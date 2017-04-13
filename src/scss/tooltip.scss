@@ -1,0 +1,253 @@
+$color_1: #333333;
+$background_color_1: rgba(0, 0, 0, 0.05);
+$background_color_2: #ffffff;
+$border_color_1: transparent;
+$border_top_color_1: #b1b1b1;
+$border_top_color_2: #ffffff;
+$border_right_color_1: #b1b1b1;
+$border_right_color_2: #ffffff;
+$border_bottom_color_1: #ffffff;
+$border_bottom_color_2: #000;
+$border_left_color_1: #b1b1b1;
+$border_left_color_2: #ffffff;
+.rc-tooltip {
+    position: absolute;
+    z-index: 1070;
+    display: block;
+    line-height: 1.5;
+    font-size: 14px;
+    line-height: 2px;
+    font-weight: 500;
+    background-color: $background_color_1;
+    padding: 1px;
+    &:not(.rc-tooltip-hidden) {
+        opacity: 0.9;
+        transition: opacity .5s ease !important;
+        transition-delay: 1.5s !important;
+    }
+}
+
+.rc-tooltip-hidden {
+    opacity: 0;
+}
+
+.rc-tooltip-inner {
+    padding: 0 10px;
+    color: $color_1;
+    text-align: left;
+    text-decoration: none;
+    background-color: $background_color_2;
+    border-radius: 3px;
+    min-height: 14px;
+    border: 1px solid #fff;
+}
+
+.rc-tooltip-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: $border_color_1;
+    border-style: solid;
+}
+
+.rc-tooltip-arrow-inner {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border-color: $border_color_1;
+    border-style: solid;
+}
+
+.rc-tooltip-placement-top {
+    .rc-tooltip-arrow {
+        bottom: -5px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_1;
+        left: 50%;
+    }
+    .rc-tooltip-arrow-inner {
+        bottom: 1px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_2;
+    }
+}
+
+.rc-tooltip-placement-topLeft {
+    .rc-tooltip-arrow {
+        bottom: -5px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_1;
+        left: 15%;
+    }
+    .rc-tooltip-arrow-inner {
+        bottom: 1px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_2;
+    }
+}
+
+.rc-tooltip-placement-topRight {
+    .rc-tooltip-arrow {
+        bottom: -5px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_1;
+        right: 15%;
+    }
+    .rc-tooltip-arrow-inner {
+        bottom: 1px;
+        margin-left: -6px;
+        border-width: 6px 6px 0;
+        border-top-color: $border_top_color_2;
+    }
+}
+
+.rc-tooltip-placement-right {
+    .rc-tooltip-arrow {
+        left: -5px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_1;
+        top: 50%;
+    }
+    .rc-tooltip-arrow-inner {
+        left: 1px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_2;
+    }
+}
+
+.rc-tooltip-placement-rightTop {
+    .rc-tooltip-arrow {
+        left: -5px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_1;
+        top: 15%;
+        margin-top: 0;
+    }
+    .rc-tooltip-arrow-inner {
+        left: 1px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_2;
+    }
+}
+
+.rc-tooltip-placement-rightBottom {
+    .rc-tooltip-arrow {
+        left: -5px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_1;
+        bottom: 15%;
+    }
+    .rc-tooltip-arrow-inner {
+        left: 1px;
+        margin-top: -6px;
+        border-width: 6px 6px 6px 0;
+        border-right-color: $border_right_color_2;
+    }
+}
+
+.rc-tooltip-placement-left {
+    .rc-tooltip-arrow {
+        right: -5px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_1;
+        top: 50%;
+    }
+    .rc-tooltip-arrow-inner {
+        right: 1px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_2;
+    }
+}
+
+.rc-tooltip-placement-leftTop {
+    .rc-tooltip-arrow {
+        right: -5px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_1;
+        top: 15%;
+        margin-top: 0;
+    }
+    .rc-tooltip-arrow-inner {
+        right: 1px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_2;
+    }
+}
+
+.rc-tooltip-placement-leftBottom {
+    .rc-tooltip-arrow {
+        right: -5px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_1;
+        bottom: 15%;
+    }
+    .rc-tooltip-arrow-inner {
+        right: 1px;
+        margin-top: -6px;
+        border-width: 6px 0 6px 6px;
+        border-left-color: $border_left_color_2;
+    }
+}
+
+.rc-tooltip-placement-bottom {
+    .rc-tooltip-arrow {
+        top: -7px;
+        margin-left: -6px;
+        border-width: 0 5px 8px;
+        border-bottom-color: $border_bottom_color_1;
+        left: 50%;
+    }
+    .rc-tooltip-arrow-inner {
+        top: 1px;
+        margin-left: -6px;
+        border-width: 0 6px 6px;
+        border-bottom-color: $border_bottom_color_2;
+    }
+}
+
+.rc-tooltip-placement-bottomLeft {
+    .rc-tooltip-arrow {
+        top: -5px;
+        margin-left: -6px;
+        border-width: 0 6px 6px;
+        border-bottom-color: $border_bottom_color_1;
+        left: 15%;
+    }
+    .rc-tooltip-arrow-inner {
+        top: 1px;
+        margin-left: -6px;
+        border-width: 0 6px 6px;
+        border-bottom-color: $border_bottom_color_2;
+    }
+}
+
+.rc-tooltip-placement-bottomRight {
+    .rc-tooltip-arrow {
+        top: -7px;
+        margin-left: -6px;
+        border-width: 0 5px 8px;
+        border-bottom-color: $border_bottom_color_1;
+        right: 8%;
+    }
+    .rc-tooltip-arrow-inner {
+        top: 1px;
+        margin-left: -6px;
+        border-width: 0 6px 6px;
+        border-bottom-color: $border_bottom_color_2;
+    }
+}

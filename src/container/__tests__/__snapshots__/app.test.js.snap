@@ -1,0 +1,1 @@
+exports[`test should render an App container 1`] = `<Connect(App) />`;

@@ -1,0 +1,43 @@
+exports[`test should render a header component 1`] = `
+<header
+  className="header">
+  <nav
+    className="nav">
+    <ul
+      className="nav__list">
+      <li
+        className="nav__item mac" />
+      <li
+        className="nav__item">
+        <Link
+          onlyActiveOnIndex={false}
+          style={Object {}}
+          to="/">
+          Network
+        </Link>
+      </li>
+      <li
+        className="nav__item">
+        <Link
+          onlyActiveOnIndex={false}
+          style={Object {}}
+          to="blender">
+          Tasks
+        </Link>
+      </li>
+      <li
+        className="nav__item button">
+        +
+      </li>
+      <li
+        className="nav__item button">
+        €
+      </li>
+      <li
+        className="nav__item button">
+        =
+      </li>
+    </ul>
+  </nav>
+</header>
+`;

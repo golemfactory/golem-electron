@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="161px" height="161px" viewBox="0 0 161 161" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 43.1 (39012) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 11</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <ellipse id="path-1" cx="80" cy="80.173913" rx="80" ry="80.173913"></ellipse>
+    </defs>
+    <g id="Elements" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="App-Settings" transform="translate(-1353.000000, -264.000000)">
+            <g id="App-Setting-Close-All-Sections--Copy" transform="translate(1203.000000, 140.000000)">
+                <g id="Avatar" transform="translate(150.672451, 124.000000)">
+                    <g id="Group-11">
+                        <mask id="mask-2" fill="white">
+                            <use xlink:href="#path-1"></use>
+                        </mask>
+                        <use id="Mask" fill="#EFF1F2" xlink:href="#path-1"></use>
+                        <path d="M80,81.1869565 C91.0432615,81.1869565 100,72.2107468 100,61.1326087 C100,50.0544706 91.0432615,41.0782609 80,41.0782609 C68.9567385,41.0782609 60,50.0544706 60,61.1326087 C60,72.2107468 68.9567385,81.1869565 80,81.1869565 Z M80,86.1869565 C66.1928813,86.1869565 55,74.9697429 55,61.1326087 C55,47.2954745 66.1928813,36.0782609 80,36.0782609 C93.8071187,36.0782609 105,47.2954745 105,61.1326087 C105,74.9697429 93.8071187,86.1869565 80,86.1869565 Z" id="Oval-3" fill="#CBCBCB" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                        <path d="M80.5,232.515217 C116.672218,232.515217 146,203.123679 146,166.861957 C146,130.600234 116.672218,101.208696 80.5,101.208696 C44.3277824,101.208696 15,130.600234 15,166.861957 C15,203.123679 44.3277824,232.515217 80.5,232.515217 Z M80.5,237.515217 C41.5639251,237.515217 10,205.882675 10,166.861957 C10,127.841238 41.5639251,96.2086957 80.5,96.2086957 C119.436075,96.2086957 151,127.841238 151,166.861957 C151,205.882675 119.436075,237.515217 80.5,237.515217 Z" id="Oval-3-Copy" fill="#CBCBCB" fill-rule="nonzero" mask="url(#mask-2)"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,41 @@
+.content__history {
+    position: relative;
+    z-index: 1;
+}
+
+.item__history {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    & + .item__history {
+        border-top: 1px solid $color-text3;
+    }
+    height: 80px;
+    h5 {
+        padding: 0;
+        margin: 0 0 2px 0;
+    }
+    .info__history {
+        span {
+            font-size: 9pt !important;
+            color: $color-text2;
+            font-weight: 500;
+            & + span {
+                &::before {
+                    content: '|';
+                    padding: 0 10px;
+                }
+            }
+        }
+    }
+    .amount__history {
+        font-weight: 400;
+        font-size: 11pt !important;
+    }
+    .icon-arrow-right {
+        font-size: 11pt;
+        margin-left: 20px;
+        color: $color-text3;
+    }
+}

@@ -1,0 +1,1 @@
+exports[`LoaderWrapper should render a table component 1`] = `<Connect(Table) />`;

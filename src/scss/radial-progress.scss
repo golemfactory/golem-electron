@@ -1,0 +1,42 @@
+#radialSvg {
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    circle {
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 1s linear;
+        stroke: #EFF1F2;
+        stroke-width: 0.15em;
+    }
+    #bar {
+        stroke-dashoffset: 380;
+        transform: rotate(-90deg);
+        transform-origin: 50%;
+        stroke: #37C481;
+        stroke-width: 0.25em;
+        stroke-linecap: round;
+    }
+}
+
+.radial-progress-bar {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    vertical-align: middle;
+    &:after {
+        position: absolute;
+        display: block;
+        height: 100%;
+        width: 100%;
+        top: 50%;
+        content: attr(data-pct) "%";
+        margin-top: -82px;
+        text-align: center;
+        border-radius: 100%;
+        line-height: 160px;
+        font-size: .8em;
+        font-weight: 500;
+    }
+}

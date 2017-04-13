@@ -1,0 +1,288 @@
+/* VENDOR - Default fall-backs and external files.
+========================================================================== */
+
+
+/* BASE - Base Variable file along with starting point Mixins and Placeholders.
+========================================================================== */
+
+@import "_vars";
+@import "_typography";
+@import "_icon";
+
+/* FRAMEWORK - Structure and layout files.
+========================================================================== */
+
+@import "header";
+@import "network/index";
+@import "task-panel/index";
+@import "settings/index";
+@import "search-box";
+@import "footer";
+@import "not-found";
+@import "loader";
+@import "dropzone";
+@import "tooltip";
+@import "radial-progress";
+html {
+    padding: 0;
+    overflow-y: scroll;
+    min-width: 460px;
+    /* Smoother startup */
+    animation: fadein 1s;
+}
+
+html,
+body {
+    margin: 0;
+    color: $color-text;
+    background: $color-bg2;
+    font-size: $font-size-primary;
+    font-family: $font-family-primary;
+    font-weight: $font-weight-primary;
+    overflow: hidden;
+    // -moz-font-weight: 400;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    // -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    &.modal-active {
+        overflow: hidden;
+    }
+}
+
+-webkit-scrollbar {
+    width: 5px;
+}
+
+-webkit-scrollbar-track {
+    background: #ddd;
+}
+
+-webkit-scrollbar-thumb {
+    background: #666;
+}
+
+a,
+button,
+input h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+select,
+span {
+    &:hover,
+    &:visited,
+    &:active,
+    &:focus {
+        outline: 0;
+    }
+}
+
+a {
+    text-decoration: none;
+    color: $color-primary;
+}
+
+button {
+    height: 40px;
+    padding: 0 25px;
+    border-radius: 5px;
+    border: 1px solid $button-static-color;
+    font-size: 12pt;
+    font-weight: bold;
+    color: $button-font-color;
+    cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 5px;
+}
+
+select {
+    width: 100%;
+    height: 32px;
+    padding: 0 10px;
+    font-size: 10pt;
+    -webkit-appearance: none;
+    -webkit-border-radius: 2px;
+}
+
+.select {
+    &:after {
+        content: " ";
+        height: 0;
+        width: 0;
+        border-left: 4px solid transparent;
+        border-right: 4px solid transparent;
+        border-top: 5px solid #000;
+        position: absolute;
+        left: 233px;
+        top: 44px;
+        transition: all 0.3s linear;
+    }
+}
+
+.btn {
+    &--primary {
+        background-color: $button-static-color;
+        font-size: 10pt;
+        &:hover {
+            background-color: $button-hover-color;
+            //color: rgb(0, 177, 200);
+        }
+    }
+    &--outline {
+        background-color: $color-bg2;
+        color: $button-static-color;
+        border-radius: 2px;
+        font-weight: 400;
+        font-size: 10pt;
+        &:hover {
+            color: $button-hover-color;
+            border: 1px solid $button-hover-color;
+            //color: rgb(0, 177, 200);
+        }
+    }
+}
+
+.text-right {
+    text-align: right;
+}
+
+.switch-box {
+    margin-right: 40px;
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 30px;
+        height: 17px;
+        margin-bottom: -3px;
+    }
+    /* Hide default HTML checkbox */
+    .switch input {
+        display: none;
+    }
+    /* The slider */
+    .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    .switch-slider:before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        margin-top: 1px;
+        left: 1;
+        background-color: white;
+        -webkit-transition: .4s;
+        transition: .4s;
+    }
+    input:checked + .switch-slider {
+        background-color: #2196F3;
+    }
+    input:focus + .switch-slider {
+        box-shadow: 0 0 1px #2196F3;
+    }
+    input:checked + .switch-slider:before {
+        -webkit-transform: translateX(13px);
+        transform: translateX(13px);
+    }
+    /* Rounded sliders */
+    .switch-slider.round {
+        border-radius: 34px;
+    }
+    .switch-slider.round:before {
+        border-radius: 50%;
+    }
+    .switch__desc {
+        margin-left: 10px;
+    }
+}
+
+
+/* Animation for transitions
+============================= */
+
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+
+/*      OS DIFFERENCES
+============================= */
+
+@mixin section__padding($padding) {
+    padding: 0 $padding;
+}
+
+.windows {
+    .content__main,
+    .content__task-panel,
+    .container__frame,
+    .content__task-detail,
+    .content__settings {
+        padding-top: $header-height-windows;
+    }
+    .section__actions,
+    .slider,
+    .item__history,
+    .tab-panel,
+    .section__personal {
+        @include section__padding($padding-windows);
+    }
+}
+
+.mac {
+    .content__main,
+    .content__task-panel,
+    .container__frame,
+    .content__task-detail,
+    .content__settings {
+        padding-top: $header-height;
+    }
+    .section__actions,
+    .slider,
+    .item__history,
+    .tab-panel,
+    .section__personal {
+        @include section__padding($padding-mac);
+    }
+}
+
+.linux {
+    .content__main,
+    .content__task-panel,
+    .container__frame,
+    .content__task-detail,
+    .content__settings {
+        padding-top: $header-height;
+    }
+    .section__actions,
+    .slider,
+    .item__history,
+    .tab-panel,
+    .section__personal {
+        @include section__padding($padding-linux);
+    }
+}

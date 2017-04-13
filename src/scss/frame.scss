@@ -1,0 +1,108 @@
+.container__frame {
+    position: absolute;
+    top: 0;
+    height: 75%;
+    width: 100%;
+    padding-top: 50px;
+    background: #000;
+    z-index: 999;
+    .header__frame {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        background: $color-bg2;
+        position: fixed;
+        top: 0;
+        height: 50px;
+        width: 100%;
+        line-height: 50px;
+        padding: 0 10px;
+        box-sizing: border-box;
+        border-bottom: 1px solid #ccc;
+        span {
+            flex-grow: 1;
+            flex-basis: auto;
+            padding: 0 10px;
+            box-sizing: border-box;
+            -webkit-transition: all 0.4s ease;
+            -moz-transition: all 0.4s ease;
+            -o-transition: all 0.4s ease;
+            transition: all 0.4s ease;
+            font-size: 10pt;
+            font-weight: bold;
+            &:active,
+            &:hover {
+                outline: 0;
+            }
+            & + span {
+                display: inline-block;
+                line-height: 8pt;
+                height: 11px;
+                border-left: 1px solid #fff;
+            }
+        }
+        .title,
+        .info,
+        .menu {
+            padding: 0;
+        }
+        .info {
+            .time,
+            .amount__frame {
+                color: #ddd;
+            }
+        }
+        .menu {
+            &__item {
+                cursor: pointer;
+                &:hover {
+                    color: #00d6e3;
+                }
+            }
+        }
+    }
+    .section {
+        &__frame {
+            .button__subtask {
+                background: #bbb;
+                position: absolute;
+                width: 30px;
+                text-align: center;
+                top: 60px;
+                right: 20px;
+                z-index: 999;
+                font-size: 20pt;
+                line-height: 30px;
+                border-radius: 50px;
+            }
+        }
+        &__image {
+            background: #000;
+            height: 409px;
+            text-align: center;
+            position: relative;
+            img {
+                max-height: 100%;
+                max-width: 100%;
+                width: auto;
+                height: auto;
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                box-sizing: border-box;
+            }
+            #frameCanvas {
+                width: 700px !important;
+                height: 366px !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+                cursor: crosshair;
+            }
+        }
+    }
+}

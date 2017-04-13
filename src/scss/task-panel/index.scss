@@ -1,0 +1,9 @@
+@import "frame";
+@import "table";
+@import "preview";
+@import "task-detail";
+.content__task-panel {
+    margin-bottom: 50px;
+    height: 100%;
+    overflow-y: scroll;
+}

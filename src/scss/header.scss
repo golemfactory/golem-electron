@@ -1,0 +1,271 @@
+/* THIS CLASS LETS USER DRAG ELECTRON APPLICATION
+================================================== */
+
+.draggable {
+    position: absolute;
+    top: 0;
+    z-index: 999;
+    width: 100%;
+    height: $header-height / 2.5;
+    cursor: move;
+}
+
+.header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    line-height: 20px;
+    border-bottom: 1px solid $color-text3;
+    box-sizing: border-box;
+    background: $color-bg2;
+    z-index: 99;
+    .top-titlebar {
+        display: none;
+    }
+    .nav {
+        z-index: 4;
+        display: flex;
+        justify-content: space-between;
+        align-content: center;
+        box-sizing: border-box;
+        width: 100%;
+        height: 100%;
+        font-family: $font-family-primary;
+        font-weight: bold;
+    }
+    .menu,
+    .nav__list {
+        list-style: none;
+        padding: 0;
+    }
+    .menu__item,
+    .nav__item {
+        display: inline-block;
+        box-sizing: border-box;
+        color: $color-text3;
+        font-size: 18px;
+        font-weight: 500;
+        cursor: pointer;
+        &:hover {
+            color: $color-text;
+        }
+        &:active,
+        &:hover {
+            outline: 0;
+        }
+    }
+    .nav__item {
+        margin: 0;
+        &:hover {
+            span {
+                background-color: $color-text;
+            }
+        }
+        & + .nav__item {
+            margin-right: 20px;
+        }
+    }
+    .menu__item {
+        color: $color-text3;
+        [class^="icon-"],
+        [class*=" icon-"] {
+            font-size: 14pt;
+            line-height: 20px;
+        }
+        & ~ .menu__item {
+            margin-left: 20px;
+        }
+    }
+    .active {
+        color: $color-text;
+    }
+    .active:nth-child(2) ~ .selector,
+    .nav__item:nth-child(2):hover ~ .selector {
+        left: 91px;
+        width: 68px;
+    }
+    .active:nth-child(3) ~ .selector,
+    .nav__item:nth-child(3):hover ~ .selector {
+        left: 179px;
+        width: 47px;
+    }
+    .selector {
+        position: absolute;
+        bottom: -1px;
+        display: block;
+        height: 2px;
+        box-sizing: border-box;
+        background: $button-static-color;
+    }
+    ul li,
+    span {
+        -webkit-transition: all 0.4s ease;
+        -moz-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+        position: relative;
+    }
+}
+
+@mixin header($padding, $selector-left_1, $selector-left_2) {
+    .nav {
+        padding: 0 $padding;
+    }
+    .active:nth-child(2) ~ .selector,
+    .nav__item:nth-child(2):hover ~ .selector {
+        left: $selector-left_1 + $padding;
+        width: 68px;
+    }
+    .active:nth-child(3) ~ .selector,
+    .nav__item:nth-child(3):hover ~ .selector {
+        left: $selector-left_2 + $padding;
+        width: 47px;
+    }
+}
+
+
+/*                 OS DIFFERENCES
+================================================== */
+
+.windows .header {
+    height: $header-height-windows;
+    @include header($padding-windows, 0, 87px);
+    .top-titlebar {
+        padding: 0 $padding-windows;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 30px;
+        color: #000;
+        font-weight: 400;
+        font-size: 9pt;
+        border-bottom: 1px solid $color-text;
+        box-sizing: border-box;
+        .os__menu {
+            span {
+                & + span {
+                    margin-left: 20px;
+                }
+            }
+        }
+    }
+}
+
+.mac .header {
+    height: $header-height;
+    @include header($padding-mac, 72px, 158px);
+}
+
+.linux .header {
+    height: $header-height;
+    @include header($padding-mac, 72px, 158px);
+}
+
+.mac .traffic-light {
+    height: 100%;
+    width: 52px;
+    float: left;
+    .close {
+        position: relative;
+        float: left;
+        $size: 12px;
+        height: $size;
+        width: $size;
+        border: solid 1px rgba(214, 46, 48, 0.15);
+        border-radius: 50%;
+        margin-top: (18 - $size) / 2;
+        box-sizing: border-box;
+        background: rgb(251, 73, 72);
+        &:before {
+            content: '';
+            position: absolute;
+            height: 1px;
+            width: 8px;
+            background: rgb(54, 0, 0);
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%) rotate(45deg);
+            opacity: 0;
+        }
+        &:after {
+            content: '';
+            position: absolute;
+            height: 1px;
+            width: 8px;
+            background: rgb(54, 0, 0);
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+            opacity: 0;
+        }
+    }
+    .minimize {
+        @extend .close;
+        position: relative;
+        margin-left: 50 / 3 / 2 * 1px;
+        background: rgb(253, 178, 37);
+        border-color: rgba(213, 142, 27, 0.15);
+        &:before {
+            content: '';
+            position: absolute;
+            height: 1px;
+            width: 8px;
+            background: rgb(134, 69, 2);
+            top: 50%;
+            left: 50%;
+            transform: translateY(-50%) translateX(-50%);
+        }
+        &:after {
+            display: none;
+        }
+    }
+    .maximize {
+        @extend .close;
+        float: right;
+        background: rgb(42, 200, 51);
+        border-color: rgba(30, 159, 32, 0.15);
+        &:before {
+            width: 6px;
+            height: 6px;
+            background: rgb(11, 84, 1);
+            transform: translateY(-50%) translateX(-50%);
+            border: solid rgb(42, 200, 51) 1px;
+            border-radius: 2px;
+        }
+        &:after {
+            width: 10px;
+            height: 2px;
+            background: rgb(42, 200, 51);
+            transform: translateY(-50%) translateX(-50%) rotate(45deg);
+        }
+    }
+    &:hover {
+        .close:before {
+            opacity: 1;
+        }
+        .close:after {
+            opacity: 1;
+        }
+    }
+    & + .nav__item {
+        margin-left: 20px;
+    }
+}
+
+.linux .traffic-light {
+    @extend .traffic-light;
+    .close {
+        &:before {
+            background: #e75c2d;
+        }
+        &:after {
+            background: #e75c2d;
+        }
+    }
+    .minimize {
+        background: #a8a8a8;
+    }
+    .maximize {
+        background: #a8a8a8;
+    }
+}

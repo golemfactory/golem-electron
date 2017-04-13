@@ -1,0 +1,54 @@
+@import "personal";
+$item__accordion-height: 78.7px;
+.content__settings {}
+
+.tab__accordion {
+    .active {
+        height: 250px !important;
+    }
+}
+
+.item__accordion {
+    height: $item__accordion-height;
+    border-top: 1px solid $color-text3;
+    transition: .3s all cubic-bezier(.34, .83, .85, .5);
+    .item-title__accordion {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: $item__accordion-height;
+        & > span {
+            display: block;
+            font-weight: 600;
+        }
+        span:last-child {
+            cursor: pointer;
+        }
+    }
+}
+
+.item__accordion:last-child {
+    border-bottom: 1px solid $color-text3;
+}
+
+
+/*      OS DIFFERENCES
+============================= */
+
+.windows {
+    .item__accordion > div > span {
+        padding: 0 $padding-windows;
+    }
+}
+
+.mac {
+    .item__accordion > div > span {
+        padding: 0 $padding-mac;
+    }
+}
+
+.linux {
+    .item__accordion > div > span {
+        padding: 0 $padding-linux;
+    }
+}

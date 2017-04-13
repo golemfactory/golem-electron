@@ -1,0 +1,51 @@
+/**
+ * Color Codes
+ */
+
+$color-primary: #1c76e7;
+$color-text: #4e4e4e;
+//$color-text: #fff;
+$color-text2: #9b9b9b;
+$color-text3: #cbcbcb;
+$color-text4: #fff;
+$color-error: #f65a23;
+$color-accent1: #37c481;
+$color-accent2: #fec62e;
+$color-accent3: #eff1f2;
+$color-bg: #e3f3ff;
+//$color-bg: -webkit-linear-gradient(left, #001d55 0%, #01d3e0 100%);
+$color-bg2: #f9fbfc;
+$button-static-color: #0169CA;
+$button-hover-color: #0054A1;
+$button-active-color: #024686;
+$button-visited-color: #0169CA;
+$button-disable-color: #CBCBCB;
+$button-font-color: #fff;
+$display-indicator-backround: #F9FBFC;
+
+/**
+ * Font Codes
+ */
+
+$font-size-primary: 12pt;
+$font-weight-primary: 300;
+$font-family-primary: "Roboto",
+sans-serif;
+$font-family-bold: "Roboto",
+sans-serif;
+
+/* 			  	OS PADDING DIFFERENCES
+================================================== */
+
+$padding-mac: 24px;
+$padding-windows: 24px;
+$padding-linux: 24px;
+
+/**/
+
+
+/*				OS HEADER DIFFERENCES
+================================================== */
+
+$header-height: 50px;
+$header-height-windows: 80px;

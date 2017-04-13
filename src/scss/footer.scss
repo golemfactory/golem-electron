@@ -1,0 +1,24 @@
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    min-width: 450px;
+    height: 50px;
+    line-height: 50px;
+    border-top: 1px solid #bbb;
+    padding: 0 20px;
+    background: $color-bg2;
+    z-index: 999;
+    display: flex;
+    justify-content: space-between;
+    align-content: center;
+    .icon-processing {
+        display: inline-block;
+        color: green;
+        font-weight: 500;
+        font-size: 22pt;
+        margin-right: 8px;
+        vertical-align: middle;
+        margin-bottom: 4px;
+    }
+}

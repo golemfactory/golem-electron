@@ -1,0 +1,34 @@
+.section__currency {
+    padding: 24 10px 10px 10px;
+    height: 126px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    position: relative;
+    background: $display-indicator-backround;
+    border-bottom: 1px solid $color-text3;
+    flex: 0 0 126px;
+    .amount {
+        font-size: 34pt;
+    }
+    ul {
+        width: 160px;
+        list-style: none;
+        padding: 0;
+        -webkit-columns: 3;
+        columns: 3;
+        font-size: 10pt;
+        font-weight: bold;
+        color: #bbb;
+        cursor: pointer;
+        font-weight: 300;
+        .active {
+            font-family: $font-family-bold;
+            font-weight: 400;
+            color: $color-text;
+        }
+    }
+    span:nth-child(1) {
+        font-size: 9pt;
+    }
+}

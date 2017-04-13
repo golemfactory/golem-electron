@@ -1,0 +1,24 @@
+exports[`<Footer/> should render a footer component 1`] = `
+<footer
+  className="footer">
+  <span>
+    ✓ Golem is ready!
+  </span>
+  <div
+    className="switch-box">
+    <label
+      className="switch">
+      <input
+        defaultChecked={false}
+        onChange={[Function]}
+        type="checkbox" />
+      <div
+        className="switch-slider round" />
+    </label>
+    <span
+      className="switch__desc">
+      Previews
+    </span>
+  </div>
+</footer>
+`;

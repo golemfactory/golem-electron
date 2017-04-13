@@ -1,0 +1,84 @@
+.searchbox {
+    width: 100%;
+    form {
+        position: relative;
+        margin: 0;
+        margin-left: auto;
+        margin-right: auto;
+        input {
+            width: 100%;
+            font-size: 20pt;
+            outline: none;
+            background: rgba(255, 255, 255, 0.6);
+            border: 0;
+            border-radius: 2px;
+            padding: 5px;
+            padding-right: 50px;
+            box-sizing: border-box;
+        }
+    }
+}
+
+a.search-button {
+    width: 40px;
+    height: 40px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 5;
+    overflow: hidden;
+    border-radius: 25px;
+    //background-color: white;
+    text-decoration: none;
+    .icon {
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        border-radius: 8px;
+        border: 2px solid #607d8b;
+        background: rgba(255, 255, 255, 0.3);
+        transition: all .6s ease;
+        &:after {
+            width: 12px;
+            height: 2px;
+            display: block;
+            content: "";
+            position: absolute;
+            bottom: -5px;
+            right: -8px;
+            background-color: #607d8b;
+            transform: rotate(45deg);
+            transition: all .6s ease;
+        }
+        .clear {
+            width: 100%;
+            height: 100%;
+            line-height: 12px;
+            display: block;
+            text-align: center;
+            color: #607d8b;
+            font-size: 0;
+            transition: all .6s ease;
+        }
+    }
+    &.typed .icon {
+        width: 60px;
+        height: 60px;
+        border-radius: 50px;
+        border-width: 6px;
+        top: -16px;
+        left: -16px;
+        &:after {
+            width: 52px;
+            height: 8px;
+            bottom: -20px;
+            right: -30px;
+        }
+        .clear {
+            line-height: 56px;
+            font-size: 24px;
+        }
+    }
+}

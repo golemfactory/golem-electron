@@ -1,0 +1,12 @@
+.nf__container {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    text-align: center;
+    transform: translate(-50%, -50%);
+    .nf__sad {
+        line-height: 100px;
+        font-size: 50pt;
+    }
+}

@@ -1,0 +1,42 @@
+.drop-zone {
+    position: relative;
+    height: 100%;
+}
+
+.drop-zone--hide {
+    display: none
+}
+
+.drop-zone--show {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    background: rgba(249, 251, 252, 0.8);
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    flex: 1;
+    padding-top: 100px;
+    align-items: center;
+    text-align: center;
+    font-size: 12pt;
+    font-weight: 600;
+    color: #444;
+    margin: auto;
+    p,
+    span {
+        pointer-events: none;
+    }
+    .icon-upload {
+        color: $color-text3;
+        font-size: 30pt;
+        font-weight: 200;
+        pointer-events: none;
+    }
+    .tips__drop-zone {
+        font-size: 9pt;
+        font-weight: 400;
+        pointer-events: none;
+    }
+}
