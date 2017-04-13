@@ -1,17 +1,37 @@
 @import "personal";
+@import "performance";
+@import "price";
+@import "trust";
+@import "file-location";
 $item__accordion-height: 78.7px;
-.content__settings {}
+.content__settings {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.section__personal {
+    flex: 0 0 300px;
+}
 
 .tab__accordion {
+    height: 100%;
+    position: relative;
+    overflow-y: scroll;
     .active {
-        height: 250px !important;
+        height: auto;
+        & > .item-content__accordion {
+            opacity: 1;
+            transition-delay: .2s;
+        }
     }
 }
 
 .item__accordion {
     height: $item__accordion-height;
-    border-top: 1px solid $color-text3;
-    transition: .3s all cubic-bezier(.34, .83, .85, .5);
+    transition: .3s height;
     .item-title__accordion {
         display: flex;
         justify-content: space-between;
@@ -25,10 +45,27 @@ $item__accordion-height: 78.7px;
             cursor: pointer;
         }
     }
+    .item-content__accordion {
+        opacity: 0;
+        transition: .5s opacity;
+    }
+    & + .item__accordion {
+        border-top: 1px solid $color-text3;
+    }
 }
 
 .item__accordion:last-child {
     border-bottom: 1px solid $color-text3;
+}
+
+.footer__settings {
+    flex: 0 0 77px;
+    width: 100%;
+    line-height: 77px;
+    text-align: center;
+    border-top: 1px solid $color-text3;
+    color: $color-text2;
+    font-size: 9pt;
 }
 
 

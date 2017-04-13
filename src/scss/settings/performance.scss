@@ -1,0 +1,51 @@
+@mixin flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.content__performance {
+    height: 231px;
+    button {
+        float: right;
+        width: 150px;
+    }
+}
+
+.list__performance {
+    padding-bottom: 20px;
+}
+
+.list-item__performance {
+    @include flex;
+    padding: 10px 0;
+    .icon__list-item__acount {
+        font-size: 20pt;
+        color: $color-text2;
+    }
+    .title__list-item__acount {
+        font-size: 10pt;
+        flex: 0 0 70px;
+    }
+    progress::-webkit-progress-bar {
+        background-color: $color-accent3 !important;
+    }
+    progress::-webkit-progress-value {
+        background-color: $color-accent1 !important;
+        width: 100%;
+        border-top-left-radius: 50px;
+        border-bottom-left-radius: 50px;
+    }
+    progress {
+        background-color: #fff;
+        border: 1px solid $color-accent3;
+        border-radius: 50px;
+        box-sizing: border-box;
+        width: 55%;
+        height: 10px;
+    }
+    .amount__list-item__performance {
+        font-weight: bold;
+        font-size: 10pt;
+    }
+}

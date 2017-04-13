@@ -21,8 +21,9 @@
 @import "not-found";
 @import "loader";
 @import "dropzone";
-@import "tooltip";
 @import "radial-progress";
+@import "tooltip";
+@import "slider";
 html {
     padding: 0;
     overflow-y: scroll;
@@ -153,6 +154,34 @@ select {
     }
 }
 
+input[type=text] {
+    background: #f9f9f9;
+    border: 1px solid $color-text4;
+    height: 32px;
+}
+
+input[type=number] {
+    position: relative;
+    height: 32px;
+    background: #f9f9f9;
+    border-box: none;
+    border: 1px solid $color-text3;
+    text-align: center;
+}
+
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    background: #FFF url('../assets/img/number-adjust.svg') no-repeat center center;
+    width: 1em;
+    border-left: 1px solid #BBB;
+    opacity: .5;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    &:hover {}
+}
+
 .text-right {
     text-align: right;
 }
@@ -213,6 +242,17 @@ select {
     .switch__desc {
         margin-left: 10px;
     }
+    &--green {
+        .switch-slider {
+            background-color: $color-accent1;
+        }
+        input:checked + .switch-slider {
+            background-color: $color-accent1;
+        }
+        input:focus + .switch-slider {
+            box-shadow: 0 0 1px $color-accent1;
+        }
+    }
 }
 
 
@@ -244,11 +284,15 @@ select {
     .content__settings {
         padding-top: $header-height-windows;
     }
+    .content__resources,
     .section__actions,
-    .slider,
     .item__history,
     .tab-panel,
-    .section__personal {
+    .section__personal,
+    .content__performance,
+    .content__price,
+    .content__trust,
+    {
         @include section__padding($padding-windows);
     }
 }
@@ -261,11 +305,14 @@ select {
     .content__settings {
         padding-top: $header-height;
     }
+    .content__resources,
     .section__actions,
-    .slider,
     .item__history,
     .tab-panel,
-    .section__personal {
+    .section__personal,
+    .content__performance,
+    .content__price,
+    .content__trust {
         @include section__padding($padding-mac);
     }
 }
@@ -275,14 +322,18 @@ select {
     .content__task-panel,
     .container__frame,
     .content__task-detail,
-    .content__settings {
+    .content__settings,
+    .content__trust {
         padding-top: $header-height;
     }
+    .content__resources,
     .section__actions,
-    .slider,
     .item__history,
     .tab-panel,
-    .section__personal {
+    .section__personal,
+    .content__performance,
+    .content__price,
+    .content__trust {
         @include section__padding($padding-linux);
     }
 }

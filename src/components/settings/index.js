@@ -5,6 +5,7 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
+import { APP_VERSION } from './../../main'
 
 
 const accordionItems = [
@@ -21,7 +22,7 @@ const accordionItems = [
         content: <Trust/>
     },
     {
-        title: 'File Location',
+        title: 'Default File Location',
         content: <FileLocation/>
     }
 ]
@@ -53,7 +54,7 @@ export default class index extends React.Component {
         target.classList.toggle('icon-arrow-down')
         target.classList.toggle('icon-arrow-up')
         this.setState({
-            activeContent: this.state.activeContent !== undefined ? undefined : parseInt(index)
+            activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
         })
     }
 
@@ -63,7 +64,9 @@ export default class index extends React.Component {
                             <span>{item.title}</span>
                             <span className="icon-arrow-down" onClick={::this._handleTab}/>
                         </div>
+                        <div className="item-content__accordion">
                         {this.state.activeContent === index && item.content}
+                        </div>
                     </div>)
     }
 
@@ -73,6 +76,9 @@ export default class index extends React.Component {
                 <Personal/>
                 <div className="tab__accordion">
                     { this.loadAccordionMenu(accordionItems)}
+                </div>
+                <div className="footer__settings">
+                    <span>Brass Golem {APP_VERSION}</span>
                 </div>
             </div>
         );

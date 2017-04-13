@@ -6,7 +6,9 @@
 
 .section__personal {
     text-align: center;
-    margin: 40px 0 20px 0;
+    margin: 40px 0 0 0;
+    padding-bottom: 20px;
+    border-bottom: 1px solid $color-text3;
 }
 
 .indicator-panel__personal {

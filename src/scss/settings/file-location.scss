@@ -1,0 +1,19 @@
+.content__file-location {
+    div {
+        height: 60px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+    input {
+        font-size: 10pt;
+    }
+    button {
+        height: 32px;
+    }
+}
+
+.tips__file-location {
+    font-size: 9pt;
+    color: $color-text2;
+}

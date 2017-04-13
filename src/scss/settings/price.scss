@@ -1,0 +1,23 @@
+.content__price {
+    height: 130px;
+}
+
+.section__price {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 10px 0;
+    text-align: left;
+    width: 100%;
+    input {
+        width: 112px;
+    }
+    span {
+        flex: 0 0 150px;
+        font-size: 10pt;
+        &:last-child {
+            margin-left: 15px;
+            font-size: 9pt;
+        }
+    }
+}
