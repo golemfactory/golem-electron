@@ -18,6 +18,9 @@
     .switch-box {
         padding: 0 30px;
         margin: 0 0 3px 0;
+        .switch-slider {
+            background-color: $color-accent1;
+        }
     }
 }
 

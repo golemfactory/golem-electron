@@ -1,6 +1,140 @@
 .content__task-detail {
-    margin-bottom: 50px;
-    padding: 20px;
     height: 100%;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    h4 {
+        margin: 30px 0;
+    }
+    .title {
+        flex: 0 0 130px;
+        font-size: 10pt;
+        font-weight: 400;
+    }
+}
+
+.section-preview__task-detail {
+    position: relative;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    flex: 0 0 230px;
+    color: $color-text4;
+    background: $color-bg;
+    box-sizing: border-box;
+    //box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
+    button {
+        position: relative;
+    }
+}
+
+.panel-preview__task-detail {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    background-image: linear-gradient(to bottom, #898989, rgba(255, 255, 255, 0.0));
+    font-weight: 600;
+    & > a > div {
+        display: flex;
+        height: 50px;
+        justify-content: flex-start;
+        align-items: center;
+        color: $color-text4 !important;
+        font-size: 10pt;
+    }
+    .icon-arrow-left-white {
+        font-size: 28pt;
+    }
+}
+
+.container__task-detail {
+    height: 100%;
+    position: relative;
+    overflow-y: scroll !important;
+}
+
+.section-settings__task-detail {
+    padding-bottom: 20px !important;
+    border-bottom: 1px solid $color-text3;
+    button {
+        height: 32px;
+        margin-left: 10px;
+    }
+    .select,
+    input {
+        width: 100%;
+    }
+    .icon-cross {
+        margin: 0 20px;
+        font-size: 10pt;
+        font-weight: 600;
+    }
+    .item-settings {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 55px;
+    }
+    .switch-box {
+        margin: 0;
+        span {
+            margin-right: 10px;
+        }
+    }
+}
+
+.section-price__task-detail {
+    .item-price {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 20px 0;
+        font-size: 10pt;
+        span,
+        input {
+            flex: 0 0 130px;
+        }
+        span:last-child {
+            margin-left: 10px;
+        }
+    }
+    .estimated-price__panel {
+        padding-top: 22px !important;
+        padding-bottom: 22px !important;
+        background: $color-bg;
+        .estimated-price {
+            font-size: 36pt;
+            text-align: center;
+        }
+        span:last-child {
+            margin-top: 22px;
+        }
+    }
+    .tips__price {
+        margin: 34px 0 !important;
+        color: $color-text2;
+        text-align: center;
+        font-size: 10pt;
+    }
+}
+
+.section-action__task-detail {
+    flex: 0 0 90px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    border-top: 1px solid $color-text3;
+    button {
+        width: 140px;
+    }
+    span {
+        margin-right: 20px;
+        font-size: 10pt;
+        font-weight: 400;
+    }
 }

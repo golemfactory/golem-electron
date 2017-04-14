@@ -114,9 +114,11 @@ select {
     font-size: 10pt;
     -webkit-appearance: none;
     -webkit-border-radius: 2px;
+    border: 1px solid $color-border;
 }
 
 .select {
+    position: relative;
     &:after {
         content: " ";
         height: 0;
@@ -125,8 +127,8 @@ select {
         border-right: 4px solid transparent;
         border-top: 5px solid #000;
         position: absolute;
-        left: 233px;
-        top: 44px;
+        right: 15px;
+        top: 15px;
         transition: all 0.3s linear;
     }
 }
@@ -141,7 +143,7 @@ select {
         }
     }
     &--outline {
-        background-color: $color-bg2;
+        background-color: transparent;
         color: $button-static-color;
         border-radius: 2px;
         font-weight: 400;
@@ -152,6 +154,12 @@ select {
             //color: rgb(0, 177, 200);
         }
     }
+}
+
+input[type=text],
+input[type=number] {
+    background: $color-input;
+    border: solid 0.5px #d5d5d5 !important;
 }
 
 input[type=text] {
@@ -243,9 +251,6 @@ input[type=number]::-webkit-inner-spin-button {
         margin-left: 10px;
     }
     &--green {
-        .switch-slider {
-            background-color: $color-accent1;
-        }
         input:checked + .switch-slider {
             background-color: $color-accent1;
         }
@@ -292,7 +297,11 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
-    {
+    .panel-preview__task-detail,
+    .section-settings__task-detail,
+    .title-price__task-detail,
+    .item-price,
+    .section-action__task-detail {
         @include section__padding($padding-windows);
     }
 }
@@ -312,7 +321,12 @@ input[type=number]::-webkit-inner-spin-button {
     .section__personal,
     .content__performance,
     .content__price,
-    .content__trust {
+    .content__trust,
+    .panel-preview__task-detail,
+    .section-settings__task-detail,
+    .title-price__task-detail,
+    .item-price,
+    .section-action__task-detail {
         @include section__padding($padding-mac);
     }
 }
@@ -323,7 +337,8 @@ input[type=number]::-webkit-inner-spin-button {
     .container__frame,
     .content__task-detail,
     .content__settings,
-    .content__trust {
+    .content__trust,
+    {
         padding-top: $header-height;
     }
     .content__resources,
@@ -333,7 +348,12 @@ input[type=number]::-webkit-inner-spin-button {
     .section__personal,
     .content__performance,
     .content__price,
-    .content__trust {
+    .content__trust,
+    .panel-preview__task-detail,
+    .section-settings__task-detail,
+    .title-price__task-detail,
+    .item-price,
+    .section-action__task-detail {
         @include section__padding($padding-linux);
     }
 }

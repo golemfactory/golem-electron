@@ -153,7 +153,7 @@ export class DropZone extends React.Component {
                 <div ref="dragbox" className={this.state.className}>
                     <p><span className="icon-upload"/></p>
                     <span>Drop files here to create a new task</span>
-                    <p className="tips__drop-zone">You can alseo click <b>+</b> above to create a task and browse for your files.</p>
+                    <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
                 </div>
             </div>
         );

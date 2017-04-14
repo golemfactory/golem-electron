@@ -30,7 +30,6 @@ export default class Header extends Component {
      * @param  {Object}     elm     [Element in target]
      */
     _navigateTo(to, isNav = true, elm) {
-        console.log(isNav)
         let navItems = document.getElementsByClassName('nav__item')
         let menuItems = document.getElementsByClassName('menu__item')
         if (isNav) {
