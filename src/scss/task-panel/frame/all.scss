@@ -1,0 +1,37 @@
+.container__all-frame {
+    background: $color-bg2;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.item__all-frame {
+    display: block;
+    position: relative;
+    margin-top: 10px;
+    width: 72.5px;
+    height: 32px;
+    div {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+        width: 56px;
+        height: 32px;
+    }
+    .frame {
+        &--undone {
+            background: $color-text2;
+        }
+        &--progress {
+            background: $color-accent1;
+        }
+        &--done {
+            background: $color-accent2;
+        }
+    }
+}

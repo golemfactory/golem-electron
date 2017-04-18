@@ -1,5 +1,5 @@
 const electron = require('electron')
-const {app, BrowserWindow, Tray, Menu, ipcMain} = electron
+const {app, BrowserWindow, Menu, ipcMain} = electron
 const chalk = require('chalk')
 const fs = require("fs")
 const connect = require('connect');
@@ -7,6 +7,8 @@ const serveStatic = require('serve-static');
 const compression = require('compression')
 
 const setupGolem = require('./setup_golem.js')
+const createTray = require('./electron/tray_handler.js')
+const ipcHandler = require('./electron/ipc_handler.js')
 
 function isDevelopment() {
     return process.env.NODE_ENV === 'development'
@@ -15,9 +17,11 @@ function isDevelopment() {
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
 const APP_WIDTH = 460
 const APP_HEIGHT = 520
+const PREVIEW_APP_WIDTH = 776
+const PREVIEW_APP_HEIGHT = 600
 
 let win
-let previewWin
+let previewWindow
 let tray
 
 /**
@@ -28,9 +32,11 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions()
     }
-    setupGolem.installation()
+    setupGolem()
     createWindow()
-    createTray()
+    tray = createTray(win)
+
+    ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
 }
 
 /**
@@ -85,7 +91,7 @@ function createWindow() {
         resizable: true,
         minWidth: APP_WIDTH,
         minHeight: APP_HEIGHT,
-        maxWidth: 810,
+        maxWidth: APP_WIDTH,
         center: true,
         show: false,
         //backgroundColor: '#00789d',
@@ -125,42 +131,6 @@ function createWindow() {
     })
 }
 
-/**
- * [createTray Creating system tray with given options]
- * @return 
- */
-function createTray() {
-    tray = new Tray('./src/assets/img/golem-tray.png')
-    const contextMenu = Menu.buildFromTemplate([
-        {
-            label: 'Dashboard',
-            type: 'radio',
-            checked: true
-        },
-        {
-            label: 'Tasks',
-            type: 'radio'
-        },
-        {
-            label: 'Account',
-            type: 'radio'
-        },
-        {
-            label: 'Settings',
-            type: 'radio'
-        },
-        {
-            label: 'Quit',
-            click: function() {
-                app.isQuiting = true;
-                app.quit();
-            }
-        }
-    ])
-    tray.setToolTip('Golem Application.')
-    tray.setContextMenu(contextMenu)
-}
-
 app.on('ready', onReady)
 
 app.on('window-all-closed', () => {
@@ -179,41 +149,38 @@ app.on('activate', () => {
     }
 })
 
-ipcMain.on('amount-updated', (event, amount) => {
-    const time = new Date().toLocaleTimeString()
 
-    tray.setTitle(`GNT${amount}`)
-    tray.setToolTip(`at ${time}`)
+function createPreviewWindow() {
+    previewWindow = new BrowserWindow({
+        title: APP_NAME,
+        width: PREVIEW_APP_WIDTH,
+        height: PREVIEW_APP_HEIGHT,
+        //titleBarStyle: 'hidden-inset',
+        frame: false,
+        resizable: false,
+        center: true,
+        show: true,
+        //backgroundColor: '#00789d',
+        "webPreferences": {
+            "webSecurity": false
+        }
+    })
 
-})
+    /*
+        win.webContents.on('did-finish-load', function() {
+            setTimeout(function() {
+                win.show();
+            }, 40);
+        });
+    */
+    previewWindow.once('ready-to-show', () => {
+        win.show()
+    })
 
-ipcMain.on('set-badge', (event, counter) => {
-    app.setBadgeCount(counter)
-})
-
-/**
- * [When preview expanding switched on from renderer side, this event resizing the window]
- * @param  {String}     'preview-section'       key of the ipc broadcast
- * @param  {[type]}     (event, checked)
- * @return nothing
- *
- * MUST CHECK LAGGY RESIZING
- * @see https://bugs.chromium.org/p/chromium/issues/detail?id=531831
- * @see https://github.com/electron/electron/issues/3615
- */
-ipcMain.on('preview-expand-section', (event, checked) => {
-    if (checked && (!previewWin || previewWin.isDestroyed())) {
-        win.setContentSize(700, APP_HEIGHT, true)
+    if (isDevelopment()) {
+        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3002}/preview`)
     } else {
-        win.setContentSize(APP_WIDTH, APP_HEIGHT, true)
+        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview`)
+    //win.loadURL(`file://${__dirname}/index.html`)
     }
-})
-
-ipcMain.on('preview-section', (event, checked) => {
-    if (checked && (!previewWin || previewWin.isDestroyed())) {
-        win.setContentSize(APP_WIDTH, 810, true)
-
-    } else {
-        win.setContentSize(APP_WIDTH, APP_HEIGHT, true)
-    }
-})
+}

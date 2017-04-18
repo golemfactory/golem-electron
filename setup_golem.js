@@ -36,10 +36,10 @@ const os = {
 }
 
 /**
- * [installation golem server installation]
+ * [setupGolem golem server installation]
  * @return nothing
  */
-var installation = function() {
+var setupGolem = function() {
     let operatingSystem = process.platform
     console.log(`⏳ Installation starting`)
     console.log()
@@ -136,4 +136,4 @@ var installation = function() {
     }
 }
 
-exports.installation = installation
+module.exports = setupGolem

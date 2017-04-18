@@ -1,10 +1,12 @@
+@import 'all';
+@import 'complete';
 .container__frame {
     position: absolute;
     top: 0;
     height: 100%;
     width: 100%;
     z-index: 99;
-    background: #000;
+    box-sizing: border-box;
     .header__frame {
         background: $color-bg2;
         position: fixed;
@@ -12,9 +14,8 @@
         height: 50px;
         width: 100%;
         line-height: 50px;
-        padding: 0 10px;
         box-sizing: border-box;
-        font-weight: bold;
+        font-weight: 400;
         border-bottom: 1px solid #ccc;
         display: flex;
         flex-direction: row;
@@ -23,7 +24,7 @@
         span {
             flex-grow: 1;
             flex-basis: auto;
-            padding: 0 10px;
+            padding: 0 5px;
             box-sizing: border-box;
             -webkit-transition: all 0.4s ease;
             -moz-transition: all 0.4s ease;
@@ -49,22 +50,35 @@
         .info {
             .time,
             .amount__frame {
-                color: #ddd;
+                color: $color-text2;
+                & + .amount__frame:before {
+                    content: '|';
+                    color: $color-text2;
+                    padding-right: 10px;
+                }
             }
         }
         .menu {
             &__item {
                 cursor: pointer;
+                color: $color-text2;
                 &:hover {
-                    color: #00d6e3;
+                    color: $color-text;
+                }
+                & + .menu__item:before {
+                    content: '|';
+                    color: $color-text2;
+                    padding-right: 10px;
                 }
             }
+        }
+        .active {
+            color: $color-text;
         }
     }
     .section {
         &__frame {
             .button__subtask {
-                background: #bbb;
                 position: absolute;
                 width: 30px;
                 text-align: center;
@@ -78,7 +92,8 @@
         }
         &__image {
             background: #000;
-            height: 409px;
+            height: 100%;
+            width: 100%;
             text-align: center;
             position: relative;
             img {

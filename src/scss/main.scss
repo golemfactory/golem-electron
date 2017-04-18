@@ -301,7 +301,10 @@ input[type=number]::-webkit-inner-spin-button {
     .section-settings__task-detail,
     .title-price__task-detail,
     .item-price,
-    .section-action__task-detail {
+    .section-action__task-detail,
+    .header__frame,
+    .container__all-frame,
+    .container__completed-frame {
         @include section__padding($padding-windows);
     }
 }
@@ -326,7 +329,10 @@ input[type=number]::-webkit-inner-spin-button {
     .section-settings__task-detail,
     .title-price__task-detail,
     .item-price,
-    .section-action__task-detail {
+    .section-action__task-detail,
+    .header__frame,
+    .container__all-frame,
+    .container__completed-frame {
         @include section__padding($padding-mac);
     }
 }
@@ -335,7 +341,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
-    .content__task-detail,
+    .section__frame .content__task-detail,
     .content__settings,
     .content__trust,
     {
@@ -353,7 +359,10 @@ input[type=number]::-webkit-inner-spin-button {
     .section-settings__task-detail,
     .title-price__task-detail,
     .item-price,
-    .section-action__task-detail {
+    .section-action__task-detail,
+    .header__frame,
+    .container__all-frame,
+    .container__completed-frame {
         @include section__padding($padding-linux);
     }
 }

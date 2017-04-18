@@ -1,0 +1,7 @@
+.container__completed-frame {
+    @extend .container__all-frame
+}
+
+.item__completed-frame {
+    @extend .item__all-frame
+}
