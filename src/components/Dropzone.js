@@ -127,11 +127,11 @@ export class DropZone extends React.Component {
             // Get file
             item.file(function(file) {
                 //file.name = path + file.name;
-                console.log("File:", path, file);
-                actions.uploadFile({
-                    path,
-                    file
-                })
+                console.log("File:", path, file.path);
+            /*actions.uploadFile({
+                path,
+                file
+            })*/
             });
         } else if (item.isDirectory) {
             // Get folder contents

@@ -12,6 +12,7 @@ import { Motion, spring } from 'react-motion';
 
 import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
+import convertSecsToHMS from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({
@@ -36,24 +37,6 @@ export class Table extends React.Component {
     _handleRowClick(event, item, index) {
         console.log(event, item, index)
         return true
-    }
-
-    /**
-     * [convertSecsToHrsMinsSecs function to format seconds as hh:mm:ss]
-     * @param  {int}        sec     [seconds]
-     * @return {String}             [hh:mm:ss]
-     */
-    convertSecsToHrsMinsSecs(sec) {
-        let minutes = Math.trunc(sec / 60);
-        let seconds = sec % 60;
-        let hours = Math.trunc(minutes / 60);
-
-        minutes = minutes % 60;
-        hours = hours < 10 ? '0' + hours : hours;
-        minutes = minutes < 10 ? '0' + minutes : minutes;
-        seconds = seconds < 10 ? '0' + seconds : seconds;
-
-        return hours + ':' + minutes + ':' + seconds;
     }
 
     /**
@@ -92,7 +75,7 @@ export class Table extends React.Component {
                     </div>
                     <div>
                         <h4>{item.name}</h4>
-                        <span className={`duration ${item.progress < 100 ? 'duration--active' : 'duration--done'}`}>{this.convertSecsToHrsMinsSecs(item.duration)} {item.progress < 100 ? 'Duration' : ' | 3.15PM Yesterday'} </span>
+                        <span className={`duration ${item.progress < 100 ? 'duration--active' : 'duration--done'}`}>{convertSecsToHMS(item.duration)} {item.progress < 100 ? 'Duration' : ' | 3.15PM Yesterday'} </span>
                     </div>
                 </div>
                 <div>

@@ -120,3 +120,50 @@
         }
     }
 }
+
+.tooltip-frame {
+    position: relative;
+    box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
+    .content__tooltip {
+        height: 100%;
+        display: block;
+        -webkit-margin-before: .5em;
+        -webkit-margin-after: .5em;
+        -webkit-margin-start: 0px;
+        -webkit-margin-end: 0px;
+        padding: 0 15px;
+        font-weight: 300;
+        text-align: center;
+    }
+    p {
+        display: block;
+        width: 100%;
+        margin: 0;
+    }
+    .status__tooltip {
+        font-size: 8pt;
+        color: $color-text3;
+        margin: 1em 0;
+    }
+    .time__tooltip {
+        font-size: 18pt;
+        margin: .8em 0 2em 0;
+        &--done {
+            color: $color-text2;
+        }
+    }
+    button {
+        border: 0;
+        padding: 0;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        box-sizing: border-box;
+        color: $color-text2;
+        background: $color-accent3;
+        font-size: 8pt;
+    }
+}

@@ -10,7 +10,7 @@ const {ipcRenderer} = window.require('electron')
 import { dict } from './../actions'
 
 const {LOGIN, SET_MESSAGE, SET_BLENDER, SET_CURRENCY, UPLOAD, LOGOUT} = dict
-const config = {
+let config = Object.freeze({
     WS_URL: 'ws://127.0.0.1:8080/ws',
     CURRENCY_URL: 'http://api.coinmarketcap.com/v1/ticker/',
     REALM: 'realm1',
@@ -22,7 +22,7 @@ const config = {
         ETH: 'ethereum',
         GNT: 'golem-network-tokens'
     }
-}
+})
 
 /**
  * { Websocket Connect function }

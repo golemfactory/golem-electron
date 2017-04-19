@@ -2,11 +2,11 @@ import React from 'react';
 import { Motion, spring } from 'react-motion'
 
 
-const dictCurrency = {
+let dictCurrency = Object.freeze({
     GNT: 'GNT',
     ETH: 'ETH',
     USD: 'USD'
-}
+})
 
 
 export default class indicator extends React.Component {

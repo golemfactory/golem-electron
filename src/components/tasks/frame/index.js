@@ -6,7 +6,6 @@ import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 
 import SingleFrame from './Single'
-import CompleteFrame from './Complete'
 import AllFrame from './All'
 
 const mapStateToProps = state => ({
@@ -53,7 +52,6 @@ export class Frame extends React.Component {
      * @param   {Object}     elm     [target element]
      */
     _handleMenu(elm) {
-        console.log('test')
         let menuItems = document.getElementsByClassName('menu__item')
         for (var i = 0; i < menuItems.length; i++) {
             menuItems[i].classList.remove('active')
@@ -82,8 +80,7 @@ export class Frame extends React.Component {
                         <span className="menu__item" onClick={::this._handleMenu} value="1">All</span>
                     </div>
                 </div>
-                {activeMenu == 0 && <CompleteFrame/> }
-                {activeMenu == 1 && <AllFrame/> }
+                <AllFrame show={activeMenu}/>
             </div>
         )
     }
