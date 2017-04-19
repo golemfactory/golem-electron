@@ -169,6 +169,7 @@ input[type=text] {
 }
 
 input[type=number] {
+    width: 100%;
     position: relative;
     height: 32px;
     background: #f9f9f9;
@@ -179,10 +180,12 @@ input[type=number] {
 
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    background: #FFF url('../assets/img/number-adjust.svg') no-repeat center center;
-    width: 1em;
-    border-left: 1px solid #BBB;
-    opacity: .5;
+    background: $color-bg2 url('../assets/img/number-adjust.svg') no-repeat center;
+    background-size: auto;
+    width: 1.2em;
+    border-left: 1px solid $color-text3;
+    box-sizing: border-box;
+    opacity: .9;
     position: absolute;
     top: 0;
     right: 0;

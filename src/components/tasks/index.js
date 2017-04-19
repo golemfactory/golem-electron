@@ -8,7 +8,7 @@ import * as Actions from '../../actions'
 import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
-import DropZone from './../DropZone'
+import DropZone from './../Dropzone'
 import Footer from './../Footer'
 
 const mapStateToProps = state => ({

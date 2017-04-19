@@ -96,13 +96,19 @@ export default class Header extends Component {
                     <span className="selector"></span>
                 </ul>
                 <ul className="menu">
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>}>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }}>
                         <li className="menu__item"><span className="icon-add"/></li>
                     </ReactTooltip>
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>}>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }}>
                         <li className="menu__item"><span className="icon-doc"/></li>
                     </ReactTooltip>
-                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>}>
+                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }}>
                         <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings', false)}><span className="icon-settings"/></li>
                     </ReactTooltip>
                 </ul>

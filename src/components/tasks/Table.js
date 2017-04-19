@@ -1,6 +1,10 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom'
 import { Link } from 'react-router'
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -92,7 +96,11 @@ export class Table extends React.Component {
                     </div>
                 </div>
                 <div>
-                    <span className="icon-trash"></span>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
+                    offset: [0, 10],
+                }} transitionName="rc-tooltip-zoom">
+                        <span className="icon-trash"></span>
+                    </ReactTooltip>
                     <Link to={`/task/${item.id}`}><span className="icon-arrow-right"></span></Link>
                 </div>
             </div></div>}

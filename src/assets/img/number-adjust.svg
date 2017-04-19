@@ -5,7 +5,7 @@
     <desc>Created with Sketch.</desc>
     <defs></defs>
     <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-        <g id="number-adjusting-icon" fill="#4E4E4E">
+        <g id="number-adjusting-icon" fill="#000000">
             <polygon id="Triangle-3" points="3 0 6 4 0 4"></polygon>
             <polygon id="Triangle-3-Copy" transform="translate(3.000000, 16.000000) scale(1, -1) translate(-3.000000, -16.000000) " points="3 14 6 18 0 18"></polygon>
         </g>

@@ -21,15 +21,15 @@ export default class Advanced extends React.Component {
             <div className="section__radial-options">
               <div className="item__radial-options">
                 <RadialProgress/>
-                <input type="number"/>
+                <input type="number" min="0"/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress/>
-                <input type="number"/>
+                <input type="number" min="0"/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress/>
-                <input type="number"/>
+                <input type="number" min="0"/>
               </div>
             </div>
             <div className="advanced__tips">

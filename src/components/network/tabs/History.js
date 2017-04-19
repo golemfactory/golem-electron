@@ -43,9 +43,9 @@ export default class History extends React.Component {
                 <span>{time}</span>
                 <span>{status}</span>
             </div>
-            <div>
+            <div className="action__history">
                 <span className="amount__history">{amount}</span>
-                <span className="icon-arrow-right"/>
+                <span className="icon-new-window"/>
             </div>
         </div>))
     }

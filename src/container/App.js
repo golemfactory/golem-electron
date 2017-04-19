@@ -22,7 +22,7 @@ import * as Actions from '../actions'
  */
 const routes = (
 <Route component={ App } >
-    <Route path="/" component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]} />
+    <Route path="/" component={MainFragment} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
     <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
     <Route path="/preview" component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]} />
     <Route path="/task" component={ TaskDetail } >
