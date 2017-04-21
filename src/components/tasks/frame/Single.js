@@ -1,4 +1,8 @@
 import React from 'react';
+import { browserHistory } from 'react-router'
+
+import ControlPanel from './ControlPanel'
+import OpenSeaDragon from './ImageZoom'
 
 const path = [
     [
@@ -6,39 +10,39 @@ const path = [
         [1, 149],
         [99, 149],
         [99, 74],
-        [494, 74],
-        [494, 1],
+        [751, 74],
+        [751, 1],
         [1, 1]
     ],
     [
         [1, 151],
-        [1, 199],
-        [494, 199],
-        [494, 76],
+        [1, 299],
+        [751, 299],
+        [751, 76],
         [101, 76],
         [101, 151],
         [1, 151]
     ],
     [
-        [1, 201],
-        [1, 257],
-        [199, 257],
-        [199, 201],
-        [1, 201]
+        [1, 301],
+        [1, 390],
+        [199, 390],
+        [199, 301],
+        [1, 301]
     ],
     [
-        [201, 201],
-        [201, 257],
-        [399, 257],
-        [399, 201],
-        [201, 201]
+        [201, 301],
+        [201, 390],
+        [399, 390],
+        [399, 301],
+        [201, 301]
     ],
     [
-        [401, 201],
-        [401, 257],
-        [494, 257],
-        [494, 201],
-        [401, 201]
+        [401, 301],
+        [401, 390],
+        [751, 390],
+        [751, 301],
+        [401, 301]
     ]
 ]
 
@@ -61,9 +65,10 @@ export default class Single extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false
+            isSubtaskShown: false
         }
         this.updateDimensions = ::this.updateDimensions
+        this._showSubtask = ::this._showSubtask
     }
 
     /**
@@ -87,12 +92,13 @@ export default class Single extends React.Component {
     }
 
     componentDidMount() {
-        /*this.path = this.props.path || path
-        this.path.forEach((item, index) => {
-            if (index === 0)
-                this.draw(item, true)
-            this.draw(item)
-        })*/
+        console.log(this.props.id)
+        // this.path = this.props.path || path
+        // this.path.forEach((item, index) => {
+        //     if (index === 0)
+        //         this.draw(item, true)
+        //     this.draw(item)
+        // })
         window.addEventListener("resize", this.updateDimensions);
         this.updateDimensions()
     }
@@ -136,30 +142,32 @@ export default class Single extends React.Component {
      * @param  {Object}   event   { mouse event }
      */
     overCanvas(event) {
-        let ratioX = event.currentTarget.offsetWidth / event.currentTarget.width
-        let ratioY = event.currentTarget.offsetHeight / event.currentTarget.height
-        let selectedIndex = this.pointIn([(event.nativeEvent.offsetX) / ratioX, (event.nativeEvent.offsetY) / ratioY], this.path)
+        if (this.state.isSubtaskShown) {
+            let ratioX = event.currentTarget.offsetWidth / event.currentTarget.width
+            let ratioY = event.currentTarget.offsetHeight / event.currentTarget.height
+            let selectedIndex = this.pointIn([(event.nativeEvent.offsetX) / ratioX, (event.nativeEvent.offsetY) / ratioY], this.path)
 
-        if (selectedIndex > -1 && tmpIndex != selectedIndex) {
-            tmpIndex = selectedIndex
-            this.path.forEach((item, index) => {
-                if (index === 0) {
-                    this.draw(item, true)
-                }
-                if (index === selectedIndex) {
-                    this.draw(item, !index ? true : false, "red")
-                } else {
+            if (selectedIndex > -1 && tmpIndex != selectedIndex) {
+                tmpIndex = selectedIndex
+                this.path.forEach((item, index) => {
+                    if (index === 0) {
+                        this.draw(item, true)
+                    }
+                    if (index === selectedIndex) {
+                        this.draw(item, !index ? true : false, "red")
+                    } else {
+                        this.draw(item)
+                    }
+                })
+            }
+            if (selectedIndex < 0) {
+                tmpIndex = selectedIndex
+                this.path.forEach((item, index) => {
+                    if (index === 0)
+                        this.draw(item, true)
                     this.draw(item)
-                }
-            })
-        }
-        if (selectedIndex < 0) {
-            tmpIndex = selectedIndex
-            this.path.forEach((item, index) => {
-                if (index === 0)
-                    this.draw(item, true)
-                this.draw(item)
-            })
+                })
+            }
         }
     }
 
@@ -196,28 +204,49 @@ export default class Single extends React.Component {
         return inside.indexOf(true);
     }
 
+    /**
+     * [_showSubtask func. will draw canvas paths over the image to show subtask of render.]
+     * @return  nothing
+     */
     _showSubtask() {
-        const {show} = this.state
         this.setState({
-            show: !show
+            isSubtaskShown: !this.state.isSubtaskShown
+        }, () => {
+            if (this.state.isSubtaskShown) {
+                console.log('drawing!')
+                this.path = this.props.path || path
+                this.path.forEach((item, index) => {
+                    if (index === 0)
+                        this.draw(item, true)
+                    this.draw(item)
+                })
+            } else {
+                this.canvasContext.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
         })
 
-        if (show) {
+    }
 
-        }
+    /**
+     * [_handleClose function for close single frame componenet]
+     * @return nothing
+     */
+    _handleClose() {
+        browserHistory.push('/preview/complete')
     }
 
     render() {
-        const {show} = this.state
-        const {preview, actions} = this.props
+        const {isSubtaskShown} = this.state
+        const {id, preview, actions} = this.props
         return (
             <div className="section__frame">
-            <span className="button__subtask" onClick={::this._showSubtask}><span className="icon-cross"/></span>
-            <div className="section__image" ref="containerImage">
-                <img src="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" draggable="false"/>
-                {show && <canvas id="frameCanvas" ref="frameCanvas" width="495" height="258" onMouseMove={::this.overCanvas}></canvas>}
+                <span className="button__subtask" onClick={::this._handleClose}><span className="icon-cross"/></span>
+                <div className="section__image" ref="containerImage">
+                    <OpenSeaDragon image="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" />
+                    {isSubtaskShown && <canvas id="frameCanvas" ref="frameCanvas" width="752" height="392" onMouseMove={::this.overCanvas}></canvas>}
+                </div>
+                <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
             </div>
-        </div>
         );
     }
 }

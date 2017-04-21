@@ -21,7 +21,7 @@ export default class Header extends Component {
     componentDidMount() {
         const index = location.pathname === "/" ? 1 : 2 // <-- HARDCODED
         let navItems = document.getElementsByClassName('nav__item')
-        navItems[index].classList.add('active')
+        navItems > 0 && navItems[index].classList.add('active')
     }
 
     /**
@@ -72,7 +72,23 @@ export default class Header extends Component {
         win.isMaximized() ? win.unmaximize() : win.maximize()
     }
 
+
+    /**
+     * [_handleTab to change active class of selected tab title]
+     * 
+     * @param   {Object}     elm     [target element]
+     */
+    _handleMenu(to, elm) {
+        let menuItems = document.getElementsByClassName('menu__item')
+        for (var i = 0; i < menuItems.length; i++) {
+            menuItems[i].classList.remove('active')
+        }
+        elm.currentTarget.classList.add('active')
+        browserHistory.push(`/preview/${to}`);
+    }
+
     render() {
+        const {activeHeader} = this.props
         return (
             <header className="header">
              <div className="top-titlebar">
@@ -84,18 +100,19 @@ export default class Header extends Component {
                     <span className="icon-close"/>
                 </div>
              </div>
-              <nav className="nav">
+            <nav className="nav">
                 <ul className="nav__list">
                     <li className="nav__item traffic-light">
                         <div className="close" onClick={::this._onClose}></div>
                         <div className="minimize" onClick={::this._onMinimize}></div>
                         <div className="maximize" onClick={::this._onMaximize} disabled={true}></div>
                     </li>
-                    <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)}>Network</li>
-                    <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)}>Tasks</li>
-                    <span className="selector"></span>
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)}>Network</li>}
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)}>Tasks</li>}
+                    {activeHeader === 'main' && <span className="selector"></span>}
                 </ul>
-                <ul className="menu">
+                {activeHeader === 'main' &&
+            <ul className="menu">
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }}>
@@ -112,7 +129,24 @@ export default class Header extends Component {
                         <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings', false)}><span className="icon-settings"/></li>
                     </ReactTooltip>
                 </ul>
+            }
+            {activeHeader === 'secondary' &&
+            <div className="header__frame">
+                    <div className="title">
+                        <span>HMD Model Bake 3.5</span>
+                    </div>
+                    <div className="info">
+                        <span className="time">1:21:15 Remaining</span>
+                        <span className="amount__frame">250 Frames</span>
+                    </div>
+                    <div className="menu">
+                        <span className="menu__item active" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>
+                        <span className="menu__item" onClick={this._handleMenu.bind(this, 'all')}>All</span>
+                    </div>
+                </div>
+            }
             </nav>
+            
             </header>
         );
     }

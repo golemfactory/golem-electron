@@ -1,0 +1,47 @@
+.container__control-panel {
+    position: absolute;
+    width: 308px;
+    height: 40px;
+    bottom: 40px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 99999;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: #000;
+    opacity: 0.8;
+    border-radius: 4px;
+    color: $color-text4;
+    font-size: 10pt;
+    span {
+        cursor: pointer;
+    }
+    .icon {
+        &-arrow {
+            &-left-white,
+            &-right-white {
+                font-size: 22pt;
+            }
+            &-left-white {
+                margin-right: -15px;
+            }
+            &-right-white {
+                margin-left: -15px;
+            }
+        }
+        &-zoom {
+            &-out {
+                font-size: 9pt;
+                margin-right: -10px;
+            }
+            &-in {
+                font-size: 9pt;
+                margin-left: -10px;
+            }
+        }
+    }
+}

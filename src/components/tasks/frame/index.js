@@ -27,9 +27,7 @@ export class Frame extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            activeMenu: 0
-        }
+
     }
 
     componentDidMount() {
@@ -43,44 +41,22 @@ export class Frame extends React.Component {
         }
 
         actions.startLoading("FRAME_LOADER", "I am loading!")
-        setTimeout(endLoading, 8000)
+        setTimeout(endLoading, 5000)
     }
 
     /**
-     * [_handleTab to change active class of selected tab title]
-     * 
-     * @param   {Object}     elm     [target element]
+     * @description second windows screens changing based on react-route
+     * Template:        {url}/preview/{type}/{id}   ( {id} necessary for SingleFrame )
+     * SingleFrame:     {url}/preview/single/{id}
+     * AllFrame:        {url}/preview/all
+     * CompleteFrame:   {url}/preview/complete
      */
-    _handleMenu(elm) {
-        let menuItems = document.getElementsByClassName('menu__item')
-        for (var i = 0; i < menuItems.length; i++) {
-            menuItems[i].classList.remove('active')
-        }
-        elm.currentTarget.classList.add('active')
-        this.setState({
-            activeMenu: elm.target.getAttribute('value')
-        })
-    }
-
 
     render() {
-        const {activeMenu} = this.state
+        const {type, id} = this.props.params
         return (
             <div className="container__frame">
-                <div className="header__frame">
-                    <div className="title">
-                        <span>HMD Model Bake 3.5</span>
-                    </div>
-                    <div className="info">
-                        <span className="time">1:21:15 Remaining</span>
-                        <span className="amount__frame">250 Frames</span>
-                    </div>
-                    <div className="menu">
-                        <span className="menu__item active" onClick={::this._handleMenu} value="0">Complete</span>
-                        <span className="menu__item" onClick={::this._handleMenu} value="1">All</span>
-                    </div>
-                </div>
-                <AllFrame show={activeMenu}/>
+                {type !== 'single' ? <AllFrame show={type}/> : <SingleFrame id={id}/>}
             </div>
         )
     }

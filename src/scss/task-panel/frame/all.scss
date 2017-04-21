@@ -5,14 +5,17 @@
     justify-content: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
+    padding: 15px 16px 0 16px;
+    box-sizing: border-box;
 }
 
 .item__all-frame {
     display: block;
     position: relative;
     margin-top: 10px;
-    width: 72.5px;
+    width: 71.6px;
     height: 32px;
+    box-sizing: border-box;
     div {
         position: absolute;
         top: 0;

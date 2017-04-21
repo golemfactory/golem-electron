@@ -1,0 +1,45 @@
+.section {
+    &__frame {
+        .button__subtask {
+            position: absolute;
+            text-align: center;
+            color: $color-text2;
+            top: 70px;
+            right: 24px;
+            z-index: 999;
+            font-size: 20pt;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+    }
+    &__image {
+        background: $color-input;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        position: relative;
+        img {
+            max-height: 100%;
+            max-width: 100%;
+            width: auto;
+            height: auto;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+        }
+        #frameCanvas {
+            width: 752px !important;
+            height: 392px !important;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            margin: auto;
+            cursor: crosshair;
+        }
+    }
+}

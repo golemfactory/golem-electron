@@ -123,6 +123,77 @@
     }
 }
 
+.header__frame {
+    background: $color-bg2;
+    height: 50px;
+    width: 100%;
+    margin-left: 30px;
+    line-height: 50px;
+    box-sizing: border-box;
+    font-weight: 400;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    span {
+        flex-grow: 1;
+        flex-basis: auto;
+        padding: 0 5px 10pt;
+        box-sizing: border-box;
+        -webkit-transition: all 0.4s ease;
+        -moz-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+        font-size: 10pt !important;
+        &:active,
+        &:hover {
+            outline: 0;
+        }
+        & + span {
+            display: inline-block;
+            line-height: 8pt;
+            height: 11px;
+            border-left: 1px solid #fff;
+        }
+    }
+    .title,
+    .info,
+    .menu {
+        padding: 0;
+    }
+    .info {
+        .time,
+        .amount__frame {
+            color: $color-text2;
+            & + .amount__frame:before {
+                content: '|';
+                color: $color-text2;
+                padding-right: 10px;
+                margin-left: 0 !important;
+            }
+        }
+    }
+    .menu {
+        &__item {
+            cursor: pointer;
+            color: $color-text2;
+            margin: 0 !important;
+            &:hover {
+                color: $color-text;
+            }
+            & + .menu__item:before {
+                content: '|';
+                color: $color-text2;
+                padding-right: 10px;
+            }
+        }
+    }
+    .active {
+        color: $color-text;
+    }
+}
+
 
 /*                 OS DIFFERENCES
 ================================================== */

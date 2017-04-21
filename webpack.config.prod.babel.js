@@ -5,17 +5,27 @@ var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlug
 
 module.exports = {
     //devtool: 'cheap-module-eval-source-map',
-    entry: [
-        'babel-polyfill',
-        './src/main'
-    ],
+    entry: {
+        main: [
+            'babel-polyfill',
+            './src/main'
+        ],
+        frame: [
+            'babel-polyfill',
+            './src/main.frame'
+        ],
+        doc: [
+            'babel-polyfill',
+            './src/main.doc'
+        ]
+    },
     node: {
         fs: 'empty',
         tls: 'empty'
     },
     output: {
         path: path.join(__dirname, 'dist'),
-        filename: 'bundle.js',
+        filename: '[name].bundle.js',
         publicPath: '/dist/'
     },
     plugins: [

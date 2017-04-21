@@ -17,8 +17,8 @@ function isDevelopment() {
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
 const APP_WIDTH = 460
 const APP_HEIGHT = 520
-const PREVIEW_APP_WIDTH = 776
-const PREVIEW_APP_HEIGHT = 600
+const PREVIEW_APP_WIDTH = 752
+const PREVIEW_APP_HEIGHT = 572
 
 let win
 let previewWindow
@@ -107,6 +107,10 @@ function createWindow() {
             }, 40);
         });
     */
+    win.webContents.on('will-navigate', (event, url) => {
+        event.preventDefault()
+    })
+
     win.once('ready-to-show', () => {
         win.show()
     })
@@ -178,7 +182,7 @@ function createPreviewWindow() {
     })
 
     if (isDevelopment()) {
-        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3002}/preview`)
+        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview/complete`)
     } else {
         previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview`)
     //win.loadURL(`file://${__dirname}/index.html`)
