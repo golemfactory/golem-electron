@@ -2,12 +2,12 @@ import React from 'react';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 
 import * as Actions from './../actions'
-/**
- * { Re-usable DropZone component }
- * @doc: http://codepen.io/jzmmm/pen/bZjzxN?editors=0011 
- */
+
+
+const ADD_TASK_NEXT_STEP = '/add-task/type'
 
 const mapStateToProps = state => ({
 })
@@ -16,6 +16,10 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+/**
+ * { Re-usable DropZone component }
+ * @doc: http://codepen.io/jzmmm/pen/bZjzxN?editors=0011 
+ */
 export class DropZone extends React.Component {
     constructor() {
         super();
@@ -111,6 +115,8 @@ export class DropZone extends React.Component {
         this.setState({
             className: 'drop-zone--hide'
         });
+
+        browserHistory.push(ADD_TASK_NEXT_STEP)
         return false;
     }
 

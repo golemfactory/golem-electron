@@ -1,13 +1,50 @@
 import React from 'react';
 import RadialProgress from './../../RadialProgress'
 
+const mockSystemConfig = {
+    cpu: 8,
+    ram: 32768,
+    disk: 2048
+}
+
 export default class Advanced extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            cpu: 0,
+            ram: 0,
+            disk: 0
+        }
+    }
+
+    componentDidMount() {
+        /*MOCK VALUES*/
+        this._handleChange('cpu', {
+            target: {
+                value: 8
+            }
+        })
+        this._handleChange('ram', {
+            target: {
+                value: 25000
+            }
+        })
+        this._handleChange('disk', {
+            target: {
+                value: 1024
+            }
+        })
+    }
+
+    _handleChange(key, evt) {
+        this.setState({
+            [key]: evt.target.value
+        })
     }
 
     render() {
+        const {cpu, ram, disk} = this.state
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
@@ -20,16 +57,16 @@ export default class Advanced extends React.Component {
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
-                <RadialProgress/>
-                <input type="number" min="0"/>
+                <RadialProgress pct={cpu} title="CPU" max={mockSystemConfig.cpu}/>
+                <input type="number" min="0" step="1" max={mockSystemConfig.cpu} onChange={this._handleChange.bind(this, 'cpu')} defaultValue={8}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress/>
-                <input type="number" min="0"/>
+                <RadialProgress pct={ram} title="RAM" max={mockSystemConfig.ram}/>
+                <input type="number" min="0" step="128" max={mockSystemConfig.ram} onChange={this._handleChange.bind(this, 'ram')} defaultValue={25000}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress/>
-                <input type="number" min="0"/>
+                <RadialProgress pct={disk} title="Disk" max={mockSystemConfig.disk}/>
+                <input type="number" min="0" step="1" max={mockSystemConfig.disk} onChange={this._handleChange.bind(this, 'disk')} defaultValue={1024}/>
               </div>
             </div>
             <div className="advanced__tips">

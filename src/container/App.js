@@ -4,6 +4,7 @@ import Header from '../components/Header'
 import MainFragment from '../components/network'
 import Tasks from '../components/tasks'
 import Frame from '../components/tasks/frame'
+import NewTask from '../components/tasks/NewTask'
 import TaskDetail from '../components/tasks/TaskDetail'
 import Settings from '../components/settings'
 import NotFound from '../components/NotFound'
@@ -26,6 +27,8 @@ const routes = (
     <Route path="/task" component={ TaskDetail } >
         <Route path="/task/:id" component={ TaskDetail } />
     </Route>
+    <Route path="/add-task/type" component={ NewTask } />
+    <Route path="/add-task/settings" component={ TaskDetail } />
     <Route path="/settings" component={ Settings } />
     <Route path="*" component={ NotFound } status={404} />
 </Route>

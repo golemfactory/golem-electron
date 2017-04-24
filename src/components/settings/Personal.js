@@ -13,7 +13,7 @@ export default class Personal extends React.Component {
             <div className="section__personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
-                        <RadialProgress/>
+                        <RadialProgress pct={16}/>
                         <span>Requestor</span>
                         <p/><span className="icon-question-mark"/>
                     </div>
@@ -21,7 +21,7 @@ export default class Personal extends React.Component {
                         <img className="image__personal" src={Avatar}/>
                     </div>
                     <div className="indicator__personal">
-                        <RadialProgress/>
+                        <RadialProgress pct={30}/>
                         <span>Provider</span>
                     </div>
                 </div>

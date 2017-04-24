@@ -288,8 +288,10 @@ input[type=number]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .content__new-task,
     .content__task-detail,
-    .content__settings {
+    .content__settings,
+    {
         padding-top: $header-height-windows;
     }
     .content__resources,
@@ -300,6 +302,10 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__new-task label,
+    .content__new-task input,
+    .container-radio__new-task,
+    .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .title-price__task-detail,
@@ -313,6 +319,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .content__new-task,
     .content__task-detail,
     .content__settings {
         padding-top: $header-height;
@@ -325,6 +332,10 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__new-task label,
+    .content__new-task input,
+    .container-radio__new-task,
+    .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .title-price__task-detail,
@@ -338,7 +349,8 @@ input[type=number]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
-    .section__frame .content__task-detail,
+    .content__new-task,
+    .content__task-detail,
     .content__settings,
     .content__trust,
     {
@@ -352,6 +364,10 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__new-task label,
+    .content__new-task input,
+    .container-radio__new-task,
+    .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .title-price__task-detail,
