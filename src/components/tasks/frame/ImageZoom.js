@@ -1,5 +1,12 @@
 import React from 'react';
+/**
+ * @see http://openseadragon.github.io/docs/ 
+ */
 import OpenSeaDragon from 'openseadragon';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+
+import * as Actions from '../../../actions'
 
 
 //carrying viewer information to other components
@@ -27,7 +34,15 @@ let loadImage = (src) => new Promise(function(resolve, reject) {
     img.src = src;
 });
 
-export default class ImageZoom extends React.Component {
+const mapStateToProps = state => ({
+    zoomRatio: state.input.zoomRatio
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class ImageZoom extends React.Component {
     constructor(props) {
         super(props);
     }
@@ -78,13 +93,37 @@ export default class ImageZoom extends React.Component {
                 }
             })
 
+            viewer.addHandler('zoom', (item) => {
+                this.calculateZoomRatio.call(this, item.zoom)
+            })
+
         });
+
+
+    }
+
+
+    calculateZoomRatio(zoom) {
+        const {x, y} = viewer.viewport.getContainerSize()
+        const {width, height} = imageInfo
+        let ratio = 0
+
+        if (width > x) {
+            ratio = (x / width) * 100
+        } else if (height > y) {
+            ratio = (y / height) * 100
+        } else {
+            ratio = (x / width) * 100
+        }
+
+        this.props.actions.setZoomRatio(ratio * zoom)
+
     }
 
     render() {
         let {id} = this.props
         return (
-            <div className="ocd-div" ref={node => {
+            <div className="ocd-div" id="ocdDiv" ref={node => {
                 this.el = node;
             }}>
                 <div className="openseadragon" id={id}></div>
@@ -92,6 +131,8 @@ export default class ImageZoom extends React.Component {
         )
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImageZoom)
 
 ImageZoom.defaultProps = {
     id: 'ocd-viewer',

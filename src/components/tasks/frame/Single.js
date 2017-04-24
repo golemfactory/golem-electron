@@ -2,7 +2,7 @@ import React from 'react';
 import { browserHistory } from 'react-router'
 
 import ControlPanel from './ControlPanel'
-import OpenSeaDragon from './ImageZoom'
+import ImageZoom from './ImageZoom'
 
 const path = [
     [
@@ -45,6 +45,7 @@ const path = [
         [401, 301]
     ]
 ]
+const CLOSE_BTN_PATH = '/preview/complete';
 
 let tmpIndex = 0
 
@@ -232,7 +233,7 @@ export default class Single extends React.Component {
      * @return nothing
      */
     _handleClose() {
-        browserHistory.push('/preview/complete')
+        browserHistory.push(CLOSE_BTN_PATH)
     }
 
     render() {
@@ -242,7 +243,7 @@ export default class Single extends React.Component {
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose}><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    <OpenSeaDragon image="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" />
+                    <ImageZoom image="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" />
                     {isSubtaskShown && <canvas id="frameCanvas" ref="frameCanvas" width="752" height="392" onMouseMove={::this.overCanvas}></canvas>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>

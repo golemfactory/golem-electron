@@ -149,7 +149,7 @@ export default class All extends React.Component {
                 align={{
                     offset: [0, 10],
                 }}>
-                    <div className={`${status[item.status]}`} onClick={this._handleClick.bind(this, item, index)}></div>
+                    <div className={`${status[item.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, item, index)}></div>
                 </ReactTooltip>
             </div>)
     }

@@ -1,4 +1,4 @@
-export const dict = {
+export let dict = Object.freeze({
     START_LOADING: 'START_LOADING',
     END_LOADING: 'END_LOADING',
     LOGIN: 'LOGIN',
@@ -9,10 +9,11 @@ export const dict = {
     SET_PREVIEW: 'SET_PREVIEW',
     SET_PREVIEW_EXPANDED: 'SET_PREVIEW_EXPANDED',
     SET_CURRENCY: 'SET_CURRENCY',
-    UPLOAD: 'UPLOAD'
-}
+    UPLOAD: 'UPLOAD',
+    SET_ZOOM_RATIO: 'SET_ZOOM_RATIO'
+})
 
-const {START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_MESSAGE, SET_AUTOLAUNCH, SET_BLENDER, SET_PREVIEW, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD} = dict
+const {START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_MESSAGE, SET_AUTOLAUNCH, SET_BLENDER, SET_PREVIEW, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO} = dict
 
 export const startLoading = (id, text) => ({
     type: START_LOADING,
@@ -66,5 +67,10 @@ export const setCurrency = (payload) => ({
 
 export const uploadFile = (payload) => ({
     type: UPLOAD,
+    payload
+})
+
+export const setZoomRatio = (payload) => ({
+    type: SET_ZOOM_RATIO,
     payload
 })

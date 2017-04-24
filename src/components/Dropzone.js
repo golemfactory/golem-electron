@@ -96,7 +96,7 @@ export class DropZone extends React.Component {
     _onDrop(e) {
         e.preventDefault();
         let files = e.dataTransfer.items;
-        console.log('Files dropped: ', files);
+        console.log('Files dropped: ', files.length);
         // Upload files
         // actions.uploadFile(files)
 
@@ -136,11 +136,29 @@ export class DropZone extends React.Component {
         } else if (item.isDirectory) {
             // Get folder contents
             var dirReader = item.createReader();
-            dirReader.readEntries((entries) => {
+            let done = false;
+            /**
+             * [readFiles funct. reads files from dragged folder]
+             * @param  {[Object]}   dirReader   [File Reader form directory]
+             * @param  {[Array]}    (entries    [File Array]
+             * @return nothing
+             *
+             * @see https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
+             * @see http://stackoverflow.com/a/23823587/1763249 
+             *
+             * @description readEntries file read limit is 100 item, so we're calling same function till array length is 0
+             */
+            let readFiles = dirReader.readEntries.bind(dirReader, (entries) => {
+
+                console.log('Entries length: ', entries.length)
                 for (var i = 0; i < entries.length; i++) {
-                    this.traverseFileTree(entries[i], path + item.name + "/");
+                    this.traverseFileTree(entries[i], path + item.name + "/")
                 }
-            });
+                if (entries.length > 0) {
+                    readFiles(); // TODO we need to add a file length limit here cuz right now users can drag infinitve numbers of files.
+                }
+            })
+            readFiles();
         }
     }
 
