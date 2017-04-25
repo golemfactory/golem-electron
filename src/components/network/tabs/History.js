@@ -53,7 +53,8 @@ export default class History extends React.Component {
     render() {
         return (
             <div className="content__history">
-                {this.loadHistory()}
+                {mockHistory.length > 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any income or payment history yet.
+                    Start Golem below to generate some.</span></div>}
             </div>
         );
     }

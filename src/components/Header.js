@@ -100,33 +100,33 @@ export default class Header extends Component {
                     <span className="icon-close"/>
                 </div>
              </div>
-            <nav className="nav">
-                <ul className="nav__list">
+            <nav className="nav" role="menubar">
+                <ul className="nav__list" role="menu">
                     <li className="nav__item traffic-light">
-                        <div className="close" onClick={::this._onClose}></div>
-                        <div className="minimize" onClick={::this._onMinimize}></div>
-                        <div className="maximize" onClick={::this._onMaximize} disabled={true}></div>
+                        <div className="close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Close"></div>
+                        <div className="minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Minimize"></div>
+                        <div className="maximize" onClick={::this._onMaximize} disabled={true} role="menuitem" tabIndex="0" aria-label="Maximize"></div>
                     </li>
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)}>Network</li>}
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)}>Tasks</li>}
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
                     {activeHeader === 'main' && <span className="selector"></span>}
                 </ul>
                 {activeHeader === 'main' &&
-            <ul className="menu">
+            <ul className="menu" role="menu">
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }}>
-                        <li className="menu__item"><span className="icon-add"/></li>
+                        <li className="menu__item"><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </ReactTooltip>
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }}>
-                        <li className="menu__item"><span className="icon-doc"/></li>
+                        <li className="menu__item"><span className="icon-doc" role="menuitem" tabIndex="0" aria-label="Documentation"/></li>
                     </ReactTooltip>
                     <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }}>
-                        <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings', false)}><span className="icon-settings"/></li>
+                        <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings', false)} role="menuitem" tabIndex="0" aria-label="Settings"><span className="icon-settings"/></li>
                     </ReactTooltip>
                 </ul>
             }
@@ -139,9 +139,9 @@ export default class Header extends Component {
                         <span className="time">1:21:15 Remaining</span>
                         <span className="amount__frame">250 Frames</span>
                     </div>
-                    <div className="menu">
-                        <span className="menu__item active" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>
-                        <span className="menu__item" onClick={this._handleMenu.bind(this, 'all')}>All</span>
+                    <div className="menu" role="menu">
+                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>
+                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')}>All</span>
                     </div>
                 </div>
             }

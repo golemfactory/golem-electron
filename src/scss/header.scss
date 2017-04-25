@@ -198,7 +198,7 @@
 /*                 OS DIFFERENCES
 ================================================== */
 
-.windows .header {
+.win .header {
     height: $header-height-windows;
     @include header($padding-windows, 0, 87px);
     .top-titlebar {
@@ -210,7 +210,7 @@
         color: #000;
         font-weight: 400;
         font-size: 9pt;
-        border-bottom: 1px solid $color-text;
+        border-bottom: 1px solid $color-border;
         box-sizing: border-box;
         .os__menu {
             span {

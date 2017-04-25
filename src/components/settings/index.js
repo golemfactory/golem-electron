@@ -62,9 +62,9 @@ export default class index extends React.Component {
         return data.map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion">
                             <span>{item.title}</span>
-                            <span className="icon-arrow-down" onClick={::this._handleTab}/>
+                            <span className="icon-arrow-down" onClick={::this._handleTab} role="tab" tabIndex="0" aria-label="Expand Tab"/>
                         </div>
-                        <div className="item-content__accordion">
+                        <div className="item-content__accordion" role="tabpanel">
                         {this.state.activeContent === index && item.content}
                         </div>
                     </div>)

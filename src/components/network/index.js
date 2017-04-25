@@ -1,4 +1,10 @@
 import React from 'react'
+/**
+ * react-a11y is an Accessibility control tool
+ * @see https://github.com/reactjs/react-a11y
+ * @see https://www.w3.org/TR/wai-aria/
+ */
+import a11y from 'react-a11y'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
@@ -14,6 +20,8 @@ import Advanced from './tabs/Advanced'
 } else {
     const electron = window.require('electron')
 }*/
+
+//a11y(React)
 
 const mapStateToProps = state => ({
     message: state.realTime.message,
@@ -113,15 +121,15 @@ export class MainFragment extends React.Component {
                     <Indicator {...this.props}/>
                 </div>
             <div className="section__quick-settings">
-            <div className="tab-panel">
-                <div className="tab__title active" value='0' onClick={::this._handleTab}>Resources</div>
-                <div className="tab__title" value='1' onClick={::this._handleTab}>History</div>
-                <div className="tab__title" value='2' onClick={::this._handleTab}>Advanced</div>
+            <div className="tab-panel" role="tablist">
+                <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
+                <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
+                <div className="tab__title" value='2' onClick={::this._handleTab} role="tab" tabIndex="0">Advanced</div>
             </div>
                 <div className="tab__content">
-                    {activeTab == 0 && <Resources/>}
-                    {activeTab == 1 && <History/>}
-                    {activeTab == 2 && <Advanced/>}
+                    {activeTab == 0 && <Resources role="tabpanel"/>}
+                    {activeTab == 1 && <History role="tabpanel"/>}
+                    {activeTab == 2 && <Advanced role="tabpanel"/>}
                 </div>
             </div>
             <div className="section__actions">

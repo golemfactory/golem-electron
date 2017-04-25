@@ -58,3 +58,15 @@
         }
     }
 }
+
+.empty-list__history {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 70px;
+    color: $color-text2;
+    font-size: 10pt;
+    box-sizing: border-box;
+}

@@ -66,7 +66,10 @@ body {
 
 a,
 button,
-input h1,
+div,
+input,
+li,
+h1,
 h2,
 h3,
 h4,
@@ -284,7 +287,7 @@ input[type=number]::-webkit-inner-spin-button {
     padding: 0 $padding;
 }
 
-.windows {
+.win {
     .content__main,
     .content__task-panel,
     .container__frame,

@@ -32,7 +32,7 @@ export default class Footer extends Component {
               </div>
               <div className="switch-box">
                 <label className="switch">
-                      <input ref="previewSwitch" type="checkbox" onChange={::this._handlePreviewSwitch} defaultChecked={preview}/>
+                      <input ref="previewSwitch" type="checkbox" onChange={::this._handlePreviewSwitch} defaultChecked={preview} aria-label="Show previews"/>
                       <div className="switch-slider round"></div>
                 </label>
                 <span className="switch__desc">Preview</span>

@@ -25,9 +25,11 @@ export default class Preview extends React.Component {
                 <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }}>
-                    <span className="button__expand icon-new-window" onClick={::this._handleExpand}></span>
+                    <span className="button__expand icon-new-window" onClick={::this._handleExpand} onKeyDown={(event) => {
+                event.keyCode === 13 && this._handleExpand.call(this)
+            }} role="button" aria-label="Open Detailed Preview Window" tabIndex="0"></span>
                 </ReactTooltip>
-                <img src="http://golem.network/img/golem.png"/>
+                <img src="http://golem.network/img/golem.png" alt="Task Preview"/>
             </div>
         );
     }

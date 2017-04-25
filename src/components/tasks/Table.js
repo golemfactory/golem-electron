@@ -61,11 +61,11 @@ export class Table extends React.Component {
                     stiffness: 50,
                     damping: 7
                 })
-            }}>
+            }} role="listItem" tabIndex="-1">
             {value => <div className="wrapper-task-item"><div className="task-item" style={{
                     background: item.progress < 100 ? `linear-gradient(90deg, #E3F3FF ${value.progress}%, transparent ${value.progress}%)` : 'transparent'
                 }}>
-                <div className="info__task-item" onClick = { e => this._handleRowClick(e, item, index)} >
+                <div className="info__task-item" onClick = { e => this._handleRowClick(e, item, index)} tabIndex="0" aria-label="Task Preview">
                     <div>
                         <span className="task-icon icon-blender">
                             <span className="path1"></span>
@@ -82,9 +82,9 @@ export class Table extends React.Component {
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
                 }} transitionName="rc-tooltip-zoom">
-                        <span className="icon-trash"></span>
+                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup"></span>
                     </ReactTooltip>
-                    <Link to={`/task/${item.id}`}><span className="icon-arrow-right"></span></Link>
+                    <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>
                 </div>
             </div></div>}
             </Motion>
@@ -99,7 +99,7 @@ export class Table extends React.Component {
         const {blender_data} = this.props
 
         return (
-            <div>
+            <div role="list">
                 {blender_data && this.listTasks(blender_data)}
             </div>
         );

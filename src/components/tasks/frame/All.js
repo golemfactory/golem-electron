@@ -149,7 +149,9 @@ export default class All extends React.Component {
                 align={{
                     offset: [0, 10],
                 }}>
-                    <div className={`${status[item.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, item, index)}></div>
+                    <div className={`${status[item.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, item, index)} onKeyDown={(event) => {
+                    event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, item, index))
+                }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
             </div>)
     }

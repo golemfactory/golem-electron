@@ -1,5 +1,6 @@
 import React from 'react';
 
+const DEFAULT = "#9b9b9b"
 const TRUST = "#37C481"
 const WARN = "#FEC62E"
 const DANGER = "#F65A23"
@@ -24,7 +25,7 @@ export default class Slider extends React.Component {
         let min = slider.getAttribute('min')
         let max = slider.getAttribute('max')
         var value = (val - min) / (max - min);
-        let color = val < 75 ? TRUST : (val >= 75 && val < 90) ? WARN : DANGER
+        let color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER)
         slider.style.background = color;
         slider.style.backgroundImage = [
             '-webkit-gradient(',
@@ -50,7 +51,7 @@ export default class Slider extends React.Component {
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={value} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower}/>
+                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={value} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource"/>
                     <span className="slider-indicator__resources" id="resourceSlider__indicator"/>
                     <span className={iconRight}/>
         </div>

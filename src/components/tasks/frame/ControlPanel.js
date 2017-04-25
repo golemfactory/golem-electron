@@ -25,13 +25,13 @@ export class ControlPanel extends React.Component {
         const {showSubtask, imgIndex, zoomRatio} = this.props
         return (
             <div className="container__control-panel">
-                <span className="icon-arrow-left-white"/>
+                <span className="icon-arrow-left-white" role="button" aria-label="Previous Frame" tabIndex="0"/>
                 <span>{parseInt(imgIndex) + 1} of 250</span>
-                <span className="icon-arrow-right-white"/>
-                <span className="icon-zoom-out" id="zoom-out"/>
+                <span className="icon-arrow-right-white" role="button" aria-label="Next Frame" tabIndex="0"/>
+                <span className="icon-zoom-out" id="zoom-out" role="button" aria-label="Zoom out" tabIndex="0"/>
                 <span id="reset">{zoomRatio && zoomRatio.toFixed(2)}%</span>
-                <span className="icon-zoom-in" id="zoom-in"/>
-                <span className="icon-show-subtasks" onClick={showSubtask}/>
+                <span className="icon-zoom-in" id="zoom-in" role="button" aria-label="Zoom In" tabIndex="0"/>
+                <span className="icon-show-subtasks" onClick={showSubtask} role="button" aria-label="Show SubTask" tabIndex="0"/>
             </div>
         );
     }

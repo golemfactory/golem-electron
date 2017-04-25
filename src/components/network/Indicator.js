@@ -80,10 +80,10 @@ export default class indicator extends React.Component {
                     {({messageAnimated}) => <span className="amount">{(messageAnimated * currencyRate).toFixed(2)}</span>}
                 </Motion>
                 <br/>
-                <ul>
-                    <li className="amont__item active" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</li>
-                    <li className="amont__item" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</li>
-                    <li className="amont__item" onClick={this._convertTo.bind(this, dictCurrency.USD)}>USD</li>
+                <ul role="menu">
+                    <li className="amont__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</li>
+                    <li className="amont__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</li>
+                    <li className="amont__item" role="menuitemradio" tabIndex="0" aria-label="USD" onClick={this._convertTo.bind(this, dictCurrency.USD)}>USD</li>
                 </ul>
             </div>
         );

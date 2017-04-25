@@ -12,7 +12,7 @@ export default class TaskDetail extends React.Component {
             <div className="content__task-detail">
                 <section className="section-preview__task-detail">
                     <div className="panel-preview__task-detail">
-                        <Link to="/tasks">
+                        <Link to="/tasks" aria-label="Back button to task list">
                             <div>
                                 <span className="icon-arrow-left-white"/>
                                 <span>Back</span>
@@ -27,32 +27,32 @@ export default class TaskDetail extends React.Component {
                             <div className="item-settings">
                                 <span className="title">Preset</span>
                                 <div className="select">
-                                    <select >
-                                        <option>4K Best Quality</option>
+                                    <select role="combobox" aria-label="Quality">
+                                        <option role="option">4K Best Quality</option>
                                     </select>
                                 </div> 
                             </div>
                             <div className="item-settings">
                                 <span className="title">Dimensions</span>
-                                <input type="number"/>
+                                <input type="number" aria-label="Dimensions (width)"/>
                                 <span className="icon-cross"/>
-                                <input type="number"/>
+                                <input type="number" aria-label="Dimensions (height)"/>
                             </div>
                             <div className="item-settings">
                                 <span className="title">Frame Range</span>
-                                <input type="text"/>
+                                <input type="text" aria-label="Frame Range"/>
                             </div>
                             <div className="item-settings">
                                 <span className="title">Format</span>
                                 <div className="select">
-                                    <select >
-                                        <option>PNG</option>
+                                    <select role="combobox" aria-label="File Format">
+                                        <option role="option">PNG</option>
                                     </select>
                                 </div>
                             </div>
                             <div className="item-settings">
                                 <span className="title">Output to</span>
-                                <input type="text" placeholder="…Docs/Golem/Output"/>
+                                <input type="text" placeholder="…Docs/Golem/Output" aria-label="Output path"/>
                                 <button className="btn--outline">Change</button>
                             </div>
                             <div className="item-settings">
@@ -60,7 +60,7 @@ export default class TaskDetail extends React.Component {
                                 <div className="switch-box switch-box--green">
                                 <span>Off</span>
                                 <label className="switch">
-                                    <input type="checkbox"/>
+                                    <input type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0"/>
                                     <div className="switch-slider round"></div>
                                 </label>
                             </div>
@@ -75,7 +75,7 @@ export default class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input type="number"/>
+                                <input type="number"aria-label="Your bid"/>
                                 <span>GNT</span>
                             </div>
                             <span className="item-price tips__price">
@@ -85,7 +85,7 @@ export default class TaskDetail extends React.Component {
                     </div>
 
                         <section className="section-action__task-detail">
-                            <span>Cancel</span>
+                            <span tabIndex="0" aria-label="Cancel">Cancel</span>
                             <button className="btn--primary">Start Task</button>
                         </section>
             </div>

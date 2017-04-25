@@ -18,7 +18,7 @@ export default class Personal extends React.Component {
                         <p/><span className="icon-question-mark"/>
                     </div>
                     <div>
-                        <img className="image__personal" src={Avatar}/>
+                        <img className="image__personal" src={Avatar} alt="avatar"/>
                     </div>
                     <div className="indicator__personal">
                         <RadialProgress pct={30}/>

@@ -241,7 +241,9 @@ export default class Single extends React.Component {
         const {id, preview, actions} = this.props
         return (
             <div className="section__frame">
-                <span className="button__subtask" onClick={::this._handleClose}><span className="icon-cross"/></span>
+                <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
+                event.keyCode === 13 && this._handleClose.call(this)
+            }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
                     <ImageZoom image="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" />
                     {isSubtaskShown && <canvas id="frameCanvas" ref="frameCanvas" width="752" height="392" onMouseMove={::this.overCanvas}></canvas>}
