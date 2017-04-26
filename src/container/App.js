@@ -8,7 +8,7 @@ import NewTask from '../components/tasks/NewTask'
 import TaskDetail from '../components/tasks/TaskDetail'
 import Settings from '../components/settings'
 import NotFound from '../components/NotFound'
-import { OnBoardingComponent } from '../components/hoc/OnBoarding'
+import { OnBoardingComponent } from '../components/hoc/Onboarding'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
