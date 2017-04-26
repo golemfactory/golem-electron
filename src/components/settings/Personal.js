@@ -1,6 +1,6 @@
 import React from 'react';
 import RadialProgress from './../RadialProgress'
-import Avatar from './../../assets/img/Avatar.svg'
+import Avatar from './../../assets/img/avatar.svg'
 
 export default class Personal extends React.Component {
 

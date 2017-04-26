@@ -232,7 +232,8 @@
     @include header($padding-mac, 72px, 158px);
 }
 
-.mac .traffic-light {
+.traffic-light {
+    display: none;
     height: 100%;
     width: 52px;
     float: left;
@@ -323,8 +324,14 @@
     }
 }
 
+.mac .traffic-light {
+    @extend .traffic-light;
+    display: block;
+}
+
 .linux .traffic-light {
     @extend .traffic-light;
+    display: block;
     .close {
         &:before {
             background: #e75c2d;
