@@ -85,7 +85,7 @@
     "serve-static": "^1.12.1",
     "unzip": "^0.1.11",
     "uuid": "^3.0.1",
-    "wampy": "^5.0.0",
+    "wampy": "^4.1.0",
     "websocket": "^1.0.24"
   },
   "jest": {

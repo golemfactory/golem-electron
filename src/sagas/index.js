@@ -44,7 +44,8 @@ export function connect() {
             {
                 realm: config.REALM,
                 autoReconnect: true,
-                //serializer: new MsgpackSerializer(),
+                //transportEncoding: 'msgpack',
+                //msgpackCoder: new MsgpackSerializer(),
                 onConnect: () => {
                     console.log('Connected to Router!');
                     resolve({

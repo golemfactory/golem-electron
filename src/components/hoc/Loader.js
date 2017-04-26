@@ -98,7 +98,7 @@ export class Loading extends React.Component {
  * @class      LoadingComponent(name)
  * @param      {React Component}        ComposedComponent   The composed component which is we waiting for; see router in Container/App.js
  * @param      {Array}                  loadingIdArray      The loading identifier array
- * @return     {ConnectedComponent>}                        { Returning connected component (Redux) }
+ * @return     {Array{ConnectedComponent, Component}}                        { Returning connected component (Redux) and Component (for testing)}
  */
 export var LoadingComponent = function(ComposedComponent, loadingIdArray) {
 

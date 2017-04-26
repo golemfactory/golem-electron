@@ -1,4 +1,5 @@
 export let dict = Object.freeze({
+    ONBOARDING: 'ONBOARDING',
     START_LOADING: 'START_LOADING',
     END_LOADING: 'END_LOADING',
     LOGIN: 'LOGIN',
@@ -13,7 +14,12 @@ export let dict = Object.freeze({
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO'
 })
 
-const {START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_MESSAGE, SET_AUTOLAUNCH, SET_BLENDER, SET_PREVIEW, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO} = dict
+const {ONBOARDING, START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_MESSAGE, SET_AUTOLAUNCH, SET_BLENDER, SET_PREVIEW, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO} = dict
+
+export const setOnboard = (payload) => ({
+    type: ONBOARDING,
+    payload
+})
 
 export const startLoading = (id, text) => ({
     type: START_LOADING,

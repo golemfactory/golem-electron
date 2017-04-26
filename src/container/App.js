@@ -8,6 +8,7 @@ import NewTask from '../components/tasks/NewTask'
 import TaskDetail from '../components/tasks/TaskDetail'
 import Settings from '../components/settings'
 import NotFound from '../components/NotFound'
+import { OnBoardingComponent } from '../components/hoc/OnBoarding'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -22,7 +23,7 @@ import * as Actions from '../actions'
  */
 const routes = (
 <Route component={ App } >
-    <Route path="/" component={MainFragment} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
+    <Route path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
     <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
     <Route path="/task" component={ TaskDetail } >
         <Route path="/task/:id" component={ TaskDetail } />

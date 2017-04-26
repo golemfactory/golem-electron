@@ -23,13 +23,13 @@ export default class NewTask extends React.Component {
                                 <span className="path2"/>
                                 <span className="path3"/>
                             </span>
-                            <span>Blender</span>
-                            <input type="radio" name="taskType"/>
+                            <input id="taskTypeRadio1" type="radio" name="taskType"/>
+                            <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                         </div>
                         <div className="radio-item__new-task">
                             <span className="icon-luxrenderer"/>
-                        <span>LuxRender</span>
-                            <input type="radio" name="taskType"/>
+                            <input id="taskTypeRadio2" type="radio" name="taskType"/>
+                            <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                         </div>
                     </div>
                 </div>
