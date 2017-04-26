@@ -107,7 +107,7 @@ export default class Header extends Component {
                         <div className="minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Minimize"></div>
                         <div className="maximize" onClick={::this._onMaximize} disabled={true} role="menuitem" tabIndex="0" aria-label="Maximize"></div>
                     </li>
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
+                    {activeHeader === 'main' && <li className="nav__item active" onClick={this._navigateTo.bind(this, '/', true)} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
                     {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
                     {activeHeader === 'main' && <span className="selector"></span>}
                 </ul>

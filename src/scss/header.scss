@@ -232,7 +232,8 @@
     @include header($padding-mac, 72px, 158px);
 }
 
-.traffic-light {
+.mac .traffic-light,
+.linux .traffic-light {
     display: none;
     height: 100%;
     width: 52px;
