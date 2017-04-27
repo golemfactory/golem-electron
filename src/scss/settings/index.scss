@@ -19,7 +19,7 @@ $item__accordion-height: 78.7px;
 .tab__accordion {
     height: 100%;
     position: relative;
-    overflow-y: scroll;
+    overflow-y: overlay;
     .active {
         height: auto;
         & > .item-content__accordion {

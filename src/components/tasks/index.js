@@ -48,19 +48,20 @@ export class TaskPanel extends React.Component {
         const {actions, preview, expandedPreview} = this.props
 
         return (
-            <div>
-                <div className="content__task-panel">
+            <div className="content__task-panel">
+                    <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                     <DropZone>
-                        <div className="section__table">
-                            <Table/>
-                        </div>
-                    </DropZone>
-                    {preview && <div className="section__preview">
-                         <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
-                    </div>}
+                            <div className="section__table">
+                                <Table/>
+                            </div>
+                        </DropZone>
+                        {preview && <div className="section__preview">
+                             <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
+                        </div>}
+                    </div>
+
+                    <Footer {...this.props}/>
                 </div>
-                <Footer {...this.props}/>
-            </div>
         )
     }
 }

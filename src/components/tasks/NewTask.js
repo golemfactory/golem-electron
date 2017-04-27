@@ -34,7 +34,9 @@ export default class NewTask extends React.Component {
                     </div>
                 </div>
                 <div className="container-action__new-task">
-                    <span>Cancel</span>
+                    <Link to="/tasks" aria-label="Cancel" tabIndex="0">
+                        <span >Cancel</span>
+                    </Link>
                     <Link to="/task/settings"><button className="btn--primary">Next</button></Link>
                 </div>
             </div>

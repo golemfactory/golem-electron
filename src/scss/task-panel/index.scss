@@ -4,7 +4,22 @@
 @import "task-detail";
 @import "new-task";
 .content__task-panel {
-    margin-bottom: 50px;
     height: 100%;
-    overflow-y: scroll;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+}
+
+.container__task-panel {
+    height: 100%;
+    overflow-y: overlay;
+    box-sizing: border-box;
+    &--with-preview {
+        margin-bottom: 300px;
+        @media screen and (max-height: 723px) {
+            margin-bottom: 0;
+            height: 325px;
+        }
+    }
 }

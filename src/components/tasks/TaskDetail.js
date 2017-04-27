@@ -5,20 +5,27 @@ export default class TaskDetail extends React.Component {
 
     constructor(props) {
         super(props);
+        function IsNumeric(input) {
+            return (input - 0) == input && ('' + input).trim().length > 0;
+        }
+        this.state = {
+            showBackOption: IsNumeric(props.params.id)
+        }
     }
 
     render() {
+        const {showBackOption} = this.state
         return (
             <div className="content__task-detail">
                 <section className="section-preview__task-detail">
-                    <div className="panel-preview__task-detail">
+                    { showBackOption && <div className="panel-preview__task-detail">
                         <Link to="/tasks" aria-label="Back button to task list">
                             <div>
                                 <span className="icon-arrow-left-white"/>
                                 <span>Back</span>
                             </div>
                         </Link>
-                    </div>
+                    </div>}
                     <button className="btn--outline">Render Local Test</button>
                 </section>
                     <div className="container__task-detail">
@@ -84,10 +91,12 @@ export default class TaskDetail extends React.Component {
                         </section>
                     </div>
 
-                        <section className="section-action__task-detail">
-                            <span tabIndex="0" aria-label="Cancel">Cancel</span>
+                        {!showBackOption && <section className="section-action__task-detail">
+                            <Link to="/tasks" aria-label="Cancel" tabIndex="0">
+                                <span >Cancel</span>
+                            </Link>
                             <button className="btn--primary">Start Task</button>
-                        </section>
+                        </section>}
             </div>
         );
     }
