@@ -8,7 +8,7 @@
         height: 2px;
         margin: 10px 12px 0 12px;
         background: #37C481; //GRADIENT TRANSITION HACK
-        background-image: -webkit-gradient( linear, left top, right top, color-stop(0.2, transparent), color-stop(0.2, $color-text3));
+        background-image: -webkit-gradient( linear, left top, right top, color-stop(0.2, transparent), color-stop(0.2, $color-accent3));
         transition: .5s background;
         &:focus {
             outline: none;

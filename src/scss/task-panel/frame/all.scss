@@ -16,6 +16,7 @@
     width: 71.6px;
     height: 32px;
     box-sizing: border-box;
+    font-size: 7pt !important;
     div {
         position: absolute;
         top: 0;
@@ -26,6 +27,11 @@
         width: 56px;
         height: 32px;
         cursor: pointer;
+        border-radius: 1px;
+        transition: .5s box-shadow;
+        &:hover {
+            box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.20);
+        }
     }
     .frame {
         &--undone {

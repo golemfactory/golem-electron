@@ -33,7 +33,7 @@ export default class Slider extends React.Component {
             'left top, ',
             'right top, ',
             'color-stop(' + value + ', transparent), ',
-            'color-stop(' + value + ', #bbb)',
+            'color-stop(' + value + ', #eff1f2)',
             ')'
         ].join('');
 

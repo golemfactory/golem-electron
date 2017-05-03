@@ -22,7 +22,7 @@
     align-items: flex-end;
     flex: 0 0 230px;
     color: $color-text4;
-    background: $color-bg;
+    background: $color-bg2;
     box-sizing: border-box;
     //box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
     button {
@@ -106,7 +106,7 @@
     .estimated-price__panel {
         padding-top: 22px !important;
         padding-bottom: 22px !important;
-        background: $color-bg;
+        background: $color-bg2;
         .estimated-price {
             font-size: 36pt;
             text-align: center;

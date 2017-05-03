@@ -24,7 +24,7 @@ export default class Preview extends React.Component {
             <div className="section__preview-black">
                 <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
-            }}>
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                     <span className="button__expand icon-new-window" onClick={::this._handleExpand} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleExpand.call(this)
             }} role="button" aria-label="Open Detailed Preview Window" tabIndex="0"></span>

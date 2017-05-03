@@ -26,7 +26,7 @@ export default class TaskDetail extends React.Component {
                             </div>
                         </Link>
                     </div>}
-                    <button className="btn--outline">Render Local Test</button>
+                    {!showBackOption && <button className="btn--outline">Render Local Test</button>}
                 </section>
                     <div className="container__task-detail">
                         <section className="section-settings__task-detail">

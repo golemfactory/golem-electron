@@ -81,7 +81,7 @@ export class Table extends React.Component {
                 <div>
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
-                }} transitionName="rc-tooltip-zoom">
+                }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup"></span>
                     </ReactTooltip>
                     <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>

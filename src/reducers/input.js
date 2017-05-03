@@ -2,7 +2,7 @@ import { dict } from './../actions'
 import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
 const {ipcRenderer} = window.require('electron')
 
-const {SET_PREVIEW, SET_PREVIEW_EXPANDED, SET_AUTOLAUNCH, SET_ZOOM_RATIO} = dict
+const {SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_AUTOLAUNCH, SET_ZOOM_RATIO} = dict
 const {AUTOLUNCH_SWITCH, PREVIEW_SWITCH} = dictConfig
 
 const initialState = {
@@ -13,7 +13,7 @@ const initialState = {
 }
 const input = (state = initialState, action) => {
     switch (action.type) {
-    case SET_PREVIEW:
+    case SET_PREVIEW_RADIO:
         setConfig(PREVIEW_SWITCH, action.payload)
         ipcRenderer.send('preview-section', action.payload)
         return Object.assign({}, state, {

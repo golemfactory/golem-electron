@@ -17,7 +17,6 @@
     line-height: 20px;
     border-bottom: 1px solid $color-text3;
     box-sizing: border-box;
-    background: $color-bg2;
     z-index: 99;
     .top-titlebar {
         display: none;
@@ -124,7 +123,6 @@
 }
 
 .header__frame {
-    background: $color-bg2;
     height: 50px;
     width: 100%;
     margin-left: 30px;

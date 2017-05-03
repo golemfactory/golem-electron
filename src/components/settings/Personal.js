@@ -28,7 +28,6 @@ export default class Personal extends React.Component {
                 <div>
                     <span className="user-name__personal">Muhammed Tanrıkulu</span>
                     <p/><span className="user-id__personal"> a34a…3bb2</span>
-                    <p/><a>Edit Profile</a>
                 </div>
             </div>
         );

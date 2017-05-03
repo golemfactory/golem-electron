@@ -1,14 +1,14 @@
 $color_1: #333333;
-$background_color_1: rgba(0, 0, 0, 0.05);
+$background_color_1: rgba(0, 0, 0, 0.12);
 $background_color_2: #ffffff;
 $border_color_1: transparent;
-$border_top_color_1: #b1b1b1;
+$border_top_color_1: rgba(0, 0, 0, 0.12);
 $border_top_color_2: #ffffff;
-$border_right_color_1: #b1b1b1;
+$border_right_color_1: rgba(0, 0, 0, 0.12);
 $border_right_color_2: #ffffff;
-$border_bottom_color_1: #ffffff;
-$border_bottom_color_2: #000;
-$border_left_color_1: #b1b1b1;
+$border_bottom_color_1: rgba(0, 0, 0, 0.2);
+$border_bottom_color_2: #ffffff;
+$border_left_color_1: rgba(0, 0, 0, 0.12);
 $border_left_color_2: #ffffff;
 .rc-tooltip {
     position: absolute;
@@ -46,6 +46,7 @@ $border_left_color_2: #ffffff;
     height: 0;
     border-color: $border_color_1;
     border-style: solid;
+    z-index: 2;
 }
 
 .rc-tooltip-arrow-inner {
@@ -54,6 +55,7 @@ $border_left_color_2: #ffffff;
     height: 0;
     border-color: $border_color_1;
     border-style: solid;
+    z-index: 1;
 }
 
 .rc-tooltip-placement-top {
@@ -212,8 +214,8 @@ $border_left_color_2: #ffffff;
     }
     .rc-tooltip-arrow-inner {
         top: 1px;
-        margin-left: -6px;
-        border-width: 0 6px 6px;
+        margin-left: -5px;
+        border-width: 0 5px 8px;
         border-bottom-color: $border_bottom_color_2;
     }
 }
@@ -244,8 +246,8 @@ $border_left_color_2: #ffffff;
     }
     .rc-tooltip-arrow-inner {
         top: 1px;
-        margin-left: -6px;
-        border-width: 0 6px 6px;
+        margin-left: -5px;
+        border-width: 0 5px 8px;
         border-bottom-color: $border_bottom_color_2;
     }
 }
