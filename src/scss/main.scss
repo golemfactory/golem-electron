@@ -291,8 +291,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container__frame,
     .content__new-task,
     .content__task-detail,
-    .content__settings,
-    {
+    .content__settings {
         padding-top: $header-height-windows;
     }
     .content__resources,
@@ -323,8 +322,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container__frame,
     .content__new-task,
     .content__task-detail,
-    .content__settings,
-    .button__subtask {
+    .content__settings {
         padding-top: $header-height;
     }
     .content__resources,
@@ -355,9 +353,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container__frame,
     .content__new-task,
     .content__task-detail,
-    .content__settings,
-    .content__trust,
-    {
+    .content__settings {
         padding-top: $header-height;
     }
     .content__resources,

@@ -4,7 +4,7 @@
             position: absolute;
             text-align: center;
             color: $color-text2;
-            top: 20px;
+            top: 70px;
             right: 24px;
             z-index: 999;
             font-size: 20pt;
@@ -41,5 +41,23 @@
             margin: auto;
             cursor: crosshair;
         }
+    }
+}
+
+.win {
+    .button__subtask {
+        top: 90px;
+    }
+}
+
+.mac {
+    .button__subtask {
+        top: 70px;
+    }
+}
+
+.linux {
+    .button__subtask {
+        top: 70px;
     }
 }
