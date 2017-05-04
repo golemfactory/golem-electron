@@ -298,6 +298,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__resources,
     .section__actions,
     .item__history,
+    .content__advanced,
     .tab-panel,
     .section__personal,
     .content__performance,
@@ -322,12 +323,14 @@ input[type=number]::-webkit-inner-spin-button {
     .container__frame,
     .content__new-task,
     .content__task-detail,
-    .content__settings {
+    .content__settings,
+    .button__subtask {
         padding-top: $header-height;
     }
     .content__resources,
     .section__actions,
     .item__history,
+    .content__advanced,
     .tab-panel,
     .section__personal,
     .content__performance,
@@ -360,6 +363,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__resources,
     .section__actions,
     .item__history,
+    .content__advanced,
     .tab-panel,
     .section__personal,
     .content__performance,

@@ -47,25 +47,3 @@
     line-height: 1.5;
     color: $color-text2;
 }
-
-@mixin section__padding($padding) {
-    padding: 0 $padding;
-}
-
-.windows {
-    .content__advanced {
-        @include section__padding($padding-windows);
-    }
-}
-
-.mac {
-    .content__advanced {
-        @include section__padding($padding-mac);
-    }
-}
-
-.linux {
-    .content__advanced {
-        @include section__padding($padding-linux);
-    }
-}
