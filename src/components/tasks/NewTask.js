@@ -17,7 +17,7 @@ export default class NewTask extends React.Component {
                 <div className="container-type__new-task">
                     <label>Task Type</label>
                     <div className="container-radio__new-task">
-                        <div className="radio-item__new-task">
+                        <div className="radio-item">
                             <span className="icon-blender">
                                 <span className="path1"/>
                                 <span className="path2"/>
@@ -26,7 +26,7 @@ export default class NewTask extends React.Component {
                             <input id="taskTypeRadio1" type="radio" name="taskType"/>
                             <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                         </div>
-                        <div className="radio-item__new-task">
+                        <div className="radio-item">
                             <span className="icon-luxrenderer"/>
                             <input id="taskTypeRadio2" type="radio" name="taskType"/>
                             <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>

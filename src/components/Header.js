@@ -22,6 +22,10 @@ export default class Header extends Component {
         const index = location.pathname === "/" ? 1 : 2 // <-- HARDCODED
         let navItems = document.getElementsByClassName('nav__item')
         navItems.length > 1 && navItems[index].classList.add('active') // 1 is the traffic lights of mac & linux
+        /*EXPRIMENTAL*/
+        window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
+            this._navigateTo(message, null)
+        })
     }
 
     /**
@@ -29,26 +33,19 @@ export default class Header extends Component {
      * @param  {String}     to      [Route fo the page]
      * @param  {Object}     elm     [Element in target]
      */
-    _navigateTo(to, isNav = true, elm) {
-        let navItems = document.getElementsByClassName('nav__item')
-        let menuItems = document.getElementsByClassName('menu__item')
-        if (isNav) {
-            for (var i = 0; i < navItems.length; i++) {
-                navItems[i].classList.remove('active')
-            }
-            for (var i = 0; i < menuItems.length; i++) {
-                menuItems[i].classList.remove('active')
-            }
-            elm.currentTarget.classList.add('active')
-        } else {
-            for (var i = 0; i < navItems.length; i++) {
-                navItems[i].classList.remove('active')
-            }
-            for (var i = 0; i < menuItems.length; i++) {
-                menuItems[i].classList.remove('active')
-            }
-            elm.currentTarget.classList.add('active')
-        }
+    _navigateTo(to, elm) {
+        let navItems = document.getElementsByClassName('nav__item');
+        let menuItems = document.getElementsByClassName('menu__item');
+
+        [].map.call(navItems, (item) => {
+            item.classList.remove('active')
+        });
+
+        [].map.call(menuItems, (item) => {
+            item.classList.remove('active')
+        });
+
+        elm && elm.currentTarget.classList.add('active')
 
         browserHistory.push(to);
     }
@@ -95,9 +92,9 @@ export default class Header extends Component {
                 <div>
                     <span>Golem</span>
                 </div>
-                <div className="os__menu">
-                    <span className="icon-minimize"/>
-                    <span className="icon-close"/>
+                <div className="os__menu" role="menu">
+                    <span className="icon-minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
+                    <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
                 </div>
              </div>
             <nav className="nav" role="menubar">
@@ -107,8 +104,8 @@ export default class Header extends Component {
                         <div className="minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Minimize"></div>
                         <div className="maximize" onClick={::this._onMaximize} disabled={true} role="menuitem" tabIndex="0" aria-label="Maximize"></div>
                     </li>
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/', true)} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks', true)} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/')} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
+                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks')} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
                     {activeHeader === 'main' && <span className="selector"></span>}
                 </ul>
                 {activeHeader === 'main' &&
@@ -126,7 +123,7 @@ export default class Header extends Component {
                     <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings', false)} role="menuitem" tabIndex="0" aria-label="Settings"><span className="icon-settings"/></li>
+                        <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings')} role="menuitem" tabIndex="0" aria-label="Settings"><span className="icon-settings"/></li>
                     </ReactTooltip>
                 </ul>
             }

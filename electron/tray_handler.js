@@ -10,7 +10,8 @@ function createTray(win) {
         {
             label: 'Dashboard',
             type: 'radio',
-            checked: true
+            checked: true,
+            click: _clickHandler.bind(null, '', win)
         },
         {
             label: 'Tasks',
@@ -42,9 +43,12 @@ function createTray(win) {
 }
 
 function _clickHandler(route, win) {
-    console.log(route, win)
-    win.loadURL(`http://localhost:${process.env.PORT || 3002}/${route}`)
+    //console.log(route, win)
+    let contents = win.webContents
+    contents.send('REDIRECT_FROM_TRAY', `/${route}`);
     win.show();
+// win.loadURL(`http://localhost:${process.env.PORT || 3002}/${route}`)
+// win.show();
 }
 
 module.exports = createTray

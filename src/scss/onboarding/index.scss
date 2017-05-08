@@ -76,5 +76,27 @@
         position: relative;
         top: 11.5px;
         font-size: 32pt;
+        cursor: pointer;
+    }
+}
+
+
+.container-checkbox__onboarding{
+    overflow-y: overlay;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    .checkbox-item{
+        width: 70%;
+        text-align: left;
+        height: 50px;
+        [class^="icon-"],
+        [class*=" icon-"] {
+            font-size: 24pt;
+        }
+    }
+    .radio-label{
+        left: 0;
     }
 }

@@ -7,8 +7,11 @@
 }
 
 .tooltip-frame {
-    position: relative;
     box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
+    .rc-tooltip-inner {
+        position: relative;
+        box-sizing: border-box;
+    }
     .content__tooltip {
         height: 100%;
         display: block;

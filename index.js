@@ -32,7 +32,7 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions()
     }
-    setupGolem()
+    //setupGolem()
     createWindow()
     tray = createTray(win)
 

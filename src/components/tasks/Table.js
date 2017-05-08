@@ -39,6 +39,10 @@ export class Table extends React.Component {
         return true
     }
 
+    _handleDeleteModal() {
+        this.props.deleteModalHandler()
+    }
+
     /**
      * {listTasks function}
      * @param  {Array}    data    [JSON array of task list]
@@ -82,7 +86,7 @@ export class Table extends React.Component {
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
                 }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup"></span>
+                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={this._handleDeleteModal.bind(this, item.id)}></span>
                     </ReactTooltip>
                     <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>
                 </div>
@@ -97,7 +101,6 @@ export class Table extends React.Component {
 
     render() {
         const {blender_data} = this.props
-
         return (
             <div role="list">
                 {blender_data && this.listTasks(blender_data)}

@@ -10,7 +10,7 @@ import Step2 from './steps/Step2'
 import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
-
+import Step6 from './steps/Step6'
 
 const mapStateToProps = state => ({
 })
@@ -46,6 +46,9 @@ class OnboardIndex extends React.Component {
         case 5:
             step = <Step5/>
             break;
+        case 6:
+            step = <Step6/>
+            break;
         }
 
         return step
@@ -60,7 +63,7 @@ class OnboardIndex extends React.Component {
 
     _handleNext() {
         const {currentStep} = this.state
-        if (currentStep < 5) {
+        if (currentStep < 6) {
             this.setState({
                 currentStep: currentStep + 1
             })
@@ -78,8 +81,7 @@ class OnboardIndex extends React.Component {
                 {::this.shownStep(currentStep)}
                 <div className="step-control__onboarding">
                    <div>
-                        
-                        {currentStep < 5 ? <span>{currentStep} of 5</span> : <span>Get Started</span>}
+                        {currentStep < 6 ? <span>{currentStep} of 6</span> : <span>Get Started</span>}
                         <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
                    </div>
                 </div>

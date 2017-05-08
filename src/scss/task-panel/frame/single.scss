@@ -40,6 +40,10 @@
             right: 0;
             margin: auto;
             cursor: crosshair;
+            polyline:hover {
+                fill: rgba(0, 0, 0, 0.3);
+                stroke: $color-accent4;
+            }
         }
     }
 }

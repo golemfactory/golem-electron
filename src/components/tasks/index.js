@@ -9,6 +9,7 @@ import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
+import Modal from './../Modal'
 import Footer from './../Footer'
 
 const mapStateToProps = state => ({
@@ -29,7 +30,11 @@ export class TaskPanel extends React.Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            deleteModal: false
+        }
     }
+
 
     componentDidMount() {
         const {actions} = this.props
@@ -43,21 +48,35 @@ export class TaskPanel extends React.Component {
         setTimeout(endLoading, 3000)
     }
 
+    _handleDeleteModal() {
+        this.setState({
+            deleteModal: true
+        })
+    }
+
+    _closeDeleteModal() {
+        this.setState({
+            deleteModal: false
+        })
+    }
+
 
     render() {
+        const {deleteModal} = this.state
         const {actions, preview, expandedPreview} = this.props
 
         return (
             <div className="content__task-panel">
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
-                    <DropZone>
+                        <DropZone>
                             <div className="section__table">
-                                <Table/>
+                                <Table deleteModalHandler={::this._handleDeleteModal}/>
                             </div>
                         </DropZone>
                         {preview && <div className="section__preview">
                              <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
                         </div>}
+                        {deleteModal && <Modal type="delete" closeModal={::this._closeDeleteModal}/>}
                     </div>
 
                     <Footer {...this.props}/>

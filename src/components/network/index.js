@@ -46,6 +46,9 @@ export class MainFragment extends React.Component {
         this.state = {
             activeTab: 0
         }
+
+
+    //props.actions.setOnboard(true)
     }
 
     componentDidMount() {
