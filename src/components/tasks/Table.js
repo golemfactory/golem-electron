@@ -16,7 +16,7 @@ import convertSecsToHMS from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({
-    blender_data: state.realTime.blender
+    taskList: state.realTime.taskList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -100,10 +100,10 @@ export class Table extends React.Component {
     }
 
     render() {
-        const {blender_data} = this.props
+        const {taskList} = this.props
         return (
             <div role="list">
-                {blender_data && this.listTasks(blender_data)}
+                {taskList && this.listTasks(taskList)}
             </div>
         );
     }

@@ -1,33 +1,17 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../../actions'
 
-const mockHistory = [
-    {
-        title: 'Processed Task',
-        time: '1:15',
-        status: 'Pending',
-        amount: '+0.014 GNT'
-    },
-    {
-        title: 'HMD Model Bake 3.5',
-        time: '1:03',
-        status: '3:01AM 28 Feb',
-        amount: '-0.017 GNT'
-    },
-    {
-        title: 'Processed Task',
-        time: '2:15',
-        status: '8:01AM 28 Feb',
-        amount: '+0.015 GNT'
-    },
-    {
-        title: 'Processed Task',
-        time: '2:15',
-        status: '8:01AM 28 Feb',
-        amount: '+0.013 GNT'
-    }
-]
+const mapStateToProps = state => ({
+    historyList: state.history.historyList
+})
 
-export default class History extends React.Component {
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class History extends React.Component {
 
     constructor(props) {
         super(props);
@@ -37,7 +21,8 @@ export default class History extends React.Component {
      * [loadHistory loading payment history as DOM]
      */
     loadHistory() {
-        return (mockHistory.map(({title, time, status, amount}, index) => <div key={index} className="item__history">
+        const {historyList} = this.props
+        return (historyList.map(({title, time, status, amount}, index) => <div key={index} className="item__history">
             <div className="info__history">
                 <h5>{title}</h5>
                 <span>{time}</span>
@@ -51,11 +36,15 @@ export default class History extends React.Component {
     }
 
     render() {
+        const {historyList} = this.props
+        console.log(historyList)
         return (
             <div className="content__history">
-                {mockHistory.length > 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any income or payment history yet.
+                {historyList.length > 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any income or payment history yet.
                     Start Golem below to generate some.</span></div>}
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(History)

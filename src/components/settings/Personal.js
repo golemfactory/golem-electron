@@ -1,27 +1,41 @@
 import React from 'react';
-import RadialProgress from './../RadialProgress'
-import Avatar from './../../assets/img/avatar.svg'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../actions'
 
-export default class Personal extends React.Component {
+import RadialProgress from './../RadialProgress'
+import PlaceHolderAvatar from './../../assets/img/avatar.svg'
+
+const mapStateToProps = state => ({
+    charts: state.profile.charts,
+    avatar: state.profile.avatar
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class Personal extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
     render() {
+        const {avatar, charts} = this.props
         return (
             <div className="section__personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
-                        <RadialProgress pct={16}/>
+                        <RadialProgress pct={charts.requestor}/>
                         <span>Requestor</span>
                         <p/><span className="icon-question-mark"/>
                     </div>
                     <div>
-                        <img className="image__personal" src={Avatar} alt="avatar"/>
+                        <img className="image__personal" src={avatar || PlaceHolderAvatar} alt="avatar"/>
                     </div>
                     <div className="indicator__personal">
-                        <RadialProgress pct={30}/>
+                        <RadialProgress pct={charts.provider}/>
                         <span>Provider</span>
                     </div>
                 </div>
@@ -33,3 +47,5 @@ export default class Personal extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Personal)

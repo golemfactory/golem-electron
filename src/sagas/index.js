@@ -7,9 +7,14 @@ const {ipcRenderer} = window.require('electron')
 
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
-import { upload } from './upload'
-import { currency } from './currency'
-import { connectedPeers } from './connectedPeers'
+import { uploadFlow } from './upload'
+import { currencyFlow } from './currency'
+import { connectedPeersFlow } from './connectedPeers'
+import { balanceFlow } from './balance'
+import { historyFlow } from './history'
+import { advancedFlow } from './advanced'
+import { trustFlow } from './trust'
+import { tasksFlow } from './tasks'
 
 const {LOGIN, SET_MESSAGE, SET_BLENDER, LOGOUT} = dict
 
@@ -33,8 +38,8 @@ export function connect() {
             {
                 realm: config.REALM,
                 autoReconnect: true,
-                //transportEncoding: 'msgpack',
-                //msgpackCoder: new MsgpackSerializer(),
+                transportEncoding: 'msgpack',
+                msgpackCoder: new MsgpackSerializer(),
                 onConnect: () => {
                     console.log('Connected to Router!');
                     resolve({
@@ -60,13 +65,11 @@ export function subscribe(session) {
             var connection = args[0];
             console.log(connection)
 
-            function on_settings(args) {
-                var settings = args[0];
-                console.log(settings)
+            if (connection === "Connected") {
+                emit(true)
+            } else {
+                emit(false)
             }
-            _handleRPC(on_settings, session, config.PRESET_RPC, {
-                name: 'default'
-            })
         }
 
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
@@ -80,7 +83,7 @@ export function subscribe(session) {
             })
         }
 
-        _handleSUBPUB(on_counter, session, config.COUNTER_CH)
+        //_handleSUBPUB(on_counter, session, config.COUNTER_CH)
 
         function on_blender(args) {
             let blender = args[0];
@@ -104,14 +107,7 @@ export function subscribe(session) {
             })
         }
 
-        _handleSUBPUB(on_blender, session, config.BLENDER_CH)
-
-        function on_upload(args) {
-            var pinfo = args[0];
-            console.log('upload event received', pinfo);
-        }
-
-        _handleSUBPUB(on_upload, session, config.UPLOAD_CH)
+        //_handleSUBPUB(on_blender, session, config.BLENDER_CH)
 
         session.options({
             onClose: function() {
@@ -150,7 +146,16 @@ export function* read(session) {
     socket.emit('message', payload);
   }
 }*/
-
+export function* apiFlow(connection) {
+    yield fork(uploadFlow, connection);
+    yield fork(connectedPeersFlow, connection, config.GET_CONNECTED_PEERS_RPC);
+    yield fork(balanceFlow, connection, config.BALANCE_CH);
+    yield fork(historyFlow, connection, [config.PAYMENTS_RPC, config.INCOME_RPC]);
+    yield fork(advancedFlow, connection, [config.PRESETS_RPC]);
+    yield fork(tasksFlow, connection, config.GET_TASKS_RPC);
+    yield fork(trustFlow, connection, [config.GET_COMPUTING_TRUST_RPC, config.GET_REQUESTING_TRUST_RPC]);
+    yield fork(currencyFlow);
+}
 /**
  * { handleIO generator handling multiple generators concurrently }
  *
@@ -159,10 +164,21 @@ export function* read(session) {
  * @return     {boolean}             { job isDone status }
  */
 export function* handleIO(connection) {
-    yield fork(read, connection);
-    yield fork(upload, connection);
-    yield fork(connectedPeers, connection, config.GET_CONNECTED_PEERS_RPC);
-    yield fork(currency);
+    //yield fork(read, connection);
+    const channel = yield call(subscribe, connection)
+    let taskApi;
+    let started = false
+
+    while (true) {
+        let status = yield take(channel)
+        if (status && !started) {
+            taskApi = yield fork(apiFlow, connection)
+            started = true
+        } else if (!status && taskApi) {
+            yield cancel(taskApi)
+            started = false
+        }
+    }
 }
 
 /**

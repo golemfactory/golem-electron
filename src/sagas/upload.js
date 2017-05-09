@@ -85,7 +85,7 @@ export function uploadResumable(r, {path="", file}) {
  * @param      {Object}  session     The session of connection of ws
  * @return     {boolean}            { job isDone status }
  */
-export function* upload(session) {
+export function* uploadFlow(session) {
     while (true) {
         const resumableObject = yield call(setupResumable, session);
         const {payload} = yield take(UPLOAD);

@@ -64,7 +64,7 @@ export function subscribeCurrency() {
  *
  * @see https://coinmarketcap.com/api/
  */
-export function* currency() {
+export function* currencyFlow() {
     const channel = yield call(subscribeCurrency)
 
     try {

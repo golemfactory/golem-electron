@@ -2,7 +2,7 @@ import { eventChannel, buffers } from 'redux-saga'
 import { take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
-import { config, _handleRPC } from './handler'
+import { config, _handleSUBPUB } from './handler'
 
 
 const {SET_CONNECTED_PEERS} = dict
@@ -14,22 +14,17 @@ const {SET_CONNECTED_PEERS} = dict
  * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeConnectedPeers(session, rpc_address) {
-    const interval = 10000
+export function subscribeBalance(session, rpc_address) {
     return eventChannel(emit => {
-        setInterval(function fetchConnectedPeers() {
-            function on_connected_peers(args) {
-                var connected_peers = args[0];
-                console.log(rpc_address, connected_peers)
-                emit({
-                    type: SET_CONNECTED_PEERS,
-                    payload: connected_peers.length
-                })
-            }
-
-            _handleRPC(on_connected_peers, session, rpc_address)
-            return fetchConnectedPeers
-        }(), interval)
+        function on_balance(args) {
+            let balance = args[0];
+            console.log(rpc_address, balance)
+        // emit({
+        //     type: SET_CONNECTED_PEERS,
+        //     payload: connected_peers.length
+        // })
+        }
+        _handleSUBPUB(on_balance, session, rpc_address)
 
 
         return () => {
@@ -44,8 +39,8 @@ export function subscribeConnectedPeers(session, rpc_address) {
  * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* connectedPeersFlow(session, address) {
-    const channel = yield call(subscribeConnectedPeers, session, address)
+export function* balanceFlow(session, address) {
+    const channel = yield call(subscribeBalance, session, address)
 
     try {
         while (true) {

@@ -1,11 +1,12 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.require('electron')
 
-const {SET_MESSAGE, SET_BLENDER} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS} = dict
 
 const initialState = {
-    message: '',
-    blender: []
+    balance: '',
+    taskList: [],
+    connectedPeers: 0
 }
 
 let badgeActive = false
@@ -13,16 +14,16 @@ let badgeTemp = 0
 
 const realTime = (state = initialState, action) => {
     switch (action.type) {
-    case SET_MESSAGE:
-        state.message = action.message
+    case SET_BALANCE:
+        state.balance = action.payload
         return Object.assign({}, state, {
-            message: action.message
+            balance: action.payload
         });
 
-    case SET_BLENDER:
+    case SET_TASKLIST:
         let badge = 0
-        state.blender = action.blender
-        action.blender && action.blender.forEach((item) => {
+        state.taskList = action.payload
+        action.payload && action.payload.forEach((item) => {
             item.status === 'In Progress' && (badge = badge + 1)
         })
         if (badge !== badgeTemp) {
@@ -34,7 +35,13 @@ const realTime = (state = initialState, action) => {
             badgeActive = false
         }
         return Object.assign({}, state, {
-            blender: action.blender
+            taskList: action.payload
+        });
+
+    case SET_CONNECTED_PEERS:
+        state.connectedPeers = action.payload
+        return Object.assign({}, state, {
+            connectedPeers: action.payload
         });
 
     default:

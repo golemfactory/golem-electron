@@ -9,26 +9,26 @@ const {SET_CONNECTED_PEERS} = dict
 
 
 /**
- * [subscribeConnectedPeers func. fetchs connedted peers data with interval]
+ * [subscribeTasks func. fetches tasks with interval]
  * @param  {Object} session     [Websocket connection session]
  * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeConnectedPeers(session, rpc_address) {
+export function subscribeTasks(session, rpc_address) {
     const interval = 10000
     return eventChannel(emit => {
-        setInterval(function fetchConnectedPeers() {
-            function on_connected_peers(args) {
-                var connected_peers = args[0];
-                console.log(rpc_address, connected_peers)
-                emit({
-                    type: SET_CONNECTED_PEERS,
-                    payload: connected_peers.length
-                })
+        setInterval(function fetchTasks() {
+            function on_tasks(args) {
+                var taskList = args[0];
+                console.log(rpc_address, taskList)
+            // emit({
+            //     type: SET_CONNECTED_PEERS,
+            //     payload: connected_peers.length
+            // })
             }
 
-            _handleRPC(on_connected_peers, session, rpc_address)
-            return fetchConnectedPeers
+            _handleRPC(on_tasks, session, rpc_address)
+            return fetchTasks
         }(), interval)
 
 
@@ -39,13 +39,13 @@ export function subscribeConnectedPeers(session, rpc_address) {
 }
 
 /**
- * [*connectedPeers generator]
+ * [*tasks generator]
  * @param  {Object} session     [Websocket connection session]
  * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* connectedPeersFlow(session, address) {
-    const channel = yield call(subscribeConnectedPeers, session, address)
+export function* tasksFlow(session, address) {
+    const channel = yield call(subscribeTasks, session, address)
 
     try {
         while (true) {

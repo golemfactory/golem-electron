@@ -1,4 +1,8 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../../actions'
+
 import RadialProgress from './../../RadialProgress'
 
 const mockSystemConfig = {
@@ -7,7 +11,15 @@ const mockSystemConfig = {
     disk: 2048
 }
 
-export default class Advanced extends React.Component {
+const mapStateToProps = state => ({
+    //chartValues: state.advance.chartValues
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class Advanced extends React.Component {
 
     constructor(props) {
         super(props);
@@ -76,3 +88,5 @@ export default class Advanced extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Advanced)

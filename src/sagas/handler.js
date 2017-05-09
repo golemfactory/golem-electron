@@ -56,9 +56,10 @@ export let config = Object.freeze({
     RUN_BENCHMARK_RPC: 'comp.environment.benchmark',
     //Payment
     BALANCE_RPC: 'pay.balance',
-    PAYMENTS_RPC: 'pay.pay.payments',
+    PAYMENTS_RPC: 'pay.payments',
     PAYMENT_ADDRESS_RPC: 'pay.ident',
     INCOME_RPC: 'pay.incomes',
+    BALANCE_CH: 'evt.pay.balance',
     //General
     QUIT_RPC: 'ui.quit',
     LOCK_CONFIG_CH: 'evt_lock_config',

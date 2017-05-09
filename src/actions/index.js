@@ -1,11 +1,17 @@
 export let dict = Object.freeze({
-    SET_ALL_FRAMES: 'SET_ALL_FRAMES',
-    SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
-    SET_TASK_INFO: 'SET_TASK_INFO',
+    ONBOARDING: 'ONBOARDING',
+    //NETWORK
+    SET_BALANCE: 'SET_BALANCE',
+    SET_RESOURCES: 'SET_RESOURCES',
+    SET_HISTORY: 'SET_HISTORY',
     SET_PRESET: 'SET_PRESET',
     SET_ADVANCED_CHART: 'SET_ADVANCED_CHART',
-    SET_HISTORY: 'SET_HISTORY',
-    SET_RESOURCES: 'SET_RESOURCES',
+    //TASKS
+    SET_TASKLIST: 'SET_TASKLIST',
+    SET_TASK_DETAILS: 'SET_TASK_DETAILS',
+    SET_TASK_INFO: 'SET_TASK_INFO',
+    SET_PREVIEW: 'SET_PREVIEW',
+    //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_PERFORMANCE_CHARTS: 'SET_PERFORMANCE_CHARTS',
     SET_PROV_MIN_PRICE: 'SET_PROV_MIN_PRICE',
@@ -14,16 +20,16 @@ export let dict = Object.freeze({
     SET_PROFILE_CHARTS: 'SET_PROFILE_CHARTS',
     SET_PROV_TRUST: 'SET_PROV_TRUST',
     SET_REQ_TRUST: 'SET_REQ_TRUST',
-    SET_TASK_DETAILS: 'SET_TASK_DETAILS',
-    SET_PREVIEW: 'SET_PREVIEW',
-    ONBOARDING: 'ONBOARDING',
+    //FRAME WINDOW
+    SET_ALL_FRAMES: 'SET_ALL_FRAMES',
+    SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
+    SET_CONNECTED_PEERS: 'SET_CONNECTED_PEERS',
+    //GENERAL
     START_LOADING: 'START_LOADING',
     END_LOADING: 'END_LOADING',
     LOGIN: 'LOGIN',
     LOGOUT: 'LOGOUT',
-    SET_MESSAGE: 'SET_MESSAGE',
     SET_AUTOLAUNCH: 'SET_AUTOLAUNCH',
-    SET_BLENDER: 'SET_BLENDER',
     SET_PREVIEW_RADIO: 'SET_PREVIEW_RADIO',
     SET_PREVIEW_EXPANDED: 'SET_PREVIEW_EXPANDED',
     SET_CURRENCY: 'SET_CURRENCY',
@@ -67,6 +73,12 @@ export const setResources = (payload) => ({
     type: SET_RESOURCES,
     payload
 })
+
+export const setConnectedPeers = (payload) => ({
+    type: SET_CONNECTED_PEERS,
+    payload
+})
+
 
 export const setFileLocation = (payload) => ({
     type: SET_FILE_LOCATION,
@@ -143,9 +155,9 @@ export const logout = () => ({
     type: LOGOUT
 })
 
-export const setMessage = (message) => ({
-    type: SET_MESSAGE,
-    message
+export const setBalance = (payload) => ({
+    type: SET_BALANCE,
+    payload
 })
 
 export const setAutoLaunch = (payload) => ({
@@ -153,9 +165,9 @@ export const setAutoLaunch = (payload) => ({
     payload
 })
 
-export const setBlender = (blender) => ({
-    type: SET_BLENDER,
-    blender
+export const setTaskList = (payload) => ({
+    type: SET_TASKLIST,
+    payload
 })
 
 export const setPreviewRadio = (payload) => ({

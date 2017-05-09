@@ -3,8 +3,11 @@ import { dict } from './../../actions'
 const {SET_AVATAR, SET_PROFILE_CHARTS} = dict
 
 const initialState = {
-    avatar: {},
-    charts: []
+    avatar: null,
+    charts: {
+        requestor: 30,
+        provider: 16
+    }
 }
 const setProfile = (state = initialState, action) => {
     switch (action.type) {

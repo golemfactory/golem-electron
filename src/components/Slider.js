@@ -9,6 +9,9 @@ export default class Slider extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            defaultValue: props.value
+        }
     }
 
     componentDidMount() {
@@ -43,15 +46,23 @@ export default class Slider extends React.Component {
         indicator.innerHTML = val;
         indicator.style.color = color;
         indicator.style.left = ((parseInt(val) + 20.5) * 3.12) + 'px'; //<-- HARDCODED
+
+    }
+
+    _handleCallback() {
+        let slider = document.getElementById('resourceSlider')
+        let val = slider.value
+        this.props.callback(val)
     }
 
     render() {
-        const {value, iconLeft, iconRight} = this.props
+        const {iconLeft, iconRight} = this.props
+        const {defaultValue} = this.state
         return (
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={value} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource"/>
+                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback}/>
                     <span className="slider-indicator__resources" id="resourceSlider__indicator"/>
                     <span className={iconRight}/>
         </div>
