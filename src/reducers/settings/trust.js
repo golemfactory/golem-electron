@@ -3,8 +3,8 @@ import { dict } from './../../actions'
 const {SET_PROV_TRUST, SET_REQ_TRUST} = dict
 
 const initialState = {
-    providerTrust: 25,
-    requestorTrust: 35
+    providerTrust: 0,
+    requestorTrust: 0
 }
 const setTrust = (state = initialState, action) => {
     switch (action.type) {

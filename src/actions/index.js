@@ -4,8 +4,10 @@ export let dict = Object.freeze({
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
+    SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
     SET_PRESET: 'SET_PRESET',
     SET_ADVANCED_CHART: 'SET_ADVANCED_CHART',
+    SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
@@ -18,6 +20,7 @@ export let dict = Object.freeze({
     SET_REQ_MAX_PRICE: 'SET_REQ_MAX_PRICE',
     SET_AVATAR: 'SET_AVATAR',
     SET_PROFILE_CHARTS: 'SET_PROFILE_CHARTS',
+    SET_NODE_NAME: 'SET_NODE_NAME',
     SET_PROV_TRUST: 'SET_PROV_TRUST',
     SET_REQ_TRUST: 'SET_REQ_TRUST',
     //FRAME WINDOW
@@ -34,10 +37,21 @@ export let dict = Object.freeze({
     SET_PREVIEW_EXPANDED: 'SET_PREVIEW_EXPANDED',
     SET_CURRENCY: 'SET_CURRENCY',
     UPLOAD: 'UPLOAD',
-    SET_ZOOM_RATIO: 'SET_ZOOM_RATIO'
+    SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
+    SET_NETWORK_INFO: 'SET_NETWORK_INFO'
 })
 
-const {SET_ALL_FRAMES, SET_FRAMES_WITH_SUBTASKS, SET_TASK_INFO, SET_PRESET, SET_ADVANCED_CHART, SET_HISTORY, SET_RESOURCES, SET_FILE_LOCATION, SET_PERFORMANCE_CHARTS, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_AVATAR, SET_PROFILE_CHARTS, SET_PROV_TRUST, SET_REQ_TRUST, SET_TASK_DETAILS, SET_PREVIEW, ONBOARDING, START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_MESSAGE, SET_AUTOLAUNCH, SET_BLENDER, SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO} = dict
+const {ONBOARDING,
+    //NETWORK
+    SET_BALANCE, SET_RESOURCES, SET_HISTORY, SET_SYSTEM_INFO, SET_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET,
+    //TASKS
+    SET_TASKLIST, SET_TASK_DETAILS, SET_TASK_INFO, SET_PREVIEW,
+    //SETTINGS
+    SET_FILE_LOCATION, SET_PERFORMANCE_CHARTS, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_AVATAR, SET_PROFILE_CHARTS, SET_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST,
+    //FRAME WINDOW
+    SET_ALL_FRAMES, SET_FRAMES_WITH_SUBTASKS, SET_CONNECTED_PEERS,
+    //GENERAL
+    START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_AUTOLAUNCH, SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO, SET_NETWORK_INFO} = dict
 
 export const setAllFrames = (payload) => ({
     type: SET_ALL_FRAMES,
@@ -54,6 +68,11 @@ export const setTaskInfo = (payload) => ({
     payload
 })
 
+export const setSystemInfo = (payload) => ({
+    type: SET_SYSTEM_INFO,
+    payload
+})
+
 export const setPreset = (payload) => ({
     type: SET_PRESET,
     payload
@@ -61,6 +80,11 @@ export const setPreset = (payload) => ({
 
 export const setAdvancedChart = (payload) => ({
     type: SET_ADVANCED_CHART,
+    payload
+})
+
+export const setChosenPreset = (payload) => ({
+    type: SET_CHOSEN_HARDWARE_PRESET,
     payload
 })
 
@@ -107,6 +131,11 @@ export const setAvatar = (payload) => ({
 
 export const setProfileCharts = (payload) => ({
     type: SET_PROFILE_CHARTS,
+    payload
+})
+
+export const setNodeName = (payload) => ({
+    type: SET_NODE_NAME,
     payload
 })
 
@@ -192,5 +221,20 @@ export const uploadFile = (payload) => ({
 
 export const setZoomRatio = (payload) => ({
     type: SET_ZOOM_RATIO,
+    payload
+})
+
+export const setNetworkInfo = (payload) => ({
+    type: SET_NETWORK_INFO,
+    payload
+})
+
+export const showTrust = (payload) => ({
+    type: 'TRUST_PAGE',
+    payload
+})
+
+export const recountBenchmark = (payload) => ({
+    type: 'RECOUNT_BENCHMARK',
     payload
 })

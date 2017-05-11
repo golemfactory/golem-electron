@@ -11,23 +11,22 @@ const {SET_CONNECTED_PEERS} = dict
 /**
  * [subscribeConnectedPeers func. fetchs connedted peers data with interval]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeConnectedPeers(session, rpc_address) {
+export function subscribeConnectedPeers(session) {
     const interval = 10000
     return eventChannel(emit => {
         setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {
                 var connected_peers = args[0];
-                console.log(rpc_address, connected_peers)
+                console.log(config.GET_CONNECTED_PEERS_RPC, connected_peers)
                 emit({
                     type: SET_CONNECTED_PEERS,
                     payload: connected_peers.length
                 })
             }
 
-            _handleRPC(on_connected_peers, session, rpc_address)
+            _handleRPC(on_connected_peers, session, config.GET_CONNECTED_PEERS_RPC)
             return fetchConnectedPeers
         }(), interval)
 
@@ -41,11 +40,10 @@ export function subscribeConnectedPeers(session, rpc_address) {
 /**
  * [*connectedPeers generator]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* connectedPeersFlow(session, address) {
-    const channel = yield call(subscribeConnectedPeers, session, address)
+export function* connectedPeersFlow(session) {
+    const channel = yield call(subscribeConnectedPeers, session)
 
     try {
         while (true) {

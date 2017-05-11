@@ -1,13 +1,14 @@
 import { dict } from './../../actions'
 
-const {SET_AVATAR, SET_PROFILE_CHARTS} = dict
+const {SET_AVATAR, SET_PROFILE_CHARTS, SET_NODE_NAME} = dict
 
 const initialState = {
     avatar: null,
     charts: {
         requestor: 30,
         provider: 16
-    }
+    },
+    nodeName: null
 }
 const setProfile = (state = initialState, action) => {
     switch (action.type) {
@@ -21,6 +22,10 @@ const setProfile = (state = initialState, action) => {
             charts: action.payload
         });
 
+    case SET_NODE_NAME:
+        return Object.assign({}, state, {
+            nodeName: action.payload
+        });
 
     default:
         return state;

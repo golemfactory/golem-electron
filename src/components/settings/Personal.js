@@ -8,7 +8,9 @@ import PlaceHolderAvatar from './../../assets/img/avatar.svg'
 
 const mapStateToProps = state => ({
     charts: state.profile.charts,
-    avatar: state.profile.avatar
+    avatar: state.profile.avatar,
+    nodeName: state.profile.nodeName,
+    nodeId: state.info.networkInfo.key
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -22,7 +24,7 @@ export class Personal extends React.Component {
     }
 
     render() {
-        const {avatar, charts} = this.props
+        const {avatar, charts, nodeName, nodeId} = this.props
         return (
             <div className="section__personal">
                 <div className="indicator-panel__personal">
@@ -40,8 +42,8 @@ export class Personal extends React.Component {
                     </div>
                 </div>
                 <div>
-                    <span className="user-name__personal">Muhammed Tanrıkulu</span>
-                    <p/><span className="user-id__personal"> a34a…3bb2</span>
+                    <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
+                    <p/><   span className="user-id__personal">{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}</span>
                 </div>
             </div>
         );

@@ -1,69 +1,57 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
+import { take, call, put, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_CURRENCY} = dict
+const {SET_CURRENCY, SET_PROV_TRUST, SET_REQ_TRUST} = dict
 
 
 /**
  * [callTrust func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function callTrust(session, rpc_address) {
-    const interval = 10000
-
-    return eventChannel(emit => {
-        setInterval(function fetchTrust() {
-            function on_trust_computing(args) {
-                let trust = args[0];
-                console.log(rpc_address[0], trust)
-            // emit({
-            //     type: SET_HISTORY,
-            //     payload: history
-            // })
-            }
-
-            function on_trust_requesting(args) {
-                let trust = args[0];
-                console.log(rpc_address[1], trust)
-            // emit({
-            //     type: SET_HISTORY,
-            //     payload: history
-            // })
-            }
-
-            _handleRPC(on_trust_computing, session, rpc_address[0])
-            _handleRPC(on_trust_requesting, session, rpc_address[1])
-            return fetchTrust
-        }(), interval)
-
-
-        return () => {
-            console.log('negative')
+export function callTrust(session, payload) {
+    let computingTrustPromise = new Promise((resolve, reject) => {
+        function on_trust_computing(args) {
+            let trust = args[0];
+            console.log(config.GET_COMPUTING_TRUST_RPC, trust)
+            resolve({
+                type: SET_PROV_TRUST,
+                payload: trust
+            })
         }
+
+        _handleRPC(on_trust_computing, session, config.GET_COMPUTING_TRUST_RPC, [payload])
     })
+    let requestingTrustPromise = new Promise((resolve, reject) => {
+        function on_trust_requesting(args) {
+            let trust = args[0];
+            console.log(config.GET_REQUESTING_TRUST_RPC, trust)
+            resolve({
+                type: SET_REQ_TRUST,
+                payload: trust
+            })
+        }
+
+        _handleRPC(on_trust_requesting, session, config.GET_REQUESTING_TRUST_RPC, [payload])
+    })
+
+    return Promise.all([computingTrustPromise, requestingTrustPromise])
+}
+
+export function* fireBase(session, {type, payload}) {
+    const actionList = yield call(callTrust, session, payload)
+    yield actionList && actionList.map(item => put(item))
 }
 
 /**
  * [*trust generator]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* trustFlow(session, address) {
-    const channel = yield call(callTrust, session, address)
-
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-    }
+export function* trustFlow(session) {
+    yield takeEvery('TRUST_PAGE', fireBase, session)
 }

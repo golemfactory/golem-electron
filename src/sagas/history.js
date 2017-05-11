@@ -36,17 +36,16 @@ const mockHistory = [
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeHistory(session, rpc_address) {
+export function subscribeHistory(session) {
     const interval = 10000
 
     return eventChannel(emit => {
         setInterval(function fetchHistory() {
             function on_history_payments(args) {
                 let history = args[0];
-                console.log(rpc_address[0], history)
+                console.log(config.PAYMENTS_RPC, history)
                 emit({
                     type: SET_HISTORY,
                     payload: mockHistory
@@ -55,15 +54,15 @@ export function subscribeHistory(session, rpc_address) {
 
             function on_history_income(args) {
                 let history = args[0];
-                console.log(rpc_address[1], history)
+                console.log(config.INCOME_RPC, history)
             // emit({
             //     type: SET_HISTORY,
             //     payload: history
             // })
             }
 
-            _handleRPC(on_history_payments, session, rpc_address[0])
-            _handleRPC(on_history_income, session, rpc_address[1])
+            _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
+            _handleRPC(on_history_income, session, config.INCOME_RPC)
             return fetchHistory
         }(), interval)
 
@@ -77,11 +76,10 @@ export function subscribeHistory(session, rpc_address) {
 /**
  * [*history generator]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* historyFlow(session, address) {
-    const channel = yield call(subscribeHistory, session, address)
+export function* historyFlow(session) {
+    const channel = yield call(subscribeHistory, session)
 
     try {
         while (true) {

@@ -11,23 +11,22 @@ const {SET_CONNECTED_PEERS} = dict
 /**
  * [subscribeTasks func. fetches tasks with interval]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeTasks(session, rpc_address) {
+export function subscribeTasks(session) {
     const interval = 10000
     return eventChannel(emit => {
         setInterval(function fetchTasks() {
             function on_tasks(args) {
                 var taskList = args[0];
-                console.log(rpc_address, taskList)
+                console.log(config.GET_TASKS_RPC, taskList)
             // emit({
             //     type: SET_CONNECTED_PEERS,
             //     payload: connected_peers.length
             // })
             }
 
-            _handleRPC(on_tasks, session, rpc_address)
+            _handleRPC(on_tasks, session, config.GET_TASKS_RPC)
             return fetchTasks
         }(), interval)
 
@@ -41,11 +40,10 @@ export function subscribeTasks(session, rpc_address) {
 /**
  * [*tasks generator]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* tasksFlow(session, address) {
-    const channel = yield call(subscribeTasks, session, address)
+export function* tasksFlow(session) {
+    const channel = yield call(subscribeTasks, session)
 
     try {
         while (true) {

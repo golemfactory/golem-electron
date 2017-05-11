@@ -13,8 +13,11 @@ import { connectedPeersFlow } from './connectedPeers'
 import { balanceFlow } from './balance'
 import { historyFlow } from './history'
 import { advancedFlow } from './advanced'
+import { performanceFlow } from './performance'
 import { trustFlow } from './trust'
 import { tasksFlow } from './tasks'
+import { settingsFlow } from './userSettings'
+import { networkInfoFlow } from './networkInfo'
 
 const {LOGIN, SET_MESSAGE, SET_BLENDER, LOGOUT} = dict
 
@@ -68,7 +71,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(false)
+                emit(true)
             }
         }
 
@@ -148,12 +151,15 @@ export function* read(session) {
 }*/
 export function* apiFlow(connection) {
     yield fork(uploadFlow, connection);
-    yield fork(connectedPeersFlow, connection, config.GET_CONNECTED_PEERS_RPC);
-    yield fork(balanceFlow, connection, config.BALANCE_CH);
-    yield fork(historyFlow, connection, [config.PAYMENTS_RPC, config.INCOME_RPC]);
-    yield fork(advancedFlow, connection, [config.PRESETS_RPC]);
-    yield fork(tasksFlow, connection, config.GET_TASKS_RPC);
-    yield fork(trustFlow, connection, [config.GET_COMPUTING_TRUST_RPC, config.GET_REQUESTING_TRUST_RPC]);
+    yield fork(networkInfoFlow, connection);
+    yield fork(settingsFlow, connection);
+    yield fork(connectedPeersFlow, connection);
+    yield fork(balanceFlow, connection);
+    yield fork(historyFlow, connection);
+    yield fork(advancedFlow, connection);
+    yield fork(tasksFlow, connection);
+    yield fork(trustFlow, connection);
+    yield fork(performanceFlow, connection);
     yield fork(currencyFlow);
 }
 /**
