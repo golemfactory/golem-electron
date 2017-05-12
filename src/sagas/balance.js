@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleSUBPUB } from './handler'
 
 
-const {SET_CONNECTED_PEERS} = dict
+const {SET_BALANCE} = dict
 
 
 /**
@@ -18,10 +18,10 @@ export function subscribeBalance(session) {
         function on_balance(args) {
             let balance = args[0];
             console.log(config.BALANCE_CH, balance)
-        // emit({
-        //     type: SET_CONNECTED_PEERS,
-        //     payload: connected_peers.length
-        // })
+            emit({
+                type: SET_BALANCE,
+                payload: balance.GNT / (10 ** 18) //POW shorthand thanks to ES6
+            })
         }
         _handleSUBPUB(on_balance, session, config.BALANCE_CH)
 
