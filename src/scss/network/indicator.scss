@@ -32,3 +32,10 @@
         font-size: 9pt;
     }
 }
+
+.content__indicator {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+}
