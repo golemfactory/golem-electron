@@ -31,7 +31,8 @@ export class TaskPanel extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            deleteModal: false
+            deleteModal: false,
+            deleteCallback: null
         }
     }
 
@@ -48,9 +49,14 @@ export class TaskPanel extends React.Component {
         setTimeout(endLoading, 3000)
     }
 
-    _handleDeleteModal() {
+    _handleDeleteModal(deleteId, deleteCallback) {
         this.setState({
-            deleteModal: true
+            deleteModal: true,
+            deleteProps: {
+                deleteId,
+                deleteCallback
+            },
+
         })
     }
 
@@ -62,7 +68,7 @@ export class TaskPanel extends React.Component {
 
 
     render() {
-        const {deleteModal} = this.state
+        const {deleteModal, deleteProps} = this.state
         const {actions, preview, expandedPreview} = this.props
 
         return (
@@ -76,7 +82,7 @@ export class TaskPanel extends React.Component {
                         {preview && <div className="section__preview">
                              <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
                         </div>}
-                        {deleteModal && <Modal type="delete" closeModal={::this._closeDeleteModal}/>}
+                        {deleteModal && <Modal type="delete" closeModal={::this._closeDeleteModal} {...deleteProps}/>}
                     </div>
 
                     <Footer {...this.props}/>

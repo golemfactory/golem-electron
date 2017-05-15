@@ -1,12 +1,25 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
+import { take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_TASKLIST} = dict
+const {SET_TASKLIST, DELETE_TASK} = dict
 
+export function callDeleteTask(session, payload) {
+
+    function on_delete_task(args) {
+        var delete_task = args[0];
+        console.log(config.DELETE_TASK_RPC, delete_task)
+    }
+
+    _handleRPC(on_delete_task, session, config.DELETE_TASK_RPC, [payload])
+}
+
+export function* deleteTaskBase(session, {type, payload}) {
+    yield call(callDeleteTask, session, payload)
+}
 
 /**
  * [subscribeTasks func. fetches tasks with interval]
@@ -37,12 +50,7 @@ export function subscribeTasks(session) {
     })
 }
 
-/**
- * [*tasks generator]
- * @param  {Object} session     [Websocket connection session]
- * @yield   {Object}            [Action object]
- */
-export function* tasksFlow(session) {
+export function* fireBase(session) {
     const channel = yield call(subscribeTasks, session)
 
     try {
@@ -53,4 +61,14 @@ export function* tasksFlow(session) {
     } finally {
         console.info('yield cancelled!')
     }
+}
+
+/**
+ * [*tasks generator]
+ * @param  {Object} session     [Websocket connection session]
+ * @yield   {Object}            [Action object]
+ */
+export function* tasksFlow(session) {
+    yield fork(fireBase, session);
+    yield takeEvery(DELETE_TASK, deleteTaskBase, session)
 }

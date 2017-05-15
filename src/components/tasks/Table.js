@@ -32,6 +32,7 @@ export class Table extends React.Component {
 
     constructor(props) {
         super(props);
+        this._handleDeleteTask = ::this._handleDeleteTask
     }
 
     _handleRowClick(event, item, index) {
@@ -39,8 +40,13 @@ export class Table extends React.Component {
         return true
     }
 
-    _handleDeleteModal() {
-        this.props.deleteModalHandler()
+    _handleDeleteModal(id) {
+        this.props.deleteModalHandler(id, this._handleDeleteTask)
+    }
+
+    _handleDeleteTask(id) {
+        console.log("DELETED_TASK", id)
+        this.props.actions.deleteTask(id)
     }
 
     /**
