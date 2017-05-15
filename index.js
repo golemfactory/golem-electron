@@ -16,7 +16,7 @@ function isDevelopment() {
 
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
 const APP_WIDTH = 460
-const APP_HEIGHT = 520
+const APP_HEIGHT = 569
 const PREVIEW_APP_WIDTH = 752
 const PREVIEW_APP_HEIGHT = 572
 
