@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_CURRENCY} = dict
+const {SET_PERFORMANCE_CHARTS} = dict
 
 
 /**
@@ -13,36 +13,36 @@ const {SET_CURRENCY} = dict
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function callBenchmark(session, _) {
+export function callBenchmark(session) {
     return new Promise((resolve, reject) => {
         function on_environments(args) {
             let environments = args[0];
-            console.log(config.GET_ENVIRONMENTS_RPC, environments)
-            let environment_ids = environments.map(item => item.id)
-            calculateBenchmark(environment_ids)
+            let benchmarkActions = environments.map(item => calculateBenchmark(item.id))
+            resolve(Promise.all(benchmarkActions))
         }
 
-        function calculateBenchmark() {
+        function calculateBenchmark(id) {
+            return new Promise((resolve, reject) => {
+                function on_benchmark(args) {
+                    let benchmark = args[0];
+                    resolve({
+                        type: SET_PERFORMANCE_CHARTS,
+                        payload: {
+                            [id == "BLENDER" ? "estimated_blender_performance" : "estimated_lux_performance"]: benchmark // <-- HARDCODED
+                        }
+                    })
+                }
 
-            function on_benchmark(args) {
-                let benchmark = args[0];
-                console.log(config.RUN_BENCHMARK_RPC, benchmark)
-            // resolve({
-            //     type: SET_PROV_TRUST,
-            //     payload: trust
-            // })
-            }
-
-            _handleRPC(on_benchmark, session, config.GET_ENVIRONMENTS_RPC)
+                _handleRPC(on_benchmark, session, config.RUN_BENCHMARK_RPC, [id])
+            })
         }
         _handleRPC(on_environments, session, config.GET_ENVIRONMENTS_RPC)
     })
 }
 
-export function* fireBase(session, {type, payload}) {
-    console.log('SAGA_PERFORMANCE', 'Fired')
-    const action = yield call(callBenchmark, session, payload)
-    yield action && put(action)
+export function* fireBase(session, {type}) {
+    const actionList = yield call(callBenchmark, session)
+    yield actionList && actionList.map(action => put(action))
 }
 
 /**

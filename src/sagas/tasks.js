@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_CONNECTED_PEERS} = dict
+const {SET_TASKLIST} = dict
 
 
 /**
@@ -20,10 +20,10 @@ export function subscribeTasks(session) {
             function on_tasks(args) {
                 var taskList = args[0];
                 console.log(config.GET_TASKS_RPC, taskList)
-            // emit({
-            //     type: SET_CONNECTED_PEERS,
-            //     payload: connected_peers.length
-            // })
+                emit({
+                    type: SET_TASKLIST,
+                    payload: taskList
+                })
             }
 
             _handleRPC(on_tasks, session, config.GET_TASKS_RPC)
