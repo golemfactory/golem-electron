@@ -65,12 +65,24 @@ export default class TaskDetail extends React.Component {
                             <div className="item-settings">
                                 <span className="title">Blender Compositing</span>
                                 <div className="switch-box switch-box--green">
-                                <span>Off</span>
-                                <label className="switch">
-                                    <input type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0"/>
-                                    <div className="switch-slider round"></div>
-                                </label>
+                                    <span>Off</span>
+                                    <label className="switch">
+                                        <input type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0"/>
+                                        <div className="switch-slider round"></div>
+                                    </label>
+                                </div>
                             </div>
+                             <div className="item-settings">
+                                <span className="title">Deadline</span>
+                                <input type="text" placeholder="16:20:00" aria-label="Deadline"/>
+                            </div>
+                            <div className="item-settings">
+                                <span className="title">Subtask Amount</span>
+                                <input type="text" placeholder="8" aria-label="Subtask amount"/>
+                            </div>
+                            <div className="item-settings">
+                                <span className="title">Subtask Timeout</span>
+                                <input type="text" placeholder="4:10:00" aria-label="Deadline"/>
                             </div>
                         </section>
                         <section className="section-price__task-detail">

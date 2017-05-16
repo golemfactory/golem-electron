@@ -67,6 +67,10 @@
     input {
         width: 100%;
     }
+    input {
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
     .icon-cross {
         margin: 0 20px;
         font-size: 10pt;

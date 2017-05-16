@@ -162,7 +162,7 @@ select {
         background-color: transparent;
         color: $button-static-color;
         border-radius: 2px;
-        font-weight: 400;
+        font-weight: 600;
         font-size: 10pt;
         &:hover {
             color: $button-hover-color;
@@ -420,6 +420,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__file-location,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
@@ -451,6 +452,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__file-location,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
@@ -482,6 +484,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__performance,
     .content__price,
     .content__trust,
+    .content__file-location,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,

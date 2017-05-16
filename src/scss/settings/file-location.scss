@@ -1,12 +1,20 @@
 .content__file-location {
     div {
+        width: 100%;
         height: 60px;
         display: flex;
         justify-content: space-around;
         align-items: center;
     }
-    input {
+    .title__file-location {
         font-size: 10pt;
+        font-weight: 400;
+    }
+    input {
+        margin: 0 20px;
+        font-size: 10pt;
+        padding: 0 20px;
+        box-sizing: border-box;
     }
     button {
         height: 32px;

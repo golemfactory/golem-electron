@@ -16,8 +16,9 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
-
+//<p/><span className="icon-question-mark"/> Deleted
 export class Personal extends React.Component {
+
 
     constructor(props) {
         super(props);
@@ -31,7 +32,6 @@ export class Personal extends React.Component {
                     <div className="indicator__personal">
                         <RadialProgress pct={charts.requestor}/>
                         <span>Requestor</span>
-                        <p/><span className="icon-question-mark"/>
                     </div>
                     <div>
                         <img className="image__personal" src={avatar || PlaceHolderAvatar} alt="avatar"/>
