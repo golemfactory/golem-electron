@@ -10,6 +10,7 @@ import * as Actions from './../actions'
 const ADD_TASK_NEXT_STEP = '/add-task/type'
 
 const mapStateToProps = state => ({
+    taskList: state.realTime.taskList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -21,10 +22,10 @@ const mapDispatchToProps = dispatch => ({
  * @doc: http://codepen.io/jzmmm/pen/bZjzxN?editors=0011 
  */
 export class DropZone extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
-            className: 'drop-zone--hide'
+            className: props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -85,7 +86,7 @@ export class DropZone extends React.Component {
      */
     _onDragLeave(e) {
         this.setState({
-            className: 'drop-zone--hide'
+            className: this.props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
         });
         e.stopPropagation();
         e.preventDefault();

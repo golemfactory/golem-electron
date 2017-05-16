@@ -1,4 +1,7 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../actions'
 
 import Personal from './Personal'
 import Performance from './Performance'
@@ -29,13 +32,27 @@ const accordionItems = [
 
 let activateContent
 
-export default class index extends React.Component {
+
+const mapStateToProps = state => ({
+    nodeId: state.info.networkInfo.key
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class Settings extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             activeContent: undefined
         }
+    }
+
+    componentDidMount() {
+        const {actions, nodeId} = this.props
+        actions.showTrust(nodeId)
     }
 
     _handleTab(elm, evt) {
@@ -84,3 +101,5 @@ export default class index extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Settings)

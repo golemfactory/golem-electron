@@ -41,9 +41,9 @@ export default class TaskDetail extends React.Component {
                             </div>
                             <div className="item-settings">
                                 <span className="title">Dimensions</span>
-                                <input type="number" aria-label="Dimensions (width)"/>
+                                <input type="number" min="0" aria-label="Dimensions (width)"/>
                                 <span className="icon-cross"/>
-                                <input type="number" aria-label="Dimensions (height)"/>
+                                <input type="number" min="0" aria-label="Dimensions (height)"/>
                             </div>
                             <div className="item-settings">
                                 <span className="title">Frame Range</span>
@@ -94,7 +94,7 @@ export default class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input type="number"aria-label="Your bid"/>
+                                <input type="number" min="0" aria-label="Your bid"/>
                                 <span>GNT</span>
                             </div>
                             <span className="item-price tips__price">

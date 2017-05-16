@@ -1,12 +1,27 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../actions'
+
 import Slider from './../Slider'
 
-export default class Trust extends React.Component {
+
+const mapStateToProps = state => ({
+    providerTrust: state.trust.providerTrust,
+    requestorTrust: state.trust.requestorTrust
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+
+export class Trust extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            trust: true
+            isRequestorTrust: false
         }
     }
 
@@ -17,27 +32,40 @@ export default class Trust extends React.Component {
 
     _handleTrustSwitch() {
         this.setState({
-            trust: !this.state.trust
+            isRequestorTrust: !this.state.isRequestorTrust
         })
     }
 
+    _handleTrustSlider(value) {
+        const {actions} = this.props
+        this.state.isRequestorTrust ? actions.setRequestorTrust(value) : actions.setProviderTrust(value)
+    }
+
+    fetchTrust(isRequestor) {
+        const {providerTrust, requestorTrust} = this.props
+        if (isRequestor)
+            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider}/>
+        else
+            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider}/>
+    }
+
     render() {
-        const {trust} = this.state
+        const {isRequestorTrust} = this.state
         return (
             <div className="content__trust">
-                <Slider value="25" iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider"/>
+                {this.fetchTrust(isRequestorTrust)}
                 <div className="switch__trust">
                     <span style={{
-                color: trust ? '#9b9b9b' : '#4e4e4e'
+                color: isRequestorTrust ? '#9b9b9b' : '#4e4e4e'
             }}>Providing</span>
                     <div className="switch-box switch-box--green">
                         <label className="switch">
-                            <input type="checkbox" onChange={::this._handleTrustSwitch} defaultChecked={trust}  aria-label="Trust switch providing/requesting" tabIndex="0"/>
+                            <input type="checkbox" onChange={::this._handleTrustSwitch} defaultChecked={isRequestorTrust}  aria-label="Trust switch providing/requesting" tabIndex="0"/>
                             <div className="switch-slider round"></div>
                         </label>
                     </div>
                     <span style={{
-                color: trust ? '#4e4e4e' : '#9b9b9b'
+                color: isRequestorTrust ? '#4e4e4e' : '#9b9b9b'
             }}>Requesting</span>
                 </div>
                 <div className="tips__trust">
@@ -47,3 +75,5 @@ export default class Trust extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Trust)

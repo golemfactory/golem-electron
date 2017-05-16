@@ -64,20 +64,20 @@ export default class indicator extends React.Component {
     }
 
     render() {
-        const {message, actions} = this.props
+        const {balance, actions} = this.props
         const {defaultCurrency, currencyRate} = this.state
         return (
             <div className="content__indicator">
                 <span>{defaultCurrency === 'GNT' ? 'Your Golem balance' : 'Approximately'}</span>
                 <Motion defaultStyle={{
-                messageAnimated: 0
+                balanceAnimated: 0
             }} style={{
-                messageAnimated: spring(Number(message), {
+                balanceAnimated: spring(Number(balance), {
                     stiffness: 50,
                     damping: 25
                 })
             }}>
-                    {({messageAnimated}) => <span className="amount">{(messageAnimated * currencyRate).toFixed(2)}</span>}
+                    {({balanceAnimated}) => <span className="amount">{(balanceAnimated * currencyRate).toFixed(2)}</span>}
                 </Motion>
                 <ul role="menu">
                     <li className="amont__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</li>

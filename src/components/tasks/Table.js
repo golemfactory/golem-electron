@@ -16,7 +16,7 @@ import convertSecsToHMS from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({
-    blender_data: state.realTime.blender
+    taskList: state.realTime.taskList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -32,6 +32,7 @@ export class Table extends React.Component {
 
     constructor(props) {
         super(props);
+        this._handleDeleteTask = ::this._handleDeleteTask
     }
 
     _handleRowClick(event, item, index) {
@@ -39,8 +40,13 @@ export class Table extends React.Component {
         return true
     }
 
-    _handleDeleteModal() {
-        this.props.deleteModalHandler()
+    _handleDeleteModal(id) {
+        this.props.deleteModalHandler(id, this._handleDeleteTask)
+    }
+
+    _handleDeleteTask(id) {
+        console.log("DELETED_TASK", id)
+        this.props.actions.deleteTask(id)
     }
 
     /**
@@ -100,10 +106,10 @@ export class Table extends React.Component {
     }
 
     render() {
-        const {blender_data} = this.props
+        const {taskList} = this.props
         return (
             <div role="list">
-                {blender_data && this.listTasks(blender_data)}
+                {taskList && this.listTasks(taskList)}
             </div>
         );
     }

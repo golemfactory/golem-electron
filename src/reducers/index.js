@@ -23,6 +23,7 @@ import input from './input'
 import loader from './loader'
 import currency from './currency'
 import realTime from './realTime'
+import info from './info'
 import { routerReducer } from 'react-router-redux'
 
 const reducer = combineReducers({
@@ -44,6 +45,7 @@ const reducer = combineReducers({
     loader,
     currency,
     realTime,
+    info,
     routing: routerReducer
 })
 

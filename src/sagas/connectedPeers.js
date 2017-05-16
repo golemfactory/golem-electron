@@ -1,37 +1,32 @@
 import { eventChannel, buffers } from 'redux-saga'
 import { take, call, put } from 'redux-saga/effects'
-import axios from 'axios'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_CURRENCY} = dict
+const {SET_CONNECTED_PEERS} = dict
 
 
 /**
  * [subscribeConnectedPeers func. fetchs connedted peers data with interval]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} rpc_address [RPC address]
  * @return {Object}             [Action object]
  */
-export function subscribeConnectedPeers(session, rpc_address) {
+export function subscribeConnectedPeers(session) {
     const interval = 10000
     return eventChannel(emit => {
         setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {
                 var connected_peers = args[0];
-                console.log(connected_peers)
-            // emit({
-            //         type: SET_CURRENCY,
-            //         payload: {
-            //             currency: data.data[0].symbol,
-            //             rate: data.data[0].price_usd
-            //         }
-            // })
+                console.log(config.GET_CONNECTED_PEERS_RPC, connected_peers)
+                emit({
+                    type: SET_CONNECTED_PEERS,
+                    payload: connected_peers.length
+                })
             }
 
-            _handleRPC(on_connected_peers, session, rpc_address)
+            _handleRPC(on_connected_peers, session, config.GET_CONNECTED_PEERS_RPC)
             return fetchConnectedPeers
         }(), interval)
 
@@ -45,11 +40,10 @@ export function subscribeConnectedPeers(session, rpc_address) {
 /**
  * [*connectedPeers generator]
  * @param  {Object} session     [Websocket connection session]
- * @param  {String} address     [RPC address]
  * @yield   {Object}            [Action object]
  */
-export function* connectedPeers(session, address) {
-    const channel = yield call(subscribeConnectedPeers, session, address)
+export function* connectedPeersFlow(session) {
+    const channel = yield call(subscribeConnectedPeers, session)
 
     try {
         while (true) {

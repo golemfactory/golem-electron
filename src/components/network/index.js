@@ -24,9 +24,10 @@ import Advanced from './tabs/Advanced'
 //a11y(React)
 
 const mapStateToProps = state => ({
-    message: state.realTime.message,
+    balance: state.realTime.balance,
     currency: state.currency,
-    autoLaunch: state.input.autoLaunch
+    autoLaunch: state.input.autoLaunch,
+    connectedPeers: state.realTime.connectedPeers
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -116,7 +117,7 @@ export class MainFragment extends React.Component {
     }
 
     render() {
-        const {message, actions, autoLaunch} = this.props
+        const {message, actions, autoLaunch, connectedPeers} = this.props
         const {activeTab} = this.state
         return (
             <div className="content__main">
@@ -138,7 +139,7 @@ export class MainFragment extends React.Component {
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className="icon-status-dot icon-status-dot--active "/>
-                    <span>240 Nodes</span>
+                    <span>{connectedPeers} {connectedPeers > 1 ? 'Nodes' : 'Node'}</span>
                 </div>
                 <button className="btn--primary">Start Golem</button>
             </div>
