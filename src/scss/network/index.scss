@@ -22,10 +22,12 @@
         border-bottom: 1px solid $color-text3;
         .tab-panel {
             @include flex;
-            height: 45px;
+            height: 47px;
             border-bottom: 1px solid $color-text3;
             .tab__title {
                 font-weight: 500;
+                font-size: 11pt;
+                line-height: 1.3em;
                 color: $color-text3;
                 cursor: pointer;
                 &.active {
@@ -36,7 +38,7 @@
         .tab__content {
             position: absolute;
             bottom: 0;
-            top: 46px;
+            top: 47px;
             width: 100%;
             overflow-y: overlay;
         }
@@ -50,7 +52,9 @@
         flex: 0 0 90px;
         &-status {
             @include flex;
-            width: 100px;
+            width: 96px;
+            font-size: 11pt;
+            font-weight: 400;
             .icon-status-dot {
                 font-size: 10pt;
                 &--active {

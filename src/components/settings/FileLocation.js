@@ -10,7 +10,7 @@ export default class FileLocation extends React.Component {
         return (
             <div className="content__file-location">
                 <div>
-                    <span>Output Folder</span>
+                    <span className="title__file-location">Output Folder</span>
                     <input type="text" disabled placeholder="..Docs/Golem/Output" aria-label="Output folder path"/>
                     <button className="btn--outline">Change</button>
                 </div>

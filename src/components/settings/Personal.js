@@ -2,6 +2,7 @@ import React from 'react';
 import RadialProgress from './../RadialProgress'
 import Avatar from './../../assets/img/avatar.svg'
 
+//<p/><span className="icon-question-mark"/> Deleted
 export default class Personal extends React.Component {
 
     constructor(props) {
@@ -15,7 +16,6 @@ export default class Personal extends React.Component {
                     <div className="indicator__personal">
                         <RadialProgress pct={16}/>
                         <span>Requestor</span>
-                        <p/><span className="icon-question-mark"/>
                     </div>
                     <div>
                         <img className="image__personal" src={Avatar} alt="avatar"/>

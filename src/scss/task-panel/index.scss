@@ -16,10 +16,10 @@
     overflow-y: overlay;
     box-sizing: border-box;
     &--with-preview {
-        margin-bottom: 300px;
+        margin-bottom: 290px;
         @media screen and (max-height: 723px) {
             margin-bottom: 0;
-            height: 325px;
+            height: 317px;
         }
     }
 }

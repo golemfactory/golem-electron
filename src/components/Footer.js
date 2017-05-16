@@ -27,8 +27,8 @@ export default class Footer extends Component {
         return (
             <footer className="footer">
               <div>
-                <span className="icon-processing"></span>
-                <span>Golem is ready!</span>
+                <span className="icon-progress"></span>
+                <span>Processing your task</span>
               </div>
               <div className="switch-box">
                 <label className="switch">

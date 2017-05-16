@@ -3,7 +3,7 @@
     .task-list {
         .task-item {
             position: relative;
-            height: 50px;
+            height: 49px;
             padding: 15px 20px;
             border-bottom: 1px solid $color-text3;
             cursor: pointer;
@@ -26,9 +26,11 @@
             h4 {
                 font-weight: 400;
                 margin: 0;
+                font-size: 11pt !important;
+                line-height: 1.5em;
             }
             .duration {
-                font-size: 9pt;
+                font-size: 8.5pt;
                 &--active {
                     color: $button-static-color;
                 }
