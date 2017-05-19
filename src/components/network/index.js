@@ -28,7 +28,8 @@ const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
     autoLaunch: state.input.autoLaunch,
-    connectedPeers: state.realTime.connectedPeers
+    connectedPeers: state.realTime.connectedPeers,
+    connectionProblem: state.info.connectionProblem
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -135,8 +136,9 @@ export class MainFragment extends React.Component {
     }
 
     render() {
-        const {message, actions, autoLaunch, connectedPeers} = this.props
+        const {message, actions, autoLaunch, connectedPeers, connectionProblem} = this.props
         const {activeTab, presetModal, modalData} = this.state
+        console.log(connectionProblem)
         return (
             <div className="content__main">
                 <div className="section__currency">
@@ -157,8 +159,8 @@ export class MainFragment extends React.Component {
             {presetModal && <PresetModal closeModal={::this._closeModal} {...modalData}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
-                    <span className="icon-status-dot icon-status-dot--active "/>
-                    <span>{connectedPeers} {connectedPeers > 1 ? 'Nodes' : 'Node'}</span>
+                    <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
+                    <span>{!connectionProblem ? `${connectedPeers} ${connectedPeers > 1 ? 'Nodes' : 'Node'}` : 'No Connection' }</span>
                 </div>
                 <button className="btn--primary">Start Golem</button>
             </div>

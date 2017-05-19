@@ -1,13 +1,14 @@
 import { dict } from './../actions'
 
-const {SET_NETWORK_INFO, SET_FILE_CHECK} = dict
+const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM} = dict
 
 const initialState = {
     networkInfo: {},
     fileCheckModal: {
         status: false,
         files: []
-    }
+    },
+    connectionProblem: false
 }
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
@@ -23,6 +24,11 @@ const setInfo = (state = initialState, action) => {
                 status,
                 files: files || []
             }
+        });
+
+    case SET_CONNECTION_PROBLEM:
+        return Object.assign({}, state, {
+            connectionProblem: action.payload
         });
 
     default:

@@ -16,9 +16,9 @@ const {SET_CONNECTED_PEERS} = dict
 export function subscribeConnectedPeers(session) {
     const interval = 10000
     return eventChannel(emit => {
-        setInterval(function fetchConnectedPeers() {
+        const iv = setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {
-                var connected_peers = args[0];
+                let connected_peers = args[0];
                 console.log(config.GET_CONNECTED_PEERS_RPC, connected_peers)
                 emit({
                     type: SET_CONNECTED_PEERS,
@@ -33,6 +33,7 @@ export function subscribeConnectedPeers(session) {
 
         return () => {
             console.log('negative')
+            clearInterval(iv)
         }
     })
 }
@@ -52,5 +53,6 @@ export function* connectedPeersFlow(session) {
         }
     } finally {
         console.info('yield cancelled!')
+        channel.close()
     }
 }

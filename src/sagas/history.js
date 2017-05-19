@@ -42,7 +42,7 @@ export function subscribeHistory(session) {
     const interval = 10000
 
     return eventChannel(emit => {
-        setInterval(function fetchHistory() {
+        const iv = setInterval(function fetchHistory() {
             function on_history_payments(args) {
                 let history = args[0];
                 console.log(config.PAYMENTS_RPC, history)
@@ -69,6 +69,7 @@ export function subscribeHistory(session) {
 
         return () => {
             console.log('negative')
+            clearInterval(iv)
         }
     })
 }
@@ -88,5 +89,6 @@ export function* historyFlow(session) {
         }
     } finally {
         console.info('yield cancelled!')
+        channel.close()
     }
 }

@@ -81,16 +81,36 @@ export let config = Object.freeze({
  * @return nothing
  */
 export let _handleSUBPUB = (_callback, _session, _channel) => {
-
-    _session.subscribe(_channel, {
+    let cb = {
         onEvent: _callback,
         onSuccess: function() {
-            console.log(`subscribed to ${_channel} topic`);
+            console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to subscribe ${_channel} topic`, err);
+            console.warn(`failed to un/subscribe ${_channel} topic`, err);
         }
-    })
+    }
+    _session.subscribe(_channel, cb)
+}
+
+/**
+ * [_handleUNSUBPUB func. unsubscribe constructor for wamp ]
+ * @param  {function}   _callback   [Callback function for changes]
+ * @param  {Object}     _session    [Websocket connection session]
+ * @param  {String}     _channel    [Subscription address]
+ * @return nothing
+ */
+export let _handleUNSUBPUB = (_callback, _session, _channel) => {
+    let cb = {
+        onEvent: _callback,
+        onSuccess: function() {
+            console.log(`un/subscribed to ${_channel} topic`);
+        },
+        onError: function(err) {
+            console.warn(`failed to un/subscribe ${_channel} topic`, err);
+        }
+    }
+    _session.unsubscribe(_channel, cb)
 }
 
 /**

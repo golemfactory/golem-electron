@@ -41,6 +41,7 @@ export let dict = Object.freeze({
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
     //ERROR
+    SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
 })
 
@@ -56,7 +57,7 @@ const {ONBOARDING,
     //GENERAL
     START_LOADING, END_LOADING, LOGIN, LOGOUT, SET_AUTOLAUNCH, SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO, SET_NETWORK_INFO,
     //ERROR
-    SET_FILE_CHECK} = dict
+    SET_CONNECTION_PROBLEM, SET_FILE_CHECK} = dict
 
 export const setAllFrames = (payload) => ({
     type: SET_ALL_FRAMES,
@@ -236,6 +237,11 @@ export const setZoomRatio = (payload) => ({
 
 export const setNetworkInfo = (payload) => ({
     type: SET_NETWORK_INFO,
+    payload
+})
+
+export const setConnectionProblem = (payload) => ({
+    type: SET_CONNECTION_PROBLEM,
     payload
 })
 

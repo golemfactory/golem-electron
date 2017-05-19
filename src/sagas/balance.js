@@ -1,8 +1,8 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
+import { take, call, put, cancel } from 'redux-saga/effects'
 import { dict } from '../actions'
 
-import { config, _handleSUBPUB } from './handler'
+import { config, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
 const {SET_BALANCE} = dict
@@ -28,6 +28,7 @@ export function subscribeBalance(session) {
 
         return () => {
             console.log('negative')
+            _handleUNSUBPUB(on_balance, session, config.BALANCE_CH)
         }
     })
 }
@@ -39,7 +40,6 @@ export function subscribeBalance(session) {
  */
 export function* balanceFlow(session) {
     const channel = yield call(subscribeBalance, session)
-
     try {
         while (true) {
             let action = yield take(channel)
@@ -47,5 +47,6 @@ export function* balanceFlow(session) {
         }
     } finally {
         console.info('yield cancelled!')
+        channel.close()
     }
 }

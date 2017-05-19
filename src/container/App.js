@@ -13,6 +13,7 @@ import { OnBoardingComponent } from '../components/hoc/Onboarding'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
+import ConnectionModal from './modal/ConnectionModal'
 
 
 
@@ -38,7 +39,8 @@ const routes = (
 
 const mapStateToProps = state => ({
     status: state.firstReducer,
-    search: state.setSearch
+    search: state.setSearch,
+    connectionProblem: state.info.connectionProblem
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -61,16 +63,22 @@ export class App extends Component {
         actions.login('Muhammed')
     }
 
+    _closeModal() {
+        const {actions} = this.props
+        actions.setConnectionProblem(false);
+    }
+
 
     render() {
 
-        const {actions, status, search, history} = this.props
+        const {actions, status, search, history, connectionProblem} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <Router history={ history } >
                     { routes }
                 </Router>
+                 {connectionProblem && <ConnectionModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

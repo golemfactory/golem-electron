@@ -19,7 +19,7 @@ import { tasksFlow } from './tasks'
 import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
-const {LOGIN, SET_MESSAGE, SET_BLENDER, LOGOUT} = dict
+const {SET_CONNECTION_PROBLEM, LOGIN, SET_MESSAGE, SET_BLENDER, LOGOUT} = dict
 
 /**
  * { Websocket Connect function }
@@ -71,7 +71,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(true)
+                emit(false)
             }
         }
 
@@ -179,10 +179,22 @@ export function* handleIO(connection) {
         let status = yield take(channel)
         if (status && !started) {
             taskApi = yield fork(apiFlow, connection)
+            yield put({
+                type: SET_CONNECTION_PROBLEM,
+                payload: false
+            })
             started = true
-        } else if (!status && taskApi) {
+        } else if (!status && taskApi && started) {
+            console.log('SHUT_DOWN')
             yield cancel(taskApi)
             started = false
+        }
+
+        if (!status) {
+            yield put({
+                type: SET_CONNECTION_PROBLEM,
+                payload: true
+            })
         }
     }
 }

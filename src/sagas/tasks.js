@@ -29,7 +29,7 @@ export function* deleteTaskBase(session, {type, payload}) {
 export function subscribeTasks(session) {
     const interval = 10000
     return eventChannel(emit => {
-        setInterval(function fetchTasks() {
+        const iv = setInterval(function fetchTasks() {
             function on_tasks(args) {
                 var taskList = args[0];
                 console.log(config.GET_TASKS_RPC, taskList)
@@ -46,6 +46,7 @@ export function subscribeTasks(session) {
 
         return () => {
             console.log('negative')
+            clearInterval(iv)
         }
     })
 }
@@ -60,6 +61,7 @@ export function* fireBase(session) {
         }
     } finally {
         console.info('yield cancelled!')
+        channel.close()
     }
 }
 

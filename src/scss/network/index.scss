@@ -55,8 +55,7 @@
         &-status {
             @include flex;
             justify-content: flex-start;
-            align-content: center;
-            width: 96px;
+            align-content: flex-start;
             font-size: 11pt;
             font-weight: 400;
             .icon-status-dot {
