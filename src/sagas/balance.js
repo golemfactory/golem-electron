@@ -20,7 +20,7 @@ export function subscribeBalance(session) {
             console.log(config.BALANCE_CH, balance)
             emit({
                 type: SET_BALANCE,
-                payload: balance.GNT / (10 ** 18) //POW shorthand thanks to ES6
+                payload: balance.GNT_available / (10 ** 18) //POW shorthand thanks to ES6
             })
         }
         _handleSUBPUB(on_balance, session, config.BALANCE_CH)

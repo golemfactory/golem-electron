@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Modal extends React.Component {
+export default class DeleteModal extends React.Component {
 
 
     constructor(props) {
@@ -20,7 +20,7 @@ export default class Modal extends React.Component {
     render() {
         const {type} = this.props
         return (
-            <div className="container__modal">
+            <div className="container__modal container__delete-modal">
                 <div className="content__modal">
                     <div>
                         <span className="icon-warning"/>

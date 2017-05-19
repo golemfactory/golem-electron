@@ -1,18 +1,33 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import { browserHistory, Link } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+
+import * as Actions from '../actions'
 /**
  * @see http://react-component.github.io/tooltip/
  */
 import ReactTooltip from 'rc-tooltip'
-const {BrowserWindow} = window.require('electron').remote;
+const {remote} = window.require('electron');
+const {BrowserWindow, dialog} = remote
+const mainProcess = remote.require('./index')
 import { setConfig, getConfig } from './../utils/configStorage'
+
+const mapStateToProps = state => ({
+    fileCheckModal: state.info.fileCheckModal
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
 /**
  * { Class for header component with navigation. }
  *
  * @class      Header (name)
  */
-export default class Header extends Component {
+export class Header extends Component {
 
     constructor(props) {
         super(props)
@@ -84,6 +99,31 @@ export default class Header extends Component {
         browserHistory.push(`/preview/${to}`);
     }
 
+    _onFileDialog() {
+        let onFileHandler = (data) => {
+            console.log(data)
+
+            if (data) {
+
+                mainProcess.selectDirectory(data)
+                    .then(item => {
+                        let mergedList = [].concat.apply([], item)
+                        mergedList.length > 0 && this._navigateTo('/add-task/type', null)
+                        let unknownFiles = mergedList.filter(({extension}) => (extension !== ".blend" && extension !== ".lxs"))
+                        unknownFiles.length > 0 && this.props.actions.setFileCheck({
+                            status: true,
+                            files: unknownFiles
+                        })
+                    })
+            }
+        }
+
+        dialog.showOpenDialog({
+            properties: ['openFile', 'openDirectory', 'multiSelections']
+        }, onFileHandler)
+
+    }
+
     render() {
         const {activeHeader} = this.props
         return (
@@ -113,7 +153,7 @@ export default class Header extends Component {
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item"><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                        <li className="menu__item" onClick={::this._onFileDialog}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </ReactTooltip>
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
@@ -148,3 +188,5 @@ export default class Header extends Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Header)

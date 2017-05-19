@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 
 import RadialProgress from './../../RadialProgress'
+import Dropdown from './../../Dropdown'
 
 const mockSystemConfig = {
     cpu: 4,
@@ -63,8 +64,8 @@ export class Advanced extends React.Component {
         })
     }
 
-    _handleOptionChange(list, evt) {
-        let values = list.filter((item, index) => item.name == evt.target.value)[0]
+    _handleOptionChange(list, name) {
+        let values = list.filter((item, index) => item.name == name)[0]
         values && this.setState({
             cpu: values.cpu_cores,
             ram: values.memory,
@@ -76,18 +77,22 @@ export class Advanced extends React.Component {
         return list.map((item, index) => <option key={index.toString()} value={item.name}>{item.name}</option>)
     }
 
+    _handleSavePresetModal(data) {
+        this.props.modalHandler(data)
+    }
+
     render() {
         const {cpu, ram, disk} = this.state
         const {presetList, chosenPreset} = this.props
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
-              <div className="select">
-                <select onChange={this._handleOptionChange.bind(this, presetList)} defaultValue={chosenPreset}>
-                 {this.fillOption(presetList)}
-                </select>
-              </div>
-              <button className="btn--outline">Save as Preset</button>
+              <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, presetList)}/>
+              <button className="btn--outline" onClick={this._handleSavePresetModal.bind(this, {
+                cpu,
+                ram,
+                disk
+            })}>Save as Preset</button>
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">

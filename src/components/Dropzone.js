@@ -34,6 +34,12 @@ export class DropZone extends React.Component {
         this.traverseFileTree = :: this.traverseFileTree
     }
 
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            className: nextProps.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+        })
+    }
+
     componentDidMount() {
         let dropzone = this.refs.dropzone
         let dragbox = this.refs.dragbox

@@ -26,6 +26,7 @@
 @import "tooltip";
 @import "slider";
 @import "modal";
+@import "dropdown";
 html {
     padding: 0;
     overflow-y: scroll;
@@ -132,6 +133,7 @@ select {
         right: 15px;
         top: 15px;
         transition: all 0.3s linear;
+        pointer-events: none;
     }
 }
 

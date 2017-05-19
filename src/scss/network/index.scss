@@ -2,6 +2,7 @@
 @import "tabs/resources";
 @import "tabs/history";
 @import "tabs/advanced";
+@import "modal/preset-modal";
 @mixin flex {
     display: flex;
     justify-content: space-between;
@@ -38,7 +39,7 @@
         .tab__content {
             position: absolute;
             bottom: 0;
-            top: 47px;
+            top: 47.5px;
             width: 100%;
             overflow-y: overlay;
         }
@@ -49,6 +50,7 @@
         @include flex;
         box-sizing: border-box;
         z-index: 2;
+        background: $color-text4;
         flex: 0 0 90px;
         &-status {
             @include flex;

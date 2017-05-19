@@ -41,12 +41,12 @@ export function callSettings(session) {
 
             actionList.push({
                 type: SET_PROV_MIN_PRICE,
-                payload: min_price
+                payload: min_price / (10 ** 18) //POW shorthand thanks to ES6
             })
 
             actionList.push({
                 type: SET_REQ_MAX_PRICE,
-                payload: max_price
+                payload: max_price / (10 ** 18) //POW shorthand thanks to ES6
             })
 
             actionList.push({

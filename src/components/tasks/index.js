@@ -9,7 +9,7 @@ import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
-import Modal from './../Modal'
+import DeleteModal from './modal/DeleteModal'
 import Footer from './../Footer'
 
 const mapStateToProps = state => ({
@@ -60,9 +60,9 @@ export class TaskPanel extends React.Component {
         })
     }
 
-    _closeDeleteModal() {
+    _closeModal() {
         this.setState({
-            deleteModal: false
+            deleteModal: false,
         })
     }
 
@@ -82,7 +82,7 @@ export class TaskPanel extends React.Component {
                         {preview && <div className="section__preview">
                              <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
                         </div>}
-                        {deleteModal && <Modal type="delete" closeModal={::this._closeDeleteModal} {...deleteProps}/>}
+                        {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     </div>
 
                     <Footer {...this.props}/>

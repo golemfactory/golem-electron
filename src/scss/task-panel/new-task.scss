@@ -8,7 +8,7 @@
     background: $color-bg2;
     label {
         display: block;
-        margin: 19px 0 !important;
+        margin: 30px 0 !important;
         font-size: 12pt;
         font-weight: 400;
     }
@@ -37,6 +37,12 @@
     flex-grow: 1;
 }
 
+.container-type__new-task {
+    height: 400px;
+    overflow-y: overlay;
+    box-sizing: border-box;
+}
+
 .container-action__new-task {
     display: flex;
     justify-content: flex-end;
@@ -46,6 +52,7 @@
     z-index: 2;
     flex: 0 0 90px;
     background: $color-text4;
+    z-index: 999;
     span {
         margin-right: 20px;
     }

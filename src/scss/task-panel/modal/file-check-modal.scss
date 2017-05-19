@@ -1,0 +1,54 @@
+.container__file-check-modal {
+    .content__modal {
+        text-align: center;
+        justify-content: space-around;
+        max-height: 500px;
+        padding: 20px;
+        .container-icon {
+            padding: 25px 0;
+            flex: 0 0 40px;
+        }
+        & > span {
+            padding: 20px 0;
+        }
+        .icon-warning {
+            color: $color-accent2;
+            font-size: 28pt;
+            background: $color-bg2;
+            border-radius: 50px;
+            padding: 18px;
+        }
+    }
+    .list__file-check-modal {
+        display: flex;
+        flex-direction: column;
+        overflow: auto;
+        margin-top: 20px;
+        padding: 20px 0;
+        width: 100%;
+        border: 1px solid $color-error;
+        min-height: 50px;
+        max-height: 130px;
+        box-sizing: border-box;
+        div {
+            text-align: left;
+            min-height: min-content;
+            /* needs vendor prefixes */
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 0 20px;
+            span {
+                position: relative;
+                width: 280px;
+                word-wrap: break-word;
+                padding-left: 10px;
+                &::before {
+                    position: absolute;
+                    content: '⬤';
+                    left: -10px;
+                }
+            }
+        }
+    }
+}

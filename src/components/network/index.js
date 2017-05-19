@@ -15,6 +15,7 @@ import Indicator from './Indicator'
 import Resources from './tabs/Resources'
 import History from './tabs/History'
 import Advanced from './tabs/Advanced'
+import PresetModal from './modal/PresetModal'
 /*if (!("require" in window)) {
     console.info("This browser does not support electron features.");
 } else {
@@ -45,11 +46,28 @@ export class MainFragment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0
+            activeTab: 0,
+            presetModal: false,
+            modalData: null
         }
 
 
     //props.actions.setOnboard(true)
+    }
+
+    _handleSavePresetModal(data) {
+        console.log(data)
+        this.setState({
+            presetModal: true,
+            modalData: data
+        })
+    }
+
+    _closeModal() {
+        this.setState({
+            presetModal: false,
+            modalData: null
+        })
     }
 
     componentDidMount() {
@@ -118,7 +136,7 @@ export class MainFragment extends React.Component {
 
     render() {
         const {message, actions, autoLaunch, connectedPeers} = this.props
-        const {activeTab} = this.state
+        const {activeTab, presetModal, modalData} = this.state
         return (
             <div className="content__main">
                 <div className="section__currency">
@@ -133,9 +151,10 @@ export class MainFragment extends React.Component {
                 <div className="tab__content">
                     {activeTab == 0 && <Resources role="tabpanel"/>}
                     {activeTab == 1 && <History role="tabpanel"/>}
-                    {activeTab == 2 && <Advanced role="tabpanel"/>}
+                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handleSavePresetModal}/>}
                 </div>
             </div>
+            {presetModal && <PresetModal closeModal={::this._closeModal} {...modalData}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className="icon-status-dot icon-status-dot--active "/>

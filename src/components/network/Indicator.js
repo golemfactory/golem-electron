@@ -8,6 +8,8 @@ let dictCurrency = Object.freeze({
     USD: 'USD'
 })
 
+let motionBalanceStart = 0;
+
 
 export default class indicator extends React.Component {
 
@@ -15,7 +17,8 @@ export default class indicator extends React.Component {
         super(props);
         this.state = {
             currencyRate: 1,
-            defaultCurrency: 'GNT'
+            defaultCurrency: 'GNT',
+            motionBalanceStart: 0
         }
     }
 
@@ -50,6 +53,13 @@ export default class indicator extends React.Component {
         }
     }
 
+    calculateAmount(balance, rate) {
+        if (balance === this.props.balance && motionBalanceStart !== balance) {
+            motionBalanceStart = balance
+        }
+        return (balance * rate).toFixed(2)
+    }
+
     /**
      * [navigateTo funct. navigates clicked currency item to active]
      * @param  {Object}     elm     [clicked DOM Element]
@@ -70,20 +80,20 @@ export default class indicator extends React.Component {
             <div className="content__indicator">
                 <span>{defaultCurrency === 'GNT' ? 'Your Golem balance' : 'Approximately'}</span>
                 <Motion defaultStyle={{
-                balanceAnimated: 0
+                balanceAnimated: motionBalanceStart
             }} style={{
                 balanceAnimated: spring(Number(balance), {
                     stiffness: 50,
                     damping: 25
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">{(balanceAnimated * currencyRate).toFixed(2)}</span>}
+                    {({balanceAnimated}) => <span className="amount">{::this.calculateAmount(balanceAnimated, currencyRate)}</span>}
                 </Motion>
-                <ul role="menu">
-                    <li className="amont__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</li>
-                    <li className="amont__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</li>
-                    <li className="amont__item" role="menuitemradio" tabIndex="0" aria-label="USD" onClick={this._convertTo.bind(this, dictCurrency.USD)}>USD</li>
-                </ul>
+                <div className="currency-menu" role="menu">
+                    <span className="amont__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</span>
+                    <span className="amont__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</span>
+                    <span className="amont__item" role="menuitemradio" tabIndex="0" aria-label="USD" onClick={this._convertTo.bind(this, dictCurrency.USD)}>USD</span>
+                </div>
             </div>
         );
     }

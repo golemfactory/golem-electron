@@ -1,0 +1,14 @@
+.container__delete-modal {
+    .content__modal {
+        height: 220px;
+        text-align: center;
+        padding: 20px;
+        .icon-warning {
+            color: $color-accent2;
+            font-size: 28pt;
+            background: $color-bg2;
+            border-radius: 50px;
+            padding: 18px;
+        }
+    }
+}

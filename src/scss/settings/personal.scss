@@ -43,13 +43,26 @@
 }
 
 .user-id__personal {
+    position: relative;
     font-size: 11pt;
     font-weight: 400;
     color: $color-text2;
+    transition: .5s all;
+    cursor: pointer;
+    &:hover {
+        color: $button-hover-color;
+    }
     &::before {
-        content: 'ID';
+        content: 'ID ';
         color: $color-text;
         font-weight: 600;
+    }
+    .icon-confirm-empty {
+        position: absolute;
+        color: $color-accent1;
+        right: -25px;
+        top: -1px;
+        font-size: 14pt;
     }
 }
 

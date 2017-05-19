@@ -1,13 +1,34 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-export default class NewTask extends React.Component {
+import * as Actions from '../../actions'
+import FileCheckModal from './modal/FileCheckModal'
+
+const mapStateToProps = state => ({
+    fileCheckModal: state.info.fileCheckModal
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class NewTask extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
+    _closeModal() {
+        const {actions} = this.props
+        actions.setFileCheck({
+            status: false
+        });
+    }
+
     render() {
+        const {fileCheckModal} = this.props
         return (
             <div className="content__new-task">
                 <div className="container-name__new-task">
@@ -31,6 +52,7 @@ export default class NewTask extends React.Component {
                             <input id="taskTypeRadio2" type="radio" name="taskType"/>
                             <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                         </div>
+                        
                     </div>
                 </div>
                 <div className="container-action__new-task">
@@ -39,7 +61,10 @@ export default class NewTask extends React.Component {
                     </Link>
                     <Link to="/task/settings"><button className="btn--primary">Next</button></Link>
                 </div>
+                {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(NewTask)

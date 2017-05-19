@@ -1,0 +1,56 @@
+.network-preset-modal {
+    .content__modal {
+        text-align: center;
+        h4 {
+            margin: 30px 0 10px 0;
+        }
+        h5 {
+            margin-top: 15px;
+            margin-left: 0;
+            padding: 0;
+        }
+        input {
+            width: 100%;
+            height: 32px;
+            margin: 10px 0 30px 0;
+            padding: 0 15px;
+            font-size: 12pt;
+            border: 1px solid $color-border;
+            box-sizing: border-box;
+            border-radius: 2px;
+            background: $color-input;
+        }
+        .section__naming {
+            width: 100%;
+            padding: 0 35px;
+            box-sizing: border-box;
+        }
+        .section__info {
+            display: flex;
+            justify-content: space-between;
+            text-align: left;
+            padding: 5px 35px 10px 35px;
+            width: 100%;
+            background: $color-bg2;
+            box-sizing: border-box;
+            span {
+                color: $color-text2;
+                font-size: 10pt;
+                line-height: 2.5em;
+            }
+        }
+    }
+    .action__modal {
+        padding: 25px 35px;
+        justify-content: flex-end;
+        font-size: 11pt;
+        span {
+            padding-right: 30px;
+        }
+        .btn--primary {
+            padding: 0;
+            width: 95px;
+            height: 32px;
+        }
+    }
+}

@@ -47,13 +47,14 @@ document.addEventListener('DOMContentLoaded', function() {
      * @return {[DOM]}
      */
     function renderWithHotReload(App) {
+        window.applicationSurface = document.getElementById('mount')
         render(
             <AppContainer>
               <Provider store={ store }>
                 <App history={ history } />
               </Provider>
             </AppContainer>,
-            document.getElementById('mount')
+            window.applicationSurface
         )
     }
 })

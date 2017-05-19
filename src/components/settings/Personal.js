@@ -1,6 +1,12 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+const {clipboard} = window.require('electron')
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
+
 import * as Actions from '../../actions'
 
 import RadialProgress from './../RadialProgress'
@@ -22,10 +28,27 @@ export class Personal extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            nodeIdCopied: false
+        }
+    }
+
+    _handleCopyToClipboard(nodeId, evt) {
+        clipboard.writeText(nodeId)
+        this.setState({
+            nodeIdCopied: true
+        }, () => {
+            setTimeout(() => {
+                this.setState({
+                    nodeIdCopied: false
+                })
+            }, 5000)
+        })
     }
 
     render() {
         const {avatar, charts, nodeName, nodeId} = this.props
+        const {nodeIdCopied} = this.state
         return (
             <div className="section__personal">
                 <div className="indicator-panel__personal">
@@ -42,8 +65,12 @@ export class Personal extends React.Component {
                     </div>
                 </div>
                 <div>
-                    <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
-                    <p/><   span className="user-id__personal">{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}</span>
+                    <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span><p/>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied && 'icon-confirm-empty'}/></span>
+                    </ReactTooltip>
                 </div>
             </div>
         );

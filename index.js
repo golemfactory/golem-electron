@@ -2,6 +2,7 @@ const electron = require('electron')
 const {app, BrowserWindow, Menu, ipcMain} = electron
 const chalk = require('chalk')
 const fs = require("fs")
+var path = require('path')
 const connect = require('connect');
 const serveStatic = require('serve-static');
 const compression = require('compression')
@@ -187,4 +188,63 @@ function createPreviewWindow() {
         previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview`)
     //win.loadURL(`file://${__dirname}/index.html`)
     }
+}
+
+exports.selectDirectory = function(directory) {
+
+let ignorePlaftormFiles = function(file) {
+    return path.basename(file) !== ".DS_Store" && path.extname(file) !== null
+}
+
+let walk = function(dir, done) {
+    let results = [];
+    fs.readdir(dir, function(err, list) {
+        if (err) return done(err);
+        let i = 0;
+        (function next() {
+            let file = list[i++];
+            if (!file) return done(null, results);
+            file = `${dir}/${file}`;
+            fs.stat(file, function(err, stat) {
+                if (stat && stat.isDirectory()) {
+                    walk(file, function(err, res) {
+                        results = results.concat(res);
+                        next();
+                    });
+                } else {
+                    ignorePlaftormFiles(file) && results.push({
+                        path: file,
+                        name: path.basename(file),
+                        extension: path.extname(file)
+                    });
+                    next();
+                }
+            });
+        })();
+    });
+};
+
+let promises = directory.length > 0 && directory.map(item => new Promise((resolve, reject) => {
+    if (fs.lstatSync(item).isDirectory())
+        walk(item, function(err, results) {
+            if (err) {
+                reject(err);
+            }
+            resolve(results);
+        });
+    else {
+        let results = [];
+        ignorePlaftormFiles(item) && results.push({
+            path: item,
+            name: path.basename(item),
+            extension: path.extname(item)
+        });
+        resolve(results)
+    }
+
+}))
+
+console.log(promises)
+
+return Promise.all(promises)
 }

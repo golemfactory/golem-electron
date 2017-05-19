@@ -1,20 +1,44 @@
 import React from 'react';
 import { Link } from 'react-router';
+import PresetModal from './modal/PresetModal'
+import Dropdown from './../Dropdown'
 
+const mockPresetList = [{
+    name: '4K Best Quality'
+}]
+
+const mockFormatList = [
+    {
+        name: 'PNG'
+    },
+    {
+        name: 'EXR'
+    }
+]
 export default class TaskDetail extends React.Component {
 
     constructor(props) {
         super(props);
-        function IsNumeric(input) {
-            return (input - 0) == input && ('' + input).trim().length > 0;
-        }
         this.state = {
-            showBackOption: IsNumeric(props.params.id)
+            showBackOption: props.params.id != "settings", //<-- HARDCODED
+            presetModal: false
         }
     }
 
+    _handleSavePresetModal() {
+        this.setState({
+            presetModal: true,
+        })
+    }
+
+    _closeModal() {
+        this.setState({
+            presetModal: false,
+        })
+    }
+
     render() {
-        const {showBackOption} = this.state
+        const {showBackOption, presetModal} = this.state
         return (
             <div className="content__task-detail">
                 <section className="section-preview__task-detail">
@@ -33,11 +57,7 @@ export default class TaskDetail extends React.Component {
                             <h4>Settings</h4>
                             <div className="item-settings">
                                 <span className="title">Preset</span>
-                                <div className="select">
-                                    <select role="combobox" aria-label="Quality">
-                                        <option role="option">4K Best Quality</option>
-                                    </select>
-                                </div> 
+                                <Dropdown list={mockPresetList} selected={0}/> 
                             </div>
                             <div className="item-settings">
                                 <span className="title">Dimensions</span>
@@ -51,11 +71,7 @@ export default class TaskDetail extends React.Component {
                             </div>
                             <div className="item-settings">
                                 <span className="title">Format</span>
-                                <div className="select">
-                                    <select role="combobox" aria-label="File Format">
-                                        <option role="option">PNG</option>
-                                    </select>
-                                </div>
+                                <Dropdown list={mockFormatList} selected={0}/> 
                             </div>
                             <div className="item-settings">
                                 <span className="title">Output to</span>
@@ -84,6 +100,9 @@ export default class TaskDetail extends React.Component {
                                 <span className="title">Subtask Timeout</span>
                                 <input type="text" placeholder="4:10:00" aria-label="Deadline"/>
                             </div>
+                            <div className="item-settings item__preset-button">
+                                <button className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
+                            </div>
                         </section>
                         <section className="section-price__task-detail">
                             <h4 className="title-price__task-detail">Price</h4>
@@ -109,6 +128,8 @@ export default class TaskDetail extends React.Component {
                             </Link>
                             <button className="btn--primary">Start Task</button>
                         </section>}
+                        
+                        {presetModal && <PresetModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

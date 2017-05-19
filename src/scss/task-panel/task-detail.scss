@@ -57,7 +57,7 @@
 }
 
 .section-settings__task-detail {
-    padding-bottom: 20px !important;
+    padding-bottom: 15px !important;
     border-bottom: 1px solid $color-text3;
     button {
         height: 32px;
@@ -81,6 +81,9 @@
         justify-content: space-between;
         align-items: center;
         height: 55px;
+    }
+    .item__preset-button {
+        justify-content: flex-end;
     }
     .switch-box {
         margin: 0;
@@ -120,10 +123,11 @@
         }
     }
     .tips__price {
-        margin: 34px 0 !important;
+        margin: 34px 0 38 0 !important;
         color: $color-text2;
         text-align: center;
-        font-size: 10pt;
+        font-size: 9pt;
+        line-height: 1.5em;
     }
 }
 
