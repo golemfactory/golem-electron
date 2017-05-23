@@ -17,12 +17,12 @@ const mockList = [
         title: 'i5-6267'
     },
     {
-        icon: 'icon-blender-grey',
-        title: 'Blender'
-    },
-    {
         icon: 'icon-luxrenderer',
         title: 'Luxrenderer'
+    },
+    {
+        icon: 'icon-blender-grey',
+        title: 'Blender'
     }
 ]
 

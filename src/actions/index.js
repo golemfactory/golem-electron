@@ -5,7 +5,8 @@ export let dict = Object.freeze({
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
     SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
-    SET_PRESET: 'SET_PRESET',
+    SET_ADVANCED_PRESET: 'SET_ADVANCED_PRESET',
+    CREATE_ADVANCED_PRESET: 'CREATE_ADVANCED_PRESET',
     SET_ADVANCED_CHART: 'SET_ADVANCED_CHART',
     SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     //TASKS
@@ -14,6 +15,7 @@ export let dict = Object.freeze({
     SET_TASK_INFO: 'SET_TASK_INFO',
     SET_PREVIEW: 'SET_PREVIEW',
     DELETE_TASK: 'DELETE_TASK',
+    CREATE_TASK: 'CREATE_TASK',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_PERFORMANCE_CHARTS: 'SET_PERFORMANCE_CHARTS',
@@ -47,9 +49,9 @@ export let dict = Object.freeze({
 
 const {ONBOARDING,
     //NETWORK
-    SET_BALANCE, SET_RESOURCES, SET_HISTORY, SET_SYSTEM_INFO, SET_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET,
+    SET_BALANCE, SET_RESOURCES, SET_HISTORY, SET_SYSTEM_INFO, SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET,
     //TASKS
-    SET_TASKLIST, SET_TASK_DETAILS, SET_TASK_INFO, SET_PREVIEW, DELETE_TASK,
+    SET_TASKLIST, SET_TASK_DETAILS, SET_TASK_INFO, SET_PREVIEW, DELETE_TASK, CREATE_TASK,
     //SETTINGS
     SET_FILE_LOCATION, SET_PERFORMANCE_CHARTS, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_AVATAR, SET_PROFILE_CHARTS, SET_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST,
     //FRAME WINDOW
@@ -79,8 +81,13 @@ export const setSystemInfo = (payload) => ({
     payload
 })
 
-export const setPreset = (payload) => ({
-    type: SET_PRESET,
+export const setAdvancedPreset = (payload) => ({
+    type: SET_ADVANCED_PRESET,
+    payload
+})
+
+export const createAdvancedPreset = (payload) => ({
+    type: CREATE_ADVANCED_PRESET,
     payload
 })
 
@@ -207,6 +214,11 @@ export const setTaskList = (payload) => ({
 
 export const deleteTask = (payload) => ({
     type: DELETE_TASK,
+    payload
+})
+
+export const createTask = (payload) => ({
+    type: CREATE_TASK,
     payload
 })
 

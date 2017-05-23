@@ -66,7 +66,6 @@ export function subscribe(session) {
 
         function on_connection(args) {
             var connection = args[0];
-            console.log(connection)
 
             if (connection === "Connected") {
                 emit(true)

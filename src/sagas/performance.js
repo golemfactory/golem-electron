@@ -17,25 +17,35 @@ export function callBenchmark(session) {
     return new Promise((resolve, reject) => {
         function on_environments(args) {
             let environments = args[0];
-            let benchmarkActions = environments.map(item => calculateBenchmark(item.id))
-            resolve(Promise.all(benchmarkActions))
+            let envIds = environments.map(item => item.id)
+            resolve(calculateBenchmark(envIds))
         }
 
-        function calculateBenchmark(id) {
-            return new Promise((resolve, reject) => {
-                function on_benchmark(args) {
-                    let benchmark = args[0];
-                    resolve({
-                        type: SET_PERFORMANCE_CHARTS,
-                        payload: {
-                            [id == "BLENDER" ? "estimated_blender_performance" : "estimated_lux_performance"]: benchmark // <-- HARDCODED
+        function calculateBenchmark(ids) {
+            let resultArray = []
+            let result = Promise.resolve()
+
+            ids.forEach((id, index) => {
+                result = result.then(() => {
+                    return new Promise((res, rej) => {
+                        _handleRPC(on_benchmark, session, config.RUN_BENCHMARK_RPC, id)
+                        function on_benchmark(args) {
+                            let benchmark = args[0];
+                            resultArray.push({
+                                type: SET_PERFORMANCE_CHARTS,
+                                payload: {
+                                    [id == "BLENDER" ? "estimated_blender_performance" : "estimated_lux_performance"]: benchmark // <-- HARDCODED
+                                }
+                            })
+                            res(resultArray)
                         }
                     })
-                }
-
-                _handleRPC(on_benchmark, session, config.RUN_BENCHMARK_RPC, [id])
+                })
             })
+
+            return result
         }
+
         _handleRPC(on_environments, session, config.GET_ENVIRONMENTS_RPC)
     })
 }

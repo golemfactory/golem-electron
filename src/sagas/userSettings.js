@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
+import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -7,6 +7,9 @@ import { config, _handleRPC } from './handler'
 
 const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME} = dict
 
+export function updateSettings(session, {type, payload}) {
+    console.info(type, 'setting updated')
+}
 
 export function callSettings(session) {
     return new Promise((response, reject) => {
@@ -61,10 +64,15 @@ export function callSettings(session) {
     })
 }
 
-export function* settingsFlow(session) {
+export function* fireBase(session) {
     const actionList = yield call(callSettings, session)
     console.log("SETTINGS_ACTION", actionList)
     yield actionList && actionList.map((item) => {
         return put(item)
     })
+}
+
+export function* settingsFlow(session) {
+    yield fork(fireBase, session)
+    yield takeEvery('TEST', updateSettings, session)
 }

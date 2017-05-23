@@ -110,10 +110,16 @@ export class Header extends Component {
                         let mergedList = [].concat.apply([], item)
                         mergedList.length > 0 && this._navigateTo('/add-task/type', null)
                         let unknownFiles = mergedList.filter(({extension}) => (extension !== ".blend" && extension !== ".lxs"))
-                        unknownFiles.length > 0 && this.props.actions.setFileCheck({
-                            status: true,
-                            files: unknownFiles
-                        })
+                        if (unknownFiles.length > 0) {
+                            this.props.actions.setFileCheck({
+                                status: true,
+                                files: unknownFiles
+                            })
+                        } else {
+                            this.props.actions.createTask({
+                                resources: mergedList.map(item => item.path)
+                            })
+                        }
                     })
             }
         }

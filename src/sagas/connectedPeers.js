@@ -19,7 +19,6 @@ export function subscribeConnectedPeers(session) {
         const iv = setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {
                 let connected_peers = args[0];
-                console.log(config.GET_CONNECTED_PEERS_RPC, connected_peers)
                 emit({
                     type: SET_CONNECTED_PEERS,
                     payload: connected_peers.length

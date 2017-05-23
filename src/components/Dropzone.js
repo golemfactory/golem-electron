@@ -5,12 +5,16 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 
 import * as Actions from './../actions'
+const {remote} = window.require('electron');
+const {BrowserWindow, dialog} = remote
+const mainProcess = remote.require('./index')
 
 
 const ADD_TASK_NEXT_STEP = '/add-task/type'
 
 const mapStateToProps = state => ({
-    taskList: state.realTime.taskList
+    taskList: state.realTime.taskList,
+    fileCheckModal: state.info.fileCheckModal
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -106,18 +110,37 @@ export class DropZone extends React.Component {
      */
     _onDrop(e) {
         e.preventDefault();
-        let files = e.dataTransfer.items;
+        let files = e.dataTransfer.files;
         console.log('Files dropped: ', files.length);
         // Upload files
         // actions.uploadFile(files)
+        if (files) {
 
-        for (var i = 0; i < files.length; i++) {
-            // webkitGetAsEntry is where the magic happens
-            var item = files[i].webkitGetAsEntry();
-            if (item) {
-                this.traverseFileTree(item);
-            }
+            mainProcess.selectDirectory([].map.call(files, item => item.path))
+                .then(item => {
+                    let mergedList = [].concat.apply([], item)
+                    mergedList.length > 0 && browserHistory.push('/add-task/type');
+                    let unknownFiles = mergedList.filter(({extension}) => (extension !== ".blend" && extension !== ".lxs"))
+                    if (unknownFiles.length > 0) {
+                        this.props.actions.setFileCheck({
+                            status: true,
+                            files: unknownFiles
+                        })
+                    } else {
+                        this.props.actions.createTask({
+                            resources: mergedList.map(item => item.path)
+                        })
+                    }
+                })
         }
+
+        // for (var i = 0; i < files.length; i++) {
+        //     // webkitGetAsEntry is where the magic happens
+        //     var item = files[i].webkitGetAsEntry();
+        //     if (item) {
+        //         this.traverseFileTree(item);
+        //     }
+        // }
 
         this.setState({
             className: 'drop-zone--hide'

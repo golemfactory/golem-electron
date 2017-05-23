@@ -56,7 +56,7 @@ export class MainFragment extends React.Component {
     //props.actions.setOnboard(true)
     }
 
-    _handleSavePresetModal(data) {
+    _handlePresetModal(data) {
         console.log(data)
         this.setState({
             presetModal: true,
@@ -69,6 +69,10 @@ export class MainFragment extends React.Component {
             presetModal: false,
             modalData: null
         })
+    }
+
+    _handleSavePreset(data) {
+        this.props.actions.createAdvancedPreset(data)
     }
 
     componentDidMount() {
@@ -153,10 +157,10 @@ export class MainFragment extends React.Component {
                 <div className="tab__content">
                     {activeTab == 0 && <Resources role="tabpanel"/>}
                     {activeTab == 1 && <History role="tabpanel"/>}
-                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handleSavePresetModal}/>}
+                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal}/>}
                 </div>
             </div>
-            {presetModal && <PresetModal closeModal={::this._closeModal} {...modalData}/>}
+            {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handleSavePreset} {...modalData}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>

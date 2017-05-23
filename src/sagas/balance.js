@@ -17,7 +17,6 @@ export function subscribeBalance(session) {
     return eventChannel(emit => {
         function on_balance(args) {
             let balance = args[0];
-            console.log(config.BALANCE_CH, balance)
             emit({
                 type: SET_BALANCE,
                 payload: balance.GNT_available / (10 ** 18) //POW shorthand thanks to ES6

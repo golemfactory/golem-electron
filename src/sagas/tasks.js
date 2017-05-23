@@ -2,10 +2,30 @@ import { eventChannel, buffers } from 'redux-saga'
 import { take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
 
-import { config, _handleRPC } from './handler'
+import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK} = dict
+
+export function callCreateTask(session, payload) {
+
+    function on_create_task(args) {
+        var create_task = args[0];
+        console.log(config.CREATE_TASK_RPC, create_task)
+    }
+
+    _handleRPC(on_create_task, session, config.CREATE_TASK_RPC, [payload])
+}
+
+export function* createTaskBase(session, {type, payload}) {
+    if (payload.options) {
+        console.info('TASK_CREATING')
+        yield call(callCreateTask, session, payload)
+    } else {
+        console.info('TASK_NOT_CREATING')
+    }
+}
+
 
 export function callDeleteTask(session, payload) {
 
@@ -27,26 +47,21 @@ export function* deleteTaskBase(session, {type, payload}) {
  * @return {Object}             [Action object]
  */
 export function subscribeTasks(session) {
-    const interval = 10000
     return eventChannel(emit => {
-        const iv = setInterval(function fetchTasks() {
-            function on_tasks(args) {
-                var taskList = args[0];
-                console.log(config.GET_TASKS_RPC, taskList)
-                emit({
-                    type: SET_TASKLIST,
-                    payload: taskList
-                })
-            }
+        function on_tasks(args) {
+            var taskList = args[0];
+            emit({
+                type: SET_TASKLIST,
+                payload: taskList
+            })
+        }
 
-            _handleRPC(on_tasks, session, config.GET_TASKS_RPC)
-            return fetchTasks
-        }(), interval)
+        _handleSUBPUB(on_tasks, session, config.GET_TASKS_CH)
 
 
         return () => {
             console.log('negative')
-            clearInterval(iv)
+            _handleUNSUBPUB(on_tasks, session, config.GET_TASKS_CH)
         }
     })
 }
@@ -73,4 +88,5 @@ export function* fireBase(session) {
 export function* tasksFlow(session) {
     yield fork(fireBase, session);
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
+    yield takeEvery(CREATE_TASK, createTaskBase, session)
 }

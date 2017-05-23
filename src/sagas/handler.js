@@ -28,6 +28,7 @@ export let config = Object.freeze({
     GET_REQUESTING_TRUST_RPC: 'rep.requesting',
     //Tasks
     GET_TASKS_RPC: 'comp.tasks',
+    GET_TASKS_CH: 'evt.comp.task.list',
     RUN_TEST_TASK_RPC: 'comp.tasks.check',
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
@@ -66,7 +67,7 @@ export let config = Object.freeze({
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',
-    PRESET_CREATE_RPC: 'env.hw.preset_create',
+    PRESET_CREATE_RPC: 'env.hw.preset.create',
     PRESET_ACTIVATE_RPC: 'env.hw.preset_activate',
     PRESET_UPDATE_RPC: 'env.hw.preset_update',
     PRESET_DELETE_RPC: 'env.hw.preset_delete',

@@ -244,7 +244,6 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
 
 }))
 
-console.log(promises)
-
+win.focus();
 return Promise.all(promises)
 }

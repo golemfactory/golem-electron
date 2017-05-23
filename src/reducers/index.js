@@ -16,6 +16,7 @@ import trust from './settings/trust'
 /*Tasks*/
 import details from './tasks/details'
 import preview from './tasks/preview'
+import create from './tasks/create'
 /*Onboard*/
 import onboard from './onboard'
 /*Rest*/
@@ -27,20 +28,27 @@ import info from './info'
 import { routerReducer } from 'react-router-redux'
 
 const reducer = combineReducers({
+    //FRAME
     all,
     single,
     task,
+    //NETWORK
     advanced,
     history,
     resources,
+    //SETTINGS
     fileLocation,
     performance,
     price,
     profile,
     trust,
+    //TASK
     details,
     preview,
+    create,
+    //ONBOARD
     onboard,
+    //GENERAL
     input,
     loader,
     currency,
