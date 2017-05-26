@@ -126,7 +126,7 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) =
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.log(`Fetch ${_rpc_address} failed!`, err);
+            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr);
         }
     })
 }

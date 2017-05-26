@@ -83,11 +83,11 @@ export class Advanced extends React.Component {
 
     render() {
         const {cpu, ram, disk} = this.state
-        const {presetList, chosenPreset} = this.props
+        const {presetList, chosenPreset, manageHandler} = this.props
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
-              <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, presetList)}/>
+              <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, presetList)} manageHandler={manageHandler}  presetManager/>
               <button className="btn--outline" onClick={this._handleSavePresetModal.bind(this, {
                 cpu,
                 ram,

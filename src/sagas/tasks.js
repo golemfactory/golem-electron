@@ -5,7 +5,31 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, GET_TASK_DETAILS, SET_TASK_DETAILS} = dict
+
+export function getTaskDetails(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_task_info(args) {
+            var task_info = args[0];
+            console.log(config.GET_TASK_RPC, task_info)
+            resolve({
+                type: SET_TASK_DETAILS,
+                payload: task_info
+            })
+        }
+        console.log("GETTASKINFO", payload)
+
+        _handleRPC(on_task_info, session, config.GET_TASK_RPC, [payload])
+    })
+}
+
+export function* taskDetailsBase(session, {type, payload}) {
+    if (payload) {
+        let action = yield call(getTaskDetails, session, payload)
+        console.log(action)
+        yield put(action)
+    }
+}
 
 export function callCreateTask(session, payload) {
 
@@ -89,4 +113,5 @@ export function* tasksFlow(session) {
     yield fork(fireBase, session);
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
     yield takeEvery(CREATE_TASK, createTaskBase, session)
+    yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
 }

@@ -24,7 +24,8 @@ const mockFormatList = [
 ]
 
 const mapStateToProps = state => ({
-    task: state.create.task
+    task: state.create.task,
+    taskInfo: state.details.detail
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -42,18 +43,56 @@ export class TaskDetail extends React.Component {
             //INPUTS
             compositing: false,
             resolution: [0, 0],
-            frames: null,
-            output_path: null,
-            timeout: null,
-            subtask_count: null,
-            subtask_timeout: null,
+            frames: '',
+            format: 0,
+            output_path: '',
+            timeout: '',
+            subtask_count: 0,
+            subtask_timeout: '',
             bid: 0
         }
     }
 
-    _handleFormInputs(states) {
+    componentDidMount() {
+        const {params, actions} = this.props
+        if (params.id != "settings") {
+            actions.getTaskDetails(params.id)
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.taskInfo && nextProps.params.id != "settings") {
+            const {timeout, subtask_count, subtask_timeout, options, bid} = nextProps.taskInfo
+            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+            resolutionW.value = options.resolution[0]
+            resolutionH.value = options.resolution[1]
+            framesRef.value = options.frames
+            outputPath.value = options.output_path
+            compositing.value = options.compositing
+            taskTimeout.value = timeout
+            subtaskCount.value = subtask_count
+            subtaskTimeout.value = subtask_timeout
+            bidRef.value = bid
+            this.setState({
+                format: mockFormatList.map(item => item.name).indexOf(options.format)
+            })
+
+            console.log(mockFormatList.map(item => item.name).indexOf(options.format))
+        }
+
+    }
+
+    _handleResolution(index, e) {
+        let res = this.state.resolution
+        res[index] = parseInt(e.target.value)
         this.setState({
-            ...states
+            resolution: res
+        })
+    }
+
+    _handleFormInputs(state, e) {
+        this.setState({
+            [state]: e.target.value
         })
     }
 
@@ -81,11 +120,13 @@ export class TaskDetail extends React.Component {
             console.log(data)
             this.setState({
                 output_path: data[0]
+            }, () => {
+                this.refs.outputPath.value = data[0]
             })
         }
 
         dialog.showOpenDialog({
-            properties: ['openFile', 'openDirectory']
+            properties: ['openDirectory']
         }, onFolderHandler)
     }
 
@@ -109,7 +150,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {showBackOption, presetModal, output_path, timeout, subtask_timeout, bid, compositing} = this.state
+        const {showBackOption, presetModal, resolution, frames, format, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -129,80 +170,52 @@ export class TaskDetail extends React.Component {
                                 <h4>Settings</h4>
                                 <div className="item-settings">
                                     <span className="title">Preset</span>
-                                    <Dropdown list={mockPresetList} selected={0} handleChange={this._handleOptionChange.bind(this, mockPresetList)}/> 
+                                    <Dropdown list={mockPresetList} selected={0} handleChange={this._handleOptionChange.bind(this, mockPresetList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
-                                    <input type="number" min="0" aria-label="Dimension (width)" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    resolution: [parseInt(e.target.value), this.state.resolution[1]]
-                })
-            }} required/>
+                                    <input ref="resolutionW" type="number" min="0" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
                                     <span className="icon-cross"/>
-                                    <input type="number" min="0" aria-label="Dimension (height)" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    resolution: [this.state.resolution[0], parseInt(e.target.value)]
-                })
-            }} required/>
+                                    <input ref="resolutionH" type="number" min="0" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Frame Range</span>
-                                    <input type="text" aria-label="Frame Range" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    frames: e.target.value
-                })
-            }} required/>
+                                    <input ref="framesRef" type="text" aria-label="Frame Range" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Format</span>
-                                    <Dropdown list={mockFormatList} selected={0} handleChange={this._handleOptionChange.bind(this, mockFormatList)}/> 
+                                    <Dropdown ref="formatRef" list={mockFormatList} selected={format} handleChange={this._handleOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Output to</span>
-                                    <input type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" value={output_path ? output_path : ''} disabled/>
-                                    <button className="btn--outline" onClick={::this._handleOutputPath}>Change</button>
+                                    <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
+                                    <button className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Blender Compositing</span>
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
                                         <label className="switch">
-                                            <input type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    compositing: e.target.checked
-                })
-            }}/>
+                                            <input ref="compositing" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleFormInputs.bind(this, 'compositing')} disabled={showBackOption}/>
                                             <div className="switch-slider round"></div>
                                         </label>
                                     </div>
                                 </div>
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
-                                    <input type="text" placeholder="16:20:00" aria-label="Task Timeout" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    timeout: e.target.value
-                })
-            }} required/>
+                                    <input ref="taskTimeout" type="text" placeholder="16:20:00" aria-label="Task Timeout" onChange={this._handleFormInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Amount</span>
-                                    <input type="text" placeholder="8" aria-label="Subtask amount" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    subtask_count: e.target.value
-                })
-            }} required/>
+                                    <input ref="subtaskCount" type="text" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtask_count')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Timeout</span>
-                                    <input type="text" placeholder="4:10:00" aria-label="Deadline" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    subtask_timeout: e.target.value
-                })
-            }} required/>
+                                    <input ref="subtaskTimeout" type="text" placeholder="4:10:00" aria-label="Deadline" onChange={this._handleFormInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
-                                <div className="item-settings item__preset-button">
+                                {!showBackOption && <div className="item-settings item__preset-button">
                                     <button className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
-                                </div>
+                                </div> }
                             </section>
                             <section className="section-price__task-detail">
                                 <h4 className="title-price__task-detail">Price</h4>
@@ -213,11 +226,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-price">
                                     <span className="title">Your bid</span>
-                                    <input type="number" min="0" step="0.000001" aria-label="Your bid" onChange={ e => {
-                this._handleFormInputs.call(this, {
-                    bid: e.target.value
-                })
-            }} required/>
+                                    <input ref="bidRef" type="number" min="0" step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!showBackOption} disabled={showBackOption}/>
                                     <span>GNT</span>
                                 </div>
                                 <span className="item-price tips__price">

@@ -40,13 +40,19 @@
     border: 1px solid $display-indicator-backround;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.20);
     border-radius: 4px;
-    padding: 10px 0;
+    padding-top: 5px;
     box-sizing: border-box;
     /* Option 1: */
     font-family: Roboto-Regular;
     font-size: 14px;
     color: $color-text3;
     line-height: 2.2em;
+    .item-container__dropdown {
+        padding-bottom: 5px;
+    }
+    .option__dropdown {
+        border-top: 1px solid $color-border;
+    }
     .item__dropdown {
         width: 100%;
         padding: 0 15px;

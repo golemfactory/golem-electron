@@ -36,6 +36,11 @@ export default class Dropdown extends React.Component {
         });
     }
 
+    _handleManageModal(list) {
+        this.props.manageHandler(list)
+        this.hide()
+    }
+
     componentWillUnmount() {}
 
     renderListItems(list) {
@@ -47,17 +52,22 @@ export default class Dropdown extends React.Component {
     }
 
     render() {
-        const {selected, list} = this.props
+        const {selected, list, presetManager, disabled} = this.props
         const {listVisible, selectedIndex} = this.state
         return (
             <div className="dropdown-container">
-                <div className="dropdown-display" onClick={::this.show}>
+                <div className="dropdown-display" onClick={!disabled && ::this.show}>
                     <span>{list[selectedIndex].name}</span>
                 </div>
                 {listVisible && <div className="dropdown-list">
-                                    <div>
+                                    <div className="item-container__dropdown">
                                         {this.renderListItems(list)}
                                     </div>
+                                    {presetManager && <div className="option__dropdown">
+                                        <div className="item__dropdown" onClick={this._handleManageModal.bind(this, list.map(item => item.name))}>
+                                            <span>Manage presets</span>
+                                        </div>
+                                    </div>}
                                 </div>}
             </div>
         );

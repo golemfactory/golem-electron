@@ -1,0 +1,59 @@
+.network-manage-preset-modal {
+    .content__modal {
+        text-align: center;
+        h5 {
+            margin: 30px 0 20px 0;
+        }
+    }
+    .section__presets {
+        width: 100%;
+        padding: 0 35px;
+        box-sizing: border-box;
+    }
+    .preset-list {
+        border: 1px solid $color-border;
+        text-align: left;
+    }
+    .item__preset-list {
+        padding: 0 15px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 10pt;
+        font-weight: 500;
+        text-transform: capitalize;
+        cursor: pointer;
+        &:nth-child(even) {
+            background: $color-bg2;
+        }
+        &:hover {
+            background: $button-static-color;
+            color: $color-text4;
+        }
+    }
+    .dock__preset-list {
+        height: 20px;
+        border-top: 1px solid $color-border;
+        box-sizing: border-box;
+        span {
+            font-size: 9pt;
+            line-height: 20px;
+            padding: 4px 10px;
+            border-right: 1px solid $color-border;
+            box-sizing: border-box;
+            &:hover {
+                background: $button-static-color;
+                color: $color-text4;
+            }
+        }
+    }
+    .action__modal {
+        padding: 25px 35px;
+        justify-content: flex-end;
+        font-size: 11pt;
+        .btn--outline {
+            padding: 0;
+            width: 95px;
+            height: 32px;
+        }
+    }
+}

@@ -14,7 +14,7 @@ const {SET_CONNECTED_PEERS} = dict
  * @return {Object}             [Action object]
  */
 export function subscribeConnectedPeers(session) {
-    const interval = 10000
+    const interval = 20000
     return eventChannel(emit => {
         const iv = setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {

@@ -70,7 +70,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(false)
+                emit(true)
             }
         }
 

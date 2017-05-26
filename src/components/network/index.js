@@ -16,6 +16,7 @@ import Resources from './tabs/Resources'
 import History from './tabs/History'
 import Advanced from './tabs/Advanced'
 import PresetModal from './modal/PresetModal'
+import ManagePresetModal from './modal/ManagePresetModal'
 /*if (!("require" in window)) {
     console.info("This browser does not support electron features.");
 } else {
@@ -49,6 +50,7 @@ export class MainFragment extends React.Component {
         this.state = {
             activeTab: 0,
             presetModal: false,
+            managePresetModal: false,
             modalData: null
         }
 
@@ -64,15 +66,30 @@ export class MainFragment extends React.Component {
         })
     }
 
+    _handleManagePresetModal(data) {
+        console.log(data)
+        this.setState({
+            managePresetModal: true,
+            modalData: {
+                data
+            }
+        })
+    }
+
     _closeModal() {
         this.setState({
             presetModal: false,
+            managePresetModal: false,
             modalData: null
         })
     }
 
     _handleSavePreset(data) {
         this.props.actions.createAdvancedPreset(data)
+    }
+
+    _handleDeletePreset(data) {
+        this.props.actions.deleteAdvancedPreset(data)
     }
 
     componentDidMount() {
@@ -85,29 +102,29 @@ export class MainFragment extends React.Component {
             })*/
 
             /*!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!*/
-            if (!("Notification" in window)) {
-                console.info("This browser does not support desktop notification");
-            }
+            // if (!("Notification" in window)) {
+            //     console.info("This browser does not support desktop notification");
+            // }
 
-            // Let's check whether notification permissions have already been granted
-            else if (Notification.permission === "granted") {
-                let myNotification = new Notification('Golem', {
-                    body: 'Loaded!',
-                    icon: golem_logo,
-                    requireInteraction: true
-                })
-            } else if (Notification.permission !== "denied") {
-                Notification.requestPermission(function(permission) {
-                    // If the user accepts, let's create a notification
-                    if (permission === "granted") {
-                        let myNotification = new Notification('Golem', {
-                            body: 'Loaded!',
-                            icon: golem_logo,
-                            requireInteraction: true
-                        })
-                    }
-                });
-            }
+        // // Let's check whether notification permissions have already been granted
+        // else if (Notification.permission === "granted") {
+        //     let myNotification = new Notification('Golem', {
+        //         body: 'Loaded!',
+        //         icon: golem_logo,
+        //         requireInteraction: true
+        //     })
+        // } else if (Notification.permission !== "denied") {
+        //     Notification.requestPermission(function(permission) {
+        //         // If the user accepts, let's create a notification
+        //         if (permission === "granted") {
+        //             let myNotification = new Notification('Golem', {
+        //                 body: 'Loaded!',
+        //                 icon: golem_logo,
+        //                 requireInteraction: true
+        //             })
+        //         }
+        //     });
+        // }
         }
 
         actions.startLoading("MAIN_LOADER", "I am loading!")
@@ -141,8 +158,7 @@ export class MainFragment extends React.Component {
 
     render() {
         const {message, actions, autoLaunch, connectedPeers, connectionProblem} = this.props
-        const {activeTab, presetModal, modalData} = this.state
-        console.log(connectionProblem)
+        const {activeTab, presetModal, managePresetModal, modalData} = this.state
         return (
             <div className="content__main">
                 <div className="section__currency">
@@ -157,10 +173,11 @@ export class MainFragment extends React.Component {
                 <div className="tab__content">
                     {activeTab == 0 && <Resources role="tabpanel"/>}
                     {activeTab == 1 && <History role="tabpanel"/>}
-                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal}/>}
+                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal} manageHandler={::this._handleManagePresetModal} />}
                 </div>
             </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handleSavePreset} {...modalData}/>}
+            {managePresetModal && <ManagePresetModal closeModal={::this._closeModal} deleteCallback={::this._handleDeletePreset} {...modalData}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>

@@ -8,7 +8,40 @@
     height: 231px;
     button {
         float: right;
-        width: 150px;
+        width: 130px;
+        transition: .5s all;
+    }
+    .btn--loading {
+        width: 160px;
+        text-align: left;
+        display: flex;
+        justify-content: space-between;
+    }
+    .icon-progress {
+        margin-left: 15px;
+        opacity: 0;
+        -webkit-animation: fade 0.5s linear 0.5s;
+        animation-fill-mode: forwards;
+        &:before {
+            display: inline-block;
+            -webkit-animation: spin 2s linear infinite;
+        }
+    }
+    @-webkit-keyframes spin {
+        0% {
+            -webkit-transform: rotate(360deg);
+        }
+        100% {
+            -webkit-transform: rotate(0deg);
+        }
+    }
+    @-webkit-keyframes fade {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
     }
 }
 
@@ -29,6 +62,7 @@
     }
     progress::-webkit-progress-bar {
         background-color: $color-accent3 !important;
+        transition: all .5s;
     }
     progress::-webkit-progress-value {
         background-color: $color-accent1 !important;

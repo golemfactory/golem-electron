@@ -5,6 +5,7 @@ import * as Actions from '../../actions'
 
 const mapStateToProps = state => ({
     chart: state.performance.charts,
+    loadingIndicator: state.performance.loadingIndicator
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -18,7 +19,7 @@ const mockList = [
     },
     {
         icon: 'icon-luxrenderer',
-        title: 'Luxrenderer'
+        title: 'Luxrender'
     },
     {
         icon: 'icon-blender-grey',
@@ -33,9 +34,7 @@ export class Performance extends React.Component {
     }
 
     _handleRecount() {
-
-        console.log('COMPONENT_PERFORMANCE', 'Fired')
-        this.props.actions.recountBenchmark('asd')
+        this.props.actions.recountBenchmark()
     }
 
     loadList(data, chart) {
@@ -52,13 +51,13 @@ export class Performance extends React.Component {
     }
 
     render() {
-        const {chart} = this.props
+        const {chart, loadingIndicator} = this.props
         return (
             <div className="content__performance">
                 <div className="list__performance">
                     {this.loadList(mockList, chart)}
                 </div>
-                <button className="btn--outline" onClick={::this._handleRecount}>Recount</button>
+                <button className={`btn--outline ${loadingIndicator && 'btn--loading'}`} onClick={::this._handleRecount}> {loadingIndicator ? 'Calculating...' : 'Calculate' }{loadingIndicator && <span className="icon-progress"></span> }</button>
             </div>
         );
     }

@@ -3,6 +3,7 @@
 @import "tabs/history";
 @import "tabs/advanced";
 @import "modal/preset-modal";
+@import "modal/manage-preset-modal";
 @mixin flex {
     display: flex;
     justify-content: space-between;

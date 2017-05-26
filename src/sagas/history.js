@@ -39,13 +39,13 @@ const mockHistory = [
  * @return {Object}             [Action object]
  */
 export function subscribeHistory(session) {
-    const interval = 10000
+    const interval = 20000
 
     return eventChannel(emit => {
         const iv = setInterval(function fetchHistory() {
             function on_history_payments(args) {
                 let history = args[0];
-                console.log(config.PAYMENTS_RPC, history)
+                //console.log(config.PAYMENTS_RPC, history)
                 emit({
                     type: SET_HISTORY,
                     payload: mockHistory
@@ -54,7 +54,7 @@ export function subscribeHistory(session) {
 
             function on_history_income(args) {
                 let history = args[0];
-                console.log(config.INCOME_RPC, history)
+            //console.log(config.INCOME_RPC, history)
             // emit({
             //     type: SET_HISTORY,
             //     payload: history
