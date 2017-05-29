@@ -84,10 +84,6 @@ export class MainFragment extends React.Component {
         this.props.actions.createAdvancedPreset(data)
     }
 
-    _handleDeletePreset(data) {
-        this.props.actions.deleteAdvancedPreset(data)
-    }
-
     componentDidMount() {
         const {actions} = this.props
         const endLoading = () => {
@@ -173,7 +169,7 @@ export class MainFragment extends React.Component {
                 </div>
             </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handleSavePreset} {...modalData}/>}
-            {managePresetModal && <ManagePresetModal closeModal={::this._closeModal} deleteCallback={::this._handleDeletePreset}/>}
+            {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
