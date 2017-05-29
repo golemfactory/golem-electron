@@ -1,20 +1,48 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
+import { fork, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, SET_ADVANCED_CHART} = dict
+const {SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, DELETE_ADVANCED_PRESET, SET_ADVANCED_CHART} = dict
 
+function deleteFunc(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_delete_preset(args) {
+            var deleted_preset = args[0];
+            console.log(config.PRESET_CREATE_RPC, deleted_preset)
+            resolve(deleted_preset)
+        }
+        console.log(config.PRESET_CREATE_RPC, payload)
+        _handleRPC(on_delete_preset, session, config.PRESET_DELETE_RPC, [payload])
+    })
+}
 
-export function createPreset(session, {payload}) {
-    function on_create_preset(args) {
-        var created_preset = args[0];
-        console.log(config.PRESET_CREATE_RPC, created_preset)
-    }
+export function* deletePreset(session, {payload}) {
+    yield call(deleteFunc, session, payload)
+    const action = yield call(subscribeAdvanced, session)
+    console.log("ADVANCED_ACTION", action)
+    yield action && put(action)
+}
 
-    _handleRPC(on_create_preset, session, config.PRESET_CREATE_RPC, [payload])
+function createFunc(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_create_preset(args) {
+            var created_preset = args[0];
+            console.log(config.PRESET_CREATE_RPC, created_preset)
+            resolve(created_preset)
+        }
+
+        _handleRPC(on_create_preset, session, config.PRESET_CREATE_RPC, [payload])
+    })
+}
+
+export function* createPreset(session, {payload}) {
+    yield call(createFunc, session, payload)
+    const action = yield call(subscribeAdvanced, session)
+    console.log("ADVANCED_ACTION", action)
+    yield action && put(action)
 }
 
 export function subscribeAdvanced(session) {
@@ -41,5 +69,6 @@ export function* fireBase(session) {
 
 export function* advancedFlow(session) {
     yield fork(fireBase, session)
-    yield takeEvery(CREATE_ADVANCED_PRESET, createPreset, session)
+    yield takeLatest(CREATE_ADVANCED_PRESET, createPreset, session)
+    yield takeLatest(DELETE_ADVANCED_PRESET, deletePreset, session)
 }

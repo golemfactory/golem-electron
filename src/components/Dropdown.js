@@ -12,7 +12,9 @@ export default class Dropdown extends React.Component {
 
     componentDidMount() {
         const {handleChange, list, selected} = this.props
-        handleChange && handleChange(list[selected].name)
+        if (handleChange && list[selected]) {
+            handleChange(list[selected].name)
+        }
     }
 
     select(item, index) {
@@ -24,7 +26,6 @@ export default class Dropdown extends React.Component {
     }
 
     show() {
-        console.log('clicked')
         this.setState({
             listVisible: !this.state.listVisible
         });
@@ -37,7 +38,7 @@ export default class Dropdown extends React.Component {
     }
 
     _handleManageModal(list) {
-        this.props.manageHandler(list)
+        this.props.manageHandler()
         this.hide()
     }
 
@@ -45,7 +46,6 @@ export default class Dropdown extends React.Component {
 
     renderListItems(list) {
         const {selectedIndex} = this.state
-        console.log('LIST', list)
         return list.map((item, index) => <div key={index.toString()} className="item__dropdown" onClick={this.select.bind(this, item, index)}>
         <span className={selectedIndex === index ? 'selected' : ''}>{item.name}</span>
       </div>)
@@ -57,14 +57,14 @@ export default class Dropdown extends React.Component {
         return (
             <div className="dropdown-container">
                 <div className="dropdown-display" onClick={!disabled && ::this.show}>
-                    <span>{list[selectedIndex].name}</span>
+                    <span>{list[selectedIndex] ? list[selectedIndex].name : 'Not loaded'}</span>
                 </div>
                 {listVisible && <div className="dropdown-list">
                                     <div className="item-container__dropdown">
                                         {this.renderListItems(list)}
                                     </div>
                                     {presetManager && <div className="option__dropdown">
-                                        <div className="item__dropdown" onClick={this._handleManageModal.bind(this, list.map(item => item.name))}>
+                                        <div className="item__dropdown" onClick={::this._handleManageModal}>
                                             <span>Manage presets</span>
                                         </div>
                                     </div>}

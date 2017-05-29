@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
+import { fork, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -17,16 +17,7 @@ export function callSettings(session) {
         function on_settings(args) {
             let on_settings = args[0];
             console.log("SETTINGS", on_settings)
-            const {num_cores, max_memory_size, max_resource_size, estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name} = on_settings
-
-            actionList.push({
-                type: SET_SYSTEM_INFO,
-                payload: {
-                    num_cores,
-                    max_memory_size,
-                    max_resource_size
-                }
-            })
+            const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name} = on_settings
 
             actionList.push({
                 type: SET_PERFORMANCE_CHARTS,
@@ -57,7 +48,21 @@ export function callSettings(session) {
                 payload: node_name
             })
 
-            response(actionList)
+            function on_hardware_caps(args) {
+                let hardware_caps = args[0];
+                console.log("HARDWARE_CAPS", hardware_caps)
+                actionList.push({
+                    type: SET_SYSTEM_INFO,
+                    payload: {
+                        ...hardware_caps
+                    }
+                })
+
+                response(actionList)
+            }
+
+            _handleRPC(on_hardware_caps, session, config.HARDWARE_CAPS_RPC)
+
         }
 
         _handleRPC(on_settings, session, config.GET_SETTINGS_RPC)
@@ -74,5 +79,5 @@ export function* fireBase(session) {
 
 export function* settingsFlow(session) {
     yield fork(fireBase, session)
-    yield takeEvery('TEST', updateSettings, session)
+    yield takeLatest('TEST', updateSettings, session)
 }

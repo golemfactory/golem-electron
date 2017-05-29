@@ -1,13 +1,16 @@
 import { dict } from './../../actions'
+import { setConfig, getConfig, dictConfig } from './../../utils/configStorage'
 
 const {SET_RESOURCES} = dict
+const {RESOURCE_SLIDER} = dictConfig
 
 const initialState = {
-    resource: 0
+    resource: getConfig(RESOURCE_SLIDER) || 0,
 }
 const setResources = (state = initialState, action) => {
     switch (action.type) {
     case SET_RESOURCES:
+        setConfig(RESOURCE_SLIDER, action.payload)
         return Object.assign({}, state, {
             resource: action.payload
         });

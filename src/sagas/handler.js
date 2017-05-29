@@ -68,9 +68,10 @@ export let config = Object.freeze({
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',
     PRESET_CREATE_RPC: 'env.hw.preset.create',
-    PRESET_ACTIVATE_RPC: 'env.hw.preset_activate',
-    PRESET_UPDATE_RPC: 'env.hw.preset_update',
-    PRESET_DELETE_RPC: 'env.hw.preset_delete',
+    PRESET_ACTIVATE_RPC: 'env.hw.preset.activate',
+    PRESET_UPDATE_RPC: 'env.hw.preset.update',
+    PRESET_DELETE_RPC: 'env.hw.preset.delete',
+    HARDWARE_CAPS_RPC: 'env.hw.caps'
 })
 
 
@@ -126,7 +127,7 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) =
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr);
+            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr.join());
         }
     })
 }

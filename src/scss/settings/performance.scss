@@ -24,6 +24,7 @@
         animation-fill-mode: forwards;
         &:before {
             display: inline-block;
+            transform-origin: 51% 48%;
             -webkit-animation: spin 2s linear infinite;
         }
     }

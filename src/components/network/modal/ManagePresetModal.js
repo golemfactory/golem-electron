@@ -1,14 +1,23 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../../actions'
 
+const mapStateToProps = state => ({
+    presetList: state.advanced.presetList
+})
 
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
 // let specifiedElement;
-export default class ManagePresetModal extends React.Component {
+export class ManagePresetModal extends React.Component {
 
 
     constructor(props) {
         super(props);
         this.state = {
-            deleteList: []
+            deletedItem: null
         }
     }
 
@@ -31,47 +40,55 @@ export default class ManagePresetModal extends React.Component {
     //     window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, specifiedElement))
     // }
 
-    _handleNameInput(e) {
-        this.setState({
-            name: e.target.value
-        })
-    }
-
     _handleCancel() {
         this.props.closeModal()
     }
 
+    _handleSelection(item) {
+        this.setState({
+            deletedItem: item
+        })
+    }
+
     _handleDelete() {
-        const {deleteList} = this.state
-        if (deleteList.length > 0)
-            deleteCallback()
+        const {deletedItem} = this.state
+        let {actions} = this.props
+        if (deletedItem) {
+            actions.deleteAdvancedPreset(deletedItem)
+        }
+    }
+
+    _handleClose() {
         this.props.closeModal()
     }
 
-    _fillList(list) {
+    _fillList(presetList) {
+        let list = presetList.map(item => item.name)
         console.log('FILL', list)
-        return list && list.map((item, index) => <div className="item__preset-list" key={index.toString()}><span>{item}</span></div>)
+        return list && list.map((item, index) => <div tabIndex="-1" className="item__preset-list" key={index.toString()} onClick={this._handleSelection.bind(this, item)}><span>{item}</span></div>)
     }
 
     render() {
-        const {data} = this.props
+        const {presetList} = this.props
         return (
             <div ref="modalContent" className="container__modal network-manage-preset-modal">
-            <div className="content__modal" onSubmit={::this._handleDelete}>
+            <div className="content__modal">
                     <section className="section__presets">
                         <h5>Manage Presets</h5>
                         <div className="preset-list">
-                        	{this._fillList(data)}
-                        	<div className="dock__preset-list">
-                        		<span className="icon-minimize"/>
-                        	</div>
+                            {this._fillList(presetList)}
                         </div>
+                        <div className="dock__preset-list">
+                                <span className="icon-minimize" onClick={::this._handleDelete}/>
+                            </div>
                     </section>
                     <div className="action__modal">
-                        <button type="submit" className="btn--outline" onClick={::this._handleDelete}>Done</button>
+                        <button type="submit" className="btn--outline" onClick={::this._handleClose}>Done</button>
                     </div>
                 </div>
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ManagePresetModal)

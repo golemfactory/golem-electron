@@ -5,8 +5,12 @@ const {SET_SYSTEM_INFO, SET_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARD
 const initialState = {
     systemInfo: {},
     presetList: [],
-    chartValues: [],
-    chosenPreset: 0
+    chartValues: {
+        cpu_cores: 0,
+        memory: 0,
+        disk: 0
+    },
+    chosenPreset: ''
 
 }
 const setAdvanced = (state = initialState, action) => {
@@ -24,7 +28,10 @@ const setAdvanced = (state = initialState, action) => {
 
     case SET_ADVANCED_CHART:
         return Object.assign({}, state, {
-            chartValues: action.payload
+            chartValues: {
+                ...state.chartValues,
+                ...action.payload
+            }
         });
 
     case SET_CHOSEN_HARDWARE_PRESET:

@@ -7,7 +7,8 @@ const config = new Config();
 export const dictConfig = {
     SHOW_ONBOARD: 'SHOW_ONBOARD',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',
-    PREVIEW_SWITCH: 'PREVIEW_SWITCH'
+    PREVIEW_SWITCH: 'PREVIEW_SWITCH',
+    RESOURCE_SLIDER: 'RESOURCE_SLIDER'
 }
 
 /**

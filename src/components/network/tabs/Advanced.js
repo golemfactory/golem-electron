@@ -6,15 +6,17 @@ import * as Actions from '../../../actions'
 import RadialProgress from './../../RadialProgress'
 import Dropdown from './../../Dropdown'
 
-const mockSystemConfig = {
-    cpu: 4,
-    ram: 4096000,
-    disk: 12288000
+const mockSystemInfo = {
+    num_cores: 3,
+    max_memory_size: 3145728,
+    max_resource_size: 10240000
 }
 
 const mapStateToProps = state => ({
+    systemInfo: state.advanced.systemInfo,
     presetList: state.advanced.presetList,
-    chosenPreset: state.advanced.chosenPreset
+    chosenPreset: state.advanced.chosenPreset,
+    chartValues: state.advanced.chartValues
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -25,52 +27,38 @@ export class Advanced extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            cpu: 0,
-            ram: 0,
-            disk: 0
-        }
     }
 
     componentDidMount() {
-        // /*MOCK VALUES*/
-        // this._handleChange('cpu', {
-        //     target: {
-        //         value: 0
-        //     }
-        // })
-        // this._handleChange('ram', {
-        //     target: {
-        //         value: 25000
-        //     }
-        // })
-        // this._handleChange('disk', {
-        //     target: {
-        //         value: 1024
-        //     }
-        // })
         const {presetList, chosenPreset} = this.props
-        this._handleOptionChange(presetList, {
-            target: {
-                value: chosenPreset
-            }
-        })
+        this._handleOptionChange(presetList, chosenPreset)
 
     }
 
     _handleChange(key, evt) {
-        this.setState({
+        this.props.actions.setAdvancedChart({
             [key]: evt.target.value
         })
     }
 
     _handleOptionChange(list, name) {
-        let values = list.filter((item, index) => item.name == name)[0]
-        values && this.setState({
-            cpu: values.cpu_cores,
-            ram: values.memory,
-            disk: values.disk
-        })
+        const {actions} = this.props
+        let value = list.filter((item, index) => item.name == name)[0]
+        if (value) {
+            actions.setChosenPreset(value.name)
+            actions.setAdvancedChart({
+                ...value
+            });
+            actions.setResources(::this.calculateResourceValue(value))
+        }
+    }
+
+    calculateResourceValue({cpu_cores, memory, disk}) {
+        const {systemInfo} = this.props
+        let cpuRatio = (cpu_cores / systemInfo.cpu_cores)
+        let ramRatio = (memory / systemInfo.memory)
+        let diskRatio = (disk / systemInfo.disk)
+        return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
     }
 
     fillOption(list) {
@@ -82,30 +70,30 @@ export class Advanced extends React.Component {
     }
 
     render() {
-        const {cpu, ram, disk} = this.state
-        const {presetList, chosenPreset, manageHandler} = this.props
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues} = this.props
+        let {cpu_cores, memory, disk} = chartValues
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
-              <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, presetList)} manageHandler={manageHandler}  presetManager/>
+              <Dropdown list={presetList} selected={presetList.map(item => item.name).indexOf(chosenPreset)} handleChange={this._handleOptionChange.bind(this, presetList)} manageHandler={manageHandler}  presetManager/>
               <button className="btn--outline" onClick={this._handleSavePresetModal.bind(this, {
-                cpu,
-                ram,
+                cpu_cores,
+                memory,
                 disk
             })}>Save as Preset</button>
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
-                <RadialProgress pct={cpu} title="CPU" max={mockSystemConfig.cpu}/>
-                <input type="number" min="0" step="1" max={mockSystemConfig.cpu} onChange={this._handleChange.bind(this, 'cpu')} value={cpu}/>
+                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores}/>
+                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleChange.bind(this, 'cpu_cores')} value={cpu_cores}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={ram} title="RAM" max={mockSystemConfig.ram}/>
-                <input type="number" min="0" step="128" max={mockSystemConfig.ram} onChange={this._handleChange.bind(this, 'ram')} value={ram}/>
+                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory}/>
+                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleChange.bind(this, 'memory')} value={memory}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={disk} title="Disk" max={mockSystemConfig.disk}/>
-                <input type="number" min="0" step="1" max={mockSystemConfig.disk} onChange={this._handleChange.bind(this, 'disk')} value={disk}/>
+                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk}/>
+                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleChange.bind(this, 'disk')} value={disk}/>
               </div>
             </div>
             <div className="advanced__tips">
