@@ -44,6 +44,7 @@ export class TaskDetail extends React.Component {
             compositing: false,
             resolution: [0, 0],
             frames: '',
+            showFrames: this.checkIfTaskBlender(props.task.type),
             format: '',
             formatIndex: 0,
             output_path: '',
@@ -61,13 +62,18 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        if (!this._nextStep) {
+            this.props.actions.clearTaskPlain()
+        }
+    }
+
     componentWillReceiveProps(nextProps) {
         if (nextProps.taskInfo && nextProps.params.id != "settings") {
-            const {timeout, subtask_count, subtask_timeout, options, bid} = nextProps.taskInfo
-            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+            const {type, timeout, subtask_count, subtask_timeout, options, bid} = nextProps.taskInfo
+            const {resolutionW, resolutionH, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
             resolutionW.value = options.resolution[0]
             resolutionH.value = options.resolution[1]
-            framesRef.value = options.frames ? options.frames : 1
             outputPath.value = options.output_path
             compositing.value = options.compositing
             taskTimeout.value = timeout
@@ -78,9 +84,20 @@ export class TaskDetail extends React.Component {
             this.setState({
                 formatIndex
             })
-            console.log(formatIndex)
+            if (this.state.showFrames || this.checkIfTaskBlender(type)) {
+                this.setState({
+                    showFrames: this.checkIfTaskBlender(type)
+                }, () => {
+                    this.refs.framesRef.value = options.frames ? options.frames : 1
+                })
+
+            }
         }
 
+    }
+
+    checkIfTaskBlender(type) {
+        return type === "Blender"
     }
 
     _handleResolution(index, e) {
@@ -132,6 +149,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleStartTaskButton() {
+        this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
         const {task} = this.props
         this.props.actions.createTask({
@@ -151,7 +169,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {showBackOption, presetModal, resolution, frames, formatIndex, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
+        const {showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -179,10 +197,10 @@ export class TaskDetail extends React.Component {
                                     <span className="icon-cross"/>
                                     <input ref="resolutionH" type="number" min="0" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
-                                <div className="item-settings">
+                                { showFrames && <div className="item-settings">
                                     <span className="title">Frame Range</span>
                                     <input ref="framesRef" type="text" aria-label="Frame Range" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>
+                                </div>}
                                 <div className="item-settings">
                                     <span className="title">Format</span>
                                     <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 

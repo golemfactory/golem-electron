@@ -1,6 +1,6 @@
 import { dict } from './../../actions'
 
-const {CREATE_TASK} = dict
+const {CREATE_TASK, CLEAR_TASK_PLAIN} = dict
 
 const initialState = {
     task: {}
@@ -13,6 +13,10 @@ const createTask = (state = initialState, action) => {
                 ...state.task,
                 ...action.payload
             }
+        });
+    case CLEAR_TASK_PLAIN:
+        return Object.assign({}, state, {
+            task: {}
         });
 
     default:

@@ -24,6 +24,12 @@ export class NewTask extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        if (!this._nextStep) {
+            this.props.actions.clearTaskPlain()
+        }
+    }
+
     _closeModal() {
         const {actions} = this.props
         actions.setFileCheck({
@@ -47,6 +53,7 @@ export class NewTask extends React.Component {
 
     _handleNextButton(e) {
         e.preventDefault();
+        this._nextStep = true
         const {name, type} = this.state
         this.props.actions.createTask({
             name,

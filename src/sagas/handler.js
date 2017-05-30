@@ -71,7 +71,11 @@ export let config = Object.freeze({
     PRESET_ACTIVATE_RPC: 'env.hw.preset.activate',
     PRESET_UPDATE_RPC: 'env.hw.preset.update',
     PRESET_DELETE_RPC: 'env.hw.preset.delete',
-    HARDWARE_CAPS_RPC: 'env.hw.caps'
+    HARDWARE_CAPS_RPC: 'env.hw.caps',
+    //Task Presets
+    TASK_PRESETS_RPC: 'comp.tasks.preset.get',
+    SAVE_TASK_PRESET_RPC: 'comp.tasks.preset.save',
+    DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete'
 })
 
 
