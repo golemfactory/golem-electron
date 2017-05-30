@@ -19,12 +19,13 @@
     }
     .icon-progress {
         margin-left: 15px;
+        margin-top: 2px;
         opacity: 0;
         -webkit-animation: fade 0.5s linear 0.5s;
         animation-fill-mode: forwards;
         &:before {
             display: inline-block;
-            transform-origin: 51% 48%;
+            transform-origin: 52% 47%;
             -webkit-animation: spin 2s linear infinite;
         }
     }

@@ -17,7 +17,7 @@ export function fetchEnvironments(session) {
     return new Promise((resolve, reject) => {
         function on_environments(args) {
             let environments = args[0];
-            let envIds = environments.map(item => item.id)
+            let envIds = environments.map(item => item.id).sort()
             resolve(envIds)
         }
 

@@ -19,8 +19,8 @@ export class NewTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: null,
-            type: 'blender'
+            name: 'Golem Task',
+            type: 'Blender'
         }
     }
 
@@ -57,12 +57,13 @@ export class NewTask extends React.Component {
 
     render() {
         const {fileCheckModal} = this.props
+        const {name} = this.state
         return (
             <div>
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
                     <div className="container-name__new-task">
                         <label>Task Name</label>
-                        <input type="text" defaultValue={`Golem Task`} autoFocus onChange={::this._handleNameInput} required/>
+                        <input type="text" value={name} autoFocus onChange={::this._handleNameInput} required/>
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
@@ -73,12 +74,12 @@ export class NewTask extends React.Component {
                                     <span className="path2"/>
                                     <span className="path3"/>
                                 </span>
-                                <input id="taskTypeRadio1" type="radio" name="taskType" value="blender" required/>
+                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                             </div>
                             <div className="radio-item">
-                                <span className="icon-luxrenderer"/>
-                                <input id="taskTypeRadio2" type="radio" name="taskType" value="luxrender"/>
+                                <span className="icon-luxrender"/>
+                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender"/>
                                 <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                             </div>
                             

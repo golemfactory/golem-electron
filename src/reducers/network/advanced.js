@@ -1,6 +1,6 @@
 import { dict } from './../../actions'
 
-const {SET_SYSTEM_INFO, SET_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET} = dict
+const {SET_SYSTEM_INFO, SET_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET, SET_ADVANCED_FROM_RESOURCE} = dict
 
 const initialState = {
     systemInfo: {},
@@ -37,6 +37,14 @@ const setAdvanced = (state = initialState, action) => {
     case SET_CHOSEN_HARDWARE_PRESET:
         return Object.assign({}, state, {
             chosenPreset: action.payload
+        });
+
+    case SET_ADVANCED_FROM_RESOURCE:
+        return Object.assign({}, state, {
+            chosenPreset: '',
+            chartValues: {
+                ...action.payload
+            }
         });
 
     default:

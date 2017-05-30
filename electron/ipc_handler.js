@@ -26,14 +26,15 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=531831
      * @see https://github.com/electron/electron/issues/3615
      */
-    ipcMain.on('preview-expand-section', (event, checked) => {
-        if (checked /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
+    ipcMain.on('preview-screen', (event, {isScreenOpen, id}) => {
+        if (isScreenOpen /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
             //win.setContentSize(700, APP_HEIGHT, true)
             createPreviewWindow()
+            console.log("ID", id)
         }
     })
 
-    ipcMain.on('preview-section', (event, checked) => {
+    ipcMain.on('preview-switch', (event, checked) => {
         if (checked /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
             win.setContentSize(APP_WIDTH, 810, true)
 

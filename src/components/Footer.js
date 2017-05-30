@@ -18,7 +18,6 @@ export default class Footer extends Component {
     _handlePreviewSwitch() {
         const {actions} = this.props
         const {previewSwitch} = this.refs
-        if (!previewSwitch.checked) browserHistory.push('/tasks')
         actions.setPreviewRadio(previewSwitch.checked)
     }
 

@@ -6,7 +6,8 @@ import Slider from './../../Slider.js'
 
 
 const mapStateToProps = state => ({
-    resource: state.resources.resource
+    resource: state.resources.resource,
+    systemInfo: state.advanced.systemInfo
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -22,6 +23,22 @@ export class Resources extends React.Component {
     _setResource(value) {
         console.log("RESOURCE", value)
         this.props.actions.setResources(value)
+        this.props.actions.setAdvancedFromResource(this.calculateHardwareAmount(value))
+    }
+
+    calculateHardwareAmount(val) {
+        const {systemInfo} = this.props
+        const ratio = val / 100
+        console.log(ratio)
+        const cpu_cores = Math.trunc(systemInfo.cpu_cores * ratio)
+        const memory = Math.trunc(systemInfo.memory * ratio)
+        const disk = Math.trunc(systemInfo.disk * ratio)
+        console.info(cpu_cores, memory, disk)
+        return {
+            cpu_cores,
+            memory,
+            disk
+        }
     }
 
     render() {

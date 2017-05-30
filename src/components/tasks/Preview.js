@@ -16,7 +16,10 @@ export default class Preview extends React.Component {
      * [_handleExpand new-window expand handler]
      */
     _handleExpand() {
-        this.props.setPreviewExpanded(true)
+        this.props.setPreviewExpanded({
+            isScreenOpen: true,
+            id: 'test'
+        })
     }
 
     render() {

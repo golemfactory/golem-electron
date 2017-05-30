@@ -77,7 +77,7 @@ export class Table extends React.Component {
                 }}>
                 <div className="info__task-item" onClick = { e => this._handleRowClick(e, item, index)} tabIndex="0" aria-label="Task Preview">
                     <div>
-                        <span className="task-icon icon-blender">
+                        <span className={`task-icon icon-${item.type.toLowerCase()}`}>
                             <span className="path1"></span>
                             <span className="path2"></span>
                             <span className="path3"></span>

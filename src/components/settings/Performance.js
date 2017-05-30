@@ -18,7 +18,7 @@ const mockList = [
         title: 'i5-6267'
     },
     {
-        icon: 'icon-luxrenderer',
+        icon: 'icon-luxrender',
         title: 'Luxrender'
     },
     {

@@ -44,7 +44,8 @@ export class TaskDetail extends React.Component {
             compositing: false,
             resolution: [0, 0],
             frames: '',
-            format: 0,
+            format: '',
+            formatIndex: 0,
             output_path: '',
             timeout: '',
             subtask_count: 0,
@@ -66,18 +67,18 @@ export class TaskDetail extends React.Component {
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
             resolutionW.value = options.resolution[0]
             resolutionH.value = options.resolution[1]
-            framesRef.value = options.frames
+            framesRef.value = options.frames ? options.frames : 1
             outputPath.value = options.output_path
             compositing.value = options.compositing
             taskTimeout.value = timeout
             subtaskCount.value = subtask_count
             subtaskTimeout.value = subtask_timeout
             bidRef.value = bid
+            let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
             this.setState({
-                format: mockFormatList.map(item => item.name).indexOf(options.format)
+                formatIndex
             })
-
-            console.log(mockFormatList.map(item => item.name).indexOf(options.format))
+            console.log(formatIndex)
         }
 
     }
@@ -150,7 +151,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {showBackOption, presetModal, resolution, frames, format, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
+        const {showBackOption, presetModal, resolution, frames, formatIndex, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -184,7 +185,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Format</span>
-                                    <Dropdown ref="formatRef" list={mockFormatList} selected={format} handleChange={this._handleOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
+                                    <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Output to</span>

@@ -15,21 +15,22 @@ const input = (state = initialState, action) => {
     switch (action.type) {
     case SET_PREVIEW_RADIO:
         setConfig(PREVIEW_SWITCH, action.payload)
-        ipcRenderer.send('preview-section', action.payload)
+        ipcRenderer.send('preview-switch', action.payload)
         return Object.assign({}, state, {
             preview: action.payload,
             expandedPreview: !action.payload && false
         });
 
     case SET_PREVIEW_EXPANDED:
-        ipcRenderer.send('preview-expand-section', action.payload)
+        ipcRenderer.send('preview-screen', {
+            ...action.payload
+        })
         return Object.assign({}, state, {
-            expandedPreview: action.payload
+            expandedPreview: action.payload.isScreenOpen
         });
 
     case SET_AUTOLAUNCH:
         setConfig(AUTOLUNCH_SWITCH, action.payload)
-        ipcRenderer.send('auto-launch-section', action.payload)
         return Object.assign({}, state, {
             autoLaunch: action.payload
         });

@@ -33,12 +33,16 @@ export class Personal extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this.copyTimeout && clearTimeout(this.copyTimeout)
+    }
+
     _handleCopyToClipboard(nodeId, evt) {
         clipboard.writeText(nodeId)
         this.setState({
             nodeIdCopied: true
         }, () => {
-            setTimeout(() => {
+            this.copyTimeout = setTimeout(() => {
                 this.setState({
                     nodeIdCopied: false
                 })
