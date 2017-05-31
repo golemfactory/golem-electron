@@ -23,7 +23,7 @@ export class Resources extends React.Component {
     _setResource(value) {
         console.log("RESOURCE", value)
         this.props.actions.setResources(value)
-        this.props.actions.setAdvancedFromResource(this.calculateHardwareAmount(value))
+        this.props.actions.setAdvancedManually(this.calculateHardwareAmount(value))
     }
 
     calculateHardwareAmount(val) {

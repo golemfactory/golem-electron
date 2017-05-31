@@ -35,10 +35,16 @@ export class Advanced extends React.Component {
 
     }
 
-    _handleChange(key, evt) {
-        this.props.actions.setAdvancedChart({
+    _handleInputChange(key, evt) {
+        const {actions, chartValues} = this.props
+        actions.setAdvancedManually({
+            ...chartValues,
             [key]: evt.target.value
         })
+        actions.setResources(this.calculateResourceValue({
+            ...chartValues,
+            [key]: evt.target.value
+        }))
     }
 
     _handleOptionChange(list, name) {
@@ -49,7 +55,7 @@ export class Advanced extends React.Component {
             actions.setAdvancedChart({
                 ...value
             });
-            actions.setResources(::this.calculateResourceValue(value))
+            actions.setResources(this.calculateResourceValue(value))
         }
     }
 
@@ -85,15 +91,15 @@ export class Advanced extends React.Component {
             <div className="section__radial-options">
               <div className="item__radial-options">
                 <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores}/>
-                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleChange.bind(this, 'cpu_cores')} value={cpu_cores}/>
+                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={cpu_cores}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={memory} title="RAM" max={systemInfo.memory}/>
-                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleChange.bind(this, 'memory')} value={memory}/>
+                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={memory}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={disk} title="Disk" max={systemInfo.disk}/>
-                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleChange.bind(this, 'disk')} value={disk}/>
+                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={disk}/>
               </div>
             </div>
             <div className="advanced__tips">
