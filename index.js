@@ -155,7 +155,7 @@ app.on('activate', () => {
 })
 
 
-function createPreviewWindow() {
+function createPreviewWindow(id) {
     previewWindow = new BrowserWindow({
         title: APP_NAME,
         width: PREVIEW_APP_WIDTH,
@@ -183,9 +183,9 @@ function createPreviewWindow() {
     })
 
     if (isDevelopment()) {
-        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview/complete`)
+        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview/complete/${id}`)
     } else {
-        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview`)
+        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview/complete/${id}`)
     //win.loadURL(`file://${__dirname}/index.html`)
     }
 }

@@ -7,6 +7,9 @@ const {ipcRenderer} = window.require('electron')
 
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
+
+import { frameBase } from './frame'
+
 import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
 import { connectedPeersFlow } from './connectedPeers'
@@ -19,7 +22,7 @@ import { tasksFlow } from './tasks'
 import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
-const {SET_CONNECTION_PROBLEM, LOGIN, SET_MESSAGE, SET_BLENDER, LOGOUT} = dict
+const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
 
 /**
  * { Websocket Connect function }
@@ -198,6 +201,16 @@ export function* handleIO(connection) {
     }
 }
 
+export function* frameFlow() {
+    while (true) {
+        let {payload} = yield take(LOGIN_FRAME)
+        const {connection} = yield call(connect)
+        const task = yield fork(frameBase, connection, payload)
+        let action = yield take(LOGOUT_FRAME)
+        yield cancel(task)
+    }
+}
+
 /**
  * { flow generator managing the major flow of the application }
  *
@@ -220,4 +233,5 @@ export function* flow() {
  */
 export default function* rootSaga() {
     yield fork(flow);
+    yield fork(frameFlow);
 }

@@ -10,8 +10,6 @@ import AllFrame from './All'
 
 
 const mapStateToProps = state => ({
-    preview: state.input.preview,
-    blender_data: state.realTime.blender
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -33,6 +31,8 @@ export class Frame extends React.Component {
 
     componentDidMount() {
         const {actions} = this.props
+        console.dir(this.props)
+        actions.loginFrame(this.props.params.id)
         const endLoading = () => {
             actions.endLoading("FRAME_LOADER")
         // To replay animation

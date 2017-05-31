@@ -35,8 +35,22 @@ export class Table extends React.Component {
         this._handleDeleteTask = ::this._handleDeleteTask
     }
 
+    _navigateTo(elm) {
+        let taskItems = document.getElementsByClassName('task-item');
+        [].map.call(taskItems, (item) => {
+            item.classList.remove('active')
+        });
+
+        elm && elm.currentTarget.classList.add('active')
+    }
+
     _handleRowClick(event, item, index) {
-        console.log(event, item, index)
+        const {id, preview} = item
+        this._navigateTo(event)
+        this.props.previewHandler({
+            id,
+            src: preview
+        })
         return true
     }
 
@@ -73,9 +87,9 @@ export class Table extends React.Component {
                 })
             }} role="listItem" tabIndex="-1">
             {value => <div className="wrapper-task-item"><div className="task-item" style={{
-                    background: item.progress < 100 ? `linear-gradient(90deg, #E3F3FF ${value.progress}%, transparent ${value.progress}%)` : 'transparent'
-                }}>
-                <div className="info__task-item" onClick = { e => this._handleRowClick(e, item, index)} tabIndex="0" aria-label="Task Preview">
+                    background: item.progress < 1 ? `linear-gradient(90deg, #E3F3FF ${value.progress * 100}%, transparent ${value.progress * 100}%)` : 'transparent'
+                }} onClick = { e => this._handleRowClick(e, item, index)} >
+                <div className="info__task-item" tabIndex="0" aria-label="Task Preview">
                     <div>
                         <span className={`task-icon icon-${item.type.toLowerCase()}`}>
                             <span className="path1"></span>
@@ -85,7 +99,8 @@ export class Table extends React.Component {
                     </div>
                     <div>
                         <h4>{item.name}</h4>
-                        <span className={`duration ${item.progress < 100 ? 'duration--active' : 'duration--done'}`}>{convertSecsToHMS(item.duration)} {item.progress < 100 ? 'Duration' : ' | 3.15PM Yesterday'} </span>
+                        {item.status === "Timeout" ? <span className="duration duration--done">Timeout</span>
+                    : <span className={`duration ${item.progress < 1 ? 'duration--active' : 'duration--done'}`}>{convertSecsToHMS(item.duration)} {item.progress < 1 ? 'Duration' : ' | 3.15PM Yesterday'} </span>}
                     </div>
                 </div>
                 <div>

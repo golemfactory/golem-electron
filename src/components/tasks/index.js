@@ -32,7 +32,9 @@ export class TaskPanel extends React.Component {
         super(props)
         this.state = {
             deleteModal: false,
-            deleteCallback: null
+            deleteCallback: null,
+            previewId: null,
+            previewSrc: null
         }
     }
 
@@ -47,6 +49,13 @@ export class TaskPanel extends React.Component {
         }
         actions.startLoading("TASK_PANEL_LOADER", "I am loading!")
         setTimeout(endLoading, 3000)
+    }
+
+    _setPreview({id, src}) {
+        this.setState({
+            previewId: id,
+            previewSrc: src
+        })
     }
 
     _handleDeleteModal(deleteId, deleteCallback) {
@@ -68,7 +77,7 @@ export class TaskPanel extends React.Component {
 
 
     render() {
-        const {deleteModal, deleteProps} = this.state
+        const {deleteModal, deleteProps, previewId, previewSrc} = this.state
         const {actions, preview, expandedPreview} = this.props
 
         return (
@@ -76,11 +85,11 @@ export class TaskPanel extends React.Component {
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                         <DropZone>
                             <div className="section__table">
-                                <Table deleteModalHandler={::this._handleDeleteModal}/>
+                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview}/>
                             </div>
                         </DropZone>
                         {preview && <div className="section__preview">
-                             <Preview setPreviewExpanded={actions.setPreviewExpanded}/> 
+                             <Preview setPreviewExpanded={actions.setPreviewExpanded} id={previewId} src={previewSrc}/> 
                         </div>}
                         {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     </div>

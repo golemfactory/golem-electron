@@ -29,7 +29,7 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
     ipcMain.on('preview-screen', (event, {isScreenOpen, id}) => {
         if (isScreenOpen /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
             //win.setContentSize(700, APP_HEIGHT, true)
-            createPreviewWindow()
+            createPreviewWindow(id)
             console.log("ID", id)
         }
     })
