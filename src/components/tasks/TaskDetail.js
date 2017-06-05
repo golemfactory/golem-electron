@@ -25,7 +25,8 @@ const mockFormatList = [
 
 const mapStateToProps = state => ({
     task: state.create.task,
-    taskInfo: state.details.detail
+    taskInfo: state.details.detail,
+    presets: state.details.presets
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -38,6 +39,7 @@ export class TaskDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            modalData: null,
             showBackOption: props.params.id != "settings", //<-- HARDCODED
             presetModal: false,
             //INPUTS
@@ -49,16 +51,38 @@ export class TaskDetail extends React.Component {
             formatIndex: 0,
             output_path: '',
             timeout: '',
-            subtask_count: 0,
+            subtasks: 0,
             subtask_timeout: '',
-            bid: 0
+            bid: 0,
+            presetList: []
         }
     }
 
     componentDidMount() {
-        const {params, actions} = this.props
+        const {params, actions, task, presets} = this.props
         if (params.id != "settings") {
             actions.getTaskDetails(params.id)
+        } else {
+            actions.getTaskPresets(task.type)
+        }
+
+
+        if (document.addEventListener) {
+            document.addEventListener('keyup', function(e) {
+                var input = e.target;
+                input.checkValidity();
+                var element = e.target;
+                if (input.validity.valid) {
+                    element.classList.remove("invalid");
+                } else { //Remove the lines below if you don't want to automatically add
+                    // classes when they're invalid.
+                    element.classList.add("invalid");
+                }
+            });
+            document.addEventListener('invalid', function(e) {
+                let element = e.target;
+                element.classList.add("invalid");
+            }, true);
         }
     }
 
@@ -70,14 +94,14 @@ export class TaskDetail extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.taskInfo && nextProps.params.id != "settings") {
-            const {type, timeout, subtask_count, subtask_timeout, options, bid} = nextProps.taskInfo
+            const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
             const {resolutionW, resolutionH, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
             resolutionW.value = options.resolution[0]
             resolutionH.value = options.resolution[1]
             outputPath.value = options.output_path
             compositing.value = options.compositing
             taskTimeout.value = timeout
-            subtaskCount.value = subtask_count
+            subtaskCount.value = subtasks
             subtaskTimeout.value = subtask_timeout
             bidRef.value = bid
             let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
@@ -94,6 +118,23 @@ export class TaskDetail extends React.Component {
             }
         }
 
+        if (nextProps.presets != this.props.presets) {
+            this.parsePresets(nextProps.presets)
+        }
+
+    }
+
+    parsePresets(presets) {
+        let presetList = []
+        Object.keys(presets).forEach(item => {
+            presetList.push({
+                name: item,
+                value: presets[item]
+            })
+        })
+        this.setState({
+            presetList
+        })
     }
 
     checkIfTaskBlender(type) {
@@ -122,8 +163,24 @@ export class TaskDetail extends React.Component {
     }
 
     _handleSavePresetModal() {
+        const {resolution, frames, format, output_path, compositing} = this.state
         this.setState({
             presetModal: true,
+            modalData: {
+                resolution,
+                frames,
+                format,
+                output_path,
+                compositing
+            }
+        })
+    }
+
+    _handlePresetSave(preset_name, data) {
+        this.props.actions.saveTaskPreset({
+            preset_name,
+            task_type: this.props.task.type,
+            data
         })
     }
 
@@ -136,11 +193,13 @@ export class TaskDetail extends React.Component {
     _handleOutputPath() {
         let onFolderHandler = data => {
             console.log(data)
-            this.setState({
-                output_path: data[0]
-            }, () => {
-                this.refs.outputPath.value = data[0]
-            })
+            if (data) {
+                this.setState({
+                    output_path: data[0]
+                }, () => {
+                    this.refs.outputPath.value = data[0]
+                })
+            }
         }
 
         dialog.showOpenDialog({
@@ -150,12 +209,12 @@ export class TaskDetail extends React.Component {
 
     _handleStartTaskButton() {
         this._nextStep = true
-        const {resolution, frames, format, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
         const {task} = this.props
         this.props.actions.createTask({
             ...task,
             timeout,
-            subtask_count,
+            subtasks,
             subtask_timeout,
             bid,
             options: {
@@ -169,7 +228,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtask_count, subtask_timeout, bid, compositing} = this.state
+        const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList} = this.state
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -189,7 +248,7 @@ export class TaskDetail extends React.Component {
                                 <h4>Settings</h4>
                                 <div className="item-settings">
                                     <span className="title">Preset</span>
-                                    <Dropdown list={mockPresetList} selected={0} handleChange={this._handleOptionChange.bind(this, mockPresetList)} disabled={showBackOption}/> 
+                                    <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, mockPresetList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
@@ -199,7 +258,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 { showFrames && <div className="item-settings">
                                     <span className="title">Frame Range</span>
-                                    <input ref="framesRef" type="text" aria-label="Frame Range" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
                                 <div className="item-settings">
                                     <span className="title">Format</span>
@@ -226,7 +285,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Amount</span>
-                                    <input ref="subtaskCount" type="text" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtask_count')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="subtaskCount" type="text" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Timeout</span>
@@ -261,7 +320,7 @@ export class TaskDetail extends React.Component {
                                 <button type="submit" className="btn--primary">Start Task</button>
                             </section>}
                             </form>
-                        {presetModal && <PresetModal closeModal={::this._closeModal}/>}
+                        {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
             </div>
         );
     }

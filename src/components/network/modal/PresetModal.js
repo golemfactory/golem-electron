@@ -40,7 +40,7 @@ export default class PresetModal extends React.Component {
                 <form className="content__modal" onSubmit={::this._handleSave}>
                     <section className="section__naming">
                         <h4>Name your Preset</h4>
-                        <input type="text" onChange={::this._handleNameInput} autofocus required/>
+                        <input type="text" onChange={::this._handleNameInput} autoFocus required/>
                     </section>
                     <section className="section__info">
                         <div>

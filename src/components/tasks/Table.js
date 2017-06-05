@@ -23,6 +23,14 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+
+const status = Object.freeze({
+    WAITING: 'Waiting',
+    COMPUTING: 'Computing',
+    FINISHED: 'Finished',
+    TIMEOUT: 'Timeout'
+})
+
 /**
  * { Class for Table Component in Blender Component }
  *
@@ -63,6 +71,22 @@ export class Table extends React.Component {
         this.props.actions.deleteTask(id)
     }
 
+    _fetchStatus(item) {
+        switch (item.status) {
+        case status.TIMEOUT:
+            return <span className="duration duration--done">Timeout</span>
+
+        case status.WAITING:
+            return <span className="duration duration--active">Waiting...</span>
+
+        case status.COMPUTING:
+            return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
+
+        default:
+            return <span className="duration duration--done">{convertSecsToHMS(item.duration)} | 3.15PM Yesterday </span>
+        }
+    }
+
     /**
      * {listTasks function}
      * @param  {Array}    data    [JSON array of task list]
@@ -99,8 +123,7 @@ export class Table extends React.Component {
                     </div>
                     <div>
                         <h4>{item.name}</h4>
-                        {item.status === "Timeout" ? <span className="duration duration--done">Timeout</span>
-                    : <span className={`duration ${item.progress < 1 ? 'duration--active' : 'duration--done'}`}>{convertSecsToHMS(item.duration)} {item.progress < 1 ? 'Duration' : ' | 3.15PM Yesterday'} </span>}
+                        {this._fetchStatus(item)}
                     </div>
                 </div>
                 <div>

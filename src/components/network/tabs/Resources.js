@@ -49,7 +49,7 @@ export class Resources extends React.Component {
         const {resource} = this.props
         return (
             <div className="content__resources">
-                <Slider value={resource} iconLeft="icon-single-server" iconRight="icon-multi-server" callback={::this._setResource}/>
+                <Slider value={resource} iconLeft="icon-single-server" iconRight="icon-multi-server" callback={::this._setResource} warn={true}/>
                 <div className="slider__tips">
                         Use the slider to choose how much of your machine’s resources 
                     (CPU, RAM and disk space) Golem can use. More power means 

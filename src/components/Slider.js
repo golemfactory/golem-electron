@@ -28,7 +28,13 @@ export default class Slider extends React.Component {
         let min = slider.getAttribute('min')
         let max = slider.getAttribute('max')
         var value = (val - min) / (max - min);
-        let color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER)
+
+        let color;
+        if (this.props.warn)
+            color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
+        else
+            color = TRUST;
+
         slider.style.background = color;
         slider.style.backgroundImage = [
             '-webkit-gradient(',

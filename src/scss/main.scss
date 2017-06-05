@@ -175,15 +175,19 @@ select {
     }
 }
 
+input.invalid {
+    border-color: red !important;
+}
+
 input[type=text],
 input[type=number] {
     background: $color-input;
-    border: solid 0.5px #d5d5d5 !important;
+    border: solid 0.5px $color-border;
 }
 
 input[type=text] {
-    background: #f9f9f9;
-    border: 1px solid $color-text4;
+    background: $color-input;
+    border: 1px solid $color-border;
     height: 32px;
 }
 
@@ -191,7 +195,7 @@ input[type=number] {
     width: 100%;
     position: relative;
     height: 32px;
-    background: #f9f9f9;
+    background: $color-input;
     border-box: none;
     border: 1px solid $color-text3;
     text-align: center;
@@ -199,7 +203,7 @@ input[type=number] {
 
 input[type=number]::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    background: $color-bg2 url('../assets/img/number-adjust.svg') no-repeat center;
+    background: $color-bg2 url("../assets/img/number-adjust.svg") no-repeat center;
     background-size: auto;
     width: 1.2em;
     border-left: 1px solid $color-text3;

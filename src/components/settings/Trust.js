@@ -44,9 +44,9 @@ export class Trust extends React.Component {
     fetchTrust(isRequestor) {
         const {providerTrust, requestorTrust} = this.props
         if (isRequestor)
-            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider}/>
+            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false}/>
         else
-            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider}/>
+            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false}/>
     }
 
     render() {

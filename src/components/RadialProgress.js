@@ -11,12 +11,19 @@ export default class RadialProgress extends React.Component {
     }
 
     render() {
-        const {pct, title, max} = this.props
+        const {pct, title, max, warn} = this.props
         let maximum = max || 100
         let ratio = ((pct <= maximum ? pct : maximum) / maximum).toFixed(2)
+        let color;
+
+        if (warn)
+            color = (ratio >= 0.75 && ratio < 0.9) ? WARN : ((ratio >= 0.9) ? DANGER : TRUST);
+        else
+            color = TRUST;
+
         let style = Object.assign({}, null, {
             'strokeDashoffset': 500 - (300 * ratio),
-            'stroke': (ratio >= 0.75 && ratio < 0.9) ? WARN : ((ratio >= 0.9) ? DANGER : TRUST)
+            'stroke': color
         });
         return (
             <div className="radial-progress-bar" data-title={title ? title : `${(100 * (pct / maximum)).toFixed(0)}%`}>

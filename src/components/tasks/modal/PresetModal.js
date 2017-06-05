@@ -5,6 +5,15 @@ export default class PresetModal extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            name: null
+        }
+    }
+
+    _handleNameInput(e) {
+        this.setState({
+            name: e.target.value
+        })
     }
 
     _handleCancel() {
@@ -12,35 +21,43 @@ export default class PresetModal extends React.Component {
     }
 
     _handleSave() {
-        const {saveCallback, presetObj} = this.props
-        saveCallback(presetObj)
+        const {saveCallback, resolution, frames, format, output_path, compositing} = this.props
+        const {name} = this.state
+        saveCallback(name,
+            {
+                resolution,
+                frames,
+                format,
+                output_path,
+                compositing
+            })
         this.props.closeModal()
     }
 
     render() {
-        const {type} = this.props
+        const {resolution, frames, format, output_path, compositing} = this.props
         return (
             <div className="container__modal task-preset-modal ">
                 <div className="content__modal">
                     <section className="section__naming">
                         <h4>Name your Preset</h4>
-                        <input type="text" autoFocus required/>
+                        <input type="text" onChange={::this._handleNameInput} autoFocus required />
                     </section>
                     <section className="section__info">
                         <h5>Dimensions</h5>
-                        <span>3840 x 2160</span>
+                        <span>{resolution && resolution[0]} x {resolution && resolution[1]}</span>
                         <h5>Frame Range</h5>
-                        <span>01-05, 10-20, 45-70</span>
+                        <span>{frames}</span>
                         <h5>Format</h5>
-                        <span>PNG File</span>
+                        <span>{format} File</span>
                         <h5>Output to</h5>
-                        <span> ...Docs/Golem/Output</span>
+                        <span>{output_path}</span>
                         <h5>Blender Compositing</h5>
-                        <span>Off</span>
+                        <span>{compositing ? 'On' : 'Off'}</span>
                     </section>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button className="btn--primary">Save</button>
+                        <button className="btn--primary" onClick={::this._handleSave}>Save</button>
                     </div>
                 </div>
             </div>

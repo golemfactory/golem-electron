@@ -90,15 +90,15 @@ export class Advanced extends React.Component {
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
-                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores}/>
+                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true}/>
                 <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={cpu_cores}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory}/>
+                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true}/>
                 <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={memory}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk}/>
+                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true}/>
                 <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={disk}/>
               </div>
             </div>

@@ -16,7 +16,9 @@ const mapStateToProps = state => ({
     charts: state.profile.charts,
     avatar: state.profile.avatar,
     nodeName: state.profile.nodeName,
-    nodeId: state.info.networkInfo.key
+    nodeId: state.info.networkInfo.key,
+    providerTrust: state.trust.providerTrust,
+    requestorTrust: state.trust.requestorTrust
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -51,20 +53,20 @@ export class Personal extends React.Component {
     }
 
     render() {
-        const {avatar, charts, nodeName, nodeId} = this.props
+        const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust} = this.props
         const {nodeIdCopied} = this.state
         return (
             <div className="section__personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
-                        <RadialProgress pct={charts.requestor}/>
+                        <RadialProgress pct={requestorTrust} warn={false}/>
                         <span>Requestor</span>
                     </div>
                     <div>
                         <img className="image__personal" src={avatar || PlaceHolderAvatar} alt="avatar"/>
                     </div>
                     <div className="indicator__personal">
-                        <RadialProgress pct={charts.provider}/>
+                        <RadialProgress pct={providerTrust} warn={false}/>
                         <span>Provider</span>
                     </div>
                 </div>
