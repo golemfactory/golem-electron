@@ -87,14 +87,15 @@ export class TaskDetail extends React.Component {
             resolutionW.value = options.resolution[0]
             resolutionH.value = options.resolution[1]
             outputPath.value = options.output_path
-            compositingRef.value = options.compositing
+            compositingRef.checked = options.compositing
             taskTimeout.value = timeout
             subtaskCount.value = subtasks
             subtaskTimeout.value = subtask_timeout
             bidRef.value = bid
             let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
             this.setState({
-                formatIndex
+                formatIndex,
+                compositing: options.compositing
             })
             if (this.state.showFrames || this.checkIfTaskBlender(type)) {
                 this.setState({
@@ -144,6 +145,12 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _handleCheckbox(e) {
+        this.setState({
+            compositing: e.target.checked
+        })
+    }
+
     _handleFormInputs(state, e) {
         this.checkInputValidity(e)
         this.setState({
@@ -153,7 +160,6 @@ export class TaskDetail extends React.Component {
 
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
-        console.log(values)
         if (values) {
             const {compositing, format, frames, output_path, resolution} = values.value
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef} = this.refs
@@ -162,7 +168,14 @@ export class TaskDetail extends React.Component {
             framesRef.value = frames
             formatRef.value = format
             outputPath.value = output_path
-            compositingRef.value = compositing
+            compositingRef.checked = compositing
+            this.setState({
+                resolution,
+                output_path,
+                frames,
+                format,
+                compositing
+            })
         }
 
     }
@@ -286,7 +299,7 @@ export class TaskDetail extends React.Component {
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
                                         <label className="switch">
-                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleFormInputs.bind(this, 'compositing')} disabled={showBackOption}/>
+                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this, 'compositing')} disabled={showBackOption}/>
                                             <div className="switch-slider round"></div>
                                         </label>
                                     </div>
