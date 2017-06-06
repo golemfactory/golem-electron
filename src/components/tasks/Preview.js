@@ -33,7 +33,7 @@ export default class Preview extends React.Component {
                 event.keyCode === 13 && this._handleExpand.call(this)
             }} role="button" aria-label="Open Detailed Preview Window" tabIndex="0"></span>
                 </ReactTooltip>
-                <img src={src ? src : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
+                <img src={src ? `file://${src}` : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
             () => this.img.src = 'http://golem.network/img/golem.png'}/>
             </div>
         );

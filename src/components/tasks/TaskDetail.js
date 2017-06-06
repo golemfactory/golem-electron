@@ -68,20 +68,24 @@ export class TaskDetail extends React.Component {
 
 
         if (document.addEventListener) {
-            document.addEventListener('keyup', function(e) {
-                var input = e.target;
-                input.checkValidity();
-                var element = e.target;
-                if (input.validity.valid) {
-                    element.classList.remove("invalid");
-                } else { //Remove the lines below if you don't want to automatically add
-                    // classes when they're invalid.
-                    element.classList.add("invalid");
-                }
-            });
+            // document.addEventListener('keyup', function(e) {
+            //     var input = e.target;
+            //     input.checkValidity();
+            //     var element = e.target;
+            //     if (input.validity.valid) {
+            //         element.classList.remove("invalid");
+            //     } else { //Remove the lines below if you don't want to automatically add
+            //         // classes when they're invalid.
+            //         element.classList.add("invalid");
+            //     }
+            // });
             document.addEventListener('invalid', function(e) {
                 let element = e.target;
-                element.classList.add("invalid");
+                if (element.validity.valid) {
+                    element.classList.remove("invalid");
+                } else {
+                    element.classList.add("invalid");
+                }
             }, true);
         }
     }
@@ -141,7 +145,16 @@ export class TaskDetail extends React.Component {
         return type === "Blender"
     }
 
+    checkInputValidity(e) {
+        e.target.checkValidity();
+        if (e.target.validity.valid)
+            e.target.classList.remove("invalid");
+        else
+            e.target.classList.add("invalid");
+    }
+
     _handleResolution(index, e) {
+        this.checkInputValidity(e)
         let res = this.state.resolution
         res[index] = parseInt(e.target.value)
         this.setState({
@@ -150,6 +163,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleFormInputs(state, e) {
+        this.checkInputValidity(e)
         this.setState({
             [state]: e.target.value
         })

@@ -123,7 +123,10 @@ export class Header extends Component {
                     })
             }
         }
-
+        /**
+         * We're not able to let people to choose directory and file at the same time.
+         * @see https://electron.atom.io/docs/api/dialog/#dialogshowopendialogbrowserwindow-options-callback
+         */
         dialog.showOpenDialog({
             properties: ['openFile', 'openDirectory', 'multiSelections']
         }, onFileHandler)
