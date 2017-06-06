@@ -68,24 +68,8 @@ export class TaskDetail extends React.Component {
 
 
         if (document.addEventListener) {
-            // document.addEventListener('keyup', function(e) {
-            //     var input = e.target;
-            //     input.checkValidity();
-            //     var element = e.target;
-            //     if (input.validity.valid) {
-            //         element.classList.remove("invalid");
-            //     } else { //Remove the lines below if you don't want to automatically add
-            //         // classes when they're invalid.
-            //         element.classList.add("invalid");
-            //     }
-            // });
             document.addEventListener('invalid', function(e) {
-                let element = e.target;
-                if (element.validity.valid) {
-                    element.classList.remove("invalid");
-                } else {
-                    element.classList.add("invalid");
-                }
+                e.target.classList.add("invalid");
             }, true);
         }
     }
@@ -99,11 +83,11 @@ export class TaskDetail extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.taskInfo && nextProps.params.id != "settings") {
             const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
-            const {resolutionW, resolutionH, formatRef, outputPath, compositing, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+            const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
             resolutionW.value = options.resolution[0]
             resolutionH.value = options.resolution[1]
             outputPath.value = options.output_path
-            compositing.value = options.compositing
+            compositingRef.value = options.compositing
             taskTimeout.value = timeout
             subtaskCount.value = subtasks
             subtaskTimeout.value = subtask_timeout
@@ -149,8 +133,6 @@ export class TaskDetail extends React.Component {
         e.target.checkValidity();
         if (e.target.validity.valid)
             e.target.classList.remove("invalid");
-        else
-            e.target.classList.add("invalid");
     }
 
     _handleResolution(index, e) {
@@ -169,7 +151,23 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleOptionChange(list, name) {
+    _handlePresetOptionChange(list, name) {
+        let values = list.filter((item, index) => item.name == name)[0]
+        console.log(values)
+        if (values) {
+            const {compositing, format, frames, output_path, resolution} = values.value
+            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef} = this.refs
+            resolutionW.value = resolution[0]
+            resolutionH.value = resolution[1]
+            framesRef.value = frames
+            formatRef.value = format
+            outputPath.value = output_path
+            compositingRef.value = compositing
+        }
+
+    }
+
+    _handleFormatOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         values && this.setState({
             format: values.name
@@ -262,7 +260,7 @@ export class TaskDetail extends React.Component {
                                 <h4>Settings</h4>
                                 <div className="item-settings">
                                     <span className="title">Preset</span>
-                                    <Dropdown list={presetList} selected={0} handleChange={this._handleOptionChange.bind(this, mockPresetList)} disabled={showBackOption}/> 
+                                    <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
@@ -276,7 +274,7 @@ export class TaskDetail extends React.Component {
                                 </div>}
                                 <div className="item-settings">
                                     <span className="title">Format</span>
-                                    <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
+                                    <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Output to</span>
@@ -288,7 +286,7 @@ export class TaskDetail extends React.Component {
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
                                         <label className="switch">
-                                            <input ref="compositing" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleFormInputs.bind(this, 'compositing')} disabled={showBackOption}/>
+                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleFormInputs.bind(this, 'compositing')} disabled={showBackOption}/>
                                             <div className="switch-slider round"></div>
                                         </label>
                                     </div>
