@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router'
 import PresetModal from './modal/PresetModal'
 import Dropdown from './../Dropdown'
 
@@ -161,6 +161,7 @@ export class TaskDetail extends React.Component {
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
+            console.log("values", values);
             const {compositing, format, frames, output_path, resolution} = values.value
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef} = this.refs
             resolutionW.value = resolution[0]
@@ -169,11 +170,13 @@ export class TaskDetail extends React.Component {
             formatRef.value = format
             outputPath.value = output_path
             compositingRef.checked = compositing
+            let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
             this.setState({
                 resolution,
                 output_path,
                 frames,
                 format,
+                formatIndex,
                 compositing
             })
         }
@@ -250,6 +253,9 @@ export class TaskDetail extends React.Component {
                 output_path,
             }
         })
+        setTimeout(() => {
+            browserHistory.push('/tasks');
+        }, 1000);
     }
 
     render() {

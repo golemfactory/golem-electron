@@ -14,7 +14,6 @@
 * Integrate Redux Saga
 * Integrate WAMP & Msgpack
 * Integrate React Motion for animations
-* Integrate ResumableJS
 * Integrate Jest & Enzyme
 * Integrate Electron based Config Storage
 * Integrate Image Zoom/pan with control panel

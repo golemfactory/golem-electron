@@ -134,7 +134,7 @@ export class Header extends Component {
     }
 
     render() {
-        const {activeHeader} = this.props
+        const {activeHeader, taskDetails} = this.props
         return (
             <header className="header">
              <div className="top-titlebar">
@@ -179,11 +179,11 @@ export class Header extends Component {
             {activeHeader === 'secondary' &&
             <div className="header__frame">
                     <div className="title">
-                        <span>HMD Model Bake 3.5</span>
+                        <span>{taskDetails.name}</span>
                     </div>
                     <div className="info">
-                        <span className="time">1:21:15 Remaining</span>
-                        <span className="amount__frame">250 Frames</span>
+                        <span className="time">{taskDetails.status}</span>
+                        <span className="amount__frame">{taskDetails.options && taskDetails.options.frame_count} {taskDetails.options && taskDetails.options.frame_count > 1 ? ' Frames' : ' Frame' }</span>
                     </div>
                     <div className="menu" role="menu">
                         <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>

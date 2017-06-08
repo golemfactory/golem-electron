@@ -53,11 +53,12 @@ export class Table extends React.Component {
     }
 
     _handleRowClick(event, item, index) {
-        const {id, preview} = item
+        const {id, preview, options} = item
         this._navigateTo(event)
         this.props.previewHandler({
             id,
-            src: preview
+            src: preview,
+            frameCount: options.frame_count
         })
         return true
     }

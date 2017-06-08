@@ -15,10 +15,7 @@
         height: 350px;
     }
     img {
-        max-height: 100%;
-        max-width: 100%;
-        width: auto;
-        height: auto;
+        object-fit: contain;
         position: absolute;
         top: 0;
         bottom: 0;

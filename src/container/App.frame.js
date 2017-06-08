@@ -28,7 +28,8 @@ const routes = (
 
 const mapStateToProps = state => ({
     status: state.firstReducer,
-    search: state.setSearch
+    search: state.setSearch,
+    details: state.details.detail
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -48,10 +49,10 @@ export class App extends Component {
 
     render() {
 
-        const {actions, status, search, history} = this.props
+        const {actions, status, search, history, details} = this.props
         return (
             <div>
-                <Header actions={ actions }  activeHeader={'secondary'}/>
+                <Header actions={ actions }  activeHeader={'secondary'} taskDetails={details}/>
                 <Router history={ history } >
                     { routes }
                 </Router>

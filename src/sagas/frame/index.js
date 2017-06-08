@@ -5,7 +5,7 @@ import { dict } from '../../actions'
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_HISTORY} = dict
+const {SET_TASK_DETAILS} = dict
 
 
 /**
@@ -46,27 +46,23 @@ export function* subtaskList(session, id) {
  */
 export function fetchFrameInfo(session, payload) {
     return new Promise((resolve, reject) => {
-        function on_create_preset(args) {
-            var created_preset = args[0];
-            console.log(config.PRESET_CREATE_RPC, created_preset)
-            resolve(created_preset)
+        function on_get_task_info(args) {
+            var task_info = args[0];
+            console.log(config.GET_TASK_RPC, task_info)
+            resolve({
+                type: SET_TASK_DETAILS,
+                payload: task_info
+            })
         }
 
-    //_handleRPC(on_create_preset, session, config.PRESET_CREATE_RPC, [payload])
+        _handleRPC(on_get_task_info, session, config.GET_TASK_RPC, [payload])
     })
 }
 
-export function* frameInfo(session) {
-    const channel = yield call(fetchFrameInfo, session)
-
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-        channel.close()
+export function* frameInfo(session, payload) {
+    if (payload) {
+        let action = yield call(fetchFrameInfo, session, payload)
+        yield put(action)
     }
 }
 
@@ -76,6 +72,6 @@ export function* frameInfo(session) {
  * @yield   {Object}            [Action object]
  */
 export function* frameBase(session, id) {
-    yield fork(frameInfo, session)
+    yield fork(frameInfo, session, id)
     yield fork(subtaskList, session, id)
 }

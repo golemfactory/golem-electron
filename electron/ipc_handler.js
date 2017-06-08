@@ -26,11 +26,11 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
      * @see https://bugs.chromium.org/p/chromium/issues/detail?id=531831
      * @see https://github.com/electron/electron/issues/3615
      */
-    ipcMain.on('preview-screen', (event, {isScreenOpen, id}) => {
+    ipcMain.on('preview-screen', (event, {isScreenOpen, id, frameCount}) => {
         if (isScreenOpen /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
             //win.setContentSize(700, APP_HEIGHT, true)
-            createPreviewWindow(id)
-            console.log("ID", id)
+            createPreviewWindow(id, frameCount)
+            console.log("ID", id, "FRAME COUNT", frameCount)
         }
     })
 

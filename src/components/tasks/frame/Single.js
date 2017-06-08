@@ -84,6 +84,7 @@ export default class Single extends React.Component {
     render() {
         const {isSubtaskShown} = this.state
         const {id, preview, actions} = this.props
+        console.log("id", id);
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {

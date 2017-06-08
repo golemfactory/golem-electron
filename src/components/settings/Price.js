@@ -34,12 +34,12 @@ export class Price extends React.Component {
                 <div className="section__price">
                     <span>Provider Minimum</span>
                     <input type="number" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price"/>
-                    <span>USD per hour</span>
+                    <span>GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
                     <input type="number" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price"/>
-                    <span>USD per hour</span>
+                    <span>GNT per hour</span>
                 </div>
             </div>
         );

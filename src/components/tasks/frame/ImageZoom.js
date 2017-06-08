@@ -70,7 +70,7 @@ export class ImageZoom extends React.Component {
                 visibilityRatio: 1.0,
                 constrainDuringPan: false,
                 defaultZoomLevel: 1,
-                minZoomLevel: 0.5,
+                minZoomLevel: 1,
                 maxZoomLevel: 10,
                 zoomInButton: 'zoom-in',
                 zoomOutButton: 'zoom-out',
