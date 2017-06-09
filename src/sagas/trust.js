@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_CURRENCY, SET_PROV_TRUST, SET_REQ_TRUST} = dict
+const {SET_CURRENCY, SET_NET_PROV_TRUST, SET_NET_REQ_TRUST} = dict
 
 
 /**
@@ -19,7 +19,7 @@ export function callTrust(session, payload) {
             let trust = args[0];
             console.log(config.GET_COMPUTING_TRUST_RPC, trust)
             resolve({
-                type: SET_PROV_TRUST,
+                type: SET_NET_PROV_TRUST,
                 payload: trust
             })
         }
@@ -31,7 +31,7 @@ export function callTrust(session, payload) {
             let trust = args[0];
             console.log(config.GET_REQUESTING_TRUST_RPC, trust)
             resolve({
-                type: SET_REQ_TRUST,
+                type: SET_NET_REQ_TRUST,
                 payload: trust
             })
         }

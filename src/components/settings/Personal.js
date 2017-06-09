@@ -17,8 +17,8 @@ const mapStateToProps = state => ({
     avatar: state.profile.avatar,
     nodeName: state.profile.nodeName,
     nodeId: state.info.networkInfo.key,
-    providerTrust: state.trust.providerTrust,
-    requestorTrust: state.trust.requestorTrust
+    providerTrust: state.profile.networkProviderTrust,
+    requestorTrust: state.profile.networkRequestorTrust
 })
 
 const mapDispatchToProps = dispatch => ({

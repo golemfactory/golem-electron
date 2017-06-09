@@ -1,12 +1,38 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, take, call, put } from 'redux-saga/effects'
+import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
 import { dict } from '../../actions'
 
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_SUBTASKS_VISIBILITY} = dict
 
+/**
+ * [subscribeHistory func. fetchs payment history of user, with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function fetchSubtasksBorder(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_subtasks_border(args) {
+            var subtasks_border = args[0];
+            console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border)
+            resolve({
+                type: SET_SUBTASKS_BORDER,
+                payload: subtasks_border
+            })
+        }
+
+        _handleRPC(on_subtasks_border, session, config.GET_SUBTASKS_BORDER_RPC, [payload])
+    })
+}
+
+export function* subtasksBorder(session, payload) {
+    if (payload) {
+        let action = yield call(fetchSubtasksBorder, session, payload)
+        yield put(action)
+    }
+}
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
@@ -25,17 +51,10 @@ export function fetchSubtaskList(session, payload) {
     })
 }
 
-export function* subtaskList(session, id) {
-    const channel = yield call(fetchSubtaskList, session, id)
-
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-        channel.close()
+export function* subtaskList(session, payload) {
+    if (payload) {
+        let action = yield call(fetchSubtaskList, session, payload)
+        yield put(action)
     }
 }
 
@@ -74,4 +93,5 @@ export function* frameInfo(session, payload) {
 export function* frameBase(session, id) {
     yield fork(frameInfo, session, id)
     yield fork(subtaskList, session, id)
+    yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id)
 }

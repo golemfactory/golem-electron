@@ -1,5 +1,9 @@
 import React from 'react';
 import { browserHistory } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+
+import * as Actions from '../../../actions'
 
 import ControlPanel from './ControlPanel'
 import ImageZoom from './ImageZoom'
@@ -50,13 +54,20 @@ const CLOSE_BTN_PATH = '/preview/complete';
 
 let tmpIndex = 0
 
-export default class Single extends React.Component {
+const mapStateToProps = state => ({
+    isSubtaskShown: state.single.isSubtaskShown,
+    borderList: state.single.borderList,
+    details: state.details.detail
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class Single extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            isSubtaskShown: false
-        }
         this._showSubtask = ::this._showSubtask
     }
 
@@ -68,9 +79,7 @@ export default class Single extends React.Component {
      * @return  nothing
      */
     _showSubtask() {
-        this.setState({
-            isSubtaskShown: !this.state.isSubtaskShown
-        })
+        this.props.actions.setSubtasksVisibility()
     }
 
     /**
@@ -82,20 +91,23 @@ export default class Single extends React.Component {
     }
 
     render() {
-        const {isSubtaskShown} = this.state
-        const {id, preview, actions} = this.props
+        const {id, preview, actions, isSubtaskShown, borderList, details} = this.props
+        console.log("isSubtaskShown", isSubtaskShown);
         console.log("id", id);
+        console.log("details.preview", details.preview);
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    <ImageZoom image="http://i.amz.mshcdn.com/7j6AkcDAU6D0RIsbIZVI7boC8Kw=/1200x627/2013%2F05%2F09%2Fdb%2FTeslaModelS.66c4e.jpg" />
-                    {isSubtaskShown && <SubTask data={path}/>}
+                    {details.preview && <ImageZoom image={`file://${details.preview}`} />}
+                    {isSubtaskShown && <SubTask data={borderList}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Single)

@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME} = dict
+const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, } = dict
 
 export function updateSettings(session, {type, payload}) {
     console.info(type, 'setting updated')
@@ -17,7 +17,7 @@ export function callSettings(session) {
         function on_settings(args) {
             let on_settings = args[0];
             console.log("SETTINGS", on_settings)
-            const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name} = on_settings
+            const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
 
             actionList.push({
                 type: SET_PERFORMANCE_CHARTS,
@@ -46,6 +46,16 @@ export function callSettings(session) {
             actionList.push({
                 type: SET_NODE_NAME,
                 payload: node_name
+            })
+
+            actionList.push({
+                type: SET_PROV_TRUST,
+                payload: Math.trunc((computing_trust + 1) * 50)
+            })
+
+            actionList.push({
+                type: SET_REQ_TRUST,
+                payload: Math.trunc((requesting_trust + 1) * 50)
             })
 
             function on_hardware_caps(args) {

@@ -1,11 +1,14 @@
 import { dict } from './../../actions'
 
-const {SET_AVATAR, SET_NODE_NAME} = dict
+const {SET_AVATAR, SET_NODE_NAME, SET_NET_PROV_TRUST, SET_NET_REQ_TRUST} = dict
 
 const initialState = {
     avatar: null,
-    nodeName: null
+    nodeName: null,
+    networkRequestorTrust: 0,
+    networkProviderTrust: 0
 }
+
 const setProfile = (state = initialState, action) => {
     switch (action.type) {
     case SET_AVATAR:
@@ -16,6 +19,16 @@ const setProfile = (state = initialState, action) => {
     case SET_NODE_NAME:
         return Object.assign({}, state, {
             nodeName: action.payload
+        });
+
+    case SET_NET_PROV_TRUST:
+        return Object.assign({}, state, {
+            networkRequestorTrust: action.payload
+        });
+
+    case SET_NET_REQ_TRUST:
+        return Object.assign({}, state, {
+            networkProviderTrust: action.payload
         });
 
     default:

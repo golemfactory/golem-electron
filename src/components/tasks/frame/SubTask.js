@@ -27,26 +27,37 @@ export default class SubTask extends React.Component {
     drawLine() {
         const {data} = this.props
 
+        var path = Object.keys(data).map(function(anchestorKey) {
+            return Object.keys(data[anchestorKey]).map(function(parentKey) {
+                return Object.keys(data[anchestorKey][parentKey]).map(function(childKey) {
+                    return data[anchestorKey][parentKey][childKey] * 2.52
+                });
+            });
+        });
+
+        console.log(path)
+
         function flatten(arr) {
             return [].concat(...arr)
         }
 
-        return data.map((item, index) => <ReactTooltip
+        return path.map((item, index) => <ReactTooltip
+            key={index.toString()}
             overlayClassName="tooltip-frame"
             placement={`${index % 10 === 0 ? 'bottomLeft' : ((index % 10 === 9) ? 'bottomRight' : 'bottom')}`}
             trigger={['hover']}
             mouseEnterDelay={1}
             overlay={<div className="content__tooltip">
-                            {index === DONE && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${index === DONE && 'time__tooltip--done'}`}>{convertSecsToHMS(subTaskData.data.duration)}</p>
-                            <button>Resubmit</button>
-                        </div>}
+                        {index === DONE && <p className="status__tooltip">Completed</p>}
+                        <p className={`time__tooltip ${index === DONE && 'time__tooltip--done'}`}>{convertSecsToHMS(subTaskData.data.duration)}</p>
+                        <button>Resubmit</button>
+                    </div>}
             align={{
                 offset: [0, 10],
             }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <polyline key={index.toString()} fill="transparent" stroke="black"
+                <polyline key={index.toString()} fill="transparent" stroke="black"
             points={flatten(item).toString().replace(/(,[^,]*),/g, '$1 ')}/>
-                </ReactTooltip>
+            </ReactTooltip>
         )
     }
 
