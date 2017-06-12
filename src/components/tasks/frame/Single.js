@@ -75,7 +75,7 @@ export class Single extends React.Component {
         console.log(this.props.id)
     }
     /**
-     * [_showSubtask func. will draw canvas paths over the image to show subtask of render.]
+     * [_showSubtask func. will draw svg paths over the image to show subtask of render.]
      * @return  nothing
      */
     _showSubtask() {
@@ -101,7 +101,7 @@ export class Single extends React.Component {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {details.preview && <ImageZoom image={`file://${details.preview}`} />}
+                    <ImageZoom image={`file:///Users/mhmmd/Desktop/dotMagic/output/Golem Task Buggy.png`} />
                     {isSubtaskShown && <SubTask data={borderList}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>

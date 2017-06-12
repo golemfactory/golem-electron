@@ -44,6 +44,7 @@ export function callTrust(session, payload) {
 
 export function* fireBase(session, {type, payload}) {
     const actionList = yield call(callTrust, session, payload)
+    console.log("actionList", actionList);
     yield actionList && actionList.map(item => put(item))
 }
 

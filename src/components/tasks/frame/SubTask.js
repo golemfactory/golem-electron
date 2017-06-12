@@ -35,16 +35,30 @@ export default class SubTask extends React.Component {
             });
         });
 
-        console.log(path)
+        console.log()
 
         function flatten(arr) {
-            return [].concat(...arr)
+            return [].concat(...arr).toString().replace(/(,[^,]*),/g, '$1 ')
+        }
+
+        /**
+         * [offset func. finding max right and bottom points of the polyline]
+         * @param  {[Array]}    arr    [Array of the path item]
+         * @return {[Array]}            [Array for the max right point and max bottom point]
+         *
+         * @description This function will be modified for the non-square shapes
+         */
+        function offset(arr) {
+            arr = [].concat(...[].concat(...arr)).sort().reverse()
+            let uniq = a => [...new Set(a)];
+            arr = uniq(arr)
+            return arr.slice(0, 2)
         }
 
         return path.map((item, index) => <ReactTooltip
             key={index.toString()}
             overlayClassName="tooltip-frame"
-            placement={`${index % 10 === 0 ? 'bottomLeft' : ((index % 10 === 9) ? 'bottomRight' : 'bottom')}`}
+            placement="bottom"
             trigger={['hover']}
             mouseEnterDelay={1}
             overlay={<div className="content__tooltip">
@@ -53,10 +67,10 @@ export default class SubTask extends React.Component {
                         <button>Resubmit</button>
                     </div>}
             align={{
-                offset: [0, 10],
+                offset: [(offset(item)[0] / 2), 20],
             }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
-            points={flatten(item).toString().replace(/(,[^,]*),/g, '$1 ')}/>
+            points={flatten(item)}/>
             </ReactTooltip>
         )
     }

@@ -21,7 +21,7 @@ $border_left_color_2: #ffffff;
     background-color: $background_color_1;
     padding: 1px;
     &:not(.rc-tooltip-hidden) {
-        opacity: 0.9;
+        opacity: 1;
     }
 }
 
@@ -46,7 +46,7 @@ $border_left_color_2: #ffffff;
     height: 0;
     border-color: $border_color_1;
     border-style: solid;
-    z-index: 2;
+    z-index: 999;
 }
 
 .rc-tooltip-arrow-inner {
@@ -55,7 +55,7 @@ $border_left_color_2: #ffffff;
     height: 0;
     border-color: $border_color_1;
     border-style: solid;
-    z-index: 1;
+    z-index: 99;
 }
 
 .rc-tooltip-placement-top {
