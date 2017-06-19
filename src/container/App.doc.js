@@ -36,9 +36,6 @@ const mapDispatchToProps = dispatch => ({
  * @class      App (name)
  */
 export class App extends Component {
-    static propTypes = {
-        actions: React.PropTypes.object.isRequired
-    }
 
     constructor(props) {
         super(props)

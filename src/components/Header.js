@@ -99,6 +99,9 @@ export class Header extends Component {
         browserHistory.push(`/preview/${to}`);
     }
 
+    /**
+     * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
+     */
     _onFileDialog() {
         let onFileHandler = (data) => {
             console.log(data)

@@ -29,18 +29,26 @@ export class Trust extends React.Component {
      * [_handleTrustSwitch onChange function for switch input]
      * @return  {Boolean}   true
      */
-
     _handleTrustSwitch() {
         this.setState({
             isRequestorTrust: !this.state.isRequestorTrust
         })
     }
 
+    /**
+     * [_handleTrustSlider swtichs between provider/requestor sldiers]
+     * @param  {Boolean}     value      [Boolean value from slider switch]
+     */
     _handleTrustSlider(value) {
         const {actions} = this.props
         this.state.isRequestorTrust ? actions.setRequestorTrust(value) : actions.setProviderTrust(value)
     }
 
+    /**
+     * [fetchTrust func.]
+     * @param  {Boolean} isRequestor    [Boolean value from slider switch]
+     * @return {DOM}                    [Slider element]
+     */
     fetchTrust(isRequestor) {
         const {providerTrust, requestorTrust} = this.props
         if (isRequestor)

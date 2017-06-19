@@ -43,15 +43,26 @@ export class Table extends React.Component {
         this._handleDeleteTask = ::this._handleDeleteTask
     }
 
-    _navigateTo(elm) {
+    /**
+     * [_navigateTo func. signifies selected navigation item]
+     * @param  {Event}  evt
+     */
+    _navigateTo(evt) {
         let taskItems = document.getElementsByClassName('task-item');
         [].map.call(taskItems, (item) => {
             item.classList.remove('active')
         });
 
-        elm && elm.currentTarget.classList.add('active')
+        evt && evt.currentTarget.classList.add('active')
     }
 
+    /**
+     * [_handleRowClick func. sends information of the clicked task as callback]
+     * @param  {Event}      event
+     * @param  {Object}     item    [Clicked task object]
+     * @param  {Number}     Index   [Index of selected task]
+     * @return {Boolean}
+     */
     _handleRowClick(event, item, index) {
         const {id, preview, options} = item
         this._navigateTo(event)
@@ -63,15 +74,28 @@ export class Table extends React.Component {
         return true
     }
 
+    /**
+     * [_handleDeleteModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
     _handleDeleteModal(id) {
         this.props.deleteModalHandler(id, this._handleDeleteTask)
     }
 
+    /**
+     * [_handleDeleteTask func. deletes selected task]
+     * @param  {Any}        id      [Id of the selected task]
+     */
     _handleDeleteTask(id) {
         console.log("DELETED_TASK", id)
         this.props.actions.deleteTask(id)
     }
 
+    /**
+     * [_fetchStatus func. populate status of the task]
+     * @param  {Object}     item    [Task item]
+     * @return {DOM}                [Element of the status]
+     */
     _fetchStatus(item) {
         switch (item.status) {
         case status.TIMEOUT:
@@ -89,6 +113,15 @@ export class Table extends React.Component {
     }
 
     /**
+     * [updateFooterInfoBar func. updates information about the task status on footer info bar]
+     * @param  {Array}    data    [JSON array of task list]
+     */
+    updateFooterInfoBar(data) {
+        let priorities = data.some(item => item.status == status.TIMEOUT)
+        this.props.actions.setFooterInfo()
+    }
+
+    /**
      * {listTasks function}
      * @param  {Array}    data    [JSON array of task list]
      * @return {Object}           [DOM of task list]
@@ -103,6 +136,7 @@ export class Table extends React.Component {
      *     @param {float}   precision   (optional)
      */
     listTasks(data) {
+        this.updateFooterInfoBar(data)
         const listItems = data.map((item, index) => <Motion key={index.toString()} defaultStyle={{
                 progress: 0
             }} style={{
@@ -120,6 +154,7 @@ export class Table extends React.Component {
                             <span className="path1"></span>
                             <span className="path2"></span>
                             <span className="path3"></span>
+                            <span className="path4"></span>
                         </span>
                     </div>
                     <div>

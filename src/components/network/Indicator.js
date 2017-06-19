@@ -53,6 +53,12 @@ export default class indicator extends React.Component {
         }
     }
 
+    /**
+     * [calculateAmount func. checks if animation ends to play animation once]
+     * @param  {Number} balance [Balance value]
+     * @param  {Number} rate    [Currency rate]
+     * @return {Number}         [Current value to fixed 2]
+     */
     calculateAmount(balance, rate) {
         if (balance === this.props.balance && motionBalanceStart !== balance) {
             motionBalanceStart = balance

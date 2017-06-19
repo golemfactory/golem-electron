@@ -53,11 +53,13 @@ export class MainFragment extends React.Component {
             managePresetModal: false,
             modalData: null
         }
-
-
     //props.actions.setOnboard(true)
     }
 
+    /**
+     * [_handlePresetModal func. will trigger presetModal state to make preset modal visible]
+     * @param  {Object}      data       [Custom hardware preset object]
+     */
     _handlePresetModal(data) {
         console.log(data)
         this.setState({
@@ -66,12 +68,18 @@ export class MainFragment extends React.Component {
         })
     }
 
+    /**
+     * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
+     */
     _handleManagePresetModal() {
         this.setState({
             managePresetModal: true
         })
     }
 
+    /**
+     * [_closeModal funct. will make all modals invisible]
+     */
     _closeModal() {
         this.setState({
             presetModal: false,
@@ -80,6 +88,10 @@ export class MainFragment extends React.Component {
         })
     }
 
+    /**
+     * [_handleSavePreset func. will create hardware preset with given custom hardware preset object]
+     * @param  {Object}     data    [Custom hardware preset object]
+     */
     _handleSavePreset(data) {
         this.props.actions.createAdvancedPreset(data)
     }

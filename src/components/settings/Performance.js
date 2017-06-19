@@ -33,10 +33,19 @@ export class Performance extends React.Component {
         super(props);
     }
 
+    /**
+     * [_handleRecount func. sends request for the benchmark]
+     */
     _handleRecount() {
         this.props.actions.recountBenchmark()
     }
 
+    /**
+     * [loadList func. populates performance items]
+     * @param  {Array}      data        [List of performance items.]
+     * @param  {Object}     chart       [Chart values of the performance items]
+     * @return {DOM}                    [Performance item elements]
+     */
     loadList(data, chart) {
         return data.map(({icon, title}, index) => <div className="list-item__performance" key={index.toString()}>
             <span className={'icon__list-item__acount ' + icon}>

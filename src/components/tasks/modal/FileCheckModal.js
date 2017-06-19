@@ -18,11 +18,19 @@ export default class FileCheckModal extends React.Component {
         window.applicationSurface.removeEventListener('click', this._handleCancel)
     }
 
+    /**
+     * [_handleCancel func. closes modal and redirects to task screen]
+     */
     _handleCancel() {
         this.props.closeModal()
         browserHistory.push('/tasks')
     }
 
+    /**
+     * [fetchFiles funcs. populate unknown file list into modal]
+     * @param  {Array}      files       [List of unknown files]
+     * @return {DOM}                    [List of unknown file elements]
+     */
     fetchFiles(files) {
         console.log("FETCH", files)
         return files.map(({name, extension}, index) => <div key={index.toString()}><span>{name}</span></div>)

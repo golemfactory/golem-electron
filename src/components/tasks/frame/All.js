@@ -190,7 +190,10 @@ export default class All extends React.Component {
 
 
 
-    // actual animation-related logic
+    /**
+     * [getDefaultStyles func. actual animation-related logic]
+     * @return  {Array}    [default style list of the animated item]
+     */
     getDefaultStyles() {
         return data.map(item => {
             console.log(...item)
@@ -204,6 +207,10 @@ export default class All extends React.Component {
         });
     }
 
+    /**
+     * [getStyles func. updated style list]
+     * @return {Array} [style list of the animated item]
+     */
     getStyles() {
         const {show} = this.props
         return data.filter((item) => {
@@ -226,7 +233,10 @@ export default class All extends React.Component {
             });
     }
 
-
+    /**
+     * [willEnter func. DOM elements enter animation]
+     * @return {Object} [Style object]
+     */
     willEnter() {
         return {
             width: 0,
@@ -234,6 +244,10 @@ export default class All extends React.Component {
         };
     }
 
+    /**
+     * [willLeave DOM elements leave animation]
+     * @return {Object} [Style object]
+     */
     willLeave() {
         return {
             width: spring(0, {

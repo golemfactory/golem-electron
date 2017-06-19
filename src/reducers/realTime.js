@@ -1,12 +1,13 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.require('electron')
 
-const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_FOOTER_INFO} = dict
 
 const initialState = {
     balance: '',
     taskList: [],
-    connectedPeers: 0
+    connectedPeers: 0,
+    footerInfo: null
 }
 
 let badgeActive = false
@@ -42,6 +43,12 @@ const realTime = (state = initialState, action) => {
         state.connectedPeers = action.payload
         return Object.assign({}, state, {
             connectedPeers: action.payload
+        });
+
+    case SET_FOOTER_INFO:
+        state.connectedPeers = action.payload
+        return Object.assign({}, state, {
+            footerInfo: action.payload
         });
 
     default:

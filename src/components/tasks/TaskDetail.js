@@ -113,6 +113,10 @@ export class TaskDetail extends React.Component {
 
     }
 
+    /**
+     * [parsePresets parses preset object from redux store to the array as state]
+     * @param  {Object}     presets     [Task preset object]
+     */
     parsePresets(presets) {
         let presetList = []
         Object.keys(presets).forEach(item => {
@@ -126,16 +130,30 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [checkIfTaskBlender func. check task type if Blender task type]
+     * @param  {string}     type    [Type of task item]
+     * @return {Boolean}
+     */
     checkIfTaskBlender(type) {
         return type === "Blender"
     }
 
+    /**
+     * [checkInputValidity func. checks if given input valid]
+     * @param  {Event}  e
+     */
     checkInputValidity(e) {
         e.target.checkValidity();
         if (e.target.validity.valid)
             e.target.classList.remove("invalid");
     }
 
+    /**
+     * [_handleResolution func. updates resolution state with given input]
+     * @param  {Number}     index   [Index of resolution list]
+     * @param  {Event}      e
+     */
     _handleResolution(index, e) {
         this.checkInputValidity(e)
         let res = this.state.resolution
@@ -145,12 +163,21 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [_handleCheckbox func. updates checkbox value]
+     * @param  {Event}  e
+     */
     _handleCheckbox(e) {
         this.setState({
             compositing: e.target.checked
         })
     }
 
+    /**
+     * [_handleFormInputs func. updtes all the rest form inputs]
+     * @param  {Any}    state   [Name of the state]
+     * @param  {Event}  e
+     */
     _handleFormInputs(state, e) {
         this.checkInputValidity(e)
         this.setState({
@@ -158,6 +185,11 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [_handlePresetOptionChange func. updates task preset dropdown changes]
+     * @param  {Array}      list    [List of the task presets]
+     * @param  {String}     name    [Name of selected preset]
+     */
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
@@ -183,6 +215,11 @@ export class TaskDetail extends React.Component {
 
     }
 
+    /**
+     * [_handleFormatOptionChange func.  updates format dropdown changes]
+     * @param  {Array}      list    [List of formats]
+     * @param  {String}     name    [Name of selected format]
+     */
     _handleFormatOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         values && this.setState({
@@ -190,6 +227,9 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
+     */
     _handleSavePresetModal() {
         const {resolution, frames, format, output_path, compositing} = this.state
         this.setState({
@@ -204,6 +244,11 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [_handlePresetSave func.]
+     * @param  {String} preset_name [Name of the custom preset]
+     * @param  {Object} data        [Custom preset object]
+     */
     _handlePresetSave(preset_name, data) {
         this.props.actions.saveTaskPreset({
             preset_name,
@@ -212,12 +257,18 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+     * [_closeModal func. closes all modals]
+     */
     _closeModal() {
         this.setState({
             presetModal: false,
         })
     }
 
+    /**
+     * [_handleOutputPath func. opens file chooser dialog and updates output path of that task]
+     */
     _handleOutputPath() {
         let onFolderHandler = data => {
             console.log(data)
@@ -235,6 +286,9 @@ export class TaskDetail extends React.Component {
         }, onFolderHandler)
     }
 
+    /**
+     * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
+     */
     _handleStartTaskButton() {
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
@@ -258,6 +312,17 @@ export class TaskDetail extends React.Component {
         }, 1000);
     }
 
+    _handleLocalRender() {
+        console.info('local sended')
+        const {actions, task} = this.props;
+        const {resources, type} = task
+        actions.runTestTask({
+            resources,
+            type,
+            subtasks: 1 // <--- HARDCODED
+        })
+    }
+
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList} = this.state
         return (
@@ -272,7 +337,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {!showBackOption && <button className="btn--outline">Render Local Test</button>}
+                        {!showBackOption && <button type="button" className="btn--outline" onClick={::this._handleLocalRender}>Render Local Test</button>}
                     </section>
                         <div className="container__task-detail">
                             <section className="section-settings__task-detail">

@@ -39,6 +39,11 @@ export class Personal extends React.Component {
         this.copyTimeout && clearTimeout(this.copyTimeout)
     }
 
+    /**
+     * [_handleCopyToClipboard funcs.  copies node id to the clipboard]
+     * @param  {String}     nodeId      [NodeId of the user]
+     * @param  {Event}      evt         [Clicked event]
+     */
     _handleCopyToClipboard(nodeId, evt) {
         clipboard.writeText(nodeId)
         this.setState({
@@ -75,7 +80,7 @@ export class Personal extends React.Component {
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied && 'icon-confirm-empty'}/></span>
+                        <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied && 'icon-confirmed-empty'}/></span>
                     </ReactTooltip>
                 </div>
             </div>

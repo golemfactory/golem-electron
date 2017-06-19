@@ -55,6 +55,10 @@ export default class Slider extends React.Component {
 
     }
 
+    /**
+     * [_handleCallback func. sends slider value as callback]
+     * @return {[type]} [description]
+     */
     _handleCallback() {
         let slider = document.getElementById('resourceSlider')
         let val = slider.value

@@ -1,5 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
+var HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -30,7 +32,29 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebpackPlugin({
+            alwaysWriteToDisk: true,
+            inject: true,
+            chunks: ['main'],
+            filename: '../index.html',
+            template: 'template.html'
+        }),
+        new HtmlWebpackPlugin({
+            alwaysWriteToDisk: true,
+            inject: true,
+            chunks: ['frame'],
+            filename: '../index.frame.html',
+            template: 'template.html'
+        }),
+        new HtmlWebpackPlugin({
+            alwaysWriteToDisk: true,
+            inject: true,
+            chunks: ['doc'],
+            filename: '../index.documentation.html',
+            template: 'template.html'
+        }),
+        new HtmlWebpackHarddiskPlugin()
     //new webpack.ContextReplacementPlugin(/bindings$/, /^$/)
     ],
     module: {
@@ -60,7 +84,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
+                test: /\.(woff(2)?|ttf|eot)(\?[a-z0-9]+)?$/,
                 use: ["file-loader"]
             },
             {

@@ -118,12 +118,15 @@ function createWindow() {
 
     if (isDevelopment()) {
         win.loadURL(`http://localhost:${process.env.PORT || 3002}/`)
+    // win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
+    //
     } else {
         // Load prod build
         let app = connect()
         app.use(compression())
         app.use(serveStatic(__dirname)).listen(3003, function() {
-            win.loadURL(`http://localhost:${process.env.PORT || 3003}/`)
+            // win.loadURL(`http://localhost:${process.env.PORT || 3003}/`)
+            win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
         });
     //win.loadURL(`file://${__dirname}/index.html`)
     }

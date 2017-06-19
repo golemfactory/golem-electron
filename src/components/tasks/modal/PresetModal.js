@@ -10,16 +10,27 @@ export default class PresetModal extends React.Component {
         }
     }
 
+    /**
+     * [_handleNameInput func. updates task preset name to be created]
+     * @param  {Event}      e
+     */
     _handleNameInput(e) {
         this.setState({
             name: e.target.value
         })
     }
 
+    /**
+     * [_handleCancel func. closes modal]
+     */
     _handleCancel() {
         this.props.closeModal()
     }
 
+    /**
+     * [_handleSave func. sends custom task presets object as callback to be created and closes modal]
+     * @return {[type]} [description]
+     */
     _handleSave() {
         const {saveCallback, resolution, frames, format, output_path, compositing} = this.props
         const {name} = this.state

@@ -20,6 +20,9 @@ export class FileLocation extends React.Component {
         super(props);
     }
 
+    /**
+     * [_handleFolderSelection func. will trigger file chooser dialog window and then update default file location on Redux store]
+     */
     _handleFolderSelection() {
         let onFolderHandler = data => {
             if (data) {

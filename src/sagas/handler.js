@@ -45,6 +45,8 @@ export let config = Object.freeze({
     GET_SUBTASK_RPC: 'comp.task.subtask',
     GET_SUBTASKS_BORDER_RPC: 'comp.task.subtasks.borders',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
+    RUN_TEST_TASK_RPC: 'comp.tasks.check',
+    TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',
     GET_RES_DIR_RPC: 'res.dir',

@@ -8,6 +8,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { browserHistory } from 'react-router'
+import createHistory from 'history/createBrowserHistory'
 
 
 import App from './container/App'

@@ -28,6 +28,11 @@ class OnboardIndex extends React.Component {
         }
     }
 
+    /**
+     * [shownStep func. will redirect user to relevant Step]
+     * @param  {Number}     id      [Id of the step]
+     * @return {DOM}                [Step element]
+     */
     shownStep(id) {
         let step
         switch (id) {
@@ -54,6 +59,9 @@ class OnboardIndex extends React.Component {
         return step
     }
 
+    /**
+     * [_handlePrev func. will redirect user to previous step]
+     */
     _handlePrev() {
         const {currentStep} = this.state
         currentStep > 1 && this.setState({
@@ -61,6 +69,9 @@ class OnboardIndex extends React.Component {
         })
     }
 
+    /**
+     * [_handleNext will redirect user to next step]
+     */
     _handleNext() {
         const {currentStep} = this.state
         if (currentStep < 6) {

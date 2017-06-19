@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CompressionPlugin = require("compression-webpack-plugin");
 var BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
@@ -26,13 +27,31 @@ module.exports = {
     output: {
         path: path.join(__dirname, 'dist'),
         filename: '[name].bundle.js',
-        publicPath: '/dist/'
+        publicPath: './dist/'
     },
     plugins: [
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
                 'NODE_ENV': JSON.stringify('production')
             }
+        }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            chunks: ['main'],
+            filename: '../index.html',
+            template: 'template.html'
+        }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            chunks: ['frame'],
+            filename: '../index.frame.html',
+            template: 'template.html'
+        }),
+        new HtmlWebpackPlugin({
+            inject: true,
+            chunks: ['doc'],
+            filename: '../index.documentation.html',
+            template: 'template.html'
         }),
         new CompressionPlugin({ // <-- don't forget to activate gzip on web server
             asset: "[path].gz[query]",
@@ -70,7 +89,7 @@ module.exports = {
                 ]
             },
             {
-                test: /\.(eot|woff|woff2|ttf)([\?]?.*)$/,
+                test: /\.(woff(2)?|ttf|eot)(\?[a-z0-9]+)?$/,
                 use: ["file-loader"]
             },
             {

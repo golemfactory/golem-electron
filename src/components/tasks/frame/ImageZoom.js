@@ -60,7 +60,6 @@ export class ImageZoom extends React.Component {
 
     /**
      * [initSeaDragon func. inits OpenSeaDragon object to pan, zoom image]
-     * @return nothing
      */
     initSeaDragon() {
         let {id, image, type} = this.props
@@ -102,7 +101,10 @@ export class ImageZoom extends React.Component {
 
     }
 
-
+    /**
+     * [calculateZoomRatio funcs. observe zoom changes and updates zoom ratio for the control panel indicator]
+     * @param  {Number} zoom [Zoom level of the Image Viewer]
+     */
     calculateZoomRatio(zoom) {
         const {x, y} = viewer.viewport.getContainerSize()
         const {width, height} = imageInfo

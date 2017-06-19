@@ -103,7 +103,6 @@ export class Loading extends React.Component {
 export var LoadingComponent = function(ComposedComponent, loadingIdArray) {
 
 
-
     const mapStateToProps = state => ({
         loader: state.loader
     })
@@ -113,9 +112,6 @@ export var LoadingComponent = function(ComposedComponent, loadingIdArray) {
     })
 
     class Loader extends React.Component {
-        static propTypes = {
-            name: React.PropTypes.string,
-        };
 
         constructor(props) {
             super(props);

@@ -55,7 +55,11 @@ export class Settings extends React.Component {
         actions.showTrust(nodeId)
     }
 
-    _handleTab(elm, evt) {
+    /**
+     * [_handleTab func. will make selected tab visible in accordion tab system]
+     * @param  {DOM}        elm         [Clicked DOM Element]
+     */
+    _handleTab(elm) {
         let target = elm.target
         let targetRoot = target.parentElement.parentElement
         let index = targetRoot.getAttribute('value')
@@ -75,6 +79,11 @@ export class Settings extends React.Component {
         })
     }
 
+    /**
+     * [loadAccordionMenu func. will  populate accordion list with given items.]
+     * @param  {Array}      data        [List of accordion items]
+     * @return {DOM}                    [Elements of accordion list]
+     */
     loadAccordionMenu(data) {
         return data.map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion">

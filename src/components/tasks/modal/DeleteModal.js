@@ -7,10 +7,16 @@ export default class DeleteModal extends React.Component {
         super(props);
     }
 
+    /**
+     * [_handleCancel funcs. closes modal]
+     */
     _handleCancel() {
         this.props.closeModal()
     }
 
+    /**
+     * [_handleDelete func. send information as callback and close modal]
+     */
     _handleDelete() {
         const {deleteCallback, deleteId} = this.props
         deleteCallback(deleteId)

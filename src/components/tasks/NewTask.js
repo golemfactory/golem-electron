@@ -30,6 +30,9 @@ export class NewTask extends React.Component {
         }
     }
 
+    /**
+     * [_closeModal funcs. closes modals]
+     */
     _closeModal() {
         const {actions} = this.props
         actions.setFileCheck({
@@ -37,6 +40,10 @@ export class NewTask extends React.Component {
         });
     }
 
+    /**
+     * [_handleNameInput funcs. updates name of the new task]
+     * @param  {Event}  e
+     */
     _handleNameInput(e) {
         console.log(e.target.value)
         this.setState({
@@ -44,6 +51,10 @@ export class NewTask extends React.Component {
         })
     }
 
+    /**
+     * [_handleTypeRadio funcs. updates type of the new task]
+     * @param  {Event}  e
+     */
     _handleTypeRadio(e) {
         console.log(e.target.value)
         this.setState({
@@ -51,6 +62,10 @@ export class NewTask extends React.Component {
         })
     }
 
+    /**
+     * [_handleNextButton funcs. redirect user to the next step]
+     * @param  {Event}  e
+     */
     _handleNextButton(e) {
         e.preventDefault();
         this._nextStep = true
@@ -80,6 +95,7 @@ export class NewTask extends React.Component {
                                     <span className="path1"/>
                                     <span className="path2"/>
                                     <span className="path3"/>
+                                    <span className="path4"/>
                                 </span>
                                 <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>

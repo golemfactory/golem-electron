@@ -52,6 +52,12 @@ export class TaskPanel extends React.Component {
         setTimeout(endLoading, 3000)
     }
 
+    /**
+     * [_setPreview func. update related states to present preview]
+     * @param {Any}         options.id         [Id of selected task]
+     * @param {String}      options.src        [Preview url of selected task]
+     * @param {Number}      options.frameCount [Frame amount of selected task]
+     */
     _setPreview({id, src, frameCount}) {
         this.setState({
             previewId: id,
@@ -60,7 +66,12 @@ export class TaskPanel extends React.Component {
         })
     }
 
-    _handleDeleteModal(deleteId, deleteCallback) {
+    /**
+     * [_handleDeleteModal func. makes  delete modal visible]
+     * @param  {[type]} deleteId       [Id of selected task]
+     * @param  {[type]} deleteCallback
+     */
+    _handleDeleteModal(deleteId, deleteCallbackData) {
         this.setState({
             deleteModal: true,
             deleteProps: {
@@ -71,6 +82,9 @@ export class TaskPanel extends React.Component {
         })
     }
 
+    /**
+     * [_closeModal funcs. closes modals.]
+     */
     _closeModal() {
         this.setState({
             deleteModal: false,

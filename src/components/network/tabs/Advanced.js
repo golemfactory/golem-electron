@@ -35,6 +35,11 @@ export class Advanced extends React.Component {
 
     }
 
+    /**
+     * [_handleInputChange func. If there's any change on input, the func. will update state]
+     * @param  {Any}        key         [State key]
+     * @param  {Event}      evt
+     */
     _handleInputChange(key, evt) {
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
@@ -47,6 +52,11 @@ export class Advanced extends React.Component {
         }))
     }
 
+    /**
+     * [_handleOptionChange func. will update adnvanced chart if there's any change on dropdown]
+     * @param  {Array}          list        [List of dropdown]
+     * @param  {String}         name        [Name of selected option]
+     */
     _handleOptionChange(list, name) {
         const {actions} = this.props
         let value = list.filter((item, index) => item.name == name)[0]
@@ -59,6 +69,13 @@ export class Advanced extends React.Component {
         }
     }
 
+    /**
+     * [calculateResourceValue func.]
+     * @param  {Int}        options.cpu_cores       [Selected cpu core amount]
+     * @param  {Int}        options.memory          [Selected memory amount]
+     * @param  {Int}        options.disk            [Selected disk space amount]
+     * @return {Int}                                [Mean of their percentage]
+     */
     calculateResourceValue({cpu_cores, memory, disk}) {
         const {systemInfo} = this.props
         let cpuRatio = (cpu_cores / systemInfo.cpu_cores)
@@ -67,10 +84,19 @@ export class Advanced extends React.Component {
         return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
     }
 
+    /**
+     * [fillOption func. will populate dropdown from Redux store]
+     * @param  {Array}      list        [List of hardware presets]
+     * @return {DOM}                    [option elements for the select list]
+     */
     fillOption(list) {
         return list.map((item, index) => <option key={index.toString()} value={item.name}>{item.name}</option>)
     }
 
+    /**
+     * [_handleSavePresetModal func. will open save preset modal]
+     * @param  {Object}     data    [Custom hardware preset object]
+     */
     _handleSavePresetModal(data) {
         this.props.modalHandler(data)
     }

@@ -19,10 +19,18 @@ export class Price extends React.Component {
         super(props);
     }
 
+    /**
+     * [_handleMinPriceChange funcs. update minimum provider price]
+     * @param  {Event}      evt
+     */
     _handleMinPriceChange(evt) {
         this.props.actions.setProviderMinPrice(evt.target.value)
     }
 
+    /**
+     * [_handleMinPriceChange funcs. update maximum requestor price]
+     * @param  {Event}      evt
+     */
     _handleMaxPriceChange(evt) {
         this.props.actions.setRequestorMaxPrice(evt.target.value)
     }
@@ -33,12 +41,12 @@ export class Price extends React.Component {
             <div className="content__price">
                 <div className="section__price">
                     <span>Provider Minimum</span>
-                    <input type="number" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price"/>
+                    <input type="number" min="0" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price"/>
                     <span>GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
-                    <input type="number" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price"/>
+                    <input type="number" min="0" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price"/>
                     <span>GNT per hour</span>
                 </div>
             </div>

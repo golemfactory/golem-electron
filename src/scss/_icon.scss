@@ -1,3 +1,11 @@
+.icon-confirmation:before {
+    content: "\e934";
+}
+
+.icon-progress-clockwise:before {
+    content: "\e935";
+}
+
 .icon-add:before {
     content: "\e900";
 }
@@ -24,17 +32,39 @@
 
 .icon-blender {
     .path1:before {
+        content: "\e906";
+        color: rgb(245, 245, 245);
+    }
+    .path2:before {
+        content: "\e907";
+        margin-left: -1em;
+        color: rgb(255, 255, 255);
+    }
+    .path3:before {
+        content: "\e908";
+        margin-left: -1em;
+        color: rgb(63, 93, 175);
+    }
+    .path4:before {
+        content: "\e909";
+        margin-left: -1em;
+        color: rgb(246, 166, 35);
+    }
+}
+
+.icon-blender-colored {
+    .path1:before {
         content: "\e90a";
         color: rgb(245, 245, 245);
     }
     .path2:before {
         content: "\e90b";
-        margin-left: -1em;
+        margin-left: -1.2080078125em;
         color: rgb(64, 93, 175);
     }
     .path3:before {
         content: "\e90c";
-        margin-left: -1em;
+        margin-left: -1.2080078125em;
         color: rgb(245, 166, 35);
     }
 }
@@ -46,7 +76,7 @@
     }
     .path2:before {
         content: "\e90e";
-        margin-left: -1em;
+        margin-left: -1.2067057291666667em;
         color: rgb(117, 117, 117);
     }
 }
@@ -59,7 +89,7 @@
     content: "\e910";
 }
 
-.icon-confirm-disabled {
+.icon-confirmed-disabled {
     .path1:before {
         content: "\e911";
         color: rgb(239, 241, 242);
@@ -71,11 +101,11 @@
     }
 }
 
-.icon-confirm-empty:before {
+.icon-confirmed-empty:before {
     content: "\e913";
 }
 
-.icon-confirm-filled {
+.icon-confirmed-filled {
     .path1:before {
         content: "\e914";
         color: rgb(55, 196, 129);
@@ -87,106 +117,122 @@
     }
 }
 
-.icon-cross:before {
-    content: "\e916";
+.icon-cross {
+    .path1:before {
+        content: "\e916";
+        color: rgb(0, 0, 0);
+    }
+    .path2:before {
+        content: "\e917";
+        margin-left: -1em;
+        color: rgb(255, 255, 255);
+    }
 }
 
 .icon-doc:before {
-    content: "\e917";
-}
-
-.icon-luxrender:before {
     content: "\e918";
 }
 
-.icon-macbook:before {
+.icon-eye:before {
     content: "\e919";
 }
 
-.icon-maximize:before {
+.icon-luxrender:before {
     content: "\e91a";
 }
 
-.icon-minimize:before {
+.icon-macbook:before {
     content: "\e91b";
 }
 
-.icon-multi-frame:before {
+.icon-maximize:before {
     content: "\e91c";
 }
 
-.icon-multi-server:before {
+.icon-minimize:before {
     content: "\e91d";
 }
 
-.icon-negative:before {
+.icon-multi-frame:before {
     content: "\e91e";
 }
 
-.icon-new-window:before {
+.icon-multi-server:before {
     content: "\e91f";
 }
 
-.icon-not-confirmed:before {
+.icon-negative:before {
     content: "\e920";
 }
 
-.icon-positive:before {
+.icon-new-window:before {
     content: "\e921";
 }
 
-.icon-preview:before {
+.icon-not-confirmed:before {
     content: "\e922";
 }
 
-.icon-progress:before {
+.icon-positive:before {
     content: "\e923";
 }
 
-.icon-question-mark:before {
-    content: "\e924";
-}
-
-.icon-settings:before {
+.icon-progress:before {
     content: "\e925";
 }
 
-.icon-show-subtasks:before {
+.icon-question-mark:before {
     content: "\e926";
 }
 
-.icon-single-frame:before {
+.icon-reload-warning:before {
     content: "\e927";
 }
 
-.icon-single-server:before {
+.icon-reload:before {
     content: "\e928";
 }
 
-.icon-status-dot:before {
+.icon-settings:before {
     content: "\e929";
 }
 
-.icon-trash:before {
+.icon-show-subtasks:before {
     content: "\e92a";
 }
 
-.icon-upload:before {
+.icon-single-frame:before {
     content: "\e92b";
 }
 
-.icon-warning:before {
+.icon-single-server:before {
     content: "\e92c";
 }
 
-.icon-zoom-in:before {
+.icon-status-dot:before {
     content: "\e92d";
 }
 
-.icon-zoom-out:before {
+.icon-trash:before {
     content: "\e92e";
 }
 
+.icon-zoom-in:before {
+    content: "\e931";
+}
+
+.icon-zoom-out:before {
+    content: "\e932";
+}
+
 .icon-zoom:before {
+    content: "\e933";
+}
+
+.icon-upload:before {
     content: "\e92f";
+}
+
+.icon-warning:before {
+    content: "\e930";
 }

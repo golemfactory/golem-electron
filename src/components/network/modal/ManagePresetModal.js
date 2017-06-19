@@ -40,16 +40,29 @@ export class ManagePresetModal extends React.Component {
     //     window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, specifiedElement))
     // }
 
+    /**
+     * [_handleCancel funct.]
+     * @return nothing
+     */
     _handleCancel() {
         this.props.closeModal()
     }
 
+    /**
+     * [_handleSelection func. will select object to be deleted.]
+     * @param  {Object}         item        [Selected preset object]
+     * @return nothing
+     */
     _handleSelection(item) {
         this.setState({
             deletedItem: item
         })
     }
 
+    /**
+     * [_handleDelete func. will delete the preset object]
+     * @return {[type]} [description]
+     */
     _handleDelete() {
         const {deletedItem} = this.state
         let {actions} = this.props
@@ -58,10 +71,19 @@ export class ManagePresetModal extends React.Component {
         }
     }
 
+    /**
+     * [_handleClose funct. will close modal]
+     * @return nothing
+     */
     _handleClose() {
         this.props.closeModal()
     }
 
+    /**
+     * [_fillList func.]
+     * @param  {Array}      presetList      [Preset list from redux store]
+     * @return {DOM}                        [HTML List version of the preset list]
+     */
     _fillList(presetList) {
         let list = presetList.map(item => item.name)
         console.log('FILL', list)

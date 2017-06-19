@@ -20,12 +20,21 @@ export class Resources extends React.Component {
         super(props);
     }
 
+    /**
+     * [_setResource func. will update resource and advanced states on redux store]
+     * @param {Int}         value       [Percentage of the resources]
+     */
     _setResource(value) {
         console.log("RESOURCE", value)
         this.props.actions.setResources(value)
         this.props.actions.setAdvancedManually(this.calculateHardwareAmount(value))
     }
 
+    /**
+     * [calculateHardwareAmount func. will calculate amount the hardware with given resource percentage]
+     * @param  {Int}        val     [Percentage of the resources]
+     * @return {Object}             [Custom hardware preset object]
+     */
     calculateHardwareAmount(val) {
         const {systemInfo} = this.props
         let ratio = val / 100

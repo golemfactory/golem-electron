@@ -1,11 +1,30 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put, fork, takeEvery } from 'redux-saga/effects'
+import { takeLatest, take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RUN_TEST_TASK, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
+
+
+export function runTestTask(session, payload) {
+
+    function on_test_task(args) {
+        var test_task = args[0];
+        console.log(config.RUN_TEST_TASK_RPC, test_task)
+    }
+
+    _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
+}
+
+export function* testTaskBase(session, {payload}) {
+    if (payload) {
+        yield call(runTestTask, session, payload)
+    }
+}
+
+
 
 export function deleteTaskPreset(session, payload) {
     function on_delete_task_preset(args) {
@@ -22,6 +41,8 @@ export function* deleteTaskPresetFlow(session, {payload}) {
 }
 
 
+
+
 export function saveTaskPreset(session, payload) {
     function on_create_task_preset(args) {
         let create_task_preset = args[0];
@@ -35,6 +56,8 @@ export function* saveTaskPresetFlow(session, {payload}) {
         yield call(saveTaskPreset, session, payload)
     }
 }
+
+
 
 export function getTaskPresets(session, payload) {
     return new Promise((resolve, reject) => {
@@ -59,12 +82,13 @@ export function* getTaskPresetsFlow(session, {payload}) {
     }
 }
 
-
 export function* taskPresetBase(session) {
     yield takeEvery(GET_TASK_PRESETS, getTaskPresetsFlow, session)
     yield takeEvery(SAVE_TASK_PRESET, saveTaskPresetFlow, session)
     yield takeEvery(DELETE_TASK_PRESET, deleteTaskPresetFlow, session)
 }
+
+
 
 export function getTaskDetails(session, payload) {
     return new Promise((resolve, reject) => {
@@ -90,6 +114,48 @@ export function* taskDetailsBase(session, {type, payload}) {
     }
 }
 
+
+/**
+ * [subscribeTasks func. fetches tasks with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function subscribeTestofTask(session) {
+    return eventChannel(emit => {
+        function on_tasks(args) {
+            var taskList = args[0];
+            emit({
+                type: SET_TASKLIST,
+                payload: taskList,
+                error: args[1][0].join('')
+            })
+        }
+
+        _handleSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+
+
+        return () => {
+            console.log('negative')
+            _handleUNSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+        }
+    })
+}
+
+export function* testTaskFlow(session) {
+    const channel = yield call(subscribeTestofTask, session)
+
+    try {
+        while (true) {
+            let action = yield take(channel)
+            console.log("action", action);
+        //yield put(action)
+        }
+    } finally {
+        console.info('yield cancelled!')
+        channel.close()
+    }
+}
+
 export function callCreateTask(session, payload) {
 
     function on_create_task(args) {
@@ -101,13 +167,21 @@ export function callCreateTask(session, payload) {
 }
 
 export function* createTaskBase(session, {type, payload}) {
+    let testCH = null
     if (payload.options) {
         console.info('TASK_CREATING')
+        if (testCH) {
+            yield cancel(task)
+        }
         yield call(callCreateTask, session, payload)
     } else {
         console.info('TASK_NOT_CREATING')
+        if (payload.type) {
+            testCH = yield fork(testTaskFlow, session);
+        }
     }
 }
+
 
 
 export function callDeleteTask(session, payload) {
@@ -174,4 +248,5 @@ export function* tasksFlow(session) {
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
     yield takeEvery(CREATE_TASK, createTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
+    yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
 }

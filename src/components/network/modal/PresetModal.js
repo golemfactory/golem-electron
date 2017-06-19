@@ -10,16 +10,27 @@ export default class PresetModal extends React.Component {
         }
     }
 
+    /**
+     * [_handleNameInput func. will define saved preset name]
+     * @param  {Event}          e
+     */
     _handleNameInput(e) {
         this.setState({
             name: e.target.value
         })
     }
 
+    /**
+     * [_handleCancel func. will close modal]
+     */
     _handleCancel() {
         this.props.closeModal()
     }
 
+    /**
+     * [_handleSave func. will save preset and close modal]
+     * @param  {Event}      e
+     */
     _handleSave(e) {
         e.preventDefault();
         const {saveCallback, cpu_cores, memory, disk} = this.props
