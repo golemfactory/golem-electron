@@ -18,3 +18,12 @@ golem/README.txt
 
 # coverage test
 coverage
+
+#HyperG
+HyperG.db
+
+#index files
+index.html
+index.frame.html
+index.documentation.html
+index.yedek.html
