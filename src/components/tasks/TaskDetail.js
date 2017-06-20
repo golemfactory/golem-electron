@@ -113,6 +113,22 @@ export class TaskDetail extends React.Component {
 
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        const {subtasks, subtask_timeout, bid} = this.state
+        const {actions, task} = this.props
+
+        if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
+            actions.getEstimatedCost({
+                type: task.type,
+                options: {
+                    price: nextState.bid,
+                    num_subtasks: nextState.subtasks,
+                    subtask_time: nextState.subtask_timeout
+                }
+            })
+        }
+    }
+
     /**
      * [parsePresets parses preset object from redux store to the array as state]
      * @param  {Object}     presets     [Task preset object]

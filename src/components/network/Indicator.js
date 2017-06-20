@@ -47,7 +47,7 @@ export default class indicator extends React.Component {
         case dictCurrency.GNT:
             return 1
         case dictCurrency.ETH:
-            return GNT / ETH
+            return (GNT / ETH) || 1
         case dictCurrency.USD:
             return GNT
         }

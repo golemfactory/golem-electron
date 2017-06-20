@@ -43,9 +43,12 @@ export function subscribeHistory(session) {
 
     return eventChannel(emit => {
         const iv = setInterval(function fetchHistory() {
+            let income;
+            let allPayments = []
             function on_history_payments(args) {
-                let history = args[0];
-                //console.log(config.PAYMENTS_RPC, history)
+                let payments = args[0];
+                let allPayments = [...payments, ...income]
+                console.info(config.PAYMENTS_RPC, allPayments)
                 emit({
                     type: SET_HISTORY,
                     payload: mockHistory
@@ -54,14 +57,15 @@ export function subscribeHistory(session) {
 
             function on_history_income(args) {
                 let history = args[0];
-            //console.log(config.INCOME_RPC, history)
-            // emit({
-            //     type: SET_HISTORY,
-            //     payload: history
-            // })
+                income = history
+                console.info(config.INCOME_RPC, history)
+                // emit({
+                //     type: SET_HISTORY,
+                //     payload: history
+                // })
+                _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
             }
 
-            _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
             _handleRPC(on_history_income, session, config.INCOME_RPC)
             return fetchHistory
         }(), interval)

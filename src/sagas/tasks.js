@@ -5,8 +5,30 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RUN_TEST_TASK, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RUN_TEST_TASK, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
 
+export function getEstimatedCost(session, payload) {
+    console.info('Estimated cost requested!')
+    return new Promise((resolve, reject) => {
+        function on_estimated_cost(args) {
+            var estimated_cost = args[0];
+            console.log(config.GET_ESTIMATED_COST_RPC, estimated_cost)
+            resolve({
+                type: SET_ESTIMATED_COST,
+                payload: estimated_cost
+            })
+        }
+
+        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, [payload])
+    })
+}
+
+export function* estimatedCostBase(session, {payload}) {
+    if (payload) {
+        let action = yield call(getEstimatedCost, session, payload)
+        yield put(action)
+    }
+}
 
 export function runTestTask(session, payload) {
 
@@ -127,7 +149,7 @@ export function subscribeTestofTask(session) {
             emit({
                 type: SET_TASKLIST,
                 payload: taskList,
-                error: args[1][0].join('')
+                error: args[1]
             })
         }
 
@@ -249,4 +271,6 @@ export function* tasksFlow(session) {
     yield takeEvery(CREATE_TASK, createTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
+    yield takeEvery(GET_ESTIMATED_COST, estimatedCostBase, session)
+    console.log("GET_ESTIMATED_COST", GET_ESTIMATED_COST);
 }

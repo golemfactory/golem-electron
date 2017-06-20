@@ -47,6 +47,7 @@ export let config = Object.freeze({
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RUN_TEST_TASK_RPC: 'comp.tasks.check',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
+    GET_ESTIMATED_COST_RPC: 'comp.task.estimated.cost',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',
     GET_RES_DIR_RPC: 'res.dir',
@@ -67,6 +68,8 @@ export let config = Object.freeze({
     //General
     QUIT_RPC: 'ui.quit',
     LOCK_CONFIG_CH: 'evt_lock_config',
+    START_GOLEM: '',
+    STOP_GOLEM: '',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',

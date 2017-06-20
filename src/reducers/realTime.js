@@ -4,9 +4,9 @@ const {ipcRenderer} = window.require('electron')
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_FOOTER_INFO} = dict
 
 const initialState = {
-    balance: '',
+    balance: parseInt(0),
     taskList: [],
-    connectedPeers: 0,
+    connectedPeers: parseInt(0), //parseInt add for preserve 0 case, otherwise js will behave it like boolean
     footerInfo: null
 }
 
@@ -16,14 +16,12 @@ let badgeTemp = 0
 const realTime = (state = initialState, action) => {
     switch (action.type) {
     case SET_BALANCE:
-        state.balance = action.payload
         return Object.assign({}, state, {
             balance: action.payload
         });
 
     case SET_TASKLIST:
         let badge = 0
-        state.taskList = action.payload
         action.payload && action.payload.forEach((item) => {
             item.status === 'In Progress' && (badge = badge + 1)
         })
@@ -40,13 +38,11 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_CONNECTED_PEERS:
-        state.connectedPeers = action.payload
         return Object.assign({}, state, {
             connectedPeers: action.payload
         });
 
     case SET_FOOTER_INFO:
-        state.connectedPeers = action.payload
         return Object.assign({}, state, {
             footerInfo: action.payload
         });
