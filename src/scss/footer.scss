@@ -12,13 +12,21 @@
     align-content: center;
     font-size: 10pt;
     font-weight: 400;
-    .icon-progress {
+    .info-bar__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    img {
+        width: 20px;
+        height: 20px;
+    }
+    .progress-status {
         display: inline-block;
-        color: $color-accent1;
         font-size: 15pt;
         font-weight: 500;
-        margin-right: 12px;
+        margin-right: 10px;
         vertical-align: middle;
-        margin-bottom: 4px;
+        margin-bottom: 0.5px;
     }
 }

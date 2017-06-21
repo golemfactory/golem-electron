@@ -71,7 +71,7 @@ export class TaskPanel extends React.Component {
      * @param  {[type]} deleteId       [Id of selected task]
      * @param  {[type]} deleteCallback
      */
-    _handleDeleteModal(deleteId, deleteCallbackData) {
+    _handleDeleteModal(deleteId, deleteCallback) {
         this.setState({
             deleteModal: true,
             deleteProps: {

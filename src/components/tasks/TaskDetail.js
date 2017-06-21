@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router'
 import PresetModal from './modal/PresetModal'
+import ManagePresetModal from './modal/ManagePresetModal'
 import Dropdown from './../Dropdown'
 
 import { bindActionCreators } from 'redux'
@@ -9,6 +10,12 @@ const {remote} = window.require('electron');
 const {dialog} = remote
 
 import * as Actions from './../../actions'
+
+const testStatusDict = {
+    STARTED: 'Started',
+    SUCCESS: 'Success',
+    ERROR: 'Error'
+}
 
 const mockPresetList = [{
     name: '4K Best Quality'
@@ -26,7 +33,9 @@ const mockFormatList = [
 const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
-    presets: state.details.presets
+    presets: state.details.presets,
+    testStatus: state.details.test_status,
+    estimated_cost: state.details.estimated_cost
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -54,12 +63,14 @@ export class TaskDetail extends React.Component {
             subtasks: 0,
             subtask_timeout: '',
             bid: 0,
-            presetList: []
+            presetList: [],
+            managePresetModal: false
         }
     }
 
     componentDidMount() {
         const {params, actions, task, presets} = this.props
+        actions.setEstimatedCost(0)
         if (params.id != "settings") {
             actions.getTaskDetails(params.id)
         } else {
@@ -108,6 +119,7 @@ export class TaskDetail extends React.Component {
         }
 
         if (nextProps.presets != this.props.presets) {
+            console.info("nextProps.presets", nextProps.presets)
             this.parsePresets(nextProps.presets)
         }
 
@@ -121,11 +133,20 @@ export class TaskDetail extends React.Component {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
-                    price: nextState.bid,
-                    num_subtasks: nextState.subtasks,
-                    subtask_time: nextState.subtask_timeout
+                    price: Number(nextState.bid),
+                    num_subtasks: Number(nextState.subtasks),
+                    subtask_time: getTimeAsFloat(nextState.subtask_timeout)
                 }
             })
+        }
+
+        function getTimeAsFloat(time) {
+            let result = 0;
+            time = time.split(':')
+            result += Number(time[0]) * 3600
+            result += Number(time[1]) * 60
+            result += Number(time[2])
+            return result / 3600
         }
     }
 
@@ -279,6 +300,7 @@ export class TaskDetail extends React.Component {
     _closeModal() {
         this.setState({
             presetModal: false,
+            managePresetModal: false
         })
     }
 
@@ -339,8 +361,18 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /**
+    * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
+    */
+    _handleManagePresetModal() {
+        this.setState({
+            managePresetModal: true
+        })
+    }
+
     render() {
-        const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList} = this.state
+        const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
+        const {testStatus, estimated_cost} = this.props
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -353,14 +385,18 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {!showBackOption && <button type="button" className="btn--outline" onClick={::this._handleLocalRender}>Render Local Test</button>}
+                        {!showBackOption && <button type="button" className={`btn--outline ${testStatus.status === testStatusDict.STARTED && 'btn--loading'}`} onClick={::this._handleLocalRender}>{testStatus.status !== testStatusDict.STARTED ? 'Render Local Test' : 'Rendering'} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
+  <span className="dot-1">.</span>
+  <span className="dot-2">.</span>
+  <span className="dot-3">.</span>
+</span>}</button>}
                     </section>
                         <div className="container__task-detail">
                             <section className="section-settings__task-detail">
                                 <h4>Settings</h4>
                                 <div className="item-settings">
                                     <span className="title">Preset</span>
-                                    <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={showBackOption}/> 
+                                    <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={showBackOption} manageHandler={::this._handleManagePresetModal}  presetManager/> 
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
@@ -411,13 +447,13 @@ export class TaskDetail extends React.Component {
                                 <h4 className="title-price__task-detail">Price</h4>
                                 <div className="item-price estimated-price__panel">
                                     <span className="title">Estimated</span>
-                                    <span className="estimated-price">0.2</span>
+                                    <span className="estimated-price">{estimated_cost.toFixed(2)}</span>
                                     <span>GNT</span>
                                 </div>
                                 <div className="item-price">
                                     <span className="title">Your bid</span>
                                     <input ref="bidRef" type="number" min="0" step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!showBackOption} disabled={showBackOption}/>
-                                    <span>GNT</span>
+                                    <span>GNT/h</span>
                                 </div>
                                 <span className="item-price tips__price">
                                     You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
@@ -433,6 +469,7 @@ export class TaskDetail extends React.Component {
                             </section>}
                             </form>
                         {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
+                        {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

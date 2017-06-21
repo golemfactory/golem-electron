@@ -35,7 +35,7 @@ function onReady() {
     }
     //setupGolem()
     createWindow()
-    tray = createTray(win)
+    // tray = createTray(win)
 
     ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
 }
@@ -122,13 +122,13 @@ function createWindow() {
     //
     } else {
         // Load prod build
-        let app = connect()
-        app.use(compression())
-        app.use(serveStatic(__dirname)).listen(3003, function() {
-            // win.loadURL(`http://localhost:${process.env.PORT || 3003}/`)
-            win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
-        });
-    //win.loadURL(`file://${__dirname}/index.html`)
+        // let app = connect()
+        // app.use(compression())
+        // app.use(serveStatic(__dirname)).listen(3003, function() {
+        //     // win.loadURL(`http://localhost:${process.env.PORT || 3003}/`)
+        //     win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
+        // });
+        win.loadURL(`file://${__dirname}/index.html`)
     }
 
     // Do not update window title after loading pages

@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RUN_TEST_TASK, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RESTART_TASK, RUN_TEST_TASK, SET_TASK_TEST_STATUS, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
 
 export function getEstimatedCost(session, payload) {
     console.info('Estimated cost requested!')
@@ -19,7 +19,7 @@ export function getEstimatedCost(session, payload) {
             })
         }
 
-        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, [payload])
+        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, [payload.type, payload.options])
     })
 }
 
@@ -48,17 +48,20 @@ export function* testTaskBase(session, {payload}) {
 
 
 
-export function deleteTaskPreset(session, payload) {
+export function deleteTaskPreset(session, {task_type, name}) {
     function on_delete_task_preset(args) {
         let deleted_task_preset = args[0];
         console.log(config.DELETE_TASK_PRESET_RPC, deleted_task_preset)
     }
-    _handleRPC(on_delete_task_preset, session, config.DELETE_TASK_PRESET_RPC, [payload])
+    _handleRPC(on_delete_task_preset, session, config.DELETE_TASK_PRESET_RPC, [task_type, name])
 }
 
 export function* deleteTaskPresetFlow(session, {payload}) {
     if (payload) {
         yield call(deleteTaskPreset, session, payload)
+        let action = yield call(getTaskPresets, session, payload.task_type)
+        console.log(action)
+        yield put(action)
     }
 }
 
@@ -76,6 +79,9 @@ export function saveTaskPreset(session, payload) {
 export function* saveTaskPresetFlow(session, {payload}) {
     if (payload) {
         yield call(saveTaskPreset, session, payload)
+        let action = yield call(getTaskPresets, session, payload.task_type)
+        console.log(action)
+        yield put(action)
     }
 }
 
@@ -145,11 +151,14 @@ export function* taskDetailsBase(session, {type, payload}) {
 export function subscribeTestofTask(session) {
     return eventChannel(emit => {
         function on_tasks(args) {
-            var taskList = args[0];
+            let status = args[0];
+            let error = args[1]
             emit({
-                type: SET_TASKLIST,
-                payload: taskList,
-                error: args[1]
+                type: SET_TASK_TEST_STATUS,
+                payload: {
+                    status,
+                    error
+                }
             })
         }
 
@@ -170,11 +179,27 @@ export function* testTaskFlow(session) {
         while (true) {
             let action = yield take(channel)
             console.log("action", action);
-        //yield put(action)
+            yield put(action)
         }
     } finally {
         console.info('yield cancelled!')
         channel.close()
+    }
+}
+
+export function callRestartTask(session, payload) {
+
+    function on_restart_task(args) {
+        var restart_task = args[0];
+        console.log(config.RESTART_TASK_RPC, restart_task)
+    }
+
+    _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [payload])
+}
+
+export function* restartTaskBase(session, {type, payload}) {
+    if (payload) {
+        yield call(callRestartTask, session, payload)
     }
 }
 
@@ -269,8 +294,9 @@ export function* tasksFlow(session) {
     yield fork(taskPresetBase, session);
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
     yield takeEvery(CREATE_TASK, createTaskBase, session)
+    yield takeLatest(RESTART_TASK, restartTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
-    yield takeEvery(GET_ESTIMATED_COST, estimatedCostBase, session)
+    yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     console.log("GET_ESTIMATED_COST", GET_ESTIMATED_COST);
 }

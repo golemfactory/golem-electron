@@ -101,7 +101,7 @@ export class Single extends React.Component {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    <ImageZoom image={`file:///Users/mhmmd/Desktop/dotMagic/output/Golem Task Buggy.png`} />
+                    {details.preview && <ImageZoom image={`file:///Users/mhmmd/Library/Application%20Support/golem/default/res/585c3e56-6cc9-405e-821d-90526f57e393/tmp/current_preview.bmp`} />}
                     {isSubtaskShown && <SubTask data={borderList}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>

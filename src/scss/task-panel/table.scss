@@ -52,6 +52,7 @@
                 margin-right: 50px;
                 box-sizing: border-box;
             }*/
+            .icon-reload,
             .icon-trash,
             .icon-arrow-right {
                 box-sizing: border-box;
@@ -67,6 +68,20 @@
                 }
             }
             &:hover .icon-trash {
+                visibility: visible;
+            }
+            &.active {
+                border-left: 5px solid $button-static-color;
+            }
+            .icon-reload {
+                visibility: hidden;
+                margin-right: 15px;
+                transition: .5s color;
+                &:hover {
+                    color: $color-text;
+                }
+            }
+            &:hover .icon-reload {
                 visibility: visible;
             }
             &.active {

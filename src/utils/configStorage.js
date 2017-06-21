@@ -1,4 +1,5 @@
-var Config = window.require('electron').remote.require('electron-config');
+var electron = window.require('electron');
+const Config = electron.remote.require('electron-config')
 const config = new Config();
 
 /**

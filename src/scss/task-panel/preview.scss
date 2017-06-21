@@ -16,6 +16,7 @@
     }
     img {
         object-fit: contain;
+        width: 100%;
         position: absolute;
         top: 0;
         bottom: 0;
@@ -25,6 +26,8 @@
         box-sizing: border-box;
     }
     .button__expand {
+        position: relative;
+        z-index: 20;
         float: right;
         margin: 20px;
         font-size: 22pt;

@@ -93,7 +93,7 @@ export default class indicator extends React.Component {
                     damping: 25
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">{::this.calculateAmount(balanceAnimated, currencyRate)}</span>}
+                    {({balanceAnimated}) => <span className="amount">{::this.calculateAmount(Number(balanceAnimated), Number(currencyRate))}</span>}
                 </Motion>
                 <div className="currency-menu" role="menu">
                     <span className="amont__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</span>

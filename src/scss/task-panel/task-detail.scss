@@ -27,6 +27,11 @@
     //box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
     button {
         position: relative;
+        width: 180px;
+        transition: .5s all;
+    }
+    .btn--loading {
+        width: 140px;
     }
 }
 

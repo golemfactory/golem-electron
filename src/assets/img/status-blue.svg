@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
+    <circle cx="10" cy="10" r="8" stroke="#2980b9" stroke-width="2" fill="none" />
+    <circle cx="10" cy="10" r="1" fill="#2980b9">
+        <animate attributeName="r" begin="0s" dur="2s" repeatCount="indefinite" from="1" to="8" />
+    </circle>
+</svg>

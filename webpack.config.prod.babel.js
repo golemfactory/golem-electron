@@ -90,11 +90,11 @@ module.exports = {
             },
             {
                 test: /\.(woff(2)?|ttf|eot)(\?[a-z0-9]+)?$/,
-                use: ["file-loader"]
+                use: ["file-loader?name=fonts/[hash].[ext]"]
             },
             {
                 test: /\.jpe?g$|\.gif$|\.png$|\.svg$/,
-                use: ["file-loader"]
+                use: ["file-loader?name=images/[hash].[ext]"]
             }]
     }
 };

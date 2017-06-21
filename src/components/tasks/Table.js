@@ -25,6 +25,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 const status = Object.freeze({
+    READY: 'Ready',
     WAITING: 'Waiting',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
@@ -41,6 +42,12 @@ export class Table extends React.Component {
     constructor(props) {
         super(props);
         this._handleDeleteTask = ::this._handleDeleteTask
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.taskList !== this.props.taskList) {
+            this.updateFooterInfoBar(nextProps.taskList)
+        }
     }
 
     /**
@@ -82,6 +89,7 @@ export class Table extends React.Component {
         this.props.deleteModalHandler(id, this._handleDeleteTask)
     }
 
+
     /**
      * [_handleDeleteTask func. deletes selected task]
      * @param  {Any}        id      [Id of the selected task]
@@ -89,6 +97,14 @@ export class Table extends React.Component {
     _handleDeleteTask(id) {
         console.log("DELETED_TASK", id)
         this.props.actions.deleteTask(id)
+    }
+
+    /**
+     * [_handleDeleteModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestart(id) {
+        this.props.actions.restartTask(id)
     }
 
     /**
@@ -117,8 +133,27 @@ export class Table extends React.Component {
      * @param  {Array}    data    [JSON array of task list]
      */
     updateFooterInfoBar(data) {
-        let priorities = data.some(item => item.status == status.TIMEOUT)
-        this.props.actions.setFooterInfo()
+        const {actions} = this.props
+        let waiting = data.some(item => item.status == status.WAITING)
+        let computing = data.some(item => item.status == status.COMPUTING)
+        let timeout = data.some(item => item.status == status.TIMEOUT)
+        let info = {
+            status: status.READY,
+            message: "Golem is ready!"
+        }
+        if (waiting) {
+            info.status = status.WAITING
+            info.message = "Task is preparing for computation"
+        }
+        if (computing) {
+            info.status = status.COMPUTING
+            info.message = "Processing your task"
+        }
+        if (timeout) {
+            info.status = status.TIMEOUT
+            info.message = "Your task is timeout"
+        }
+        actions.setFooterInfo(info)
     }
 
     /**
@@ -136,7 +171,6 @@ export class Table extends React.Component {
      *     @param {float}   precision   (optional)
      */
     listTasks(data) {
-        this.updateFooterInfoBar(data)
         const listItems = data.map((item, index) => <Motion key={index.toString()} defaultStyle={{
                 progress: 0
             }} style={{
@@ -163,6 +197,12 @@ export class Table extends React.Component {
                     </div>
                 </div>
                 <div>
+                    {item.status == status.TIMEOUT &&
+                <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Restart</p>} mouseEnterDelay={1} align={{
+                    offset: [0, 10],
+                }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span className="icon-reload" tabIndex="0" aria-label="Restart Task" onClick={this._handleRestart.bind(this, item.id)}></span>
+                    </ReactTooltip> }
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
                 }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>

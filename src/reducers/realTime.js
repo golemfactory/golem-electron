@@ -4,9 +4,9 @@ const {ipcRenderer} = window.require('electron')
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_FOOTER_INFO} = dict
 
 const initialState = {
-    balance: parseInt(0),
+    balance: Number(0),
     taskList: [],
-    connectedPeers: parseInt(0), //parseInt add for preserve 0 case, otherwise js will behave it like boolean
+    connectedPeers: Number(0), //Number added for preserve 0 case, otherwise js will behave it like boolean
     footerInfo: null
 }
 

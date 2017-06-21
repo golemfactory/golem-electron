@@ -49,6 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function renderWithHotReload(App) {
         window.applicationSurface = document.getElementById('mount')
+        window.electron = window.require('electron')
         render(
             <AppContainer>
               <Provider store={ store }>

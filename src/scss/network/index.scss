@@ -38,10 +38,9 @@
             }
         }
         .tab__content {
-            position: absolute;
-            bottom: 0;
             top: 47.5px;
             width: 100%;
+            height: -webkit-calc(100% - 330px);
             overflow-y: overlay;
         }
     }

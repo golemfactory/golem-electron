@@ -4,13 +4,13 @@ const {app, ipcMain} = electron
 
 function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) {
 
-    ipcMain.on('amount-updated', (event, amount) => {
-        const time = new Date().toLocaleTimeString()
+    // ipcMain.on('amount-updated', (event, amount) => {
+    //     const time = new Date().toLocaleTimeString()
 
-        tray.setTitle(`GNT${amount}`)
-        tray.setToolTip(`at ${time}`)
+    //     tray.setTitle(`GNT${amount}`)
+    //     tray.setToolTip(`at ${time}`)
 
-    })
+    // })
 
     ipcMain.on('set-badge', (event, counter) => {
         app.setBadgeCount(counter)
