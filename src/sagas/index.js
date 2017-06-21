@@ -10,6 +10,7 @@ import { config, _handleSUBPUB, _handleRPC } from './handler'
 
 import { frameBase } from './frame'
 
+import { engineFlow } from './engine'
 import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
 import { connectedPeersFlow } from './connectedPeers'
@@ -173,6 +174,7 @@ export function* apiFlow(connection) {
  */
 export function* handleIO(connection) {
     //yield fork(read, connection);
+    yield fork(engineFlow, connection);
     const channel = yield call(subscribe, connection)
     let taskApi;
     let started = false

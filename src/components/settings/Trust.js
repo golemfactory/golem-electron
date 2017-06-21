@@ -8,7 +8,8 @@ import Slider from './../Slider'
 
 const mapStateToProps = state => ({
     providerTrust: state.trust.providerTrust,
-    requestorTrust: state.trust.requestorTrust
+    requestorTrust: state.trust.requestorTrust,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -50,11 +51,11 @@ export class Trust extends React.Component {
      * @return {DOM}                    [Slider element]
      */
     fetchTrust(isRequestor) {
-        const {providerTrust, requestorTrust} = this.props
+        const {providerTrust, requestorTrust, isEngineOn} = this.props
         if (isRequestor)
-            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false}/>
+            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false} disabled={isEngineOn}/>
         else
-            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false}/>
+            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false} disabled={isEngineOn}/>
     }
 
     render() {

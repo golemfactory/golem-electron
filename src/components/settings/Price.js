@@ -5,7 +5,8 @@ import * as Actions from '../../actions'
 
 const mapStateToProps = state => ({
     providerMinPrice: state.price.providerMinPrice,
-    requestorMaxPrice: state.price.requestorMaxPrice
+    requestorMaxPrice: state.price.requestorMaxPrice,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -36,17 +37,17 @@ export class Price extends React.Component {
     }
 
     render() {
-        const {providerMinPrice, requestorMaxPrice} = this.props
+        const {providerMinPrice, requestorMaxPrice, isEngineOn} = this.props
         return (
             <div className="content__price">
                 <div className="section__price">
                     <span>Provider Minimum</span>
-                    <input type="number" min="0" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price"/>
+                    <input type="number" min="0" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
-                    <input type="number" min="0" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price"/>
+                    <input type="number" min="0" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
             </div>

@@ -30,7 +30,8 @@ const mapStateToProps = state => ({
     currency: state.currency,
     autoLaunch: state.input.autoLaunch,
     connectedPeers: state.realTime.connectedPeers,
-    connectionProblem: state.info.connectionProblem
+    connectionProblem: state.info.connectionProblem,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -54,6 +55,15 @@ export class MainFragment extends React.Component {
             modalData: null
         }
     //props.actions.setOnboard(true)
+    }
+
+    _golemize() {
+        const {actions, isEngineOn} = this.props
+        if (isEngineOn) {
+            actions.stopGolem()
+        } else {
+            actions.startGolem()
+        }
     }
 
     /**
@@ -161,7 +171,7 @@ export class MainFragment extends React.Component {
     }
 
     render() {
-        const {message, actions, autoLaunch, connectedPeers, connectionProblem} = this.props
+        const {message, actions, autoLaunch, connectedPeers, connectionProblem, isEngineOn} = this.props
         const {activeTab, presetModal, managePresetModal, modalData} = this.state
         return (
             <div className="content__main">
@@ -187,7 +197,7 @@ export class MainFragment extends React.Component {
                     <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
                     <span>{!connectionProblem ? `${connectedPeers} ${connectedPeers > 1 ? 'Nodes' : 'Node'}` : 'No Connection' }</span>
                 </div>
-                <button className="btn--primary">Start Golem</button>
+                <button className="btn--primary" onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
         </div>
         );

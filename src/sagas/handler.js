@@ -68,8 +68,8 @@ export let config = Object.freeze({
     //General
     QUIT_RPC: 'ui.quit',
     LOCK_CONFIG_CH: 'evt_lock_config',
-    START_GOLEM: '',
-    STOP_GOLEM: '',
+    START_GOLEM_RPC: 'ui.start',
+    STOP_GOLEM_RPC: 'ui.stop',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',

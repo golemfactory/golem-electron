@@ -16,7 +16,8 @@ const mapStateToProps = state => ({
     systemInfo: state.advanced.systemInfo,
     presetList: state.advanced.presetList,
     chosenPreset: state.advanced.chosenPreset,
-    chartValues: state.advanced.chartValues
+    chartValues: state.advanced.chartValues,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -102,30 +103,30 @@ export class Advanced extends React.Component {
     }
 
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues} = this.props
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn} = this.props
         let {cpu_cores, memory, disk} = chartValues
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
-              <Dropdown list={presetList} selected={presetList.map(item => item.name).indexOf(chosenPreset)} handleChange={this._handleOptionChange.bind(this, presetList)} manageHandler={manageHandler}  presetManager/>
+              <Dropdown list={presetList} selected={presetList.map(item => item.name).indexOf(chosenPreset)} handleChange={this._handleOptionChange.bind(this, presetList)} manageHandler={manageHandler}  presetManager disabled={isEngineOn}/>
               <button className="btn--outline" onClick={this._handleSavePresetModal.bind(this, {
                 cpu_cores,
                 memory,
                 disk
-            })}>Save as Preset</button>
+            })} disabled={isEngineOn}>Save as Preset</button>
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
                 <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true}/>
-                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={cpu_cores}/>
+                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={cpu_cores} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true}/>
-                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={memory}/>
+                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={memory} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true}/>
-                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={disk}/>
+                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={disk} disabled={isEngineOn}/>
               </div>
             </div>
             <div className="advanced__tips">

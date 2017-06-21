@@ -66,13 +66,13 @@ export default class Slider extends React.Component {
     }
 
     render() {
-        const {iconLeft, iconRight} = this.props
+        const {iconLeft, iconRight, disabled} = this.props
         const {defaultValue} = this.state
         return (
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback}/>
+                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id="resourceSlider__indicator"/>
                     <span className={iconRight}/>
         </div>

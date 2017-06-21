@@ -7,7 +7,8 @@ import { connect } from 'react-redux'
 import * as Actions from './../../actions'
 
 const mapStateToProps = state => ({
-    location: state.fileLocation.location
+    location: state.fileLocation.location,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -38,13 +39,13 @@ export class FileLocation extends React.Component {
     }
 
     render() {
-        const {location} = this.props
+        const {location, isEngineOn} = this.props
         return (
             <div className="content__file-location">
                 <div>
                     <span className="title__file-location">Output Folder</span>
                     <input ref="outputPath" type="text" disabled placeholder="..Docs/Golem/Output" aria-label="Output folder path" value={location}/>
-                    <button className="btn--outline" onClick={::this._handleFolderSelection}>Change</button>
+                    <button className="btn--outline" onClick={::this._handleFolderSelection} disabled={isEngineOn}>Change</button>
                 </div>
                 <div>
                     <span className="tips__file-location">Output folder is where the returned results of your tasks will go. </span>

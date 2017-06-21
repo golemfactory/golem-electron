@@ -27,7 +27,8 @@
     "build": {
         "appId": "com.golem.app",
         "mac": {
-            "category": "public.app-category.productivity"
+            "category": "public.app-category.productivity",
+            "target": ["dir", "pkg"]
         },
         "files": [
             "electron",

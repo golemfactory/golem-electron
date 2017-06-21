@@ -1,6 +1,6 @@
 import { dict } from './../actions'
 
-const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM} = dict
+const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_ENGINE_STATUS} = dict
 
 const initialState = {
     networkInfo: {},
@@ -8,7 +8,8 @@ const initialState = {
         status: false,
         files: []
     },
-    connectionProblem: false
+    connectionProblem: false,
+    isEngineOn: true
 }
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
@@ -29,6 +30,11 @@ const setInfo = (state = initialState, action) => {
     case SET_CONNECTION_PROBLEM:
         return Object.assign({}, state, {
             connectionProblem: action.payload
+        });
+
+    case SET_GOLEM_ENGINE_STATUS:
+        return Object.assign({}, state, {
+            isEngineOn: action.payload
         });
 
     default:
