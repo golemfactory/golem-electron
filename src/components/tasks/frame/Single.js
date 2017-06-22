@@ -94,14 +94,14 @@ export class Single extends React.Component {
         const {id, preview, actions, isSubtaskShown, borderList, details} = this.props
         console.log("isSubtaskShown", isSubtaskShown);
         console.log("id", id);
-        console.log("details.preview", details.preview);
+        console.log("details.preview", encodeURI(details.preview));
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {details.preview && <ImageZoom image={`file:///Users/mhmmd/Library/Application%20Support/golem/default/res/585c3e56-6cc9-405e-821d-90526f57e393/tmp/current_preview.bmp`} />}
+                    {details.preview && <ImageZoom image={'file://' + encodeURI(details.preview)} />}
                     {isSubtaskShown && <SubTask data={borderList}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>

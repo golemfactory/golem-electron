@@ -2,6 +2,10 @@ import React from 'react';
 import ReactTooltip from 'rc-tooltip'
 import { browserHistory } from 'react-router'
 import { TransitionMotion, spring, presets } from 'react-motion'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+
+import * as Actions from '../../../actions'
 
 import SingleFrame from './Single'
 import convertSecsToHMS from './../../../utils/secsToHMS'
@@ -9,7 +13,7 @@ import convertSecsToHMS from './../../../utils/secsToHMS'
 const UNDONE = 0
 const PROGRESS = 1
 const DONE = 2
-const data = [
+let data = [
     {
         key: '0',
         data: {
@@ -167,10 +171,26 @@ let status = [
 
 Object.freeze(status)
 
-export default class All extends React.Component {
+const mapStateToProps = state => ({
+    details: state.details.detail,
+    frameList: state.all.frameList
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class All extends React.Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.frameList !== this.props.frameList) {
+            data = nextProps.frameList
+            console.log("frameList", nextProps.frameList);
+        }
     }
 
     /**
@@ -331,3 +351,5 @@ export default class All extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(All)

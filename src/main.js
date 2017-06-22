@@ -9,6 +9,7 @@ import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { browserHistory } from 'react-router'
 import createHistory from 'history/createBrowserHistory'
+window.require('electron').webFrame.setZoomLevelLimits(1, 1)
 
 
 import App from './container/App'

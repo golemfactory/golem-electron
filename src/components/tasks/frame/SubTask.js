@@ -27,7 +27,7 @@ export default class SubTask extends React.Component {
         var path = Object.keys(data).map(function(anchestorKey) {
             return Object.keys(data[anchestorKey]).map(function(parentKey) {
                 return Object.keys(data[anchestorKey][parentKey]).map(function(childKey) {
-                    return data[anchestorKey][parentKey][childKey] * 2.52
+                    return data[anchestorKey][parentKey][childKey] * 0.59
                 });
             });
         });

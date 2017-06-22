@@ -59,6 +59,7 @@ export class TaskDetail extends React.Component {
             format: '',
             formatIndex: 0,
             output_path: '',
+            sample_per_pixel: '',
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
@@ -417,7 +418,7 @@ export class TaskDetail extends React.Component {
                                     <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
                                     <button className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
                                 </div>
-                                <div className="item-settings">
+                                { showFrames && <div className="item-settings">
                                     <span className="title">Blender Compositing</span>
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
@@ -426,7 +427,11 @@ export class TaskDetail extends React.Component {
                                             <div className="switch-slider round"></div>
                                         </label>
                                     </div>
-                                </div>
+                                </div>}
+                                {!showFrames && <div className="item-settings">
+                                    <span className="title">Sample per pixel</span>
+                                    <input ref="taskTimeout" type="text" placeholder="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
+                                </div>}
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
                                     <input ref="taskTimeout" type="text" placeholder="16:20:00" aria-label="Task Timeout" onChange={this._handleFormInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>

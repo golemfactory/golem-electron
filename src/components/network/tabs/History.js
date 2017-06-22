@@ -11,6 +11,8 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+const etherscan = "https://rinkeby.etherscan.io/tx/0x"
+
 export class History extends React.Component {
 
     constructor(props) {
@@ -21,16 +23,31 @@ export class History extends React.Component {
      * [loadHistory loading payment history as DOM]
      */
     loadHistory() {
+        function timeStampToHR(timestamp) {
+            // Create a new JavaScript Date object based on the timestamp
+            // multiplied by 1000 so that the argument is in milliseconds, not seconds.
+            var date = new Date(timestamp);
+            // Hours part from the timestamp
+            var hours = date.getHours();
+            // Minutes part from the timestamp
+            var minutes = "0" + date.getMinutes();
+            // Seconds part from the timestamp
+            var seconds = "0" + date.getSeconds();
+
+            // Will display time in 10:30:23 format
+            var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+            return formattedTime
+        }
         const {historyList} = this.props
-        return (historyList.map(({title, time, status, amount}, index) => <div key={index} className="item__history">
+        return (historyList.map(({payee, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
             <div className="info__history">
-                <h5>{title}</h5>
-                <span>{time}</span>
-                <span>{status}</span>
+                <h5>{payee}</h5>
+                <span>{timeStampToHR(created)}</span>
+                <span className="status__history">{status}</span>
             </div>
             <div className="action__history">
-                <span className="amount__history">{amount}</span>
-                <span className="icon-new-window"/>
+                <span className="amount__history">{type === "income" ? '+ ' : '- '}{(value / (10 ** 18)).toFixed(2)}</span>
+                {transaction && <a href={`${etherscan}${transaction}`}><span className="icon-new-window"/></a>}
             </div>
         </div>))
     }

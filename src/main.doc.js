@@ -7,6 +7,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { browserHistory } from 'react-router'
+window.require('electron').webFrame.setZoomLevelLimits(1, 1)
 
 
 import App from './container/App.doc'

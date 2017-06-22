@@ -16,7 +16,7 @@
         "postinstall": "electron-builder install-app-deps",
         "compile": "webpack --config webpack.config.prod.babel.js",
         "start:app": "node server.js",
-        "start": "NODE_ENV=development electron .",
+        "start": "cross-env NODE_ENV=development electron .",
         "start:prod": "electron .",
         "test": "jest",
         "test:watch": "jest --watch --no-cache",
@@ -27,20 +27,8 @@
     "build": {
         "appId": "com.golem.app",
         "mac": {
-            "category": "public.app-category.productivity",
-            "target": ["dir", "pkg"]
-        },
-        "files": [
-            "electron",
-            "setup_jest.js",
-            "setup_golem.js",
-            "index.js",
-            "node_modules",
-            "dist",
-            "index.html",
-            "index.frame.html",
-            "index.documentation.html"
-        ]
+            "category": "public.app-category.productivity"
+        }
     },
     "devDependencies": {
         "app-module-path": "1.1.0",

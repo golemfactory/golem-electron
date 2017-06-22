@@ -5,8 +5,34 @@ import { dict } from '../../actions'
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_SUBTASKS_VISIBILITY} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES} = dict
 
+/**
+ * [subscribeHistory func. fetchs payment history of user, with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function fetchFrameList(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_get_frame_list(args) {
+            var frame_list = args[0];
+            console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
+            resolve({
+                type: SET_ALL_FRAMES,
+                payload: frame_list
+            })
+        }
+
+        _handleRPC(on_get_frame_list, session, config.GET_SUBTASKS_FRAMES_RPC, [payload])
+    })
+}
+
+export function* frameList(session, payload) {
+    if (payload) {
+        let action = yield call(fetchFrameList, session, payload)
+    //yield put(action)
+    }
+}
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
@@ -93,5 +119,6 @@ export function* frameInfo(session, payload) {
 export function* frameBase(session, id) {
     yield fork(frameInfo, session, id)
     yield fork(subtaskList, session, id)
+    yield fork(frameList, session, id)
     yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id)
 }

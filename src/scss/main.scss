@@ -149,6 +149,9 @@ select {
         &:active {
             background-color: $button-active-color;
         }
+        &:disabled {
+            background-color: $button-disable-color;
+        }
     }
     &--warning {
         background-color: $color-error;
@@ -158,6 +161,9 @@ select {
             background-color: $color-delete-hover;
         }
         &:active {
+            background-color: $color-delete-active;
+        }
+        &:disabled {
             background-color: $color-delete-active;
         }
     }
@@ -170,6 +176,11 @@ select {
         &:hover {
             color: $button-hover-color;
             border: 1px solid $button-hover-color;
+            //color: rgb(0, 177, 200);
+        }
+        &:disabled {
+            color: $button-disable-color;
+            border: 1px solid $button-disable-color;
             //color: rgb(0, 177, 200);
         }
     }

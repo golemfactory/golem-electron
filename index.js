@@ -110,7 +110,10 @@ function createWindow() {
     */
     win.webContents.on('will-navigate', (event, url) => {
         event.preventDefault()
+        if (url.includes('etherscan'))
+            electron.shell.openExternal(url);
     })
+
 
     win.once('ready-to-show', () => {
         win.show()
@@ -189,15 +192,81 @@ function createPreviewWindow(id, frameCount) {
         let previewURL = `http://localhost:${process.env.PORT || 3003}/preview/${frameCount > 1 ? 'complete' : 'single' }/${id}`
         previewWindow.loadURL(previewURL)
     } else {
-        previewWindow.loadURL(`http://localhost:${process.env.PORT || 3003}/preview/complete/${id}`)
+        let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'complete' : 'single' }/${id}`
+        previewWindow.loadURL(previewURL)
     //win.loadURL(`file://${__dirname}/index.html`)
     }
 }
 
 exports.selectDirectory = function(directory) {
+console.log("directory", directory);
+
+let blackList = [
+    "ACTION",
+    "APK",
+    "APP",
+    "BAT",
+    "BIN",
+    "CMD",
+    "COM",
+    "COMMAND",
+    "CPL",
+    "CSH",
+    "EXE",
+    "GADGET",
+    "INF",
+    "INS",
+    "INX",
+    "IPA",
+    "ISU",
+    "JOB",
+    "JSE",
+    "KSH",
+    "LNK",
+    "MSC",
+    "MSI",
+    "MSP",
+    "MST",
+    "OSX",
+    "OUT",
+    "PAF",
+    "PIF",
+    "PRG",
+    "REG",
+    "RGS",
+    "RUN",
+    "SCR",
+    "SCT",
+    "SHB",
+    "SHS",
+    "U3B",
+    "VB",
+    "VBE",
+    "VBS",
+    "VBSCRIPT",
+    "WORKFLOW",
+    "WS",
+    "WSF",
+    "WSH",
+]
+
+const masterList = [
+    "BLEND",
+    "LXS"
+]
 
 let ignorePlaftormFiles = function(file) {
     return path.basename(file) !== ".DS_Store" && path.extname(file) !== null
+}
+
+let isBadFile = function(file) {
+    let correctExtension = file.replace(".", "").toUpperCase()
+    return blackList.includes(correctExtension)
+}
+
+let isMasterFile = function(file) {
+    let correctExtension = file.replace(".", "").toUpperCase()
+    return masterList.includes(correctExtension)
 }
 
 let walk = function(dir, done) {
@@ -219,7 +288,9 @@ let walk = function(dir, done) {
                     ignorePlaftormFiles(file) && results.push({
                         path: file,
                         name: path.basename(file),
-                        extension: path.extname(file)
+                        extension: path.extname(file),
+                        malicious: isBadFile(path.extname(file)),
+                        master: isMasterFile(path.extname(file))
                     });
                     next();
                 }
@@ -234,6 +305,7 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
             if (err) {
                 reject(err);
             }
+            console.log('results', results)
             resolve(results);
         });
     else {
@@ -241,11 +313,13 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
         ignorePlaftormFiles(item) && results.push({
             path: item,
             name: path.basename(item),
-            extension: path.extname(item)
+            extension: path.extname(item),
+            malicious: isBadFile(path.extname(item)),
+            master: isMasterFile(path.extname(item))
         });
+        console.log('results', results)
         resolve(results)
     }
-
 }))
 
 win.focus();

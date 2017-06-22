@@ -111,17 +111,20 @@ export class Header extends Component {
                 mainProcess.selectDirectory(data)
                     .then(item => {
                         let mergedList = [].concat.apply([], item)
-                        mergedList.length > 0 && this._navigateTo('/add-task/type', null)
-                        let unknownFiles = mergedList.filter(({extension}) => (extension !== ".blend" && extension !== ".lxs"))
+                        let unknownFiles = mergedList.filter(({malicious}) => (malicious))
+                        let masterFiles = mergedList.filter(({master}) => (master))
+                        masterFiles.length > 0 && this._navigateTo('/add-task/type', null)
                         if (unknownFiles.length > 0) {
                             this.props.actions.setFileCheck({
                                 status: true,
                                 files: unknownFiles
                             })
-                        } else {
+                        } else if (masterFiles.length > 0) {
                             this.props.actions.createTask({
                                 resources: mergedList.map(item => item.path)
                             })
+                        } else {
+                            alert("There's no main file! There should be at least one blender or luxrender file.")
                         }
                     })
             }
@@ -137,7 +140,7 @@ export class Header extends Component {
     }
 
     render() {
-        const {activeHeader, taskDetails} = this.props
+        const {activeHeader, taskDetails, detail} = this.props
         return (
             <header className="header">
              <div className="top-titlebar">
@@ -189,8 +192,8 @@ export class Header extends Component {
                         <span className="amount__frame">{taskDetails.options && taskDetails.options.frame_count} {taskDetails.options && taskDetails.options.frame_count > 1 ? ' Frames' : ' Frame' }</span>
                     </div>
                     <div className="menu" role="menu">
-                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>
-                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')}>All</span>
+                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>Complete</span>
+                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>All</span>
                     </div>
                 </div>
             }

@@ -19,11 +19,14 @@
     box-sizing: border-box;
     text-align: center;
     .section__quick-settings {
+        @include flex;
+        flex-direction: column;
         position: relative;
         flex-grow: 1;
         border-bottom: 1px solid $color-text3;
         .tab-panel {
             @include flex;
+            align-self: stretch;
             height: 47px;
             border-bottom: 1px solid $color-text3;
             .tab__title {
@@ -40,7 +43,8 @@
         .tab__content {
             top: 47.5px;
             width: 100%;
-            height: -webkit-calc(100% - 330px);
+            min-height: 0;
+            flex: 1 1 calc(100% - 830px);
             overflow-y: overlay;
         }
     }

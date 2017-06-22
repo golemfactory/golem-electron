@@ -40,6 +40,9 @@
             }
         }
     }
+    .status__history {
+        text-transform: capitalize;
+    }
     .action__history {
         display: flex;
         justify-content: space-between;
@@ -69,7 +72,7 @@
 
 .empty-list__history {
     width: 100%;
-    flex: 1;
+    height: 200px;
     display: flex;
     justify-content: center;
     align-items: center;

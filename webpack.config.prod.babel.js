@@ -25,9 +25,9 @@ module.exports = {
         tls: 'empty'
     },
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, 'app'),
         filename: '[name].bundle.js',
-        publicPath: './dist/'
+        publicPath: './app/'
     },
     plugins: [
         new webpack.DefinePlugin({ // <-- key to reducing React's size
