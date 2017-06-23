@@ -134,9 +134,10 @@ export const setAdvancedChart = (payload) => ({
     payload
 })
 
-export const setChosenPreset = (payload) => ({
+export const setChosenPreset = (payload, init) => ({
     type: SET_CHOSEN_HARDWARE_PRESET,
-    payload
+    payload,
+    init
 })
 
 export const setAdvancedManually = (payload) => ({
@@ -170,14 +171,16 @@ export const setPerformanceCharts = (payload) => ({
     payload
 })
 
-export const setProviderMinPrice = (payload) => ({
+export const setProviderMinPrice = (payload, init) => ({
     type: SET_PROV_MIN_PRICE,
-    payload
+    payload,
+    init
 })
 
-export const setRequestorMaxPrice = (payload) => ({
+export const setRequestorMaxPrice = (payload, init) => ({
     type: SET_REQ_MAX_PRICE,
-    payload
+    payload,
+    init
 })
 
 export const setAvatar = (payload) => ({
@@ -190,14 +193,16 @@ export const setNodeName = (payload) => ({
     payload
 })
 
-export const setProviderTrust = (payload) => ({
+export const setProviderTrust = (payload, init) => ({
     type: SET_PROV_TRUST,
-    payload
+    payload,
+    init
 })
 
-export const setRequestorTrust = (payload) => ({
+export const setRequestorTrust = (payload, init) => ({
     type: SET_REQ_TRUST,
-    payload
+    payload,
+    init
 })
 
 export const setNetworkProviderTrust = (payload) => ({
@@ -230,8 +235,9 @@ export const setOnboard = (payload) => ({
     payload
 })
 
-export const startGolem = () => ({
-    type: START_GOLEM
+export const startGolem = (payload) => ({
+    type: START_GOLEM,
+    payload
 })
 
 export const stopGolem = () => ({

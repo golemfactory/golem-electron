@@ -1,10 +1,10 @@
 {
-    "name": "golem-electron",
+    "name": "golem",
     "version": "0.0.1",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
-        "Golem, Imapp, Super, Computer, Render"
+        "Golem, Super Computer, Render, Blender, Blockchain, Ethereum, LuxRender, Cryptocurrency, GNT"
     ],
     "author": {
         "name": "Muhammed Tanrıkulu",
@@ -25,7 +25,7 @@
         "dist": "build"
     },
     "build": {
-        "appId": "com.golem.app",
+        "appId": "network.golem.app",
         "mac": {
             "category": "public.app-category.productivity"
         }

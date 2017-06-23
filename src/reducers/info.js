@@ -1,6 +1,8 @@
 import { dict } from './../actions'
+import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
 
 const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_ENGINE_STATUS} = dict
+const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
     networkInfo: {},
@@ -9,13 +11,16 @@ const initialState = {
         files: []
     },
     connectionProblem: false,
-    isEngineOn: true
+    isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
 }
+console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
     case SET_NETWORK_INFO:
+        setConfig(GOLEM_STARTER, true)
         return Object.assign({}, state, {
-            networkInfo: action.payload
+            networkInfo: action.payload,
+            isEngineOn: true
         });
 
     case SET_FILE_CHECK:
@@ -33,6 +38,7 @@ const setInfo = (state = initialState, action) => {
         });
 
     case SET_GOLEM_ENGINE_STATUS:
+        setConfig(GOLEM_STARTER, action.payload)
         return Object.assign({}, state, {
             isEngineOn: action.payload
         });

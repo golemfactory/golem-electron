@@ -13,7 +13,7 @@ export default class Dropdown extends React.Component {
     componentDidMount() {
         const {handleChange, list, selected} = this.props
         if (handleChange && list[selected]) {
-            handleChange(list[selected].name)
+            handleChange(list[selected].name, true)
         }
     }
 

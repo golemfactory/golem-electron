@@ -21,6 +21,27 @@
         width: 20px;
         height: 20px;
     }
+    .indicator-status {
+        -webkit-mask: url('../assets/img/status.svg') no-repeat 100% 100%;
+        mask: url('../assets/img/status.svg') no-repeat 100% 100%;
+        -webkit-mask-size: cover;
+        mask-size: cover;
+        width: 20px;
+        height: 20px;
+        transition: background-color .5s;
+        &--red {
+            background-color: $color-error;
+        }
+        &--yellow {
+            background-color: $color-accent2;
+        }
+        &--green {
+            background-color: $color-accent1;
+        }
+        &--blue {
+            background-color: $button-static-color;
+        }
+    }
     .progress-status {
         display: inline-block;
         font-size: 15pt;

@@ -6,13 +6,9 @@ import { connect } from 'react-redux'
 
 import * as Actions from './../actions'
 
-import StatusGreenIcon from '../assets/img/status-green.svg'
-import StatusBlueIcon from '../assets/img/status-blue.svg'
-import StatusYellowIcon from '../assets/img/status-yellow.svg'
-import StatusRedIcon from '../assets/img/status-red.svg'
-
 const status = Object.freeze({
     READY: 'Ready',
+    NOTREADY: 'Not Ready',
     WAITING: 'Waiting',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
@@ -52,8 +48,8 @@ export class Footer extends Component {
         return (
             <footer className="footer">
               <div className="info-bar__footer">
-                <img className="progress-status" src={StatusGreenIcon} />
-                  <span>{footerInfo && footerInfo.message}</span>
+                <span className={`progress-status indicator-status ${footerInfo ? 'indicator-status--' + footerInfo.color : ''}`}/>
+                <span>{footerInfo && footerInfo.message}</span>
               </div>
               <div className="switch-box">
                 <label className="switch">

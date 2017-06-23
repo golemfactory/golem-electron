@@ -45,16 +45,18 @@ export class Personal extends React.Component {
      * @param  {Event}      evt         [Clicked event]
      */
     _handleCopyToClipboard(nodeId, evt) {
-        clipboard.writeText(nodeId)
-        this.setState({
-            nodeIdCopied: true
-        }, () => {
-            this.copyTimeout = setTimeout(() => {
-                this.setState({
-                    nodeIdCopied: false
-                })
-            }, 5000)
-        })
+        if (nodeId) {
+            clipboard.writeText(nodeId)
+            this.setState({
+                nodeIdCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        nodeIdCopied: false
+                    })
+                }, 5000)
+            })
+        }
     }
 
     render() {

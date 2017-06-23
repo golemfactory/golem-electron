@@ -31,6 +31,7 @@ const mapStateToProps = state => ({
     autoLaunch: state.input.autoLaunch,
     connectedPeers: state.realTime.connectedPeers,
     connectionProblem: state.info.connectionProblem,
+    chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn
 })
 
@@ -58,11 +59,11 @@ export class MainFragment extends React.Component {
     }
 
     _golemize() {
-        const {actions, isEngineOn} = this.props
+        const {actions, isEngineOn, chosenPreset} = this.props
         if (isEngineOn) {
             actions.stopGolem()
         } else {
-            actions.startGolem()
+            actions.startGolem(chosenPreset)
         }
     }
 

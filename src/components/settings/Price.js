@@ -25,7 +25,7 @@ export class Price extends React.Component {
      * @param  {Event}      evt
      */
     _handleMinPriceChange(evt) {
-        this.props.actions.setProviderMinPrice(evt.target.value)
+        this.props.actions.setProviderMinPrice(Number(evt.target.valueAsNumber) * (10 ** 18))
     }
 
     /**
@@ -33,7 +33,7 @@ export class Price extends React.Component {
      * @param  {Event}      evt
      */
     _handleMaxPriceChange(evt) {
-        this.props.actions.setRequestorMaxPrice(evt.target.value)
+        this.props.actions.setRequestorMaxPrice(Number(evt.target.valueAsNumber) * (10 ** 18))
     }
 
     render() {
@@ -42,12 +42,12 @@ export class Price extends React.Component {
             <div className="content__price">
                 <div className="section__price">
                     <span>Provider Minimum</span>
-                    <input type="number" min="0" value={providerMinPrice} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
+                    <input type="number" min="0" step={0.1} value={Number(providerMinPrice) / (10 ** 18)} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
-                    <input type="number" min="0" value={requestorMaxPrice} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
+                    <input type="number" min="0" step={0.1} value={Number(requestorMaxPrice) / (10 ** 18)} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
             </div>

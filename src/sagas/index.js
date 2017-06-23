@@ -155,14 +155,11 @@ export function* read(session) {
 export function* apiFlow(connection) {
     yield fork(uploadFlow, connection);
     yield fork(networkInfoFlow, connection);
-    yield fork(settingsFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
     yield fork(historyFlow, connection);
-    yield fork(advancedFlow, connection);
     yield fork(tasksFlow, connection);
     yield fork(trustFlow, connection);
-    yield fork(performanceFlow, connection);
     yield fork(currencyFlow);
 }
 /**
@@ -175,6 +172,9 @@ export function* apiFlow(connection) {
 export function* handleIO(connection) {
     //yield fork(read, connection);
     yield fork(engineFlow, connection);
+    yield fork(settingsFlow, connection);
+    yield fork(advancedFlow, connection);
+    yield fork(performanceFlow, connection);
     const channel = yield call(subscribe, connection)
     let taskApi;
     let started = false

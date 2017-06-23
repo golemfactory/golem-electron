@@ -94,29 +94,33 @@ export class TaskDetail extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.taskInfo && nextProps.params.id != "settings") {
-            const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
-            const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
-            resolutionW.value = options.resolution[0]
-            resolutionH.value = options.resolution[1]
-            outputPath.value = options.output_path
-            compositingRef.checked = options.compositing
-            taskTimeout.value = timeout
-            subtaskCount.value = subtasks
-            subtaskTimeout.value = subtask_timeout
-            bidRef.value = bid
-            let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
             this.setState({
-                formatIndex,
-                compositing: options.compositing
-            })
-            if (this.state.showFrames || this.checkIfTaskBlender(type)) {
+                showFrames: this.checkIfTaskBlender(nextProps.taskInfo.type)
+            }, () => {
+                const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                resolutionW.value = options.resolution[0]
+                resolutionH.value = options.resolution[1]
+                outputPath.value = options.output_path
+                compositingRef.checked = options.compositing
+                taskTimeout.value = timeout
+                subtaskCount.value = subtasks
+                subtaskTimeout.value = subtask_timeout
+                bidRef.value = bid
+                let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                 this.setState({
-                    showFrames: this.checkIfTaskBlender(type)
-                }, () => {
-                    this.refs.framesRef.value = options.frames ? options.frames : 1
+                    formatIndex,
+                    compositing: this.options.compositing
                 })
+                if (this.state.showFrames || this.checkIfTaskBlender(type)) {
+                    this.setState({
+                        showFrames: this.checkIfTaskBlender(type)
+                    }, () => {
+                        this.refs.framesRef.value = options.frames ? options.frames : 1
+                    })
 
-            }
+                }
+            })
         }
 
         if (nextProps.presets != this.props.presets) {
@@ -374,6 +378,7 @@ export class TaskDetail extends React.Component {
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props
+        console.log("showFrames", showFrames)
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">

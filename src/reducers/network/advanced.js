@@ -41,7 +41,7 @@ const setAdvanced = (state = initialState, action) => {
 
     case SET_ADVANCED_MANUALLY:
         return Object.assign({}, state, {
-            chosenPreset: '',
+            chosenPreset: 'custom',
             chartValues: {
                 ...action.payload
             }

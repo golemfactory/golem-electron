@@ -119,17 +119,21 @@ export class DropZone extends React.Component {
             mainProcess.selectDirectory([].map.call(files, item => item.path))
                 .then(item => {
                     let mergedList = [].concat.apply([], item)
-                    mergedList.length > 0 && browserHistory.push('/add-task/type');
-                    let unknownFiles = mergedList.filter(({extension}) => (extension !== ".blend" && extension !== ".lxs"))
+                    let unknownFiles = mergedList.filter(({malicious}) => (malicious))
+                    let masterFiles = mergedList.filter(({master}) => (master))
+                    console.log("masterFiles", masterFiles);
+                    masterFiles.length > 0 && browserHistory.push(ADD_TASK_NEXT_STEP)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,
                             files: unknownFiles
                         })
-                    } else {
+                    } else if (masterFiles.length > 0) {
                         this.props.actions.createTask({
                             resources: mergedList.map(item => item.path)
                         })
+                    } else {
+                        alert("There's no main file! There should be at least one blender or luxrender file.")
                     }
                 })
         }
@@ -146,7 +150,7 @@ export class DropZone extends React.Component {
             className: 'drop-zone--hide'
         });
 
-        browserHistory.push(ADD_TASK_NEXT_STEP)
+
         return false;
     }
 

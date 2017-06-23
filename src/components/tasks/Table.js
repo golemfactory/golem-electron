@@ -16,7 +16,8 @@ import convertSecsToHMS from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({
-    taskList: state.realTime.taskList
+    taskList: state.realTime.taskList,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -25,11 +26,13 @@ const mapDispatchToProps = dispatch => ({
 
 
 const status = Object.freeze({
+    NOTREADY: 'Not Ready',
     READY: 'Ready',
     WAITING: 'Waiting',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
-    TIMEOUT: 'Timeout'
+    TIMEOUT: 'Timeout',
+    RESTART: 'Restart'
 })
 
 /**
@@ -120,6 +123,9 @@ export class Table extends React.Component {
         case status.WAITING:
             return <span className="duration duration--active">Waiting...</span>
 
+        case status.RESTART:
+            return <span className="duration duration--active">Restarting...</span>
+
         case status.COMPUTING:
             return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
 
@@ -137,23 +143,34 @@ export class Table extends React.Component {
         let waiting = data.some(item => item.status == status.WAITING)
         let computing = data.some(item => item.status == status.COMPUTING)
         let timeout = data.some(item => item.status == status.TIMEOUT)
+        let restart = data.some(item => item.status == status.RESTART)
         let info = {
             status: status.READY,
-            message: "Golem is ready!"
+            message: "Golem is ready!",
+            color: 'green'
         }
         if (waiting) {
             info.status = status.WAITING
             info.message = "Task is preparing for computation"
+            info.color = 'yellow'
         }
         if (computing) {
             info.status = status.COMPUTING
             info.message = "Processing your task"
+            info.color = "green"
         }
         if (timeout) {
             info.status = status.TIMEOUT
             info.message = "Your task is timeout"
+            info.color = "red"
+        }
+        if (restart) {
+            info.status = status.RESTART
+            info.message = "Your task is restarting"
+            info.color = "yellow"
         }
         actions.setFooterInfo(info)
+
     }
 
     /**
