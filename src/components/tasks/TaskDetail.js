@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router'
+import TimeSelection from 'timepoint-selection'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import Dropdown from './../Dropdown'
@@ -93,6 +94,32 @@ export class TaskDetail extends React.Component {
                 e.target.classList.add("invalid");
             }, true);
         }
+
+        this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, {
+            'durationFormat': 'dd:hh:mm:ss',
+            'max': 3600 * 1000,
+            'value': 0, // initial value of input in seconds.
+            'useAbbr': true, // configure the separator to not be ':'
+            'abbr': { // pass in custom separator (with trailing space if desired)
+                'dd': 'days ',
+                'hh': 'h ',
+                'mm': 'm ',
+                'ss': 's'
+            }
+        });
+        this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, {
+            'durationFormat': 'dd:hh:mm:ss',
+            'max': 3600 * 1000,
+            'value': 0, // initial value of input in seconds.
+            'useAbbr': true, // configure the separator to not be ':'
+            'abbr': { // pass in custom separator (with trailing space if desired)
+                'dd': 'days ',
+                'hh': 'h ',
+                'mm': 'm ',
+                'ss': 's'
+            }
+        });
+        console.log("this.subtaskTaskTimeoutInput", this.subtaskTaskTimeoutInput)
     }
 
     componentWillUnmount() {
@@ -111,9 +138,9 @@ export class TaskDetail extends React.Component {
                 resolutionW.value = options.resolution[0]
                 resolutionH.value = options.resolution[1]
                 outputPath.value = options.output_path
-                taskTimeout.value = timeout
+                this.taskTimeoutInput.setValue(getTimeAsFloat(timeout) * 3600)
                 subtaskCount.value = subtasks
-                subtaskTimeout.value = subtask_timeout
+                this.subtaskTaskTimeoutInput.setValue(getTimeAsFloat(subtask_timeout) * 3600)
                 bidRef.value = bid
                 let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                 this.setState({
@@ -158,7 +185,7 @@ export class TaskDetail extends React.Component {
                 options: {
                     price: Number(nextState.bid),
                     num_subtasks: Number(nextState.subtasks),
-                    subtask_time: getTimeAsFloat(nextState.subtask_timeout)
+                    subtask_time: nextState.subtask_timeout
                 }
             })
         }
@@ -222,6 +249,24 @@ export class TaskDetail extends React.Component {
         console.log("e", e.target.checked);
         this.setState({
             compositing: e.target.checked
+        })
+    }
+
+    /**
+     * [_handleTimeoutInputs func. updtes timeout values form inputs]
+     * @param  {[type]} state [Name of the state]
+     * @param  {[type]} e     
+     */
+    _handleTimeoutInputs(state, e) {
+
+        const timeoutList = Object.freeze({
+            'timeout': this.taskTimeoutInput,
+            'subtask_timeout': this.subtaskTaskTimeoutInput
+        })
+
+        this.checkInputValidity(e)
+        this.setState({
+            [state]: Number(timeoutList[state].getValue()) / 3600
         })
     }
 
@@ -349,14 +394,23 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton() {
+
+        function floatToString(timeFloat) {
+            let time = timeFloat * 3600;
+            var date = new Date(1970, 0, 1); //time travel :)
+            date.setSeconds(time);
+            return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+        }
+
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
         const {task} = this.props
+
         this.props.actions.createTask({
             ...task,
-            timeout,
+            timeout: floatToString(timeout),
             subtasks,
-            subtask_timeout,
+            subtask_timeout: floatToString(subtask_timeout),
             bid,
             options: {
                 resolution,
@@ -455,7 +509,7 @@ export class TaskDetail extends React.Component {
                                 </div>}
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
-                                    <input ref="taskTimeout" type="text" placeholder="16:20:00" aria-label="Task Timeout" onChange={this._handleFormInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Amount</span>
@@ -463,7 +517,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Timeout</span>
-                                    <input ref="subtaskTimeout" type="text" placeholder="4:10:00" aria-label="Deadline" onChange={this._handleFormInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 {!showBackOption && <div className="item-settings item__preset-button">
                                     <button className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
