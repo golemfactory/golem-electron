@@ -42,6 +42,15 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+function getTimeAsFloat(time) {
+    let result = 0;
+    time = time.split(':')
+    result += Number(time[0]) * 3600
+    result += Number(time[1]) * 60
+    result += Number(time[2])
+    return result / 3600
+}
+
 
 export class TaskDetail extends React.Component {
 
@@ -120,6 +129,15 @@ export class TaskDetail extends React.Component {
                 } else {
                     haltspp.value = options.haltspp
                 }
+
+                this.props.actions.getEstimatedCost({
+                    type: nextProps.taskInfo.type,
+                    options: {
+                        price: Number(bid),
+                        num_subtasks: Number(subtasks),
+                        subtask_time: getTimeAsFloat(subtask_timeout)
+                    }
+                })
             })
         }
 
@@ -143,15 +161,6 @@ export class TaskDetail extends React.Component {
                     subtask_time: getTimeAsFloat(nextState.subtask_timeout)
                 }
             })
-        }
-
-        function getTimeAsFloat(time) {
-            let result = 0;
-            time = time.split(':')
-            result += Number(time[0]) * 3600
-            result += Number(time[1]) * 60
-            result += Number(time[2])
-            return result / 3600
         }
     }
 
