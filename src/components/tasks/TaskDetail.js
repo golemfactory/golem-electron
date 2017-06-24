@@ -55,7 +55,7 @@ export class TaskDetail extends React.Component {
             compositing: false,
             resolution: [0, 0],
             frames: '',
-            showFrames: this.checkIfTaskBlender(props.task.type),
+            isBlenderTask: this.checkIfTaskBlender(props.task.type),
             format: '',
             formatIndex: 0,
             output_path: '',
@@ -95,14 +95,13 @@ export class TaskDetail extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (nextProps.taskInfo && nextProps.params.id != "settings") {
             this.setState({
-                showFrames: this.checkIfTaskBlender(nextProps.taskInfo.type)
+                isBlenderTask: this.checkIfTaskBlender(nextProps.taskInfo.type)
             }, () => {
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 resolutionW.value = options.resolution[0]
                 resolutionH.value = options.resolution[1]
                 outputPath.value = options.output_path
-                compositingRef.checked = options.compositing
                 taskTimeout.value = timeout
                 subtaskCount.value = subtasks
                 subtaskTimeout.value = subtask_timeout
@@ -110,15 +109,16 @@ export class TaskDetail extends React.Component {
                 let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                 this.setState({
                     formatIndex,
-                    compositing: this.options.compositing
                 })
-                if (this.state.showFrames || this.checkIfTaskBlender(type)) {
-                    this.setState({
-                        showFrames: this.checkIfTaskBlender(type)
-                    }, () => {
-                        this.refs.framesRef.value = options.frames ? options.frames : 1
-                    })
 
+                if (this.state.isBlenderTask) {
+                    compositingRef.checked = options.compositing
+                    this.setState({
+                        compositing: options.compositing
+                    })
+                    this.refs.framesRef.value = options.frames ? options.frames : 1
+                } else {
+                    haltspp.value = options.haltspp
                 }
             })
         }
@@ -240,11 +240,17 @@ export class TaskDetail extends React.Component {
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef} = this.refs
             resolutionW.value = resolution[0]
             resolutionH.value = resolution[1]
-            framesRef.value = frames
             formatRef.value = format
             outputPath.value = output_path
-            compositingRef.checked = compositing
             let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
+
+            if (this.checkIfTaskBlender(this.props.task.type)) {
+                framesRef.value = frames
+                compositingRef.checked = compositing
+            } else {
+                //TODO for luxrender specific options
+            }
+
             this.setState({
                 resolution,
                 output_path,
@@ -376,9 +382,9 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, showBackOption, presetModal, resolution, frames, showFrames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
+        const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props
-        console.log("showFrames", showFrames)
+        console.log("isBlenderTask", isBlenderTask)
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -410,7 +416,7 @@ export class TaskDetail extends React.Component {
                                     <span className="icon-cross"/>
                                     <input ref="resolutionH" type="number" min="0" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
-                                { showFrames && <div className="item-settings">
+                                { isBlenderTask && <div className="item-settings">
                                     <span className="title">Frame Range</span>
                                     <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
@@ -423,7 +429,7 @@ export class TaskDetail extends React.Component {
                                     <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
                                     <button className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
                                 </div>
-                                { showFrames && <div className="item-settings">
+                                { isBlenderTask && <div className="item-settings">
                                     <span className="title">Blender Compositing</span>
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
@@ -433,9 +439,9 @@ export class TaskDetail extends React.Component {
                                         </label>
                                     </div>
                                 </div>}
-                                {!showFrames && <div className="item-settings">
+                                {!isBlenderTask && <div className="item-settings">
                                     <span className="title">Sample per pixel</span>
-                                    <input ref="taskTimeout" type="text" placeholder="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="haltspp" type="text" placeholder="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
