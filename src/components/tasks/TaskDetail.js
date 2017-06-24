@@ -219,6 +219,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
+        console.log("e", e.target.checked);
         this.setState({
             compositing: e.target.checked
         })
@@ -443,7 +444,7 @@ export class TaskDetail extends React.Component {
                                     <div className="switch-box switch-box--green">
                                         <span>{compositing ? 'On' : 'Off'}</span>
                                         <label className="switch">
-                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this, 'compositing')} disabled={showBackOption}/>
+                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={showBackOption}/>
                                             <div className="switch-slider round"></div>
                                         </label>
                                     </div>
