@@ -1,15 +1,13 @@
 import { eventChannel, buffers } from 'redux-saga'
 import { fork, take, call, put, cancel } from 'redux-saga/effects'
 import { login, setMessage, logout, dict } from '../actions'
+
 import Wampy from 'wampy'
 import MsgpackSerializer from './../utils/MsgpackSerializer'
-const {ipcRenderer} = window.require('electron')
-
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
 
 import { frameBase } from './frame'
-
 import { engineFlow } from './engine'
 import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
@@ -23,7 +21,9 @@ import { tasksFlow } from './tasks'
 import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
+const {ipcRenderer} = window.require('electron')
 const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
+
 
 /**
  * { Websocket Connect function }
@@ -36,9 +36,9 @@ export function connect() {
         /**
          * [{Object} Wampy]
          * @inheritDoc https://github.com/KSDaemon/wampy.js
-         * 
+         *
          * @param  {[String]}       config.WS_URL       ['Websocket URL']
-         * @param  {[Object]}       Options   
+         * @param  {[Object]}       Options
          * @return {[Object]}       connection          ['Connection with session']
          */
         function connect() {
@@ -49,13 +49,14 @@ export function connect() {
                     transportEncoding: 'msgpack',
                     msgpackCoder: new MsgpackSerializer(),
                     onConnect: () => {
-                        console.log('Connected to Router!');
+                        console.log('Wampy connected successfully');
                         resolve({
                             connection
-                        })
+                        });
                     },
-                    onError: () => {
-                        console.info('Error while connected!');
+                    onError: (err, details) => {
+                        console.info('Wampy connection error', err, details);
+                        ipcRenderer.send('start-golem-process');
                         setTimeout(() => {
                             connect();
                         }, 5000) //can be less

@@ -7,10 +7,9 @@ const connect = require('connect');
 const serveStatic = require('serve-static');
 const compression = require('compression')
 
-const setupGolem = require('./setup_golem.js')
-const golemCheck = require('./golem_checker.js')
 const createTray = require('./electron/tray_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
+const golemHandler = require('./electron/golem_handler.js')
 
 function isDevelopment() {
     return process.env.NODE_ENV === 'development'
@@ -36,11 +35,11 @@ function onReady() {
     }
 
     //setupGolem()
-    golemCheck()
     createWindow()
     // tray = createTray(win)
 
     ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
+    golemHandler(app)
 }
 
 /**
@@ -83,7 +82,7 @@ function installDevExtensions() {
 
 /**
  * [createWindow Creating browserWindow with given options]
- * @return 
+ * @return
  */
 function createWindow() {
     win = new BrowserWindow({
