@@ -120,6 +120,8 @@ export class TaskDetail extends React.Component {
             }
         });
         console.log("this.subtaskTaskTimeoutInput", this.subtaskTaskTimeoutInput)
+
+        this._handleLocalRender()
     }
 
     componentWillUnmount() {
@@ -497,7 +499,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`} onClick={::this._handleLocalRender}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
+                        {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
   <span className="dot-1">.</span>
   <span className="dot-2">.</span>
   <span className="dot-3">.</span>
