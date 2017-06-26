@@ -2,7 +2,7 @@ import React from 'react';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 
 import * as Actions from './../actions'
 const {remote} = window.require('electron');
@@ -122,7 +122,7 @@ export class DropZone extends React.Component {
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious))
                     let masterFiles = mergedList.filter(({master}) => (master))
                     console.log("masterFiles", masterFiles);
-                    masterFiles.length > 0 && browserHistory.push(ADD_TASK_NEXT_STEP)
+                    masterFiles.length > 0 && hashHistory.push(ADD_TASK_NEXT_STEP)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,

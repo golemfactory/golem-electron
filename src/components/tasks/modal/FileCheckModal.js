@@ -1,5 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 
 
 export default class FileCheckModal extends React.Component {
@@ -23,7 +23,7 @@ export default class FileCheckModal extends React.Component {
      */
     _handleCancel() {
         this.props.closeModal()
-        browserHistory.push('/tasks')
+        hashHistory.push('/tasks')
     }
 
     /**

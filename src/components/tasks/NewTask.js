@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, browserHistory } from 'react-router'
+import { Link, hashHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -74,7 +74,7 @@ export class NewTask extends React.Component {
             name,
             type
         })
-        browserHistory.push('/task/settings')
+        hashHistory.push('/task/settings')
     }
 
     render() {

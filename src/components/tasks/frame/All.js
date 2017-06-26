@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactTooltip from 'rc-tooltip'
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 import { TransitionMotion, spring, presets } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -202,7 +202,7 @@ export class All extends React.Component {
     _handleClick(item, id) {
         console.log(item)
         if (item.status === DONE) {
-            browserHistory.push(`/preview/single/${id}`)
+            hashHistory.push(`/preview/single/${id}`)
         }
     }
 

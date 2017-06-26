@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, browserHistory } from 'react-router'
+import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
@@ -426,7 +426,7 @@ export class TaskDetail extends React.Component {
             }
         })
         setTimeout(() => {
-            browserHistory.push('/tasks');
+            hashHistory.push('/tasks');
         }, 1000);
     }
 

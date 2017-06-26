@@ -1,5 +1,5 @@
 import React from 'react';
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -87,7 +87,7 @@ export class Single extends React.Component {
      * @return nothing
      */
     _handleClose() {
-        browserHistory.push(CLOSE_BTN_PATH)
+        hashHistory.push(CLOSE_BTN_PATH)
     }
 
     render() {

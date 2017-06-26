@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { browserHistory, Link } from 'react-router'
+import { hashHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -62,7 +62,7 @@ export class Header extends Component {
 
         elm && elm.currentTarget.classList.add('active')
 
-        browserHistory.push(to);
+        hashHistory.push(to);
     }
 
 
@@ -96,7 +96,7 @@ export class Header extends Component {
             menuItems[i].classList.remove('active')
         }
         elm.currentTarget.classList.add('active')
-        browserHistory.push(`/preview/${to}`);
+        hashHistory.push(`/preview/${to}`);
     }
 
     /**

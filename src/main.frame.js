@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
-import { browserHistory } from 'react-router'
+import { hashHistory } from 'react-router'
 window.require('electron').webFrame.setZoomLevelLimits(1, 1)
 
 
@@ -18,7 +18,7 @@ import './scss/main.scss'
 
 export const APP_VERSION = "v0.1"
 
-const routingMiddleware = routerMiddleware(browserHistory)
+const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()
 const enhancer = compose(
     // Middleware you want to use in development:
@@ -27,7 +27,7 @@ const enhancer = compose(
 )
 
 let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
-let history = syncHistoryWithStore(browserHistory, store)
+let history = syncHistoryWithStore(hashHistory, store)
 
 sagaMiddleware.run(sagas)
 

@@ -9,7 +9,7 @@ class GolemProcess {
     constructor(processName, processArgs) {
         this.process = null;
         this.processName = processName || 'golemapp';
-        this.processArgs = processArgs || ['--nogui'];
+        this.processArgs = processArgs;
     }
 
     processRunning(cb) {
