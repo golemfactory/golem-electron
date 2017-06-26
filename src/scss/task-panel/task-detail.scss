@@ -37,6 +37,26 @@
     .btn--loading {
         width: 140px;
     }
+    .btn--success {
+        width: 140px;
+        background: $color-accent1;
+        color: $color-text4;
+        border: 1px solid $color-accent1;
+        &:hover {
+            color: $color-text4;
+            border: 1px solid $color-accent1;
+        }
+    }
+    .btn--error {
+        width: 140px;
+        background: $color-error;
+        color: $color-text4;
+        border: 1px solid $color-error;
+        &:hover {
+            color: $color-text4;
+            border: 1px solid $color-error;
+        }
+    }
 }
 
 .panel-preview__task-detail {

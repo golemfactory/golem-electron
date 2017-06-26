@@ -8,6 +8,7 @@ const serveStatic = require('serve-static');
 const compression = require('compression')
 
 const setupGolem = require('./setup_golem.js')
+const golemCheck = require('./golem_checker.js')
 const createTray = require('./electron/tray_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 
@@ -33,7 +34,9 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions()
     }
+
     //setupGolem()
+    golemCheck()
     createWindow()
     // tray = createTray(win)
 
@@ -189,10 +192,10 @@ function createPreviewWindow(id, frameCount) {
     })
 
     if (isDevelopment()) {
-        let previewURL = `http://localhost:${process.env.PORT || 3003}/preview/${frameCount > 1 ? 'complete' : 'single' }/${id}`
+        let previewURL = `http://localhost:${process.env.PORT || 3003}/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
         previewWindow.loadURL(previewURL)
     } else {
-        let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'complete' : 'single' }/${id}`
+        let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
         previewWindow.loadURL(previewURL)
     //win.loadURL(`file://${__dirname}/index.html`)
     }

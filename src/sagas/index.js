@@ -41,19 +41,29 @@ export function connect() {
          * @param  {[Object]}       Options   
          * @return {[Object]}       connection          ['Connection with session']
          */
-        let connection = new Wampy(config.WS_URL,
-            {
-                realm: config.REALM,
-                autoReconnect: true,
-                transportEncoding: 'msgpack',
-                msgpackCoder: new MsgpackSerializer(),
-                onConnect: () => {
-                    console.log('Connected to Router!');
-                    resolve({
-                        connection
-                    })
-                }
-            });
+        function connect() {
+            let connection = new Wampy(config.WS_URL,
+                {
+                    realm: config.REALM,
+                    autoReconnect: true,
+                    transportEncoding: 'msgpack',
+                    msgpackCoder: new MsgpackSerializer(),
+                    onConnect: () => {
+                        console.log('Connected to Router!');
+                        resolve({
+                            connection
+                        })
+                    },
+                    onError: () => {
+                        console.info('Error while connected!');
+                        setTimeout(() => {
+                            connect();
+                        }, 5000) //can be less
+                    }
+                });
+        }
+
+        connect()
     })
 }
 

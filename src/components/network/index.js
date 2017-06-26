@@ -53,7 +53,8 @@ export class MainFragment extends React.Component {
             activeTab: 0,
             presetModal: false,
             managePresetModal: false,
-            modalData: null
+            modalData: null,
+            engineLoading: false
         }
     //props.actions.setOnboard(true)
     }
@@ -65,6 +66,9 @@ export class MainFragment extends React.Component {
         } else {
             actions.startGolem(chosenPreset)
         }
+        this.setState({
+            engineLoading: true
+        })
     }
 
     /**
@@ -146,6 +150,14 @@ export class MainFragment extends React.Component {
         setTimeout(endLoading, 8000)
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.isEngineOn !== this.props.isEngineOn) {
+            this.setState({
+                engineLoading: false
+            })
+        }
+    }
+
     /**
      * [_handleAutoLaunchSwitch onChange function for switch input]
      */
@@ -173,7 +185,7 @@ export class MainFragment extends React.Component {
 
     render() {
         const {message, actions, autoLaunch, connectedPeers, connectionProblem, isEngineOn} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData} = this.state
+        const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
         return (
             <div className="content__main">
                 <div className="section__currency">
@@ -198,7 +210,10 @@ export class MainFragment extends React.Component {
                     <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
                     <span>{!connectionProblem ? `${connectedPeers} ${connectedPeers > 1 ? 'Nodes' : 'Node'}` : 'No Connection' }</span>
                 </div>
-                <button className="btn--primary" onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+            </div>
+            <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
+            
             </div>
         </div>
         );

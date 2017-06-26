@@ -49,9 +49,9 @@ export class Resources extends React.Component {
         const disk = Math.trunc(systemInfo.disk * ratio)
         console.info(cpu_cores, memory, disk)
         return {
-            cpu_cores,
-            memory,
-            disk
+            cpu_cores: systemInfo.cpu_cores * ratio,
+            memory: systemInfo.memory * ratio,
+            disk: systemInfo.disk * ratio
         }
     }
 

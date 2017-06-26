@@ -151,6 +151,7 @@ select {
         }
         &:disabled {
             background-color: $button-disable-color;
+            border: 1px solid $button-disable-color;
         }
     }
     &--warning {

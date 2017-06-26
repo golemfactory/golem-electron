@@ -76,5 +76,32 @@
                 }
             }
         }
+        .btn--yellow {
+            background: $color-accent2;
+            border: 1px solid $color-accent2;
+            &:hover {
+                background: darken( $color-accent2, 10%);
+            }
+        }
+    }
+    .loading-indicator {
+        position: absolute;
+        z-index: 9 !important;
+        position: absolute;
+        bottom: 40px;
+        right: 90px;
+        width: 0;
+        height: 0;
+        background: rgba($color-text4, 0.7);
+        border-radius: 50%;
+        transition: width 2s, height 2s, opacity .1s linear 2s;
+        transform: translate(50%, 50%);
+        opacity: 0;
+        &.active {
+            opacity: 1;
+            width: 300vh;
+            height: 300vh;
+            transition: width 2s, height 2s, opacity .1s linear 0s;
+        }
     }
 }

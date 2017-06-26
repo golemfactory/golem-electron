@@ -79,9 +79,9 @@ export class Advanced extends React.Component {
      */
     calculateResourceValue({cpu_cores, memory, disk}) {
         const {systemInfo} = this.props
-        let cpuRatio = (cpu_cores / systemInfo.cpu_cores)
-        let ramRatio = (memory / systemInfo.memory)
-        let diskRatio = (disk / systemInfo.disk)
+        let cpuRatio = (this.maxVal(cpu_cores, systemInfo.cpu_cores) / systemInfo.cpu_cores)
+        let ramRatio = (this.maxVal(memory, systemInfo.memory) / systemInfo.memory)
+        let diskRatio = (this.maxVal(disk, systemInfo.disk) / systemInfo.disk)
         return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
     }
 
@@ -102,6 +102,16 @@ export class Advanced extends React.Component {
         this.props.modalHandler(data)
     }
 
+    /**
+     * [maxVal check the max limit for the resources]
+     * @param  {Number} val   [Given resource value]
+     * @param  {Number} limit [Max limit for the given resource value]
+     * @return {Number}       [Min value of between]
+     */
+    maxVal(val, limit) {
+        return Math.min(val, limit)
+    }
+
     render() {
         const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn} = this.props
         let {cpu_cores, memory, disk} = chartValues
@@ -118,15 +128,15 @@ export class Advanced extends React.Component {
             <div className="section__radial-options">
               <div className="item__radial-options">
                 <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true}/>
-                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={cpu_cores} disabled={isEngineOn}/>
+                <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={this.maxVal(cpu_cores, systemInfo.cpu_cores)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true}/>
-                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={memory} disabled={isEngineOn}/>
+                <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={this.maxVal(memory, systemInfo.memory)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
                 <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true}/>
-                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={disk} disabled={isEngineOn}/>
+                <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={this.maxVal(disk, systemInfo.disk)} disabled={isEngineOn}/>
               </div>
             </div>
             <div className="advanced__tips">

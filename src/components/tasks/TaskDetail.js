@@ -97,7 +97,7 @@ export class TaskDetail extends React.Component {
 
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, {
             'durationFormat': 'dd:hh:mm:ss',
-            'max': 3600 * 1000,
+            'max': 60 * 60 * 24 * 2,
             'value': 0, // initial value of input in seconds.
             'useAbbr': true, // configure the separator to not be ':'
             'abbr': { // pass in custom separator (with trailing space if desired)
@@ -109,7 +109,7 @@ export class TaskDetail extends React.Component {
         });
         this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, {
             'durationFormat': 'dd:hh:mm:ss',
-            'max': 3600 * 1000,
+            'max': 60 * 60 * 24 * 2,
             'value': 0, // initial value of input in seconds.
             'useAbbr': true, // configure the separator to not be ':'
             'abbr': { // pass in custom separator (with trailing space if desired)
@@ -135,36 +135,39 @@ export class TaskDetail extends React.Component {
             }, () => {
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
-                resolutionW.value = options.resolution[0]
-                resolutionH.value = options.resolution[1]
-                outputPath.value = options.output_path
-                this.taskTimeoutInput.setValue(getTimeAsFloat(timeout) * 3600)
+
+                timeout && this.taskTimeoutInput.setValue(getTimeAsFloat(timeout) * 3600)
                 subtaskCount.value = subtasks
-                this.subtaskTaskTimeoutInput.setValue(getTimeAsFloat(subtask_timeout) * 3600)
+                subtask_timeout && this.subtaskTaskTimeoutInput.setValue(getTimeAsFloat(subtask_timeout) * 3600)
                 bidRef.value = bid
-                let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
-                this.setState({
-                    formatIndex,
-                })
-
-                if (this.state.isBlenderTask) {
-                    compositingRef.checked = options.compositing
+                if (options) {
+                    resolutionW.value = options.resolution[0]
+                    resolutionH.value = options.resolution[1]
+                    outputPath.value = options.output_path
+                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                     this.setState({
-                        compositing: options.compositing
+                        formatIndex,
                     })
-                    this.refs.framesRef.value = options.frames ? options.frames : 1
-                } else {
-                    haltspp.value = options.haltspp
-                }
 
-                this.props.actions.getEstimatedCost({
-                    type: nextProps.taskInfo.type,
-                    options: {
-                        price: Number(bid),
-                        num_subtasks: Number(subtasks),
-                        subtask_time: getTimeAsFloat(subtask_timeout)
+                    if (this.state.isBlenderTask) {
+                        compositingRef.checked = options.compositing
+                        this.setState({
+                            compositing: options.compositing
+                        })
+                        this.refs.framesRef.value = options.frames ? options.frames : 1
+                    } else {
+                        haltspp.value = options.haltspp
                     }
-                })
+
+                    this.props.actions.getEstimatedCost({
+                        type: nextProps.taskInfo.type,
+                        options: {
+                            price: Number(bid),
+                            num_subtasks: Number(subtasks),
+                            subtask_time: getTimeAsFloat(subtask_timeout)
+                        }
+                    })
+                }
             })
         }
 
@@ -445,10 +448,43 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _handleTestStatus({status, error}) {
+        switch (status) {
+        case testStatusDict.STARTED:
+            return {
+                class: 'btn--loading',
+                text: 'Rendering',
+                locked: true
+            }
+
+        case testStatusDict.SUCCESS:
+            return {
+                class: 'btn--success',
+                text: 'Success!',
+                locked: false
+            }
+
+        case testStatusDict.ERROR:
+            return {
+                class: 'btn--error',
+                text: 'Error',
+                locked: true
+            }
+
+        default:
+            return {
+                class: '',
+                text: 'Render Local Test',
+                locked: true
+            }
+        }
+    }
+
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props
         console.log("isBlenderTask", isBlenderTask)
+        let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -461,7 +497,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {!showBackOption && <button type="button" className={`btn--outline ${testStatus.status === testStatusDict.STARTED && 'btn--loading'}`} onClick={::this._handleLocalRender}>{testStatus.status !== testStatusDict.STARTED ? 'Render Local Test' : 'Rendering'} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
+                        {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`} onClick={::this._handleLocalRender}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
   <span className="dot-1">.</span>
   <span className="dot-2">.</span>
   <span className="dot-3">.</span>
@@ -470,15 +506,15 @@ export class TaskDetail extends React.Component {
                         <div className="container__task-detail">
                             <section className="section-settings__task-detail">
                                 <h4>Settings</h4>
-                                <div className="item-settings">
+                                {!showBackOption && <div className="item-settings">
                                     <span className="title">Preset</span>
                                     <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={showBackOption} manageHandler={::this._handleManagePresetModal}  presetManager/> 
-                                </div>
+                                </div>}
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
-                                    <input ref="resolutionW" type="number" min="0" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="resolutionW" type="number" min="0" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
                                     <span className="icon-cross"/>
-                                    <input ref="resolutionH" type="number" min="0" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="resolutionH" type="number" min="0" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 { isBlenderTask && <div className="item-settings">
                                     <span className="title">Frame Range</span>
@@ -505,7 +541,7 @@ export class TaskDetail extends React.Component {
                                 </div>}
                                 {!isBlenderTask && <div className="item-settings">
                                     <span className="title">Sample per pixel</span>
-                                    <input ref="haltspp" type="text" placeholder="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
@@ -513,7 +549,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Amount</span>
-                                    <input ref="subtaskCount" type="text" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="subtaskCount" type="number" min="1" max="100" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 <div className="item-settings">
                                     <span className="title">Subtask Timeout</span>
@@ -545,7 +581,7 @@ export class TaskDetail extends React.Component {
                                 <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                                     <span >Cancel</span>
                                 </Link>
-                                <button type="submit" className="btn--primary">Start Task</button>
+                                <button type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
                             </section>}
                             </form>
                         {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}

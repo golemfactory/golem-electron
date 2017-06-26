@@ -59,6 +59,10 @@ export class Personal extends React.Component {
         }
     }
 
+    // <RadialProgress pct={requestorTrust} warn={false}/>
+    // <span>Requestor</span>
+    // <RadialProgress pct={providerTrust} warn={false}/>
+    // <span>Provider</span>
     render() {
         const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust} = this.props
         const {nodeIdCopied} = this.state
@@ -66,15 +70,11 @@ export class Personal extends React.Component {
             <div className="section__personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
-                        <RadialProgress pct={requestorTrust} warn={false}/>
-                        <span>Requestor</span>
                     </div>
                     <div>
                         <img className="image__personal" src={avatar || PlaceHolderAvatar} alt="avatar"/>
                     </div>
                     <div className="indicator__personal">
-                        <RadialProgress pct={providerTrust} warn={false}/>
-                        <span>Provider</span>
                     </div>
                 </div>
                 <div>

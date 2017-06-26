@@ -1,6 +1,6 @@
 import { dict } from './../../actions'
 
-const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STATUS} = dict
+const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STATUS, CLEAR_TASK_PLAIN} = dict
 
 const initialState = {
     detail: {},
@@ -28,6 +28,11 @@ const setTaskDetails = (state = initialState, action) => {
     case SET_TASK_TEST_STATUS:
         return Object.assign({}, state, {
             test_status: action.payload
+        });
+    case CLEAR_TASK_PLAIN:
+        return Object.assign({}, state, {
+            test_status: {},
+            detail: {}
         });
 
 
