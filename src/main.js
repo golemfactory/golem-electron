@@ -8,7 +8,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { hashHistory } from 'react-router'
-import createHistory from 'history/createhashHistory'
+import createHistory from 'history/createHashHistory'
 window.require('electron').webFrame.setZoomLevelLimits(1, 1)
 
 
