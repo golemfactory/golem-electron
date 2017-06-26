@@ -20,7 +20,7 @@ export class NewTask extends React.Component {
         super(props);
         this.state = {
             name: 'Golem Task',
-            type: 'Blender'
+            type: null
         }
     }
 
@@ -79,7 +79,7 @@ export class NewTask extends React.Component {
 
     render() {
         const {fileCheckModal} = this.props
-        const {name} = this.state
+        const {name, type} = this.state
         return (
             <div>
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
@@ -112,7 +112,7 @@ export class NewTask extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button type="submit" className="btn--primary">Next</button>
+                        <button type="submit" className="btn--primary" disabled={!type}>Next</button>
                     </div>
                 </form>
                 {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}
