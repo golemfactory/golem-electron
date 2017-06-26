@@ -4,6 +4,7 @@ const DEFAULT = "#9b9b9b"
 const TRUST = "#37C481"
 const WARN = "#FEC62E"
 const DANGER = "#F65A23"
+const DISABLED = "#CBCBCB"
 
 export default class Slider extends React.Component {
 
@@ -15,13 +16,19 @@ export default class Slider extends React.Component {
     }
 
     componentDidMount() {
-        this._handleFillLower()
+        this._handleFillLower(this.props.disabled)
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.disabled !== this.props.disabled) {
+            this._handleFillLower(nextProps.disabled)
+        }
     }
 
     /**
      * [_handleFillLower handling colorful part of the input range while thumb dragged]
      */
-    _handleFillLower() {
+    _handleFillLower(isDisabled) {
         let slider = document.getElementById('resourceSlider')
         let indicator = document.getElementById('resourceSlider__indicator')
         let val = slider.value
@@ -30,10 +37,14 @@ export default class Slider extends React.Component {
         var value = (val - min) / (max - min);
 
         let color;
-        if (this.props.warn)
-            color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
-        else
-            color = TRUST;
+        if (!isDisabled) {
+            if (this.props.warn)
+                color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
+            else
+                color = TRUST;
+        } else {
+            color = DISABLED;
+        }
 
         slider.style.background = color;
         slider.style.backgroundImage = [
@@ -72,7 +83,7 @@ export default class Slider extends React.Component {
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={::this._handleFillLower} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id="resourceSlider__indicator"/>
                     <span className={iconRight}/>
         </div>

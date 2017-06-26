@@ -90,7 +90,7 @@ export class TaskDetail extends React.Component {
 
 
         if (document.addEventListener) {
-            document.addEventListener('invalid', function(e) {
+            document.addEventListener('invalid', (e) => {
                 e.target.classList.add("invalid");
             }, true);
         }

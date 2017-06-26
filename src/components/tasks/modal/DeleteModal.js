@@ -34,7 +34,7 @@ export default class DeleteModal extends React.Component {
                     <span>Are you sure  you want to delete this task? You can’t undo this.</span>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button className="btn--warning" onClick={::this._handleDelete}>Delete</button>
+                        <button type="button" className="btn--warning" onClick={::this._handleDelete}>Delete</button>
                     </div>
                 </div>
             </div>
