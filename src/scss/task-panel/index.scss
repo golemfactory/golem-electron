@@ -19,7 +19,7 @@
     overflow-y: overlay;
     box-sizing: border-box;
     &--with-preview {
-        margin-bottom: 292px;
+        margin-bottom: 292px + 59px;
         @media screen and (max-height: 725px) {
             margin-bottom: 0;
             height: 319px;

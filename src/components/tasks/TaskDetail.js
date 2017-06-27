@@ -297,12 +297,13 @@ export class TaskDetail extends React.Component {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
             console.log("values", values);
-            const {compositing, format, frames, output_path, resolution} = values.value
-            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef} = this.refs
+            const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
+            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
             resolutionW.value = resolution[0]
             resolutionH.value = resolution[1]
             formatRef.value = format
             outputPath.value = output_path
+            haltspp.value = sample_per_pixel
             let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
 
             if (this.checkIfTaskBlender(this.props.task.type)) {
@@ -340,7 +341,7 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal() {
-        const {resolution, frames, format, output_path, compositing} = this.state
+        const {resolution, frames, format, output_path, compositing, sample_per_pixel} = this.state
         this.setState({
             presetModal: true,
             modalData: {
@@ -348,7 +349,9 @@ export class TaskDetail extends React.Component {
                 frames,
                 format,
                 output_path,
-                compositing
+                sample_per_pixel,
+                compositing,
+                task_type: this.props.task.type
             }
         })
     }
