@@ -530,7 +530,7 @@ export class TaskDetail extends React.Component {
                                 <div className="item-settings">
                                     <span className="title">Output to</span>
                                     <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
-                                    <button className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
+                                    <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
                                 </div>
                                 { isBlenderTask && <div className="item-settings">
                                     <span className="title">Blender Compositing</span>
@@ -559,7 +559,7 @@ export class TaskDetail extends React.Component {
                                     <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 {!showBackOption && <div className="item-settings item__preset-button">
-                                    <button className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
+                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
                                 </div> }
                             </section>
                             <section className="section-price__task-detail">
