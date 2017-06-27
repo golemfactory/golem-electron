@@ -102,7 +102,7 @@ export class Single extends React.Component {
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
                     {details.preview && <ImageZoom image={`file://${details.preview}`} />}
-                    {isSubtaskShown && <SubTask data={borderList}/>}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={(details && details.options) && (details.options.resolution[1] / details.options.resolution[0])}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
             </div>

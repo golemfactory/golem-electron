@@ -22,12 +22,12 @@ export default class SubTask extends React.Component {
 
 
     drawLine() {
-        const {data} = this.props
+        const {data, ratio} = this.props
 
         var path = Object.keys(data).map(function(anchestorKey) {
             return Object.keys(data[anchestorKey]).map(function(parentKey) {
                 return Object.keys(data[anchestorKey][parentKey]).map(function(childKey) {
-                    return data[anchestorKey][parentKey][childKey] * 0.59
+                    return data[anchestorKey][parentKey][childKey] * (ratio + 0.028)
                 });
             });
         });
