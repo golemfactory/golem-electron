@@ -214,6 +214,8 @@
         border-bottom: 1px solid $color-border;
         box-sizing: border-box;
         .os__menu {
+            position: relative;
+            z-index: 999;
             span {
                 & + span {
                     margin-left: 20px;
