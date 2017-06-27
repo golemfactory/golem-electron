@@ -310,7 +310,6 @@ export class TaskDetail extends React.Component {
             resolutionH.value = resolution[1]
             formatRef.value = format
             outputPath.value = output_path
-            haltspp.value = sample_per_pixel
             let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
 
             if (this.checkIfTaskBlender(this.props.task.type)) {
@@ -318,6 +317,7 @@ export class TaskDetail extends React.Component {
                 compositingRef.checked = compositing
             } else {
                 //TODO for luxrender specific options
+                haltspp.value = sample_per_pixel
             }
 
             this.setState({
@@ -495,9 +495,10 @@ export class TaskDetail extends React.Component {
 
     isPresetFieldsFilled(nextState) {
         const {resolution, frames, sample_per_pixel} = nextState
-        let isBlender = this.checkIfTaskBlender(this.props.task_type)
+        let isBlender = this.checkIfTaskBlender(this.props.task.type)
+        console.log("isBlender", isBlender);
         if (isBlender) {
-            console.log("check preset not available", !resolution[0] || !resolution[1] || !frames)
+            console.log("check preset not available", resolution[0], resolution[1], frames)
             return !resolution[0] || !resolution[1] || !frames
         } else {
             return !resolution[0] || !resolution[1] || !sample_per_pixel

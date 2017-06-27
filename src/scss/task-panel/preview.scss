@@ -2,7 +2,6 @@
     background: #444;
     height: 350px;
     width: 100%;
-    text-align: center;
     position: absolute;
     bottom: 59px;
     @media screen and (max-height: 725px + 59px) {
@@ -17,19 +16,16 @@
     img {
         object-fit: contain;
         width: 100%;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
+        height: 100%;
+        margin: 0;
+        padding: 0;
         box-sizing: border-box;
     }
     .button__expand {
-        position: relative;
+        position: absolute;
         z-index: 20;
-        float: right;
-        margin: 20px;
+        right: 30px;
+        top: 30px;
         font-size: 22pt;
         cursor: pointer;
         color: $color-text4;
