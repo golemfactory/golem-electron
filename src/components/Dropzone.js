@@ -122,7 +122,7 @@ export class DropZone extends React.Component {
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious))
                     let masterFiles = mergedList.filter(({master}) => (master))
                     console.log("masterFiles", masterFiles);
-                    masterFiles.length > 0 && hashHistory.push(ADD_TASK_NEXT_STEP)
+                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(ADD_TASK_NEXT_STEP)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,

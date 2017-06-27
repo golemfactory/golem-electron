@@ -4,9 +4,9 @@
 .draggable {
     position: absolute;
     top: 0;
-    z-index: 999;
+    z-index: 100;
     width: 100%;
-    height: $header-height / 2.5;
+    height: $header-height;
     cursor: move;
 }
 
@@ -40,12 +40,14 @@
     }
     .menu__item,
     .nav__item {
+        position: relative;
         display: inline-block;
         box-sizing: border-box;
         color: $color-text3;
         font-size: 18px;
         font-weight: 500;
         cursor: pointer;
+        z-index: 999;
         &:hover {
             color: $color-text;
         }

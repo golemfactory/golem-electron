@@ -112,8 +112,8 @@ export class Header extends Component {
                     .then(item => {
                         let mergedList = [].concat.apply([], item)
                         let unknownFiles = mergedList.filter(({malicious}) => (malicious))
-                        let masterFiles = mergedList.filter(({master}) => (master))
-                        masterFiles.length > 0 && this._navigateTo('/add-task/type', null)
+                        let masterFiles = mergedList.filter(({master}) => (master));
+                        (masterFiles.length > 0 || unknownFiles.length > 0) && this._navigateTo('/add-task/type', null)
                         if (unknownFiles.length > 0) {
                             this.props.actions.setFileCheck({
                                 status: true,
@@ -141,9 +141,13 @@ export class Header extends Component {
 
     render() {
         const {activeHeader, taskDetails, detail} = this.props
+        let styling = {
+            'WebkitAppRegion': 'drag'
+        }
         return (
             <header className="header">
              <div className="top-titlebar">
+                <div style={styling} className="draggable"></div>
                 <div>
                     <span>Golem</span>
                 </div>
@@ -153,6 +157,7 @@ export class Header extends Component {
                 </div>
              </div>
             <nav className="nav" role="menubar">
+                <div style={styling} className="draggable"></div>
                 <ul className="nav__list" role="menu">
                     <li className="nav__item traffic-light">
                         <div className="close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Close"></div>

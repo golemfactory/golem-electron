@@ -27,6 +27,7 @@ export class History extends React.Component {
             // Create a new JavaScript Date object based on the timestamp
             // multiplied by 1000 so that the argument is in milliseconds, not seconds.
             var date = new Date(timestamp);
+            console.log("date", date);
             // Hours part from the timestamp
             var hours = date.getHours();
             // Minutes part from the timestamp
@@ -39,9 +40,9 @@ export class History extends React.Component {
             return formattedTime
         }
         const {historyList} = this.props
-        return (historyList.map(({payee, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
+        return (historyList.map(({payee, payer, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
             <div className="info__history">
-                <h5>{payee}</h5>
+                <h5>{(payee || payer).substr(0, 32)}...</h5>
                 <span>{timeStampToHR(created)}</span>
                 <span className="status__history">{status}</span>
             </div>

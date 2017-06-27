@@ -1,11 +1,13 @@
 import { dict } from './../../actions'
 import { setConfig, getConfig, dictConfig } from './../../utils/configStorage'
+const {remote} = window.require('electron');
+const mainProcess = remote.require('./index')
 
 const {SET_FILE_LOCATION} = dict
 const {DEFAULT_FILE_LOCATION} = dictConfig
-
+console.log(" mainProcess.getDefaultLocation", mainProcess.getDefaultLocation())
 const initialState = {
-    location: getConfig(DEFAULT_FILE_LOCATION) || ''
+    location: getConfig(DEFAULT_FILE_LOCATION) || mainProcess.getDefaultLocation()
 }
 const setFileLocation = (state = initialState, action) => {
     switch (action.type) {

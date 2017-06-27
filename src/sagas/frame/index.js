@@ -22,7 +22,6 @@ export function fetchFrameList(session, payload) {
                 payload: frame_list
             })
         }
-
         _handleRPC(on_get_frame_list, session, config.GET_SUBTASKS_FRAMES_RPC, [payload])
     })
 }
@@ -49,6 +48,7 @@ export function fetchSubtasksBorder(session, payload) {
             })
         }
 
+        console.log("REQUEST MADE:", config.GET_SUBTASKS_BORDER_RPC, payload)
         _handleRPC(on_subtasks_border, session, config.GET_SUBTASKS_BORDER_RPC, [payload])
     })
 }

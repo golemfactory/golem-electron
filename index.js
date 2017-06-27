@@ -191,7 +191,7 @@ function createPreviewWindow(id, frameCount) {
     })
 
     if (isDevelopment()) {
-        let previewURL = `http://localhost:${process.env.PORT || 3003}/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+        let previewURL = `http://localhost:${process.env.PORT || 3003}#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
         previewWindow.loadURL(previewURL)
     } else {
         let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
@@ -326,4 +326,8 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
 
 win.focus();
 return Promise.all(promises)
+}
+
+exports.getDefaultLocation = function() {
+return __dirname
 }

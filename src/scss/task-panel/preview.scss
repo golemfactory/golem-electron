@@ -33,5 +33,7 @@
         font-size: 22pt;
         cursor: pointer;
         color: $color-text4;
+        bbox-shadow: 2px 2px 2px 1px $color-text;
+        z-index: 3 !important;
     }
 }

@@ -36,7 +36,8 @@ const mapStateToProps = state => ({
     taskInfo: state.details.detail,
     presets: state.details.presets,
     testStatus: state.details.test_status,
-    estimated_cost: state.details.estimated_cost
+    estimated_cost: state.details.estimated_cost,
+    location: state.fileLocation.location
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -68,7 +69,7 @@ export class TaskDetail extends React.Component {
             isBlenderTask: this.checkIfTaskBlender(props.task.type),
             format: '',
             formatIndex: 0,
-            output_path: '',
+            output_path: props.location,
             sample_per_pixel: '',
             timeout: '',
             subtasks: 0,
@@ -80,7 +81,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentDidMount() {
-        const {params, actions, task, presets} = this.props
+        const {params, actions, task, presets, location} = this.props
         actions.setEstimatedCost(0)
         if (params.id != "settings") {
             actions.getTaskDetails(params.id)
