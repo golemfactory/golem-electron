@@ -8,6 +8,7 @@
     width: 100%;
     height: $header-height;
     cursor: move;
+    -webkit-app-region: drag;
 }
 
 .header {
@@ -48,6 +49,7 @@
         font-weight: 500;
         cursor: pointer;
         z-index: 999;
+        -webkit-app-region: no-drag;
         &:hover {
             color: $color-text;
         }
@@ -216,6 +218,7 @@
         .os__menu {
             position: relative;
             z-index: 999;
+            -webkit-app-region: no-drag;
             span {
                 & + span {
                     margin-left: 20px;

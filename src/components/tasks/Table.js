@@ -12,7 +12,7 @@ import { Motion, spring } from 'react-motion';
 
 import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
-import convertSecsToHMS from './../../utils/secsToHMS'
+import { convertSecsToHMS } from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({

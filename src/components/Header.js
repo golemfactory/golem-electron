@@ -147,7 +147,6 @@ export class Header extends Component {
         return (
             <header className="header">
              <div className="top-titlebar">
-                <div style={styling} className="draggable"></div>
                 <div>
                     <span>Golem</span>
                 </div>
@@ -197,8 +196,8 @@ export class Header extends Component {
                         <span className="amount__frame">{taskDetails.options && taskDetails.options.frame_count} {taskDetails.options && taskDetails.options.frame_count > 1 ? ' Frames' : ' Frame' }</span>
                     </div>
                     <div className="menu" role="menu">
-                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>Complete</span>
-                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>All</span>
+                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>Complete</span>
+                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>All</span>
                     </div>
                 </div>
             }

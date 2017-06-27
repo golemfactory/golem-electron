@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactTooltip from 'rc-tooltip'
 
-import convertSecsToHMS from './../../../utils/secsToHMS'
+import { convertSecsToHMS } from './../../../utils/secsToHMS'
 
 const UNDONE = 0
 const PROGRESS = 1

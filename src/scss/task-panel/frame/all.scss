@@ -43,5 +43,8 @@
         &--done {
             background: $color-accent2;
         }
+        &--error {
+            background: $color-error;
+        }
     }
 }

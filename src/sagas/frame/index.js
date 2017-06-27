@@ -29,7 +29,7 @@ export function fetchFrameList(session, payload) {
 export function* frameList(session, payload) {
     if (payload) {
         let action = yield call(fetchFrameList, session, payload)
-    //yield put(action)
+        yield put(action)
     }
 }
 /**

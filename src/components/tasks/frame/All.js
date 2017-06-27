@@ -8,168 +8,23 @@ import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 
 import SingleFrame from './Single'
-import convertSecsToHMS from './../../../utils/secsToHMS'
+import { timeStampToHR } from './../../../utils/secsToHMS'
 
-const UNDONE = 0
-const PROGRESS = 1
-const DONE = 2
-let data = [
-    {
-        key: '0',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '1',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '2',
-        data: {
-            status: 1,
-            duration: 1206
-        }
-    },
-    {
-        key: '3',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '4',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '5',
-        data: {
-            status: 2,
-            duration: 1206
-        }
-    },
-    {
-        key: '6',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '7',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '8',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '9',
-        data: {
-            status: 1,
-            duration: 1206
-        }
-    },
-    {
-        key: '10',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '11',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '12',
-        data: {
-            status: 2,
-            duration: 1206
-        }
-    },
-    {
-        key: '13',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '14',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '15',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '16',
-        data: {
-            status: 1,
-            duration: 1206
-        }
-    },
-    {
-        key: '17',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '18',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    },
-    {
-        key: '19',
-        data: {
-            status: 2,
-            duration: 1206
-        }
-    },
-    {
-        key: '20',
-        data: {
-            status: 0,
-            duration: 1206
-        }
-    }
-]
+const statusDict = Object.freeze({
+    NOTSTARTED: 'Not started',
+    COMPUTING: 'Computing',
+    FINISHED: 'Finished',
+    ABORTED: 'Aborted'
+})
 
-let status = [
-    'frame--undone',
-    'frame--progress',
-    'frame--done'
-]
+let statusClassDict = {
+    'Not started': 'frame--undone',
+    'Computing': 'frame--progress',
+    'Finished': 'frame--done',
+    'Aborted': 'frame--error'
+}
 
-Object.freeze(status)
+Object.freeze(statusClassDict)
 
 const mapStateToProps = state => ({
     details: state.details.detail,
@@ -186,13 +41,6 @@ export class All extends React.Component {
         super(props);
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        if (nextProps.frameList !== this.props.frameList) {
-            data = nextProps.frameList
-            console.log("frameList", nextProps.frameList);
-        }
-    }
-
     /**
      * [_handleClick func. will redirect related single frame]
      * @param       {[type]} item       [completed frame item]
@@ -201,7 +49,7 @@ export class All extends React.Component {
      */
     _handleClick(item, id) {
         console.log(item)
-        if (item.status === DONE) {
+        if (item.status === statusDict.FINISHED) {
             hashHistory.push(`/preview/single/${id}`)
         }
     }
@@ -215,10 +63,15 @@ export class All extends React.Component {
      * @return  {Array}    [default style list of the animated item]
      */
     getDefaultStyles() {
-        return data.map(item => {
-            console.log(...item)
+        const {frameList} = this.props
+        return frameList.map((item, index) => {
+            console.log(statusClassDict[item[1][0]])
             return {
-                ...item,
+                key: item[0].toString(),
+                data: {
+                    status: item[1][0],
+                    created: item[1][1]
+                },
                 style: {
                     width: 0,
                     opacity: 1
@@ -232,13 +85,17 @@ export class All extends React.Component {
      * @return {Array} [style list of the animated item]
      */
     getStyles() {
-        const {show} = this.props
-        return data.filter((item) => {
-            return show == 'complete' ? item.data.status === DONE : true
+        const {show, frameList} = this.props
+        return frameList.filter((item, index) => {
+            return show == 'complete' ? item[1][0] === statusDict.FINISHED : true
         })
             .map((item, i) => {
                 return {
-                    ...item,
+                    key: item[0].toString(),
+                    data: {
+                        status: item[1][0],
+                        created: item[1][1]
+                    },
                     style: {
                         width: spring(71.6, {
                             stiffness: 300,
@@ -281,39 +138,6 @@ export class All extends React.Component {
         };
     }
 
-
-    /**
-     * [loadAllFrames func. will load all frame items to the container]
-     * @return      {DOM}    [frame-item div]
-     */
-    /*loadAllFrames() {
-        const {show} = this.props
-        return data
-            .filter((item) => {
-                return show == 'complete' ? item.status === DONE : true
-
-            })
-            .map((item, index) => <div className="item__all-frame" key={index.toString()}>
-                <ReactTooltip
-                overlayClassName="tooltip-frame"
-                placement={`${index % 10 === 0 ? 'bottomLeft' : ((index % 10 === 9) ? 'bottomRight' : 'bottom')}`}
-                trigger={['hover']}
-                overlay={<div className="content__tooltip">
-                            {item.status === DONE && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${item.status === DONE && 'time__tooltip--done'}`}>{convertSecsToHMS(item.duration)}</p>
-                            <button onClick={this._handleResubmit.bind(this, item, index)}>Resubmit</button>
-                        </div>}
-                mouseEnterDelay={1}
-                align={{
-                    offset: [0, 10],
-                }}>
-                    <div className={`${status[item.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, item, index)} onKeyDown={(event) => {
-                    event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, item, index))
-                }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
-                </ReactTooltip>
-            </div>)
-    }*/
-
     render() {
         const {show} = this.props
         return (
@@ -331,15 +155,15 @@ export class All extends React.Component {
                     trigger={['hover']}
                     mouseEnterDelay={1}
                     overlay={<div className="content__tooltip">
-                            {data.status === DONE && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${data.status === DONE && 'time__tooltip--done'}`}>{convertSecsToHMS(data.duration)}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit</button>
+                            {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
+                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
+                            <button onClick={this._handleResubmit.bind(this, null, index)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${status[data.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
-                        event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, data, index))
+                    <div className={`${statusClassDict[data.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, null, index)} onKeyDown={(event) => {
+                        event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, null, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
             </div>
