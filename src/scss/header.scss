@@ -20,6 +20,10 @@
     box-sizing: border-box;
     z-index: 99;
     background: $color-text4;
+    .draggable--win,
+    .draggable--other {
+        display: none;
+    }
     .top-titlebar {
         display: none;
     }
@@ -226,11 +230,20 @@
             }
         }
     }
+    .draggable--win {
+        display: initial;
+    }
 }
 
 .mac .header {
     height: $header-height;
     @include header($padding-mac, 72px, 158px);
+    .draggable--other {
+        display: initial;
+    }
+    .draggable--other {
+        display: initial;
+    }
 }
 
 .linux .header {

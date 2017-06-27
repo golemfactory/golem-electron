@@ -147,6 +147,7 @@ export class Header extends Component {
         return (
             <header className="header">
              <div className="top-titlebar">
+                <div style={styling} className="draggable draggable--win"></div>
                 <div>
                     <span>Golem</span>
                 </div>
@@ -156,7 +157,7 @@ export class Header extends Component {
                 </div>
              </div>
             <nav className="nav" role="menubar">
-                <div style={styling} className="draggable"></div>
+                <div style={styling} className="draggable draggable--other"></div>
                 <ul className="nav__list" role="menu">
                     <li className="nav__item traffic-light">
                         <div className="close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Close"></div>
