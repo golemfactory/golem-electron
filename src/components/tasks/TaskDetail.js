@@ -76,7 +76,8 @@ export class TaskDetail extends React.Component {
             subtask_timeout: '',
             bid: 0,
             presetList: [],
-            managePresetModal: false
+            managePresetModal: false,
+            savePresetLock: true
         }
     }
 
@@ -193,6 +194,12 @@ export class TaskDetail extends React.Component {
                     num_subtasks: Number(nextState.subtasks),
                     subtask_time: nextState.subtask_timeout
                 }
+            })
+        }
+
+        if (nextState.resolution[0] !== this.state.resolution[0] || nextState.resolution[1] !== this.state.resolution[1] || nextState.frames !== this.state.frames || nextState.sample_per_pixel !== this.state.sample_per_pixel) {
+            this.setState({
+                savePresetLock: this.isPresetFieldsFilled(nextState)
             })
         }
     }
@@ -486,8 +493,19 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    isPresetFieldsFilled(nextState) {
+        const {resolution, frames, sample_per_pixel} = nextState
+        let isBlender = this.checkIfTaskBlender(this.props.task_type)
+        if (isBlender) {
+            console.log("check preset not available", !resolution[0] || !resolution[1] || !frames)
+            return !resolution[0] || !resolution[1] || !frames
+        } else {
+            return !resolution[0] || !resolution[1] || !sample_per_pixel
+        }
+    }
+
     render() {
-        const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal} = this.state
+        const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props
         console.log("isBlenderTask", isBlenderTask)
         let testStyle = this._handleTestStatus(testStatus)
@@ -562,7 +580,7 @@ export class TaskDetail extends React.Component {
                                     <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 {!showBackOption && <div className="item-settings item__preset-button">
-                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal}>Save as preset</button>
+                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
                                 </div> }
                             </section>
                             <section className="section-price__task-detail">
