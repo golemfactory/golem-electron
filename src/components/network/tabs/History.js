@@ -59,7 +59,6 @@ export class History extends React.Component {
                 return -1;
             return 0;
         }
-        ;
 
         const {historyList} = this.props
         return (historyList.sort(newestToOldest).map(({payee, payer, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
