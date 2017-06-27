@@ -157,13 +157,13 @@ export class All extends React.Component {
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, null, index)}>Resubmit</button>
+                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, null, index)} onKeyDown={(event) => {
-                        event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, null, index))
+                    <div className={`${statusClassDict[data.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
+                        event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
             </div>

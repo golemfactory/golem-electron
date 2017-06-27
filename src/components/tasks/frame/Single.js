@@ -101,7 +101,7 @@ export class Single extends React.Component {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {details.preview && <ImageZoom image={'file://' + encodeURI(details.preview)} />}
+                    {details.preview && <ImageZoom image={`file://${details.preview}`} />}
                     {isSubtaskShown && <SubTask data={borderList}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
