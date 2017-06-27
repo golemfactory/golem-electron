@@ -241,14 +241,14 @@
     .draggable--other {
         display: initial;
     }
-    .draggable--other {
-        display: initial;
-    }
 }
 
 .linux .header {
     height: $header-height;
     @include header($padding-mac, 72px, 158px);
+    .draggable--other {
+        display: initial;
+    }
 }
 
 .mac .traffic-light,
