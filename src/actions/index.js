@@ -195,13 +195,13 @@ export const setNodeName = (payload) => ({
 
 export const setProviderTrust = (payload, init) => ({
     type: SET_PROV_TRUST,
-    payload,
+    payload: (payload / 50) - 1,
     init
 })
 
 export const setRequestorTrust = (payload, init) => ({
     type: SET_REQ_TRUST,
-    payload,
+    payload: (payload / 50) - 1,
     init
 })
 
