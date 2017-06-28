@@ -14,7 +14,8 @@ const statusDict = Object.freeze({
     NOTSTARTED: 'Not started',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
-    ABORTED: 'Aborted'
+    ABORTED: 'Aborted',
+    WAITING: 'Waiting'
 })
 
 let statusClassDict = {
@@ -48,15 +49,20 @@ export class All extends React.Component {
      * @return nothing
      */
     _handleClick(item, id) {
-        console.log(item)
-        if (item.status === statusDict.FINISHED) {
+        if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
             hashHistory.push(`/preview/single/${id}`)
         }
     }
 
     _handleResubmit() {}
 
-
+    sortById(a, b) {
+        if (Number(a.data.id) > Number(b.data.id))
+            return 1;
+        if (Number(a.data.id) < Number(b.data.id))
+            return -1;
+        return 0;
+    }
 
     /**
      * [getDefaultStyles func. actual animation-related logic]
@@ -65,10 +71,10 @@ export class All extends React.Component {
     getDefaultStyles() {
         const {frameList} = this.props
         return frameList.map((item, index) => {
-            console.log(statusClassDict[item[1][0]])
             return {
                 key: item[0].toString(),
                 data: {
+                    id: item[0],
                     status: item[1][0],
                     created: item[1][1]
                 },
@@ -77,7 +83,8 @@ export class All extends React.Component {
                     opacity: 1
                 }
             }
-        });
+        })
+            .sort(this.sortById);
     }
 
     /**
@@ -93,6 +100,7 @@ export class All extends React.Component {
                 return {
                     key: item[0].toString(),
                     data: {
+                        id: item[0],
                         status: item[1][0],
                         created: item[1][1]
                     },
@@ -107,7 +115,8 @@ export class All extends React.Component {
                         }),
                     }
                 };
-            });
+            })
+            .sort(this.sortById);
     }
 
     /**
@@ -137,7 +146,7 @@ export class All extends React.Component {
             }),
         };
     }
-
+    // show == 'complete' && 
     render() {
         const {show} = this.props
         return (
@@ -157,13 +166,13 @@ export class All extends React.Component {
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit</button>
+                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit{key}</button>
                         </div>}
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={show == 'complete' && this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
-                        event.keyCode === 13 && (show == 'complete' && this._handleClick.call(this, data, index))
+                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
+                        event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
             </div>

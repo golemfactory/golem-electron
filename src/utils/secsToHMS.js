@@ -23,11 +23,9 @@ function isDateToday(date) {
 }
 
 function timeStampToHR(timestamp) {
-    console.log("timestamp", timestamp);
     // Create a new JavaScript Date object based on the timestamp
     // multiplied by 1000 so that the argument is in milliseconds, not seconds.
     var date = new Date(Number(timestamp));
-    console.log("date", date);
     var days = "0" + date.getDate();
     var month = "0" + (date.getMonth() + 1); //January is 0!
     var year = date.getFullYear();

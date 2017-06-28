@@ -1,11 +1,13 @@
 import { dict } from './../../actions'
 
-const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_SUBTASKS_VISIBILITY} = dict
+const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY} = dict
 
 const initialState = {
     frameList: [],
     borderList: [],
-    isSubtaskShown: false
+    isSubtaskShown: false,
+    previewList: [],
+    subtasksList: []
 }
 
 const setSingleFrames = (state = initialState, action) => {
@@ -26,6 +28,15 @@ const setSingleFrames = (state = initialState, action) => {
             isSubtaskShown: !state.isSubtaskShown
         });
 
+    case SET_SUBTASKS_LIST:
+        return Object.assign({}, state, {
+            subtasksList: action.payload
+        });
+
+    case SET_PREVIEW_LIST:
+        return Object.assign({}, state, {
+            previewList: action.payload
+        });
 
     default:
         return state;

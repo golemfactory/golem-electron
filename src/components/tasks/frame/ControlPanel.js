@@ -7,7 +7,8 @@ import * as Actions from '../../../actions'
 
 
 const mapStateToProps = state => ({
-    zoomRatio: state.input.zoomRatio
+    zoomRatio: state.input.zoomRatio,
+    details: state.details.detail
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -21,12 +22,20 @@ export class ControlPanel extends React.Component {
         super(props);
     }
 
+    isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
     render() {
-        const {showSubtask, imgIndex, zoomRatio} = this.props
+        const {showSubtask, zoomRatio, details} = this.props
+        let {imgIndex} = this.props
+        if (!this.isNumeric(imgIndex) || imgIndex > 999) {
+            imgIndex = 0;
+        }
         return (
             <div className="container__control-panel">
                 <span className="icon-arrow-left-white" role="button" aria-label="Previous Frame" tabIndex="0"/>
-                <span>{parseInt(imgIndex) + 1} of 250</span>
+                <span>{parseInt(imgIndex) + 1} of {details.options && details.options.frame_count}</span>
                 <span className="icon-arrow-right-white" role="button" aria-label="Next Frame" tabIndex="0"/>
                 <span className="icon-zoom-out" id="zoom-out" role="button" aria-label="Zoom out" tabIndex="0"/>
                 <span id="reset">{zoomRatio && zoomRatio.toFixed(2)}%</span>

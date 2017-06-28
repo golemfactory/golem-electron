@@ -9,55 +9,18 @@ import ControlPanel from './ControlPanel'
 import ImageZoom from './ImageZoom'
 import SubTask from './SubTask'
 
-const path = [
-    [
-        [1, 1],
-        [1, 149],
-        [99, 149],
-        [99, 74],
-        [751, 74],
-        [751, 1],
-        [1, 1]
-    ],
-    [
-        [1, 151],
-        [1, 299],
-        [751, 299],
-        [751, 76],
-        [101, 76],
-        [101, 151],
-        [1, 151]
-    ],
-    [
-        [1, 301],
-        [1, 390],
-        [199, 390],
-        [199, 301],
-        [1, 301]
-    ],
-    [
-        [201, 301],
-        [201, 390],
-        [399, 390],
-        [399, 301],
-        [201, 301]
-    ],
-    [
-        [401, 301],
-        [401, 390],
-        [751, 390],
-        [751, 301],
-        [401, 301]
-    ]
-]
 const CLOSE_BTN_PATH = '/preview/complete';
 
 let tmpIndex = 0
 
+
 const mapStateToProps = state => ({
     isSubtaskShown: state.single.isSubtaskShown,
     borderList: state.single.borderList,
-    details: state.details.detail
+    details: state.details.detail,
+    subtasksList: state.single.subtasksList,
+    previewList: state.single.previewList,
+    taskId: state.task.taskId
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -72,7 +35,7 @@ export class Single extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.id)
+        console.log(this.props.taskId)
     }
     /**
      * [_showSubtask func. will draw svg paths over the image to show subtask of render.]
@@ -90,19 +53,25 @@ export class Single extends React.Component {
         hashHistory.push(CLOSE_BTN_PATH)
     }
 
+    _handleRestartSubtask(id) {
+        this.props.actions.restartSubtask(id)
+    }
+
+
     render() {
-        const {id, preview, actions, isSubtaskShown, borderList, details} = this.props
+        const {id, taskId, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
         console.log("isSubtaskShown", isSubtaskShown);
         console.log("id", id);
-        console.log("details.preview", encodeURI(details.preview));
+        console.log("details", details);
+        let previewLink = previewList[id]
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {details.preview && <ImageZoom image={`file://${details.preview}`} />}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={(details && details.options) && (details.options.resolution[1] / details.options.resolution[0])}/>}
+                    {previewLink && <ImageZoom image={`file://${previewLink}`} />}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={(details && details.options) && (details.options.resolution[1] / details.options.resolution[0])} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask}/>}
                 </div>
                 <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
             </div>

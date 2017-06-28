@@ -91,12 +91,14 @@ export class Header extends Component {
      * @param   {Object}     elm     [target element]
      */
     _handleMenu(to, elm) {
-        let menuItems = document.getElementsByClassName('menu__item')
-        for (var i = 0; i < menuItems.length; i++) {
-            menuItems[i].classList.remove('active')
+        if (this.props.taskDetails.options && Number(this.props.taskDetails.options.frame_count) > 1) {
+            let menuItems = document.getElementsByClassName('menu__item')
+            for (var i = 0; i < menuItems.length; i++) {
+                menuItems[i].classList.remove('active')
+            }
+            elm.currentTarget.classList.add('active')
+            hashHistory.push(`/preview/${to}`);
         }
-        elm.currentTarget.classList.add('active')
-        hashHistory.push(`/preview/${to}`);
     }
 
     /**
@@ -197,8 +199,8 @@ export class Header extends Component {
                         <span className="amount__frame">{taskDetails.options && taskDetails.options.frame_count} {taskDetails.options && taskDetails.options.frame_count > 1 ? ' Frames' : ' Frame' }</span>
                     </div>
                     <div className="menu" role="menu">
-                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>Complete</span>
-                        <span className="menu__item active" role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')} disabled={taskDetails.options && taskDetails.options.frame_count < 2}>All</span>
+                        <span className="menu__item" role="menuitem" tabIndex="0" aria-label="Completed Frames" onClick={this._handleMenu.bind(this, 'complete')}>Complete</span>
+                        <span className={`menu__item ${(taskDetails.options && taskDetails.options.frame_count > 1) ? 'active' : ''}`} role="menuitem" tabIndex="0" aria-label="All Frames" onClick={this._handleMenu.bind(this, 'all')}>All</span>
                     </div>
                 </div>
             }

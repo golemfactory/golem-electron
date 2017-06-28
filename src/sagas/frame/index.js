@@ -1,11 +1,53 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
+import { fork, takeEvery, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../../actions'
 
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_SUBTASK} = dict
+
+export function restartSubtask(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_restart_subtask(args) {
+            var restarted_subtask = args[0];
+            console.log(config.RESTART_SUBTASK_RPC, restarted_subtask)
+            resolve(restarted_subtask)
+        }
+        _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASK_RPC, [payload])
+    })
+}
+
+export function* restartSubtaskBase(session, {payload}) {
+    if (payload) {
+        let action = yield call(restartSubtask, session, payload)
+        console.log("action", action);
+    //yield put(action)
+    }
+}
+
+export function getPreviews(session, id) {
+    console.log("id", id);
+    return new Promise((resolve, reject) => {
+        function on_previews(args) {
+            var previews = args[0];
+            console.log(config.GET_PREVIEW_LIST_RPC, previews)
+            resolve({
+                type: SET_PREVIEW_LIST,
+                payload: previews
+            })
+        }
+        _handleRPC(on_previews, session, config.GET_PREVIEW_LIST_RPC, [id])
+    })
+}
+
+export function* getPreviewBase(session, id) {
+    if (id) {
+        let action = yield call(getPreviews, session, id)
+        yield put(action)
+    }
+}
+
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
@@ -53,9 +95,9 @@ export function fetchSubtasksBorder(session, payload) {
     })
 }
 
-export function* subtasksBorder(session, payload) {
-    if (payload) {
-        let action = yield call(fetchSubtasksBorder, session, payload)
+export function* subtasksBorder(session, id, {payload}) {
+    if (id) {
+        let action = yield call(fetchSubtasksBorder, session, id)
         yield put(action)
     }
 }
@@ -70,7 +112,10 @@ export function fetchSubtaskList(session, payload) {
         function on_subtask_list(args) {
             var subtask_list = args[0];
             console.log(config.GET_SUBTASKS_RPC, subtask_list)
-        //resolve(subtask_list)
+            resolve({
+                type: SET_SUBTASKS_LIST,
+                payload: subtask_list
+            })
         }
 
         _handleRPC(on_subtask_list, session, config.GET_SUBTASKS_RPC, [payload])
@@ -120,5 +165,7 @@ export function* frameBase(session, id) {
     yield fork(frameInfo, session, id)
     yield fork(subtaskList, session, id)
     yield fork(frameList, session, id)
+    yield fork(getPreviewBase, session, id)
     yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id)
+    yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session)
 }

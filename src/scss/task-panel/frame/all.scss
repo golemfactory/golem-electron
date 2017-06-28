@@ -5,8 +5,9 @@
     justify-content: flex-start;
     align-content: flex-start;
     flex-wrap: wrap;
-    padding: 15px 16px 0 16px;
+    padding: 15px 16px 15px 16px;
     box-sizing: border-box;
+    overflow-y: overlay;
 }
 
 .item__all-frame {
