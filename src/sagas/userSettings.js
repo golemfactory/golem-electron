@@ -85,13 +85,13 @@ export function callSettings(session) {
 
             actionList.push({
                 type: SET_PROV_TRUST,
-                payload: Math.trunc((computing_trust + 1) * 50),
+                payload: computing_trust,
                 init: true
             })
 
             actionList.push({
                 type: SET_REQ_TRUST,
-                payload: Math.trunc((requesting_trust + 1) * 50),
+                payload: requesting_trust,
                 init: true
             })
 

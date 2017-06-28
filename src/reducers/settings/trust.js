@@ -11,12 +11,12 @@ const setTrust = (state = initialState, action) => {
 
     case SET_PROV_TRUST:
         return Object.assign({}, state, {
-            providerTrust: action.payload
+            providerTrust:  Math.trunc((action.payload + 1) * 50),
         });
 
     case SET_REQ_TRUST:
         return Object.assign({}, state, {
-            requestorTrust: action.payload
+            requestorTrust: Math.trunc((action.payload + 1) * 50),
         });
 
 
