@@ -7,6 +7,8 @@ const connect = require('connect');
 const serveStatic = require('serve-static');
 const compression = require('compression')
 
+//require('electron-debug')({showDevTools: true, enabled: true});
+
 const createTray = require('./electron/tray_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')

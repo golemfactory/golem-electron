@@ -63,7 +63,7 @@ export class Single extends React.Component {
         console.log("isSubtaskShown", isSubtaskShown);
         console.log("id", id);
         console.log("details", details);
-        let previewLink = previewList[id]
+        let previewLink = previewList[previewList.length < 2 ? 0 : id]
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
