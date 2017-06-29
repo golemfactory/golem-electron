@@ -42,6 +42,7 @@ export function connect() {
          * @return {[Object]}       connection          ['Connection with session']
          */
         function connect() {
+            let connectTimeout = null;
             let connection = new Wampy(config.WS_URL,
                 {
                     realm: config.REALM,
@@ -54,10 +55,17 @@ export function connect() {
                             connection
                         });
                     },
+                    onClose: function () {
+                        console.log('Wampy connection was closed.');
+                    },
                     onError: (err, details) => {
-                        console.info('Wampy connection error', err, details);
+                        console.info('Wampy connection error:', err, details);
+                        if (connectTimeout) return;
+
+                        console.info('Wampy is connecting');
                         ipcRenderer.send('start-golem-process');
-                        setTimeout(() => {
+                        connectTimeout = setTimeout(() => {
+                            connectTimeout = null;
                             connect();
                         }, 5000) //can be less
                     }

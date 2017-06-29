@@ -55,13 +55,14 @@ class GolemProcess {
         /* Handle process events */
         this.process.on('error', data => {
             console.error('💻 Cannot start Golem:', data.toString())
-        })
+        });
         this.process.on('exit', code => {
             console.log('💻 Golem exited with code', code);
         });
+        /* FIXME: we shouldn't be catching stdout here.
         this.process.stderr.on('data', data => {
             console.error('💻 Golem error:', data.toString());
-        });
+        });*/
     }
 
     stopProcess() {
@@ -76,9 +77,6 @@ class GolemProcess {
 function golemHandler(app) {
     app.golem = new GolemProcess();
 
-    app.on('window-all-closed', () => {
-        app.golem.stopProcess();
-    });
     ipcMain.on('start-golem-process', () => {
         app.golem.startProcess();
     });
