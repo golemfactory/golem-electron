@@ -148,6 +148,7 @@ app.on('ready', onReady)
 
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
+        app.golem.stopProcess();
         app.quit()
     }
 })
