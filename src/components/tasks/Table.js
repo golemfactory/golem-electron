@@ -161,7 +161,7 @@ export class Table extends React.Component {
         }
         if (timeout) {
             info.status = status.TIMEOUT
-            info.message = "Your task is timeout"
+            info.message = "Your task has timeouted"
             info.color = "red"
         }
         if (restart) {
