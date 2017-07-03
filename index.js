@@ -3,9 +3,6 @@ const {app, BrowserWindow, Menu, ipcMain} = electron
 const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
-const connect = require('connect');
-const serveStatic = require('serve-static');
-const compression = require('compression')
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
