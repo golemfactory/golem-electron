@@ -1,8 +1,10 @@
 const electron = require('electron')
 const {app, ipcMain} = electron
 
-
+let openedWindowsMap = null;
 function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) {
+
+    openedWindowsMap = new Map()
 
     // ipcMain.on('amount-updated', (event, amount) => {
     //     const time = new Date().toLocaleTimeString()
@@ -29,7 +31,14 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
     ipcMain.on('preview-screen', (event, {isScreenOpen, id, frameCount}) => {
         if (isScreenOpen /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
             //win.setContentSize(700, APP_HEIGHT, true)
-            createPreviewWindow(id, frameCount)
+            if (openedWindowsMap.has(id)) {
+                let pWindow = openedWindowsMap.get(id)
+                pWindow.show();
+            } else {
+                createPreviewWindow(id, frameCount).then((previewWindow) => {
+                    openedWindowsMap.set(id, previewWindow)
+                })
+            }
             console.log("ID", id, "FRAME COUNT", frameCount)
         }
     })
@@ -43,6 +52,23 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
         }
     })
 
+    console.info('IPC Handlers created.')
 }
+
+
+function ipcRemover() {
+    ipcMain.removeAllListeners('preview-switch')
+    ipcMain.removeAllListeners('preview-screen')
+    ipcMain.removeAllListeners('set-badge')
+    console.info('IPC Listeners destroyed.')
+}
+
+function mapRemover(id) {
+    openedWindowsMap.delete(id)
+    console.info(id, 'deleted from map.')
+}
+
+ipcHandler.ipcRemover = ipcRemover.bind()
+ipcHandler.mapRemover = mapRemover.bind()
 
 module.exports = ipcHandler;

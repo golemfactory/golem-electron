@@ -51,6 +51,7 @@ export class ImageZoom extends React.Component {
         this.initSeaDragon()
         setTimeout(() => {
             this.viewer.viewport.getZoom()
+            this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
         }, 5000)
     }
 
@@ -64,17 +65,24 @@ export class ImageZoom extends React.Component {
     initSeaDragon() {
         let {id, image, type} = this.props
         loadImage(image).then(data => {
+            let isVertical = false
+
+            console.log("imageInfo.width/imageInfo.height", imageInfo.width / imageInfo.height);
+            if ((imageInfo.width / imageInfo.height) < 1.4601941747572815) {
+                isVertical = true
+            }
             viewer = this.viewer = OpenSeadragon({
                 id: id,
-                visibilityRatio: 1.0,
+                //visibilityRatio: 1,
                 constrainDuringPan: false,
-                defaultZoomLevel: 1,
-                minZoomLevel: 1,
+                //defaultZoomLevel: 1,
+                minZoomLevel: !isVertical ? 1 : .00001,
                 maxZoomLevel: 10,
                 zoomInButton: 'zoom-in',
                 zoomOutButton: 'zoom-out',
                 homeButton: 'reset',
                 //fullPageButton: 'full-page',
+                wrapVertical: isVertical,
                 nextButton: 'next',
                 previousButton: 'previous',
                 showNavigator: false,
@@ -93,12 +101,11 @@ export class ImageZoom extends React.Component {
             })
 
             viewer.addHandler('zoom', (item) => {
+                this.viewer.viewport.goHome(true)
                 this.calculateZoomRatio.call(this, item.zoom)
             })
 
         });
-
-
     }
 
     /**
@@ -108,16 +115,10 @@ export class ImageZoom extends React.Component {
     calculateZoomRatio(zoom) {
         const {x, y} = viewer.viewport.getContainerSize()
         const {width, height} = imageInfo
-        let ratio = 0
-
-        if (width > x) {
-            ratio = (x / width) * 100
-        } else if (height > y) {
-            ratio = (y / height) * 100
-        } else {
-            ratio = (x / width) * 100
-        }
-
+        let ratio = (x / width) * 100
+        // if ((width / height) < 1.4601941747572815) {
+        //     ratio = (y / height) * 100
+        // }
         this.props.actions.setZoomRatio(ratio * zoom)
 
     }

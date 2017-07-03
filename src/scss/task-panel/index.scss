@@ -12,6 +12,7 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+    overflow-y: hidden;
 }
 
 .container__task-panel {
@@ -20,9 +21,9 @@
     box-sizing: border-box;
     &--with-preview {
         margin-bottom: 292px + 59px;
-        @media screen and (max-height: 725px) {
+        @media screen and (max-height: 725px + 59px) {
             margin-bottom: 0;
-            height: 319px;
+            height: 319px
         }
     }
 }

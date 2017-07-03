@@ -7,6 +7,12 @@ import { config, _handleRPC } from './../handler'
 
 const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_SUBTASK} = dict
 
+/**
+ * [restartSubtask func. restarts related subtask]
+ * @param  {Object} session [Websocket connection session]
+ * @param  {Object} payload [Subtask Id]
+ * @return {Object}         [Promise]
+ */
 export function restartSubtask(session, payload) {
     return new Promise((resolve, reject) => {
         function on_restart_subtask(args) {
@@ -26,6 +32,12 @@ export function* restartSubtaskBase(session, {payload}) {
     }
 }
 
+/**
+ * [getPreviews func. gets preview image list]
+ * @param  {Object} session [Websocket connection session]
+ * @param  {Number} id      [Task id]
+ * @return {[type]}         [description]
+ */
 export function getPreviews(session, id) {
     console.log("id", id);
     return new Promise((resolve, reject) => {
@@ -50,9 +62,9 @@ export function* getPreviewBase(session, id) {
 
 
 /**
- * [subscribeHistory func. fetchs payment history of user, with interval]
+ * [fetchFrameList func. fetchs frame list of the task]
  * @param  {Object} session     [Websocket connection session]
- * @return {Object}             [Action object]
+ * @return {Object}             [Promise of action]
  */
 export function fetchFrameList(session, payload) {
     return new Promise((resolve, reject) => {
@@ -75,11 +87,11 @@ export function* frameList(session, payload) {
     }
 }
 /**
- * [subscribeHistory func. fetchs payment history of user, with interval]
+ * [fetchSubtasksBorder func. fetchs border of the subtasks related with given frame id]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function fetchSubtasksBorder(session, payload) {
+export function fetchSubtasksBorder(session, payload, frame_id) {
     return new Promise((resolve, reject) => {
         function on_subtasks_border(args) {
             var subtasks_border = args[0];
@@ -91,13 +103,13 @@ export function fetchSubtasksBorder(session, payload) {
         }
 
         console.log("REQUEST MADE:", config.GET_SUBTASKS_BORDER_RPC, payload)
-        _handleRPC(on_subtasks_border, session, config.GET_SUBTASKS_BORDER_RPC, [payload])
+        _handleRPC(on_subtasks_border, session, config.GET_SUBTASKS_BORDER_RPC, [payload, frame_id])
     })
 }
 
 export function* subtasksBorder(session, id, {payload}) {
     if (id) {
-        let action = yield call(fetchSubtasksBorder, session, id)
+        let action = yield call(fetchSubtasksBorder, session, id, payload)
         yield put(action)
     }
 }
@@ -130,7 +142,7 @@ export function* subtaskList(session, payload) {
 }
 
 /**
- * [subscribeHistory func. fetchs payment history of user, with interval]
+ * [fetchFrameInfo func. fetchs information of the frames]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */

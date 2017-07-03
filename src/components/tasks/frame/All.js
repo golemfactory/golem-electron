@@ -54,7 +54,9 @@ export class All extends React.Component {
         }
     }
 
-    _handleResubmit() {}
+    _handleResubmit(item) {
+        console.info("handleResubmit", item);
+    }
 
     sortById(a, b) {
         if (Number(a.data.id) > Number(b.data.id))
@@ -166,7 +168,7 @@ export class All extends React.Component {
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit{key}</button>
+                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],

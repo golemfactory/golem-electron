@@ -4,6 +4,7 @@
     width: 100%;
     position: absolute;
     bottom: 59px;
+    z-index: 2;
     @media screen and (max-height: 725px + 59px) {
         //<-- HARDCODED //TO DO should get Table height on JS part to make it clear 
         //or another CSS solution like flex

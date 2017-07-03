@@ -40,7 +40,6 @@ function onReady() {
     createWindow()
     // tray = createTray(win)
 
-    ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
     golemHandler(app)
 }
 
@@ -120,6 +119,7 @@ function createWindow() {
 
 
     win.once('ready-to-show', () => {
+        ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
         win.show()
     })
 
@@ -144,6 +144,11 @@ function createWindow() {
     win.on('closed', () => {
         win = null
     })
+
+    win.on('close', () => {
+        win = null;
+        ipcHandler.ipcRemover()
+    });
 }
 
 app.on('ready', onReady)
@@ -167,40 +172,48 @@ app.on('activate', () => {
 
 
 function createPreviewWindow(id, frameCount) {
-    previewWindow = new BrowserWindow({
-        title: APP_NAME,
-        width: PREVIEW_APP_WIDTH,
-        height: PREVIEW_APP_HEIGHT,
-        //titleBarStyle: 'hidden-inset',
-        frame: false,
-        resizable: false,
-        center: true,
-        show: true,
-        //backgroundColor: '#00789d',
-        "webPreferences": {
-            "webSecurity": false
+    return new Promise((resolve, reject) => {
+        previewWindow = new BrowserWindow({
+            title: APP_NAME,
+            width: PREVIEW_APP_WIDTH,
+            height: PREVIEW_APP_HEIGHT,
+            //titleBarStyle: 'hidden-inset',
+            frame: false,
+            resizable: false,
+            center: true,
+            show: true,
+            //backgroundColor: '#00789d',
+            "webPreferences": {
+                "webSecurity": false
+            }
+        })
+
+        /*
+            win.webContents.on('did-finish-load', function() {
+                setTimeout(function() {
+                    win.show();
+                }, 40);
+            });
+        */
+        previewWindow.once('ready-to-show', () => {
+            win.show()
+        })
+
+        previewWindow.on('close', () => {
+            previewWindow = null
+            ipcHandler.mapRemover(id)
+        })
+
+        if (isDevelopment()) {
+            let previewURL = `http://localhost:${process.env.PORT || 3003}#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+            previewWindow.loadURL(previewURL)
+        } else {
+            let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+            previewWindow.loadURL(previewURL)
+        //win.loadURL(`file://${__dirname}/index.html`)
         }
+        resolve(previewWindow)
     })
-
-    /*
-        win.webContents.on('did-finish-load', function() {
-            setTimeout(function() {
-                win.show();
-            }, 40);
-        });
-    */
-    previewWindow.once('ready-to-show', () => {
-        win.show()
-    })
-
-    if (isDevelopment()) {
-        let previewURL = `http://localhost:${process.env.PORT || 3003}#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
-        previewWindow.loadURL(previewURL)
-    } else {
-        let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
-        previewWindow.loadURL(previewURL)
-    //win.loadURL(`file://${__dirname}/index.html`)
-    }
 }
 
 exports.selectDirectory = function(directory) {

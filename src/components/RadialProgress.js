@@ -3,6 +3,7 @@ import React from 'react';
 const TRUST = "#37C481"
 const WARN = "#FEC62E"
 const DANGER = "#F65A23"
+const DISABLED = "#CBCBCB"
 
 export default class RadialProgress extends React.Component {
 
@@ -11,15 +12,18 @@ export default class RadialProgress extends React.Component {
     }
 
     render() {
-        const {pct, title, max, warn} = this.props
+        const {pct, title, max, warn, disabled} = this.props
         let maximum = max || 100
         let ratio = ((pct <= maximum ? pct : maximum) / maximum).toFixed(2)
         let color;
-
+        if (!disabled) {
         if (warn)
             color = (ratio >= 0.75 && ratio < 0.9) ? WARN : ((ratio >= 0.9) ? DANGER : TRUST);
         else
             color = TRUST;
+    } else {
+        color = DISABLED;
+    }
 
         let style = Object.assign({}, null, {
             'strokeDashoffset': 500 - (300 * ratio),

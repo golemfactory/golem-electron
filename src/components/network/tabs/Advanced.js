@@ -127,15 +127,15 @@ export class Advanced extends React.Component {
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
-                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true}/>
+                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true} disabled={isEngineOn}/>
                 <input type="number" min="0" step="1" max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={this.maxVal(cpu_cores, systemInfo.cpu_cores)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true}/>
+                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true} disabled={isEngineOn}/>
                 <input type="number" min="0" step="128" max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={this.maxVal(memory, systemInfo.memory)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true}/>
+                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true} disabled={isEngineOn}/>
                 <input type="number" min="0" step="1" max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={this.maxVal(disk, systemInfo.disk)} disabled={isEngineOn}/>
               </div>
             </div>

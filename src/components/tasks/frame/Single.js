@@ -20,7 +20,8 @@ const mapStateToProps = state => ({
     details: state.details.detail,
     subtasksList: state.single.subtasksList,
     previewList: state.single.previewList,
-    taskId: state.task.taskId
+    taskId: state.task.taskId,
+    zoomRatio: state.input.zoomRatio,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -32,17 +33,67 @@ export class Single extends React.Component {
     constructor(props) {
         super(props);
         this._showSubtask = ::this._showSubtask
+        this.state = {
+            ratio: 0,
+            offset: {},
+            id: null,
+            previewLink: null
+        }
     }
 
-    componentDidMount() {
-        console.log(this.props.taskId)
+
+    // componentWillReceiveProps(nextProps) {
+    //     let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.id]
+    //     this.setState({
+    //         id: Number(nextProps.id),
+    //         previewLink
+    //     })
+    // }
+
+    /**
+     * [_previousFrame func. changes frame screen to the previous one]
+     */
+    _previousFrame() {
+        const {previewList} = this.props
+        const {id} = this.state
+        console.log('previous')
+        id > 0 && this.setState({
+            id: id - 1
+        }, () => {
+            console.log('newId', id)
+            let previewLink = previewList[previewList.length < 2 ? 0 : id]
+            console.log('new previewLink', previewLink)
+            this.setState({
+                previewLink
+            })
+        })
+    }
+
+    /**
+     * [_nextFrame func. changes frame screen to the next one]
+     */
+    _nextFrame() {
+        const {details, previewList} = this.props
+        const {id} = this.state
+        if (!!details.options) {
+            id < details.options.frame_count - 1 && this.setState({
+                id: id + 1
+            }, () => {
+                console.log('newId', id)
+                let previewLink = previewList[previewList.length < 2 ? 0 : id]
+                console.log('new previewLink', previewLink)
+                this.setState({
+                    previewLink
+                })
+            })
+        }
     }
     /**
      * [_showSubtask func. will draw svg paths over the image to show subtask of render.]
      * @return  nothing
      */
-    _showSubtask() {
-        this.props.actions.setSubtasksVisibility()
+    _showSubtask(id) {
+        this.props.actions.setSubtasksVisibility(id)
     }
 
     /**
@@ -52,17 +103,54 @@ export class Single extends React.Component {
     _handleClose() {
         hashHistory.push(CLOSE_BTN_PATH)
     }
-
+    /**
+     * [_handleRestartSubtask func. triggers restart subtask event]
+     * @param  {Number} id [Id of subtask]
+     */
     _handleRestartSubtask(id) {
         this.props.actions.restartSubtask(id)
     }
 
+    /**
+     * [_setClientInfo func. will update position of the subtask borders]
+     * @param {Number} options.x [Width of the container]
+     * @param {[type]} options.y [Height of the container]
+     * @param {Object} _         [Center coordinates of the container]
+     * @param {Object} bounds    [Width and height information of the content]
+     */
+    _setClientInfo({x, y}, _, bounds) {
+        let contentSize = bounds._contentSize
+        let containerRatio = x / y;
+        let imageRatio = contentSize.x / contentSize.y
+        let offset = {};
+
+        if (imageRatio < containerRatio) {
+            let ratio = y / contentSize.y
+            let resizedPartX = contentSize.x * ratio
+            offset = {
+                direction: 'x',
+                value: Math.trunc(Math.abs(x - resizedPartX) / 2)
+            };
+        } else {
+            let ratio = x / contentSize.x
+            let resizedPartY = contentSize.y * ratio
+            offset = {
+                direction: 'y',
+                value: Math.trunc(Math.abs(y - resizedPartY) / 2)
+            };
+        }
+
+        let ratio = (this.props.zoomRatio / 100) - 0.028
+
+        this.setState({
+            ratio,
+            offset
+        })
+    }
 
     render() {
-        const {id, taskId, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
-        console.log("isSubtaskShown", isSubtaskShown);
-        console.log("id", id);
-        console.log("details", details);
+        const {taskId, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
+        const {id, ratio, offset} = this.state
         let previewLink = previewList[previewList.length < 2 ? 0 : id]
         return (
             <div className="section__frame">
@@ -70,10 +158,10 @@ export class Single extends React.Component {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {previewLink && <ImageZoom image={`file://${previewLink}`} />}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={(details && details.options) && (details.options.resolution[1] / details.options.resolution[0])} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask}/>}
+                    {previewLink && <ImageZoom image={`file://${previewLink}?${new Date().getTime()}`} fetchClientInfo={::this._setClientInfo} />}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
                 </div>
-                <ControlPanel showSubtask={this._showSubtask} imgIndex={id}/>
+                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, id)} imgIndex={id}/>
             </div>
         );
     }

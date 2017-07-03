@@ -70,9 +70,9 @@ export default class Dropdown extends React.Component {
                 </div>
                 {listVisible && <div className="dropdown-list">
                                     <div className="item-container__dropdown">
-                                        {this.renderListItems(list)}
+                                        {list.length > 0 ? this.renderListItems(list) : <span className="info__dropdown">There's no preset. You must create first.</span>}
                                     </div>
-                                    {presetManager && <div className="option__dropdown">
+                                    {list.length > 0 && presetManager && <div className="option__dropdown">
                                         <div className="item__dropdown" onClick={::this._handleManageModal}>
                                             <span>Manage presets</span>
                                         </div>

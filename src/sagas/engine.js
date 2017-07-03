@@ -35,6 +35,11 @@ export function activatePreset(session, payload) {
     })
 }
 
+/**
+ * [*golemizeBase generator starts golem engine]
+ * @param {Object} session         [Session of the wamp connection]
+ * @param {Object} options.payload [Name of chosen preset]
+ */
 export function* golemizeBase(session, {payload}) {
     const presetStatus = yield call(activatePreset, session, payload)
     console.log("presetStatus", presetStatus);
@@ -60,7 +65,11 @@ export function stopEngine(session) {
     })
 }
 
-export function* notTodayBase(session) {
+/**
+ * [*stopGolemBase generator stops golem engine]
+ * @param {[type]} session       [Session of the wamp connection]
+ */
+export function* stopGolemBase(session) {
     const engineStatus = yield call(stopEngine, session)
     console.info("engineStatus", engineStatus)
     if (!engineStatus) {
@@ -86,5 +95,5 @@ export function* notTodayBase(session) {
  */
 export function* engineFlow(session) {
     yield takeLatest(START_GOLEM, golemizeBase, session)
-    yield takeLatest(STOP_GOLEM, notTodayBase, session)
+    yield takeLatest(STOP_GOLEM, stopGolemBase, session)
 }

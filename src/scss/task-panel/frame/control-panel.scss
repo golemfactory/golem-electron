@@ -20,6 +20,17 @@
     span {
         cursor: pointer;
     }
+    .preview-count__control-panel {
+        width: 65px;
+        text-align: center;
+    }
+    .zoom-home-button {
+        width: 50px;
+        text-align: center;
+    }
+    .icon-show-subtasks {
+        margin-bottom: 2px;
+    }
     .icon {
         &-arrow {
             &-left-white,
