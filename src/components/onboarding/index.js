@@ -24,8 +24,15 @@ class OnboardIndex extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            currentStep: 1
+            currentStep: 1,
+            nodeName: null
         }
+    }
+
+    _setNodeName(name) {
+        this.setState({
+            nodeName: name
+        })
     }
 
     /**
@@ -40,7 +47,7 @@ class OnboardIndex extends React.Component {
             step = <Step1/>
             break;
         case 2:
-            step = <Step2/>
+            step = <Step2 setNodeName={::this._setNodeName}/>
             break;
         case 3:
             step = <Step3/>
@@ -73,7 +80,10 @@ class OnboardIndex extends React.Component {
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
-        const {currentStep} = this.state
+        const {currentStep, nodeName} = this.state
+        if (currentStep === 2) {
+            this.props.actions.updateNodeName(nodeName)
+        }
         if (currentStep < 5) {
             this.setState({
                 currentStep: currentStep + 1

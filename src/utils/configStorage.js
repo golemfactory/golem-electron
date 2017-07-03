@@ -5,6 +5,7 @@ const config = new Config();
 /**
  * CONFIG STORE KEYS
  */
+//config.delete('SHOW_ONBOARD') // <-- Rollback onboard
 export const dictConfig = {
     SHOW_ONBOARD: 'SHOW_ONBOARD',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',

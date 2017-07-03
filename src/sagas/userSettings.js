@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
+const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
 
 const parameterDict = Object.freeze({
     SET_PROV_MIN_PRICE: 'min_price',
@@ -13,7 +13,8 @@ const parameterDict = Object.freeze({
     SET_PROV_TRUST: 'computing_trust',
     SET_REQ_TRUST: 'requesting_trust',
     SET_FILE_LOCATION: '',
-    SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name'
+    SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name',
+    UPDATE_NODE_NAME: 'node_name'
 })
 export function updateSettings(session, type, payload) {
     console.log("payload", type, payload);
@@ -32,6 +33,9 @@ export function updateSettings(session, type, payload) {
 export function* updateSettingsBase(session, {type, payload, init}) {
     if (!init) {
         const updateStatus = yield call(updateSettings, session, type, payload)
+        if (type === "UPDATE_NODE_NAME") {
+            yield call(fireBase, session)
+        }
         console.info("updateSettingsStatus", updateStatus)
     }
 
@@ -132,4 +136,5 @@ export function* settingsFlow(session) {
     yield takeLatest(SET_PROV_TRUST, updateSettingsBase, session)
     yield takeLatest(SET_REQ_TRUST, updateSettingsBase, session)
     yield takeLatest(SET_CHOSEN_HARDWARE_PRESET, updateSettingsBase, session)
+    yield takeLatest(UPDATE_NODE_NAME, updateSettingsBase, session)
 }
