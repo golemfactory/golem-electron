@@ -32,7 +32,6 @@ export default class FileCheckModal extends React.Component {
      * @return {DOM}                    [List of unknown file elements]
      */
     fetchFiles(files) {
-        console.log("FETCH", files)
         return files.map(({name, extension}, index) => <div key={index.toString()}><span>{name}</span></div>)
     }
 

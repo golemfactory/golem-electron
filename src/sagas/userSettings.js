@@ -17,13 +17,13 @@ const parameterDict = Object.freeze({
     UPDATE_NODE_NAME: 'node_name'
 })
 export function updateSettings(session, type, payload) {
-    console.log("payload", type, payload);
+    //console.log("payload", type, payload);
     return new Promise((resolve, reject) => {
         function on_update_choosen_preset(args) {
             let updateStatus = args[0];
             resolve(updateStatus)
         }
-        console.log(parameterDict[type])
+        //console.log(parameterDict[type])
         _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTINGS_RPC, [{
             [parameterDict[type]]: payload
         }])
@@ -36,7 +36,7 @@ export function* updateSettingsBase(session, {type, payload, init}) {
         if (type === "UPDATE_NODE_NAME") {
             yield call(fireBase, session)
         }
-        console.info("updateSettingsStatus", updateStatus)
+    //console.info("updateSettingsStatus", updateStatus)
     }
 
 // if (!updateStatus) {
@@ -52,7 +52,7 @@ export function callSettings(session) {
         let actionList = []
         function on_settings(args) {
             let on_settings = args[0];
-            console.log("SETTINGS", on_settings)
+            //console.log("SETTINGS", on_settings)
             const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
 
             actionList.push({
@@ -101,7 +101,7 @@ export function callSettings(session) {
 
             function on_hardware_caps(args) {
                 let hardware_caps = args[0];
-                console.log("HARDWARE_CAPS", hardware_caps)
+                //console.log("HARDWARE_CAPS", hardware_caps)
                 actionList.push({
                     type: SET_SYSTEM_INFO,
                     payload: {
@@ -121,8 +121,8 @@ export function callSettings(session) {
 }
 
 export function* fireBase(session) {
-    const actionList = yield call(callSettings, session)
-    console.log("SETTINGS_ACTION", actionList)
+    const actionList = yield call(callSettings, session);
+    //console.log("SETTINGS_ACTION", actionList)
     yield actionList && actionList.map((item) => {
         return put(item)
     })

@@ -41,10 +41,10 @@ export function activatePreset(session, payload) {
  * @param {Object} options.payload [Name of chosen preset]
  */
 export function* golemizeBase(session, {payload}) {
-    const presetStatus = yield call(activatePreset, session, payload)
-    console.log("presetStatus", presetStatus);
-    const engineStatus = yield call(fireEngine, session)
-    console.log(engineStatus)
+    const presetStatus = yield call(activatePreset, session, payload);
+    //console.log("presetStatus", presetStatus);
+    const engineStatus = yield call(fireEngine, session);
+    //console.log(engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_ENGINE_STATUS,
@@ -70,8 +70,8 @@ export function stopEngine(session) {
  * @param {[type]} session       [Session of the wamp connection]
  */
 export function* stopGolemBase(session) {
-    const engineStatus = yield call(stopEngine, session)
-    console.info("engineStatus", engineStatus)
+    const engineStatus = yield call(stopEngine, session);
+    //console.info("engineStatus", engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_ENGINE_STATUS,

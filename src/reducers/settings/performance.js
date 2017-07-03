@@ -14,7 +14,7 @@ const setPerformance = (state = initialState, action) => {
     switch (action.type) {
 
     case SET_PERFORMANCE_CHARTS:
-        console.log(Object.keys(action.payload))
+        //console.log(Object.keys(action.payload))
         return Object.assign({}, state, {
             charts: {
                 ...state.charts,

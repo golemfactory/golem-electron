@@ -12,8 +12,8 @@ describe('handleIO', () => {
 
     const connection = new WebSocket('ws://localhost:8080/ws')
     let session
-    let task = createMockTask()
-    console.log(connection)
+    let task = createMockTask();
+    //console.log(connection)
     connection.onopen = (sess) => {
         session = sess
     }

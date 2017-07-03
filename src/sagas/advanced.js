@@ -11,19 +11,19 @@ function updateFunc(session, payload) {
     return new Promise((resolve, reject) => {
         function on_update_preset(args) {
             var update_preset = args[0];
-            console.log(config.PRESET_UPDATE_RPC, update_preset)
+            //console.log(config.PRESET_UPDATE_RPC, update_preset)
             resolve(update_preset)
         }
         payload.name = "custom" // <-- HARDCODED
-        console.log(config.PRESET_UPDATE_RPC, payload)
+        //console.log(config.PRESET_UPDATE_RPC, payload)
         _handleRPC(on_update_preset, session, config.PRESET_UPDATE_RPC, [payload])
     })
 }
 
 export function* updatePreset(session, {payload}) {
     yield call(updateFunc, session, payload)
-    const action = yield call(subscribeAdvanced, session)
-    console.log("ADVANCED_ACTION", action)
+    const action = yield call(subscribeAdvanced, session);
+    //console.log("ADVANCED_ACTION", action)
     yield action && put(action)
 }
 
@@ -31,18 +31,18 @@ function deleteFunc(session, payload) {
     return new Promise((resolve, reject) => {
         function on_delete_preset(args) {
             var deleted_preset = args[0];
-            console.log(config.PRESET_CREATE_RPC, deleted_preset)
+            //console.log(config.PRESET_CREATE_RPC, deleted_preset)
             resolve(deleted_preset)
         }
-        console.log(config.PRESET_CREATE_RPC, payload)
+        //console.log(config.PRESET_CREATE_RPC, payload)
         _handleRPC(on_delete_preset, session, config.PRESET_DELETE_RPC, [payload])
     })
 }
 
 export function* deletePreset(session, {payload}) {
     yield call(deleteFunc, session, payload)
-    const action = yield call(subscribeAdvanced, session)
-    console.log("ADVANCED_ACTION", action)
+    const action = yield call(subscribeAdvanced, session);
+    //console.log("ADVANCED_ACTION", action)
     yield action && put(action)
 }
 
@@ -50,7 +50,7 @@ function createFunc(session, payload) {
     return new Promise((resolve, reject) => {
         function on_create_preset(args) {
             var created_preset = args[0];
-            console.log(config.PRESET_CREATE_RPC, created_preset)
+            //console.log(config.PRESET_CREATE_RPC, created_preset)
             resolve(created_preset)
         }
 
@@ -60,8 +60,8 @@ function createFunc(session, payload) {
 
 export function* createPreset(session, {payload}) {
     yield call(createFunc, session, payload)
-    const action = yield call(subscribeAdvanced, session)
-    console.log("ADVANCED_ACTION", action)
+    const action = yield call(subscribeAdvanced, session);
+    //console.log("ADVANCED_ACTION", action)
     yield action && put(action)
 }
 
@@ -70,7 +70,7 @@ export function subscribeAdvanced(session) {
 
         function on_custom_presets(args) {
             var custom_presets = args[0];
-            console.log(config.PRESETS_RPC, custom_presets)
+            //console.log(config.PRESETS_RPC, custom_presets)
             resolve({
                 type: SET_ADVANCED_PRESET,
                 payload: custom_presets
@@ -83,7 +83,7 @@ export function subscribeAdvanced(session) {
 
 export function* fireBase(session) {
     const action = yield call(subscribeAdvanced, session)
-    console.log("ADVANCED_ACTION", action)
+    //console.log("ADVANCED_ACTION", action)
     yield action && put(action)
 }
 

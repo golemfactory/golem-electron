@@ -76,7 +76,7 @@ export class MainFragment extends React.Component {
      * @param  {Object}      data       [Custom hardware preset object]
      */
     _handlePresetModal(data) {
-        console.log(data)
+        //console.log(data)
         this.setState({
             presetModal: true,
             modalData: data

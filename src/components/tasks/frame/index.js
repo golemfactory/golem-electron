@@ -30,8 +30,8 @@ export class Frame extends React.Component {
     }
 
     componentDidMount() {
-        const {actions} = this.props
-        console.dir(this.props)
+        const {actions} = this.props;
+        //console.dir(this.props)
         actions.loginFrame(this.props.params.id)
         const endLoading = () => {
             actions.endLoading("FRAME_LOADER")
@@ -54,8 +54,8 @@ export class Frame extends React.Component {
      */
 
     render() {
-        const {type, id} = this.props.params
-        console.log("type", type);
+        const {type, id} = this.props.params;
+        //console.log("type", type);
         return (
             <div className="container__frame">
                 {type !== 'single' ? <AllFrame show={type}/> : <SingleFrame id={id}/>}

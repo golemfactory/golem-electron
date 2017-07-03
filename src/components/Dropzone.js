@@ -111,17 +111,17 @@ export class DropZone extends React.Component {
     _onDrop(e) {
         e.preventDefault();
         let files = e.dataTransfer.files;
-        console.log('Files dropped: ', files.length);
+        //console.log('Files dropped: ', files.length);
         // Upload files
         // actions.uploadFile(files)
         if (files) {
 
             mainProcess.selectDirectory([].map.call(files, item => item.path))
                 .then(item => {
-                    let mergedList = [].concat.apply([], item)
-                    let unknownFiles = mergedList.filter(({malicious}) => (malicious))
-                    let masterFiles = mergedList.filter(({master}) => (master))
-                    console.log("masterFiles", masterFiles);
+                    let mergedList = [].concat.apply([], item);
+                    let unknownFiles = mergedList.filter(({malicious}) => (malicious));
+                    let masterFiles = mergedList.filter(({master}) => (master));
+                    //console.log("masterFiles", masterFiles);
                     (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(ADD_TASK_NEXT_STEP)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
@@ -167,11 +167,11 @@ export class DropZone extends React.Component {
             // Get file
             item.file(function(file) {
                 //file.name = path + file.name;
-                console.log("File:", path, file.path);
-            /*actions.uploadFile({
-                path,
-                file
-            })*/
+                //console.log("File:", path, file.path);
+                /*actions.uploadFile({
+                    path,
+                    file
+                })*/
             });
         } else if (item.isDirectory) {
             // Get folder contents
@@ -190,7 +190,7 @@ export class DropZone extends React.Component {
              */
             let readFiles = dirReader.readEntries.bind(dirReader, (entries) => {
 
-                console.log('Entries length: ', entries.length)
+                //console.log('Entries length: ', entries.length)
                 for (var i = 0; i < entries.length; i++) {
                     this.traverseFileTree(entries[i], path + item.name + "/")
                 }

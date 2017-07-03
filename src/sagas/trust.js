@@ -17,7 +17,7 @@ export function callTrust(session, payload) {
     let computingTrustPromise = new Promise((resolve, reject) => {
         function on_trust_computing(args) {
             let trust = args[0];
-            console.log(config.GET_COMPUTING_TRUST_RPC, trust)
+            //console.log(config.GET_COMPUTING_TRUST_RPC, trust)
             resolve({
                 type: SET_NET_PROV_TRUST,
                 payload: trust
@@ -29,7 +29,7 @@ export function callTrust(session, payload) {
     let requestingTrustPromise = new Promise((resolve, reject) => {
         function on_trust_requesting(args) {
             let trust = args[0];
-            console.log(config.GET_REQUESTING_TRUST_RPC, trust)
+            //console.log(config.GET_REQUESTING_TRUST_RPC, trust)
             resolve({
                 type: SET_NET_REQ_TRUST,
                 payload: trust
@@ -43,8 +43,8 @@ export function callTrust(session, payload) {
 }
 
 export function* fireBase(session, {type, payload}) {
-    const actionList = yield call(callTrust, session, payload)
-    console.log("actionList", actionList);
+    const actionList = yield call(callTrust, session, payload);
+    //console.log("actionList", actionList);
     yield actionList && actionList.map(item => put(item))
 }
 

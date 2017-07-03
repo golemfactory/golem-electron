@@ -17,7 +17,7 @@ export function restartSubtask(session, payload) {
     return new Promise((resolve, reject) => {
         function on_restart_subtask(args) {
             var restarted_subtask = args[0];
-            console.log(config.RESTART_SUBTASK_RPC, restarted_subtask)
+            //console.log(config.RESTART_SUBTASK_RPC, restarted_subtask)
             resolve(restarted_subtask)
         }
         _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASK_RPC, [payload])
@@ -26,8 +26,8 @@ export function restartSubtask(session, payload) {
 
 export function* restartSubtaskBase(session, {payload}) {
     if (payload) {
-        let action = yield call(restartSubtask, session, payload)
-        console.log("action", action);
+        let action = yield call(restartSubtask, session, payload);
+    //console.log("action", action);
     //yield put(action)
     }
 }
@@ -39,11 +39,11 @@ export function* restartSubtaskBase(session, {payload}) {
  * @return {[type]}         [description]
  */
 export function getPreviews(session, id) {
-    console.log("id", id);
+    //console.log("id", id);
     return new Promise((resolve, reject) => {
         function on_previews(args) {
             var previews = args[0];
-            console.log(config.GET_PREVIEW_LIST_RPC, previews)
+            //console.log(config.GET_PREVIEW_LIST_RPC, previews)
             resolve({
                 type: SET_PREVIEW_LIST,
                 payload: previews
@@ -70,7 +70,7 @@ export function fetchFrameList(session, payload) {
     return new Promise((resolve, reject) => {
         function on_get_frame_list(args) {
             var frame_list = args[0];
-            console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
+            //console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
             resolve({
                 type: SET_ALL_FRAMES,
                 payload: frame_list
@@ -95,14 +95,14 @@ export function fetchSubtasksBorder(session, payload, frame_id) {
     return new Promise((resolve, reject) => {
         function on_subtasks_border(args) {
             var subtasks_border = args[0];
-            console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border)
+            //console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border)
             resolve({
                 type: SET_SUBTASKS_BORDER,
                 payload: subtasks_border
             })
         }
 
-        console.log("REQUEST MADE:", config.GET_SUBTASKS_BORDER_RPC, payload)
+        //console.log("REQUEST MADE:", config.GET_SUBTASKS_BORDER_RPC, payload)
         _handleRPC(on_subtasks_border, session, config.GET_SUBTASKS_BORDER_RPC, [payload, frame_id])
     })
 }
@@ -123,7 +123,7 @@ export function fetchSubtaskList(session, payload) {
     return new Promise((resolve, reject) => {
         function on_subtask_list(args) {
             var subtask_list = args[0];
-            console.log(config.GET_SUBTASKS_RPC, subtask_list)
+            //console.log(config.GET_SUBTASKS_RPC, subtask_list)
             resolve({
                 type: SET_SUBTASKS_LIST,
                 payload: subtask_list
@@ -150,7 +150,7 @@ export function fetchFrameInfo(session, payload) {
     return new Promise((resolve, reject) => {
         function on_get_task_info(args) {
             var task_info = args[0];
-            console.log(config.GET_TASK_RPC, task_info)
+            //console.log(config.GET_TASK_RPC, task_info)
             resolve({
                 type: SET_TASK_DETAILS,
                 payload: task_info

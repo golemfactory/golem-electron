@@ -55,7 +55,7 @@ export class All extends React.Component {
     }
 
     _handleResubmit(item) {
-        console.info("handleResubmit", item);
+        //console.info("handleResubmit", item);
     }
 
     sortById(a, b) {

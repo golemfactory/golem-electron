@@ -12,7 +12,7 @@ export function callNetworkInfo(session) {
     return new Promise((response, reject) => {
         function on_info(args) {
             let info = args[0];
-            console.log(config.GET_NODE_RPC, info)
+            //console.log(config.GET_NODE_RPC, info)
             response({
                 type: SET_NETWORK_INFO,
                 payload: info
@@ -24,7 +24,7 @@ export function callNetworkInfo(session) {
 }
 
 export function* networkInfoFlow(session) {
-    const action = yield call(callNetworkInfo, session)
-    console.log("SETTINGS_ACTION", action)
+    const action = yield call(callNetworkInfo, session);
+    //console.log("SETTINGS_ACTION", action)
     yield action && put(action)
 }

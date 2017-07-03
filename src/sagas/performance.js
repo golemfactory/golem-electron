@@ -40,7 +40,7 @@ export function callBenchmark(benchmarkName, session) {
                 }
             })
         }
-        console.log(benchmarkName)
+        //console.log(benchmarkName)
         _handleRPC(on_benchmark, session, config.RUN_BENCHMARK_RPC, benchmarkName)
     })
 

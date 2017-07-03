@@ -19,7 +19,7 @@ export default class Dropdown extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (nextProps.selected !== this.props.selected) {
-            console.log("NEXT_PROPS", nextProps.selected)
+            //console.log("NEXT_PROPS", nextProps.selected)
             this.setState({
                 selectedIndex: nextProps.selected
             });

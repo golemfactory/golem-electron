@@ -85,8 +85,8 @@ export class ManagePresetModal extends React.Component {
      * @return {DOM}                        [HTML List version of the preset list]
      */
     _fillList(presetList) {
-        let list = presetList.map(item => item.name)
-        console.log('FILL', list)
+        let list = presetList.map(item => item.name);
+        //console.log('FILL', list)
         return list && list.map((item, index) => <div tabIndex="-1" className="item__preset-list" key={index.toString()} onClick={this._handleSelection.bind(this, item)}><span>{item}</span></div>)
     }
 

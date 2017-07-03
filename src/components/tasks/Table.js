@@ -98,7 +98,7 @@ export class Table extends React.Component {
      * @param  {Any}        id      [Id of the selected task]
      */
     _handleDeleteTask(id) {
-        console.log("DELETED_TASK", id)
+        //console.log("DELETED_TASK", id)
         this.props.actions.deleteTask(id)
     }
 

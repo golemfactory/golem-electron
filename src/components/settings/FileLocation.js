@@ -27,7 +27,7 @@ export class FileLocation extends React.Component {
     _handleFolderSelection() {
         let onFolderHandler = data => {
             if (data) {
-                console.log(data)
+                //console.log(data)
                 this.props.actions.setFileLocation(data[0])
                 this.refs.outputPath.value = data[0]
             }

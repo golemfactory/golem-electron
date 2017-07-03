@@ -28,7 +28,7 @@ export function subscribeCurrency() {
         let fetchCurrency = TOKEN => {
             axios.get(`${CURRENCY_URL}/${TOKEN}`)
                 .then((data) => {
-                    console.log(`FROM SAGA_CURRENCY, ${TOKEN}`, data)
+                    //console.log(`FROM SAGA_CURRENCY, ${TOKEN}`, data)
                     emit({
                         type: SET_CURRENCY,
                         payload: {

@@ -108,7 +108,7 @@ export class Header extends Component {
      */
     _onFileDialog() {
         let onFileHandler = (data) => {
-            console.log(data)
+            //console.log(data)
 
             if (data) {
 

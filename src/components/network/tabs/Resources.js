@@ -26,7 +26,6 @@ export class Resources extends React.Component {
      * @param {Int}         value       [Percentage of the resources]
      */
     _setResource(value) {
-        console.log("RESOURCE", value)
         this.props.actions.setResources(value)
         this.props.actions.setAdvancedManually(this.calculateHardwareAmount(value))
     }
@@ -38,16 +37,14 @@ export class Resources extends React.Component {
      */
     calculateHardwareAmount(val) {
         const {systemInfo} = this.props
-        let ratio = val / 100
-        console.log(ratio)
+        let ratio = val / 100;
         let cpu_cores = Math.trunc(systemInfo.cpu_cores * ratio)
         if (cpu_cores < 1 && val > 0) {
             cpu_cores = 1
             ratio = ratio / 2
         }
-        const memory = Math.trunc(systemInfo.memory * ratio)
-        const disk = Math.trunc(systemInfo.disk * ratio)
-        console.info(cpu_cores, memory, disk)
+        const memory = Math.trunc(systemInfo.memory * ratio);
+        const disk = Math.trunc(systemInfo.disk * ratio);
         return {
             cpu_cores: systemInfo.cpu_cores * ratio,
             memory: systemInfo.memory * ratio,

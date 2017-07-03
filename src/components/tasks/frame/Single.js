@@ -41,12 +41,6 @@ export class Single extends React.Component {
         }
     }
 
-    componentDidMount() {
-        console.log(this.props.taskId)
-        console.log("this.props.previewList.length", this.props.previewList.length);
-
-    }
-
     componentWillReceiveProps(nextProps) {
         let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.id]
         this.setState({
@@ -60,14 +54,11 @@ export class Single extends React.Component {
      */
     _previousFrame() {
         const {previewList} = this.props
-        const {id} = this.state
-        console.log('previous')
+        const {id} = this.state;
         id > 0 && this.setState({
             id: id - 1
         }, () => {
-            console.log('newId', id)
-            let previewLink = previewList[previewList.length < 2 ? 0 : id]
-            console.log('new previewLink', previewLink)
+            let previewLink = previewList[previewList.length < 2 ? 0 : id];
             this.setState({
                 previewLink
             })
@@ -84,9 +75,7 @@ export class Single extends React.Component {
             id < details.options.frame_count - 1 && this.setState({
                 id: id + 1
             }, () => {
-                console.log('newId', id)
-                let previewLink = previewList[previewList.length < 2 ? 0 : id]
-                console.log('new previewLink', previewLink)
+                let previewLink = previewList[previewList.length < 2 ? 0 : id];
                 this.setState({
                     previewLink
                 })

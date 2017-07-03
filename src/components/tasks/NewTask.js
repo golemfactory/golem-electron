@@ -45,7 +45,7 @@ export class NewTask extends React.Component {
      * @param  {Event}  e
      */
     _handleNameInput(e) {
-        console.log(e.target.value)
+        //console.log(e.target.value)
         this.setState({
             name: e.target.value
         })
@@ -56,7 +56,7 @@ export class NewTask extends React.Component {
      * @param  {Event}  e
      */
     _handleTypeRadio(e) {
-        console.log(e.target.value)
+        //console.log(e.target.value)
         this.setState({
             type: e.target.value
         })

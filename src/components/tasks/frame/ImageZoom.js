@@ -67,7 +67,7 @@ export class ImageZoom extends React.Component {
         loadImage(image).then(data => {
             let isVertical = false
 
-            console.log("imageInfo.width/imageInfo.height", imageInfo.width / imageInfo.height);
+            //console.log("imageInfo.width/imageInfo.height", imageInfo.width / imageInfo.height);
             if ((imageInfo.width / imageInfo.height) < 1.4601941747572815) {
                 isVertical = true
             }

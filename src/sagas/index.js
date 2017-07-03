@@ -55,7 +55,7 @@ export function connect() {
                             connection
                         });
                     },
-                    onClose: function () {
+                    onClose: function() {
                         console.log('Wampy connection was closed.');
                     },
                     onError: (err, details) => {

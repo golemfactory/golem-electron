@@ -13,7 +13,7 @@ const initialState = {
     connectionProblem: false,
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
 }
-console.log(getConfig(GOLEM_STARTER))
+//console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
     case SET_NETWORK_INFO:

@@ -5,7 +5,7 @@ const mainProcess = remote.require('./index')
 
 const {SET_FILE_LOCATION} = dict
 const {DEFAULT_FILE_LOCATION} = dictConfig
-console.log(" mainProcess.getDefaultLocation", mainProcess.getDefaultLocation())
+//console.log(" mainProcess.getDefaultLocation", mainProcess.getDefaultLocation())
 const initialState = {
     location: getConfig(DEFAULT_FILE_LOCATION) || mainProcess.getDefaultLocation()
 }
