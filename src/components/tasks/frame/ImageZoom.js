@@ -99,12 +99,19 @@ export class ImageZoom extends React.Component {
                     dblClickToZoom: true
                 }
             })
+            let goHomeonDefault = () => {
+                return new Promise((resolve, reject) => {
+                    viewer.viewport.goHome(true)
+                    resolve(true)
+                })
+            }
 
-            viewer.addHandler('zoom', (item) => {
-                this.viewer.viewport.goHome(true)
-                this.calculateZoomRatio.call(this, item.zoom)
+            goHomeonDefault().then(() => {
+                viewer.addHandler('zoom', (item) => {
+                    //this.viewer.viewport.goHome(true)
+                    this.calculateZoomRatio.call(this, item.zoom)
+                })
             })
-
         });
     }
 

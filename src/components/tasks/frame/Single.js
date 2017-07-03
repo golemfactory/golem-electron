@@ -41,14 +41,19 @@ export class Single extends React.Component {
         }
     }
 
+    componentDidMount() {
+        console.log(this.props.taskId)
+        console.log("this.props.previewList.length", this.props.previewList.length);
 
-    // componentWillReceiveProps(nextProps) {
-    //     let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.id]
-    //     this.setState({
-    //         id: Number(nextProps.id),
-    //         previewLink
-    //     })
-    // }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.id]
+        this.setState({
+            id: Number(nextProps.id),
+            previewLink
+        })
+    }
 
     /**
      * [_previousFrame func. changes frame screen to the previous one]
@@ -150,8 +155,7 @@ export class Single extends React.Component {
 
     render() {
         const {taskId, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
-        const {id, ratio, offset} = this.state
-        let previewLink = previewList[previewList.length < 2 ? 0 : id]
+        const {id, ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {

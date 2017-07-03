@@ -22,6 +22,8 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+const DOCLINK = "http://docs.golem.network"
+
 /**
  * { Class for header component with navigation. }
  *
@@ -141,6 +143,8 @@ export class Header extends Component {
 
     }
 
+    _openDoc() {}
+
     render() {
         const {activeHeader, taskDetails, detail} = this.props
         let styling = {
@@ -180,7 +184,10 @@ export class Header extends Component {
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item"><span className="icon-doc" role="menuitem" tabIndex="0" aria-label="Documentation"/></li>
+                        <li className="menu__item"><a href={DOCLINK}>
+                            <span className="icon-doc" role="menuitem" tabIndex="0" aria-label="Documentation"/>
+                            </a>
+                        </li>
                     </ReactTooltip>
                     <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
