@@ -55,7 +55,7 @@ export function connect() {
                             connection
                         });
                     },
-                    onClose: function () {
+                    onClose: function() {
                         console.log('Wampy connection was closed.');
                     },
                     onError: (err, details) => {
@@ -93,7 +93,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(true)
+                emit(false)
             }
         }
 

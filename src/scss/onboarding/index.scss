@@ -64,6 +64,14 @@
     line-height: 1.3em;
 }
 
+.desc__port {
+    mark {
+        padding: 2px;
+    }
+    font-size: 10pt;
+    margin-top: 10px;
+}
+
 .step-control__onboarding {
     position: relative;
     top: -30px;
@@ -80,14 +88,13 @@
     }
 }
 
-
-.container-checkbox__onboarding{
+.container-checkbox__onboarding {
     overflow-y: overlay;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
-    .checkbox-item{
+    .checkbox-item {
         width: 70%;
         text-align: left;
         height: 50px;
@@ -96,7 +103,7 @@
             font-size: 24pt;
         }
     }
-    .radio-label{
+    .radio-label {
         left: 0;
     }
 }
