@@ -5,7 +5,7 @@ const os = require('os');
 const path = require('path');
 
 const {exec, spawn} = require('child_process');
-const {app, ipcMain} = electron;
+const {app} = electron;
 
 
 class GolemProcess {
