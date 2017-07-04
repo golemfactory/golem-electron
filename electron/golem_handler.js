@@ -3,7 +3,6 @@ const fs = require('fs');
 const getpid = require('getpid');
 const os = require('os');
 const path = require('path');
-const psTree = require('ps-tree');
 
 const {exec, spawn} = require('child_process');
 const {app, ipcMain} = electron;
