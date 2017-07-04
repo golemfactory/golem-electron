@@ -53,8 +53,6 @@ class GolemProcess {
             env: env
         });
 
-        console.log('spawned', this.process.pid);
-
         /* Handle process events */
         this.process.on('error', data => {
             console.error('💻 Cannot start Golem:', data.toString())
