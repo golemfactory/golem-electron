@@ -3,8 +3,9 @@ const fs = require('fs');
 const getpid = require('getpid');
 const os = require('os');
 const path = require('path');
+const psTree = require('ps-tree');
 
-const {spawn} = require('child_process');
+const {exec, spawn} = require('child_process');
 const {app, ipcMain} = electron;
 
 
@@ -36,7 +37,7 @@ class GolemProcess {
 
     _startProcess() {
         let cwd = path.join(os.homedir(), '.golem');
-        let envPath = process.env.PATH;
+        let env = process.env;
 
         /* Create a working directory */
         if (!fs.existsSync(cwd))
@@ -44,13 +45,15 @@ class GolemProcess {
 
         /* Patch PATH on Unix and Linux */
         if (os.platform() != 'win32')
-            envPath += ':/usr/local/bin';
+            env.PATH += ':/usr/local/bin';
 
         console.log('💻 Starting Golem...');
         this.process = spawn(this.processName, this.processArgs, {
             cwd: cwd,
-            env: {PATH: envPath}
+            env: env
         });
+
+        console.log('spawned', this.process.pid);
 
         /* Handle process events */
         this.process.on('error', data => {
@@ -66,11 +69,33 @@ class GolemProcess {
     }
 
     stopProcess() {
-        if (!this.process)
-            console.warn('💻 Cannot stop Golem: unknown process');
-        else
-            this.process.kill('SIGINT');
+        return new Promise((resolve, reject) => {
+            if (!this.process) {
+                console.warn('💻 Cannot stop Golem: not in control of the process');
+                return reject();
+            }
+
+            /* Kill golemapp on Linux / macOS */
+            if (os.platform() != 'win32')
+                return this.process.kill();
+
+            /* Kill golemapp on Windows */
+            exec('tasklist', (error, stdout, stderr) => {
+                let lines = stdout.split('\n');
+                for (let line of lines) {
+
+                    if (!line.startsWith(this.processName))
+                        continue;
+
+                    let entries = line.split(/\s*[\s,]\s*/);
+                    process.kill(parseInt(entries[1]), 'SIGINT');
+                }
+
+                resolve();
+            });
+        });
     }
+
 }
 
 
