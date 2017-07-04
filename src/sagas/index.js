@@ -24,6 +24,8 @@ import { networkInfoFlow } from './networkInfo'
 const {ipcRenderer} = window.require('electron')
 const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
 
+const {remote} = window.require('electron');
+const {app} = remote
 
 /**
  * { Websocket Connect function }
@@ -63,7 +65,7 @@ export function connect() {
                         if (connectTimeout) return;
 
                         console.info('Wampy is connecting');
-                        ipcRenderer.send('start-golem-process');
+                        app.golem.startProcess();
                         connectTimeout = setTimeout(() => {
                             connectTimeout = null;
                             connect();

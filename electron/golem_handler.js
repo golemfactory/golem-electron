@@ -100,13 +100,6 @@ class GolemProcess {
 
 function golemHandler(app) {
     app.golem = new GolemProcess();
-
-    ipcMain.on('start-golem-process', () => {
-        app.golem.startProcess();
-    });
-    ipcMain.on('stop-golem-process', (event, counter) => {
-        app.golem.stopProcess();
-    });
 }
 
 

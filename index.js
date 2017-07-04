@@ -120,6 +120,8 @@ function createWindow() {
         win.show()
     })
 
+    win.on('test-event', () => console.log('test event'));
+
     if (isDevelopment()) {
         win.loadURL(`http://localhost:${process.env.PORT || 3002}/`)
     // win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
@@ -212,6 +214,10 @@ function createPreviewWindow(id, frameCount) {
         }
         resolve(previewWindow)
     })
+}
+
+exports.startGolem = function() {
+    app.golem.startProcess();
 }
 
 exports.selectDirectory = function(directory) {
