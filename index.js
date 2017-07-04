@@ -120,7 +120,6 @@ function createWindow() {
         win.show()
     })
 
-    win.on('test-event', () => console.log('test event'));
 
     if (isDevelopment()) {
         win.loadURL(`http://localhost:${process.env.PORT || 3002}/`)
@@ -216,9 +215,6 @@ function createPreviewWindow(id, frameCount) {
     })
 }
 
-exports.startGolem = function() {
-    app.golem.startProcess();
-}
 
 exports.selectDirectory = function(directory) {
 console.log("directory", directory);
