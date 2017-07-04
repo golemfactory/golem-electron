@@ -93,7 +93,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(true)
+                emit(false)
             }
         }
 
