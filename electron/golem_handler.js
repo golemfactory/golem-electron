@@ -1,6 +1,5 @@
 const electron = require('electron');
 const fs = require('fs');
-const getpid = require('getpid');
 const os = require('os');
 const path = require('path');
 
@@ -19,12 +18,7 @@ class GolemProcess {
     processRunning(cb) {
         if (this.process)
             return cb(this.process.pid);
-
-        getpid(this.processName, (err, pid) => {
-            if (err)
-                return handle_error(err);
-            cb(pid);
-        });
+        cb(false);
     }
 
     startProcess(err, pid) {
