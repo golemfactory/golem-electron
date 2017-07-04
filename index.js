@@ -120,6 +120,7 @@ function createWindow() {
         win.show()
     })
 
+
     if (isDevelopment()) {
         win.loadURL(`http://localhost:${process.env.PORT || 3002}/`)
     // win.loadURL(`file:///Users/mhmmd/projects/golem-electron/index.html`)
@@ -213,6 +214,7 @@ function createPreviewWindow(id, frameCount) {
         resolve(previewWindow)
     })
 }
+
 
 exports.selectDirectory = function(directory) {
 console.log("directory", directory);

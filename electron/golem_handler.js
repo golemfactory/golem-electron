@@ -1,11 +1,10 @@
 const electron = require('electron');
 const fs = require('fs');
-const getpid = require('getpid');
 const os = require('os');
 const path = require('path');
 
 const {exec, spawn} = require('child_process');
-const {app, ipcMain} = electron;
+const {app} = electron;
 
 
 class GolemProcess {
@@ -19,12 +18,7 @@ class GolemProcess {
     processRunning(cb) {
         if (this.process)
             return cb(this.process.pid);
-
-        getpid(this.processName, (err, pid) => {
-            if (err)
-                return handle_error(err);
-            cb(pid);
-        });
+        cb(false);
     }
 
     startProcess(err, pid) {
@@ -100,13 +94,6 @@ class GolemProcess {
 
 function golemHandler(app) {
     app.golem = new GolemProcess();
-
-    ipcMain.on('start-golem-process', () => {
-        app.golem.startProcess();
-    });
-    ipcMain.on('stop-golem-process', (event, counter) => {
-        app.golem.stopProcess();
-    });
 }
 
 
