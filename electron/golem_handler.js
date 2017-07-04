@@ -74,8 +74,10 @@ class GolemProcess {
             }
 
             /* Kill golemapp on Linux / macOS */
-            if (os.platform() != 'win32')
-                return this.process.kill();
+            if (os.platform() != 'win32') {
+                this.process.kill();
+                return resolve();
+            }
 
             /* Kill golemapp on Windows */
             exec('tasklist', (error, stdout, stderr) => {
