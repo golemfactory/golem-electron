@@ -50,7 +50,7 @@ export class ImageZoom extends React.Component {
     componentDidMount() {
         this.initSeaDragon()
         setTimeout(() => {
-            this.viewer.viewport.getZoom()
+            this.viewer.viewport.goHome(true)
             this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
         }, 5000)
     }
@@ -101,14 +101,13 @@ export class ImageZoom extends React.Component {
             })
             let goHomeonDefault = () => {
                 return new Promise((resolve, reject) => {
-                    viewer.viewport.goHome(true)
+                    this.viewer.viewport.goHome(true)
                     resolve(true)
                 })
             }
 
             goHomeonDefault().then(() => {
                 viewer.addHandler('zoom', (item) => {
-                    //this.viewer.viewport.goHome(true)
                     this.calculateZoomRatio.call(this, item.zoom)
                 })
             })
