@@ -72,7 +72,11 @@ export default class SubTask extends React.Component {
         super(props);
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        const {data, ratio, subtaskList, offset} = this.props
+        console.info("this.props.offset", offset)
+        console.info("data, ratio, subtaskList", data, ratio, subtaskList)
+    }
 
     handleResubmit(id) {
         this.props.restartSubtask(id)

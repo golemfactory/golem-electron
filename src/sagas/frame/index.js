@@ -95,7 +95,7 @@ export function fetchSubtasksBorder(session, payload, frame_id) {
     return new Promise((resolve, reject) => {
         function on_subtasks_border(args) {
             var subtasks_border = args[0];
-            //console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border)
+            console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border, payload, frame_id)
             resolve({
                 type: SET_SUBTASKS_BORDER,
                 payload: subtasks_border

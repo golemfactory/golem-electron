@@ -59,9 +59,9 @@ export class All extends React.Component {
      * @param       {[type]} id         [description] //TODO we gonna delete this arg. cuz item arg. will be enough to get id.
      * @return nothing
      */
-    _handleClick(item, id) {
+    _handleClick(item, id, frameID) {
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
-            hashHistory.push(`/preview/single/${id}`)
+            hashHistory.push(`/preview/single/${id}/${frameID}`)
         }
     }
 
@@ -176,7 +176,7 @@ export class All extends React.Component {
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
+                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index, data.id)} onKeyDown={(event) => {
                         event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>

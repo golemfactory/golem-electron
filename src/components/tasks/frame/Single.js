@@ -36,7 +36,7 @@ export class Single extends React.Component {
         this.state = {
             ratio: 0,
             offset: {},
-            id: null,
+            id: 0,
             previewLink: props.previewList[props.previewList.length < 2 ? 0 : props.id]
         }
     }
@@ -87,6 +87,7 @@ export class Single extends React.Component {
      * @return  nothing
      */
     _showSubtask(id) {
+        console.info("_showSubtask.id", id)
         this.props.actions.setSubtasksVisibility(id)
     }
 
@@ -143,7 +144,7 @@ export class Single extends React.Component {
     }
 
     render() {
-        const {taskId, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
+        const {taskId, frameID, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
         const {id, ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
@@ -154,7 +155,7 @@ export class Single extends React.Component {
                     {previewLink && <ImageZoom image={`file://${previewLink}?${new Date().getTime()}`} fetchClientInfo={::this._setClientInfo} />}
                     {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
                 </div>
-                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, id)} imgIndex={id}/>
+                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} imgIndex={id}/>
             </div>
         );
     }
