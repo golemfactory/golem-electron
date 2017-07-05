@@ -35,7 +35,8 @@ let loadImage = (src) => new Promise(function(resolve, reject) {
 });
 
 const mapStateToProps = state => ({
-    zoomRatio: state.input.zoomRatio
+    zoomRatio: state.input.zoomRatio,
+    isLoaderActive: state.loader.FRAME_LOADER.isLoading
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -49,10 +50,6 @@ export class ImageZoom extends React.Component {
 
     componentDidMount() {
         this.initSeaDragon()
-        setTimeout(() => {
-            this.viewer.viewport.goHome(true)
-            this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
-        }, 5000)
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -99,6 +96,15 @@ export class ImageZoom extends React.Component {
                     dblClickToZoom: true
                 }
             })
+
+            viewer.addHandler('open', (item) => {
+                console.info('open')
+                setTimeout(() => {
+                    this.viewer.viewport.goHome(true)
+                    this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
+                }, this.props.isLoaderActive ? 5000 : 0)
+            })
+
             let goHomeonDefault = () => {
                 return new Promise((resolve, reject) => {
                     this.viewer.viewport.goHome(true)

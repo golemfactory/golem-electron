@@ -37,7 +37,7 @@ export class Single extends React.Component {
             ratio: 0,
             offset: {},
             id: null,
-            previewLink: null
+            previewLink: props.previewList[props.previewList.length < 2 ? 0 : props.id]
         }
     }
 
