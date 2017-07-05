@@ -37,12 +37,12 @@ export class Single extends React.Component {
             ratio: 0,
             offset: {},
             id: 0,
-            previewLink: props.previewList[props.previewList.length < 2 ? 0 : props.id]
+            previewLink: props.previewList[props.previewList.length < 2 ? 0 : props.frameID]
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.id]
+        let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.frameID]
         this.setState({
             id: Number(nextProps.id),
             previewLink
@@ -53,12 +53,12 @@ export class Single extends React.Component {
      * [_previousFrame func. changes frame screen to the previous one]
      */
     _previousFrame() {
-        const {previewList} = this.props
+        const {previewList, frameID} = this.props
         const {id} = this.state;
         id > 0 && this.setState({
             id: id - 1
         }, () => {
-            let previewLink = previewList[previewList.length < 2 ? 0 : id];
+            let previewLink = previewList[previewList.length < 2 ? 0 : frameID];
             this.setState({
                 previewLink
             })
@@ -69,13 +69,13 @@ export class Single extends React.Component {
      * [_nextFrame func. changes frame screen to the next one]
      */
     _nextFrame() {
-        const {details, previewList} = this.props
+        const {details, previewList, frameID} = this.props
         const {id} = this.state
         if (!!details.options) {
             id < details.options.frame_count - 1 && this.setState({
                 id: id + 1
             }, () => {
-                let previewLink = previewList[previewList.length < 2 ? 0 : id];
+                let previewLink = previewList[previewList.length < 2 ? 0 : frameID];
                 this.setState({
                     previewLink
                 })
@@ -87,7 +87,6 @@ export class Single extends React.Component {
      * @return  nothing
      */
     _showSubtask(id) {
-        console.info("_showSubtask.id", id)
         this.props.actions.setSubtasksVisibility(id)
     }
 

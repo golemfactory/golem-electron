@@ -65,8 +65,8 @@ export class All extends React.Component {
         }
     }
 
-    _handleResubmit(item) {
-        //console.info("handleResubmit", item);
+    _handleResubmit(_, frameID) {
+        this.props.actions.restartFrame(frameID)
     }
 
     /**
@@ -171,7 +171,7 @@ export class All extends React.Component {
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, index)}>Resubmit</button>
+                            <button onClick={this._handleResubmit.bind(this, data, data.id)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],
