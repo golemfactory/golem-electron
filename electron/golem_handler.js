@@ -15,17 +15,9 @@ class GolemProcess {
         this.processArgs = processArgs || ['--nogui'];
     }
 
-    processRunning(cb) {
-        if (this.process)
-            return cb(this.process.pid);
-        cb(false);
-    }
-
     startProcess(err, pid) {
-        this.processRunning(running => {
-            if (!running)
-                this._startProcess();
-        })
+        if (!this.process)
+            this._startProcess();
     }
 
     _startProcess() {
@@ -43,7 +35,8 @@ class GolemProcess {
         console.log('💻 Starting Golem...');
         this.process = spawn(this.processName, this.processArgs, {
             cwd: cwd,
-            env: env
+            env: env,
+            stdio: 'ignore'
         });
 
         /* Handle process events */
