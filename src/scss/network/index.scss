@@ -103,5 +103,16 @@
             height: 300vh;
             transition: width 2s, height 2s, opacity .1s linear 0s;
         }
+        .loading-icon {
+            transform: translate(-50%, -80%);
+            position: absolute;
+            z-index: 10 !important;
+            width: 64px;
+            height: 64px;
+            left: 0;
+            right: 0;
+            top: 80px;
+            margin: auto;
+        }
     }
 }

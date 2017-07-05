@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, take, call, put, cancel } from 'redux-saga/effects'
+import { fork, takeLatest, take, call, put, cancel } from 'redux-saga/effects'
 import { login, setMessage, logout, dict } from '../actions'
 
 import Wampy from 'wampy'
@@ -22,10 +22,12 @@ import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
 const {ipcRenderer} = window.require('electron')
-const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
+const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, CONTINUE_WITH_PROBLEM, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
 
 const {remote} = window.require('electron');
 const {app} = remote
+
+let skipError = false
 
 /**
  * { Websocket Connect function }
@@ -78,6 +80,10 @@ export function connect() {
     })
 }
 
+export function disablePortFlow() {
+    skipError = true
+}
+
 /**
  * { Subscribe function. It's observing changes from the server side via Redux-Saga/EventChannel and websocket }
  *
@@ -95,7 +101,7 @@ export function subscribe(session) {
             if (connection === "Connected") {
                 emit(true)
             } else {
-                emit(false)
+                emit(skipError)
             }
         }
 
@@ -196,6 +202,7 @@ export function* handleIO(connection) {
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
     yield fork(performanceFlow, connection);
+    yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
     const channel = yield call(subscribe, connection)
     let taskApi;
     let started = false

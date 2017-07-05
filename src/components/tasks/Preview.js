@@ -9,6 +9,8 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 
+import golemIcon from '../../assets/img/golem.png'
+
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList
@@ -79,7 +81,7 @@ export class Preview extends React.Component {
                                 </ReactTooltip>}
                 <img src={src ? `file://${preview}?${new Date().getTime()}` : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
             (e) => {
-                e.preventDefault(); return this.img.src = 'http://golem.network/img/golem.png'
+                e.preventDefault(); return this.img.src = golemIcon
             }}/>
             </div>
         );

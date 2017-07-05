@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 
 import golem_logo from './../../assets/img/golem-tray.png'
+import golem_svg from './../../assets/img/golem.svg'
 
 import Indicator from './Indicator'
 import Resources from './tabs/Resources'
@@ -182,7 +183,7 @@ export class MainFragment extends React.Component {
             activeTab: elm.target.getAttribute('value')
         })
     }
-
+    // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectedPeers, connectionProblem, isEngineOn} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
@@ -213,7 +214,6 @@ export class MainFragment extends React.Component {
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
             <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
-            
             </div>
         </div>
         );

@@ -31,6 +31,24 @@ const mockFormatList = [
     }
 ]
 
+/*############# HELPER FUNCTIONS ############# */
+
+function getTimeAsFloat(time) {
+    let result = 0;
+    time = time.split(':')
+    result += Number(time[0]) * 3600
+    result += Number(time[1]) * 60
+    result += Number(time[2])
+    return result / 3600
+}
+
+function floatToString(timeFloat) {
+    let time = timeFloat * 3600;
+    var date = new Date(1970, 0, 1); //time travel :)
+    date.setSeconds(time);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+}
+
 const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
@@ -43,15 +61,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
-
-function getTimeAsFloat(time) {
-    let result = 0;
-    time = time.split(':')
-    result += Number(time[0]) * 3600
-    result += Number(time[1]) * 60
-    result += Number(time[2])
-    return result / 3600
-}
 
 
 export class TaskDetail extends React.Component {
@@ -410,13 +419,6 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton() {
-
-        function floatToString(timeFloat) {
-            let time = timeFloat * 3600;
-            var date = new Date(1970, 0, 1); //time travel :)
-            date.setSeconds(time);
-            return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-        }
 
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state

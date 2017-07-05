@@ -13,13 +13,32 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DOCLINK = "http://docs.golem.network"
-
+let specifiedElement;
 export class ConnectionModal extends React.Component {
 
 
     constructor(props) {
         super(props);
         this._handleCancel = ::this._handleCancel
+    }
+
+    clickOutside(parent, event) {
+        var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
+        // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
+        if (!isClickInside) {
+            //the click was outside the parent, do something
+            this.props.actions.skipPortError()
+            this._handleCancel()
+        }
+    }
+
+    componentDidMount() {
+        specifiedElement = this.refs.modalContent
+        window.applicationSurface.addEventListener('click', this.clickOutside.bind(this, specifiedElement))
+    }
+
+    componentWillUnmount() {
+        window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, specifiedElement))
     }
 
     _handleCancel() {
@@ -29,7 +48,7 @@ export class ConnectionModal extends React.Component {
 
     render() {
         return (
-            <div className="container__modal container__connection-modal">
+            <div ref="modalContent" className="container__modal container__connection-modal">
                 <div className="content__modal">
                     <div className="container-icon">
                         <span className="icon-warning"/>

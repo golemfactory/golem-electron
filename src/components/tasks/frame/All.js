@@ -27,6 +27,17 @@ let statusClassDict = {
 
 Object.freeze(statusClassDict)
 
+/*################### HELPER FUNCTIONS #################*/
+
+function sortById(a, b) {
+    if (Number(a.data.id) > Number(b.data.id))
+        return 1;
+    if (Number(a.data.id) < Number(b.data.id))
+        return -1;
+    return 0;
+}
+
+
 const mapStateToProps = state => ({
     details: state.details.detail,
     frameList: state.all.frameList
@@ -58,14 +69,6 @@ export class All extends React.Component {
         //console.info("handleResubmit", item);
     }
 
-    sortById(a, b) {
-        if (Number(a.data.id) > Number(b.data.id))
-            return 1;
-        if (Number(a.data.id) < Number(b.data.id))
-            return -1;
-        return 0;
-    }
-
     /**
      * [getDefaultStyles func. actual animation-related logic]
      * @return  {Array}    [default style list of the animated item]
@@ -86,7 +89,7 @@ export class All extends React.Component {
                 }
             }
         })
-            .sort(this.sortById);
+            .sort(sortById);
     }
 
     /**
