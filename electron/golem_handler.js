@@ -87,15 +87,14 @@ class GolemProcess {
         let stdout = '';
 
         try {
-            stdout = execSync(`wmic process where (` +
-                                `ParentProcessId=${pid} ` +
-                                `and Name!="wmic.exe" ` +
-                                `and Name!="conhost.exe" ` +
-                                `and Name!="cmd.exe" ` +
-                              `) get processid`);
 
-            stdout = stdout.toString()
-                           .trim();
+            stdout = execSync(
+                `wmic process where (` +
+                 `ParentProcessId=${pid} ` +
+                 `and Name!="wmic.exe" ` +
+                `) get processid`
+            ).toString();
+
         } catch (exc) {
             console.error('error executing', exc);
         }
