@@ -96,7 +96,7 @@ class GolemProcess {
             ).toString();
 
         } catch (exc) {
-            console.error('error executing', exc);
+            console.error(`Error executing WMIC: ${exc}`);
         }
 
         return stdout.split('\n')
