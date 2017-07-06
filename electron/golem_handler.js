@@ -3,8 +3,10 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const {exec, spawn} = require('child_process');
+const {exec, execSync, spawn} = require('child_process');
 const {app} = electron;
+
+const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
 
 
 class GolemProcess {
@@ -59,29 +61,47 @@ class GolemProcess {
                 return reject();
             }
 
-            /* Kill golemapp on Linux / macOS */
-            if (os.platform() != 'win32') {
+            if (os.platform() == 'win32')
+                this.windowsKillProcess(this.process.pid, true);
+            else
                 this.process.kill();
-                return resolve();
-            }
 
-            /* Kill golemapp on Windows */
-            exec('tasklist', (error, stdout, stderr) => {
-                let lines = stdout.split('\n');
-                for (let line of lines) {
-
-                    if (!line.startsWith(this.processName))
-                        continue;
-
-                    let entries = line.split(/\s*[\s,]\s*/);
-                    process.kill(parseInt(entries[1]), 'SIGINT');
-                }
-
-                resolve();
-            });
+            resolve();
         });
     }
 
+    windowsKillProcess(pid, ignorePid) {
+        let subPids = this.windowsSubProcesses(pid);
+        for (let subPid of subPids)
+            this.windowsKillProcess(subPid);
+
+        try {
+            if (!ignorePid)
+                process.kill(parseInt(pid), 'SIGINT');
+        } catch (exc) {
+            console.error(`Error killing process ${pid}: ${exc}`);
+        }
+    }
+
+    windowsSubProcesses(pid) {
+        let stdout = '';
+
+        try {
+
+            stdout = execSync(
+                `wmic process where (` +
+                 `ParentProcessId=${pid} ` +
+                 `and Name!="wmic.exe" ` +
+                `) get processid`
+            ).toString();
+
+        } catch (exc) {
+            console.error(`Error executing WMIC: ${exc}`);
+        }
+
+        return stdout.split('\n')
+                     .filter(Number);
+    }
 }
 
 
