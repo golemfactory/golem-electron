@@ -6,7 +6,9 @@ const initialState = {
     frameList: [],
     borderList: [],
     isSubtaskShown: false,
-    previewList: [],
+    previewList: {
+        size: 0
+    },
     subtasksList: []
 }
 
@@ -35,7 +37,10 @@ const setSingleFrames = (state = initialState, action) => {
 
     case SET_PREVIEW_LIST:
         return Object.assign({}, state, {
-            previewList: action.payload
+            previewList: {
+                ...action.payload,
+                size: Object.keys(action.payload).length
+            },
         });
 
     default:

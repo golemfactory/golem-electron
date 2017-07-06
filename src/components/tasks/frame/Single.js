@@ -37,12 +37,12 @@ export class Single extends React.Component {
             ratio: 0,
             offset: {},
             id: 0,
-            previewLink: props.previewList[props.previewList.length < 2 ? 0 : props.frameID]
+            previewLink: props.previewList[props.previewList.size < 2 ? 1 : props.frameID]
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let previewLink = nextProps.previewList[nextProps.previewList.length < 2 ? 0 : nextProps.frameID]
+        let previewLink = nextProps.previewList[nextProps.previewList.size < 2 ? 1 : nextProps.frameID]
         this.setState({
             id: Number(nextProps.id),
             previewLink
@@ -58,7 +58,7 @@ export class Single extends React.Component {
         id > 0 && this.setState({
             id: id - 1
         }, () => {
-            let previewLink = previewList[previewList.length < 2 ? 0 : frameID];
+            let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
             this.setState({
                 previewLink
             })
@@ -75,7 +75,7 @@ export class Single extends React.Component {
             id < details.options.frame_count - 1 && this.setState({
                 id: id + 1
             }, () => {
-                let previewLink = previewList[previewList.length < 2 ? 0 : frameID];
+                let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
                 this.setState({
                     previewLink
                 })

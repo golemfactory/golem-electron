@@ -67,7 +67,7 @@ export function getPreviews(session, id) {
     return new Promise((resolve, reject) => {
         function on_previews(args) {
             var previews = args[0];
-            //console.log(config.GET_PREVIEW_LIST_RPC, previews)
+            console.log(config.GET_PREVIEW_LIST_RPC, previews)
             resolve({
                 type: SET_PREVIEW_LIST,
                 payload: previews
@@ -94,7 +94,7 @@ export function fetchFrameList(session, payload) {
     return new Promise((resolve, reject) => {
         function on_get_frame_list(args) {
             var frame_list = args[0];
-            //console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
+            console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
             resolve({
                 type: SET_ALL_FRAMES,
                 payload: frame_list
