@@ -112,10 +112,12 @@ export function* frameList(session, payload) {
 }
 /**
  * [fetchSubtasksBorder func. fetchs border of the subtasks related with given frame id]
- * @param  {Object} session     [Websocket connection session]
- * @return {Object}             [Action object]
+ * @param   {Object}     session     [Websocket connection session]
+ * @param   {Any}       payload     [id of task]
+ * @param   {Number}    frame_id    [Id of related frame] Default = 0
+ * @return {Object}                 [Action object]
  */
-export function fetchSubtasksBorder(session, payload, frame_id) {
+export function fetchSubtasksBorder(session, payload, frame_id = 0) {
     return new Promise((resolve, reject) => {
         function on_subtasks_border(args) {
             var subtasks_border = args[0];
