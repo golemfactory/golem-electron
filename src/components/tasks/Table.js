@@ -12,7 +12,7 @@ import { Motion, spring } from 'react-motion';
 
 import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
-import { convertSecsToHMS } from './../../utils/secsToHMS'
+import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 
 
 const mapStateToProps = state => ({
@@ -130,7 +130,7 @@ export class Table extends React.Component {
             return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
 
         default:
-            return <span className="duration duration--done">{convertSecsToHMS(item.duration)} | 3.15PM Yesterday </span>
+            return <span className="duration duration--done">{timeStampToHR(item.time_started * (10 ** 3))} | {item.status}</span>
         }
     }
 
