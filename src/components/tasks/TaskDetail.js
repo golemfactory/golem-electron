@@ -570,6 +570,9 @@ export class TaskDetail extends React.Component {
                                     <span className="title">Sample per pixel</span>
                                     <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
+                                {!showBackOption && <div className="item-settings item__preset-button">
+                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
+                                </div> }
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
                                     <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
@@ -582,9 +585,6 @@ export class TaskDetail extends React.Component {
                                     <span className="title">Subtask Timeout</span>
                                     <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
-                                {!showBackOption && <div className="item-settings item__preset-button">
-                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
-                                </div> }
                             </section>
                             <section className="section-price__task-detail">
                                 <h4 className="title-price__task-detail">Price</h4>
