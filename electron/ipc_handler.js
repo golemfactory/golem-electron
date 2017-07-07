@@ -44,8 +44,11 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
     })
 
     ipcMain.on('preview-switch', (event, checked) => {
-        if (checked /*&& (!previewWin || previewWin.isDestroyed())*/ ) {
-            win.setContentSize(APP_WIDTH, 810, true)
+        let currentAppSize = win.getSize()
+        if (checked) {
+            if (currentAppSize[1] < 810) {
+                win.setContentSize(APP_WIDTH, 810, true)
+            }
 
         } else {
             win.setContentSize(APP_WIDTH, APP_HEIGHT, true)
