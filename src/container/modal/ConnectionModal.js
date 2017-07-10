@@ -13,7 +13,6 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DOCLINK = "http://docs.golem.network"
-let specifiedElement;
 export class ConnectionModal extends React.Component {
 
 
@@ -33,12 +32,12 @@ export class ConnectionModal extends React.Component {
     }
 
     componentDidMount() {
-        specifiedElement = this.refs.modalContent
-        window.applicationSurface.addEventListener('click', this.clickOutside.bind(this, specifiedElement))
+        this._specifiedElement = this.refs.modalContent
+        window.applicationSurface.addEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
     }
 
     componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, specifiedElement))
+        window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
     }
 
     _handleCancel() {

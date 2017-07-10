@@ -1,6 +1,5 @@
 import React from 'react';
 
-let specifiedElement;
 export default class Dropdown extends React.Component {
 
     constructor(props) {
@@ -13,13 +12,12 @@ export default class Dropdown extends React.Component {
 
     componentDidMount() {
         this._isMounted = true
-        console.log('mounted!')
         const {handleChange, list, selected} = this.props
         if (handleChange && list[selected]) {
             handleChange(list[selected].name, true)
         }
-        specifiedElement = this.refs.dropdownContent;
-        this._clickOutside = this.clickOutside.bind(this, specifiedElement)
+        this._specifiedElement = this.refs.dropdownContent;
+        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -33,13 +31,10 @@ export default class Dropdown extends React.Component {
 
     componentWillUnmount() {
         this._isMounted = false
-        console.log('unmounted!')
         window.applicationSurface.removeEventListener('click', this._clickOutside)
     }
 
     clickOutside(parent, event) {
-        console.log("event", event);
-        console.log("parent", parent);
         var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
         // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
         if (!isClickInside) {
