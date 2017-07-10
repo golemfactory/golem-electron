@@ -1,5 +1,7 @@
 import React from 'react';
 
+let specifiedElement;
+let clickOutside;
 export default class Dropdown extends React.Component {
 
     constructor(props) {
@@ -11,10 +13,13 @@ export default class Dropdown extends React.Component {
     }
 
     componentDidMount() {
+        this._isMounted = true
         const {handleChange, list, selected} = this.props
         if (handleChange && list[selected]) {
             handleChange(list[selected].name, true)
         }
+        specifiedElement = this.refs.dropdownContent;
+        clickOutside = this.clickOutside.bind(this, specifiedElement)
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -26,10 +31,26 @@ export default class Dropdown extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        this._isMounted = false
+        window.applicationSurface.removeEventListener('click', clickOutside)
+    }
+
+    clickOutside(parent, event) {
+        var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
+        // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
+        if (!isClickInside) {
+            //the click was outside the parent, do something
+            this.hide()
+        }
+    }
+
     select(item, index) {
         this.setState({
             listVisible: false,
             selectedIndex: index
+        }, () => {
+            window.applicationSurface.removeEventListener('click', clickOutside)
         });
         this.props.handleChange(item.name)
     }
@@ -37,21 +58,24 @@ export default class Dropdown extends React.Component {
     show() {
         this.setState({
             listVisible: !this.state.listVisible
+        }, () => {
+            window.applicationSurface.addEventListener('click', clickOutside)
         });
     }
 
     hide() {
-        this.setState({
-            listVisible: false
-        });
+        if (this._isMounted)
+            this.setState({
+                listVisible: false
+            }, () => {
+                window.applicationSurface.removeEventListener('click', clickOutside)
+            });
     }
 
     _handleManageModal(list) {
         this.props.manageHandler()
         this.hide()
     }
-
-    componentWillUnmount() {}
 
     renderListItems(list) {
         const {selectedIndex} = this.state
@@ -64,7 +88,7 @@ export default class Dropdown extends React.Component {
         const {selected, list, presetManager, disabled} = this.props
         const {listVisible, selectedIndex} = this.state
         return (
-            <div className="dropdown-container">
+            <div ref="dropdownContent" className="dropdown-container">
                 <div className="dropdown-display" onClick={!disabled && ::this.show}>
                     <span>{list[selectedIndex] ? list[selectedIndex].name : 'Not loaded'}</span>
                 </div>
