@@ -150,14 +150,18 @@ export function* taskDetailsBase(session, {type, payload}) {
  */
 export function subscribeTestofTask(session) {
     return eventChannel(emit => {
-        function on_tasks(args) {
+        function on_tasks(args, more) {
             let status = args[0];
-            let error = args[1]
+            console.log("status", status);
+            let error = args[1];
+            console.log("more", more);
+
             emit({
                 type: SET_TASK_TEST_STATUS,
                 payload: {
                     status,
-                    error
+                    error,
+                    more
                 }
             })
         }

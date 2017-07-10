@@ -93,7 +93,7 @@ export class ManagePresetModal extends React.Component {
     render() {
         const {presetList} = this.props
         return (
-            <div ref="modalContent" className="container__modal network-manage-preset-modal">
+            <div className="container__modal network-manage-preset-modal">
             <div className="content__modal">
                     <section className="section__presets">
                         <h5>Manage Presets</h5>

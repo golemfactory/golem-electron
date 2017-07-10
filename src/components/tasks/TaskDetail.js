@@ -31,6 +31,24 @@ const mockFormatList = [
     }
 ]
 
+/*############# HELPER FUNCTIONS ############# */
+
+function getTimeAsFloat(time) {
+    let result = 0;
+    time = time.split(':')
+    result += Number(time[0]) * 3600
+    result += Number(time[1]) * 60
+    result += Number(time[2])
+    return result / 3600
+}
+
+function floatToString(timeFloat) {
+    let time = timeFloat * 3600;
+    var date = new Date(1970, 0, 1); //time travel :)
+    date.setSeconds(time);
+    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+}
+
 const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
@@ -43,15 +61,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
-
-function getTimeAsFloat(time) {
-    let result = 0;
-    time = time.split(':')
-    result += Number(time[0]) * 3600
-    result += Number(time[1]) * 60
-    result += Number(time[2])
-    return result / 3600
-}
 
 
 export class TaskDetail extends React.Component {
@@ -411,13 +420,6 @@ export class TaskDetail extends React.Component {
      */
     _handleStartTaskButton() {
 
-        function floatToString(timeFloat) {
-            let time = timeFloat * 3600;
-            var date = new Date(1970, 0, 1); //time travel :)
-            date.setSeconds(time);
-            return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
-        }
-
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
         const {task} = this.props
@@ -508,12 +510,12 @@ export class TaskDetail extends React.Component {
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props;
-        //console.log("isBlenderTask", isBlenderTask)
+        console.log("testStatus", testStatus)
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                <section className="section-preview__task-detail">
+                <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
                         { showBackOption && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
                                 <div>
@@ -522,6 +524,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
+                        {testStatus.more && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
                         {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
   <span className="dot-1">.</span>
   <span className="dot-2">.</span>
@@ -568,6 +571,9 @@ export class TaskDetail extends React.Component {
                                     <span className="title">Sample per pixel</span>
                                     <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>}
+                                {!showBackOption && <div className="item-settings item__preset-button">
+                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
+                                </div> }
                                  <div className="item-settings">
                                     <span className="title">Task Timeout</span>
                                     <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
@@ -580,9 +586,6 @@ export class TaskDetail extends React.Component {
                                     <span className="title">Subtask Timeout</span>
                                     <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
-                                {!showBackOption && <div className="item-settings item__preset-button">
-                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
-                                </div> }
                             </section>
                             <section className="section-price__task-detail">
                                 <h4 className="title-price__task-detail">Price</h4>

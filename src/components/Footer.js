@@ -3,6 +3,10 @@ import { hashHistory } from 'react-router'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
 
 import * as Actions from './../actions'
 
@@ -43,21 +47,47 @@ export class Footer extends Component {
         actions.setPreviewRadio(previewSwitch.checked)
     }
 
+    /**
+     * [_handleExpand new-window expand handler]
+     * @param  {Number} id         [Task id]
+     * @param  {Number} frameCount [Amount of frame]
+     */
+    _handleExpand(id, frameCount) {
+        this.props.setPreviewExpanded({
+            isScreenOpen: true,
+            id,
+            frameCount
+        })
+    }
+
     render() {
-        const {preview, footerInfo} = this.props
+        const {preview, footerInfo, id, frameCount} = this.props
         return (
             <footer className="footer">
               <div className="info-bar__footer">
                 <span className={`progress-status indicator-status ${footerInfo ? 'indicator-status--' + footerInfo.color : ''}`}/>
                 <span>{footerInfo && footerInfo.message}</span>
               </div>
-              <div className="switch-box">
+              <div className="preview-bar__footer">
+              <ReactTooltip placement="topRight" trigger={['hover']} overlay={<p>Preview</p>} mouseEnterDelay={1} align={{
+                offset: [5, -10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+
+              <div className="switch-box switch-box--green">
                 <label className="switch">
                       <input ref="previewSwitch" type="checkbox" onChange={::this._handlePreviewSwitch} defaultChecked={preview} aria-label="Show previews"/>
                       <div className="switch-slider round"></div>
                 </label>
-                <span className="switch__desc">Preview</span>
               </div>
+                </ReactTooltip>
+                <ReactTooltip placement="topRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
+                offset: [5, -10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                                    <span className={`button__expand icon-new-window ${!!id ? 'jump' : 'disabled'}` } onClick={this._handleExpand.bind(this, id, frameCount)} onKeyDown={(event) => {
+                event.keyCode === 13 && this._handleExpand.call(this)
+            }} role="button" aria-label="Open Detailed Preview Window" tabIndex="0"></span>
+                                </ReactTooltip>
+                                </div>
             </footer>
         );
     }

@@ -105,12 +105,12 @@ export class TaskPanel extends React.Component {
                             </div>
                         </DropZone>
                         {preview && <div className="section__preview">
-                             <Preview setPreviewExpanded={actions.setPreviewExpanded} id={previewId} src={previewSrc} frameCount={frameCount}/> 
+                             <Preview id={previewId} src={previewSrc}/> 
                         </div>}
                         {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     </div>
 
-                    <Footer {...this.props}/>
+                    <Footer {...this.props} id={previewId} frameCount={frameCount} setPreviewExpanded={actions.setPreviewExpanded}/>
                 </div>
         )
     }

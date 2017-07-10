@@ -5,7 +5,7 @@ import { dict } from '../../actions'
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_SUBTASK} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK} = dict
 
 /**
  * [restartSubtask func. restarts related subtask]
@@ -33,17 +33,41 @@ export function* restartSubtaskBase(session, {payload}) {
 }
 
 /**
+ * [restartFrame func. restarts related frame]
+ * @param  {Object} session [Websocket connection session]
+ * @param  {Object} payload [Subtask Id]
+ * @return {Object}         [Promise]
+ */
+export function restartFrame(session, id, payload) {
+    return new Promise((resolve, reject) => {
+        function on_restart_frame(args) {
+            var restarted_frame = args[0];
+            //console.log(config.RESTART_FRAME_RPC, restarted_frame)
+            resolve(restarted_frame)
+        }
+        _handleRPC(on_restart_frame, session, config.RESTART_FRAME_RPC, [id, payload])
+    })
+}
+
+export function* restartFrameBase(session, id, {payload}) {
+    if (payload) {
+        let action = yield call(restartFrame, session, id, payload);
+    //console.log("action", action);
+    //yield put(action)
+    }
+}
+
+/**
  * [getPreviews func. gets preview image list]
  * @param  {Object} session [Websocket connection session]
  * @param  {Number} id      [Task id]
  * @return {[type]}         [description]
  */
 export function getPreviews(session, id) {
-    //console.log("id", id);
     return new Promise((resolve, reject) => {
         function on_previews(args) {
             var previews = args[0];
-            //console.log(config.GET_PREVIEW_LIST_RPC, previews)
+            console.log(config.GET_PREVIEW_LIST_RPC, previews)
             resolve({
                 type: SET_PREVIEW_LIST,
                 payload: previews
@@ -70,7 +94,7 @@ export function fetchFrameList(session, payload) {
     return new Promise((resolve, reject) => {
         function on_get_frame_list(args) {
             var frame_list = args[0];
-            //console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
+            console.log(config.GET_SUBTASKS_FRAMES_RPC, frame_list)
             resolve({
                 type: SET_ALL_FRAMES,
                 payload: frame_list
@@ -88,14 +112,16 @@ export function* frameList(session, payload) {
 }
 /**
  * [fetchSubtasksBorder func. fetchs border of the subtasks related with given frame id]
- * @param  {Object} session     [Websocket connection session]
- * @return {Object}             [Action object]
+ * @param   {Object}     session     [Websocket connection session]
+ * @param   {Any}       payload     [id of task]
+ * @param   {Number}    frame_id    [Id of related frame] Default = 0
+ * @return {Object}                 [Action object]
  */
-export function fetchSubtasksBorder(session, payload, frame_id) {
+export function fetchSubtasksBorder(session, payload, frame_id = 0) {
     return new Promise((resolve, reject) => {
         function on_subtasks_border(args) {
             var subtasks_border = args[0];
-            //console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border)
+            //console.log(config.GET_SUBTASKS_BORDER_RPC, subtasks_border, payload, frame_id)
             resolve({
                 type: SET_SUBTASKS_BORDER,
                 payload: subtasks_border
@@ -179,5 +205,6 @@ export function* frameBase(session, id) {
     yield fork(frameList, session, id)
     yield fork(getPreviewBase, session, id)
     yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id)
+    yield takeLatest(RESTART_FRAME, restartFrameBase, session, id)
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session)
 }

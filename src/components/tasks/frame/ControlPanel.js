@@ -6,6 +6,14 @@ import { connect } from 'react-redux'
 import * as Actions from '../../../actions'
 
 
+/*############# HELPER FUNCTIONS ############# */
+
+
+function isNumeric(n) {
+    return !isNaN(parseFloat(n)) && isFinite(n);
+}
+
+
 const mapStateToProps = state => ({
     zoomRatio: state.input.zoomRatio,
     details: state.details.detail
@@ -15,21 +23,17 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-
 export class ControlPanel extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
-    isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
 
     render() {
         const {previousFrame, nextFrame, showSubtask, zoomRatio, details} = this.props
         let {imgIndex} = this.props
-        if (!this.isNumeric(imgIndex) || imgIndex > 999) {
+        if (!isNumeric(imgIndex) || imgIndex > 999) {
             imgIndex = 0;
         }
         return (

@@ -12,6 +12,7 @@
     align-content: center;
     font-size: 10pt;
     font-weight: 400;
+    box-sizing: border-box;
     .info-bar__footer {
         display: flex;
         justify-content: space-between;
@@ -49,5 +50,40 @@
         margin-right: 10px;
         vertical-align: middle;
         margin-bottom: 0.5px;
+    }
+    .icon-new-window {
+        font-size: 20pt;
+        cursor: pointer;
+        color: $color-text;
+        will-change: transform;
+        &.jump {
+            animation: beat 0.35s linear;
+        }
+        &.disabled {
+            color: $button-disable-color;
+        }
+    }
+    .preview-bar__footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0 5px 0;
+        padding: 0;
+        .switch-box {
+            margin: 0 10px 0 0;
+            padding: 0;
+        }
+    }
+    @keyframes beat {
+        0% {
+            transform: scale(1);
+        }
+        50% {
+            transform: scale(1.4);
+            color: $button-static-color;
+        }
+        100% {
+            transform: scale(1);
+        }
     }
 }

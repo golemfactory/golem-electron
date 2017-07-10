@@ -7,8 +7,42 @@ const UNDONE = 0
 const PROGRESS = 1
 const DONE = 2
 
+/*################### HELPER FUNCTIONS #######################*/
 
+/**
+ * Function fetchs selected nth items(columns) of 2D Array
+ * @param  {Array}      arr     [2D Array]
+ * @param  {Number}     n       [(n)th column number]
+ * @return {Array}              [Array of (n)th column]
+ */
 const arrayColumn = (arr, n) => arr.map(x => x[n]);
+
+
+/**
+ *  Function will flat given n times nested array and convert to the SVG points array
+ *  @see https://jsfiddle.net/mk8jx9wb/
+ */
+function convertToSVGPoints(arr) {
+    arr.push(arr[0])
+    return [].concat(...arr).toString().replace(/(,[^,]*),/g, '$1 ')
+}
+
+/**
+* [tooltipOffset func. finding max right and bottom points of the polyline]
+* @param  {[Array]}    arr    [Array of the path item]
+* @return {[Array]}            [Array for the max right point and max bottom point]
+*
+* @description This function will be modified for the non-square shapes
+*/
+function tooltipOffset(arr) {
+    let horizontalPoints = arrayColumn(arr, 0)
+    let maxHorizontalLength = Math.max(...horizontalPoints)
+    let minHorizontalLength = Math.min(...horizontalPoints)
+    let verticalPoints = arrayColumn(arr, 1)
+    let maxVerticalLength = Math.max(...verticalPoints)
+    let minVerticalLength = Math.min(...verticalPoints)
+    return [(maxHorizontalLength - minHorizontalLength) / 2, (maxVerticalLength - minVerticalLength) / 5]
+}
 
 const subTaskData = {
     key: '0',
@@ -38,7 +72,11 @@ export default class SubTask extends React.Component {
         super(props);
     }
 
-    componentDidMount() {}
+    componentDidMount() {
+        const {data, ratio, subtaskList, offset} = this.props
+        console.info("this.props.offset", offset)
+        console.info("data, ratio, subtaskList", data, ratio, subtaskList)
+    }
 
     handleResubmit(id) {
         this.props.restartSubtask(id)
@@ -47,64 +85,42 @@ export default class SubTask extends React.Component {
 
     drawLine() {
         const {data, ratio, subtaskList} = this.props
-        let subIDList = []
         var path = Object.keys(data).map(function(anchestorKey) {
-            subIDList.push(anchestorKey)
-            return Object.keys(data[anchestorKey]).map(function(parentKey) {
-                return Object.keys(data[anchestorKey][parentKey]).map(function(childKey, index) {
-                    return data[anchestorKey][parentKey][childKey] * (ratio + 0.028) // <--  Calculating border coordinates with given ratio
-                });
-            });
+            return {
+                key: anchestorKey,
+                value: Object.keys(data[anchestorKey]).map(function(parentKey) {
+                    return Object.keys(data[anchestorKey][parentKey]).map(function(childKey, index) {
+                        return data[anchestorKey][parentKey][childKey] * (ratio + 0.028) // <--  Calculating border coordinates with given ratio
+                    });
+                })
+            }
         });
-
-
-        function flatten(arr) {
-            arr.push(arr[0])
-            return [].concat(...arr).toString().replace(/(,[^,]*),/g, '$1 ')
-        }
-
-        /**
-         * [tooltipOffset func. finding max right and bottom points of the polyline]
-         * @param  {[Array]}    arr    [Array of the path item]
-         * @return {[Array]}            [Array for the max right point and max bottom point]
-         *
-         * @description This function will be modified for the non-square shapes
-         */
-        function tooltipOffset(arr) {
-            let horizontalPoints = arrayColumn(arr, 0)
-            let maxHorizontalLength = Math.max(...horizontalPoints)
-            let minHorizontalLength = Math.min(...horizontalPoints)
-            let verticalPoints = arrayColumn(arr, 1)
-            let maxVerticalLength = Math.max(...verticalPoints)
-            let minVerticalLength = Math.min(...verticalPoints)
-            return [(maxHorizontalLength - minHorizontalLength) / 2, (maxVerticalLength - minVerticalLength) / 5]
-        }
 
         return path
             .sort((a, b) => {
-                let verticalPointA = arrayColumn(a, 1)[0]
-                let verticalPointB = arrayColumn(b, 1)[0]
+                let verticalPointA = arrayColumn(a.value, 1)[0]
+                let verticalPointB = arrayColumn(b.value, 1)[0]
                 return verticalPointA - verticalPointB
             })
             .map((item, index) => {
-                let subtask = subtaskList.filter(sub => sub.subtask_id === subIDList[index])[0]
-                return <ReactTooltip
-                    key={index.toString()}
-                    overlayClassName="tooltip-frame"
-                    placement={index === path.length - 1 ? 'top' : 'bottom' }
-                    trigger={['hover']}
-                    mouseEnterDelay={1}
-                    overlay={<div className="content__tooltip">
+                let subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                return !!subtask ? <ReactTooltip
+                key={index.toString()}
+                overlayClassName="tooltip-frame"
+                placement={index === path.length - 1 ? 'top' : 'bottom' }
+                trigger={['hover']}
+                mouseEnterDelay={1}
+                overlay={<div className="content__tooltip">
                         {subtask.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{timeStampToHR((subtask.time_started * (10 ** 3)).toFixed(0))}</p>
+                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR((subtask.time_started * (10 ** 3)).toFixed(0))}</p>
                         <button type="button" onClick={this.handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
                     </div>}
-                    align={{
-                        offset: tooltipOffset(item),
-                    }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                align={{
+                    offset: tooltipOffset(item.value),
+                }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
-                    points={flatten(item)}/>
-            </ReactTooltip>
+                points={convertToSVGPoints(item.value)}/>
+            </ReactTooltip> : ''
             })
     }
 
