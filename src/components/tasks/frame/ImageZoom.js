@@ -52,6 +52,12 @@ export class ImageZoom extends React.Component {
         this.initSeaDragon()
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.isSubtaskShown !== this.props.isSubtaskShown && !!nextProps.isSubtaskShown) {
+            this.viewer.viewport.goHome(true)
+        }
+    }
+
     shouldComponentUpdate(nextProps, nextState) {
         return false
     }
@@ -114,6 +120,7 @@ export class ImageZoom extends React.Component {
 
             // goHomeonDefault().then(() => {
             viewer.addHandler('zoom', (item) => {
+                !!this.props.isSubtaskShown && this.props.setSubtasksVisibility()
                 this.calculateZoomRatio.call(this, item.zoom)
             })
         // })
