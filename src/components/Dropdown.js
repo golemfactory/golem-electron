@@ -1,7 +1,6 @@
 import React from 'react';
 
 let specifiedElement;
-let clickOutside;
 export default class Dropdown extends React.Component {
 
     constructor(props) {
@@ -14,12 +13,13 @@ export default class Dropdown extends React.Component {
 
     componentDidMount() {
         this._isMounted = true
+        console.log('mounted!')
         const {handleChange, list, selected} = this.props
         if (handleChange && list[selected]) {
             handleChange(list[selected].name, true)
         }
         specifiedElement = this.refs.dropdownContent;
-        clickOutside = this.clickOutside.bind(this, specifiedElement)
+        this._clickOutside = this.clickOutside.bind(this, specifiedElement)
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -33,10 +33,13 @@ export default class Dropdown extends React.Component {
 
     componentWillUnmount() {
         this._isMounted = false
-        window.applicationSurface.removeEventListener('click', clickOutside)
+        console.log('unmounted!')
+        window.applicationSurface.removeEventListener('click', this._clickOutside)
     }
 
     clickOutside(parent, event) {
+        console.log("event", event);
+        console.log("parent", parent);
         var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
         // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
         if (!isClickInside) {
@@ -50,7 +53,7 @@ export default class Dropdown extends React.Component {
             listVisible: false,
             selectedIndex: index
         }, () => {
-            window.applicationSurface.removeEventListener('click', clickOutside)
+            window.applicationSurface.removeEventListener('click', this._clickOutside)
         });
         this.props.handleChange(item.name)
     }
@@ -59,7 +62,7 @@ export default class Dropdown extends React.Component {
         this.setState({
             listVisible: !this.state.listVisible
         }, () => {
-            window.applicationSurface.addEventListener('click', clickOutside)
+            window.applicationSurface.addEventListener('click', this._clickOutside)
         });
     }
 
@@ -68,7 +71,7 @@ export default class Dropdown extends React.Component {
             this.setState({
                 listVisible: false
             }, () => {
-                window.applicationSurface.removeEventListener('click', clickOutside)
+                window.applicationSurface.removeEventListener('click', this._clickOutside)
             });
     }
 
