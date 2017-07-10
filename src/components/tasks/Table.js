@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 const status = Object.freeze({
-    NOTREADY: 'Not Ready',
+    NOTREADY: 'Not started',
     READY: 'Ready',
     WAITING: 'Waiting',
     COMPUTING: 'Computing',
@@ -119,6 +119,9 @@ export class Table extends React.Component {
         switch (item.status) {
         case status.TIMEOUT:
             return <span className="duration duration--done">Timeout</span>
+
+        case status.NOTREADY:
+            return <span className="duration duration--active">Preparing...</span>
 
         case status.WAITING:
             return <span className="duration duration--active">Waiting...</span>

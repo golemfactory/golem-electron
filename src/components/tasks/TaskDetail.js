@@ -510,12 +510,12 @@ export class TaskDetail extends React.Component {
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props;
-        //console.log("isBlenderTask", isBlenderTask)
+        console.log("testStatus", testStatus)
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                <section className="section-preview__task-detail">
+                <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
                         { showBackOption && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
                                 <div>
@@ -524,6 +524,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
+                        {testStatus.more && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
                         {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
   <span className="dot-1">.</span>
   <span className="dot-2">.</span>

@@ -32,7 +32,6 @@ export class Single extends React.Component {
 
     constructor(props) {
         super(props);
-        this._showSubtask = ::this._showSubtask
         this.state = {
             ratio: 0,
             offset: {},
@@ -47,6 +46,11 @@ export class Single extends React.Component {
             id: Number(nextProps.id),
             previewLink
         })
+    }
+
+    componentWillUnmount() {
+        const {isSubtaskShown, actions} = this.props
+        !!isSubtaskShown && actions.setSubtasksVisibility()
     }
 
     /**

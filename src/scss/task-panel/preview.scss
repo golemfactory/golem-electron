@@ -2,12 +2,10 @@
     background: #444;
     height: 350px;
     width: 100%;
-    position: absolute;
+    position: fixed;
     bottom: 59px;
     z-index: 2;
     @media screen and (max-height: 725px + 59px) {
-        //<-- HARDCODED //TO DO should get Table height on JS part to make it clear 
-        //or another CSS solution like flex
         top: 376px;
     }
     &-black {
@@ -22,15 +20,15 @@
         padding: 0;
         box-sizing: border-box;
     }
-    .button__expand {
-        position: absolute;
-        z-index: 20;
-        right: 30px;
-        top: 30px;
-        font-size: 22pt;
-        cursor: pointer;
-        color: $color-text4;
-        text-shadow: 1px 1px 2px black;
-        z-index: 3 !important;
-    }
+    // .button__expand {
+    //     position: absolute;
+    //     z-index: 20;
+    //     right: 30px;
+    //     top: 30px;
+    //     font-size: 22pt;
+    //     cursor: pointer;
+    //     color: $color-text4;
+    //     text-shadow: 1px 1px 2px black;
+    //     z-index: 3 !important;
+    // }
 }
