@@ -53,7 +53,7 @@ export class Footer extends Component {
      * @param  {Number} frameCount [Amount of frame]
      */
     _handleExpand(id, frameCount) {
-        this.props.setPreviewExpanded({
+        id && this.props.setPreviewExpanded({
             isScreenOpen: true,
             id,
             frameCount

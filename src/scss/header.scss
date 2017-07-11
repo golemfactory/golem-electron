@@ -125,13 +125,13 @@
     .nav {
         padding: 0 $padding;
     }
-    .active:nth-child(2) ~ .selector,
-    .nav__item:nth-child(2):hover ~ .selector {
+    /*.nav__item:nth-child(2):hover ~ .selector*/
+    .active:nth-child(2) ~ .selector {
         left: $selector-left_1 + $padding;
         width: 68px;
     }
-    .active:nth-child(3) ~ .selector,
-    .nav__item:nth-child(3):hover ~ .selector {
+    /*.nav__item:nth-child(3):hover ~ .selector*/
+    .active:nth-child(3) ~ .selector {
         left: $selector-left_2 + $padding;
         width: 47px;
     }
