@@ -82,28 +82,27 @@ const messages = {
 }
 
 
-function dig(source) {
-    let args = Array.from(arguments);
-    let src = args.shift();
-
-    for (let arg of args)
+function dig(src, ...rest) {
+    for ( let arg of rest )
         src = src[arg];
     return src;
 }
 
 
 function getGolemStatus(component, method, stage, data) {
-    let status, message, color;
+    let status,
+        message,
+        color;
 
     try {
         status = dig(statuses, component, method, stage);
-    } catch (e) {
+    } catch ( e ) {
         status = 'Not Ready';
     }
 
     try {
         message = dig(messages, component, method, stage);
-    } catch (e) {
+    } catch ( e ) {
         console.log('ERR', e)
         message = `${component}.${method}`
     } finally {
@@ -112,8 +111,8 @@ function getGolemStatus(component, method, stage, data) {
     }
 
     return {
-        status: status,
-        message: message
+        status,
+        message
     };
 }
 

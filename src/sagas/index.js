@@ -30,13 +30,6 @@ const {app} = remote
 let skipError = false;
 let connectTimeout = null;
 
-
-function dispatch(action) {
-    if (window.store)
-        window.store.dispatch(action);
-}
-
-
 /**
  * { Websocket Connect function }
  *
@@ -73,10 +66,6 @@ export function connect() {
                         console.info('WS: connection error:', err, details);
                         if (connectTimeout) return;
 
-                        dispatch({
-                            type: SET_GOLEM_STATUS,
-                            payload: { message: 'Starting Golem' }
-                        });
                         app.golem.startProcess();
 
                         connectTimeout = setTimeout(() => {
@@ -263,6 +252,14 @@ export function* frameFlow() {
 export function* flow() {
     while (true) {
         let {payload} = yield take(LOGIN)
+
+        yield put({
+            type: SET_GOLEM_STATUS,
+            payload: {
+                message: 'Starting Golem'
+            }
+        })
+
         const {connection} = yield call(connect)
         const task = yield fork(handleIO, connection)
         let action = yield take(LOGOUT)
