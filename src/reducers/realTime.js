@@ -50,28 +50,17 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_CONNECTED_PEERS:
-        let update = {
-            connectedPeers: action.payload
-        };
-
-        if (update.connectedPeers)
-            update.golemStatus = {
+        return Object.assign({}, state, {
+            connectedPeers: action.payload,
+            golemStatus: {
                 status: 'Ready',
-                message: nodesString(update.connectedPeers),
-        }
-
-        return Object.assign({}, state, update);
+                message: nodesString(action.payload),
+            }
+        });
 
     case SET_GOLEM_STATUS:
-        let golemStatus;
-
-        if (state.connectedPeers)
-            golemStatus = nodesString(state.connectedPeers);
-        else
-            golemStatus = action.payload;
-
         return Object.assign({}, state, {
-            golemStatus
+            golemStatus: action.payload
         });
 
     case SET_FOOTER_INFO:
