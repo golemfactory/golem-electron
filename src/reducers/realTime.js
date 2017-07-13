@@ -4,9 +4,9 @@ const {ipcRenderer} = window.require('electron')
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
 
 const initialState = {
-    balance: [Number(0), Number(0)],
+    balance: [0, 0],
     taskList: [],
-    connectedPeers: Number(0), //Number added for preserve 0 case, otherwise js will behave it like boolean
+    connectedPeers: 0,
     golemStatus: {
         status: 'Not Ready',
         message: 'Not connected'
@@ -57,7 +57,7 @@ const realTime = (state = initialState, action) => {
             update.golemStatus = {
                 status: 'Ready',
                 message: nodesString(update.connectedPeers),
-            }
+        }
 
         return Object.assign({}, state, update);
 
@@ -70,7 +70,7 @@ const realTime = (state = initialState, action) => {
             golemStatus = action.payload;
 
         return Object.assign({}, state, {
-            golemStatus: golemStatus
+            golemStatus
         });
 
     case SET_FOOTER_INFO:

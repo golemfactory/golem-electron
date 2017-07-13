@@ -30,7 +30,6 @@ const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
     autoLaunch: state.input.autoLaunch,
-    connectedPeers: state.realTime.connectedPeers,
     connectionProblem: state.info.connectionProblem,
     golemStatus: state.realTime.golemStatus,
     chosenPreset: state.advanced.chosenPreset,
