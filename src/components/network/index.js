@@ -40,6 +40,12 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+/*############# HELPER FUNCTIONS ############# */
+
+function isGolemReady(status) {
+    return status === "Ready"
+}
+
 
 /**
  * { Class for main fragment component. Aka. Homepage }
@@ -208,10 +214,10 @@ export class MainFragment extends React.Component {
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
-                    <span className={`icon-status-dot ${!connectionProblem && golemStatus.status == 'Ready' ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
+                    <span className={`icon-status-dot ${!connectionProblem && isGolemReady(golemStatus.status) ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
                     <span>{`${golemStatus.message}`}</span>
                 </div>
-                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
             <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
             </div>

@@ -76,13 +76,6 @@
                 }
             }
         }
-        .btn--yellow {
-            background: $color-accent2;
-            border: 1px solid $color-accent2;
-            &:hover {
-                background: darken( $color-accent2, 10%);
-            }
-        }
     }
     .loading-indicator {
         position: absolute;
