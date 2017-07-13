@@ -1,17 +1,28 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.require('electron')
 
-const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_FOOTER_INFO} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
 
 const initialState = {
     balance: [Number(0), Number(0)],
     taskList: [],
     connectedPeers: Number(0), //Number added for preserve 0 case, otherwise js will behave it like boolean
+    golemStatus: {
+        status: 'Not Ready',
+        message: 'Not connected'
+    },
     footerInfo: null
 }
 
 let badgeActive = false
 let badgeTemp = 0
+
+
+function nodesString(num) {
+    let postfix = num != 1 ? 's' : '';
+    return `${num} Node${postfix}`;
+}
+
 
 const realTime = (state = initialState, action) => {
     switch (action.type) {
@@ -38,8 +49,28 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_CONNECTED_PEERS:
-        return Object.assign({}, state, {
+        let update = {
             connectedPeers: action.payload
+        };
+
+        if (update.connectedPeers)
+            update.golemStatus = {
+                status: 'Ready',
+                message: nodesString(update.connectedPeers),
+            }
+
+        return Object.assign({}, state, update);
+
+    case SET_GOLEM_STATUS:
+        let golemStatus;
+
+        if (state.connectedPeers)
+            golemStatus = nodesString(state.connectedPeers);
+        else
+            golemStatus = action.payload;
+
+        return Object.assign({}, state, {
+            golemStatus: golemStatus
         });
 
     case SET_FOOTER_INFO:

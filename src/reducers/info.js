@@ -1,7 +1,7 @@
 import { dict } from './../actions'
 import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
 
-const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_ENGINE_STATUS} = dict
+const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
@@ -37,7 +37,7 @@ const setInfo = (state = initialState, action) => {
             connectionProblem: action.payload
         });
 
-    case SET_GOLEM_ENGINE_STATUS:
+    case SET_GOLEM_PAUSE_STATUS:
         setConfig(GOLEM_STARTER, action.payload)
         return Object.assign({}, state, {
             isEngineOn: action.payload
