@@ -20,7 +20,7 @@ let badgeTemp = 0
 
 function nodesString(num) {
     if (num < 1) return 'No Nodes Connected';
-    let postfix = num != 1 ? 's' : '';
+    const postfix = num != 1 ? 's' : '';
     return `${num} Node${postfix}`;
 }
 

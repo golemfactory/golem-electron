@@ -93,7 +93,7 @@ function dig(src, ...rest) {
 
 
 function getGolemStatus(component, method, stage, data) {
-    let result = {};
+    const result = {};
 
     try {
         result.message = dig(messages, component, method, stage);
@@ -142,7 +142,7 @@ export function subscribeGolemStatus(session) {
 /**
  * [*golemStatus generator]
  * @param  {Object} session     [Websocket connection session]
- * @yield   {Object}            [Action object]
+ * @yield  {Object}             [Action object]
  */
 export function* golemStatusFlow(session) {
     const channel = yield call(subscribeGolemStatus, session)
