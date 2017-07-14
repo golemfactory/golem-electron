@@ -11,6 +11,9 @@ const statuses = {
     client: {
         'start': {
             post: 'Ready'
+        },
+        'quit': {
+            pre: 'Not Ready'
         }
     }
 }
@@ -90,30 +93,21 @@ function dig(src, ...rest) {
 
 
 function getGolemStatus(component, method, stage, data) {
-    let status,
-        message,
-        color;
+    let result = {};
 
     try {
-        status = dig(statuses, component, method, stage);
+        result.message = dig(messages, component, method, stage);
     } catch ( e ) {
-        status = 'Not Ready';
+        result.message = `Golem - ${component}`;
     }
 
-    try {
-        message = dig(messages, component, method, stage);
-    } catch ( e ) {
-        console.log('ERR', e)
-        message = `${component}.${method}`
-    } finally {
-        if (stage == 'exception' && data)
-            message += `: ${data}`;
-    }
+    if (stage == 'exception') {
+        result.status = 'Exception';
+    } else try {
+        result.status = dig(statuses, component, method, stage);
+    } catch ( e ) { }
 
-    return {
-        status,
-        message
-    };
+    return result;
 }
 
 

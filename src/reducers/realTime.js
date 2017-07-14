@@ -59,8 +59,12 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_GOLEM_STATUS:
+        if (state.golemStatus.status == 'Exception')
+            return state;
         return Object.assign({}, state, {
-            golemStatus: action.payload
+            golemStatus: Object.assign(
+                {}, state.golemStatus, action.payload
+            )
         });
 
     case SET_FOOTER_INFO:
