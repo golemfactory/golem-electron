@@ -2,6 +2,7 @@ const electron = require('electron');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
+const log = require('./debug_handler.js')
 
 const {exec, execSync, spawn} = require('child_process');
 const {app} = electron;
@@ -43,21 +44,21 @@ class GolemProcess {
 
         /* Handle process events */
         this.process.on('error', data => {
-            console.error('💻 Cannot start Golem:', data.toString())
+            log.error('MAIN_PROCESS > GOLEM_HANDLER', 'Cannot start Golem:', data.toString())
         });
         this.process.on('exit', code => {
-            console.log('💻 Golem exited with code', code);
+            log.info('MAIN_PROCESS > GOLEM_HANDLER', 'Golem exited with code', code)
         });
-        /* FIXME: we shouldn't be catching stdout here.
-        this.process.stderr.on('data', data => {
-            console.error('💻 Golem error:', data.toString());
-        });*/
+    /* FIXME: we shouldn't be catching stdout here.
+    this.process.stderr.on('data', data => {
+        console.error('💻 Golem error:', data.toString());
+    });*/
     }
 
     stopProcess() {
         return new Promise((resolve, reject) => {
             if (!this.process) {
-                console.warn('💻 Cannot stop Golem: not in control of the process');
+                log.warn('MAIN_PROCESS > GOLEM_HANDLER', 'Cannot stop Golem: not in control of the process')
                 return reject();
             }
 
@@ -72,14 +73,14 @@ class GolemProcess {
 
     windowsKillProcess(pid, ignorePid) {
         let subPids = this.windowsSubProcesses(pid);
-        for (let subPid of subPids)
+        for ( let subPid of subPids )
             this.windowsKillProcess(subPid);
 
         try {
             if (!ignorePid)
                 process.kill(parseInt(pid), 'SIGINT');
-        } catch (exc) {
-            console.error(`Error killing process ${pid}: ${exc}`);
+        } catch ( exc ) {
+            log.error('MAIN_PROCESS > GOLEM_HANDLER', `Error killing process ${pid}: ${exc}`)
         }
     }
 
@@ -90,17 +91,17 @@ class GolemProcess {
 
             stdout = execSync(
                 `wmic process where (` +
-                 `ParentProcessId=${pid} ` +
-                 `and Name!="wmic.exe" ` +
+                `ParentProcessId=${pid} ` +
+                `and Name!="wmic.exe" ` +
                 `) get processid`
             ).toString();
 
-        } catch (exc) {
-            console.error(`Error executing WMIC: ${exc}`);
+        } catch ( exc ) {
+            log.error('MAIN_PROCESS > GOLEM_HANDLER', `Error executing WMIC: ${exc}`)
         }
 
         return stdout.split('\n')
-                     .filter(Number);
+            .filter(Number);
     }
 }
 

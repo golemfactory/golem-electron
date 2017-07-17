@@ -116,6 +116,7 @@
         "createjs-browserify": "^1.0.5",
         "css-browser-selector": "^0.6.5",
         "electron-config": "^0.2.1",
+        "electron-log": "^2.2.7",
         "getpid": "0.0.1",
         "history": "^4.6.2",
         "msgpack5": "^3.4.1",

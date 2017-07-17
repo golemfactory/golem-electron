@@ -12,7 +12,7 @@ import ReactTooltip from 'rc-tooltip'
 const {remote} = window.require('electron');
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
-import { setConfig, getConfig } from './../utils/configStorage'
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal
@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-const DOCLINK = "http://docs.golem.network"
+const DOCLINK = "https://docs.golem.network/"
 
 /**
  * { Class for header component with navigation. }
@@ -36,7 +36,7 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = location.pathname === "/" ? 1 : 2 // <-- HARDCODED
+        const index = 1
         let navItems = document.getElementsByClassName('nav__item')
         navItems.length > 1 && navItems[index].classList.add('active') // 1 is the traffic lights of mac & linux
         /*EXPRIMENTAL*/

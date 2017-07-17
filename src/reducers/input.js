@@ -1,5 +1,6 @@
 import { dict } from './../actions'
-import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
+const {remote} = window.require('electron')
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 const {ipcRenderer} = window.require('electron')
 
 const {SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_AUTOLAUNCH, SET_ZOOM_RATIO} = dict

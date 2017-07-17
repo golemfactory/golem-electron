@@ -1,7 +1,7 @@
 import { dict } from './../../actions'
-import { setConfig, getConfig, dictConfig } from './../../utils/configStorage'
 const {remote} = window.require('electron');
 const mainProcess = remote.require('./index')
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {SET_FILE_LOCATION} = dict
 const {DEFAULT_FILE_LOCATION} = dictConfig

@@ -1,5 +1,6 @@
 const electron = require('electron')
 const {app, ipcMain} = electron
+const log = require('./debug_handler.js')
 
 let openedWindowsMap = null;
 function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) {
@@ -37,6 +38,7 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
             } else {
                 createPreviewWindow(id, frameCount).then((previewWindow) => {
                     openedWindowsMap.set(id, previewWindow)
+                    log.debug('MAIN_PROCESS > IPC_HANDLER', 'Preview window landed successfully!')
                 })
             }
             console.log("ID", id, "FRAME COUNT", frameCount)
