@@ -14,13 +14,18 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+const radioTypes = Object.freeze({
+    blend: 'Blender',
+    lxs: 'LuxRender'
+})
+
 export class NewTask extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             name: 'Golem Task',
-            type: null
+            type: radioTypes[this.props.params.type] || null
         }
     }
 
@@ -89,7 +94,7 @@ export class NewTask extends React.Component {
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
-                        <div className="container-radio__new-task" onChange={::this._handleTypeRadio}>
+                        <div ref="radioCloud" className="container-radio__new-task" onChange={::this._handleTypeRadio}>
                             <div className="radio-item">
                                 <span className="icon-blender">
                                     <span className="path1"/>
@@ -97,12 +102,12 @@ export class NewTask extends React.Component {
                                     <span className="path3"/>
                                     <span className="path4"/>
                                 </span>
-                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" required/>
+                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" defaultChecked={type === radioTypes.blend} required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                             </div>
                             <div className="radio-item">
                                 <span className="icon-luxrender"/>
-                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender"/>
+                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" defaultChecked={type === radioTypes.lxs}/>
                                 <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                             </div>
                             

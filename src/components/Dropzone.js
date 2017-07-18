@@ -110,6 +110,28 @@ export class DropZone extends React.Component {
      */
     _onDrop(e) {
         e.preventDefault();
+
+        /**
+         * [checkDominantType function checks common item in given array, if there's one common returns it, if more than one with equal amounts returns negative boolean]
+         * @param  {[type]}      files      [Array of extension]
+         * @return {Any}                    [Common item or negative boolean]
+         */
+        const checkDominantType = function(files) {
+            const isBiggerThanOther = function(element, index, array) {
+                return element[1] !== array[0][1];
+            }
+            const tempFiles = [...files.reduce((total, current) => total.set(current, (total.get(current) || 0) + 1), new Map)]
+            const anyDominant = tempFiles.some(isBiggerThanOther)
+
+            if (!anyDominant && tempFiles.length > 1) {
+                return false
+            } else {
+                return tempFiles
+                    .sort((a, b) => b[1] - a[1])
+                    .map(item => item[0])[0];
+            }
+        }
+
         let files = e.dataTransfer.files;
         //console.log('Files dropped: ', files.length);
         // Upload files
@@ -121,8 +143,9 @@ export class DropZone extends React.Component {
                     let mergedList = [].concat.apply([], item);
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious));
                     let masterFiles = mergedList.filter(({master}) => (master));
+                    let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
                     //console.log("masterFiles", masterFiles);
-                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(ADD_TASK_NEXT_STEP)
+                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,

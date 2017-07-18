@@ -107,9 +107,25 @@ export class Header extends Component {
      * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
      */
     _onFileDialog() {
-        let onFileHandler = (data) => {
-            //console.log(data)
 
+        const checkDominantType = function(files) {
+            const isBiggerThanOther = function(element, index, array) {
+                return element[1] !== array[0][1];
+            }
+            const tempFiles = [...files.reduce((acc, s) => acc.set(s, (acc.get(s) || 0) + 1), new Map)]
+            const anyDominant = tempFiles.some(isBiggerThanOther)
+
+            if (!anyDominant && tempFiles.length > 1) {
+                return false
+            } else {
+                return tempFiles
+                    .sort((a, b) => b[1] - a[1])
+                    .map(a => a[0])[0];
+            }
+        }
+
+        const onFileHandler = (data) => {
+            //console.log(data)
             if (data) {
 
                 mainProcess.selectDirectory(data)
@@ -117,7 +133,10 @@ export class Header extends Component {
                         let mergedList = [].concat.apply([], item)
                         let unknownFiles = mergedList.filter(({malicious}) => (malicious))
                         let masterFiles = mergedList.filter(({master}) => (master));
-                        (masterFiles.length > 0 || unknownFiles.length > 0) && this._navigateTo('/add-task/type', null)
+                        let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
+
+                        (masterFiles.length > 0 || unknownFiles.length > 0) && this._navigateTo(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`, null)
+
                         if (unknownFiles.length > 0) {
                             this.props.actions.setFileCheck({
                                 status: true,
