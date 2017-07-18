@@ -29,6 +29,13 @@ export class NewTask extends React.Component {
         }
     }
 
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.params.type !== this.props.params.type)
+            this.setState({
+                type: radioTypes[nextProps.params.type] || null
+            })
+    }
+
     componentWillUnmount() {
         if (!this._nextStep) {
             this.props.actions.clearTaskPlain()
@@ -102,12 +109,12 @@ export class NewTask extends React.Component {
                                     <span className="path3"/>
                                     <span className="path4"/>
                                 </span>
-                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" defaultChecked={type === radioTypes.blend} required/>
+                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                             </div>
                             <div className="radio-item">
                                 <span className="icon-luxrender"/>
-                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" defaultChecked={type === radioTypes.lxs}/>
+                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" checked={type === radioTypes.lxs} readOnly/>
                                 <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                             </div>
                             
