@@ -47,11 +47,11 @@ Now you can close and reopen the application to catch all critical informations 
 You'll find debug logs in;
 <br/>
 <br/>
-Windows &nbsp;&nbsp;`%USERPROFILE%\AppData\Roaming\golem\log.log`
+Windows &nbsp;&nbsp;`%USERPROFILE%\.golem\logs\gui.log` & `gui-error.log`
 <br/>
-Mac &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/Library/Logs/golem/log.log`
+Mac &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.golem/logs/gui.log` & `gui-error.log`
 <br/>
-Linux &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.config/golem/log.log`
+Linux &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.golem/logs/gui.log` & `gui-error.log`
 <br/>
 
 ### :umbrella: Testing

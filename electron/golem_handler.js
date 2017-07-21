@@ -49,10 +49,10 @@ class GolemProcess {
         this.process.on('exit', code => {
             log.info('MAIN_PROCESS > GOLEM_HANDLER', 'Golem exited with code', code)
         });
-    /* FIXME: we shouldn't be catching stdout here.
-    this.process.stderr.on('data', data => {
-        console.error('💻 Golem error:', data.toString());
-    });*/
+        // FIXME: we shouldn't be catching stdout here.
+        this.process.stderr.on('data', data => {
+            log.error('MAIN_PROCESS > GOLEM_HANDLER', 'Golem error:', data.toString())
+        });
     }
 
     stopProcess() {

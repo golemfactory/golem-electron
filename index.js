@@ -123,7 +123,7 @@ function createWindow() {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
         Menu.setApplicationMenu(menuHandler)
         win.show()
-        log.debug('MAIN_PROCESS', 'Application landed successfully!')
+        log.info('MAIN_PROCESS', 'Application landed successfully!')
     })
 
     /**
