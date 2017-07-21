@@ -14,7 +14,7 @@ class GolemProcess {
     constructor(processName, processArgs) {
         this.process = null;
         this.processName = processName || 'golemapp';
-        this.processArgs = processArgs || ['--nogui', '-r', '0.0.0.0:61000'];
+        this.processArgs = processArgs || ['--nogui', '-r', '127.0.0.1:61000'];
     }
 
     startProcess(err, pid) {
