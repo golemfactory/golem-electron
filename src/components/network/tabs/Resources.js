@@ -38,17 +38,18 @@ export class Resources extends React.Component {
     calculateHardwareAmount(val) {
         const {systemInfo} = this.props
         let ratio = val / 100;
-        let cpu_cores = Math.trunc(systemInfo.cpu_cores * ratio)
+        let cpu_cores = systemInfo.cpu_cores * ratio
         if (cpu_cores < 1 && val > 0) {
             cpu_cores = 1
             ratio = ratio / 2
         }
-        const memory = Math.trunc(systemInfo.memory * ratio);
-        const disk = Math.trunc(systemInfo.disk * ratio);
+        const memory = systemInfo.memory * ratio;
+        const disk = systemInfo.disk * ratio;
+        console.log("cpu_cores,memory, disk", cpu_cores, memory, disk);
         return {
-            cpu_cores: systemInfo.cpu_cores * ratio,
-            memory: systemInfo.memory * ratio,
-            disk: systemInfo.disk * ratio
+            cpu_cores,
+            memory,
+            disk
         }
     }
 

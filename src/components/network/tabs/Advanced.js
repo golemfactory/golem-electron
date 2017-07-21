@@ -41,6 +41,7 @@ export class Advanced extends React.Component {
      * @param  {Event}      evt
      */
     _handleInputChange(key, evt) {
+        console.log("key", "evt", key, evt);
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
             ...chartValues,
@@ -59,14 +60,15 @@ export class Advanced extends React.Component {
      * @param  {String}         init        [Initial loading: true, personal choose: false]
      */
     _handleOptionChange(list, name, init = false) {
-        const {actions} = this.props
+        const {actions, chartValues} = this.props
         let value = list.filter((item, index) => item.name == name)[0]
         if (value) {
             actions.setChosenPreset(value.name, init)
             actions.setAdvancedChart({
                 ...value
             });
-            actions.setResources(this.calculateResourceValue(value))
+            console.log("this.calculateResourceValue(value)", this.calculateResourceValue(value), value);
+            !init && actions.setResources(this.calculateResourceValue(value))
         }
     }
 
