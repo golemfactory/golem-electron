@@ -73,7 +73,7 @@ export class TaskDetail extends React.Component {
             presetModal: false,
             //INPUTS
             compositing: false,
-            resolution: [0, 0],
+            resolution: [100, 100],
             frames: '',
             isBlenderTask: this.checkIfTaskBlender(props.task.type),
             format: '',
@@ -540,9 +540,9 @@ export class TaskDetail extends React.Component {
                                 </div>}
                                 <div className="item-settings">
                                     <span className="title">Dimensions</span>
-                                    <input ref="resolutionW" type="number" min="0" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
                                     <span className="icon-cross"/>
-                                    <input ref="resolutionH" type="number" min="0" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
+                                    <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
                                 </div>
                                 { isBlenderTask && <div className="item-settings">
                                     <span className="title">Frame Range</span>
