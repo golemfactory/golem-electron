@@ -41,10 +41,8 @@ export class Single extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        let previewLink = nextProps.previewList[nextProps.previewList.size < 2 ? 1 : nextProps.frameID]
         this.setState({
-            id: Number(nextProps.id),
-            previewLink
+            id: Number(nextProps.id)
         })
     }
 
@@ -58,11 +56,12 @@ export class Single extends React.Component {
      */
     _previousFrame() {
         const {previewList, frameID} = this.props
-        const {id} = this.state;
-        id > 0 && this.setState({
+        let {id} = this.state;
+        (id > 0) && this.setState({
             id: id - 1
         }, () => {
-            let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
+            let {id} = this.state
+            let previewLink = previewList[previewList.size < 2 ? 1 : (id + 1)];
             this.setState({
                 previewLink
             })
@@ -74,12 +73,13 @@ export class Single extends React.Component {
      */
     _nextFrame() {
         const {details, previewList, frameID} = this.props
-        const {id} = this.state
+        let {id} = this.state
         if (!!details.options) {
-            id < details.options.frame_count - 1 && this.setState({
+            (id < details.options.frame_count - 1) && this.setState({
                 id: id + 1
             }, () => {
-                let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
+                let {id} = this.state
+                let previewLink = previewList[previewList.size < 2 ? 1 : (id + 1)];
                 this.setState({
                     previewLink
                 })
@@ -155,7 +155,7 @@ export class Single extends React.Component {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {previewLink && <ImageZoom image={`file://${previewLink}?${new Date().getTime()}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
+                    {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
                     {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
                 </div>
                 <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} imgIndex={id}/>

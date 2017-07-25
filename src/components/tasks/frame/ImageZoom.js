@@ -56,10 +56,29 @@ export class ImageZoom extends React.Component {
         if (nextProps.isSubtaskShown !== this.props.isSubtaskShown && !!nextProps.isSubtaskShown) {
             this.viewer.viewport.goHome(true)
         }
+
+        if (nextProps.image !== this.props.image) {
+            console.info(nextProps.image)
+            loadImage(nextProps.image).then(data => {
+                this.viewer.addTiledImage({
+                    tileSource: {
+                        type: nextProps.type,
+                        levels: [{
+                            url: nextProps.image,
+                            height: data.naturalHeight,
+                            width: data.naturalWidth
+                        }]
+                    },
+                    index: 0,
+                    preload: true,
+                    replace: true
+                });
+            })
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return false
+        return true
     }
 
     /**
