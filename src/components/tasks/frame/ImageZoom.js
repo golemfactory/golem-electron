@@ -58,7 +58,6 @@ export class ImageZoom extends React.Component {
         }
 
         if (nextProps.image !== this.props.image) {
-            console.info(nextProps.image)
             loadImage(nextProps.image).then(data => {
                 this.viewer.addTiledImage({
                     tileSource: {
@@ -78,7 +77,9 @@ export class ImageZoom extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return true
+        if (nextProps.image !== this.props.image)
+            return true
+        return false
     }
 
     /**
@@ -123,7 +124,6 @@ export class ImageZoom extends React.Component {
             })
 
             viewer.addHandler('open', (item) => {
-                console.info('open')
                 setTimeout(() => {
                     this.viewer.viewport.goHome(true)
                     this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);

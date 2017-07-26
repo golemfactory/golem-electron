@@ -30,11 +30,7 @@ Object.freeze(statusClassDict)
 /*################### HELPER FUNCTIONS #################*/
 
 function sortById(a, b) {
-    if (Number(a.data.id) > Number(b.data.id))
-        return 1;
-    if (Number(a.data.id) < Number(b.data.id))
-        return -1;
-    return 0;
+    return a.data.id - b.data.id
 }
 
 
@@ -55,13 +51,14 @@ export class All extends React.Component {
 
     /**
      * [_handleClick func. will redirect related single frame]
-     * @param       {[type]} item       [completed frame item]
-     * @param       {[type]} id         [description] //TODO we gonna delete this arg. cuz item arg. will be enough to get id.
+     * @param       {[type]} item          [clicked item]
+     * @param       {[type]} index         [index of clicked item]
      * @return nothing
      */
-    _handleClick(item, id, frameID) {
+    _handleClick(item, index) {
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
-            hashHistory.push(`/preview/single/${id}/${frameID}`)
+            this.props.actions.setFrameId(item.id)
+            hashHistory.push(`/preview/single/${index}`)
         }
     }
 
@@ -121,7 +118,7 @@ export class All extends React.Component {
                     }
                 };
             })
-            .sort(this.sortById);
+            .sort(sortById);
     }
 
     /**
@@ -176,7 +173,7 @@ export class All extends React.Component {
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index, data.id)} onKeyDown={(event) => {
+                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
                         event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
