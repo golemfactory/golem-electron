@@ -5,6 +5,10 @@ import * as Actions from '../../../actions'
 import Slider from './../../Slider.js'
 
 
+const preset = Object.freeze({
+    CUSTOM: 'custom'
+})
+
 const mapStateToProps = state => ({
     resource: state.resources.resource,
     systemInfo: state.advanced.systemInfo,
@@ -45,11 +49,11 @@ export class Resources extends React.Component {
         }
         const memory = systemInfo.memory * ratio;
         const disk = systemInfo.disk * ratio;
-        console.log("cpu_cores,memory, disk", cpu_cores, memory, disk);
         return {
             cpu_cores,
             memory,
-            disk
+            disk,
+            name: preset.CUSTOM
         }
     }
 

@@ -12,6 +12,10 @@ const mockSystemInfo = {
     max_resource_size: 10240000
 }
 
+const preset = Object.freeze({
+    CUSTOM: 'custom'
+})
+
 const mapStateToProps = state => ({
     systemInfo: state.advanced.systemInfo,
     presetList: state.advanced.presetList,
@@ -41,11 +45,11 @@ export class Advanced extends React.Component {
      * @param  {Event}      evt
      */
     _handleInputChange(key, evt) {
-        console.log("key", "evt", key, evt);
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
             ...chartValues,
-            [key]: evt.target.value
+            [key]: evt.target.value,
+            name: preset.CUSTOM
         })
         actions.setResources(this.calculateResourceValue({
             ...chartValues,
@@ -67,7 +71,6 @@ export class Advanced extends React.Component {
             actions.setAdvancedChart({
                 ...value
             });
-            console.log("this.calculateResourceValue(value)", this.calculateResourceValue(value), value);
             !init && actions.setResources(this.calculateResourceValue(value))
         }
     }

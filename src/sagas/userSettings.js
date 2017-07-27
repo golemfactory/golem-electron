@@ -13,7 +13,7 @@ const parameterDict = Object.freeze({
     SET_PROV_TRUST: 'computing_trust',
     SET_REQ_TRUST: 'requesting_trust',
     SET_FILE_LOCATION: '',
-    SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name',
+    //SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name',
     UPDATE_NODE_NAME: 'node_name'
 })
 export function updateSettings(session, type, payload) {
@@ -135,6 +135,5 @@ export function* settingsFlow(session) {
     yield takeLatest(SET_FILE_LOCATION, updateSettingsBase, session)
     yield takeLatest(SET_PROV_TRUST, updateSettingsBase, session)
     yield takeLatest(SET_REQ_TRUST, updateSettingsBase, session)
-    yield takeLatest(SET_CHOSEN_HARDWARE_PRESET, updateSettingsBase, session)
     yield takeLatest(UPDATE_NODE_NAME, updateSettingsBase, session)
 }
