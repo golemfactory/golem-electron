@@ -569,7 +569,7 @@ export class TaskDetail extends React.Component {
         ]
 
         switch (type) {
-        case 'Blender':
+        case taskType.BLENDER:
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings">
@@ -591,7 +591,7 @@ export class TaskDetail extends React.Component {
                         </div>
             })
             break;
-        case 'LuxRender':
+        case taskType.LUXRENDER:
             formTemplate.push({
                 order: 5,
                 content: <div className="item-settings">
