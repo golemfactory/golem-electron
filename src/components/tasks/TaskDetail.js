@@ -600,8 +600,6 @@ export class TaskDetail extends React.Component {
                          </div>
             })
             break;
-        case 'Dummy':
-            break;
         }
 
         let sortByOrder = (a, b) => (a.order - b.order)
