@@ -626,7 +626,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {testStatus.more && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
+                        {(!isDetailPage && testStatus.more) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
                         {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
                             <span className="dot-1">.</span>
                             <span className="dot-2">.</span>
