@@ -634,10 +634,18 @@ export class TaskDetail extends React.Component {
             break;
         case taskType.DUMMY:
             formTemplate.push({
+                order: 4,
+                content: <div className="item-settings">
+                            <span className="title">Difficulty Factor</span>
+                            <input ref="diffFactor" type="number" placeholder="1" min="1" max="32" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+
+            formTemplate.push({
                 order: 5,
                 content: <div className="item-settings">
-                            <span className="title">Difficulty factor</span>
-                            <input ref="diffFactor" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <span className="title">Length of Data</span>
+                            <input ref="diffFactor" type="number" placeholder="1" min="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             break;
