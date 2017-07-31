@@ -155,7 +155,7 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.golem.stopProcess()
             .then(app.quit,
-                  app.quit);
+                app.quit);
     }
 })
 
@@ -270,7 +270,8 @@ let blackList = [
 
 const masterList = [
     "BLEND",
-    "LXS"
+    "LXS",
+    "TXT"
 ]
 
 let ignorePlaftormFiles = function(file) {

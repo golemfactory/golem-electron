@@ -105,7 +105,11 @@ export class NewTask extends React.Component {
                                 <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender"/>
                                 <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                             </div>
-                            
+                            <div className="radio-item">
+                                <span className="icon-question-mark"/>
+                                <input id="taskTypeRadio3" type="radio" name="taskType" value="Dummy"/>
+                                <label htmlFor="taskTypeRadio3" className="radio-label">Dummy</label>
+                            </div>
                         </div>
                     </div>
                     <div className="container-action__new-task">

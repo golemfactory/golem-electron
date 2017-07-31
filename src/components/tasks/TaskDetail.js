@@ -15,7 +15,8 @@ import * as Actions from './../../actions'
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
-    LUXRENDER: 'LuxRender'
+    LUXRENDER: 'LuxRender',
+    DUMMY: 'Dummy'
 })
 
 const testStatusDict = Object.freeze({
@@ -81,6 +82,7 @@ export class TaskDetail extends React.Component {
             formatIndex: 0,
             output_path: props.location,
             sample_per_pixel: '',
+            difficulty_factor: 0,
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
@@ -130,7 +132,7 @@ export class TaskDetail extends React.Component {
             }, () => {
 
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, diffFactor, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
 
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks || 0
@@ -153,6 +155,8 @@ export class TaskDetail extends React.Component {
                         this.refs.framesRef.value = options.frames ? options.frames : 1
                     } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
+                    } else if ((nextProps.task.type || this.state.type) === taskType.DUMMY) {
+                        diffFactor.value = options.difficulty_factor
                     }
 
                     this.props.actions.getEstimatedCost({
@@ -306,8 +310,8 @@ export class TaskDetail extends React.Component {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
             //console.log("values", values);
-            const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
-            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
+            const {compositing, format, frames, output_path, resolution, sample_per_pixel, difficulty_factor} = values.value
+            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp, diffFactor} = this.refs
             resolutionW.value = resolution[0]
             resolutionH.value = resolution[1]
             formatRef.value = format
@@ -322,6 +326,10 @@ export class TaskDetail extends React.Component {
             } else if (this.props.task.type === taskType.LUXRENDER) {
 
                 haltspp.value = sample_per_pixel
+
+            } else if (this.props.task.type === taskType.DUMMY) {
+
+                diffFactor.value = difficulty_factor
 
             }
 
@@ -353,7 +361,7 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal() {
-        const {resolution, frames, format, output_path, compositing, sample_per_pixel} = this.state
+        const {resolution, frames, format, output_path, compositing, sample_per_pixel, difficulty_factor} = this.state
         this.setState({
             presetModal: true,
             modalData: {
@@ -362,6 +370,7 @@ export class TaskDetail extends React.Component {
                 format,
                 output_path,
                 sample_per_pixel,
+                difficulty_factor,
                 compositing,
                 task_type: this.props.task.type
             }
@@ -417,7 +426,7 @@ export class TaskDetail extends React.Component {
     _handleStartTaskButton() {
 
         this._nextStep = true
-        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing, sample_per_pixel, difficulty_factor} = this.state
         const {task} = this.props
 
         this.props.actions.createTask({
@@ -432,6 +441,8 @@ export class TaskDetail extends React.Component {
                 format,
                 compositing,
                 output_path,
+                sample_per_pixel,
+                difficulty_factor
             }
         })
         setTimeout(() => {
@@ -515,22 +526,6 @@ export class TaskDetail extends React.Component {
                         </div>
             },
             {
-                order: 1,
-                content: <div className="item-settings">
-                                <span className="title">Dimensions</span>
-                                <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span className="icon-cross"/>
-                                <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
-            },
-            {
-                order: 3,
-                content: <div className="item-settings">
-                                <span className="title">Format</span>
-                                <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
-                         </div>
-            },
-            {
                 order: 4,
                 content: <div className="item-settings">
                                 <span className="title">Output to</span>
@@ -571,6 +566,24 @@ export class TaskDetail extends React.Component {
         switch (type) {
         case taskType.BLENDER:
             formTemplate.push({
+                order: 1,
+                content: <div className="item-settings">
+                                <span className="title">Dimensions</span>
+                                <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
+                                <span className="icon-cross"/>
+                                <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            })
+
+            formTemplate.push({
+                order: 3,
+                content: <div className="item-settings">
+                                <span className="title">Format</span>
+                                <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
+                         </div>
+            })
+
+            formTemplate.push({
                 order: 2,
                 content: <div className="item-settings">
                             <span className="title">Frame Range</span>
@@ -592,11 +605,39 @@ export class TaskDetail extends React.Component {
             })
             break;
         case taskType.LUXRENDER:
+
+            formTemplate.push({
+                order: 1,
+                content: <div className="item-settings">
+                                <span className="title">Dimensions</span>
+                                <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
+                                <span className="icon-cross"/>
+                                <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            })
+
+            formTemplate.push({
+                order: 3,
+                content: <div className="item-settings">
+                                <span className="title">Format</span>
+                                <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
+                         </div>
+            })
+
             formTemplate.push({
                 order: 5,
                 content: <div className="item-settings">
                             <span className="title">Sample per pixel</span>
                             <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+            break;
+        case taskType.DUMMY:
+            formTemplate.push({
+                order: 5,
+                content: <div className="item-settings">
+                            <span className="title">Difficulty factor</span>
+                            <input ref="diffFactor" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             break;
