@@ -13,6 +13,11 @@ npm-debug.log
 yarn-error.log
 logs
 
+# setup folder
+golem/golem.sh
+golem/license.txt
+golem/README.txt
+
 # coverage test
 coverage
 
