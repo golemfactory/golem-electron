@@ -29,7 +29,7 @@ const routes = (
     <Route path="/task" component={ TaskDetail } >
         <Route path="/task/:id" component={ TaskDetail } />
     </Route>
-    <Route path="/add-task/type" component={ NewTask } />
+    <Route path="/add-task/type(/:type)" component={ NewTask } />
     <Route path="/add-task/settings" component={ TaskDetail } />
     <Route path="/settings" component={ Settings } />
     <Route path="*" component={ NotFound } status={404} />

@@ -510,7 +510,6 @@ export class TaskDetail extends React.Component {
     render() {
         const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props;
-        console.log("testStatus", testStatus)
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>
