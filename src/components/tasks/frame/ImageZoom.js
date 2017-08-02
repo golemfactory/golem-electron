@@ -56,9 +56,29 @@ export class ImageZoom extends React.Component {
         if (nextProps.isSubtaskShown !== this.props.isSubtaskShown && !!nextProps.isSubtaskShown) {
             this.viewer.viewport.goHome(true)
         }
+
+        if (nextProps.image !== this.props.image) {
+            loadImage(nextProps.image).then(data => {
+                this.viewer.addTiledImage({
+                    tileSource: {
+                        type: nextProps.type,
+                        levels: [{
+                            url: nextProps.image,
+                            height: data.naturalHeight,
+                            width: data.naturalWidth
+                        }]
+                    },
+                    index: 0,
+                    preload: true,
+                    replace: true
+                });
+            })
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.image !== this.props.image)
+            return true
         return false
     }
 
@@ -104,7 +124,6 @@ export class ImageZoom extends React.Component {
             })
 
             viewer.addHandler('open', (item) => {
-                console.info('open')
                 setTimeout(() => {
                     this.viewer.viewport.goHome(true)
                     this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
