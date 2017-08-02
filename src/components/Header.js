@@ -39,10 +39,10 @@ export class Header extends Component {
         const index = location.pathname === "/" ? 1 : 2 // <-- HARDCODED
         let navItems = document.getElementsByClassName('nav__item')
         navItems.length > 1 && navItems[index].classList.add('active') // 1 is the traffic lights of mac & linux
-        /*EXPRIMENTAL*/
-        window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
-            this._navigateTo(message, null)
-        })
+    /*EXPRIMENTAL*/
+    // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
+    //     this._navigateTo(message, null)
+    // })
     }
 
     /**

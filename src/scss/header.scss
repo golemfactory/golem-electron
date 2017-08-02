@@ -93,13 +93,13 @@
     .active {
         color: $color-text;
     }
-    .active:nth-child(2) ~ .selector,
-    .nav__item:nth-child(2):hover ~ .selector {
+    // .nav__item:nth-child(2):hover ~ .selector
+    .active:nth-child(2) ~ .selector {
         left: 91px;
         width: 68px;
     }
-    .active:nth-child(3) ~ .selector,
-    .nav__item:nth-child(3):hover ~ .selector {
+    // .nav__item:nth-child(3):hover ~ .selector
+    .active:nth-child(3) ~ .selector {
         left: 179px;
         width: 47px;
     }
