@@ -50,11 +50,22 @@ class GolemProcess {
         options.timeout = 1000; // ms
         options.killSignal = 'SIGKILL';
         let result = spawnSync(this.processName, ['--version'], options);
+        if (result.error) {
+            if (result.error.code == 'ENOENT') {
+                console.error(this.processName,
+                        "not found! Make sure it's in your $PATH");
+                return false;
+            } else {
+                console.error(this.processName, "failed. ERRNO:",
+                        result.error.errno, "code:", result.error.code);
+                return false;
+            }
+        }
         if (result.status != 0) {
             console.error('Cannot start Golem process. Exit code:',
                     result.status,
                     'stderr:',
-                    result.stderr.toString()
+                    result.stderr && result.stderr.toString() || "<null>"
             );
             return false;
         }
