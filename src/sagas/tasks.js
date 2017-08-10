@@ -34,7 +34,7 @@ export function runTestTask(session, payload) {
 
     function on_test_task(args) {
         var test_task = args[0];
-    //console.log(config.RUN_TEST_TASK_RPC, test_task)
+        console.log(config.RUN_TEST_TASK_RPC, test_task, args[1])
     }
 
     _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
