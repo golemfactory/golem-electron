@@ -82,7 +82,8 @@ export class TaskDetail extends React.Component {
             formatIndex: 0,
             output_path: props.location,
             sample_per_pixel: '',
-            difficulty_factor: 0,
+            difficulty: 1,
+            subtask_data_size: 10,
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
@@ -132,7 +133,7 @@ export class TaskDetail extends React.Component {
             }, () => {
 
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, diffFactor, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, difficultyRef, subtaskDataSizeRef, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
 
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks || 0
@@ -156,7 +157,8 @@ export class TaskDetail extends React.Component {
                     } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
                     } else if ((nextProps.task.type || this.state.type) === taskType.DUMMY) {
-                        diffFactor.value = options.difficulty_factor
+                        difficultyRef.value = options.difficulty
+                        subtaskDataSizeRef.value = options.subtask_data_size
                     }
 
                     this.props.actions.getEstimatedCost({
@@ -310,8 +312,8 @@ export class TaskDetail extends React.Component {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
             //console.log("values", values);
-            const {compositing, format, frames, output_path, resolution, sample_per_pixel, difficulty_factor} = values.value
-            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp, diffFactor} = this.refs
+            const {compositing, format, frames, output_path, resolution, sample_per_pixel, difficulty} = values.value
+            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp, difficultyRef, subtaskDataSizeRef} = this.refs
             resolutionW.value = resolution[0]
             resolutionH.value = resolution[1]
             formatRef.value = format
@@ -329,7 +331,9 @@ export class TaskDetail extends React.Component {
 
             } else if (this.props.task.type === taskType.DUMMY) {
 
-                diffFactor.value = difficulty_factor
+                difficultyRef.value = difficulty
+                subtaskDataSizeRef.value = subtask_data_size
+
 
             }
 
@@ -361,7 +365,7 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal() {
-        const {resolution, frames, format, output_path, compositing, sample_per_pixel, difficulty_factor} = this.state
+        const {resolution, frames, format, output_path, compositing, sample_per_pixel, difficulty, subtask_data_size} = this.state
         this.setState({
             presetModal: true,
             modalData: {
@@ -370,7 +374,8 @@ export class TaskDetail extends React.Component {
                 format,
                 output_path,
                 sample_per_pixel,
-                difficulty_factor,
+                difficulty,
+                subtask_data_size,
                 compositing,
                 task_type: this.props.task.type
             }
@@ -426,7 +431,7 @@ export class TaskDetail extends React.Component {
     _handleStartTaskButton() {
 
         this._nextStep = true
-        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing, sample_per_pixel, difficulty_factor} = this.state
+        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing, sample_per_pixel, difficulty, subtask_data_size} = this.state
         const {task} = this.props
 
         this.props.actions.createTask({
@@ -442,7 +447,8 @@ export class TaskDetail extends React.Component {
                 compositing,
                 output_path,
                 sample_per_pixel,
-                difficulty_factor
+                difficulty,
+                subtask_data_size
             }
         })
         setTimeout(() => {
@@ -636,8 +642,8 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 4,
                 content: <div className="item-settings">
-                            <span className="title">Difficulty Factor</span>
-                            <input ref="diffFactor" type="number" placeholder="1" min="1" max="32" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <span className="title">Difficulty</span>
+                            <input ref="difficultyRef" type="number" placeholder="1" min="1" max="32" aria-label="Difficulty Factor" onChange={this._handleFormInputs.bind(this, 'difficulty')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
 
@@ -645,7 +651,7 @@ export class TaskDetail extends React.Component {
                 order: 5,
                 content: <div className="item-settings">
                             <span className="title">Length of Data</span>
-                            <input ref="diffFactor" type="number" placeholder="1" min="1" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'difficulty_factor')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="subtaskDataSizeRef" type="number" placeholder="1" min="1" aria-label="Subtask Data Size" onChange={this._handleFormInputs.bind(this, 'subtask_data_size')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             break;
