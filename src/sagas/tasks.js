@@ -154,6 +154,7 @@ export function subscribeTestofTask(session) {
             let status = args[0];
             let error = args[1];
 
+            console.log(config.TASK_TEST_STATUS_CH, status, error, more)
             emit({
                 type: SET_TASK_TEST_STATUS,
                 payload: {
