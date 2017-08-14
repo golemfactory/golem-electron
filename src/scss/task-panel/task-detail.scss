@@ -4,13 +4,16 @@
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+
     h4 {
         margin: 30px 0;
     }
+
     input::selection {
         background: #ffcc89;
         color: #222;
     }
+
     .title {
         flex: 0 0 130px;
         font-size: 10pt;
@@ -29,35 +32,42 @@
     background: $color-bg2;
     box-sizing: border-box;
     transition: .5s background;
+
     //box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
     button {
         position: relative;
         width: 180px;
         transition: .5s all;
     }
+
     .btn--loading {
         width: 140px;
     }
+
     .btn--success {
         width: 140px;
         background: $color-accent1;
         color: $color-text4;
         border: 1px solid $color-accent1;
+
         &:hover {
             color: $color-text4;
             border: 1px solid $color-accent1;
         }
     }
+
     .btn--error {
         width: 140px;
         background: $color-error;
         color: $color-text4;
         border: 1px solid $color-error;
+
         &:hover {
             color: $color-text4;
             border: 1px solid $color-error;
         }
     }
+
     .warning__render-test {
         width: 100%;
         height: 100%;
@@ -73,6 +83,7 @@
         box-sizing: border-box;
         overflow-y: overlay;
     }
+
     &.warning {
         background: $color-accent2 !important;
     }
@@ -83,8 +94,9 @@
     width: 100%;
     top: 0;
     left: 0;
-    background-image: linear-gradient(to bottom, #898989, rgba(255, 255, 255, 0.0));
+    background-image: linear-gradient(to bottom, #898989, rgba(255, 255, 255, 0));
     font-weight: 600;
+
     & > a > div {
         display: flex;
         height: 50px;
@@ -93,6 +105,7 @@
         color: $color-text4 !important;
         font-size: 10pt;
     }
+
     .icon-arrow-left-white {
         font-size: 28pt;
     }
@@ -102,40 +115,49 @@
     height: 100%;
     position: relative;
     overflow-y: overlay !important;
+    transform: translateZ(0);
 }
 
 .section-settings__task-detail {
     box-sizing: border-box;
     padding-bottom: 15px !important;
     border-bottom: 1px solid $color-text3;
+
     button {
         height: 32px;
         margin-left: 10px;
     }
+
     .select,
     input {
         width: 100%;
     }
+
     input {
         padding: 0 10px;
         box-sizing: border-box;
     }
+
     .icon-cross {
         margin: 0 20px;
         font-size: 10pt;
         font-weight: 600;
     }
+
     .item-settings {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: 55px;
     }
+
     .item__preset-button {
         justify-content: flex-end;
     }
+
     .switch-box {
         margin: 0;
+
         span {
             margin-right: 10px;
         }
@@ -151,26 +173,32 @@
         box-sizing: border-box;
         margin: 20px 0;
         font-size: 10pt;
+
         span,
         input {
             flex: 0 0 130px;
         }
+
         span:last-child {
             margin-left: 10px;
         }
     }
+
     .estimated-price__panel {
         padding-top: 22px !important;
         padding-bottom: 22px !important;
         background: $color-bg2;
+
         .estimated-price {
             font-size: 36pt;
             text-align: center;
         }
+
         span:last-child {
             margin-top: 22px;
         }
     }
+
     .tips__price {
         margin: 34px 0 38 0 !important;
         color: $color-text2;
@@ -186,9 +214,11 @@
     justify-content: flex-end;
     align-items: center;
     border-top: 1px solid $color-text3;
+
     button {
         width: 140px;
     }
+
     span {
         margin-right: 20px;
         font-size: 10pt;
