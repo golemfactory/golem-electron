@@ -93,7 +93,7 @@ module.exports = {
                 use: ["file-loader?name=fonts/[hash].[ext]"]
             },
             {
-                test: /\.jpe?g$|\.gif$|\.png$|\.svg$/,
+                test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.json$/,
                 use: ["file-loader?name=images/[hash].[ext]"]
             }]
     }
