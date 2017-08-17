@@ -198,6 +198,18 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _convertPriceAsHR(price) {
+        console.log("price", price);
+        let priceLength = parseInt(price).toString().length
+        if (priceLength < 5) {
+            return <span className="estimated-price">{price.toFixed(2)}</span>
+        }
+        let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
+        let firstDigitLength = firstDigit.toString().length
+        console.log("firstDigitLength", firstDigitLength);
+        return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
+    }
+
     _setTimeStamp() {
         const options = Object.freeze({
             'durationFormat': 'dd:hh:mm:ss',
@@ -240,6 +252,7 @@ export class TaskDetail extends React.Component {
         e.target.checkValidity();
         if (e.target.validity.valid)
             e.target.classList.remove("invalid");
+        return e.target.validity.valid
     }
 
     /**
@@ -291,10 +304,10 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        this.checkInputValidity(e)
-        this.setState({
-            [state]: e.target.value
-        })
+        if(this.checkInputValidity(e))
+            this.setState({
+                [state]: e.target.value
+            })
     }
 
     /**
@@ -642,12 +655,12 @@ export class TaskDetail extends React.Component {
                             <h4 className="title-price__task-detail">Price</h4>
                             <div className="item-price estimated-price__panel">
                                 <span className="title">Estimated</span>
-                                <span className="estimated-price">{estimated_cost.toFixed(2)}</span>
+                                {this._convertPriceAsHR(estimated_cost)}
                                 <span>GNT</span>
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input ref="bidRef" type="number" min="0" step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="bidRef" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
                             </div>
                             <span className="item-price tips__price">
