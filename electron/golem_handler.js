@@ -30,11 +30,14 @@ class GolemProcess {
         if (!fs.existsSync(cwd))
             fs.mkdirSync(cwd);
 
-        /* Patch PATH on Unix and Linux */
-        if (os.platform() != 'win32')
+        /* Patch env on Unix and Linux */
+        if (os.platform() != 'win32') {
             env.PATH += ':/usr/local/bin';
+            env.LC_ALL = env.LC_ALL || 'UTF-8';
+        }
 
         console.log('💻 Starting Golem...');
+        console.log('env:', env)
         this.process = spawn(this.processName, this.processArgs, {
             cwd: cwd,
             env: env,
