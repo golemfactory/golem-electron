@@ -5,6 +5,7 @@ import * as Actions from '../../../actions'
 import { timeStampToHR } from '../../../utils/secsToHMS'
 
 const etherscan = "https://rinkeby.etherscan.io/tx/0x"
+const ETH_DENOM = 10 ** 18;
 
 /*############# HELPER FUNCTIONS ############# */
 
@@ -39,11 +40,11 @@ export class History extends React.Component {
         return (historyList.sort(newestToOldest).map(({payee, payer, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
             <div className="info__history">
                 <h5>{(payee || payer).substr(0, 32)}...</h5>
-                <span>{timeStampToHR((created * (10 ** 3)).toFixed(0))}</span>
+                <span>{timeStampToHR(created)}</span>
                 <span className="status__history">{status}</span>
             </div>
             <div className="action__history">
-                <span className="amount__history">{type === "income" ? '+ ' : '- '}{(value / (10 ** 18)).toFixed(2)}</span>
+                <span className="amount__history">{type === "income" ? '+ ' : '- '}{(value / ETH_DENOM).toFixed(2)}</span>
                 {transaction && <a href={`${etherscan}${transaction}`}><span className="icon-new-window"/></a>}
             </div>
         </div>))

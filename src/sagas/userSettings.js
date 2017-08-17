@@ -13,7 +13,6 @@ const parameterDict = Object.freeze({
     SET_PROV_TRUST: 'computing_trust',
     SET_REQ_TRUST: 'requesting_trust',
     SET_FILE_LOCATION: '',
-    //SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name',
     UPDATE_NODE_NAME: 'node_name'
 })
 export function updateSettings(session, type, payload) {

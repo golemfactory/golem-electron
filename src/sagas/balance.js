@@ -6,6 +6,7 @@ import { config, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
 const {SET_BALANCE} = dict
+const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 
 /**
@@ -19,7 +20,7 @@ export function subscribeBalance(session) {
             let balance = args[0];
             emit({
                 type: SET_BALANCE,
-                payload: [balance.GNT_available / (10 ** 18), balance.ETH / (10 ** 18)] //POW shorthand thanks to ES6
+                payload: [(balance.GNT_available / ETH_DENOM) || 0, (balance.ETH / ETH_DENOM) || 0]
             })
         }
         _handleSUBPUB(on_balance, session, config.BALANCE_CH)

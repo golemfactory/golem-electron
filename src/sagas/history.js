@@ -6,32 +6,6 @@ import { config, _handleRPC } from './handler'
 
 
 const {SET_HISTORY} = dict
-const mockHistory = [
-    {
-        title: 'Processed Task',
-        time: '1:15',
-        status: 'Pending',
-        amount: '+0.014 GNT'
-    },
-    {
-        title: 'HMD Model Bake 3.5',
-        time: '1:03',
-        status: '3:01AM 28 Feb',
-        amount: '-0.017 GNT'
-    },
-    {
-        title: 'Processed Task',
-        time: '2:15',
-        status: '8:01AM 28 Feb',
-        amount: '+0.015 GNT'
-    },
-    {
-        title: 'Processed Task',
-        time: '2:15',
-        status: '8:01AM 28 Feb',
-        amount: '+0.013 GNT'
-    }
-]
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]

@@ -111,7 +111,10 @@ export class TaskDetail extends React.Component {
             this._setTimeStamp()
         }
 
-        !this.state.isDetailPage && this._handleLocalRender()
+        if (!this.state.isDetailPage) {
+            this.refs.outputPath.value = location
+            this._handleLocalRender()
+        }
     }
 
     componentWillUnmount() {

@@ -10,6 +10,12 @@ import * as Actions from '../../../actions'
 import SingleFrame from './Single'
 import { timeStampToHR } from './../../../utils/secsToHMS'
 
+const routesDict = Object.freeze({
+    COMPLETE: 'complete',
+    ALL: 'all',
+    SINGLE: 'single'
+})
+
 const statusDict = Object.freeze({
     NOTSTARTED: 'Not started',
     COMPUTING: 'Computing',
@@ -18,14 +24,12 @@ const statusDict = Object.freeze({
     WAITING: 'Waiting'
 })
 
-let statusClassDict = {
+const statusClassDict = Object.freeze({
     'Not started': 'frame--undone',
     'Computing': 'frame--progress',
     'Finished': 'frame--done',
     'Aborted': 'frame--error'
-}
-
-Object.freeze(statusClassDict)
+})
 
 /*################### HELPER FUNCTIONS #################*/
 
@@ -58,7 +62,7 @@ export class All extends React.Component {
     _handleClick(item, index) {
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
             this.props.actions.setFrameId(item.id)
-            hashHistory.push(`/preview/single/${index}`)
+            hashHistory.push(`/preview/${routesDict.SINGLE}/${index}`)
         }
     }
 
@@ -96,7 +100,7 @@ export class All extends React.Component {
     getStyles() {
         const {show, frameList} = this.props
         return frameList.filter((item, index) => {
-            return show == 'complete' ? item[1][0] === statusDict.FINISHED : true
+            return show == routesDict.COMPLETE ? item[1][0] === statusDict.FINISHED : true
         })
             .map((item, i) => {
                 return {
@@ -167,7 +171,7 @@ export class All extends React.Component {
                     mouseEnterDelay={1}
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
+                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
                             <button onClick={this._handleResubmit.bind(this, data, data.id)}>Resubmit</button>
                         </div>}
                     align={{

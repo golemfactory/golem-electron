@@ -1,6 +1,5 @@
 import createjs from 'createjs-browserify'
-
-var data_json_url = "http://golem.network/data.json";
+import data_json_url from '../assets/data.json'
 
 var ajax = {};
 ajax.x = function() {

@@ -12,6 +12,11 @@ const mainProcess = remote.require('./index')
 
 const ADD_TASK_NEXT_STEP = '/add-task/type'
 
+const classDict = Object.freeze({
+    SHOW: 'drop-zone--show',
+    HIDE: 'drop-zone--hide'
+})
+
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal
@@ -29,7 +34,7 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -40,7 +45,7 @@ export class DropZone extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            className: nextProps.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         })
     }
 
@@ -71,7 +76,7 @@ export class DropZone extends React.Component {
      */
     _onDragEnter(e) {
         this.setState({
-            className: 'drop-zone--show'
+            className: classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -96,7 +101,7 @@ export class DropZone extends React.Component {
      */
     _onDragLeave(e) {
         this.setState({
-            className: this.props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -170,7 +175,7 @@ export class DropZone extends React.Component {
         // }
 
         this.setState({
-            className: 'drop-zone--hide'
+            className: classDict.HIDE
         });
 
 
