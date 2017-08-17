@@ -250,7 +250,7 @@
     @include header($padding-windows, 0, 87px);
 
     .top-titlebar {
-        padding: 0 $padding-windows;
+        padding-left: $padding-windows;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -265,10 +265,52 @@
             position: relative;
             z-index: 999;
             -webkit-app-region: no-drag;
+            margin-right: 5px;
+            align-self: flex-start;
 
             span {
                 & + span {
-                    margin-left: 20px;
+                    margin-left: 1px;
+                }
+            }
+
+            .icon-minimize,
+            .icon-close {
+                font-size: 6pt;
+                transition: .5s all;
+                line-height: 22px;
+
+                &:hover {
+                    transition: none;
+                }
+            }
+
+            .icon-minimize {
+                display: inline-block;
+                width: 25px;
+                height: 17px;
+                text-align: center;
+                vertical-align: bottom;
+                font-weight: bold;
+                font-size: 7pt;
+                padding-top: 3px;
+
+                &:hover {
+                    background: #3665B3;
+                    color: #FFF;
+                }
+            }
+
+            .icon-close {
+                display: inline-block;
+                background: #C75050;
+                color: #FFF;
+                width: 45px;
+                height: 20px;
+                text-align: center;
+
+                &:hover {
+                    background: #E04343;
                 }
             }
         }
