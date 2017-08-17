@@ -25,14 +25,22 @@ class GolemProcess {
     _startProcess() {
         let cwd = path.join(os.homedir(), '.golem');
         let env = process.env;
+        let platform = os.platform();
 
         /* Create a working directory */
         if (!fs.existsSync(cwd))
             fs.mkdirSync(cwd);
 
-        /* Patch PATH on Unix and Linux */
-        if (os.platform() != 'win32')
+        /* Patch env on Unix and Linux */
+        if (platform != 'win32') {
             env.PATH += ':/usr/local/bin';
+
+            if (platform == 'linux') {
+                env.LC_ALL = env.LC_ALL || 'en_US.UTF-8';
+                env.LANG = env.LANG || 'en_US.UTF-8';
+            } else
+                env.LC_ALL = env.LC_ALL || 'UTF-8';
+        }
 
         console.log('💻 Starting Golem...');
         this.process = spawn(this.processName, this.processArgs, {
