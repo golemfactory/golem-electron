@@ -37,7 +37,6 @@ class GolemProcess {
         }
 
         console.log('💻 Starting Golem...');
-        console.log('env:', env)
         this.process = spawn(this.processName, this.processArgs, {
             cwd: cwd,
             env: env,
