@@ -28,7 +28,8 @@ export function fetchEnvironments(session) {
 export function callBenchmark(benchmarkName, session) {
     let products = {
         BLENDER: 'estimated_blender_performance',
-        LUXRENDER: 'estimated_lux_performance'
+        LUXRENDER: 'estimated_lux_performance',
+        DUMMYPOW: 'estimated_dummytask_performance'
     }
     return new Promise((resolve, reject) => {
         function on_benchmark(args) {

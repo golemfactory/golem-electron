@@ -6,7 +6,8 @@ const initialState = {
     charts: {
         estimated_performance: 0,
         estimated_lux_performance: 0,
-        estimated_blender_performance: 0
+        estimated_blender_performance: 0,
+        estimated_dummytask_performance: 0
     },
     loadingIndicator: false
 }

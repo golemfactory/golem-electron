@@ -5,42 +5,50 @@
 }
 
 .content__performance {
-    height: 231px;
+    height: 270px;
+
     button {
         float: right;
         width: 130px;
         transition: .5s all;
     }
+
     .btn--loading {
         width: 160px;
         text-align: left;
         display: flex;
         justify-content: space-between;
     }
+
     .icon-progress {
         margin-left: 15px;
         margin-top: 2px;
         opacity: 0;
         -webkit-animation: fade 0.5s linear 0.5s;
         animation-fill-mode: forwards;
+
         &:before {
             display: inline-block;
             transform-origin: 52% 47%;
             -webkit-animation: spin 2s linear infinite;
         }
     }
+
     @-webkit-keyframes spin {
         0% {
             -webkit-transform: rotate(360deg);
         }
+
         100% {
             -webkit-transform: rotate(0deg);
         }
     }
+
     @-webkit-keyframes fade {
         0% {
             opacity: 0;
         }
+
         100% {
             opacity: 1;
         }
@@ -53,26 +61,32 @@
 
 .list-item__performance {
     @include flex;
+
     padding: 10px 0;
+
     .icon__list-item__acount {
         font-size: 20pt;
         width: 30px;
         color: $color-text2;
     }
+
     .title__list-item__acount {
         font-size: 10pt;
         flex: 0 0 70px;
     }
+
     progress::-webkit-progress-bar {
         background-color: $color-accent3 !important;
         transition: all .5s;
     }
+
     progress::-webkit-progress-value {
         background-color: $color-accent1 !important;
         width: 100%;
         border-top-left-radius: 50px;
         border-bottom-left-radius: 50px;
     }
+
     progress {
         background-color: #fff;
         border: 1px solid $color-accent3;
@@ -81,6 +95,7 @@
         width: 55%;
         height: 10px;
     }
+
     .amount__list-item__performance {
         flex: 0 0 32px;
         text-align: right;

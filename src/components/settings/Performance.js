@@ -24,6 +24,10 @@ const mockList = [
     {
         icon: 'icon-blender-grey',
         title: 'Blender'
+    },
+    {
+        icon: 'icon-question-mark',
+        title: 'Dummy'
     }
 ]
 //loadingIndicator && <span className="icon-progress"/>
