@@ -643,7 +643,7 @@ export class TaskDetail extends React.Component {
                 order: 4,
                 content: <div className="item-settings">
                             <span className="title">Difficulty</span>
-                            <input ref="difficultyRef" type="number" placeholder="1" min="1" max="32" aria-label="Difficulty Factor" onChange={this._handleFormInputs.bind(this, 'difficulty')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="difficultyRef" type="text" minLength="8" maxLength="8" aria-label="Difficulty Factor" onChange={this._handleFormInputs.bind(this, 'difficulty')} pattern="[a-fA-F\d]+" required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
 
