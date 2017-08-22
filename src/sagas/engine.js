@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {START_GOLEM, STOP_GOLEM, SET_GOLEM_ENGINE_STATUS, SET_FOOTER_INFO} = dict
+const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO} = dict
 
 
 /**
@@ -47,7 +47,7 @@ export function* golemizeBase(session, {payload}) {
     //console.log(engineStatus)
     if (!engineStatus) {
         yield put({
-            type: SET_GOLEM_ENGINE_STATUS,
+            type: SET_GOLEM_PAUSE_STATUS,
             payload: true
         })
     }
@@ -74,7 +74,7 @@ export function* stopGolemBase(session) {
     //console.info("engineStatus", engineStatus)
     if (!engineStatus) {
         yield put({
-            type: SET_GOLEM_ENGINE_STATUS,
+            type: SET_GOLEM_PAUSE_STATUS,
             payload: false
         })
         yield put({

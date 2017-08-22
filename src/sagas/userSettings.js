@@ -40,7 +40,7 @@ export function* updateSettingsBase(session, {type, payload, init}) {
 
 // if (!updateStatus) {
 //     yield put({
-//         type: SET_GOLEM_ENGINE_STATUS,
+//         type: SET_GOLEM_PAUSE_STATUS,
 //         payload: false
 //     })
 // }

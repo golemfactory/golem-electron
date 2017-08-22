@@ -166,6 +166,22 @@ select {
         }
 
         &:disabled {
+            cursor: not-allowed;
+            background-color: $button-disable-color;
+            border: 1px solid $button-disable-color;
+        }
+    }
+    &--yellow {
+        background: $color-accent2;
+        border: 1px solid $color-accent2;
+        &:hover {
+            background: darken( $color-accent2, 10%);
+        }
+        &:active {
+            background: darken( $color-accent2, 15%);
+        }
+        &:disabled {
+            cursor: not-allowed;
             background-color: $button-disable-color;
             border: 1px solid $button-disable-color;
         }
@@ -185,6 +201,7 @@ select {
         }
 
         &:disabled {
+            cursor: not-allowed;
             background-color: $color-delete-active;
         }
     }
@@ -205,6 +222,7 @@ select {
         }
 
         &:disabled {
+            cursor: not-allowed;
             color: $button-disable-color;
             border: 1px solid $button-disable-color;
 
