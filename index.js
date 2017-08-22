@@ -353,7 +353,7 @@ function createLocationPath(_dir){
 exports.getDefaultLocation = function() {
 
     const isWin = process.platform === "win32"
-    const _location = `${process.env.HOME}${!!isWin ? '\\Documents' : '/Documents'}`
+    const _location = isWin ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
 
     if (!fs.existsSync(_location)) 
         return createLocationPath(_location)
