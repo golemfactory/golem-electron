@@ -22,6 +22,7 @@ const mapStateToProps = state => ({
     previewList: state.single.previewList,
     taskId: state.task.taskId,
     zoomRatio: state.input.zoomRatio,
+    frameID: state.single.frameId
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -35,16 +36,14 @@ export class Single extends React.Component {
         this.state = {
             ratio: 0,
             offset: {},
-            id: 0,
             previewLink: props.previewList[props.previewList.size < 2 ? 1 : props.frameID]
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        let previewLink = nextProps.previewList[nextProps.previewList.size < 2 ? 1 : nextProps.frameID]
         this.setState({
-            id: Number(nextProps.id),
-            previewLink
+            frameIndex: Number(nextProps.id),
+            previewLink: nextProps.previewList[nextProps.previewList.size < 2 ? 1 : nextProps.frameID]
         })
     }
 
@@ -57,33 +56,29 @@ export class Single extends React.Component {
      * [_previousFrame func. changes frame screen to the previous one]
      */
     _previousFrame() {
-        const {previewList, frameID} = this.props
-        const {id} = this.state;
-        id > 0 && this.setState({
-            id: id - 1
-        }, () => {
-            let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
+        const {previewList, actions} = this.props
+        let {frameID} = this.props;
+        if (frameID > 1) {
+            actions.previousFrame();
             this.setState({
-                previewLink
+                previewLink: previewList[previewList.size < 2 ? 1 : frameID]
             })
-        })
+        }
     }
 
     /**
      * [_nextFrame func. changes frame screen to the next one]
      */
     _nextFrame() {
-        const {details, previewList, frameID} = this.props
-        const {id} = this.state
+        const {details, previewList, actions} = this.props
+        let {frameID} = this.props
         if (!!details.options) {
-            id < details.options.frame_count - 1 && this.setState({
-                id: id + 1
-            }, () => {
-                let previewLink = previewList[previewList.size < 2 ? 1 : frameID];
+            if (frameID < details.options.frame_count) {
+                actions.nextFrame();
                 this.setState({
-                    previewLink
+                    previewLink: previewList[previewList.size < 2 ? 1 : frameID]
                 })
-            })
+            }
         }
     }
     /**
@@ -148,17 +143,17 @@ export class Single extends React.Component {
 
     render() {
         const {taskId, frameID, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
-        const {id, ratio, offset, previewLink} = this.state
+        const {frameIndex, ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleClose.call(this)
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
-                    {previewLink && <ImageZoom image={`file://${previewLink}?${new Date().getTime()}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
+                    {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
                     {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
                 </div>
-                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} imgIndex={id}/>
+                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameID}/>
             </div>
         );
     }

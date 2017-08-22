@@ -12,15 +12,17 @@ const {dialog} = remote
 
 import * as Actions from './../../actions'
 
-const testStatusDict = {
+const editMode = "settings"
+const taskType = Object.freeze({
+    BLENDER: 'Blender',
+    LUXRENDER: 'LuxRender'
+})
+
+const testStatusDict = Object.freeze({
     STARTED: 'Started',
     SUCCESS: 'Success',
     ERROR: 'Error'
-}
-
-const mockPresetList = [{
-    name: '4K Best Quality'
-}]
+})
 
 const mockFormatList = [
     {
@@ -69,13 +71,12 @@ export class TaskDetail extends React.Component {
         super(props);
         this.state = {
             modalData: null,
-            showBackOption: props.params.id != "settings", //<-- HARDCODED
+            isDetailPage: props.params.id != "settings", //<-- HARDCODED
             presetModal: false,
             //INPUTS
             compositing: false,
-            resolution: [0, 0],
+            resolution: [100, 100],
             frames: '',
-            isBlenderTask: this.checkIfTaskBlender(props.task.type),
             format: '',
             formatIndex: 0,
             output_path: props.location,
@@ -93,7 +94,7 @@ export class TaskDetail extends React.Component {
     componentDidMount() {
         const {params, actions, task, presets, location} = this.props
         actions.setEstimatedCost(0)
-        if (params.id != "settings") {
+        if (params.id != editMode) {
             actions.getTaskDetails(params.id)
         } else {
             actions.getTaskPresets(task.type)
@@ -106,33 +107,14 @@ export class TaskDetail extends React.Component {
             }, true);
         }
 
-        this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, {
-            'durationFormat': 'dd:hh:mm:ss',
-            'max': 60 * 60 * 24 * 2,
-            'value': 0, // initial value of input in seconds.
-            'useAbbr': true, // configure the separator to not be ':'
-            'abbr': { // pass in custom separator (with trailing space if desired)
-                'dd': 'days ',
-                'hh': 'h ',
-                'mm': 'm ',
-                'ss': 's'
-            }
-        });
-        this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, {
-            'durationFormat': 'dd:hh:mm:ss',
-            'max': 60 * 60 * 24 * 2,
-            'value': 0, // initial value of input in seconds.
-            'useAbbr': true, // configure the separator to not be ':'
-            'abbr': { // pass in custom separator (with trailing space if desired)
-                'dd': 'days ',
-                'hh': 'h ',
-                'mm': 'm ',
-                'ss': 's'
-            }
-        });
-        //console.log("this.subtaskTaskTimeoutInput", this.subtaskTaskTimeoutInput)
+        if (!!this.refs.taskTimeout && !!this.refs.subtaskTimeout) {
+            this._setTimeStamp()
+        }
 
-        this._handleLocalRender()
+        if (!this.state.isDetailPage) {
+            this.refs.outputPath.value = location
+            this._handleLocalRender()
+        }
     }
 
     componentWillUnmount() {
@@ -142,17 +124,21 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.taskInfo && nextProps.params.id != "settings") {
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id != editMode) {
+            if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
+                this._setTimeStamp()
+            }
             this.setState({
-                isBlenderTask: this.checkIfTaskBlender(nextProps.taskInfo.type)
+                type: nextProps.taskInfo.type
             }, () => {
+
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
 
-                timeout && this.taskTimeoutInput.setValue(getTimeAsFloat(timeout) * 3600)
-                subtaskCount.value = subtasks
-                subtask_timeout && this.subtaskTaskTimeoutInput.setValue(getTimeAsFloat(subtask_timeout) * 3600)
-                bidRef.value = bid
+                this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
+                subtaskCount.value = subtasks || 0
+                this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
+                bidRef.value = bid || 0
                 if (options) {
                     resolutionW.value = options.resolution[0]
                     resolutionH.value = options.resolution[1]
@@ -162,13 +148,13 @@ export class TaskDetail extends React.Component {
                         formatIndex,
                     })
 
-                    if (this.state.isBlenderTask) {
+                    if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
                         compositingRef.checked = options.compositing
                         this.setState({
                             compositing: options.compositing
                         })
                         this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else {
+                    } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
                     }
 
@@ -180,7 +166,9 @@ export class TaskDetail extends React.Component {
                             subtask_time: getTimeAsFloat(subtask_timeout)
                         }
                     })
+
                 }
+
             })
         }
 
@@ -213,6 +201,35 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _convertPriceAsHR(price) {
+        console.log("price", price);
+        let priceLength = parseInt(price).toString().length
+        if (priceLength < 5) {
+            return <span className="estimated-price">{price.toFixed(2)}</span>
+        }
+        let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
+        let firstDigitLength = firstDigit.toString().length
+        console.log("firstDigitLength", firstDigitLength);
+        return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
+    }
+
+    _setTimeStamp() {
+        const options = Object.freeze({
+            'durationFormat': 'dd:hh:mm:ss',
+            'max': 60 * 60 * 24 * 2,
+            'value': 0, // initial value of input in seconds.
+            'useAbbr': true, // configure the separator to not be ':'
+            'abbr': { // pass in custom separator (with trailing space if desired)
+                'dd': 'days ',
+                'hh': 'h ',
+                'mm': 'm ',
+                'ss': 's'
+            }
+        })
+        this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
+        this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, options);
+    }
+
     /**
      * [parsePresets parses preset object from redux store to the array as state]
      * @param  {Object}     presets     [Task preset object]
@@ -231,15 +248,6 @@ export class TaskDetail extends React.Component {
     }
 
     /**
-     * [checkIfTaskBlender func. check task type if Blender task type]
-     * @param  {string}     type    [Type of task item]
-     * @return {Boolean}
-     */
-    checkIfTaskBlender(type) {
-        return type === "Blender"
-    }
-
-    /**
      * [checkInputValidity func. checks if given input valid]
      * @param  {Event}  e
      */
@@ -247,6 +255,7 @@ export class TaskDetail extends React.Component {
         e.target.checkValidity();
         if (e.target.validity.valid)
             e.target.classList.remove("invalid");
+        return e.target.validity.valid
     }
 
     /**
@@ -298,10 +307,10 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        this.checkInputValidity(e)
-        this.setState({
-            [state]: e.target.value
-        })
+        if(this.checkInputValidity(e))
+            this.setState({
+                [state]: e.target.value
+            })
     }
 
     /**
@@ -321,12 +330,15 @@ export class TaskDetail extends React.Component {
             outputPath.value = output_path
             let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
 
-            if (this.checkIfTaskBlender(this.props.task.type)) {
+            if (this.props.task.type === taskType.BLENDER) {
+
                 framesRef.value = frames
                 compositingRef.checked = compositing
-            } else {
-                //TODO for luxrender specific options
+
+            } else if (this.props.task.type === taskType.LUXRENDER) {
+
                 haltspp.value = sample_per_pixel
+
             }
 
             this.setState({
@@ -497,9 +509,8 @@ export class TaskDetail extends React.Component {
 
     isPresetFieldsFilled(nextState) {
         const {resolution, frames, sample_per_pixel} = nextState
-        let isBlender = this.checkIfTaskBlender(this.props.task.type);
-        //console.log("isBlender", isBlender);
-        if (isBlender) {
+
+        if (this.props.task.type === taskType.BLENDER) {
             //console.log("check preset not available", resolution[0], resolution[1], frames)
             return !resolution[0] || !resolution[1] || !frames
         } else {
@@ -507,16 +518,123 @@ export class TaskDetail extends React.Component {
         }
     }
 
-    render() {
-        const {modalData, showBackOption, presetModal, resolution, frames, isBlenderTask, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
+    _handleFormByType(type, isDetail) {
+        const {modalData, isDetailPage, presetModal, resolution, frames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props;
-        console.log("testStatus", testStatus)
+        let formTemplate = [
+            {
+                order: 0,
+                detailContent: false,
+                content: <div className="item-settings" key="0">
+                            <span className="title">Preset</span>
+                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={::this._handleManagePresetModal}  presetManager/> 
+                        </div>
+            },
+            {
+                order: 1,
+                content: <div className="item-settings" key="1">
+                                <span className="title">Dimensions</span>
+                                <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
+                                <span className="icon-cross"/>
+                                <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            },
+            {
+                order: 3,
+                content: <div className="item-settings" key="3">
+                                <span className="title">Format</span>
+                                <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
+                         </div>
+            },
+            {
+                order: 4,
+                content: <div className="item-settings" key="4">
+                                <span className="title">Output to</span>
+                                <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
+                                <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={isDetailPage}>Change</button>
+                          </div>
+            },
+            {
+                order: 6,
+                detailContent: false,
+                content: <div className="item-settings item__preset-button" key="6">
+                                <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
+                            </div>
+            },
+            {
+                order: 7,
+                content: <div className="item-settings" key="7">
+                                <span className="title">Task Timeout</span>
+                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            },
+            {
+                order: 8,
+                content: <div className="item-settings" key="8">
+                                <span className="title">Subtask Amount</span>
+                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            },
+            {
+                order: 9,
+                content: <div className="item-settings" key="9">
+                                <span className="title">Subtask Timeout</span>
+                                <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+            }
+        ]
+
+        switch (type) {
+        case taskType.BLENDER:
+            formTemplate.push({
+                order: 2,
+                content: <div className="item-settings" key="2">
+                            <span className="title">Frame Range</span>
+                            <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+            formTemplate.push({
+                order: 5,
+                content: <div className="item-settings" key="5">
+                            <span className="title">Blender Compositing</span>
+                            <div className="switch-box switch-box--green">
+                                <span>{compositing ? 'On' : 'Off'}</span>
+                                <label className="switch">
+                                    <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
+                                    <div className="switch-slider round"></div>
+                                </label>
+                            </div>
+                        </div>
+            })
+            break;
+        case taskType.LUXRENDER:
+            formTemplate.push({
+                order: 5,
+                content: <div className="item-settings" key="5">
+                            <span className="title">Sample per pixel</span>
+                            <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+            break;
+        }
+
+        let sortByOrder = (a, b) => (a.order - b.order)
+
+        return formTemplate
+            .sort(sortByOrder)
+            .filter(item => item.detailContent === undefined || item.detailContent === isDetail)
+            .map(item => item.content)
+    }
+
+    render() {
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
+        const {testStatus, estimated_cost} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
-            <div>
+            <div>       
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
-                        { showBackOption && <div className="panel-preview__task-detail">
+                    <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
+                        { isDetailPage && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
                                 <div>
                                     <span className="icon-arrow-left-white"/>
@@ -524,96 +642,44 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </Link>
                         </div>}
-                        {testStatus.more && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
-                        {!showBackOption && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
-  <span className="dot-1">.</span>
-  <span className="dot-2">.</span>
-  <span className="dot-3">.</span>
-</span>}</button>}
+                        {(!isDetailPage && testStatus.more) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
+                        {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
+                            <span className="dot-1">.</span>
+                            <span className="dot-2">.</span>
+                            <span className="dot-3">.</span>
+                        </span>}</button>}
                     </section>
-                        <div className="container__task-detail">
-                            <section className="section-settings__task-detail">
+                    <section className="container__task-detail">
+                        <div className="section-settings__task-detail">
                                 <h4>Settings</h4>
-                                {!showBackOption && <div className="item-settings">
-                                    <span className="title">Preset</span>
-                                    <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={showBackOption} manageHandler={::this._handleManagePresetModal}  presetManager/> 
-                                </div>}
-                                <div className="item-settings">
-                                    <span className="title">Dimensions</span>
-                                    <input ref="resolutionW" type="number" min="0" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!showBackOption} disabled={showBackOption}/>
-                                    <span className="icon-cross"/>
-                                    <input ref="resolutionH" type="number" min="0" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!showBackOption} disabled={showBackOption}/>
-                                </div>
-                                { isBlenderTask && <div className="item-settings">
-                                    <span className="title">Frame Range</span>
-                                    <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>}
-                                <div className="item-settings">
-                                    <span className="title">Format</span>
-                                    <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={showBackOption}/> 
-                                </div>
-                                <div className="item-settings">
-                                    <span className="title">Output to</span>
-                                    <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
-                                    <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={showBackOption}>Change</button>
-                                </div>
-                                { isBlenderTask && <div className="item-settings">
-                                    <span className="title">Blender Compositing</span>
-                                    <div className="switch-box switch-box--green">
-                                        <span>{compositing ? 'On' : 'Off'}</span>
-                                        <label className="switch">
-                                            <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={showBackOption}/>
-                                            <div className="switch-slider round"></div>
-                                        </label>
-                                    </div>
-                                </div>}
-                                {!isBlenderTask && <div className="item-settings">
-                                    <span className="title">Sample per pixel</span>
-                                    <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>}
-                                {!showBackOption && <div className="item-settings item__preset-button">
-                                    <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
-                                </div> }
-                                 <div className="item-settings">
-                                    <span className="title">Task Timeout</span>
-                                    <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>
-                                <div className="item-settings">
-                                    <span className="title">Subtask Amount</span>
-                                    <input ref="subtaskCount" type="number" min="1" max="100" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>
-                                <div className="item-settings">
-                                    <span className="title">Subtask Timeout</span>
-                                    <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!showBackOption} disabled={showBackOption}/>
-                                </div>
-                            </section>
-                            <section className="section-price__task-detail">
-                                <h4 className="title-price__task-detail">Price</h4>
-                                <div className="item-price estimated-price__panel">
-                                    <span className="title">Estimated</span>
-                                    <span className="estimated-price">{estimated_cost.toFixed(2)}</span>
-                                    <span>GNT</span>
-                                </div>
-                                <div className="item-price">
-                                    <span className="title">Your bid</span>
-                                    <input ref="bidRef" type="number" min="0" step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!showBackOption} disabled={showBackOption}/>
-                                    <span>GNT/h</span>
-                                </div>
-                                <span className="item-price tips__price">
-                                    You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
-                                </span>
-                            </section>
+                                {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
-                    
-                            {!showBackOption && <section className="section-action__task-detail">
-                                <Link to="/tasks" aria-label="Cancel" tabIndex="0">
-                                    <span >Cancel</span>
-                                </Link>
-                                <button type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
-                            </section>}
-                            </form>
-                        {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
-                        {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
+                        <div className="section-price__task-detail">
+                            <h4 className="title-price__task-detail">Price</h4>
+                            <div className="item-price estimated-price__panel">
+                                <span className="title">Estimated</span>
+                                {this._convertPriceAsHR(estimated_cost)}
+                                <span>GNT</span>
+                            </div>
+                            <div className="item-price">
+                                <span className="title">Your bid</span>
+                                <input ref="bidRef" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <span>GNT/h</span>
+                            </div>
+                            <span className="item-price tips__price">
+                                You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
+                            </span>  
+                        </div>
+                    </section>
+                    {!isDetailPage && <section className="section-action__task-detail">
+                        <Link to="/tasks" aria-label="Cancel" tabIndex="0">
+                            <span >Cancel</span>
+                        </Link>
+                        <button type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
+                    </section>}
+                </form>
+                {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
+                {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

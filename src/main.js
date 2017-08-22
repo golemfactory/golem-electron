@@ -17,7 +17,7 @@ import reducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
-export const APP_VERSION = "v0.7.1"
+export const APP_VERSION = "v0.8.0"
 
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()

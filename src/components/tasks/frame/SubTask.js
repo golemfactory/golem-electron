@@ -74,8 +74,6 @@ export default class SubTask extends React.Component {
 
     componentDidMount() {
         const {data, ratio, subtaskList, offset} = this.props
-        console.info("this.props.offset", offset)
-        console.info("data, ratio, subtaskList", data, ratio, subtaskList)
     }
 
     handleResubmit(id) {
@@ -112,7 +110,7 @@ export default class SubTask extends React.Component {
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
                         {subtask.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR((subtask.time_started * (10 ** 3)).toFixed(0))}</p>
+                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
                         <button type="button" onClick={this.handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
                     </div>}
                 align={{

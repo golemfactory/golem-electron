@@ -5,7 +5,24 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, DELETE_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_ADVANCED_MANUALLY} = dict
+const {SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, DELETE_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_ADVANCED_MANUALLY, SET_CHOSEN_HARDWARE_PRESET} = dict
+
+function activateFunc(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_activate_preset(args) {
+            var activate_preset = args[0];
+            resolve(activate_preset)
+        }
+        _handleRPC(on_activate_preset, session, config.PRESET_ACTIVATE_RPC, [payload])
+    })
+}
+
+export function* activatePreset(session, {payload}) {
+    yield call(activateFunc, session, payload)
+    const action = yield call(subscribeAdvanced, session);
+    //console.log("ADVANCED_ACTION", action)
+    yield action && put(action)
+}
 
 function updateFunc(session, payload) {
     return new Promise((resolve, reject) => {
@@ -91,5 +108,6 @@ export function* advancedFlow(session) {
     yield fork(fireBase, session)
     yield takeLatest(CREATE_ADVANCED_PRESET, createPreset, session)
     yield takeLatest(SET_ADVANCED_MANUALLY, updatePreset, session)
+    yield takeLatest(SET_CHOSEN_HARDWARE_PRESET, activatePreset, session)
     yield takeLatest(DELETE_ADVANCED_PRESET, deletePreset, session)
 }
