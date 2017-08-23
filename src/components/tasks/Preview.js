@@ -51,7 +51,8 @@ export class Preview extends React.Component {
 
     render() {
         const {id, src, taskList} = this.props
-        let preview = id && taskList.filter((item) => item.id === id)[0].preview
+        let task = !!id && taskList.filter((item) => item.id === id)[0]
+        let preview = !!task && task.preview
         const {previewSRC} = this.state
 
         return (

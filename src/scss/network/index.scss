@@ -4,6 +4,7 @@
 @import "tabs/advanced";
 @import "modal/preset-modal";
 @import "modal/manage-preset-modal";
+
 @mixin flex {
     display: flex;
     justify-content: space-between;
@@ -18,28 +19,36 @@
     align-content: space-between;
     box-sizing: border-box;
     text-align: center;
+
     .section__quick-settings {
         @include flex;
+
         flex-direction: column;
         position: relative;
         flex-grow: 1;
         border-bottom: 1px solid $color-text3;
+
         .tab-panel {
             @include flex;
+
             align-self: stretch;
             height: 47px;
             border-bottom: 1px solid $color-text3;
+
             .tab__title {
                 font-weight: 500;
                 font-size: 11pt;
                 line-height: 1.3em;
                 color: $color-text3;
                 cursor: pointer;
+                transition: .5s all;
+
                 &.active {
                     color: $color-text;
                 }
             }
         }
+
         .tab__content {
             top: 47.5px;
             width: 100%;
@@ -48,35 +57,45 @@
             overflow-y: overlay;
         }
     }
+
     .section__actions {
         text-align: left;
         width: 100%;
+
         @include flex;
+
         box-sizing: border-box;
         z-index: 2;
         background: $color-text4;
         flex: 0 0 90px;
+
         &-status {
             @include flex;
+
             justify-content: flex-start;
             align-content: flex-start;
             font-size: 11pt;
             font-weight: 400;
+
             .icon-status-dot {
                 margin-right: 8px;
                 font-size: 10pt;
+
                 &--active {
                     color: #37C481;
                 }
+
                 &--deactive {
                     color: #F9FCFC;
                 }
+
                 &--warning {
                     color: #F65A23;
                 }
             }
         }
     }
+
     .loading-indicator {
         position: absolute;
         z-index: 9 !important;
@@ -90,12 +109,14 @@
         transition: width 2s, height 2s, opacity .1s linear 2s;
         transform: translate(50%, 50%);
         opacity: 0;
+
         &.active {
             opacity: 1;
             width: 300vh;
             height: 300vh;
             transition: width 2s, height 2s, opacity .1s linear 0s;
         }
+
         .loading-icon {
             transform: translate(-50%, -80%);
             position: absolute;
