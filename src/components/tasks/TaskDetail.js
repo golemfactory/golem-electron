@@ -46,9 +46,14 @@ function getTimeAsFloat(time) {
 
 function floatToString(timeFloat) {
     let time = timeFloat * 3600;
-    var date = new Date(1970, 0, 1); //time travel :)
+    let date = new Date(1970, 0, 1); //time travel :)
+    let startDay = date.getDate()
     date.setSeconds(time);
-    return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+
+    let endDay = date.getDate()
+    let day = endDay - startDay
+    let hours = date.getHours() + (day * 24)
+    return hours +':'+ date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
 }
 
 const mapStateToProps = state => ({
@@ -134,7 +139,6 @@ export class TaskDetail extends React.Component {
 
                 const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
-
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks || 0
                 this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
