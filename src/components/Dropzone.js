@@ -12,6 +12,11 @@ const mainProcess = remote.require('./index')
 
 const ADD_TASK_NEXT_STEP = '/add-task/type'
 
+const classDict = Object.freeze({
+    SHOW: 'drop-zone--show',
+    HIDE: 'drop-zone--hide'
+})
+
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal
@@ -29,7 +34,7 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -40,7 +45,7 @@ export class DropZone extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            className: nextProps.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         })
     }
 
@@ -71,7 +76,7 @@ export class DropZone extends React.Component {
      */
     _onDragEnter(e) {
         this.setState({
-            className: 'drop-zone--show'
+            className: classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -96,7 +101,7 @@ export class DropZone extends React.Component {
      */
     _onDragLeave(e) {
         this.setState({
-            className: this.props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -110,6 +115,28 @@ export class DropZone extends React.Component {
      */
     _onDrop(e) {
         e.preventDefault();
+
+        /**
+         * [checkDominantType function checks common item in given array, if there's one common returns it, if more than one with equal amounts returns negative boolean]
+         * @param  {[type]}      files      [Array of extension]
+         * @return {Any}                    [Common item or negative boolean]
+         */
+        const checkDominantType = function(files) {
+            const isBiggerThanOther = function(element, index, array) {
+                return element[1] !== array[0][1];
+            }
+            const tempFiles = [...files.reduce((total, current) => total.set(current, (total.get(current) || 0) + 1), new Map)]
+            const anyDominant = tempFiles.some(isBiggerThanOther)
+
+            if (!anyDominant && tempFiles.length > 1) {
+                return false
+            } else {
+                return tempFiles
+                    .sort((a, b) => b[1] - a[1])
+                    .map(item => item[0])[0];
+            }
+        }
+
         let files = e.dataTransfer.files;
         //console.log('Files dropped: ', files.length);
         // Upload files
@@ -121,8 +148,9 @@ export class DropZone extends React.Component {
                     let mergedList = [].concat.apply([], item);
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious));
                     let masterFiles = mergedList.filter(({master}) => (master));
+                    let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
                     //console.log("masterFiles", masterFiles);
-                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(ADD_TASK_NEXT_STEP)
+                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,
@@ -147,7 +175,7 @@ export class DropZone extends React.Component {
         // }
 
         this.setState({
-            className: 'drop-zone--hide'
+            className: classDict.HIDE
         });
 
 

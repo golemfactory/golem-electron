@@ -7,7 +7,6 @@ export let config = Object.freeze({
     BLENDER_CH: 'com.golem.blender',
     PREVIEW_CH: 'com.golem.preview',
     UPLOAD_CH: 'com.golem.upload.on_progress',
-    LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
     UPDATE_SETTINGS_RPC: 'env.opts.update',
@@ -47,7 +46,6 @@ export let config = Object.freeze({
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
-    RUN_TEST_TASK_RPC: 'comp.tasks.check',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
@@ -70,9 +68,11 @@ export let config = Object.freeze({
     BALANCE_CH: 'evt.pay.balance',
     //General
     QUIT_RPC: 'ui.quit',
-    LOCK_CONFIG_CH: 'evt_lock_config',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
+    LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
+    GOLEM_STATUS_RPC: 'golem.status',
+    GOLEM_STATUS_CH: 'evt.golem.status',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',

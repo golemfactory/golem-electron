@@ -13,7 +13,7 @@ window.require('electron').webFrame.setZoomLevelLimits(1, 1)
 import App from './container/App.doc'
 import './scss/main.scss'
 
-export const APP_VERSION = "v0.7.1"
+export const APP_VERSION = "v0.8.0"
 
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()

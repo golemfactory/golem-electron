@@ -15,7 +15,7 @@ const mapDispatchToProps = dispatch => ({
 const mockList = [
     {
         icon: 'icon-macbook',
-        title: 'i5-6267'
+        title: 'CPU'
     },
     {
         icon: 'icon-luxrender',

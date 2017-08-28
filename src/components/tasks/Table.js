@@ -133,7 +133,7 @@ export class Table extends React.Component {
             return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
 
         default:
-            return <span className="duration duration--done">{timeStampToHR(item.time_started * (10 ** 3))} | {item.status}</span>
+            return <span className="duration duration--done">{timeStampToHR(item.time_started)} | {item.status}</span>
         }
     }
 

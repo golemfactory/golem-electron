@@ -3,6 +3,7 @@ const {app, BrowserWindow, Menu, ipcMain} = electron
 const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
+var mkdirp = require('mkdirp');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -155,7 +156,7 @@ app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.golem.stopProcess()
             .then(app.quit,
-                  app.quit);
+                app.quit);
     }
 })
 
@@ -344,6 +345,17 @@ win.focus();
 return Promise.all(promises)
 }
 
+
+function createLocationPath(_dir){
+    return mkdirp.sync(_dir)
+}
+
 exports.getDefaultLocation = function() {
-return __dirname
+
+    const isWin = process.platform === "win32"
+    const _location = isWin ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
+
+    if (!fs.existsSync(_location)) 
+        return createLocationPath(_location)
+    return _location
 }
