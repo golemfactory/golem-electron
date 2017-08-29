@@ -115,6 +115,7 @@
     height: 100%;
     position: relative;
     overflow-y: overlay !important;
+    overflow-x: hidden;
     transform: translateZ(0);
 }
 
