@@ -64,16 +64,17 @@ class GolemProcess {
 
     stopProcess() {
         return new Promise((resolve, reject) => {
-            if (!this.process) {
-                console.warn('💻 Cannot stop Golem: not in control of the process');
+            if (!this.process)
                 return reject();
-            }
+
+            console.log('Terminating Golem');
 
             if (os.platform() == 'win32')
                 this.windowsKillProcess(this.process.pid, true);
             else
                 this.process.kill();
 
+            this.process = null;
             resolve();
         });
     }
@@ -114,7 +115,8 @@ class GolemProcess {
 
 
 function golemHandler(app) {
-    app.golem = new GolemProcess();
+    if (!app.golem)
+        app.golem = new GolemProcess();
 }
 
 
