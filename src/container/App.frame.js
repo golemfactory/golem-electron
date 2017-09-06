@@ -19,7 +19,7 @@ import * as Actions from '../actions'
 const routes = (
 <Route component={ App } >
     <Route path="/preview/:type" component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}>
-        <Route path="/preview/:type/:id(/:frameID)"  component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}/>
+        <Route path="/preview/:type/:id"  component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}/>
     </Route>
     <Route path="*" component={ NotFound } status={404} />
 </Route>

@@ -8,7 +8,8 @@ const initialState = {
     chartValues: {
         cpu_cores: 0,
         memory: 0,
-        disk: 0
+        disk: 0,
+        name: null
     },
     chosenPreset: ''
 

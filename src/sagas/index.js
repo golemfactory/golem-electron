@@ -6,7 +6,7 @@ import Wampy from 'wampy'
 import MsgpackSerializer from './../utils/MsgpackSerializer'
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
-
+import { golemStatusFlow } from './golem'
 import { frameBase } from './frame'
 import { engineFlow } from './engine'
 import { uploadFlow } from './upload'
@@ -22,12 +22,13 @@ import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
 const {ipcRenderer} = window.require('electron')
-const {SET_CONNECTION_PROBLEM, LOGIN, LOGIN_FRAME, CONTINUE_WITH_PROBLEM, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
+const {SET_CONNECTION_PROBLEM, SET_GOLEM_STATUS, SET_CONNECTED_PEERS, LOGIN, LOGIN_FRAME, CONTINUE_WITH_PROBLEM, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
 
 const {remote} = window.require('electron');
 const {app} = remote
 
-let skipError = false
+let skipError = false;
+let connectTimeout = null;
 
 /**
  * { Websocket Connect function }
@@ -35,7 +36,6 @@ let skipError = false
  * @return     {Promise}      { It returns connection and new session of the connection as promise }
  */
 export function connect() {
-    console.log('connect function starting!')
     return new Promise(resolve => {
         /**
          * [{Object} Wampy]
@@ -46,7 +46,6 @@ export function connect() {
          * @return {[Object]}       connection          ['Connection with session']
          */
         function connect() {
-            let connectTimeout = null;
             let connection = new Wampy(config.WS_URL,
                 {
                     realm: config.REALM,
@@ -54,31 +53,34 @@ export function connect() {
                     transportEncoding: 'msgpack',
                     msgpackCoder: new MsgpackSerializer(),
                     onConnect: () => {
-                        console.log('Wampy connected successfully');
+                        console.log('WS: connected');
+
                         resolve({
                             connection
                         });
                     },
-                    onClose: function() {
-                        console.log('Wampy connection was closed.');
+                    onClose: () => {
+                        console.log('WS: connection closed');
                     },
                     onError: (err, details) => {
-                        console.info('Wampy connection error:', err, details);
+                        console.info('WS: connection error:', err, details);
                         if (connectTimeout) return;
 
-                        console.info('Wampy is connecting');
                         app.golem.startProcess();
+
                         connectTimeout = setTimeout(() => {
                             connectTimeout = null;
                             connect();
-                        }, 5000) //can be less
+                        }, 1000);
                     }
                 });
         }
 
+        console.log('WS: connecting')
         connect()
     })
 }
+
 
 export function disablePortFlow() {
     skipError = true
@@ -198,6 +200,7 @@ export function* apiFlow(connection) {
  */
 export function* handleIO(connection) {
     //yield fork(read, connection);
+    yield fork(golemStatusFlow, connection);
     yield fork(engineFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
@@ -249,6 +252,14 @@ export function* frameFlow() {
 export function* flow() {
     while (true) {
         let {payload} = yield take(LOGIN)
+
+        yield put({
+            type: SET_GOLEM_STATUS,
+            payload: {
+                message: 'Starting Golem'
+            }
+        })
+
         const {connection} = yield call(connect)
         const task = yield fork(handleIO, connection)
         let action = yield take(LOGOUT)
