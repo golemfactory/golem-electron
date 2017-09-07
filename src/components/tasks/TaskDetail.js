@@ -9,6 +9,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 const {remote} = window.require('electron');
 const {dialog} = remote
+const {getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 import * as Actions from './../../actions'
 
@@ -62,7 +63,8 @@ const mapStateToProps = state => ({
     presets: state.details.presets,
     testStatus: state.details.test_status,
     estimated_cost: state.details.estimated_cost,
-    location: state.fileLocation.location
+    location: state.fileLocation.location,
+    subtasksList: state.single.subtasksList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -101,6 +103,10 @@ export class TaskDetail extends React.Component {
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
+            this.isDeveloperMode = getConfig(dictConfig.DEVELOPER_MODE);
+            this.liveSubList = this.isDeveloperMode && setInterval(()=>{
+                actions.fetchSubtasksList(params.id)
+            }, 1000)
         } else {
             actions.getTaskPresets(task.type)
         }
@@ -125,6 +131,7 @@ export class TaskDetail extends React.Component {
     componentWillUnmount() {
         if (!this._nextStep) {
             this.props.actions.clearTaskPlain()
+            this.liveSubList && clearInterval(this.liveSubList);
         }
     }
 
@@ -511,6 +518,30 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _fillNodeInfo(data){
+        function statusDot(status){
+            switch(status){
+                case 'Starting':
+                return 'icon-status-dot--progress'
+
+                case 'Finished':
+                return 'icon-status-dot--done'
+
+                case 'Downloading':
+                return 'icon-status-dot--download'
+
+                case 'Failure':
+                return 'icon-status-dot--warning'
+            }
+        }
+
+        return data.map(({subtask_id, status, node_name}, index) => <tr key={index.toString()}>
+                <td><span>{subtask_id}</span></td>
+                <td><span className={`icon-status-dot ${statusDot(status)}`}/></td>
+                <td>{node_name || 'Anonymous node'}</td>
+            </tr>)
+    }
+
     isPresetFieldsFilled(nextState) {
         const {resolution, frames, sample_per_pixel} = nextState
 
@@ -632,7 +663,7 @@ export class TaskDetail extends React.Component {
 
     render() {
         const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
-        const {testStatus, estimated_cost} = this.props;
+        const {testStatus, estimated_cost, subtasksList} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -653,7 +684,25 @@ export class TaskDetail extends React.Component {
                             <span className="dot-3">.</span>
                         </span>}</button>}
                     </section>
+
                     <section className="container__task-detail">
+                        { this.isDeveloperMode &&
+                        <div className="section-node-list__task-detail">
+                            <h4 className="experiment">Dev mode</h4>
+                            <table>
+                                <thead>
+                                    <tr>
+                                      <th>Subtask</th>
+                                      <th>State</th>
+                                      <th>Node</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {::this._fillNodeInfo(subtasksList)}
+                                </tbody>
+                            </table>
+                        </div>
+                        }
                         <div className="section-settings__task-detail">
                                 <h4>Settings</h4>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
@@ -675,6 +724,7 @@ export class TaskDetail extends React.Component {
                             </span>  
                         </div>
                     </section>
+
                     {!isDetailPage && <section className="section-action__task-detail">
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>

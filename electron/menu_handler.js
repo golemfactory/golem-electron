@@ -1,8 +1,9 @@
 const {app, Menu, globalShortcut} = require('electron')
 const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
-const {DEBUG_MODE} = dictConfig
+const {DEBUG_MODE, DEVELOPER_MODE} = dictConfig
 const DOCLINK = "https://docs.golem.network/"
 let isDebugMode = getConfig(DEBUG_MODE)
+let isDeveloperMode = getConfig(DEVELOPER_MODE)
 const template = [
     {
         label: 'Edit',
@@ -144,17 +145,29 @@ if (process.platform === 'darwin') {
         }]
 
     //View menu
-    template[2].submenu = [{
+    template[2].submenu.push({
         label: 'Debug mode',
         type: 'checkbox',
         checked: isDebugMode,
-        accelerator: 'CmdOrCtrl+Shift+D',
+        accelerator: 'CmdOrCtrl+Shift+L',
         click: () => {
             isDebugMode = !isDebugMode
             setConfig(DEBUG_MODE, isDebugMode)
             console.info('!', `Debug mode ${isDebugMode ? 'started.' : 'stopped.'}`);
         }
-    }]
+    })
+
+    template[2].submenu.push({
+        label: 'Developer mode',
+        type: 'checkbox',
+        checked: isDeveloperMode,
+        accelerator: 'CmdOrCtrl+Shift+D',
+        click: () => {
+            isDeveloperMode = !isDeveloperMode
+            setConfig(DEVELOPER_MODE, isDeveloperMode)
+            console.info('!', `Developer mode ${isDeveloperMode ? 'started.' : 'stopped.'}`);
+        }
+    })
 
     // Window menu
     template[3].submenu = [

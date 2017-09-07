@@ -5,7 +5,7 @@ import { dict } from '../../actions'
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK} = dict
 
 /**
  * [restartSubtask func. restarts related subtask]
@@ -161,6 +161,7 @@ export function fetchSubtaskList(session, payload) {
 }
 
 export function* subtaskList(session, payload) {
+    console.log("payload", payload);
     if (payload) {
         let action = yield call(fetchSubtaskList, session, payload)
         yield put(action)
