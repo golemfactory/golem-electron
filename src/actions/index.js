@@ -126,7 +126,6 @@ export const setSubtasksList = (payload) => ({
 })
 
 export const fetchSubtasksList = (payload) => {
-    console.log("fetchSubtasksList", payload);
     return ({
     type: FETCH_SUBTASKS_LIST,
     payload
