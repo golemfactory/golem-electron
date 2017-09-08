@@ -1,6 +1,12 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
+const {clipboard} = window.require('electron')
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
+
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import Dropdown from './../Dropdown'
@@ -94,7 +100,8 @@ export class TaskDetail extends React.Component {
             bid: 0,
             presetList: [],
             managePresetModal: false,
-            savePresetLock: true
+            savePresetLock: true,
+            isDataCopied: false
         }
     }
 
@@ -132,6 +139,7 @@ export class TaskDetail extends React.Component {
         if (!this._nextStep) {
             this.props.actions.clearTaskPlain()
             this.liveSubList && clearInterval(this.liveSubList);
+            this.copyTimeout && clearTimeout(this.copyTimeout);
         }
     }
 
@@ -518,7 +526,23 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _handleCopyToClipboard(data, evt) {
+        if (data) {
+            clipboard.writeText(data)
+            this.setState({
+                isDataCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        isDataCopied: false
+                    })
+                }, 3000)
+            })
+        }
+    }
+
     _fillNodeInfo(data){
+        const {isDataCopied} = this.state
         function statusDot(status){
             switch(status){
                 case 'Starting':
@@ -535,10 +559,30 @@ export class TaskDetail extends React.Component {
             }
         }
 
-        return data.map(({subtask_id, status, node_name}, index) => <tr key={index.toString()}>
-                <td><span>{subtask_id}</span></td>
-                <td><span className={`icon-status-dot ${statusDot(status)}`}/></td>
-                <td>{node_name || 'Anonymous node'}</td>
+        return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
+                <td>
+                <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
+                            <span>{subtask_id}</span>
+                        </div>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span className={`icon-status-dot ${statusDot(status)}`}/>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
+                    </ReactTooltip>
+                </td>
             </tr>)
     }
 
