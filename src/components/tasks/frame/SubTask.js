@@ -139,7 +139,7 @@ export default class SubTask extends React.Component {
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
                 overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
-                placement={index >= path.length / 2 ? 'top' : 'bottom' }
+                placement={index + 1 > path.length / 2 ? 'top' : 'bottom' }
                 trigger={['hover']}
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
