@@ -221,14 +221,14 @@ export class TaskDetail extends React.Component {
     }
 
     _convertPriceAsHR(price) {
-        console.log("price", price);
+        // console.log("price", price);
         let priceLength = parseInt(price).toString().length
         if (priceLength < 5) {
             return <span className="estimated-price">{price.toFixed(2)}</span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        console.log("firstDigitLength", firstDigitLength);
+        // console.log("firstDigitLength", firstDigitLength);
         return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
     }
 

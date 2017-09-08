@@ -28,7 +28,6 @@ export function fetchSubtaskList(session, {payload}) {
 }
 
 export function* subtaskList(session, payload) {
-    console.log("payload", payload);
     if (payload) {
         let action = yield call(fetchSubtaskList, session, payload)
         yield put(action)
