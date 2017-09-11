@@ -67,6 +67,11 @@
 }
 
 .tooltip-dev {
+
+    .developer_view__tooltip{
+        display: flex;
+        justify-content: space-around;
+    }
     .time__tooltip {
         margin: .8em 0 .8em 0;
         &--done {
@@ -83,9 +88,10 @@
     }
     .desc__tooltip{
         width: 240px;
+        padding-left: 20px;
         line-height: 1.2em;
         color: $color-text2;
-        margin: 1em 0 7em 0;
+        margin: .4em 0 7em 0;
     }
     .logs__tooltip {
         position: absolute;

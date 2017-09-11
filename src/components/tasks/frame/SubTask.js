@@ -143,11 +143,17 @@ export default class SubTask extends React.Component {
                 trigger={['hover']}
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
-                        {_taskStatus(subtask.status)}
-                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
-                        {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
-                        {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
-                        {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                        <div className="developer_view__tooltip">
+                            <div>
+                                {_taskStatus(subtask.status)}
+                                <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
+                                {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
+                                {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
+                            </div>
+                            <div>
+                                {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                            </div>
+                        </div>
                         {isDevMode && <div className="logs__tooltip">
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
