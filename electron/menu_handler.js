@@ -98,12 +98,6 @@ if (process.platform === 'darwin') {
         label: app.getName(),
         submenu: [
             {
-                role: 'about'
-            },
-            {
-                type: 'separator'
-            },
-            {
                 role: 'services',
                 submenu: []
             },
@@ -127,6 +121,7 @@ if (process.platform === 'darwin') {
             }
         ]
     })
+}
 
     // Edit menu
     template[1].submenu = [{
@@ -184,7 +179,6 @@ if (process.platform === 'darwin') {
             role: 'front'
         }
     ]
-}
 
 const menu = Menu.buildFromTemplate(template)
 module.exports = menu
