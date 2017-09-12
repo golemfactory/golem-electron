@@ -8,8 +8,11 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
+import Stats from './Stats'
 import { APP_VERSION } from './../../main'
-
+const {remote} = window.require('electron');
+const {dialog} = remote
+const {getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const accordionItems = [
     {
@@ -27,6 +30,10 @@ const accordionItems = [
     {
         title: 'Default File Location',
         content: <FileLocation/>
+    },
+    {
+        title: "Stats",
+        content: <Stats/>
     }
 ]
 
@@ -53,6 +60,7 @@ export class Settings extends React.Component {
     componentDidMount() {
         const {actions, nodeId} = this.props
         actions.showTrust(nodeId)
+        this.isDeveloperMode = getConfig(dictConfig.DEVELOPER_MODE);
     }
 
     /**
@@ -85,7 +93,9 @@ export class Settings extends React.Component {
      * @return {DOM}                    [Elements of accordion list]
      */
     loadAccordionMenu(data) {
-        return data.map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
+        return data
+        .filter((_, index) => this.isDeveloperMode || index < 4)
+        .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion">
                             <span>{item.title}</span>
                             <span className="icon-arrow-down" onClick={::this._handleTab} role="tab" tabIndex="0" aria-label="Expand Tab"/>

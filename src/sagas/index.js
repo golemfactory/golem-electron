@@ -16,6 +16,7 @@ import { balanceFlow } from './balance'
 import { historyFlow } from './history'
 import { advancedFlow } from './advanced'
 import { performanceFlow } from './performance'
+import { statsFlow } from './stats'
 import { trustFlow } from './trust'
 import { tasksFlow } from './tasks'
 import { settingsFlow } from './userSettings'
@@ -205,6 +206,7 @@ export function* handleIO(connection) {
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
     yield fork(performanceFlow, connection);
+    yield fork(statsFlow, connection);
     yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
     const channel = yield call(subscribe, connection)
     let taskApi;
