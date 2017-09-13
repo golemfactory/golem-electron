@@ -1,6 +1,8 @@
 import { eventChannel, buffers } from 'redux-saga';
 import { take, call, put, cancel } from 'redux-saga/effects';
 import { dict } from '../actions'
+const {remote} = window.require('electron');
+const log = remote.require('./electron/debug_handler.js')
 
 import { config, _handleSUBPUB, _handleUNSUBPUB, _handleRPC } from './handler'
 
@@ -105,7 +107,9 @@ function getGolemStatus(component, method, stage, data) {
         result.status = 'Exception';
     } else try {
         result.status = dig(statuses, component, method, stage);
-    } catch ( e ) { }
+    } catch ( e ) { 
+        log.warn('SAGA > GOLEM', e)
+    }
 
     return result;
 }

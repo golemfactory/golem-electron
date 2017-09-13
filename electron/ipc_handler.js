@@ -38,7 +38,6 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
             } else {
                 createPreviewWindow(id, frameCount).then((previewWindow) => {
                     openedWindowsMap.set(id, previewWindow)
-                    log.info('MAIN_PROCESS > IPC_HANDLER', 'Preview window landed successfully!')
                 })
             }
             console.log("ID", id, "FRAME COUNT", frameCount)
