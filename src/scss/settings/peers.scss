@@ -1,0 +1,32 @@
+.content__peers{
+	height: 100%;
+
+	table{
+        width: 100%;
+        margin-bottom: 30px;
+        border-collapse: collapse; 
+    }
+
+    tr{
+        line-height: 30px;
+        border-bottom: 1px solid $color-text3;
+    }
+
+    td:nth-child(1){
+            width: 150px;
+        	text-align: center;
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            box-sizing: border-box;
+            display: block;
+            span{
+                display: inline-block;
+            }
+    }
+
+    td:nth-child(2){
+        width: 30%;
+        text-align: center;
+    }
+}

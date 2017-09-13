@@ -9,6 +9,7 @@ import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
 import Stats from './Stats'
+import Peers from './Peers'
 import { APP_VERSION } from './../../main'
 const {remote} = window.require('electron');
 const {dialog} = remote
@@ -30,6 +31,10 @@ const accordionItems = [
     {
         title: 'Default File Location',
         content: <FileLocation/>
+    },
+    {
+        title: "Peers",
+        content: <Peers/>
     },
     {
         title: "Stats",
