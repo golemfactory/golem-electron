@@ -73,18 +73,26 @@ export class Peers extends React.Component {
         const {isEngineOn, peerInfo} = this.props
         return (
             <div className="content__peers">
-                <table>
-                    <thead>
-                        <tr>
-                          <th>Address</th>
-                          <th>Port</th>
-                          <th>Node Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {::this._fillNodeInfo(peerInfo)}
-                    </tbody>
-                </table>
+            { peerInfo.length > 0 ?
+                <div className="node-info__peers">
+                    <table>
+                        <thead>
+                            <tr>
+                              <th>Address</th>
+                              <th>Port</th>
+                              <th>Node Name</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {::this._fillNodeInfo(peerInfo)}
+                        </tbody>
+                    </table>
+                </div>
+                :
+                <div className="no-node__peers">
+                    <span>There's no active node.</span>
+                </div>
+                }
             </div>
         );
     }
