@@ -640,10 +640,8 @@ export class TaskDetail extends React.Component {
                     <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
                         { isDetailPage && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
-                                <div>
-                                    <span className="icon-arrow-left-white"/>
-                                    <span>Back</span>
-                                </div>
+                                <span className="icon-arrow-left-white"/>
+                                <span>Back</span>
                             </Link>
                         </div>}
                         {(!isDetailPage && testStatus.more) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}

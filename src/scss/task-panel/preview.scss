@@ -4,9 +4,11 @@
     width: 100%;
     position: fixed;
     bottom: 59px;
-    z-index: 2;
-    @media screen and (max-height: 725px + 59px) {
-        top: 376px;
+    z-index: -1;
+    left: 0;
+    box-sizing: border-box;
+    @media screen and (max-height: 749px + 59px) {
+        top: 400px;
     }
     &-black {
         background: #000;

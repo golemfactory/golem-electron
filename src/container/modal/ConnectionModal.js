@@ -33,11 +33,12 @@ export class ConnectionModal extends React.Component {
 
     componentDidMount() {
         this._specifiedElement = this.refs.modalContent
-        window.applicationSurface.addEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
+        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
+        window.applicationSurface.addEventListener('click', this._clickOutside)
     }
 
     componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
+        window.applicationSurface.removeEventListener('click', this._clickOutside)
     }
 
     _handleCancel() {
