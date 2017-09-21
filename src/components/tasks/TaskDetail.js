@@ -7,10 +7,12 @@ import Dropdown from './../Dropdown'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
 const {remote} = window.require('electron');
 const {dialog} = remote
 
 import * as Actions from './../../actions'
+import {once} from './../../utils/once'
 
 const editMode = "settings"
 const taskType = Object.freeze({
@@ -434,7 +436,7 @@ export class TaskDetail extends React.Component {
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
-    _handleStartTaskButton() {
+    _handleStartTaskButton = once(() => {
 
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
@@ -457,7 +459,7 @@ export class TaskDetail extends React.Component {
         setTimeout(() => {
             hashHistory.push('/tasks');
         }, 1000);
-    }
+    })
 
     _handleLocalRender() {
         //console.info('local sended')
