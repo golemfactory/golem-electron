@@ -15,7 +15,7 @@ export default class Step6 extends React.Component {
                     <img className="doc-image" src={docPreview}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>If you need help at any time, the Docs button on the toolbar should answer most of your questions. You’re also welcome to join our public Slack.</span>
+                    <span>If you need help at any time, the Docs button on the toolbar should answer most of your questions. You’re also welcome to join our public chat.</span>
                 </div>
             </div>
         );

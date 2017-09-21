@@ -15,11 +15,10 @@ export default class Step1 extends React.Component {
                    <img className="welcome-image" src={welcomeBeta}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>Thanks for installing Brass Golem, 
-                    the worldwide supercomputer.
+                    <span>Thanks for installing Brass Golem.
                     Let’s set up a few things for you before we start.</span>
                     <span className="desc__port"><mark><strong>Attention:</strong> Please make sure that your computer has public IP or forwarded ports 40102, 40103, 3282.
-                    Get more info <a href="https://github.com/golemfactory/golem/wiki/Testing#how-to-start-testing">here.</a>
+                    <br/><a href="https://github.com/golemfactory/golem/wiki/Testing#how-to-start-testing">More info</a>
                     </mark></span>
                 </div>
             </div>
