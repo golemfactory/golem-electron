@@ -12,13 +12,17 @@ export default class Step2 extends React.Component {
         return this.props.setNodeName(e.target.value)
     }
 
+    componentDidMount() {
+        setTimeout(() => document.getElementById('nickInput').focus(), 600) //CSSTransition issue related
+    }
+
     render() {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding">
                     <img src={avatar}/>
                     <div className="nickname-area__onboarding">
-                        <input className="nickname-input__onboarding" placeholder="Anonymous Golem" onChange={::this._setNodeName} maxLength={16} autoFocus/>
+                        <input id="nickInput" className="nickname-input__onboarding" placeholder="Anonymous Golem" onChange={::this._setNodeName} maxLength={16}/>
                     </div>
                 </div>
                 <div className="desc__onboarding">

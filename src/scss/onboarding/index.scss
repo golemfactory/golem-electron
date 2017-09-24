@@ -13,7 +13,7 @@
     height: 100%;
     background: $color-text4;
     z-index: 99999 !important;
-    padding-bottom: 24px;
+    padding-bottom: 38px;
     box-sizing:border-box;
 }
 
@@ -26,6 +26,7 @@
 }
 
 .section-image__onboarding {
+    position: relative;
     width: 100%;
     flex: 0 0 288px;
     background: $color-bg2;
@@ -99,6 +100,7 @@
 }
 
 .step-control__onboarding {
+    display: block;
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
@@ -106,7 +108,6 @@
     box-sizing: border-box;
 
     @include flex;
-    align-self: flex-end;
 
     .icon-arrow-left-white,
     .icon-arrow-right-white {

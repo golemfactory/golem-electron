@@ -30,6 +30,19 @@ class OnboardIndex extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._keypressListener = event => {
+            if(event.key === "Enter"){
+                this._handleNext.call(this)
+            }
+        }
+        document.addEventListener("keypress", this._keypressListener);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keypress", this._keypressListener);
+    }
+
     _setNodeName(name) {
         this.setState({
             nodeName: name
@@ -42,22 +55,23 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        let step
+        let step;
+        let key = Symbol(id).toString();
         switch (id) {
         case 1:
-            step = <Step1 key={0}/>
+            step = <Step1 key={key}/>
             break;
         case 2:
-            step = <Step2 setNodeName={::this._setNodeName}key={1}/>
+            step = <Step2 setNodeName={::this._setNodeName}key={key}/>
             break;
         case 3:
-            step = <Step3 key={2}/>
+            step = <Step3 key={key}/>
             break;
         case 4:
-            step = <Step4 key={3}/>
+            step = <Step4 key={key}/>
             break;
         case 5:
-            step = <Step5 key={4}/>
+            step = <Step5 key={key}/>
             break;
         // case 6:
         //     step = <Step6/>
