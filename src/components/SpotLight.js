@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { Motion, spring } from 'react-motion'
 
 /**
- * { Class for not found(404) component. }
+ * { Class for creating tutorials with pointing objects. }
  *
- * @class      NotFound (name)
+ * @class      SpotLight (name)
  */
 export default class SpotLight extends Component {
 
