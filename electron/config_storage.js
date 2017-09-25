@@ -1,4 +1,4 @@
-var electron = require('electron');
+const electron = require('electron');
 const Config = require('electron-config')
 const config = new Config();
 

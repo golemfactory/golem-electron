@@ -7,7 +7,11 @@ var mkdirp = require('mkdirp');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
+/*
+ * Application tray can be additional feature for the future.
+ */
 //const createTray = require('./electron/tray_handler.js')
+
 const log = require('./electron/debug_handler.js')
 const menuHandler = require('./electron/menu_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
