@@ -48,7 +48,7 @@ export class Advanced extends React.Component {
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
             ...chartValues,
-            [key]: evt.target.value,
+            [key]: evt.target.value || 0,
             name: preset.CUSTOM
         })
         actions.setResources(this.calculateResourceValue({
