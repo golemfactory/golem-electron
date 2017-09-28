@@ -8,7 +8,6 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
-import { APP_VERSION } from './../../main'
 
 
 const accordionItems = [
@@ -34,7 +33,8 @@ let activateContent
 
 
 const mapStateToProps = state => ({
-    nodeId: state.info.networkInfo.key
+    nodeId: state.info.networkInfo.key,
+    version: state.info.version
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -97,6 +97,7 @@ export class Settings extends React.Component {
     }
 
     render() {
+        const {version} = this.props
         return (
             <div className="content__settings">
                 <Personal/>
@@ -104,7 +105,7 @@ export class Settings extends React.Component {
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
                 <div className="footer__settings">
-                    <span>Brass Golem {APP_VERSION}</span>
+                    <span>Brass Golem v{version}</span>
                 </div>
             </div>
         );

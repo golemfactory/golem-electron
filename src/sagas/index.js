@@ -6,6 +6,7 @@ import Wampy from 'wampy'
 import MsgpackSerializer from './../utils/MsgpackSerializer'
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
+import { versionFlow } from './version'
 import { golemStatusFlow } from './golem'
 import { frameBase } from './frame'
 import { engineFlow } from './engine'
@@ -109,17 +110,6 @@ export function subscribe(session) {
 
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
 
-        function on_counter(args) {
-            var counter = args[0];
-            ipcRenderer.send('amount-updated', counter)
-            emit({
-                type: SET_MESSAGE,
-                message: counter
-            })
-        }
-
-        //_handleSUBPUB(on_counter, session, config.COUNTER_CH)
-
         function on_blender(args) {
             let blender = args[0];
 
@@ -200,6 +190,7 @@ export function* apiFlow(connection) {
  */
 export function* handleIO(connection) {
     //yield fork(read, connection);
+    yield fork(versionFlow, connection);
     yield fork(golemStatusFlow, connection);
     yield fork(engineFlow, connection);
     yield fork(settingsFlow, connection);
