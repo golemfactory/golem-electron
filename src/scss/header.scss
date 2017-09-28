@@ -167,7 +167,6 @@
     line-height: $header-height;
     box-sizing: border-box;
     font-weight: 400;
-    border-bottom: 1px solid #ccc;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
@@ -322,7 +321,7 @@
     }
 
     .header__frame {
-        header: 50px !important;
+        height: 50px !important;
     }
 }
 
