@@ -243,80 +243,86 @@
 /*                 OS DIFFERENCES
 ================================================== */
 
-.win .header {
-    height: $header-height-windows;
+.win {
+    .header {
+        height: $header-height-windows;
 
-    @include header($padding-windows, 0, 87px);
+        @include header($padding-windows, 0, 87px);
 
-    .top-titlebar {
-        padding-left: $padding-windows;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: 30px;
-        color: #000;
-        font-weight: 400;
-        font-size: 9pt;
-        border-bottom: 1px solid $color-border;
-        box-sizing: border-box;
+        .top-titlebar {
+            padding-left: $padding-windows;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 30px;
+            color: #000;
+            font-weight: 400;
+            font-size: 9pt;
+            border-bottom: 1px solid $color-border;
+            box-sizing: border-box;
 
-        .os__menu {
-            position: relative;
-            z-index: 999;
-            -webkit-app-region: no-drag;
-            margin-right: 5px;
-            align-self: flex-start;
+            .os__menu {
+                position: relative;
+                z-index: 999;
+                -webkit-app-region: no-drag;
+                margin-right: 5px;
+                align-self: flex-start;
 
-            span {
-                & + span {
-                    margin-left: 1px;
+                span {
+                    & + span {
+                        margin-left: 1px;
+                    }
                 }
-            }
 
-            .icon-minimize,
-            .icon-close {
-                font-size: 6pt;
-                transition: .5s all;
-                line-height: 22px;
+                .icon-minimize,
+                .icon-close {
+                    font-size: 6pt;
+                    transition: .5s all;
+                    line-height: 22px;
 
-                &:hover {
-                    transition: none;
+                    &:hover {
+                        transition: none;
+                    }
                 }
-            }
 
-            .icon-minimize {
-                display: inline-block;
-                width: 25px;
-                height: 17px;
-                text-align: center;
-                vertical-align: bottom;
-                font-weight: bold;
-                font-size: 7pt;
-                padding-top: 3px;
+                .icon-minimize {
+                    display: inline-block;
+                    width: 25px;
+                    height: 17px;
+                    text-align: center;
+                    vertical-align: bottom;
+                    font-weight: bold;
+                    font-size: 7pt;
+                    padding-top: 3px;
 
-                &:hover {
-                    background: #3665B3;
+                    &:hover {
+                        background: #3665B3;
+                        color: #FFF;
+                    }
+                }
+
+                .icon-close {
+                    display: inline-block;
+                    background: #C75050;
                     color: #FFF;
-                }
-            }
+                    width: 45px;
+                    height: 20px;
+                    text-align: center;
 
-            .icon-close {
-                display: inline-block;
-                background: #C75050;
-                color: #FFF;
-                width: 45px;
-                height: 20px;
-                text-align: center;
-
-                &:hover {
-                    background: #E04343;
+                    &:hover {
+                        background: #E04343;
+                    }
                 }
             }
         }
+
+        .draggable--win {
+            display: initial;
+        }
     }
 
-    .draggable--win {
-        display: initial;
+    .header__frame {
+        header: 50px !important;
     }
 }
 
@@ -324,7 +330,8 @@
     height: $header-height;
 
     @include header($padding-mac, 72px, 160px);
-    .nav{
+
+    .nav {
         height: 100%;
     }
 
@@ -337,7 +344,8 @@
     height: $header-height;
 
     @include header($padding-mac, 72px, 160px);
-    .nav{
+
+    .nav {
         height: 100%;
     }
 
