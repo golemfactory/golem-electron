@@ -60,9 +60,11 @@ export class All extends React.Component {
      * @return nothing
      */
     _handleClick(item, index) {
+        const {setFrameId, setFrameIndex} = this.props.actions
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
-            this.props.actions.setFrameId(item.id)
-            hashHistory.push(`/preview/${routesDict.SINGLE}/${index}`)
+            setFrameId(item.id)
+            setFrameIndex(index)
+            hashHistory.push(`/preview/${routesDict.SINGLE}/`)
         }
     }
 
@@ -152,6 +154,11 @@ export class All extends React.Component {
             }),
         };
     }
+
+    _getIndexById(_id){
+        const {frameList} = this.props;
+        return frameList.findIndex(obj => obj[0] === _id)
+    }
     // show == 'complete' && 
     render() {
         const {show} = this.props
@@ -177,7 +184,7 @@ export class All extends React.Component {
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index)} onKeyDown={(event) => {
+                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} onKeyDown={(event) => {
                         event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>
