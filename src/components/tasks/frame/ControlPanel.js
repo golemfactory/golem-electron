@@ -32,7 +32,7 @@ export class ControlPanel extends React.Component {
 
     render() {
         const {previousFrame, nextFrame, showSubtask, zoomRatio, details, frameIndex} = this.props
-        let index = frameIndex
+        let index = frameIndex + 1 //index gap
         if (!isNumeric(frameIndex) || frameIndex > 999) {
             index = 0;
         }

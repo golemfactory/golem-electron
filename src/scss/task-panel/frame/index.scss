@@ -1,6 +1,7 @@
-@import 'all';
-@import 'single';
-@import 'control-panel';
+@import "all";
+@import "single";
+@import "control-panel";
+
 .container__frame {
     box-sizing: border-box;
     height: 100%;
@@ -8,10 +9,12 @@
 
 .tooltip-frame {
     box-shadow: 0 0 7px 0 rgba(0, 0, 0, 0.2);
+
     .rc-tooltip-inner {
         position: relative;
         box-sizing: border-box;
     }
+
     .content__tooltip {
         height: 100%;
         display: block;
@@ -23,23 +26,28 @@
         font-weight: 300;
         text-align: center;
     }
+
     p {
         display: block;
         width: 100%;
         margin: 0;
     }
+
     .status__tooltip {
         font-size: 8pt;
         color: $color-text3;
         margin: 1em 0;
     }
+
     .time__tooltip {
         font-size: 18pt;
         margin: .8em 0 2em 0;
+
         &--done {
             color: $color-text2;
         }
     }
+
     button {
         border: 0;
         padding: 0;
@@ -63,12 +71,14 @@
     width: 100vw;
     height: 100vh;
     background-color: black;
+
     .center-container {
         width: 100%;
         height: 100%;
         display: flex;
         align-content: center;
         justify-content: center;
+
         img {
             max-width: 1024px;
             height: auto;
@@ -85,6 +95,7 @@
     transition: transform 0.3ms;
     display: flex;
     justify-content: center;
+
     img {
         height: auto;
     }
