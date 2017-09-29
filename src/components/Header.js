@@ -36,7 +36,7 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = 1
+        const index = location.hash.includes('tasks') ? 2 : 1 // <-- HARDCODED
         let navItems = document.getElementsByClassName('nav__item')
         navItems.length > 1 && navItems[index].classList.add('active') // 1 is the traffic lights of mac & linux
     /*EXPRIMENTAL*/

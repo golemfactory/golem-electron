@@ -103,9 +103,10 @@
     background-image: linear-gradient(to bottom, #898989, rgba(255, 255, 255, 0));
     font-weight: 600;
 
-    & > a > div {
+    & > a {
         display: flex;
         height: 50px;
+        width: 80px;
         justify-content: flex-start;
         align-items: center;
         color: $color-text4 !important;
@@ -121,6 +122,7 @@
     height: 100%;
     position: relative;
     overflow-y: overlay !important;
+    overflow-x: hidden;
     transform: translateZ(0);
 }
 

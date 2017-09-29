@@ -47,6 +47,14 @@ function onReady() {
     golemHandler(app)
 }
 
+function quit() {
+    if (app.golem)
+        app.golem.stopProcess()
+            .then(app.quit, app.quit);
+    else
+        app.quit();
+}
+
 /**
  * [installDevExtensions installing development extensions]
  * @return  {[Object]}   [Promise]
@@ -174,12 +182,13 @@ function createWindow() {
 app.on('ready', onReady)
 
 app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-        app.golem.stopProcess()
-            .then(app.quit,
-                app.quit);
-    }
-})
+    if (process.platform != 'darwin')
+        quit();
+});
+app.on('before-quit', () => {
+    if (process.platform == 'darwin')
+        quit();
+});
 
 app.on('will-navigate', ev => {
     ev.preventDefault()
@@ -386,7 +395,7 @@ exports.getDefaultLocation = function() {
     const isWin = process.platform === "win32"
     const _location = isWin ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
 
-    if (!fs.existsSync(_location)) 
+    if (!fs.existsSync(_location))
         return createLocationPath(_location)
     return _location
 }
