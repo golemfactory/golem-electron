@@ -23,6 +23,7 @@ import onboard from './onboard'
 import input from './input'
 import loader from './loader'
 import currency from './currency'
+import latest_version from './latest_version'
 import realTime from './realTime'
 import info from './info'
 import { routerReducer } from 'react-router-redux'
@@ -52,6 +53,7 @@ const reducer = combineReducers({
     input,
     loader,
     currency,
+    latest_version,
     realTime,
     info,
     routing: routerReducer
