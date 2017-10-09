@@ -20,7 +20,9 @@ export function callBenchmarkOnStartup(session){
             let updateBenchmark = args[0];
             let bencmarks = {};
             Object.keys(updateBenchmark).forEach( item => {
-                bencmarks[products[item]] = updateBenchmark[item]
+                let product = products[item]
+                if(product)
+                    bencmarks[product] = updateBenchmark[item]
             })
             resolve({
                 type: SET_PERFORMANCE_CHARTS,
