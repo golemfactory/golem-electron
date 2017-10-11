@@ -252,28 +252,61 @@ export function* deleteTaskBase(session, {type, payload}) {
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function subscribeTasks(session) {
+// export function subscribeTasks(session) {
+//     return eventChannel(emit => {
+//         function on_tasks(args) {
+//             var taskList = args[0];
+//             emit({
+//                 type: SET_TASKLIST,
+//                 payload: taskList
+//             })
+//         }
+
+//         _handleSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+
+
+//         return () => {
+//             console.log('negative')
+//             _handleUNSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+//         }
+//     })
+// }
+
+export function subscribeTaskList(session) {
+    const interval = 1000
+
     return eventChannel(emit => {
-        function on_tasks(args) {
-            var taskList = args[0];
-            emit({
-                type: SET_TASKLIST,
-                payload: taskList
-            })
+
+        const fetchTaskList = () => {
+            
+            function on_tasks(args) {
+                var taskList = args[0];
+                emit({
+                    type: SET_TASKLIST,
+                    payload: taskList
+                })
+            }
+
+            _handleRPC(on_tasks, session, config.GET_TASKS_RPC)
         }
 
-        _handleSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+        const fetchOnStartup = () => {
+                fetchTaskList()
 
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            _handleUNSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+            clearInterval(channelInterval);
         }
     })
 }
 
 export function* fireBase(session) {
-    const channel = yield call(subscribeTasks, session)
+    const channel = yield call(subscribeTaskList, session)
 
     try {
         while (true) {
