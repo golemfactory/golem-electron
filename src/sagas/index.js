@@ -11,6 +11,7 @@ import { frameBase } from './frame'
 import { engineFlow } from './engine'
 import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
+import { latestVersionFlow } from './latest_version'
 import { connectedPeersFlow } from './connectedPeers'
 import { balanceFlow } from './balance'
 import { historyFlow } from './history'
@@ -190,6 +191,7 @@ export function* apiFlow(connection) {
     yield fork(tasksFlow, connection);
     yield fork(trustFlow, connection);
     yield fork(currencyFlow);
+    yield fork(latestVersionFlow);
 }
 /**
  * { handleIO generator handling multiple generators concurrently }
