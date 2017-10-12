@@ -9,6 +9,7 @@
     flex: 0 0 154px;
     .amount {
         font-size: 34pt;
+        cursor: pointer;
     }
     .currency-menu {
         margin: 2px 0 30px 0;
@@ -20,6 +21,8 @@
         cursor: pointer;
         font-weight: 300;
         span {
+            display:inline-block;
+            min-width: 30px;
             padding: 0 8px;
         }
         .active {
@@ -32,6 +35,13 @@
         font-size: 9pt;
         font-weight: 400;
         line-height: 2.4em;
+    }
+
+    .currency-info{
+        font-size:10pt;
+        position: absolute;
+        bottom: 20px;
+        color: #bbb;
     }
 }
 
