@@ -72,6 +72,7 @@ export class Single extends React.Component {
     _nextFrame() {
         const {details, previewList, frameID, frameIndex, actions} = this.props
         console.log("previewList, frameID, frameIndex", previewList, frameID, frameIndex);
+
         if (!!details.options) {
             if (frameIndex + 1 < details.options.frame_count) {
                 actions.nextFrame();

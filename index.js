@@ -112,7 +112,7 @@ function createWindow() {
         maxWidth: APP_WIDTH,
         center: true,
         show: false,
-        //backgroundColor: '#00789d',
+        backgroundColor: '#fff',
         "webPreferences": {
             "webSecurity": false
         }
@@ -212,7 +212,7 @@ function createPreviewWindow(id, frameCount) {
             resizable: false,
             center: true,
             show: true,
-            //backgroundColor: '#00789d',
+            backgroundColor: '#fff',
             "webPreferences": {
                 "webSecurity": false
             }
