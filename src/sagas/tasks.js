@@ -148,34 +148,77 @@ export function* taskDetailsBase(session, {type, payload}) {
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function subscribeTestofTask(session) {
-    return eventChannel(emit => {
-        function on_tasks(args, more) {
-            let status = args[0];
-            let error = args[1];
 
-            emit({
-                type: SET_TASK_TEST_STATUS,
-                payload: {
-                    status,
-                    error,
-                    more
+// export function subscribeTestofTask(session) {
+//     return eventChannel(emit => {
+//         function on_tasks(args, more) {
+//             let status = args[0];
+//             let error = args[1];
+
+//             emit({
+//                 type: SET_TASK_TEST_STATUS,
+//                 payload: {
+//                     status,
+//                     error,
+//                     more
+//                 }
+//             })
+//         }
+
+//         _handleSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+
+
+//         return () => {
+//             console.log('negative')
+//             _handleUNSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+//         }
+//     })
+// }
+
+export function subscribeTestStatus(session) {
+    const interval = 1000
+
+    return eventChannel(emit => {
+
+        const fetchTestStatus = () => {
+            
+            function on_tasks(args, more) {
+                let obj = args[0];
+                const {status, error} = JSON.parse(obj)
+                emit({
+                    type: SET_TASK_TEST_STATUS,
+                    payload: {
+                        status,
+                        error,
+                        more
+                    }
+                })
+
+                if(!!status && status !== "Started"){
+                    clearInterval(channelInterval); //Wait until eventual result and kill the interval
                 }
-            })
+            }
+
+            _handleRPC(on_tasks, session, config.CHECK_TEST_STATUS_RPC)
         }
 
-        _handleSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+        const fetchOnStartup = () => {
+                fetchTestStatus()
 
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            _handleUNSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+            clearInterval(channelInterval);
         }
     })
 }
 
 export function* testTaskFlow(session) {
-    const channel = yield call(subscribeTestofTask, session)
+    const channel = yield call(subscribeTestStatus, session)
 
     try {
         while (true) {
