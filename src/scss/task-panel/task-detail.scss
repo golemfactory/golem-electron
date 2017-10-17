@@ -250,6 +250,10 @@
         border-bottom: 1px solid $color-text3;
     }
 
+    td{
+        cursor: pointer;
+    }
+
     td:nth-child(1){
             width: 150px;
             margin: 0;
