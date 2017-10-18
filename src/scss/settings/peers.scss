@@ -9,6 +9,14 @@
             border-collapse: collapse;
         }
 
+        th:nth-child(1){
+            text-align: left;
+        }
+
+        th:nth-child(3){
+            text-align: right;
+        }
+
         tr {
             line-height: 30px;
             border-bottom: 1px solid $color-text3;
@@ -20,7 +28,6 @@
 
         td:nth-child(1) {
             width: 150px;
-            text-align: center;
             margin: 0;
             white-space: nowrap;
             overflow: hidden;
@@ -33,8 +40,10 @@
         }
 
         td:nth-child(2) {
-            width: 30%;
-            text-align: center;
+        }
+
+        td:nth-child(3) {
+            text-align: right;
         }
     }
 
