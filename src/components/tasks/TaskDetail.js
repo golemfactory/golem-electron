@@ -216,9 +216,11 @@ export class TaskDetail extends React.Component {
 
         if(nextProps.isDeveloperMode && !this.liveSubList){
 
-            this.liveSubList = setInterval(()=>{
+            let interval = ()=> {
                 actions.fetchSubtasksList(nextProps.params.id)
-            }, 1000)
+                return interval
+            }
+            this.liveSubList = setInterval(interval(), 1000)
 
         } else if(!nextProps.isDeveloperMode && this.liveSubList) {
 
@@ -729,9 +731,10 @@ export class TaskDetail extends React.Component {
                     </section>
 
                     <section className="container__task-detail">
-                        { isDeveloperMode &&
+                        { (isDetailPage && isDeveloperMode) &&
                         <div className="section-node-list__task-detail">
                             <h4 className="experiment">Dev mode</h4>
+                        { subtasksList.length > 0 ?
                             <table>
                                 <thead>
                                     <tr>
@@ -744,6 +747,11 @@ export class TaskDetail extends React.Component {
                                     {::this._fillNodeInfo(subtasksList)}
                                 </tbody>
                             </table>
+                            :
+                            <div className="no-node__task">
+                                <span>There's no active node.</span>
+                            </div>
+                        }
                         </div>
                         }
                         <div className="section-settings__task-detail">
