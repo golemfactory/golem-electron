@@ -46,7 +46,7 @@ export class Peers extends React.Component {
         const {isDataCopied} = this.state
         return peerInfo.map(({address, port, node_name}, index) => <tr key={index.toString()}>
                 <td>
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy <Adress:Port>'}</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy <Adress:Port>'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, `${address}:${port}`)}>
@@ -58,7 +58,7 @@ export class Peers extends React.Component {
                     <span>{port}</span>
                 </td>
                 <td>
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, node_name)}>
