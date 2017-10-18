@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-const {clipboard} = window.require('electron')
+
 /**
  * @see http://react-component.github.io/tooltip/
  */
@@ -11,6 +11,8 @@ import * as Actions from '../../actions'
 
 import RadialProgress from './../RadialProgress'
 import PlaceHolderAvatar from './../../assets/img/avatar.svg'
+
+const {clipboard } = window.electron
 
 const mapStateToProps = state => ({
     charts: state.profile.charts,

@@ -29,6 +29,7 @@ const setTaskDetails = (state = initialState, action) => {
         return Object.assign({}, state, {
             test_status: action.payload
         });
+        
     case CLEAR_TASK_PLAIN:
         return Object.assign({}, state, {
             test_status: {},

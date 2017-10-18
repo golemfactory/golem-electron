@@ -3,6 +3,9 @@ import ReactTooltip from 'rc-tooltip'
 
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
+const {ipcRenderer, remote} = window.electron;
+const {getConfig, dictConfig} = remote.getGlobal('configStorage')
+
 const UNDONE = 0
 const PROGRESS = 1
 const DONE = 2
@@ -53,10 +56,10 @@ const subTaskData = {
 }
 
 const statusDict = Object.freeze({
-    NOTSTARTED: 'Not started',
-    COMPUTING: 'Computing',
+    STARTING: 'Starting',
+    DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
-    ABORTED: 'Aborted'
+    FAILURE: 'Aborted'
 })
 
 let statusClassDict = {
@@ -76,12 +79,17 @@ export default class SubTask extends React.Component {
         const {data, ratio, subtaskList, offset} = this.props
     }
 
-    handleResubmit(id) {
+    _handleResubmit(id) {
         this.props.restartSubtask(id)
     }
 
+    _handleOpenFile(path){
+        console.log("path", path);
+        ipcRenderer.send('open-file', path)
+    }
 
-    drawLine() {
+
+    drawLine(isDevMode) {
         const {data, ratio, subtaskList} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
@@ -94,6 +102,31 @@ export default class SubTask extends React.Component {
             }
         });
 
+        function _taskStatus(status){
+            console.log("status", status);
+            switch(status){
+                case statusDict.FINISHED:
+                return <p className="status__tooltip">Completed</p>;
+
+                case statusDict.DOWNLOADING:
+                return <p className="status__tooltip">Downloading</p>;
+
+                case statusDict.STARTING:
+                return <p className="status__tooltip">Starting</p>;
+
+                case statusDict.FAILURE:
+                return <p className="status__tooltip">Failed</p>;
+
+                default:
+                return <p className="status__tooltip">Waiting</p>;
+            }
+        }
+
+        function _counter(start){
+            console.log("start", window.performance.now(), start);
+            return window.performance.now() - start
+        }
+
         return path
             .sort((a, b) => {
                 let verticalPointA = arrayColumn(a.value, 1)[0]
@@ -104,14 +137,27 @@ export default class SubTask extends React.Component {
                 let subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
-                overlayClassName="tooltip-frame"
-                placement={index === path.length - 1 ? 'top' : 'bottom' }
+                overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
+                placement={index + 1 > path.length / 2 ? 'top' : 'bottom' }
                 trigger={['hover']}
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
-                        {subtask.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
-                        <button type="button" onClick={this.handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
+                        <div className="developer_view__tooltip">
+                            <div>
+                                {_taskStatus(subtask.status)}
+                                <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
+                                {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
+                                {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
+                            </div>
+                            <div>
+                                {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                            </div>
+                        </div>
+                        {isDevMode && <div className="logs__tooltip">
+                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
+                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
+                        </div>}
+                        <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
                     </div>}
                 align={{
                     offset: tooltipOffset(item.value),
@@ -123,7 +169,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
-        const {offset} = this.props
+        const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
             customStyle = {
@@ -137,7 +183,7 @@ export default class SubTask extends React.Component {
         return (
             <div id="frameSVG" style={customStyle}>
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine()}
+            {this.drawLine(isDeveloperMode)}
         </svg>
       </div>
         );

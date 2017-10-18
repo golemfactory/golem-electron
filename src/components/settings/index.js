@@ -8,8 +8,12 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
+import Stats from './Stats'
+import Peers from './Peers'
 import { APP_VERSION } from './../../main'
 
+const {remote} = window.electron;
+const {dialog} = remote
 
 const accordionItems = [
     {
@@ -27,6 +31,14 @@ const accordionItems = [
     {
         title: 'Default File Location',
         content: <FileLocation/>
+    },
+    {
+        title: "Peers",
+        content: <Peers/>
+    },
+    {
+        title: "Stats",
+        content: <Stats/>
     }
 ]
 
@@ -34,7 +46,8 @@ let activateContent
 
 
 const mapStateToProps = state => ({
-    nodeId: state.info.networkInfo.key
+    nodeId: state.info.networkInfo.key,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -53,6 +66,14 @@ export class Settings extends React.Component {
     componentDidMount() {
         const {actions, nodeId} = this.props
         actions.showTrust(nodeId)
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if(nextProps.isDeveloperMode != this.props.isDeveloperMode && this.state.activeContent > 3){
+            this.setState({
+                activeContent: undefined
+            })
+        }
     }
 
     /**
@@ -85,7 +106,10 @@ export class Settings extends React.Component {
      * @return {DOM}                    [Elements of accordion list]
      */
     loadAccordionMenu(data) {
-        return data.map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
+        const {isDeveloperMode} = this.props
+        return data
+        .filter((_, index) => isDeveloperMode || index < 4)
+        .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion">
                             <span>{item.title}</span>
                             <span className="icon-arrow-down" onClick={::this._handleTab} role="tab" tabIndex="0" aria-label="Expand Tab"/>

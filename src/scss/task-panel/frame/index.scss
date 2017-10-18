@@ -61,6 +61,80 @@
         color: $color-text2;
         background: $color-accent3;
         font-size: 8pt;
+        transition: color .5s;
+
+        &:hover:enabled {
+            color: $color-text;
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+        }
+
+        &:active {
+            background: $color-text2;
+        }
+    }
+}
+
+.tooltip-dev {
+    .developer_view__tooltip {
+        display: flex;
+        justify-content: space-around;
+    }
+
+    .time__tooltip {
+        margin: .8em 0 .8em 0;
+
+        &--done {
+            color: $color-text2;
+        }
+    }
+
+    .ip-info__tooltip {
+        color: $color-text3;
+        margin: 2em 0 .8em 0;
+    }
+
+    .node-name__tooltip {
+        color: $color-text3;
+        margin: 1em 0 .8em 0;
+    }
+
+    .desc__tooltip {
+        width: 240px;
+        padding-left: 20px;
+        line-height: 1.2em;
+        color: $color-text2;
+        margin: .4em 0 7em 0;
+    }
+
+    .logs__tooltip {
+        position: absolute;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        bottom: 0;
+        width: 100%;
+        color: $color-text2;
+
+        button:first {
+            margin-right: .25em;
+        }
+
+        button + button {
+            margin-left: .25em;
+        }
+    }
+
+    button {
+        position: relative;
+    }
+
+    .submit__button {
+        position: absolute;
+        left: 0;
+        bottom: 42px;
     }
 }
 

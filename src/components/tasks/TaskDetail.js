@@ -1,6 +1,12 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
+const {clipboard} = window.electron;
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
+
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import Dropdown from './../Dropdown'
@@ -62,7 +68,9 @@ const mapStateToProps = state => ({
     presets: state.details.presets,
     testStatus: state.details.test_status,
     estimated_cost: state.details.estimated_cost,
-    location: state.fileLocation.location
+    location: state.fileLocation.location,
+    subtasksList: state.single.subtasksList,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -92,12 +100,13 @@ export class TaskDetail extends React.Component {
             bid: 0,
             presetList: [],
             managePresetModal: false,
-            savePresetLock: true
+            savePresetLock: true,
+            isDataCopied: false
         }
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location} = this.props
+        const {params, actions, task, presets, location, isDeveloperMode} = this.props
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
@@ -125,6 +134,8 @@ export class TaskDetail extends React.Component {
     componentWillUnmount() {
         if (!this._nextStep) {
             this.props.actions.clearTaskPlain()
+            this.liveSubList && clearInterval(this.liveSubList);
+            this.copyTimeout && clearTimeout(this.copyTimeout);
         }
     }
 
@@ -177,7 +188,6 @@ export class TaskDetail extends React.Component {
         }
 
         if (nextProps.presets != this.props.presets) {
-            //console.info("nextProps.presets", nextProps.presets)
             this.parsePresets(nextProps.presets)
         }
 
@@ -203,17 +213,30 @@ export class TaskDetail extends React.Component {
                 savePresetLock: this.isPresetFieldsFilled(nextState)
             })
         }
+
+        if(nextProps.isDeveloperMode && !this.liveSubList){
+
+            let interval = ()=> {
+                actions.fetchSubtasksList(nextProps.params.id)
+                return interval
+            }
+            this.liveSubList = setInterval(interval(), 1000)
+
+        } else if(!nextProps.isDeveloperMode && this.liveSubList) {
+
+            clearInterval(this.liveSubList)
+            this.liveSubList = false;
+            
+        }
     }
 
     _convertPriceAsHR(price) {
-        console.log("price", price);
         let priceLength = parseInt(price).toString().length
         if (priceLength < 5) {
             return <span className="estimated-price">{price.toFixed(2)}</span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        console.log("firstDigitLength", firstDigitLength);
         return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
     }
 
@@ -281,7 +304,6 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        //console.log("e", e.target.checked);
         this.setState({
             compositing: e.target.checked
         })
@@ -325,7 +347,6 @@ export class TaskDetail extends React.Component {
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
-            //console.log("values", values);
             const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
             resolutionW.value = resolution[0]
@@ -416,7 +437,6 @@ export class TaskDetail extends React.Component {
      */
     _handleOutputPath() {
         let onFolderHandler = data => {
-            //console.log(data)
             if (data) {
                 this.setState({
                     output_path: data[0]
@@ -460,7 +480,6 @@ export class TaskDetail extends React.Component {
     }
 
     _handleLocalRender() {
-        //console.info('local sended')
         const {actions, task} = this.props;
         const {resources, type} = task
         actions.runTestTask({
@@ -511,11 +530,70 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _handleCopyToClipboard(data, evt) {
+        if (data) {
+            clipboard.writeText(data)
+            this.setState({
+                isDataCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        isDataCopied: false
+                    })
+                }, 3000)
+            })
+        }
+    }
+
+    _fillNodeInfo(data){
+        const {isDataCopied} = this.state
+        function statusDot(status){
+            switch(status){
+                case 'Starting':
+                return 'icon-status-dot--progress'
+
+                case 'Finished':
+                return 'icon-status-dot--done'
+
+                case 'Downloading':
+                return 'icon-status-dot--download'
+
+                case 'Failure':
+                return 'icon-status-dot--warning'
+            }
+        }
+
+        return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
+                <td>
+                <ReactTooltip placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
+                            <span>{subtask_id}</span>
+                        </div>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span className={`icon-status-dot ${statusDot(status)}`}/>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
+                    </ReactTooltip>
+                </td>
+            </tr>)
+    }
+
     isPresetFieldsFilled(nextState) {
         const {resolution, frames, sample_per_pixel} = nextState
 
         if (this.props.task.type === taskType.BLENDER) {
-            //console.log("check preset not available", resolution[0], resolution[1], frames)
             return !resolution[0] || !resolution[1] || !frames
         } else {
             return !resolution[0] || !resolution[1] || !sample_per_pixel
@@ -632,7 +710,7 @@ export class TaskDetail extends React.Component {
 
     render() {
         const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
-        const {testStatus, estimated_cost} = this.props;
+        const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -651,7 +729,31 @@ export class TaskDetail extends React.Component {
                             <span className="dot-3">.</span>
                         </span>}</button>}
                     </section>
+
                     <section className="container__task-detail">
+                        { (isDetailPage && isDeveloperMode) &&
+                        <div className="section-node-list__task-detail">
+                            <h4 className="experiment">Dev mode</h4>
+                        { subtasksList.length > 0 ?
+                            <table>
+                                <thead>
+                                    <tr>
+                                      <th>Subtask</th>
+                                      <th>State</th>
+                                      <th>Node</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {::this._fillNodeInfo(subtasksList)}
+                                </tbody>
+                            </table>
+                            :
+                            <div className="no-node__task">
+                                <span>There's no active node.</span>
+                            </div>
+                        }
+                        </div>
+                        }
                         <div className="section-settings__task-detail">
                                 <h4>Settings</h4>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
@@ -673,6 +775,7 @@ export class TaskDetail extends React.Component {
                             </span>  
                         </div>
                     </section>
+
                     {!isDetailPage && <section className="section-action__task-detail">
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
