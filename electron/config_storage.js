@@ -24,7 +24,7 @@ const dictConfig = {
  *
  * @see https://github.com/sindresorhus/electron-config 
  */
-let setConfig = function(key, value) {
+function setConfig(key, value) {
     config.set(key, value);
 }
 
@@ -35,7 +35,7 @@ let setConfig = function(key, value) {
  *
  * @see https://github.com/sindresorhus/electron-config
  */
-let getConfig = function(key) {
+function getConfig(key) {
     return config.get(key)
 }
 

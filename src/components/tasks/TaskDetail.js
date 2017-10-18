@@ -192,7 +192,6 @@ export class TaskDetail extends React.Component {
         }
 
         if (nextProps.presets != this.props.presets) {
-            //console.info("nextProps.presets", nextProps.presets)
             this.parsePresets(nextProps.presets)
         }
 
@@ -221,14 +220,12 @@ export class TaskDetail extends React.Component {
     }
 
     _convertPriceAsHR(price) {
-        // console.log("price", price);
         let priceLength = parseInt(price).toString().length
         if (priceLength < 5) {
             return <span className="estimated-price">{price.toFixed(2)}</span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        // console.log("firstDigitLength", firstDigitLength);
         return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
     }
 
@@ -296,7 +293,6 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        //console.log("e", e.target.checked);
         this.setState({
             compositing: e.target.checked
         })
@@ -340,7 +336,6 @@ export class TaskDetail extends React.Component {
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
-            //console.log("values", values);
             const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
             resolutionW.value = resolution[0]
@@ -431,7 +426,6 @@ export class TaskDetail extends React.Component {
      */
     _handleOutputPath() {
         let onFolderHandler = data => {
-            //console.log(data)
             if (data) {
                 this.setState({
                     output_path: data[0]
@@ -475,7 +469,6 @@ export class TaskDetail extends React.Component {
     }
 
     _handleLocalRender() {
-        //console.info('local sended')
         const {actions, task} = this.props;
         const {resources, type} = task
         actions.runTestTask({
@@ -590,7 +583,6 @@ export class TaskDetail extends React.Component {
         const {resolution, frames, sample_per_pixel} = nextState
 
         if (this.props.task.type === taskType.BLENDER) {
-            //console.log("check preset not available", resolution[0], resolution[1], frames)
             return !resolution[0] || !resolution[1] || !frames
         } else {
             return !resolution[0] || !resolution[1] || !sample_per_pixel
