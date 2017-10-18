@@ -1,16 +1,16 @@
 import { dict } from './../actions'
-const {remote} = window.require('electron')
+const {remote, ipcRenderer} = window.electron
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
-const {ipcRenderer} = window.require('electron')
 
-const {SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_AUTOLAUNCH, SET_ZOOM_RATIO} = dict
-const {AUTOLUNCH_SWITCH, PREVIEW_SWITCH} = dictConfig
+const {SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_AUTOLAUNCH, SET_ZOOM_RATIO, TOGGLE_DEVELOPER_MODE} = dict
+const {AUTOLUNCH_SWITCH, PREVIEW_SWITCH, DEVELOPER_MODE} = dictConfig
 
 const initialState = {
     preview: getConfig(PREVIEW_SWITCH) || false,
     expandedPreview: false,
     autoLaunch: getConfig(AUTOLUNCH_SWITCH) || false,
-    zoomRatio: null
+    zoomRatio: null,
+    developerMode: getConfig(DEVELOPER_MODE) || false
 }
 const input = (state = initialState, action) => {
     switch (action.type) {
@@ -39,6 +39,11 @@ const input = (state = initialState, action) => {
     case SET_ZOOM_RATIO:
         return Object.assign({}, state, {
             zoomRatio: action.payload
+        });
+
+    case TOGGLE_DEVELOPER_MODE:
+        return Object.assign({}, state, {
+            developerMode: action.payload
         });
 
     default:

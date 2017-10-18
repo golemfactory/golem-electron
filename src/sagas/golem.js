@@ -1,7 +1,7 @@
 import { eventChannel, buffers } from 'redux-saga';
 import { take, call, put, cancel } from 'redux-saga/effects';
 import { dict } from '../actions'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const log = remote.require('./electron/debug_handler.js')
 
 import { config, _handleSUBPUB, _handleUNSUBPUB, _handleRPC } from './handler'

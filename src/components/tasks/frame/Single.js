@@ -23,7 +23,8 @@ const mapStateToProps = state => ({
     taskId: state.task.taskId,
     zoomRatio: state.input.zoomRatio,
     frameIndex: state.single.frameIndex,
-    frameID: state.single.frameId
+    frameID: state.single.frameId,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -143,7 +144,7 @@ export class Single extends React.Component {
     }
 
     render() {
-        const {taskId, frameID, frameIndex, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
+        const {taskId, frameID, frameIndex, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList, isDeveloperMode} = this.props
         const {ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
@@ -152,7 +153,7 @@ export class Single extends React.Component {
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
                 </div>
                 <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameIndex}/>
             </div>

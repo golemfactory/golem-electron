@@ -1,5 +1,5 @@
 import { dict } from './../../actions'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 

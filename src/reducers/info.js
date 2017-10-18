@@ -1,5 +1,5 @@
 import { dict } from './../actions'
-const {remote} = window.require('electron')
+const {remote} = window.electron;
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-const {clipboard} = window.require('electron')
+const {clipboard} = window.electron;
 /**
  * @see http://react-component.github.io/tooltip/
  */

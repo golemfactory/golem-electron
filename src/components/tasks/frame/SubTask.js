@@ -3,7 +3,7 @@ import ReactTooltip from 'rc-tooltip'
 
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
-const {ipcRenderer, remote} = window.require('electron')
+const {ipcRenderer, remote} = window.electron;
 const {getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const UNDONE = 0
@@ -76,7 +76,6 @@ export default class SubTask extends React.Component {
     }
 
     componentDidMount() {
-        this.isDeveloperMode = getConfig(dictConfig.DEVELOPER_MODE);
         const {data, ratio, subtaskList, offset} = this.props
     }
 
@@ -170,7 +169,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
-        const {offset} = this.props
+        const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
             customStyle = {
@@ -184,7 +183,7 @@ export default class SubTask extends React.Component {
         return (
             <div id="frameSVG" style={customStyle}>
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine(this.isDeveloperMode)}
+            {this.drawLine(isDeveloperMode)}
         </svg>
       </div>
         );

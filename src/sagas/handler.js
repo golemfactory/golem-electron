@@ -1,4 +1,4 @@
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const log = remote.require('./electron/debug_handler.js')
 
 export let config = Object.freeze({

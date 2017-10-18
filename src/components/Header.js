@@ -9,7 +9,7 @@ import * as Actions from '../actions'
  * @see http://react-component.github.io/tooltip/
  */
 import ReactTooltip from 'rc-tooltip'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
-const {clipboard} = window.require('electron')
+const {clipboard} = window.electron;
 /**
  * @see http://react-component.github.io/tooltip/
  */
@@ -15,7 +15,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 const {remote} = window.require('electron');
 const {dialog} = remote
-const {getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 import * as Actions from './../../actions'
 
@@ -70,7 +69,8 @@ const mapStateToProps = state => ({
     testStatus: state.details.test_status,
     estimated_cost: state.details.estimated_cost,
     location: state.fileLocation.location,
-    subtasksList: state.single.subtasksList
+    subtasksList: state.single.subtasksList,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -106,12 +106,11 @@ export class TaskDetail extends React.Component {
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location} = this.props
+        const {params, actions, task, presets, location, isDeveloperMode} = this.props
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
-            this.isDeveloperMode = getConfig(dictConfig.DEVELOPER_MODE);
-            this.liveSubList = this.isDeveloperMode && setInterval(()=>{
+            this.liveSubList = isDeveloperMode && setInterval(()=>{
                 actions.fetchSubtasksList(params.id)
             }, 1000)
         } else {
@@ -699,7 +698,7 @@ export class TaskDetail extends React.Component {
 
     render() {
         const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
-        const {testStatus, estimated_cost, subtasksList} = this.props;
+        const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -720,7 +719,7 @@ export class TaskDetail extends React.Component {
                     </section>
 
                     <section className="container__task-detail">
-                        { this.isDeveloperMode &&
+                        { isDeveloperMode &&
                         <div className="section-node-list__task-detail">
                             <h4 className="experiment">Dev mode</h4>
                             <table>

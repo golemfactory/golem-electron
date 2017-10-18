@@ -1,5 +1,5 @@
 import { dict } from './../actions'
-const {ipcRenderer} = window.require('electron')
+const {ipcRenderer} = window.electron
 
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
 

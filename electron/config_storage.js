@@ -1,6 +1,6 @@
 const electron = require('electron');
-const Config = require('electron-config')
-const config = new Config();
+const Store = require('electron-store')
+const store = new Store();
 
 /**
  * CONFIG STORE KEYS
@@ -25,7 +25,7 @@ const dictConfig = {
  * @see https://github.com/sindresorhus/electron-config 
  */
 function setConfig(key, value) {
-    config.set(key, value);
+    store.set(key, value);
 }
 
 /**
@@ -36,13 +36,14 @@ function setConfig(key, value) {
  * @see https://github.com/sindresorhus/electron-config
  */
 function getConfig(key) {
-    return config.get(key)
+    return store.get(key)
 }
 
 const configStorage = {
     setConfig,
     getConfig,
-    dictConfig
+    dictConfig,
+    configStore: store
 }
 
 module.exports = global.configStorage = configStorage
