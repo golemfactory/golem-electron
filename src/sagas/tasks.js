@@ -322,7 +322,7 @@ export function* tasksFlow(session) {
     yield fork(fireBase, session);
     yield fork(taskPresetBase, session);
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
-    yield takeEvery(CREATE_TASK, createTaskBase, session)
+    yield takeLatest(CREATE_TASK, createTaskBase, session)
     yield takeLatest(RESTART_TASK, restartTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
