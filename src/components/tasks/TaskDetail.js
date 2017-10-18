@@ -110,9 +110,6 @@ export class TaskDetail extends React.Component {
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
-            this.liveSubList = isDeveloperMode && setInterval(()=>{
-                actions.fetchSubtasksList(params.id)
-            }, 1000)
         } else {
             actions.getTaskPresets(task.type)
         }
@@ -215,6 +212,19 @@ export class TaskDetail extends React.Component {
             this.setState({
                 savePresetLock: this.isPresetFieldsFilled(nextState)
             })
+        }
+
+        if(nextProps.isDeveloperMode && !this.liveSubList){
+
+            this.liveSubList = setInterval(()=>{
+                actions.fetchSubtasksList(nextProps.params.id)
+            }, 1000)
+
+        } else if(!nextProps.isDeveloperMode && this.liveSubList) {
+
+            clearInterval(this.liveSubList)
+            this.liveSubList = false;
+            
         }
     }
 
