@@ -53,7 +53,8 @@ export class Personal extends React.Component {
         this.setState({
             editMode: !this.state.editMode
         }, () => {
-            const {editMode, nodeName} = this.state;
+            let {editMode, nodeName} = this.state;
+            if(!!nodeName) nodeName = nodeName.trim() //space character
             if(!!nodeName && !editMode && nodeName != this.props.nodeName)
                 this.props.actions.updateNodeName(nodeName)
         })
@@ -103,12 +104,16 @@ export class Personal extends React.Component {
                         onSubmit={::this._toggleEditMode}>
                         { editMode
                         ?
-                        <input type="text" defaultValue={nodeName} onChange={::this._setNodeName} onKeyDown={(event) => {
-                    event.keyCode === 13 && this.form.dispatchEvent(new Event("submit"));
-                }} maxLength={16}
-                pattern="[a-zA-Z0-9-]+"
-                title="Please write with English charaters and numbers"
-                autoFocus required/>
+                        <input 
+                        pattern="[a-zA-Z0-9-]+"
+                        title="Please write with English charaters and numbers"
+                        type="text" 
+                        defaultValue={nodeName} 
+                        onChange={::this._setNodeName} onKeyDown={(event) => {
+                            event.keyCode === 13 && this.form.dispatchEvent(new Event("submit"));
+                        }}
+                        maxLength={16}
+                        autoFocus required/>
                         :
                         <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
                         }
