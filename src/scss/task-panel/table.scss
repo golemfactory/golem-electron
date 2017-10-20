@@ -62,6 +62,7 @@
                 box-sizing: border-box;
                 font-size: 14pt;
                 color: $color-text3;
+                cursor: pointer;
             }
             .icon-trash {
                 visibility: hidden;
@@ -90,6 +91,12 @@
             }
             &.active {
                 border-left: 5px solid $button-static-color;
+            }
+            .icon-arrow-right{
+                transition: .5s color;
+                &:hover {
+                    color: $color-text;
+                }
             }
         }
     }
