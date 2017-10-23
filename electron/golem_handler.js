@@ -4,10 +4,11 @@ const os = require('os');
 const path = require('path');
 const log = require('./debug_handler.js')
 
-const {exec, execSync, spawn} = require('child_process');
+const {execSync, spawn, spawnSync} = require('child_process');
 const {app} = electron;
 
 const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
+const MINIMUM_GOLEM_VERSION = [0, 7, 1];
 
 
 class GolemProcess {
@@ -18,12 +19,17 @@ class GolemProcess {
         this.processArgs = processArgs || ['--nogui', '-r', '127.0.0.1:61000'];
     }
 
-    startProcess(err, pid) {
-        if (!this.process)
+    startProcess() {
+        try {
+            if (this.process) return;
+            if (!this.checkVersion()) return;
             this._startProcess();
+        } catch (e) {
+            console.error('GolemProcess error:', e);
+        }
     }
 
-    _startProcess() {
+    prepareSpawnOptions() {
         let cwd = path.join(os.homedir(), '.golem');
         let env = process.env;
         let platform = os.platform();
@@ -47,8 +53,54 @@ class GolemProcess {
         this.process = spawn(this.processName, this.processArgs, {
             cwd: cwd,
             env: env,
-            stdio: 'ignore'
-        });
+        }
+    }
+
+    checkVersion() {
+        let options = this.prepareSpawnOptions();
+        options.stdio = 'pipe';
+        options.timeout = 1000; // ms
+        options.killSignal = 'SIGKILL';
+        let result = spawnSync(this.processName, ['--version'], options);
+        if (result.error) {
+            if (result.error.code == 'ENOENT') {
+                console.error(this.processName,
+                        "not found! Make sure it's in your $PATH");
+                return false;
+            } else {
+                console.error(this.processName, "failed. ERRNO:",
+                        result.error.errno, "code:", result.error.code);
+                return false;
+            }
+        }
+        if (result.status != 0) {
+            console.error('Cannot start Golem process. Exit code:',
+                    result.status,
+                    'stderr:',
+                    result.stderr && result.stderr.toString() || "<null>"
+            );
+            return false;
+        }
+        let version_re = /^GOLEM version: (\d+\.\d+\.\d+)$/m;
+        let version_match = version_re.exec(result.stdout.toString());
+        let process_version = version_match[1].split(".");
+        if (process_version < MINIMUM_GOLEM_VERSION) {
+            console.error(this.processName,
+                    ' version is', process_version.join(".")
+                    +'. Minimum required version is',
+                    MINIMUM_GOLEM_VERSION.join(".") + '. Please upgrade.'
+            );
+            return false;
+        }
+        return true;
+    }
+
+    _startProcess() {
+        let options = this.prepareSpawnOptions();
+        options.stdio = 'ignore';
+
+        console.log('💻 Starting Golem...');
+        this.process = spawn(this.processName, this.processArgs, options);
 
         /* Handle process events */
         this.process.on('error', data => {
