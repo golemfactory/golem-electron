@@ -29,6 +29,7 @@ export default class indicator extends React.Component {
     }
 
     componentDidMount() {
+console.log("this.state.idx", this.state.idx);
         document.getElementsByClassName('amount__item')[this.state.idx].classList.add('active')
     }
 
@@ -107,7 +108,7 @@ export default class indicator extends React.Component {
         const {defaultCurrency, currencyRate, idx, toggler} = this.state
         return (
             <div className="content__indicator">
-                <span>{defaultCurrency == dictCurrency.GNT ? 'Wallet balance' : 'Gas balance'}</span>
+                <span>{idx == 0 ? 'Wallet balance' : 'Gas balance'}</span>
                 <Motion defaultStyle={{
                 balanceAnimated: motionBalanceStart
             }} style={{
@@ -119,7 +120,7 @@ export default class indicator extends React.Component {
                     {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && '$'}{::this.formatAmount(Number(balanceAnimated))}</span>}
                 </Motion>
                 <div className="currency-menu" role="menu">
-                    <span className="amount__item active" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>{(!toggler && defaultCurrency == dictCurrency.GNT) ? 'USD' : 'GNT'}</span>
+                    <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>{(!toggler && defaultCurrency == dictCurrency.GNT) ? 'USD' : 'GNT'}</span>
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>{(!toggler && defaultCurrency == dictCurrency.ETH) ? 'USD' : 'ETH'}</span>
                 </div>
                 {!toggler && <span className="currency-info">Estimated Amount</span>}
