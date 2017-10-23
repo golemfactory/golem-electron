@@ -1,3 +1,6 @@
+const {remote} = window.electron;
+const log = remote.require('./electron/debug_handler.js')
+
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
     WS_URL: 'ws://127.0.0.1:61000/ws',
@@ -60,6 +63,7 @@ export let config = Object.freeze({
     ENABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     DISABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     RUN_BENCHMARK_RPC: 'comp.environment.benchmark',
+    GET_BENCHMARK_RESULT_RPC: 'comp.environment.performance',
     //Payment
     BALANCE_RPC: 'pay.balance',
     PAYMENTS_RPC: 'pay.payments',
@@ -123,7 +127,7 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err, details, arr.join())
         }
     }
     _session.unsubscribe(_channel, cb)
@@ -141,7 +145,7 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) =
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr.join());
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
         }
     })
 }

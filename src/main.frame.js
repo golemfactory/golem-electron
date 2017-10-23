@@ -8,13 +8,18 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { hashHistory } from 'react-router'
-window.require('electron').webFrame.setZoomLevelLimits(1, 1)
+import './utils/electronLayer'
+import {dict} from './actions'
+
 
 
 import App from './container/App.frame'
 import reducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
+
+const {remote} = window.electron
+const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()
@@ -28,6 +33,13 @@ let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhan
 let history = syncHistoryWithStore(hashHistory, store)
 
 sagaMiddleware.run(sagas)
+
+configStore.onDidChange(dictConfig.DEVELOPER_MODE, (newVal)=> {
+    store.dispatch({
+        type: dict.TOGGLE_DEVELOPER_MODE,
+        payload: newVal
+    })
+})
 
 document.addEventListener('DOMContentLoaded', function() {
 

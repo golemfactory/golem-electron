@@ -1,5 +1,6 @@
 import { dict } from './../actions'
-import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
+const {remote} = window.electron
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {ONBOARDING} = dict
 const {SHOW_ONBOARD} = dictConfig

@@ -7,7 +7,13 @@ var mkdirp = require('mkdirp');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
-const createTray = require('./electron/tray_handler.js')
+/*
+ * Application tray can be additional feature for the future.
+ */
+//const createTray = require('./electron/tray_handler.js')
+
+const log = require('./electron/debug_handler.js')
+const menuHandler = require('./electron/menu_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')
 
@@ -69,6 +75,7 @@ function installDevExtensions() {
                 resolve()
             })
             .catch((err) => {
+                log.warn('MAIN_PROCESS > REACT_DEVELOPER_TOOLS', err)
                 console.log(chalk.red(`An error occurred: ${err}`))
                 console.log()
                 reject()
@@ -80,6 +87,7 @@ function installDevExtensions() {
                 resolve()
             })
             .catch((err) => {
+                log.warn('MAIN_PROCESS > REDUX_DEVTOOLS', err)
                 console.log(chalk.red(`An error occurred: ${err}`))
                 console.log()
                 reject()
@@ -104,7 +112,7 @@ function createWindow() {
         maxWidth: APP_WIDTH,
         center: true,
         show: false,
-        //backgroundColor: '#00789d',
+        backgroundColor: '#fff',
         "webPreferences": {
             "webSecurity": false
         }
@@ -126,7 +134,19 @@ function createWindow() {
 
     win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
+        Menu.setApplicationMenu(menuHandler)
         win.show()
+    })
+
+    /**
+     * [This event emitted when the load failed or was cancelled]
+     *
+     * @see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
+     *
+     * @description To see error codes meanings check url above.
+     */
+    win.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+        log.warn('MAIN_PROCESS', 'MAIN LOAD FAILED', errorCode, errorDescription, validatedURL, isMainFrame)
     })
 
 
@@ -191,7 +211,7 @@ function createPreviewWindow(id, frameCount) {
             resizable: false,
             center: true,
             show: true,
-            //backgroundColor: '#00789d',
+            backgroundColor: '#fff',
             "webPreferences": {
                 "webSecurity": false
             }
@@ -211,6 +231,18 @@ function createPreviewWindow(id, frameCount) {
         previewWindow.on('close', () => {
             previewWindow = null
             ipcHandler.mapRemover(id)
+        })
+
+
+        /**
+         * [This event emitted when the load failed or was cancelled]
+         *
+         * @see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
+         *
+         * @description To see error codes meanings check url above.
+         */
+        previewWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+            log.warn('MAIN_PROCESS', 'PREVIEW LOAD FAILED', errorCode, errorDescription, validatedURL, isMainFrame)
         })
 
         if (isDevelopment()) {
@@ -333,7 +365,6 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
             if (err) {
                 reject(err);
             }
-            console.log('results', results)
             resolve(results);
         });
     else {
@@ -345,7 +376,6 @@ let promises = directory.length > 0 && directory.map(item => new Promise((resolv
             malicious: isBadFile(path.extname(item)),
             master: isMasterFile(path.extname(item))
         });
-        console.log('results', results)
         resolve(results)
     }
 }))

@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import * as Actions from './../actions'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
 

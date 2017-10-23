@@ -9,10 +9,10 @@ import * as Actions from '../actions'
  * @see http://react-component.github.io/tooltip/
  */
 import ReactTooltip from 'rc-tooltip'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
-import { setConfig, getConfig } from './../utils/configStorage'
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal
@@ -22,7 +22,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-const DOCLINK = "http://docs.golem.network"
+const DOCLINK = "https://docs.golem.network/"
 
 /**
  * { Class for header component with navigation. }

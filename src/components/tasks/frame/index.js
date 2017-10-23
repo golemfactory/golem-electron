@@ -30,9 +30,9 @@ export class Frame extends React.Component {
     }
 
     componentDidMount() {
-        const {actions} = this.props;
+        const {actions, params} = this.props;
         //console.dir(this.props)
-        actions.loginFrame(this.props.params.id)
+        actions.loginFrame(params.id)
         const endLoading = () => {
             actions.endLoading("FRAME_LOADER")
         // To replay animation
@@ -54,11 +54,11 @@ export class Frame extends React.Component {
      */
 
     render() {
-        const {type, id, frameID} = this.props.params;
+        const {type, id, frameIndex} = this.props.params;
         //console.log("type", type);
         return (
             <div className="container__frame">
-                {type !== 'single' ? <AllFrame show={type}/> : <SingleFrame id={id} frameID={frameID}/>}
+                {type !== 'single' ? <AllFrame show={type}/> : <SingleFrame taskID={id} frameIndex={frameIndex}/>}
             </div>
         )
     }
