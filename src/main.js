@@ -21,8 +21,6 @@ import './scss/main.scss'
 const {remote} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
-export const APP_VERSION = "v0.8.1"
-
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()
 const enhancer = compose(

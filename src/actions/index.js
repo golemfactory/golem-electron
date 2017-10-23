@@ -60,6 +60,7 @@ export let dict = Object.freeze({
     NEXT_FRAME: 'NEXT_FRAME',
     PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
+    SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     START_GOLEM: 'START_GOLEM',
     STOP_GOLEM: 'STOP_GOLEM',
     CONTINUE_WITH_PROBLEM: 'CONTINUE_WITH_PROBLEM',
@@ -142,8 +143,8 @@ const {ONBOARDING, UPDATE_NODE_NAME,
     SET_FRAME_INDEX, 
     NEXT_FRAME, 
     PREVIOUS_FRAME,
-
     //GENERAL
+    SET_GOLEM_VERSION,
     START_GOLEM, 
     STOP_GOLEM, 
     CONTINUE_WITH_PROBLEM, 
@@ -359,6 +360,11 @@ export const setPreview = (payload) => ({
 
 export const setOnboard = (payload) => ({
     type: ONBOARDING,
+    payload
+})
+
+export const setVersion = (payload) => ({
+    type: SET_GOLEM_VERSION,
     payload
 })
 

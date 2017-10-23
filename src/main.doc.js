@@ -13,8 +13,6 @@ import './utils/electronLayer'
 import App from './container/App.doc'
 import './scss/main.scss'
 
-export const APP_VERSION = "v0.8.1"
-
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()
 const enhancer = compose(
