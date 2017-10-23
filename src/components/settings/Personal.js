@@ -33,12 +33,31 @@ export class Personal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            nodeIdCopied: false
+            nodeIdCopied: false,
+            editMode: false,
+            nodeName: null
         }
     }
 
     componentWillUnmount() {
         this.copyTimeout && clearTimeout(this.copyTimeout)
+    }
+
+    _setNodeName(e) {
+        this.setState({
+            nodeName: e.target.value
+        })
+    }
+
+    _toggleEditMode(e){
+        this.setState({
+            editMode: !this.state.editMode
+        }, () => {
+            let {editMode, nodeName} = this.state;
+            if(!!nodeName) nodeName = nodeName.trim() //space character
+            if(!!nodeName && !editMode && nodeName != this.props.nodeName)
+                this.props.actions.updateNodeName(nodeName)
+        })
     }
 
     /**
@@ -67,7 +86,7 @@ export class Personal extends React.Component {
     // <span>Provider</span>
     render() {
         const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust} = this.props
-        const {nodeIdCopied} = this.state
+        const {nodeIdCopied, editMode} = this.state
         return (
             <div className="section__personal">
                 <div className="indicator-panel__personal">
@@ -80,7 +99,31 @@ export class Personal extends React.Component {
                     </div>
                 </div>
                 <div>
-                    <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span><p/>
+                    <form ref={node => this.form = node} 
+                        className="user-name__form" 
+                        onSubmit={::this._toggleEditMode}>
+                        { editMode
+                        ?
+                        <input 
+                        pattern="[a-zA-Z0-9-]+"
+                        title="Please write with English charaters and numbers"
+                        type="text" 
+                        defaultValue={nodeName} 
+                        onChange={::this._setNodeName} onKeyDown={(event) => {
+                            event.keyCode === 13 && this.form.dispatchEvent(new Event("submit"));
+                        }}
+                        maxLength={16}
+                        autoFocus required/>
+                        :
+                        <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
+                        }
+                        <ReactTooltip className="tooltip__edit-mode" placement="top" trigger={['hover']} overlay={<p>Edit</p>} mouseEnterDelay={1} align={{
+                    offset: [0, -5],
+                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                            <span className={`toggle__edit-mode ${editMode ? "icon-checkmark" : "icon-pencil"}`} onClick={() => this.form.dispatchEvent(new Event("submit"))}/>
+                        </ReactTooltip>
+                        <p/>
+                    </form>
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>

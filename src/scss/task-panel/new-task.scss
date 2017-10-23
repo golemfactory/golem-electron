@@ -26,8 +26,8 @@
     [class*=" icon-"] {
         font-size: 28px;
     }
-    .icon-luxrender {
-        color: #f4ca1b;
+    .icon-luxrender:before {
+        color: #f4ca1b !important;
     }
 }
 
