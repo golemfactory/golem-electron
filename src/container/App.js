@@ -61,6 +61,8 @@ export class App extends Component {
     componentDidMount() {
         const {actions} = this.props
         actions.login('Muhammed')
+
+
     }
 
     _closeModal() {

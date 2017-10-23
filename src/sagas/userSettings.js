@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
+const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
 
 const parameterDict = Object.freeze({
     SET_PROV_MIN_PRICE: 'min_price',
@@ -52,16 +52,8 @@ export function callSettings(session) {
         function on_settings(args) {
             let on_settings = args[0];
             //console.log("SETTINGS", on_settings)
-            const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
+            const {hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
 
-            actionList.push({
-                type: SET_PERFORMANCE_CHARTS,
-                payload: {
-                    estimated_performance,
-                    estimated_lux_performance,
-                    estimated_blender_performance
-                }
-            })
 
             actionList.push({
                 type: SET_CHOSEN_HARDWARE_PRESET,

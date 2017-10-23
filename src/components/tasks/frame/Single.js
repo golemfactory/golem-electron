@@ -22,7 +22,9 @@ const mapStateToProps = state => ({
     previewList: state.single.previewList,
     taskId: state.task.taskId,
     zoomRatio: state.input.zoomRatio,
-    frameID: state.single.frameId
+    frameIndex: state.single.frameIndex,
+    frameID: state.single.frameId,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -42,7 +44,6 @@ export class Single extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            frameIndex: Number(nextProps.id),
             previewLink: nextProps.previewList[nextProps.previewList.size < 2 ? 1 : nextProps.frameID]
         })
     }
@@ -56,9 +57,9 @@ export class Single extends React.Component {
      * [_previousFrame func. changes frame screen to the previous one]
      */
     _previousFrame() {
-        const {previewList, actions} = this.props
-        let {frameID} = this.props;
-        if (frameID > 1) {
+        const {previewList, frameID, frameIndex, actions} = this.props
+        console.log("previewList, frameID, frameIndex", previewList, frameID, frameIndex);
+        if (frameIndex > 0) {
             actions.previousFrame();
             this.setState({
                 previewLink: previewList[previewList.size < 2 ? 1 : frameID]
@@ -70,10 +71,11 @@ export class Single extends React.Component {
      * [_nextFrame func. changes frame screen to the next one]
      */
     _nextFrame() {
-        const {details, previewList, actions} = this.props
-        let {frameID} = this.props
+        const {details, previewList, frameID, frameIndex, actions} = this.props
+        console.log("previewList, frameID, frameIndex", previewList, frameID, frameIndex);
+
         if (!!details.options) {
-            if (frameID < details.options.frame_count) {
+            if (frameIndex + 1 < details.options.frame_count) {
                 actions.nextFrame();
                 this.setState({
                     previewLink: previewList[previewList.size < 2 ? 1 : frameID]
@@ -142,8 +144,8 @@ export class Single extends React.Component {
     }
 
     render() {
-        const {taskId, frameID, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList} = this.props
-        const {frameIndex, ratio, offset, previewLink} = this.state
+        const {taskId, frameID, frameIndex, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList, isDeveloperMode} = this.props
+        const {ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
                 <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
@@ -151,9 +153,9 @@ export class Single extends React.Component {
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset}/>}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
                 </div>
-                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameID}/>
+                <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameIndex}/>
             </div>
         );
     }

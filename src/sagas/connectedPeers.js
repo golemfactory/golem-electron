@@ -21,7 +21,7 @@ export function subscribeConnectedPeers(session) {
                 let connected_peers = args[0];
                 emit({
                     type: SET_CONNECTED_PEERS,
-                    payload: connected_peers.length
+                    payload: connected_peers
                 })
             }
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion'
-import { setConfig, getConfig, dictConfig } from './../../utils/configStorage'
+const {remote} = window.electron;
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 const {INDICATOR_ID} = dictConfig
 
 
@@ -26,7 +27,7 @@ export default class indicator extends React.Component {
     }
 
     componentDidMount() {
-        document.getElementsByClassName('amont__item')[this.state.idx].classList.add('active')
+        document.getElementsByClassName('amount__item')[this.state.idx].classList.add('active')
     }
 
     /**
@@ -82,7 +83,7 @@ export default class indicator extends React.Component {
      * @return nothing
      */
     navigateTo(elm) {
-        let navItems = document.getElementsByClassName('amont__item')
+        let navItems = document.getElementsByClassName('amount__item')
         for (var i = 0; i < navItems.length; i++) {
             navItems[i].classList.remove('active')
         }
@@ -106,8 +107,8 @@ export default class indicator extends React.Component {
                     {({balanceAnimated}) => <span className="amount">{::this.calculateAmount(Number(balanceAnimated), Number(currencyRate))}</span>}
                 </Motion>
                 <div className="currency-menu" role="menu">
-                    <span className="amont__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</span>
-                    <span className="amont__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</span>
+                    <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>GNT</span>
+                    <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>ETH</span>
                 </div>
             </div>
         );

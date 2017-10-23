@@ -49,7 +49,7 @@ export class ImageZoom extends React.Component {
     }
 
     componentDidMount() {
-        this.initSeaDragon()
+        this.initSeaDragon(OpenSeaDragon)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -85,7 +85,7 @@ export class ImageZoom extends React.Component {
     /**
      * [initSeaDragon func. inits OpenSeaDragon object to pan, zoom image]
      */
-    initSeaDragon() {
+    initSeaDragon(OSD) {
         let {id, image, type} = this.props
         loadImage(image).then(data => {
             let isVertical = false
@@ -94,7 +94,7 @@ export class ImageZoom extends React.Component {
             if ((imageInfo.width / imageInfo.height) < 1.4601941747572815) {
                 isVertical = true
             }
-            viewer = this.viewer = OpenSeadragon({
+            viewer = this.viewer = OSD({
                 id: id,
                 //visibilityRatio: 1,
                 constrainDuringPan: false,

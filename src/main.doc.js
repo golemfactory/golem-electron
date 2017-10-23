@@ -7,13 +7,11 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { hashHistory } from 'react-router'
-window.require('electron').webFrame.setZoomLevelLimits(1, 1)
+import './utils/electronLayer'
 
 
 import App from './container/App.doc'
 import './scss/main.scss'
-
-export const APP_VERSION = "v0.8.1"
 
 const routingMiddleware = routerMiddleware(hashHistory)
 const sagaMiddleware = createSagaMiddleware()
