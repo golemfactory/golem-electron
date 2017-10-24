@@ -35,7 +35,8 @@ export class TaskPanel extends React.Component {
             deleteCallback: null,
             previewId: null,
             previewSrc: null,
-            frameCount: null
+            frameCount: null,
+            psEnabled: false
         }
     }
 
@@ -93,7 +94,7 @@ export class TaskPanel extends React.Component {
 
 
     render() {
-        const {deleteModal, deleteProps, previewId, previewSrc, frameCount} = this.state
+        const {deleteModal, deleteProps, previewId, previewSrc, frameCount, psEnabled} = this.state
         const {actions, preview, expandedPreview} = this.props
 
         return (
@@ -110,7 +111,7 @@ export class TaskPanel extends React.Component {
                         {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     </div>
 
-                    <Footer {...this.props} id={previewId} frameCount={frameCount} setPreviewExpanded={actions.setPreviewExpanded}/>
+                    <Footer {...this.props} id={previewId} frameCount={frameCount} setPreviewExpanded={actions.setPreviewExpanded} psEnabled={psEnabled}/>
                 </div>
         )
     }
