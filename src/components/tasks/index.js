@@ -59,11 +59,12 @@ export class TaskPanel extends React.Component {
      * @param {String}      options.src        [Preview url of selected task]
      * @param {Number}      options.frameCount [Frame amount of selected task]
      */
-    _setPreview({id, src, frameCount}) {
+    _setPreview({id, src, frameCount, psEnabled}) {
         this.setState({
             previewId: id,
             previewSrc: src,
-            frameCount
+            frameCount,
+            psEnabled
         })
     }
 
