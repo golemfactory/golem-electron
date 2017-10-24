@@ -196,7 +196,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid} = this.state
+        const {subtasks, subtask_timeout, bid, isDetailPage} = this.state
         const {actions, task} = this.props
 
         if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
@@ -216,7 +216,7 @@ export class TaskDetail extends React.Component {
             })
         }
 
-        if(nextProps.isDeveloperMode && !this.liveSubList){
+        if(nextProps.isDeveloperMode && !this.liveSubList && isDetailPage){
 
             let interval = ()=> {
                 actions.fetchSubtasksList(nextProps.params.id)
@@ -224,7 +224,7 @@ export class TaskDetail extends React.Component {
             }
             this.liveSubList = setInterval(interval(), 1000)
 
-        } else if(!nextProps.isDeveloperMode && this.liveSubList) {
+        } else if(!nextProps.isDeveloperMode && this.liveSubList && isDetailPage) {
 
             clearInterval(this.liveSubList)
             this.liveSubList = false;
