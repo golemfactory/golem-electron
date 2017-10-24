@@ -4,8 +4,9 @@ const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {ONBOARDING} = dict
 const {SHOW_ONBOARD} = dictConfig
+//setConfig(SHOW_ONBOARD, false)
 const initialState = {
-    showOnboard: (getConfig(SHOW_ONBOARD) === undefined || getConfig(SHOW_ONBOARD) === null) ? true : getConfig(SHOW_ONBOARD),
+    showOnboard: (!getConfig(SHOW_ONBOARD)) ? true : getConfig(SHOW_ONBOARD),
 }
 const setOnboard = (state = initialState, action) => {
     switch (action.type) {

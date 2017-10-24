@@ -85,7 +85,9 @@ export let dict = Object.freeze({
     SET_FILE_CHECK: 'SET_FILE_CHECK'
 })
 
-const {ONBOARDING, UPDATE_NODE_NAME,
+const {
+    ONBOARDING, 
+    UPDATE_NODE_NAME,
     //NETWORK
     SET_BALANCE, 
     SET_RESOURCES, 

@@ -52,8 +52,8 @@ export class Footer extends Component {
      * @param  {Number} id         [Task id]
      * @param  {Number} frameCount [Amount of frame]
      */
-    _handleExpand(id, frameCount) {
-        id && this.props.setPreviewExpanded({
+    _handleExpand(id, frameCount, enabled) {
+        (id && enabled) && this.props.setPreviewExpanded({
             isScreenOpen: true,
             id,
             frameCount
@@ -61,7 +61,7 @@ export class Footer extends Component {
     }
 
     render() {
-        const {preview, footerInfo, id, frameCount} = this.props
+        const {preview, footerInfo, id, frameCount, psEnabled} = this.props
         return (
             <footer className="footer">
               <div className="info-bar__footer">
@@ -83,8 +83,8 @@ export class Footer extends Component {
                 <ReactTooltip placement="topRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
                 offset: [5, -10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                                    <span className={`button__expand icon-new-window ${!!id ? 'jump' : 'disabled'}` } onClick={this._handleExpand.bind(this, id, frameCount)} onKeyDown={(event) => {
-                event.keyCode === 13 && this._handleExpand.call(this)
+                                    <span className={`button__expand icon-new-window ${(!!id && psEnabled) ? 'jump' : 'disabled'}` } onClick={this._handleExpand.bind(this, id, frameCount, psEnabled)} onKeyDown={(event) => {
+                event.keyCode === 13 && this._handleExpand.call(this, id, frameCount, psEnabled)
             }} role="button" aria-label="Open Detailed Preview Window" tabIndex="0"></span>
                                 </ReactTooltip>
                                 </div>

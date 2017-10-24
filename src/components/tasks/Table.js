@@ -77,9 +77,10 @@ export class Table extends React.Component {
         const {id, preview, options} = item
         this._navigateTo(event)
         this.props.previewHandler({
-            id,
+            id: id,
             src: preview,
-            frameCount: options.frame_count
+            frameCount: options.frame_count,
+            psEnabled: (item.status == status.COMPUTING || item.status == status.FINISHED)
         })
         return true
     }
