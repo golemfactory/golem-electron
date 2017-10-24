@@ -7,7 +7,7 @@ const store = new Store();
  */
 //config.delete('SHOW_ONBOARD') // <-- Rollback onboard
 const dictConfig = {
-    SHOW_ONBOARD: 'SHOW_ONBOARD',
+    HIDE_ONBOARD: 'HIDE_ONBOARD',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',
     PREVIEW_SWITCH: 'PREVIEW_SWITCH',
     RESOURCE_SLIDER: 'RESOURCE_SLIDER',

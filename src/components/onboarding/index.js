@@ -105,7 +105,7 @@ class OnboardIndex extends React.Component {
             })
         } else {
             const {actions} = this.props
-            actions.setOnboard(false)
+            actions.setOnboard(true)
         }
     }
 
