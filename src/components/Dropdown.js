@@ -87,7 +87,7 @@ export default class Dropdown extends React.Component {
         const {listVisible, selectedIndex} = this.state
         return (
             <div ref="dropdownContent" className="dropdown-container">
-                <div className="dropdown-display" onClick={!disabled && ::this.show}>
+                <div className="dropdown-display" onClick={!disabled && ::this.show} disabled={disabled}>
                     <span>{list[selectedIndex] ? list[selectedIndex].name : 'Not loaded'}</span>
                 </div>
                 {listVisible && <div className="dropdown-list">

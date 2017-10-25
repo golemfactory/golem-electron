@@ -29,6 +29,10 @@
     position: relative;
     padding: 0 15px;
     text-transform: capitalize;
+    cursor: pointer;
+    &[disabled]{
+        cursor: not-allowed;
+    }
 }
 
 .dropdown-list {
