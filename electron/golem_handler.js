@@ -57,11 +57,10 @@ class GolemProcess {
         this.process.on('exit', code => {
             log.info('MAIN_PROCESS > GOLEM_HANDLER', 'Golem exited with code', code)
         });
-        // On Windows, golem is a windowed app with no stdio (hence the stdio: 'ignore' part)
-        if (platform != 'win32')
-            this.process.stderr.on('data', data => {
-                log.error('MAIN_PROCESS > GOLEM_HANDLER', 'Golem error:', data.toString())
-            });
+        // stdio is ignored
+        // this.process.stderr.on('data', data => {
+        //     log.error('MAIN_PROCESS > GOLEM_HANDLER', 'Golem error:', data.toString())
+        // });
     }
 
     stopProcess() {
