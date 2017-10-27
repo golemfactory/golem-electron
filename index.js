@@ -127,7 +127,7 @@ function createWindow() {
     */
     win.webContents.on('will-navigate', (event, url) => {
         event.preventDefault()
-        if (url.includes('etherscan') || url.includes('golem'))
+        if (url.includes('http') && (url.includes('etherscan') || url.includes('golem')))
             electron.shell.openExternal(url);
     })
 
