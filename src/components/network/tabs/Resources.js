@@ -6,13 +6,15 @@ import Slider from './../../Slider.js'
 
 
 const preset = Object.freeze({
+    DEFAULT: 'default',
     CUSTOM: 'custom'
 })
 
 const mapStateToProps = state => ({
     resource: state.resources.resource,
     systemInfo: state.advanced.systemInfo,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    presetList: state.advanced.presetList,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -23,6 +25,15 @@ export class Resources extends React.Component {
 
     constructor(props) {
         super(props);
+
+        if(props.resource === undefined){
+            const defaultPreset = props.presetList.filter(item => item.name = preset.DEFAULT)[0]
+
+            if(defaultPreset){
+                const value = this.calculateResourceValue(defaultPreset)
+                this.props.actions.setResources(value)
+            }
+        }
     }
 
     /**
@@ -55,6 +66,33 @@ export class Resources extends React.Component {
             disk,
             name: preset.CUSTOM
         }
+    }
+
+    /********* DUPLICATED IN ADVANCED *********/
+
+    /**
+     * [calculateResourceValue func.]
+     * @param  {Int}        options.cpu_cores       [Selected cpu core amount]
+     * @param  {Int}        options.memory          [Selected memory amount]
+     * @param  {Int}        options.disk            [Selected disk space amount]
+     * @return {Int}                                [Mean of their percentage]
+     */
+    calculateResourceValue({cpu_cores, memory, disk}) {
+        const {systemInfo} = this.props
+        let cpuRatio = (this.maxVal(cpu_cores, systemInfo.cpu_cores) / systemInfo.cpu_cores)
+        let ramRatio = (this.maxVal(memory, systemInfo.memory) / systemInfo.memory)
+        let diskRatio = (this.maxVal(disk, systemInfo.disk) / systemInfo.disk)
+        return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
+    }
+
+    /**
+     * [maxVal check the max limit for the resources]
+     * @param  {Number} val   [Given resource value]
+     * @param  {Number} limit [Max limit for the given resource value]
+     * @return {Number}       [Min value of between]
+     */
+    maxVal(val, limit) {
+        return Math.min(val, limit)
     }
 
     render() {
