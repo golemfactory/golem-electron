@@ -193,7 +193,6 @@ export class Table extends React.Component {
      */
     listTasks(data) {
         const listItems = data
-        .reverse()
         .map((item, index) => <Motion key={index.toString()} defaultStyle={{
                 progress: 0
             }} style={{
