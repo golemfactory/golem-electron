@@ -1,11 +1,12 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
-const {clipboard} = window.electron;
+const {clipboard, remote} = window.electron;
 /**
  * @see http://react-component.github.io/tooltip/
  */
 import ReactTooltip from 'rc-tooltip'
+import yup from 'yup'
 
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
@@ -14,7 +15,6 @@ import Dropdown from './../Dropdown'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-const {remote} = window.require('electron');
 const {dialog} = remote
 
 import * as Actions from './../../actions'
@@ -79,6 +79,14 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+const presetSchema = yup.object().shape({
+    resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+    frames: yup.string().required(),
+    format: yup.string(),
+    output_path: yup.string(),
+    sample_per_pixel: yup.string(),
+    compositing: yup.bool()
+})
 
 export class TaskDetail extends React.Component {
 
@@ -196,7 +204,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid, isDetailPage} = this.state
+        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock} = this.state
         const {actions, task} = this.props
 
         if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
@@ -207,12 +215,6 @@ export class TaskDetail extends React.Component {
                     num_subtasks: Number(nextState.subtasks),
                     subtask_time: nextState.subtask_timeout
                 }
-            })
-        }
-
-        if (nextState.resolution[0] !== this.state.resolution[0] || nextState.resolution[1] !== this.state.resolution[1] || nextState.frames !== this.state.frames || nextState.sample_per_pixel !== this.state.sample_per_pixel) {
-            this.setState({
-                savePresetLock: this.isPresetFieldsFilled(nextState)
             })
         }
 
@@ -298,6 +300,12 @@ export class TaskDetail extends React.Component {
         res[index] = parseInt(e.target.value)
         this.setState({
             resolution: res
+        }, () => {
+            this.isPresetFieldsFilled(this.state).then( result => {
+                this.setState({
+                    savePresetLock: !result
+                })
+            })
         })
     }
 
@@ -335,10 +343,24 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        if(this.checkInputValidity(e))
+        if(this.checkInputValidity(e)){
             this.setState({
                 [state]: e.target.value
+            }, () => {
+                if(state === "frames")
+                    this.isPresetFieldsFilled(this.state).then( result => {
+                        this.setState({
+                            savePresetLock: !result
+                        })
+                    })
             })
+        } else if(!this.state.savePresetLock && state === "frames" && !this.checkInputValidity(e)){
+            this.setState({
+                frames: null,
+                savePresetLock: true
+            })
+        }
+        
     }
 
     /**
@@ -389,6 +411,12 @@ export class TaskDetail extends React.Component {
         let values = list.filter((item, index) => item.name == name)[0]
         values && this.setState({
             format: values.name
+        },  () => {
+            this.isPresetFieldsFilled(this.state).then( result => {
+                this.setState({
+                    savePresetLock: !result
+                })
+            })
         })
     }
 
@@ -593,13 +621,9 @@ export class TaskDetail extends React.Component {
     }
 
     isPresetFieldsFilled(nextState) {
-        const {resolution, frames, sample_per_pixel} = nextState
-
-        if (this.props.task.type === taskType.BLENDER) {
-            return !resolution[0] || !resolution[1] || !frames
-        } else {
-            return !resolution[0] || !resolution[1] || !sample_per_pixel
-        }
+        const {resolution, frames, sample_per_pixel, compositing, format} = nextState
+        return presetSchema.isValid({resolution, frames, sample_per_pixel, compositing, format})
+        
     }
 
     _handleFormByType(type, isDetail) {
