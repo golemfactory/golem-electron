@@ -18,6 +18,7 @@ const classDict = Object.freeze({
 })
 
 const mapStateToProps = state => ({
+    isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal
 })
@@ -44,29 +45,34 @@ export class DropZone extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
-        })
+        if(nextProps.taskList && (nextProps.taskList.length !== this.props.taskList.length))
+            this.setState({
+                className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+            })
     }
 
     componentDidMount() {
         let dropzone = this.refs.dropzone
         let dragbox = this.refs.dragbox
-        dropzone.addEventListener('mouseup', this._onDragLeave);
-        dropzone.addEventListener('dragenter', this._onDragEnter);
-        dropzone.addEventListener('dragover', this._onDragOver);
-        dragbox.addEventListener('dragleave', this._onDragLeave);
-        dropzone.addEventListener('drop', this._onDrop);
+        if(dragbox){
+            dropzone.addEventListener('mouseup', this._onDragLeave);
+            dropzone.addEventListener('dragenter', this._onDragEnter);
+            dropzone.addEventListener('dragover', this._onDragOver);
+            dragbox.addEventListener('dragleave', this._onDragLeave);
+            dropzone.addEventListener('drop', this._onDrop);
+        }
     }
 
     componentWillUnmount() {
         let dropzone = this.refs.dropzone
         let dragbox = this.refs.dragbox
-        dropzone.removeEventListener('mouseup', this._onDragLeave);
-        dropzone.removeEventListener('dragenter', this._onDragEnter);
-        dropzone.addEventListener('dragover', this._onDragOver);
-        dragbox.removeEventListener('dragleave', this._onDragLeave);
-        dropzone.removeEventListener('drop', this._onDrop);
+        if(dragbox){
+            dropzone.removeEventListener('mouseup', this._onDragLeave);
+            dropzone.removeEventListener('dragenter', this._onDragEnter);
+            dropzone.addEventListener('dragover', this._onDragOver);
+            dragbox.removeEventListener('dragleave', this._onDragLeave);
+            dropzone.removeEventListener('drop', this._onDrop);
+        }
     }
 
     /**
@@ -233,14 +239,26 @@ export class DropZone extends React.Component {
 
 
     render() {
+        const {isEngineOn} = this.props
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                <div ref="dragbox" className={this.state.className}>
-                    <p><span className="icon-upload"/></p>
-                    <span>Drop files here to create a new task</span>
-                    <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
-                </div>
+                { isEngineOn ?
+                    <div ref="dragbox" className={this.state.className}>
+                        <p><span className="icon-upload"/></p>
+                        <span>Drop files here to create a new task</span>
+                        <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
+                    </div>
+                    :
+                    <div className={this.state.className}>
+                        <p>
+                            <div className="container-icon">
+                                <span className="icon-warning"/>
+                            </div>
+                        </p>
+                        <span>Before drop your files golem needs to be started.</span>
+                    </div>
+                }
             </div>
         );
     }
