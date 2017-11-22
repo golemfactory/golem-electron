@@ -88,6 +88,8 @@ const presetSchema = yup.object().shape({
     compositing: yup.bool()
 })
 
+
+
 export class TaskDetail extends React.Component {
 
     constructor(props) {
@@ -278,6 +280,16 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    /*
+     *
+     *
+    */
+    changePresetLock = (result) => {
+        this.setState({
+            savePresetLock: !result
+        })
+    }
+
     /**
      * [checkInputValidity func. checks if given input valid]
      * @param  {Event}  e
@@ -301,11 +313,7 @@ export class TaskDetail extends React.Component {
         this.setState({
             resolution: res
         }, () => {
-            this.isPresetFieldsFilled(this.state).then( result => {
-                this.setState({
-                    savePresetLock: !result
-                })
-            })
+            this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
         })
     }
 
@@ -348,11 +356,7 @@ export class TaskDetail extends React.Component {
                 [state]: e.target.value
             }, () => {
                 if(state === "frames")
-                    this.isPresetFieldsFilled(this.state).then( result => {
-                        this.setState({
-                            savePresetLock: !result
-                        })
-                    })
+                    this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
             })
         } else if(!this.state.savePresetLock && state === "frames" && !this.checkInputValidity(e)){
             this.setState({
@@ -412,11 +416,7 @@ export class TaskDetail extends React.Component {
         values && this.setState({
             format: values.name
         },  () => {
-            this.isPresetFieldsFilled(this.state).then( result => {
-                this.setState({
-                    savePresetLock: !result
-                })
-            })
+            this.isPresetFieldsFilled(this.state).then( this.changePresetLock)
         })
     }
 
