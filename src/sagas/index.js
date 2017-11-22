@@ -173,6 +173,7 @@ export function* read(session) {
   }
 }*/
 export function* apiFlow(connection) {
+    yield fork(performanceFlow, connection);
     yield fork(uploadFlow, connection);
     yield fork(networkInfoFlow, connection);
     yield fork(connectedPeersFlow, connection);
@@ -196,7 +197,6 @@ export function* handleIO(connection) {
     yield fork(engineFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
-    yield fork(performanceFlow, connection);
     yield fork(statsFlow, connection);
     yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
     const channel = yield call(subscribe, connection)
