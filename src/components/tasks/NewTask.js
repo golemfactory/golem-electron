@@ -97,7 +97,7 @@ export class NewTask extends React.Component {
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
                     <div className="container-name__new-task">
                         <label>Task Name</label>
-                        <input type="text" value={name} autoFocus onChange={::this._handleNameInput} required/>
+                        <input type="text" value={name} pattern="([a-zA-Z0-9_\-\.\s]){4,}" autoFocus onChange={::this._handleNameInput} required/>
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
