@@ -42,8 +42,10 @@ export default class Slider extends React.Component {
                 color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
             else
                 color = TRUST;
+                slider.style.cursor = "pointer";
         } else {
             color = DISABLED;
+            slider.style.cursor = "not-allowed";
         }
 
         slider.style.background = color;
