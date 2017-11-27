@@ -83,7 +83,7 @@
         "electron": "^1.4.5",
         "electron-builder": "^19.5.1",
         "electron-debug": "^1.2.0",
-        "electron-devtools-installer": "2.0.1",
+        "electron-devtools-installer": "^2.2.1",
         "electron-rebuild": "^1.5.7",
         "enzyme": "^2.7.1",
         "enzyme-to-json": "^1.4.5",
