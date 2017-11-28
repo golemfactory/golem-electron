@@ -43,13 +43,20 @@
     .container-icon {
         padding: 25px 0;
         flex: 0 0 40px;
+        pointer-events: none;
     }
     
     .icon-warning {
+        pointer-events: none;
         color: $color-accent2;
         font-size: 28pt;
         background: $color-bg2;
         border-radius: 50px;
         padding: 18px;
     }
+}
+
+
+.no-drop{
+    cursor: no-drop !important;
 }

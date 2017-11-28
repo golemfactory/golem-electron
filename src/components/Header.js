@@ -196,7 +196,7 @@ export class Header extends Component {
                 </ul>
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={isEngineOn ? <p>New Task</p> : <p>Golem not started yet.</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={isEngineOn ? <p>New Task</p> : <p>Golem is not started yet.</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <li className="menu__item" onClick={isEngineOn ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
