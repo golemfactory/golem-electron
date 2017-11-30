@@ -76,7 +76,6 @@ export let dict = Object.freeze({
     SET_PREVIEW_RADIO: 'SET_PREVIEW_RADIO',
     SET_PREVIEW_EXPANDED: 'SET_PREVIEW_EXPANDED',
     SET_CURRENCY: 'SET_CURRENCY',
-    UPLOAD: 'UPLOAD',
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
     TOGGLE_DEVELOPER_MODE: 'TOGGLE_DEVELOPER_MODE',
@@ -163,7 +162,6 @@ const {
     SET_PREVIEW_RADIO, 
     SET_PREVIEW_EXPANDED, 
     SET_CURRENCY, 
-    UPLOAD, 
     SET_ZOOM_RATIO, 
     SET_NETWORK_INFO, 
     TOGGLE_DEVELOPER_MODE,
@@ -523,11 +521,6 @@ export const setPreviewExpanded = (payload) => ({
 
 export const setCurrency = (payload) => ({
     type: SET_CURRENCY,
-    payload
-})
-
-export const uploadFile = (payload) => ({
-    type: UPLOAD,
     payload
 })
 
