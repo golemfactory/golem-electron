@@ -75,12 +75,20 @@ export class Table extends React.Component {
      */
     _handleRowClick(event, item, index) {
         const {id, preview, options} = item
+
+        function shouldPSEnabled(_item){
+            return (_item.status == status.COMPUTING                        || 
+                    _item.status == status.FINISHED                         || 
+                    (_item.status == status.TIMEOUT && _item.progress > 0)  ||
+                    (_item.status == status.RESTART && _item.progress > 0))
+        }
+
         this._navigateTo(event)
         this.props.previewHandler({
             id: id,
             src: preview,
             frameCount: options.frame_count,
-            psEnabled: (item.status == status.COMPUTING || item.status == status.FINISHED)
+            psEnabled: shouldPSEnabled(item)
         })
         return true
     }
