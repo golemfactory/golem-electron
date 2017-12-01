@@ -138,7 +138,7 @@ export default class SubTask extends React.Component {
      * @return {corner points of the drawings [Array]}
      */
     drawLine(isDevMode) {
-        const {data, ratio, subtaskList} = this.props
+        const {data, ratio, subtaskList, subtaskAmount} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
                 key: anchestorKey,
@@ -184,7 +184,7 @@ export default class SubTask extends React.Component {
             .map((item, index) => {
                 
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
-                const isDirectionTop = index + 1 > path.length / 2;
+                const isDirectionTop = index + 1 > subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
                 overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
