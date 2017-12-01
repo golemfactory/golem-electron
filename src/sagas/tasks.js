@@ -285,7 +285,7 @@ export function subscribeTasks(session) {
             var taskList = args[0];
             emit({
                 type: SET_TASKLIST,
-                payload: taskList
+                payload: taskList.reverse() // in DESC order
             })
         }
 
