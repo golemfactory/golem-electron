@@ -130,7 +130,7 @@ export class Settings extends React.Component {
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
                 <div className="footer__settings">
-                    <span>Brass Golem v{version}</span>
+                    <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
                 </div>
             </div>
         );
