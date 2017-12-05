@@ -112,7 +112,7 @@ export class NewTask extends React.Component {
                     <div className="container-name__new-task">
                         <label>Task Name</label>
                         <span ref="taskNameHint" className="hint__task-name">Task name can contain; letter, number, space between characters, dot, dash and underscore. It should consists of at least 4 characters.</span>
-                        <input type="text" value={name} pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$" minLength={4} maxLength={16} autoFocus onChange={::this._handleNameInput} title="'/ and \' are not allowed" required/>
+                        <input type="text" value={name} pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$" minLength={4} maxLength={16} autoFocus onChange={::this._handleNameInput} required/>
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
