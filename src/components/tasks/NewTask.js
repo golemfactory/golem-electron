@@ -52,12 +52,26 @@ export class NewTask extends React.Component {
         });
     }
 
+    checkInputValidity(e) {
+        const {taskNameHint, nextButton} = this.refs
+        e.target.checkValidity();
+        if (e.target.validity.valid){
+            taskNameHint.style.display = "none";
+            nextButton.disabled = false
+        }
+        else{
+            taskNameHint.style.display = "block";
+            nextButton.disabled = true
+        }
+    }
+
     /**
      * [_handleNameInput funcs. updates name of the new task]
      * @param  {Event}  e
      */
     _handleNameInput(e) {
         //console.log(e.target.value)
+        ::this.checkInputValidity(e)
         this.setState({
             name: e.target.value
         })
@@ -97,7 +111,8 @@ export class NewTask extends React.Component {
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
                     <div className="container-name__new-task">
                         <label>Task Name</label>
-                        <input type="text" value={name} pattern="([a-zA-Z0-9_\-\.\s]){4,}" autoFocus onChange={::this._handleNameInput} required/>
+                        <span ref="taskNameHint" className="hint__task-name">Task name can contain; letter, number, space between characters, dot, dash and underscore. It should consists of at least 4 characters.</span>
+                        <input type="text" value={name} pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$" minLength={4} maxLength={16} autoFocus onChange={::this._handleNameInput} title="'/ and \' are not allowed" required/>
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
@@ -124,7 +139,7 @@ export class NewTask extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button type="submit" className="btn--primary" disabled={!type}>Next</button>
+                        <button ref="nextButton" type="submit" className="btn--primary" disabled={!type}>Next</button>
                     </div>
                 </form>
                 {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}
