@@ -257,6 +257,7 @@ export class TaskDetail extends React.Component {
         })
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
         this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, options);
+        this.refs.subtaskTimeout.disabled = true;
     }
 
     /**
@@ -324,8 +325,20 @@ export class TaskDetail extends React.Component {
         })
 
         this.checkInputValidity(e)
+        if(state === 'timeout'){
+            const taskTimeoutValue = this.taskTimeoutInput.getValue()
+            const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue()
+
+            if(subtaskTimeoutValue > taskTimeoutValue){
+                this.subtaskTaskTimeoutInput.setValue(taskTimeoutValue)
+            }
+
+            this.subtaskTaskTimeoutInput.max = taskTimeoutValue + 1 // including value itself
+            this.refs.subtaskTimeout.disabled = !(taskTimeoutValue > 0);
+        }
+        
         this.setState({
-            [state]: Number(timeoutList[state].getValue()) / 3600
+            [state]: timeoutList[state].getValue() / 3600
         })
     }
 
