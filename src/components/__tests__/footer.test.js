@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
 import sinon from 'sinon'
-import ConnectedFooter, {Footer} from '../footer'
+import ConnectedFooter, {Footer} from '../Footer'
 
 
 describe('<Footer/>', () => {
