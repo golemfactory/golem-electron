@@ -85,7 +85,14 @@
             "node_modules/p-locate",
             "node_modules/p-limit",
             "node_modules/imurmurhash",
-            "node_modules/signal-exit"
+            "node_modules/signal-exit",
+            "node_modules/dot-prop",
+            "node_modules/pkg-up",
+            "node_modules/find-up",
+            "node_modules/path-exists",
+            "node_modules/env-paths",
+            "node_modules/write-file-atomic",
+            "node_modules/graceful-fs"
         ]
     },
     "devDependencies": {
