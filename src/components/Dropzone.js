@@ -35,7 +35,7 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave

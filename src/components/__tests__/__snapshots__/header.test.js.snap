@@ -1,41 +1,86 @@
-exports[`test should render a header component 1`] = `
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render a header component 1`] = `
 <header
-  className="header">
+  className="header"
+>
+  <div
+    className="top-titlebar"
+  >
+    <div
+      className="draggable draggable--win"
+      style={
+        Object {
+          "WebkitAppRegion": "drag",
+        }
+      }
+    />
+    <div>
+      <span>
+        Golem
+      </span>
+    </div>
+    <div
+      className="os__menu"
+      role="menu"
+    >
+      <span
+        aria-label="Close"
+        className="icon-minimize"
+        onClick={[Function]}
+        role="menuitem"
+        tabIndex="0"
+      />
+      <span
+        aria-label="Minimize"
+        className="icon-close"
+        onClick={[Function]}
+        role="menuitem"
+        tabIndex="0"
+      />
+    </div>
+  </div>
   <nav
-    className="nav">
+    className="nav"
+    role="menubar"
+  >
+    <div
+      className="draggable draggable--other"
+      style={
+        Object {
+          "WebkitAppRegion": "drag",
+        }
+      }
+    />
     <ul
-      className="nav__list">
+      className="nav__list"
+      role="menu"
+    >
       <li
-        className="nav__item mac" />
-      <li
-        className="nav__item">
-        <Link
-          onlyActiveOnIndex={false}
-          style={Object {}}
-          to="/">
-          Network
-        </Link>
-      </li>
-      <li
-        className="nav__item">
-        <Link
-          onlyActiveOnIndex={false}
-          style={Object {}}
-          to="blender">
-          Tasks
-        </Link>
-      </li>
-      <li
-        className="nav__item button">
-        +
-      </li>
-      <li
-        className="nav__item button">
-        €
-      </li>
-      <li
-        className="nav__item button">
-        =
+        className="nav__item traffic-light"
+      >
+        <div
+          aria-label="Close"
+          className="close"
+          onClick={[Function]}
+          role="menuitem"
+          tabIndex="0"
+        />
+        <div
+          aria-label="Minimize"
+          className="minimize"
+          onClick={[Function]}
+          role="menuitem"
+          tabIndex="0"
+        />
+        <div
+          aria-label="Maximize"
+          className="maximize"
+          disabled={true}
+          onClick={[Function]}
+          role="menuitem"
+          tabIndex="0"
+        />
       </li>
     </ul>
   </nav>

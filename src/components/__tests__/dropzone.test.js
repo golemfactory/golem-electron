@@ -3,7 +3,7 @@ jest.unmock('../Dropzone')
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
 import ConnectedDropzone, { DropZone } from '../Dropzone'
 import sinon from 'sinon'
@@ -44,7 +44,7 @@ describe('<DropZone />', () => {
 
     it('fn(_onDragEnter) should change state as drop-zone--show', () => {
 
-        let mockDropZone = TestUtils.renderIntoDocument(<DropZone />);
+        let mockDropZone = TestUtils.renderIntoDocument(<DropZone taskList={[1, 2, 3]}/>);
 
         expect(mockDropZone.state.className).toBe('drop-zone--hide')
         mockDropZone._onDragEnter(mockEvent)
@@ -53,7 +53,7 @@ describe('<DropZone />', () => {
 
     it('fn(_onDragOver) should return false', () => {
 
-        let mockDropZone = TestUtils.renderIntoDocument(<DropZone />);
+        let mockDropZone = TestUtils.renderIntoDocument(<DropZone taskList={[1, 2, 3]}/>);
 
         expect(mockDropZone.state.className).toBe('drop-zone--hide')
         mockDropZone._onDragOver(mockEvent)
@@ -62,7 +62,7 @@ describe('<DropZone />', () => {
 
     it('fn(_onDragLeave) should change state as drop-zone--hide', () => {
 
-        let mockDropZone = TestUtils.renderIntoDocument(<DropZone />);
+        let mockDropZone = TestUtils.renderIntoDocument(<DropZone taskList={[1, 2, 3]}/>);
 
         mockDropZone._onDragLeave(mockEvent)
         expect(mockDropZone.state.className).toBe('drop-zone--hide')
@@ -70,9 +70,9 @@ describe('<DropZone />', () => {
 
     it('fn(_onDrop) should trigger uploadFile action', () => {
 
-        let mockDropZone = mount(<DropZone actions={actions} />);
-        mockDropZone.instance()._onDrop(mockEvent)
-        expect(mockDropZone.props().actions.uploadFile.calledOnce).toBe(true)
+        let mockDropZone = mount(<DropZone actions={actions} taskList={[1, 2, 3]}/>);
+        mockDropZone.instance()._onDrop(null, mockEvent)
+        expect(mockDropZone.instance()._onDrop(null, mockEvent)).toBe(false)
     });
 
     it('should call componentDidMount', () => {

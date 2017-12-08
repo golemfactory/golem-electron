@@ -85,7 +85,8 @@
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "^2.2.1",
         "electron-rebuild": "^1.5.7",
-        "enzyme": "^2.7.1",
+        "enzyme": "^2.9.1",
+        "enzyme-adapter-react-16": "^1.1.0",
         "enzyme-to-json": "^1.4.5",
         "express": "^4.14.0",
         "file-loader": "^0.9.0",
@@ -93,14 +94,14 @@
         "html-webpack-plugin": "^2.28.0",
         "http": "0.0.0",
         "identity-obj-proxy": "^3.0.0",
-        "jest-cli": "^18.1.0",
+        "jest": "^21.2.1",
         "mock-socket": "^6.0.4",
         "node-sass": "^3.13.0",
         "react-a11y": "^0.3.3",
-        "react-addons-test-utils": "^15.4.2",
         "react-hot-loader": "^3.0.0-beta.6",
         "redux-mock-store": "^1.2.2",
         "redux-saga-test-plan": "^2.2.0",
+        "regenerator-runtime": "^0.11.0",
         "sass-loader": "^4.0.2",
         "sinon": "^1.17.7",
         "style-loader": "^0.13.1",
@@ -151,7 +152,7 @@
         ],
         "moduleNameMapper": {
             "^.+\\.(css|scss)$": "identity-obj-proxy",
-            "^.*[.](png|PNG)$": "<rootDir>/__mocks__/EmptyModule"
+            "^.*[.](png|PNG|svg|SVG)$": "<rootDir>/__mocks__/EmptyModule"
         },
         "transformIgnorePatterns": [
             "/node_modules/"

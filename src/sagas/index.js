@@ -244,7 +244,7 @@ export function* frameFlow() {
  */
 export function* flow() {
     while (true) {
-        let {payload} = yield take(LOGIN)
+        yield take(LOGIN)
 
         yield put({
             type: SET_GOLEM_STATUS,

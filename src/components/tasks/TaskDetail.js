@@ -14,7 +14,7 @@ import Dropdown from './../Dropdown'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const {dialog} = remote
 
 import * as Actions from './../../actions'
