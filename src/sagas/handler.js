@@ -9,7 +9,6 @@ export let config = Object.freeze({
     COUNTER_CH: 'com.golem.oncounter',
     BLENDER_CH: 'com.golem.blender',
     PREVIEW_CH: 'com.golem.preview',
-    UPLOAD_CH: 'com.golem.upload.on_progress',
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
     UPDATE_SETTINGS_RPC: 'env.opts.update',

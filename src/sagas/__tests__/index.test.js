@@ -3,7 +3,6 @@ import { createMockTask } from 'redux-saga/lib/utils'
 import { take, flush, call } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
-import Resumable from 'resumablejs'
 
 import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, upload, subscribe, setupResumable, uploadResumable } from '../'
 import { versionFlow } from '../version'
