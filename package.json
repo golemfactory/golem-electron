@@ -22,7 +22,7 @@
         "test:watch": "jest --watch --no-cache",
         "test:coverage": "jest --coverage --watch --no-cache",
         "pack": "build --dir",
-        "dist": "rm -rf dist/ && build"
+        "dist": "build"
     },
     "build": {
         "appId": "network.golem.app",
