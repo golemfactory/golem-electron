@@ -20,7 +20,7 @@ describe('<Footer/>', () => {
         const wrapper = mount(
             <Footer preview={false}/>
         )
-        expect(wrapper.ref('previewSwitch').prop('defaultChecked')).toBe(false)
+        expect(wrapper.ref('previewSwitch').defaultChecked).toBe(false)
     })
 
 });

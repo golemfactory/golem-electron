@@ -21,7 +21,7 @@ it('should render a dropzone component', () => {
 })
 
 describe('<DropZone />', () => {
-    const wrapper = shallow(
+    const wrapper = mount(
         <DropZone/>
     )
 

@@ -22,19 +22,12 @@ it('should render a MainFragment component', () => {
 
 describe('<MainFragment />', () => {
     const golemStatus = {status: true}
-    const wrapper = shallow(
-        <MainFragment golemStatus={golemStatus}/>
-    )
 
     const actions = {
         startLoading: (a, b) => true,
         endLoading: jest.fn(),
         login: (a) => a
     }
-
-    it('renders one content__main div', () => {
-        expect(wrapper.find('.content__main').length).toBe(1)
-    })
 
     it('should call componentDidMount', () => {
         const states = {

@@ -15,7 +15,7 @@ let dictCurrency = Object.freeze({
 let motionBalanceStart = 0;
 
 
-export default class indicator extends React.Component {
+export default class Indicator extends React.Component {
 
     constructor(props) {
         super(props);

@@ -620,15 +620,6 @@ describe('actions', () => {
         expect(actions.setCurrency(payload)).toEqual(expectedAction)
     })
 
-    it('should create an action to uploadFile', () => {
-        const payload = { name: "" }
-        const expectedAction = {
-            type: actions.dict.UPLOAD,
-            payload
-        }
-        expect(actions.uploadFile(payload)).toEqual(expectedAction)
-    })
-
     it('should create an action to setZoomRatio', () => {
         const payload = 0.54
         const expectedAction = {

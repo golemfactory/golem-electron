@@ -15,7 +15,7 @@ exports[`Loading should render an Loading container 1`] = `
     }
     width="1534"
   />
-  <Component
+  <Motion
     style={
       Object {
         "alpha": Object {
