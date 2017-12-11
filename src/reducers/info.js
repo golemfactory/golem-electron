@@ -6,7 +6,11 @@ const {SET_GOLEM_VERSION, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBL
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
-    version: "",
+    version: {
+        number: "",
+        message: "Connection is not established yet.",
+        error: false
+    },
     networkInfo: {},
     fileCheckModal: {
         status: false,
@@ -20,7 +24,9 @@ const setInfo = (state = initialState, action) => {
     switch (action.type) {
     case SET_GOLEM_VERSION:
         return Object.assign({}, state, {
-            version: action.payload
+            version: {
+                ...action.payload
+            }
         });
 
     case SET_NETWORK_INFO:
