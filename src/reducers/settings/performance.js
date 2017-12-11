@@ -20,7 +20,7 @@ const setPerformance = (state = initialState, action) => {
                 ...state.charts,
                 ...action.payload
             },
-            loadingIndicator: (Object.keys(action.payload).length > 1 || Object.keys(action.payload)[0] === "estimated_lux_performance") ? false : true
+            loadingIndicator: (Object.keys(action.payload).length > 1 || Object.keys(action.payload)[0] === "estimated_performance") ? false : true
         });
 
     case RECOUNT_BENCHMARK:
