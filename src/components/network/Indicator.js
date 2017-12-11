@@ -15,7 +15,7 @@ let dictCurrency = Object.freeze({
 let motionBalanceStart = 0;
 
 
-export default class indicator extends React.Component {
+export default class Indicator extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,8 +29,8 @@ export default class indicator extends React.Component {
     }
 
     componentDidMount() {
-console.log("this.state.idx", this.state.idx);
-        document.getElementsByClassName('amount__item')[this.state.idx].classList.add('active')
+        const amountItem = document.getElementsByClassName('amount__item')
+        this.state.idx && amountItem[this.state.idx].classList.add('active')
     }
 
     /**

@@ -4,7 +4,22 @@ import { take, flush, call } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
 
-import rootSaga, { flow, handleIO, connect, read, upload, subscribe } from '../'
+import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable } from '../'
+import { versionFlow } from '../version'
+import { golemStatusFlow } from '../golem'
+import { frameBase } from '../frame'
+import { engineFlow } from '../engine'
+import { currencyFlow } from '../currency'
+import { connectedPeersFlow } from '../connectedPeers'
+import { balanceFlow } from '../balance'
+import { historyFlow } from '../history'
+import { advancedFlow } from '../advanced'
+import { performanceFlow } from '../performance'
+import { statsFlow } from '../stats'
+import { trustFlow } from '../trust'
+import { tasksFlow } from '../tasks'
+import { settingsFlow } from '../userSettings'
+import { networkInfoFlow } from '../networkInfo'
 
 describe('handleIO', () => {
 
@@ -12,7 +27,7 @@ describe('handleIO', () => {
     const connection = new WebSocket('ws://localhost:8080/ws')
     let session
     let task = createMockTask();
-    //console.log(connection)
+    //
     connection.onopen = (sess) => {
         session = sess
     }
@@ -22,6 +37,12 @@ describe('handleIO', () => {
             type: 'LOGIN',
             payload: 'Muhammed'
         },
+        start_message: {
+            type: 'SET_GOLEM_STATUS',
+            payload: {
+                message: 'Starting Golem'
+            }
+        },
         logout: {
             type: 'LOGOUT'
         },
@@ -29,15 +50,6 @@ describe('handleIO', () => {
             '@@redux-saga/SAGA_ACTION': true,
             message: 21384,
             type: "SET_MESSAGE",
-        },
-        upload: {
-            type: 'UPLOAD',
-            payload: {
-                '0': new File([""], "filename.txt", {
-                    type: "text/plain",
-                    lastModified: Date.now()
-                })
-            }
         }
     }
 
@@ -73,6 +85,9 @@ describe('handleIO', () => {
             .next()
             .fork(flow)
 
+            .next()
+            .fork(frameFlow)
+
             .finish()
             .isDone()
     })
@@ -82,6 +97,9 @@ describe('handleIO', () => {
         sagaFlow
             .next()
             .take(action.login.type)
+
+            .next()
+            .put(action.start_message)
 
             .next(action.login)
             .call(connect)
@@ -105,11 +123,23 @@ describe('handleIO', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
             .next()
-            .fork(read, connection)
+            .fork(versionFlow, connection)
 
             .next()
-            .fork(upload, connection)
+            .fork(golemStatusFlow, connection)
 
+            .next()
+            .fork(engineFlow, connection)
+
+            .next()
+            .fork(settingsFlow, connection)
+
+            .next()
+            .fork(advancedFlow, connection)
+
+            .next()
+            .fork(statsFlow, connection)
+            
             .finish()
             .isDone()
 
@@ -130,5 +160,4 @@ describe('handleIO', () => {
             .finish()
             .isDone()
     })
-
 })

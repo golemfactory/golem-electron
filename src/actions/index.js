@@ -535,7 +535,7 @@ export const setNetworkInfo = (payload) => ({
 })
 
 export const toggleDeveloperMode = (payload) => ({
-    type: TOGGLER_DEVELOPER_MODE,
+    type: TOGGLE_DEVELOPER_MODE,
     payload
 })
 
