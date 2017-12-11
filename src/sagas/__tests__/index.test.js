@@ -3,9 +3,8 @@ import { createMockTask } from 'redux-saga/lib/utils'
 import { take, flush, call } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
-import Resumable from 'resumablejs'
 
-import rootSaga, { flow, handleIO, connect, read, upload, subscribe, setupResumable, uploadResumable } from '../'
+import rootSaga, { flow, handleIO, connect, read, upload, subscribe } from '../'
 
 describe('handleIO', () => {
 
@@ -132,77 +131,4 @@ describe('handleIO', () => {
             .isDone()
     })
 
-    it('should upload function to the server (upload)', () => {
-        let resumableObject = new Resumable({
-            target: 'upload',
-            uploadMethod: 'POST',
-            testMethod: 'POST',
-            chunkSize: 1 * 1024 * 1024,
-            forceChunkSize: true, // https://github.com/23/resumable.js/issues/51
-            simultaneousUploads: 4,
-            testChunks: false,
-            query: {
-                on_progress: 'com.example.upload.on_progress',
-                session: 1234,
-                chunk_extra: JSON.stringify({
-                    test: 'lala',
-                    test2: 23
-                }),
-                finish_extra: JSON.stringify({
-                    test: 'fifi',
-                    test2: 52
-                })
-            }
-        });
-        let sagaUpload = testSaga(upload, connection)
-        sagaUpload
-            .next()
-            .call(setupResumable, connection)
-
-            .next(resumableObject)
-            .take(action.upload.type)
-
-            .next(action.upload.payload)
-            .call(uploadResumable, resumableObject, undefined)
-
-            .finish()
-            .isDone()
-    })
-
-    it('should create resumable object', () => {
-        connection.getSessionId = function() {
-            return 3
-        }
-        let resumable = setupResumable(connection)
-        expect(resumable !== null && typeof resumable === 'object').toBe(true)
-    })
-
-    it('should trigger fileAdded event', () => {
-        let file = new File([""], "filename");
-        let resumableObject = new Resumable({
-            target: 'upload',
-            uploadMethod: 'POST',
-            testMethod: 'POST',
-            chunkSize: 1 * 1024 * 1024,
-            forceChunkSize: true, // https://github.com/23/resumable.js/issues/51
-            simultaneousUploads: 4,
-            testChunks: false,
-            query: {
-                on_progress: 'com.example.upload.on_progress',
-                session: 1234,
-                chunk_extra: JSON.stringify({
-                    test: 'lala',
-                    test2: 23
-                }),
-                finish_extra: JSON.stringify({
-                    test: 'fifi',
-                    test2: 52
-                })
-            }
-        });
-        uploadResumable(resumableObject, {
-            null,
-            file
-        })
-    })
 })

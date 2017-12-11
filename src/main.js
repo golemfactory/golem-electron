@@ -8,7 +8,6 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
 import { hashHistory } from 'react-router'
-import createHistory from 'history/createHashHistory'
 import './utils/electronLayer'
 import {dict} from './actions'
 
