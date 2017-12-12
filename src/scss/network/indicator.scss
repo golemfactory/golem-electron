@@ -11,6 +11,14 @@
         font-size: 34pt;
         cursor: pointer;
     }
+
+    .symbol__usd{
+        font-size: 18pt !important;
+        vertical-align: top;
+        line-height: 34pt !important;
+        margin-right: 1pt;
+    }
+
     .currency-menu {
         margin: 2px 0 30px 0;
         width: 120px;
@@ -31,6 +39,7 @@
             color: $color-text;
         }
     }
+
     span:nth-child(1) {
         font-size: 9pt;
         font-weight: 400;

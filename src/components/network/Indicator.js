@@ -30,7 +30,8 @@ export default class Indicator extends React.Component {
 
     componentDidMount() {
         const amountItem = document.getElementsByClassName('amount__item')
-        this.state.idx && amountItem[this.state.idx].classList.add('active')
+        if(!isNaN(parseFloat(this.state.idx)) && amountItem[this.state.idx])
+            amountItem[this.state.idx].classList.add('active')
     }
 
     /**
@@ -117,7 +118,7 @@ export default class Indicator extends React.Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && '$'}{::this.formatAmount(Number(balanceAnimated))}</span>}
+                    {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && <span className="symbol__usd">$</span> }{::this.formatAmount(Number(balanceAnimated))}</span>}
                 </Motion>
                 <div className="currency-menu" role="menu">
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>{(!toggler && defaultCurrency == dictCurrency.GNT) ? 'USD' : 'GNT'}</span>
