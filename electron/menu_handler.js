@@ -2,7 +2,7 @@ const {app, Menu, globalShortcut} = require('electron')
 const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
 const {DEBUG_MODE, DEVELOPER_MODE} = dictConfig
 const DOCLINK = "https://docs.golem.network/"
-let isDebugMode = getConfig(DEBUG_MODE)
+let isDebugMode = !getConfig(DEBUG_MODE)
 let isDeveloperMode = getConfig(DEVELOPER_MODE)
 const template = [
     {
