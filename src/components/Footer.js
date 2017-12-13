@@ -20,7 +20,10 @@ const status = Object.freeze({
 })
 
 const mapStateToProps = state => ({
-    footerInfo: state.realTime.footerInfo
+    footerInfo: state.realTime.footerInfo,
+    psEnabled: state.preview.ps.enabled,
+    id: state.preview.ps.id,
+    frameCount: state.preview.ps.frameCount
 })
 
 const mapDispatchToProps = dispatch => ({

@@ -34,9 +34,7 @@ export class TaskPanel extends React.Component {
             deleteModal: false,
             deleteCallback: null,
             previewId: null,
-            previewSrc: null,
-            frameCount: null,
-            psEnabled: false
+            previewSrc: null
         }
     }
 
@@ -57,14 +55,11 @@ export class TaskPanel extends React.Component {
      * [_setPreview func. update related states to present preview]
      * @param {Any}         options.id         [Id of selected task]
      * @param {String}      options.src        [Preview url of selected task]
-     * @param {Number}      options.frameCount [Frame amount of selected task]
      */
-    _setPreview({id, src, frameCount, psEnabled}) {
+    _setPreview({id, src}) {
         this.setState({
             previewId: id,
-            previewSrc: src,
-            frameCount,
-            psEnabled
+            previewSrc: src
         })
     }
 
@@ -103,7 +98,7 @@ export class TaskPanel extends React.Component {
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                         <DropZone>
                             <div className="section__table">
-                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview}/>
+                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview} previewId={previewId}/>
                             </div>
                         </DropZone>
                     </div>
@@ -111,7 +106,7 @@ export class TaskPanel extends React.Component {
                         <Preview id={previewId} src={previewSrc}/> 
                     </div>}
                     {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
-                    <Footer {...this.props} id={previewId} frameCount={frameCount} setPreviewExpanded={actions.setPreviewExpanded} psEnabled={psEnabled}/>
+                    <Footer {...this.props}  setPreviewExpanded={actions.setPreviewExpanded}/>
                 </div>
         )
     }

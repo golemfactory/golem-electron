@@ -18,6 +18,7 @@ export let dict = Object.freeze({
     GET_TASK_DETAILS: 'GET_TASK_DETAILS',
     SET_TASK_INFO: 'SET_TASK_INFO',
     SET_PREVIEW: 'SET_PREVIEW',
+    UPDATE_PREVIEW_LOCK: 'UPDATE_PREVIEW_LOCK',
     DELETE_TASK: 'DELETE_TASK',
     CREATE_TASK: 'CREATE_TASK',
     RESTART_TASK: 'RESTART_TASK',
@@ -103,7 +104,8 @@ const {
     SET_TASK_DETAILS, 
     GET_TASK_DETAILS, 
     SET_TASK_INFO, 
-    SET_PREVIEW, 
+    SET_PREVIEW,
+    UPDATE_PREVIEW_LOCK,
     DELETE_TASK, 
     CREATE_TASK, 
     RESTART_TASK, 
@@ -355,6 +357,11 @@ export const getTaskDetails = (payload) => ({
 
 export const setPreview = (payload) => ({
     type: SET_PREVIEW,
+    payload
+})
+
+export const updatePreviewLock = (payload) => ({
+    type: UPDATE_PREVIEW_LOCK,
     payload
 })
 
