@@ -38,7 +38,7 @@ export default class Step5 extends React.Component {
                     </div>
                 </div>
                 <div className="desc__onboarding">
-                    <span>Please select your default task type.  You can change this later when you add tasks. If you do not plan to use tasks, just skip this.</span>
+                    <span>Please select your default task type. You can change this later when you add tasks. If you do not plan to use tasks, just skip this.</span>
                 </div>
             </div>
         )
