@@ -105,7 +105,7 @@ export class ImageZoom extends React.Component {
                 zoomOutButton: 'zoom-out',
                 homeButton: 'reset',
                 //fullPageButton: 'full-page',
-                wrapVertical: isVertical,
+                //wrapVertical: isVertical, <-- be careful while using this feature. cause of repeated image issue for higher than 35:24 ratio
                 nextButton: 'next',
                 previousButton: 'previous',
                 showNavigator: false,

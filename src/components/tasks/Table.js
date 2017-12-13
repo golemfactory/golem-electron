@@ -192,7 +192,8 @@ export class Table extends React.Component {
      *     @param {float}   precision   (optional)
      */
     listTasks(data) {
-        const listItems = data.map((item, index) => <Motion key={index.toString()} defaultStyle={{
+        const listItems = data
+        .map((item, index) => <Motion key={index.toString()} defaultStyle={{
                 progress: 0
             }} style={{
                 progress: spring(item.progress, {

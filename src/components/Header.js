@@ -15,6 +15,7 @@ const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const mapStateToProps = state => ({
+    isEngineOn: state.info.isEngineOn,
     fileCheckModal: state.info.fileCheckModal
 })
 
@@ -165,7 +166,7 @@ export class Header extends Component {
     _openDoc() {}
 
     render() {
-        const {activeHeader, taskDetails, detail} = this.props
+        const {activeHeader, taskDetails, detail, isEngineOn} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
@@ -195,10 +196,10 @@ export class Header extends Component {
                 </ul>
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>New Task</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={isEngineOn ? <p>New Task</p> : <p>Golem is not started yet.</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item" onClick={::this._onFileDialog}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                        <li className="menu__item" onClick={isEngineOn ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </ReactTooltip>
                     <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],

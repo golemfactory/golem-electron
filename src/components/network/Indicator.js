@@ -15,7 +15,7 @@ let dictCurrency = Object.freeze({
 let motionBalanceStart = 0;
 
 
-export default class indicator extends React.Component {
+export default class Indicator extends React.Component {
 
     constructor(props) {
         super(props);
@@ -29,8 +29,9 @@ export default class indicator extends React.Component {
     }
 
     componentDidMount() {
-console.log("this.state.idx", this.state.idx);
-        document.getElementsByClassName('amount__item')[this.state.idx].classList.add('active')
+        const amountItem = document.getElementsByClassName('amount__item')
+        if(!isNaN(parseFloat(this.state.idx)) && amountItem[this.state.idx])
+            amountItem[this.state.idx].classList.add('active')
     }
 
     /**
@@ -117,7 +118,7 @@ console.log("this.state.idx", this.state.idx);
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && '$'}{::this.formatAmount(Number(balanceAnimated))}</span>}
+                    {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && <span className="symbol__usd">$</span> }{::this.formatAmount(Number(balanceAnimated))}</span>}
                 </Motion>
                 <div className="currency-menu" role="menu">
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>{(!toggler && defaultCurrency == dictCurrency.GNT) ? 'USD' : 'GNT'}</span>

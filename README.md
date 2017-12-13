@@ -1,5 +1,8 @@
 # Golem Electron Application
-![Image of Yaktocat](https://pbs.twimg.com/profile_images/659017061704822784/nRM6iJCS_400x400.png)
+![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.12.0-brightgreen.svg)
+[![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
+<br/>
+![Image of Golem](https://pbs.twimg.com/profile_images/659017061704822784/nRM6iJCS_400x400.png)
 
 The desktop application using Electron, React and Redux.
 

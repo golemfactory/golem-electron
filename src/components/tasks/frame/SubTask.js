@@ -37,14 +37,57 @@ function convertToSVGPoints(arr) {
 *
 * @description This function will be modified for the non-square shapes
 */
-function tooltipOffset(arr) {
-    let horizontalPoints = arrayColumn(arr, 0)
-    let maxHorizontalLength = Math.max(...horizontalPoints)
-    let minHorizontalLength = Math.min(...horizontalPoints)
-    let verticalPoints = arrayColumn(arr, 1)
-    let maxVerticalLength = Math.max(...verticalPoints)
-    let minVerticalLength = Math.min(...verticalPoints)
-    return [(maxHorizontalLength - minHorizontalLength) / 2, (maxVerticalLength - minVerticalLength) / 5]
+function tooltipOffset(arr, isDirTop) {
+    
+    const horizontalPoints = arrayColumn(arr, 0)
+    const maxHorizontalLength = Math.max(...horizontalPoints)
+    const minHorizontalLength = Math.min(...horizontalPoints)
+    
+
+    const verticalPoints = arrayColumn(arr, 1)
+    const maxVerticalLength = Math.max(...verticalPoints)
+    const minVerticalLength = Math.min(...verticalPoints)
+
+    /**
+     * @FIXME 
+     *
+     * if we gonna draw shape always thro edge to other edge we can keep lat 0
+     * but if we gonna draw more than one shape between two side edges we need to calculate 
+     * distance between absolute center and center of shape in this parameter.
+     *
+     * @example
+     * 
+     * +) center of screen & center of shape
+     * ---------------------
+     * = distance between is 0
+     * 
+     * |#################################|
+     * |                                 |
+     * |                +                |
+     * |                                 | 
+     * |#################################|
+     *
+     * @example
+     * 
+     * p) center of screen
+     * q) center of shape
+     * --------------------
+     * =  q - p is the offset ± is depend on direction
+     *
+     * |#################################|
+     * |         #                       |
+     * |    p    #      q                |
+     * |         #                       | 
+     * |#################################|
+     */
+    
+    const lat = 0
+    let lng = (maxVerticalLength - minVerticalLength) / 2
+
+    if(!isDirTop) // <-- if direction is 'bottom' we will calculate lng coordinate as minus to center tooltip into the shape.
+        lng  = -1 * lng;
+
+    return [lat, lng]
 }
 
 const subTaskData = {
@@ -84,13 +127,18 @@ export default class SubTask extends React.Component {
     }
 
     _handleOpenFile(path){
-        console.log("path", path);
+        
         ipcRenderer.send('open-file', path)
     }
 
-
+    /**
+     * @description This function will draw shapes with given corner points 
+     * 
+     * @param  isDevMode {Boolean}
+     * @return {corner points of the drawings [Array]}
+     */
     drawLine(isDevMode) {
-        const {data, ratio, subtaskList} = this.props
+        const {data, ratio, subtaskList, subtaskAmount} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
                 key: anchestorKey,
@@ -103,7 +151,7 @@ export default class SubTask extends React.Component {
         });
 
         function _taskStatus(status){
-            console.log("status", status);
+            
             switch(status){
                 case statusDict.FINISHED:
                 return <p className="status__tooltip">Completed</p>;
@@ -123,22 +171,24 @@ export default class SubTask extends React.Component {
         }
 
         function _counter(start){
-            console.log("start", window.performance.now(), start);
+            
             return window.performance.now() - start
         }
 
         return path
             .sort((a, b) => {
-                let verticalPointA = arrayColumn(a.value, 1)[0]
-                let verticalPointB = arrayColumn(b.value, 1)[0]
+                const verticalPointA = arrayColumn(a.value, 1)[0]
+                const verticalPointB = arrayColumn(b.value, 1)[0]
                 return verticalPointA - verticalPointB
             })
             .map((item, index) => {
-                let subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                
+                const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                const isDirectionTop = index + 1 > subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
                 overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
-                placement={index + 1 > path.length / 2 ? 'top' : 'bottom' }
+                placement={isDirectionTop ? 'top' : 'bottom' }
                 trigger={['hover']}
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
@@ -160,7 +210,7 @@ export default class SubTask extends React.Component {
                         <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
                     </div>}
                 align={{
-                    offset: tooltipOffset(item.value),
+                    offset: tooltipOffset(item.value, isDirectionTop),
                 }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
                 points={convertToSVGPoints(item.value)}/>

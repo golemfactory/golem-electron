@@ -10,7 +10,6 @@ import { versionFlow } from './version'
 import { golemStatusFlow } from './golem'
 import { frameBase } from './frame'
 import { engineFlow } from './engine'
-import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
 import { connectedPeersFlow } from './connectedPeers'
 import { balanceFlow } from './balance'
@@ -173,7 +172,7 @@ export function* read(session) {
   }
 }*/
 export function* apiFlow(connection) {
-    yield fork(uploadFlow, connection);
+    yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
@@ -196,7 +195,6 @@ export function* handleIO(connection) {
     yield fork(engineFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
-    yield fork(performanceFlow, connection);
     yield fork(statsFlow, connection);
     yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
     const channel = yield call(subscribe, connection)
@@ -244,7 +242,7 @@ export function* frameFlow() {
  */
 export function* flow() {
     while (true) {
-        let {payload} = yield take(LOGIN)
+        yield take(LOGIN)
 
         yield put({
             type: SET_GOLEM_STATUS,

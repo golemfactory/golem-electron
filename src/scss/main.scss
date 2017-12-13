@@ -91,6 +91,14 @@ span {
     }
 }
 
+input,
+button,
+select{
+    &:disabled{
+        cursor: not-allowed !important;
+    }
+}
+
 a {
     text-decoration: none;
     color: $color-primary;
@@ -455,6 +463,7 @@ input[type=number]::-webkit-inner-spin-button {
                     box-shadow: inset 0 0 0 4px $color-text2;
                     border-color: darken($color-text2, 25%);
                     background: darken($color-text2, 25%);
+                    cursor: not-allowed;
                 }
             }
         }
