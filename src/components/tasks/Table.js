@@ -35,6 +35,13 @@ const status = Object.freeze({
     RESTART: 'Restart'
 })
 
+function shouldPSEnabled(_item){
+            return (_item.status == status.COMPUTING                        || 
+                    _item.status == status.FINISHED                         || 
+                    (_item.status == status.TIMEOUT && _item.progress > 0)  ||
+                    (_item.status == status.RESTART && _item.progress > 0))
+        }
+
 /**
  * { Class for Table Component in Blender Component }
  *
@@ -44,7 +51,9 @@ export class Table extends React.Component {
 
     constructor(props) {
         super(props);
+
         this._handleDeleteTask = ::this._handleDeleteTask
+        this._fetchStatus = ::this._fetchStatus
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -76,20 +85,13 @@ export class Table extends React.Component {
     _handleRowClick(event, item, index) {
         const {id, preview, options} = item
 
-        function shouldPSEnabled(_item){
-            return (_item.status == status.COMPUTING                        || 
-                    _item.status == status.FINISHED                         || 
-                    (_item.status == status.TIMEOUT && _item.progress > 0)  ||
-                    (_item.status == status.RESTART && _item.progress > 0))
-        }
-
         this._navigateTo(event)
         this.props.previewHandler({
             id: id,
-            src: preview,
-            frameCount: options.frame_count,
-            psEnabled: shouldPSEnabled(item)
+            src: preview
         })
+
+
         return true
     }
 
@@ -125,6 +127,15 @@ export class Table extends React.Component {
      * @return {DOM}                [Element of the status]
      */
     _fetchStatus(item) {
+
+        if(item.id == this.props.previewId){
+            this.props.actions.updatePreviewLock({
+                id: item.id,
+                frameCount: item.options.frameCount,
+                enabled: shouldPSEnabled(item)
+            })
+        }
+
         switch (item.status) {
         case status.TIMEOUT:
             return <span className="duration duration--done">Timeout</span>
