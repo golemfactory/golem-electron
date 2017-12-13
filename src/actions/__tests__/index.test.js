@@ -331,6 +331,19 @@ describe('actions', () => {
         expect(actions.setPreview(payload)).toEqual(expectedAction)
     })
 
+    it('should create an action to updatePreviewLock', () => {
+        const payload = {
+            id: 0,
+            enabled: true,
+            frameCount: 1
+        }
+        const expectedAction = {
+            payload: payload,
+            type: actions.dict.UPDATE_PREVIEW_LOCK
+        }
+        expect(actions.updatePreviewLock(payload)).toEqual(expectedAction)
+    })
+
     it('should create an action to setOnboard', () => {
         const payload = true
         const expectedAction = {
