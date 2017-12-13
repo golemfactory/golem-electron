@@ -168,7 +168,8 @@
         "uuid": "^3.0.1",
         "wampy": "^4.1.0",
         "websocket": "^1.0.24",
-        "winston-uber": "^1.0.1"
+        "winston-uber": "^1.0.1",
+        "yup": "^0.23.0"
     },
     "jest": {
         "setupFiles": [
