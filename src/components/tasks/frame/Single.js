@@ -153,7 +153,7 @@ export class Single extends React.Component {
             }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} subtaskAmount={details.subtask} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} subtaskAmount={details.subtasks} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
                 </div>
                 <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameIndex}/>
             </div>
