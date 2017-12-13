@@ -193,21 +193,11 @@
             "<rootDir>/__mocks__/EmptyModule.js"
         ]
     },
-    "transformIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "unmockedModulePathPatterns": [
-      "<rootDir>/node_modules/react",
-      "<rootDir>/node_modules/react-dom",
-      "<rootDir>/node_modules/react-addons-test-utils",
-      "<rootDir>/__mocks__/EmptyModule.js"
-    ]
-  },
-  "env": {
-    "test": {
-      "plugins": [
-        "transform-es2015-modules-commonjs"
-      ]
+    "env": {
+        "test": {
+            "plugins": [
+                "transform-es2015-modules-commonjs"
+            ]
+        }
     }
-  }
 }
