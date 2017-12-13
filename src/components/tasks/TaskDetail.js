@@ -89,6 +89,15 @@ const presetSchema = yup.object().shape({
 })
 
 
+const hints = {
+    frame: [
+        "Use '1-3' for consecutive frames, instead of 1,2,3",
+        "To get specific frames, type indexes. e.g. 2,6,7",
+        "For '1,3,5,7' frames use '1-7;2' notation."
+    ]
+}
+
+
 
 export class TaskDetail extends React.Component {
 
@@ -119,6 +128,7 @@ export class TaskDetail extends React.Component {
 
     componentDidMount() {
         const {params, actions, task, presets, location, isDeveloperMode} = this.props
+
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
@@ -141,6 +151,8 @@ export class TaskDetail extends React.Component {
             this.refs.outputPath.value = location
             this._handleLocalRender()
         }
+
+        this.frameHintNum = Math.floor(Math.random()* hints.frame.length)
     }
 
     componentWillUnmount() {
@@ -280,10 +292,10 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    /*
-     *
-     *
-    */
+    /**
+     * [changePresetLock func. enables\disables save preset button]
+     * @param  {boolean} result [form validity result]
+     */
     changePresetLock = (result) => {
         this.setState({
             savePresetLock: !result
@@ -680,7 +692,7 @@ export class TaskDetail extends React.Component {
                 order: 8,
                 content: <div className="item-settings" key="8">
                                 <span className="title">Subtask Amount</span>
-                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
             },
             {
@@ -698,7 +710,7 @@ export class TaskDetail extends React.Component {
                 order: 2,
                 content: <div className="item-settings" key="2">
                             <span className="title">Frame Range</span>
-                            <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             formTemplate.push({
@@ -793,7 +805,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input ref="bidRef" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="bidRef" type="number" min="0.000001" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
                             </div>
                             <span className="item-price tips__price">
