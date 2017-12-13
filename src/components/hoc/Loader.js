@@ -77,7 +77,7 @@ export class Loading extends React.Component {
                                 <div className="text"> worldwide
                                     <br/> supercomputer
                                 </div>
-                                <div className="loading">
+                                <div id="loading" className="loading">
                                     <span></span>
                                     <span></span>
                                     <span></span>

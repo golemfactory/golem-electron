@@ -37,6 +37,15 @@
     flex-grow: 1;
 }
 
+.hint__task-name{
+    display: none;
+    position: absolute;
+    font-size: 9pt;
+    font-weight: 400;
+    color: $color-error;
+    padding: 20px 24px;
+}
+
 .container-type__new-task {
     height: 400px;
     overflow-y: overlay;

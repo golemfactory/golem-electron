@@ -1,1 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`LoaderWrapper should render a table component 1`] = `<Connect(Table) />`;

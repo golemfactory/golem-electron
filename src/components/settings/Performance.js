@@ -66,7 +66,7 @@ export class Performance extends React.Component {
                 <div className="list__performance">
                     {this.loadList(mockList, chart)}
                 </div>
-                <button className={`btn--outline ${loadingIndicator && 'btn--loading'}`} onClick={::this._handleRecount}> {loadingIndicator ? 'Calculating' : 'Calculate' }{loadingIndicator && <span className="jumping-dots">
+                <button className={`btn--outline ${loadingIndicator && 'btn--loading'}`} onClick={::this._handleRecount} disabled={loadingIndicator}> {loadingIndicator ? 'Calculating' : 'Calculate' }{loadingIndicator && <span className="jumping-dots">
   <span className="dot-1">.</span>
   <span className="dot-2">.</span>
   <span className="dot-3">.</span>

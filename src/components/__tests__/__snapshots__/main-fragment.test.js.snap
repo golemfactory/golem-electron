@@ -1,1 +1,0 @@
-exports[`test should render a MainFragment component 1`] = `<Connect(MainFragment) />`;

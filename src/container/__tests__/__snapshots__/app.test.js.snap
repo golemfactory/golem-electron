@@ -1,1 +1,3 @@
-exports[`test should render an App container 1`] = `<Connect(App) />`;
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`should render an App container 1`] = `<Connect(App) />`;

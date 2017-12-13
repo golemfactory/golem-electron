@@ -48,7 +48,7 @@ export class FileLocation extends React.Component {
                     <button className="btn--outline" onClick={::this._handleFolderSelection} disabled={isEngineOn}>Change</button>
                 </div>
                 <div>
-                    <span className="tips__file-location">Output folder is where the returned results of your tasks will go. </span>
+                    <span className="tips__file-location">Output folder is where the returned results of your tasks will go.</span>
                 </div>
             </div>
         );
