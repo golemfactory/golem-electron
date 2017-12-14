@@ -51,6 +51,15 @@ export class TaskPanel extends React.Component {
         setTimeout(endLoading, 3000)
     }
 
+
+    componentWillUnmount() {
+        this.props.actions.updatePreviewLock({
+            enabled: false,
+            id: null,
+            frameCount: null
+        })
+    }
+
     /**
      * [_setPreview func. update related states to present preview]
      * @param {Any}         options.id         [Id of selected task]

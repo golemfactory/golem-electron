@@ -127,11 +127,10 @@ export class Table extends React.Component {
      * @return {DOM}                [Element of the status]
      */
     _fetchStatus(item) {
-
         if(item.id == this.props.previewId){
             this.props.actions.updatePreviewLock({
                 id: item.id,
-                frameCount: item.options.frameCount,
+                frameCount: item.options.frame_count,
                 enabled: shouldPSEnabled(item)
             })
         }
