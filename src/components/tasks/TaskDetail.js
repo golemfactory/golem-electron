@@ -91,9 +91,9 @@ const presetSchema = yup.object().shape({
 
 const hints = {
     frame: [
-        "Hint: Use consecutive frames, e.g. '1-6'",
-        "Hint: Add more than one frame, e.g. '2,6,7'",
-        "Hint: Use common diff. i.e. '1-7;2' notation."
+        "Hint: To use consecutive frames, e.g. \"1-6\".",
+        "Hint: To pick random frames, e.g. \"2;6;7\".",
+        "Hint: To use common diff. e.g. \"1-7,2\"."
     ]
 }
 
