@@ -82,8 +82,8 @@ export class Settings extends React.Component {
      * @param  {DOM}        elm         [Clicked DOM Element]
      */
     _handleTab(elm) {
-        let target = elm.target
-        let targetRoot = target.parentElement.parentElement
+        let target = elm.currentTarget
+        let targetRoot = target.parentElement
         let index = targetRoot.getAttribute('value')
         let accordionItems = document.getElementsByClassName('item__accordion')
         for (var i = 0; i < accordionItems.length; i++) {
@@ -94,8 +94,8 @@ export class Settings extends React.Component {
             }
         }
         targetRoot.classList.toggle('active')
-        target.classList.toggle('icon-arrow-down')
-        target.classList.toggle('icon-arrow-up')
+        target.children[1].classList.toggle('icon-arrow-down')
+        target.children[1].classList.toggle('icon-arrow-up')
         this.setState({
             activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
         })
@@ -111,9 +111,9 @@ export class Settings extends React.Component {
         return data
         .filter((_, index) => isDeveloperMode || index < 4)
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
-                        <div className="item-title__accordion">
+                        <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>
-                            <span className="icon-arrow-down" onClick={::this._handleTab} role="tab" tabIndex="0" aria-label="Expand Tab"/>
+                            <span className="icon-arrow-down" aria-label="Expand Tab"/>
                         </div>
                         <div className="item-content__accordion" role="tabpanel">
                         {this.state.activeContent === index && item.content}

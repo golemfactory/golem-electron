@@ -45,14 +45,11 @@ $item__accordion-height: 78.7px;
         justify-content: space-between;
         align-items: center;
         height: $item__accordion-height;
+        cursor: pointer;
 
         & > span {
             display: block;
             font-weight: 600;
-        }
-
-        span:last-child {
-            cursor: pointer;
         }
     }
 
