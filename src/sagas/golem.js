@@ -21,7 +21,34 @@ const statuses = {
 }
 
 const messages = {
+    hyperdrive: {
+        'instance.check': {
+            pre: '',
+            post: '',
+            exception: 'Hyperdrive is not available'
+        },
+        'instance.connect': {
+            pre: '',
+            post: '',
+            exception: 'Cannot connect to hyperdrive'
+        },
+    },
     docker: {
+        'instance.check': {
+            pre: 'Checking for docker',
+            post: 'Docker is available',
+            exception: 'Docker is not available'
+        },
+        'instance.env': {
+            pre: 'Setting VM environment',
+            post: 'VM environment configured',
+            exception: 'Docker environment error'
+        },
+        'instance.status': {
+            pre: '',
+            post: '',
+            exception: 'Docker machine status error'
+        },
         'images.pull': {
             pre: 'Pulling Docker images',
             post: 'Docker images downloaded',
@@ -48,6 +75,11 @@ const messages = {
             pre: 'Recovering Docker VM',
             post: 'Docker VM recovered',
             exception: 'Error recovering Docker VM'
+        },
+        'vm.stop': {
+            pre: 'Creating Docker VM',
+            post: 'Docker VM created',
+            exception: 'Error stopping a VM'
         },
     },
     ethereum: {
@@ -123,11 +155,12 @@ function getGolemStatus(component, method, stage, data) {
 export function subscribeGolemStatus(session) {
     return eventChannel(emit => {
         function on_status(args) {
-            if (args && args.length)
-                emit({
-                    type: SET_GOLEM_STATUS,
-                    payload: getGolemStatus.apply(null, args)
-                });
+            if (args && args.length){
+                    emit({
+                        type: SET_GOLEM_STATUS,
+                        payload: getGolemStatus.apply(null, args)
+                    });
+                }
         }
 
         function on_status_rpc(result) {

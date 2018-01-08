@@ -100,39 +100,16 @@ export function subscribe(session) {
 
         function on_connection(args) {
             var connection = args[0];
+            console.info("connection", connection);
 
-            if (connection === "Connected") {
+            if (connection.startsWith("Connected")) {
                 emit(true)
-            } else {
+            } else if (connection.startsWith("Port")) {
                 emit(skipError)
             }
         }
 
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
-
-        function on_blender(args) {
-            let blender = args[0];
-
-            function on_preview(args) {
-                console.log(args)
-            }
-
-            blender.forEach((item, index) => {
-                if (item.preview)
-                    session.call(config.PREVIEW_CH, [index], {
-                        onSuccess: on_preview,
-                        onError: function(err, details) {
-                            console.log('Fetch preview failed!', err);
-                        }
-                    })
-            })
-            emit({
-                type: SET_BLENDER,
-                blender: blender
-            })
-        }
-
-        //_handleSUBPUB(on_blender, session, config.BLENDER_CH)
 
         session.options({
             onClose: function() {
