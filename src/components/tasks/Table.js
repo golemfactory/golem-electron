@@ -39,7 +39,7 @@ function shouldPSEnabled(_item){
             return (_item.status == status.COMPUTING                        || 
                     _item.status == status.FINISHED                         || 
                     (_item.status == status.TIMEOUT && _item.progress > 0)  ||
-                    (_item.status == status.RESTART && _item.progress > 0))
+                    _item.status == status.RESTART)
         }
 
 /**
@@ -146,7 +146,7 @@ export class Table extends React.Component {
             return <span className="duration duration--active">Waiting...</span>
 
         case status.RESTART:
-            return <span className="duration duration--active">Restarting...</span>
+            return <span className="duration duration--done">Restarted</span>
 
         case status.COMPUTING:
             return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
@@ -165,7 +165,6 @@ export class Table extends React.Component {
         let waiting = data.some(item => item.status == status.WAITING)
         let computing = data.some(item => item.status == status.COMPUTING)
         let timeout = data.some(item => item.status == status.TIMEOUT)
-        let restart = data.some(item => item.status == status.RESTART)
         let info = {
             status: status.READY,
             message: "Golem is ready!",
@@ -185,11 +184,6 @@ export class Table extends React.Component {
             info.status = status.TIMEOUT
             info.message = "Your task has timed out"
             info.color = "red"
-        }
-        if (restart) {
-            info.status = status.RESTART
-            info.message = "Your task is restarting"
-            info.color = "yellow"
         }
         actions.setFooterInfo(info)
 
