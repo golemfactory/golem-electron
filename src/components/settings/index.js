@@ -116,7 +116,7 @@ export class Settings extends React.Component {
                             <span className="icon-arrow-down" aria-label="Expand Tab"/>
                         </div>
                         <div className="item-content__accordion" role="tabpanel">
-                        {this.state.activeContent === index && item.content}
+                        {item.content}
                         </div>
                     </div>)
     }

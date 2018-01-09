@@ -25,20 +25,24 @@ $item__accordion-height: 78.7px;
     position: relative;
     overflow-y: overlay;
     transform: translateZ(0);
-
-    .active {
-        height: auto;
-
-        & > .item-content__accordion {
-            opacity: 1;
-            transition-delay: .2s;
-        }
-    }
 }
 
 .item__accordion {
-    height: $item__accordion-height;
-    transition: .3s height;
+    max-height: 800px;
+    transition: .5s max-height;
+
+    &.active {
+        & > .item-content__accordion {
+            opacity: 1;
+            max-height: 800px;
+            overflow: overlay;
+        }
+    }
+
+    &:not(.active){
+        max-height: $item__accordion-height;
+        transition: .5s max-height;
+    }
 
     .item-title__accordion {
         display: flex;
@@ -54,8 +58,10 @@ $item__accordion-height: 78.7px;
     }
 
     .item-content__accordion {
+        max-height: 0;
+        overflow: hidden;
         opacity: 0;
-        transition: .5s opacity;
+        transition: .5s all;
     }
 
     & + .item__accordion {
