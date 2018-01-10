@@ -88,7 +88,7 @@ export class Personal extends React.Component {
         const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust} = this.props
         const {nodeIdCopied, editMode} = this.state
         return (
-            <div className="section__personal">
+            <div className="section__personal" id="personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
                     </div>

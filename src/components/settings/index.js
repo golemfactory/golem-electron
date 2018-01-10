@@ -67,6 +67,19 @@ export class Settings extends React.Component {
     componentDidMount() {
         const {actions, nodeId} = this.props
         actions.showTrust(nodeId)
+
+         this.headerEl = document.getElementById('personal');
+        // const resizeHeaderOnScroll = () => {
+        //     const elementY = document.getElementById('tabAcordion'),
+        //     shrinkOn = 0;
+        //     if (elementY.scrollTop > shrinkOn && Number.isInteger(this.state.activeContent)) {
+        //         this.headerEl.classList.add("smaller");
+        //     } else if(!Number.isInteger(this.state.activeContent)) {
+        //         this.headerEl.classList.remove("smaller");
+        //     }
+        // }
+
+        // window.addEventListener('scroll', resizeHeaderOnScroll, true);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -98,6 +111,12 @@ export class Settings extends React.Component {
         target.children[1].classList.toggle('icon-arrow-up')
         this.setState({
             activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
+        },() => {
+            if(!Number.isInteger(this.state.activeContent)){
+                this.headerEl.classList.remove("smaller")
+            } else {
+                this.headerEl.classList.add("smaller")
+            }
         })
     }
 
@@ -126,7 +145,7 @@ export class Settings extends React.Component {
         return (
             <div className="content__settings">
                 <Personal/>
-                <div className="tab__accordion">
+                <div className="tab__accordion" id="tabAcordion">
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
                 <div className="footer__settings">

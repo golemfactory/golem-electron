@@ -47,11 +47,13 @@
     justify-content: space-around;
     box-sizing: border-box;
     margin-bottom: 40px;
+    transition: 1s all;
 }
 
 .indicator__personal {
     position: relative;
     width: 75px;
+    transition: 1s all;
     span {
         line-height: 1.5;
         color: $color-text2;
@@ -104,4 +106,6 @@
 .image__personal {
     width: 161px;
     height: 161px;
+    max-height: 161px;
+    transition: 1s all;
 }
