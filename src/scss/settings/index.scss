@@ -18,7 +18,7 @@ $item__accordion-height: 78.7px;
 
 .section__personal {
     flex: 0 0 292px;
-    transition: 1s all;
+    transition: .8s all;
 }
 
 .smaller{
@@ -48,7 +48,7 @@ $item__accordion-height: 78.7px;
 
 .item__accordion {
     max-height: 800px;
-    transition: .7s max-height;
+    transition: .8s max-height;
 
     &.active {
         & > .item-content__accordion {
@@ -60,7 +60,7 @@ $item__accordion-height: 78.7px;
 
     &:not(.active){
         max-height: $item__accordion-height;
-        transition: 1s max-height;
+        transition: .8s max-height;
     }
 
     .item-title__accordion {
@@ -80,7 +80,7 @@ $item__accordion-height: 78.7px;
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        transition: 1s all;
+        transition: .5s all;
     }
 
     & + .item__accordion {
