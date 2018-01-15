@@ -238,7 +238,7 @@ export function* connectionFlow(){
         }
     } finally {
         console.info('yield cancelled!')
-        connectionCH.close()
+        yield cancel(task)
     }
     return task
 }
