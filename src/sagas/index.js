@@ -29,7 +29,6 @@ const {remote} = window.electron
 const {app} = remote
 
 let skipError = false;
-let connectTimeout = null;
 
 /**
  * { Websocket Connect function }
@@ -37,7 +36,7 @@ let connectTimeout = null;
  * @return     {Promise}      { It returns connection and new session of the connection as promise }
  */
 export function connect() {
-    return new Promise(resolve => {
+    return eventChannel(emit => {
         /**
          * [{Object} Wampy]
          * @inheritDoc https://github.com/KSDaemon/wampy.js
@@ -53,11 +52,21 @@ export function connect() {
                     autoReconnect: true,
                     transportEncoding: 'msgpack',
                     msgpackCoder: new MsgpackSerializer(),
+                    maxRetries: 100000,
                     onConnect: () => {
                         console.log('WS: connected');
 
-                        resolve({
-                            connection
+                        emit({
+                            connection,
+                            error: null
+                        });
+                    },
+                    onReconnectSuccess: () => {
+                        console.log('WS: Reconnected');
+
+                        emit({
+                            connection,
+                            error: null
                         });
                     },
                     onClose: () => {
@@ -65,20 +74,23 @@ export function connect() {
                     },
                     onError: (err, details) => {
                         console.info('WS: connection error:', err, details);
-                        if (connectTimeout) return;
+                        
+                        emit({
+                            connection: null,
+                            error: err
+                        })
 
                         app.golem.startProcess();
-
-                        connectTimeout = setTimeout(() => {
-                            connectTimeout = null;
-                            connect();
-                        }, 1000);
                     }
                 });
         }
 
         console.log('WS: connecting')
         connect()
+
+        return () => {
+            console.log('negative')
+        }
     })
 }
 
@@ -100,14 +112,13 @@ export function subscribe(session) {
 
         function on_connection(args) {
             var connection = args[0];
-            console.info("connection", connection);
 
-            if (connection.startsWith("Connected")) {
+            if (connection.startsWith("Connected") || connection.startsWith("Not connected")) {
                 emit(true)
             } else if (connection.startsWith("Port")) {
                 emit(skipError)
             }
-        }
+}
 
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
 
@@ -119,27 +130,9 @@ export function subscribe(session) {
 
         return () => {
             console.log('negative')
+            _handleUNSUBPUB(on_connection, session, config.CONNECTION_CH)
         }
     })
-}
-
-/**
- * { Read Generator, waiting for emits from the emitchannel and writing it to the redux store }
- *
- * @param      {Object}  session  The connection and session of ws
- * @return     {boolean}             { job isDone status }
- */
-export function* read(session) {
-    const channel = yield call(subscribe, session)
-
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-    }
 }
 
 /*function* write(socket) {
@@ -148,6 +141,7 @@ export function* read(session) {
     socket.emit('message', payload);
   }
 }*/
+
 export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
@@ -180,6 +174,7 @@ export function* handleIO(connection) {
 
     while (true) {
         let status = yield take(channel)
+
         if (status && !started) {
             taskApi = yield fork(apiFlow, connection)
             yield put({
@@ -196,20 +191,56 @@ export function* handleIO(connection) {
         if (!status) {
             yield put({
                 type: SET_CONNECTION_PROBLEM,
-                payload: true
+                payload: {
+                    status: true,
+                    issue: "PORT"
+                }
             })
         }
     }
 }
 
 export function* frameFlow() {
+    let {payload} = yield take(LOGIN_FRAME)
+    const {connection} = yield call(connect)
     while (true) {
-        let {payload} = yield take(LOGIN_FRAME)
-        const {connection} = yield call(connect)
         const task = yield fork(frameBase, connection, payload)
         let action = yield take(LOGOUT_FRAME)
         yield cancel(task)
     }
+}
+
+
+export function* connectionFlow(){
+    const connectionCH = yield call(connect)
+    let task;
+
+    try{
+        while(true){
+            let {connection, error} = yield take(connectionCH)
+            if(error){
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                })
+                skipError = false
+            }
+            else{
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: false
+                })
+                task = yield fork(handleIO, connection) 
+            }
+        }
+    } finally {
+        console.info('yield cancelled!')
+        connectionCH.close()
+    }
+    return task
 }
 
 /**
@@ -220,16 +251,13 @@ export function* frameFlow() {
 export function* flow() {
     while (true) {
         yield take(LOGIN)
-
         yield put({
             type: SET_GOLEM_STATUS,
             payload: {
                 message: 'Starting Golem'
             }
         })
-
-        const {connection} = yield call(connect)
-        const task = yield fork(handleIO, connection)
+        const {task} = yield call(connectionFlow)
         let action = yield take(LOGOUT)
         yield cancel(task)
     }

@@ -189,6 +189,15 @@ export class MainFragment extends React.Component {
             activeTab: elm.target.getAttribute('value')
         })
     }
+
+    golemDotClass(_gs, _cp){
+        if(isGolemReady(_gs.status)){
+            return (_cp && _cp.status) ? 'icon-status-dot--warning' : 'icon-status-dot--active'
+        }
+        else {
+            return 'icon-status-dot--error'
+        }
+    }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn} = this.props
@@ -214,7 +223,7 @@ export class MainFragment extends React.Component {
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
-                    <span className={`icon-status-dot ${!connectionProblem && isGolemReady(golemStatus.status) ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
+                    <span className={`icon-status-dot ${this.golemDotClass(golemStatus, connectionProblem)}`}/>
                     <span>{`${golemStatus.message}`}</span>
                 </div>
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>

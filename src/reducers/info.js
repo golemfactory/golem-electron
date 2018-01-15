@@ -16,7 +16,10 @@ const initialState = {
         status: false,
         files: []
     },
-    connectionProblem: false,
+    connectionProblem: {
+        status: false,
+        issue: null
+    },
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
 }
 //console.log(getConfig(GOLEM_STARTER))
@@ -36,19 +39,23 @@ const setInfo = (state = initialState, action) => {
             isEngineOn: true
         });
 
-    case SET_FILE_CHECK:
-        const {status, files} = action.payload
-        return Object.assign({}, state, {
-            fileCheckModal: {
-                status,
-                files: files || []
-            }
-        });
+    case SET_FILE_CHECK: {
+            const {status, files} = action.payload
+            return Object.assign({}, state, {
+                fileCheckModal: {
+                    status,
+                    files: files || []
+                }
+            });}
 
-    case SET_CONNECTION_PROBLEM:
-        return Object.assign({}, state, {
-            connectionProblem: action.payload
-        });
+    case SET_CONNECTION_PROBLEM: {
+            const {status, issue} = action.payload
+            return Object.assign({}, state, {
+                connectionProblem: {
+                    status: !!status,
+                    issue: issue || null
+                }
+            });}
 
     case SET_GOLEM_PAUSE_STATUS:
         setConfig(GOLEM_STARTER, action.payload)

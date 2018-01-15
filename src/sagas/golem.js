@@ -23,13 +23,13 @@ const statuses = {
 const messages = {
     hyperdrive: {
         'instance.check': {
-            pre: '',
-            post: '',
+            pre: 'Checking for hyperdrive',
+            post: 'Hyperdrive is available',
             exception: 'Hyperdrive is not available'
         },
         'instance.connect': {
-            pre: '',
-            post: '',
+            pre: 'Connecting to hyperdrive',
+            post: 'Connected to hyperdrive',
             exception: 'Cannot connect to hyperdrive'
         },
     },

@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 
 const mapStateToProps = state => ({
+    connectionProblem: state.info.connectionProblem
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -47,13 +48,14 @@ export class ConnectionModal extends React.Component {
 
 
     render() {
+        const {connectionProblem} = this.props
         return (
             <div ref="modalContent" className="container__modal container__connection-modal">
                 <div className="content__modal">
                     <div className="container-icon">
                         <span className="icon-warning"/>
                     </div>
-                    <span>Golem is having trouble connecting. <br/>You may need to check your router ports. <br/>Please check the <a href={DOCLINK}>docs</a> for help.</span>
+                    <span>Golem is having trouble connecting. <br/>You may need to check your {connectionProblem.issue}. <br/>Please check the <a href={DOCLINK}>docs</a> for help.</span>
                 </div>
             </div>
         );

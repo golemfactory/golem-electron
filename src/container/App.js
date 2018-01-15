@@ -80,7 +80,7 @@ export class App extends Component {
                 <Router history={ history } >
                     { routes }
                 </Router>
-                 {connectionProblem && <ConnectionModal closeModal={::this._closeModal}/>}
+                 {(connectionProblem && connectionProblem.status) && <ConnectionModal closeModal={::this._closeModal}/>}
             </div>
         );
     }
