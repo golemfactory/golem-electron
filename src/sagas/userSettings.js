@@ -22,7 +22,6 @@ export function updateSettings(session, type, payload) {
             let updateStatus = args[0];
             resolve(updateStatus)
         }
-        //console.log(parameterDict[type])
         _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTINGS_RPC, [{
             [parameterDict[type]]: payload
         }])
@@ -35,7 +34,6 @@ export function* updateSettingsBase(session, {type, payload, init}) {
         if (type === "UPDATE_NODE_NAME") {
             yield call(fireBase, session)
         }
-    //console.info("updateSettingsStatus", updateStatus)
     }
 
 // if (!updateStatus) {
@@ -113,7 +111,6 @@ export function callSettings(session) {
 
 export function* fireBase(session) {
     const actionList = yield call(callSettings, session);
-    //console.log("SETTINGS_ACTION", actionList)
     yield actionList && actionList.map((item) => {
         return put(item)
     })

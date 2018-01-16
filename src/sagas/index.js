@@ -6,25 +6,26 @@ import Wampy from 'wampy'
 import MsgpackSerializer from './../utils/MsgpackSerializer'
 import { config, _handleSUBPUB, _handleRPC } from './handler'
 
+import { versionFlow } from './version'
 import { golemStatusFlow } from './golem'
 import { frameBase } from './frame'
 import { engineFlow } from './engine'
-import { uploadFlow } from './upload'
 import { currencyFlow } from './currency'
 import { connectedPeersFlow } from './connectedPeers'
 import { balanceFlow } from './balance'
 import { historyFlow } from './history'
 import { advancedFlow } from './advanced'
 import { performanceFlow } from './performance'
+import { statsFlow } from './stats'
 import { trustFlow } from './trust'
 import { tasksFlow } from './tasks'
 import { settingsFlow } from './userSettings'
 import { networkInfoFlow } from './networkInfo'
 
-const {ipcRenderer} = window.require('electron')
+const {ipcRenderer} = window.electron
 const {SET_CONNECTION_PROBLEM, SET_GOLEM_STATUS, SET_CONNECTED_PEERS, LOGIN, LOGIN_FRAME, CONTINUE_WITH_PROBLEM, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
 
-const {remote} = window.require('electron');
+const {remote} = window.electron
 const {app} = remote
 
 let skipError = false;
@@ -109,17 +110,6 @@ export function subscribe(session) {
 
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
 
-        function on_counter(args) {
-            var counter = args[0];
-            ipcRenderer.send('amount-updated', counter)
-            emit({
-                type: SET_MESSAGE,
-                message: counter
-            })
-        }
-
-        //_handleSUBPUB(on_counter, session, config.COUNTER_CH)
-
         function on_blender(args) {
             let blender = args[0];
 
@@ -182,7 +172,7 @@ export function* read(session) {
   }
 }*/
 export function* apiFlow(connection) {
-    yield fork(uploadFlow, connection);
+    yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
@@ -200,11 +190,12 @@ export function* apiFlow(connection) {
  */
 export function* handleIO(connection) {
     //yield fork(read, connection);
+    yield fork(versionFlow, connection);
     yield fork(golemStatusFlow, connection);
     yield fork(engineFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
-    yield fork(performanceFlow, connection);
+    yield fork(statsFlow, connection);
     yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
     const channel = yield call(subscribe, connection)
     let taskApi;
@@ -251,7 +242,7 @@ export function* frameFlow() {
  */
 export function* flow() {
     while (true) {
-        let {payload} = yield take(LOGIN)
+        yield take(LOGIN)
 
         yield put({
             type: SET_GOLEM_STATUS,

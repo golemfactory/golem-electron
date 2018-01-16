@@ -8,8 +8,12 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
+import Stats from './Stats'
+import Peers from './Peers'
 import { APP_VERSION } from './../../main'
 
+const {remote} = window.electron;
+const {dialog} = remote
 
 const accordionItems = [
     {
@@ -27,6 +31,14 @@ const accordionItems = [
     {
         title: 'Default File Location',
         content: <FileLocation/>
+    },
+    {
+        title: "Peers",
+        content: <Peers/>
+    },
+    {
+        title: "Stats",
+        content: <Stats/>
     }
 ]
 
@@ -34,7 +46,9 @@ let activateContent
 
 
 const mapStateToProps = state => ({
-    nodeId: state.info.networkInfo.key
+    nodeId: state.info.networkInfo.key,
+    version: state.info.version,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -53,6 +67,27 @@ export class Settings extends React.Component {
     componentDidMount() {
         const {actions, nodeId} = this.props
         actions.showTrust(nodeId)
+
+         this.headerEl = document.getElementById('personal');
+        // const resizeHeaderOnScroll = () => {
+        //     const elementY = document.getElementById('tabAcordion'),
+        //     shrinkOn = 0;
+        //     if (elementY.scrollTop > shrinkOn && Number.isInteger(this.state.activeContent)) {
+        //         this.headerEl.classList.add("smaller");
+        //     } else if(!Number.isInteger(this.state.activeContent)) {
+        //         this.headerEl.classList.remove("smaller");
+        //     }
+        // }
+
+        // window.addEventListener('scroll', resizeHeaderOnScroll, true);
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if(nextProps.isDeveloperMode != this.props.isDeveloperMode && this.state.activeContent > 3){
+            this.setState({
+                activeContent: undefined
+            })
+        }
     }
 
     /**
@@ -60,8 +95,8 @@ export class Settings extends React.Component {
      * @param  {DOM}        elm         [Clicked DOM Element]
      */
     _handleTab(elm) {
-        let target = elm.target
-        let targetRoot = target.parentElement.parentElement
+        let target = elm.currentTarget
+        let targetRoot = target.parentElement
         let index = targetRoot.getAttribute('value')
         let accordionItems = document.getElementsByClassName('item__accordion')
         for (var i = 0; i < accordionItems.length; i++) {
@@ -72,10 +107,16 @@ export class Settings extends React.Component {
             }
         }
         targetRoot.classList.toggle('active')
-        target.classList.toggle('icon-arrow-down')
-        target.classList.toggle('icon-arrow-up')
+        target.children[1].classList.toggle('icon-arrow-down')
+        target.children[1].classList.toggle('icon-arrow-up')
         this.setState({
             activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
+        },() => {
+            if(!Number.isInteger(this.state.activeContent)){
+                this.headerEl.classList.remove("smaller")
+            } else {
+                this.headerEl.classList.add("smaller")
+            }
         })
     }
 
@@ -85,26 +126,30 @@ export class Settings extends React.Component {
      * @return {DOM}                    [Elements of accordion list]
      */
     loadAccordionMenu(data) {
-        return data.map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
-                        <div className="item-title__accordion">
+        const {isDeveloperMode} = this.props
+        return data
+        .filter((_, index) => isDeveloperMode || index < 4)
+        .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
+                        <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>
-                            <span className="icon-arrow-down" onClick={::this._handleTab} role="tab" tabIndex="0" aria-label="Expand Tab"/>
+                            <span className="icon-arrow-down" aria-label="Expand Tab"/>
                         </div>
                         <div className="item-content__accordion" role="tabpanel">
-                        {this.state.activeContent === index && item.content}
+                        {item.content}
                         </div>
                     </div>)
     }
 
     render() {
+        const {version} = this.props
         return (
             <div className="content__settings">
                 <Personal/>
-                <div className="tab__accordion">
+                <div className="tab__accordion" id="tabAcordion">
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
                 <div className="footer__settings">
-                    <span>Brass Golem {APP_VERSION}</span>
+                    <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
                 </div>
             </div>
         );

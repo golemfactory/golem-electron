@@ -1,6 +1,9 @@
 import { dict } from './../../actions'
 
-const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_FRAME_ID, SET_FRAME_INDEX, NEXT_FRAME, PREVIOUS_FRAME} = dict
+const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, 
+    SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_FRAME_ID, 
+    SET_FRAME_INDEX, NEXT_FRAME, PREVIOUS_FRAME, CLEAR_TASK_PLAIN} = dict
+
 
 const initialState = {
     frameList: [],
@@ -69,6 +72,11 @@ const setSingleFrames = (state = initialState, action) => {
         return Object.assign({}, state, {
             frameIndex: prevIndex,
             frameId: prevKeys[prevIndex]
+        });
+
+    case CLEAR_TASK_PLAIN:
+        return Object.assign({}, state, {
+            subtasksList: []
         });
 
     default:

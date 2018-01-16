@@ -7,7 +7,13 @@ var mkdirp = require('mkdirp');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
-const createTray = require('./electron/tray_handler.js')
+/*
+ * Application tray can be additional feature for the future.
+ */
+//const createTray = require('./electron/tray_handler.js')
+
+const log = require('./electron/debug_handler.js')
+const menuHandler = require('./electron/menu_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')
 
@@ -17,7 +23,7 @@ function isDevelopment() {
 
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
 const APP_WIDTH = 460
-const APP_HEIGHT = 569
+const APP_HEIGHT = 589
 const PREVIEW_APP_WIDTH = 752
 const PREVIEW_APP_HEIGHT = 572
 
@@ -69,6 +75,7 @@ function installDevExtensions() {
                 resolve()
             })
             .catch((err) => {
+                log.warn('MAIN_PROCESS > REACT_DEVELOPER_TOOLS', err)
                 console.log(chalk.red(`An error occurred: ${err}`))
                 console.log()
                 reject()
@@ -80,6 +87,7 @@ function installDevExtensions() {
                 resolve()
             })
             .catch((err) => {
+                log.warn('MAIN_PROCESS > REDUX_DEVTOOLS', err)
                 console.log(chalk.red(`An error occurred: ${err}`))
                 console.log()
                 reject()
@@ -119,14 +127,26 @@ function createWindow() {
     */
     win.webContents.on('will-navigate', (event, url) => {
         event.preventDefault()
-        if (url.includes('etherscan') || url.includes('golem'))
+        if (url.includes('http') && (url.includes('etherscan') || url.includes('golem')))
             electron.shell.openExternal(url);
     })
 
 
     win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
+        Menu.setApplicationMenu(menuHandler)
         win.show()
+    })
+
+    /**
+     * [This event emitted when the load failed or was cancelled]
+     *
+     * @see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
+     *
+     * @description To see error codes meanings check url above.
+     */
+    win.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+        log.warn('MAIN_PROCESS', 'MAIN LOAD FAILED', errorCode, errorDescription, validatedURL, isMainFrame)
     })
 
 
@@ -213,6 +233,18 @@ function createPreviewWindow(id, frameCount) {
             ipcHandler.mapRemover(id)
         })
 
+
+        /**
+         * [This event emitted when the load failed or was cancelled]
+         *
+         * @see https://cs.chromium.org/chromium/src/net/base/net_error_list.h
+         *
+         * @description To see error codes meanings check url above.
+         */
+        previewWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+            log.warn('MAIN_PROCESS', 'PREVIEW LOAD FAILED', errorCode, errorDescription, validatedURL, isMainFrame)
+        })
+
         if (isDevelopment()) {
             let previewURL = `http://localhost:${process.env.PORT || 3003}#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
             previewWindow.loadURL(previewURL)
@@ -225,133 +257,135 @@ function createPreviewWindow(id, frameCount) {
     })
 }
 
+function isWin(){
+    return process.platform === "win32"
+}
+
 
 exports.selectDirectory = function(directory) {
-console.log("directory", directory);
+    console.log("directory", directory);
 
-let blackList = [
-    "ACTION",
-    "APK",
-    "APP",
-    "BAT",
-    "BIN",
-    "CMD",
-    "COM",
-    "COMMAND",
-    "CPL",
-    "CSH",
-    "EXE",
-    "GADGET",
-    "INF",
-    "INS",
-    "INX",
-    "IPA",
-    "ISU",
-    "JOB",
-    "JSE",
-    "KSH",
-    "LNK",
-    "MSC",
-    "MSI",
-    "MSP",
-    "MST",
-    "OSX",
-    "OUT",
-    "PAF",
-    "PIF",
-    "PRG",
-    "REG",
-    "RGS",
-    "RUN",
-    "SCR",
-    "SCT",
-    "SHB",
-    "SHS",
-    "U3B",
-    "VB",
-    "VBE",
-    "VBS",
-    "VBSCRIPT",
-    "WORKFLOW",
-    "WS",
-    "WSF",
-    "WSH",
-]
+    let blackList = [
+        "ACTION",
+        "APK",
+        "APP",
+        "BAT",
+        "BIN",
+        "CMD",
+        "COM",
+        "COMMAND",
+        "CPL",
+        "CSH",
+        "EXE",
+        "GADGET",
+        "INF",
+        "INS",
+        "INX",
+        "IPA",
+        "ISU",
+        "JOB",
+        "JSE",
+        "KSH",
+        "LNK",
+        "MSC",
+        "MSI",
+        "MSP",
+        "MST",
+        "OSX",
+        "OUT",
+        "PAF",
+        "PIF",
+        "PRG",
+        "REG",
+        "RGS",
+        "RUN",
+        "SCR",
+        "SCT",
+        "SHB",
+        "SHS",
+        "U3B",
+        "VB",
+        "VBE",
+        "VBS",
+        "VBSCRIPT",
+        "WORKFLOW",
+        "WS",
+        "WSF",
+        "WSH",
+    ]
 
-const masterList = [
-    "BLEND",
-    "LXS"
-]
+    const masterList = [
+        "BLEND",
+        "LXS"
+    ]
 
-let ignorePlaftormFiles = function(file) {
-    return path.basename(file) !== ".DS_Store" && path.extname(file) !== null
-}
-
-let isBadFile = function(file) {
-    let correctExtension = file.replace(".", "").toUpperCase()
-    return blackList.includes(correctExtension)
-}
-
-let isMasterFile = function(file) {
-    let correctExtension = file.replace(".", "").toUpperCase()
-    return masterList.includes(correctExtension)
-}
-
-let walk = function(dir, done) {
-    let results = [];
-    fs.readdir(dir, function(err, list) {
-        if (err) return done(err);
-        let i = 0;
-        (function next() {
-            let file = list[i++];
-            if (!file) return done(null, results);
-            file = `${dir}/${file}`;
-            fs.stat(file, function(err, stat) {
-                if (stat && stat.isDirectory()) {
-                    walk(file, function(err, res) {
-                        results = results.concat(res);
-                        next();
-                    });
-                } else {
-                    ignorePlaftormFiles(file) && results.push({
-                        path: file,
-                        name: path.basename(file),
-                        extension: path.extname(file),
-                        malicious: isBadFile(path.extname(file)),
-                        master: isMasterFile(path.extname(file))
-                    });
-                    next();
-                }
-            });
-        })();
-    });
-};
-
-let promises = directory.length > 0 && directory.map(item => new Promise((resolve, reject) => {
-    if (fs.lstatSync(item).isDirectory())
-        walk(item, function(err, results) {
-            if (err) {
-                reject(err);
-            }
-            console.log('results', results)
-            resolve(results);
-        });
-    else {
-        let results = [];
-        ignorePlaftormFiles(item) && results.push({
-            path: item,
-            name: path.basename(item),
-            extension: path.extname(item),
-            malicious: isBadFile(path.extname(item)),
-            master: isMasterFile(path.extname(item))
-        });
-        console.log('results', results)
-        resolve(results)
+    let ignorePlaftormFiles = function(file) {
+        return path.basename(file) !== ".DS_Store" && path.extname(file) !== null
     }
-}))
 
-win.focus();
-return Promise.all(promises)
+    let isBadFile = function(file) {
+        let correctExtension = file.replace(".", "").toUpperCase()
+        return blackList.includes(correctExtension)
+    }
+
+    let isMasterFile = function(file) {
+        let correctExtension = file.replace(".", "").toUpperCase()
+        return masterList.includes(correctExtension)
+    }
+
+    let walk = function(dir, done) {
+        let results = [];
+        fs.readdir(dir, function(err, list) {
+            if (err) return done(err);
+            let i = 0;
+            (function next() {
+                let file = list[i++];
+                if (!file) return done(null, results);
+                file = isWin() ? `${dir}\\\\${file}` : `${dir}/${file}`;
+                fs.stat(file, function(err, stat) {
+                    if (stat && stat.isDirectory()) {
+                        walk(file, function(err, res) {
+                            results = results.concat(res);
+                            next();
+                        });
+                    } else {
+                        ignorePlaftormFiles(file) && results.push({
+                            path: file,
+                            name: path.basename(file),
+                            extension: path.extname(file),
+                            malicious: isBadFile(path.extname(file)),
+                            master: isMasterFile(path.extname(file))
+                        });
+                        next();
+                    }
+                });
+            })();
+        });
+    };
+
+    let promises = directory.length > 0 && directory.map(item => new Promise((resolve, reject) => {
+        if (fs.lstatSync(item).isDirectory())
+            walk(item, function(err, results) {
+                if (err) {
+                    reject(err);
+                }
+                resolve(results);
+            });
+        else {
+            let results = [];
+            ignorePlaftormFiles(item) && results.push({
+                path: item,
+                name: path.basename(item),
+                extension: path.extname(item),
+                malicious: isBadFile(path.extname(item)),
+                master: isMasterFile(path.extname(item))
+            });
+            resolve(results)
+        }
+    }))
+
+    win.focus();
+    return Promise.all(promises)
 }
 
 
@@ -361,8 +395,7 @@ function createLocationPath(_dir){
 
 exports.getDefaultLocation = function() {
 
-    const isWin = process.platform === "win32"
-    const _location = isWin ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
+    const _location = isWin() ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
 
     if (!fs.existsSync(_location))
         return createLocationPath(_location)

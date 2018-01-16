@@ -26,8 +26,8 @@
     [class*=" icon-"] {
         font-size: 28px;
     }
-    .icon-luxrender {
-        color: #f4ca1b;
+    .icon-luxrender:before {
+        color: #f4ca1b !important;
     }
 }
 
@@ -35,6 +35,15 @@
 .container-type__new-task {
     position: relative;
     flex-grow: 1;
+}
+
+.hint__task-name{
+    display: none;
+    position: absolute;
+    font-size: 9pt;
+    font-weight: 400;
+    color: $color-error;
+    padding: 20px 24px;
 }
 
 .container-type__new-task {

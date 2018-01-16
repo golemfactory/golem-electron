@@ -1,16 +1,24 @@
 import React from 'react';
 import { Link, hashHistory } from 'react-router'
 import TimeSelection from 'timepoint-selection'
+const {clipboard, remote} = window.electron;
+/**
+ * @see http://react-component.github.io/tooltip/
+ */
+import ReactTooltip from 'rc-tooltip'
+import yup from 'yup'
+
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import Dropdown from './../Dropdown'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-const {remote} = window.require('electron');
+
 const {dialog} = remote
 
 import * as Actions from './../../actions'
+import {once} from './../../utils/once'
 
 const editMode = "settings"
 const taskType = Object.freeze({
@@ -62,12 +70,33 @@ const mapStateToProps = state => ({
     presets: state.details.presets,
     testStatus: state.details.test_status,
     estimated_cost: state.details.estimated_cost,
-    location: state.fileLocation.location
+    location: state.fileLocation.location,
+    subtasksList: state.single.subtasksList,
+    isDeveloperMode: state.input.developerMode
 })
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
+
+const presetSchema = yup.object().shape({
+    resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+    frames: yup.string().required(),
+    format: yup.string(),
+    output_path: yup.string(),
+    sample_per_pixel: yup.string(),
+    compositing: yup.bool()
+})
+
+
+const hints = {
+    frame: [
+        "Hint: To use consecutive frames, e.g. \"1-6\".",
+        "Hint: To pick random frames, e.g. \"2;6;7\".",
+        "Hint: To use common diff. e.g. \"1-7,2\"."
+    ]
+}
+
 
 
 export class TaskDetail extends React.Component {
@@ -92,12 +121,14 @@ export class TaskDetail extends React.Component {
             bid: 0,
             presetList: [],
             managePresetModal: false,
-            savePresetLock: true
+            savePresetLock: true,
+            isDataCopied: false
         }
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location} = this.props
+        const {params, actions, task, presets, location, isDeveloperMode} = this.props
+
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
@@ -120,11 +151,15 @@ export class TaskDetail extends React.Component {
             this.refs.outputPath.value = location
             this._handleLocalRender()
         }
+
+        this.frameHintNum = Math.floor(Math.random()* hints.frame.length)
     }
 
     componentWillUnmount() {
         if (!this._nextStep) {
             this.props.actions.clearTaskPlain()
+            this.liveSubList && clearInterval(this.liveSubList);
+            this.copyTimeout && clearTimeout(this.copyTimeout);
         }
     }
 
@@ -177,14 +212,13 @@ export class TaskDetail extends React.Component {
         }
 
         if (nextProps.presets != this.props.presets) {
-            //console.info("nextProps.presets", nextProps.presets)
             this.parsePresets(nextProps.presets)
         }
 
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid} = this.state
+        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock} = this.state
         const {actions, task} = this.props
 
         if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
@@ -198,22 +232,29 @@ export class TaskDetail extends React.Component {
             })
         }
 
-        if (nextState.resolution[0] !== this.state.resolution[0] || nextState.resolution[1] !== this.state.resolution[1] || nextState.frames !== this.state.frames || nextState.sample_per_pixel !== this.state.sample_per_pixel) {
-            this.setState({
-                savePresetLock: this.isPresetFieldsFilled(nextState)
-            })
+        if(nextProps.isDeveloperMode && !this.liveSubList && isDetailPage){
+
+            let interval = ()=> {
+                actions.fetchSubtasksList(nextProps.params.id)
+                return interval
+            }
+            this.liveSubList = setInterval(interval(), 1000)
+
+        } else if(!nextProps.isDeveloperMode && this.liveSubList && isDetailPage) {
+
+            clearInterval(this.liveSubList)
+            this.liveSubList = false;
+            
         }
     }
 
     _convertPriceAsHR(price) {
-        console.log("price", price);
         let priceLength = parseInt(price).toString().length
         if (priceLength < 5) {
             return <span className="estimated-price">{price.toFixed(2)}</span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        console.log("firstDigitLength", firstDigitLength);
         return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
     }
 
@@ -232,6 +273,7 @@ export class TaskDetail extends React.Component {
         })
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
         this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, options);
+        this.refs.subtaskTimeout.disabled = true;
     }
 
     /**
@@ -248,6 +290,16 @@ export class TaskDetail extends React.Component {
         })
         this.setState({
             presetList
+        })
+    }
+
+    /**
+     * [changePresetLock func. enables\disables save preset button]
+     * @param  {boolean} result [form validity result]
+     */
+    changePresetLock = (result) => {
+        this.setState({
+            savePresetLock: !result
         })
     }
 
@@ -273,6 +325,8 @@ export class TaskDetail extends React.Component {
         res[index] = parseInt(e.target.value)
         this.setState({
             resolution: res
+        }, () => {
+            this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
         })
     }
 
@@ -281,7 +335,6 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        //console.log("e", e.target.checked);
         this.setState({
             compositing: e.target.checked
         })
@@ -300,8 +353,20 @@ export class TaskDetail extends React.Component {
         })
 
         this.checkInputValidity(e)
+        if(state === 'timeout'){
+            const taskTimeoutValue = this.taskTimeoutInput.getValue()
+            const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue()
+
+            if(subtaskTimeoutValue > taskTimeoutValue){
+                this.subtaskTaskTimeoutInput.setValue(taskTimeoutValue)
+            }
+
+            this.subtaskTaskTimeoutInput.max = taskTimeoutValue + 1 // including value itself
+            this.refs.subtaskTimeout.disabled = !(taskTimeoutValue > 0);
+        }
+        
         this.setState({
-            [state]: Number(timeoutList[state].getValue()) / 3600
+            [state]: timeoutList[state].getValue() / 3600
         })
     }
 
@@ -311,10 +376,20 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        if(this.checkInputValidity(e))
+        if(this.checkInputValidity(e)){
             this.setState({
                 [state]: e.target.value
+            }, () => {
+                if(state === "frames")
+                    this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
             })
+        } else if(!this.state.savePresetLock && state === "frames" && !this.checkInputValidity(e)){
+            this.setState({
+                frames: null,
+                savePresetLock: true
+            })
+        }
+        
     }
 
     /**
@@ -325,7 +400,6 @@ export class TaskDetail extends React.Component {
     _handlePresetOptionChange(list, name) {
         let values = list.filter((item, index) => item.name == name)[0]
         if (values) {
-            //console.log("values", values);
             const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
             const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
             resolutionW.value = resolution[0]
@@ -366,6 +440,8 @@ export class TaskDetail extends React.Component {
         let values = list.filter((item, index) => item.name == name)[0]
         values && this.setState({
             format: values.name
+        },  () => {
+            this.isPresetFieldsFilled(this.state).then( this.changePresetLock)
         })
     }
 
@@ -416,7 +492,6 @@ export class TaskDetail extends React.Component {
      */
     _handleOutputPath() {
         let onFolderHandler = data => {
-            //console.log(data)
             if (data) {
                 this.setState({
                     output_path: data[0]
@@ -434,7 +509,7 @@ export class TaskDetail extends React.Component {
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
-    _handleStartTaskButton() {
+    _handleStartTaskButton = once(() => {
 
         this._nextStep = true
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
@@ -457,10 +532,9 @@ export class TaskDetail extends React.Component {
         setTimeout(() => {
             hashHistory.push('/tasks');
         }, 1000);
-    }
+    })
 
     _handleLocalRender() {
-        //console.info('local sended')
         const {actions, task} = this.props;
         const {resources, type} = task
         actions.runTestTask({
@@ -511,15 +585,70 @@ export class TaskDetail extends React.Component {
         }
     }
 
-    isPresetFieldsFilled(nextState) {
-        const {resolution, frames, sample_per_pixel} = nextState
-
-        if (this.props.task.type === taskType.BLENDER) {
-            //console.log("check preset not available", resolution[0], resolution[1], frames)
-            return !resolution[0] || !resolution[1] || !frames
-        } else {
-            return !resolution[0] || !resolution[1] || !sample_per_pixel
+    _handleCopyToClipboard(data, evt) {
+        if (data) {
+            clipboard.writeText(data)
+            this.setState({
+                isDataCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        isDataCopied: false
+                    })
+                }, 3000)
+            })
         }
+    }
+
+    _fillNodeInfo(data){
+        const {isDataCopied} = this.state
+        function statusDot(status){
+            switch(status){
+                case 'Starting':
+                return 'icon-status-dot--progress'
+
+                case 'Finished':
+                return 'icon-status-dot--done'
+
+                case 'Downloading':
+                return 'icon-status-dot--download'
+
+                case 'Failure':
+                return 'icon-status-dot--warning'
+            }
+        }
+
+        return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
+                <td>
+                <ReactTooltip placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
+                            <span>{subtask_id}</span>
+                        </div>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span className={`icon-status-dot ${statusDot(status)}`}/>
+                    </ReactTooltip>
+                </td>
+                <td>
+                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
+                    </ReactTooltip>
+                </td>
+            </tr>)
+    }
+
+    isPresetFieldsFilled(nextState) {
+        const {resolution, frames, sample_per_pixel, compositing, format} = nextState
+        return presetSchema.isValid({resolution, frames, sample_per_pixel, compositing, format})
+        
     }
 
     _handleFormByType(type, isDetail) {
@@ -576,7 +705,7 @@ export class TaskDetail extends React.Component {
                 order: 8,
                 content: <div className="item-settings" key="8">
                                 <span className="title">Subtask Amount</span>
-                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="8" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
             },
             {
@@ -594,7 +723,7 @@ export class TaskDetail extends React.Component {
                 order: 2,
                 content: <div className="item-settings" key="2">
                             <span className="title">Frame Range</span>
-                            <input ref="framesRef" type="text" aria-label="Frame Range" pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             formTemplate.push({
@@ -632,7 +761,7 @@ export class TaskDetail extends React.Component {
 
     render() {
         const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
-        const {testStatus, estimated_cost} = this.props;
+        const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -651,7 +780,31 @@ export class TaskDetail extends React.Component {
                             <span className="dot-3">.</span>
                         </span>}</button>}
                     </section>
+
                     <section className="container__task-detail">
+                        { (isDetailPage && isDeveloperMode) &&
+                        <div className="section-node-list__task-detail">
+                            <h4 className="experiment">Dev mode</h4>
+                        { subtasksList.length > 0 ?
+                            <table>
+                                <thead>
+                                    <tr>
+                                      <th>Subtask</th>
+                                      <th>State</th>
+                                      <th>Node</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {::this._fillNodeInfo(subtasksList)}
+                                </tbody>
+                            </table>
+                            :
+                            <div className="no-node__task">
+                                <span>There's no active node.</span>
+                            </div>
+                        }
+                        </div>
+                        }
                         <div className="section-settings__task-detail">
                                 <h4>Settings</h4>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
@@ -665,7 +818,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input ref="bidRef" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="bidRef" type="number" min="0.000001" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
                             </div>
                             <span className="item-price tips__price">
@@ -673,6 +826,7 @@ export class TaskDetail extends React.Component {
                             </span>  
                         </div>
                     </section>
+
                     {!isDetailPage && <section className="section-action__task-detail">
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>

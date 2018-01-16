@@ -78,7 +78,7 @@ export class Trust extends React.Component {
             }}>Requesting</span>
                 </div>
                 <div className="tips__trust">
-                    <span>A low setting means your node may get more task requests,  but from less reliable requestors. A high setting could mean  less tasks, but more reliable requestors.</span>
+                    <span>A low setting means your node may get more task requests, but from less reliable requestors. A high setting could mean fewer tasks, but more reliable requestors.</span>
                 </div>
             </div>
         );

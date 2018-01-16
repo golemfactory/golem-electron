@@ -1,6 +1,9 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`Loading should render an Loading container 1`] = `
 <div
-  className="content__loading">
+  className="content__loading"
+>
   <canvas
     className="canvas"
     height="841"
@@ -10,7 +13,8 @@ exports[`Loading should render an Loading container 1`] = `
         "backgroundColor": "rgba(0, 0, 0, 0)",
       }
     }
-    width="1534" />
+    width="1534"
+  />
   <Motion
     style={
       Object {
@@ -27,6 +31,7 @@ exports[`Loading should render an Loading container 1`] = `
           "val": 0,
         },
       }
-    } />
+    }
+  />
 </div>
 `;

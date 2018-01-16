@@ -13,6 +13,7 @@ import performance from './settings/performance'
 import price from './settings/price'
 import profile from './settings/profile'
 import trust from './settings/trust'
+import stats from './settings/stats'
 /*Tasks*/
 import details from './tasks/details'
 import preview from './tasks/preview'
@@ -42,6 +43,7 @@ const reducer = combineReducers({
     price,
     profile,
     trust,
+    stats,
     //TASK
     details,
     preview,

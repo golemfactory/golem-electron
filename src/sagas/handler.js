@@ -1,3 +1,6 @@
+const {remote} = window.electron;
+const log = remote.require('./electron/debug_handler.js')
+
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
     WS_URL: 'ws://127.0.0.1:61000/ws',
@@ -6,7 +9,6 @@ export let config = Object.freeze({
     COUNTER_CH: 'com.golem.oncounter',
     BLENDER_CH: 'com.golem.blender',
     PREVIEW_CH: 'com.golem.preview',
-    UPLOAD_CH: 'com.golem.upload.on_progress',
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
     UPDATE_SETTINGS_RPC: 'env.opts.update',
@@ -69,6 +71,7 @@ export let config = Object.freeze({
     INCOME_RPC: 'pay.incomes',
     BALANCE_CH: 'evt.pay.balance',
     //General
+    VERSION_RPC: 'golem.version',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
@@ -124,7 +127,7 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err, details, arr.join())
         }
     }
     _session.unsubscribe(_channel, cb)
@@ -142,7 +145,7 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) =
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr.join());
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
         }
     })
 }

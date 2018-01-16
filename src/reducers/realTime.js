@@ -1,5 +1,5 @@
 import { dict } from './../actions'
-const {ipcRenderer} = window.require('electron')
+const {ipcRenderer} = window.electron
 
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
 
@@ -7,6 +7,7 @@ const initialState = {
     balance: [0, 0],
     taskList: [],
     connectedPeers: 0,
+    peerInfo: [],
     golemStatus: {
         status: 'Not Ready',
         message: 'Not connected'
@@ -51,10 +52,11 @@ const realTime = (state = initialState, action) => {
 
     case SET_CONNECTED_PEERS:
         return Object.assign({}, state, {
-            connectedPeers: action.payload,
+            peerInfo: action.payload,
+            connectedPeers: action.payload.length,
             golemStatus: {
                 status: 'Ready',
-                message: nodesString(action.payload),
+                message: nodesString(action.payload.length),
             }
         });
 

@@ -3,9 +3,23 @@ import { createMockTask } from 'redux-saga/lib/utils'
 import { take, flush, call } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
-import Resumable from 'resumablejs'
 
-import rootSaga, { flow, handleIO, connect, read, upload, subscribe, setupResumable, uploadResumable } from '../'
+import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable } from '../'
+import { versionFlow } from '../version'
+import { golemStatusFlow } from '../golem'
+import { frameBase } from '../frame'
+import { engineFlow } from '../engine'
+import { currencyFlow } from '../currency'
+import { connectedPeersFlow } from '../connectedPeers'
+import { balanceFlow } from '../balance'
+import { historyFlow } from '../history'
+import { advancedFlow } from '../advanced'
+import { performanceFlow } from '../performance'
+import { statsFlow } from '../stats'
+import { trustFlow } from '../trust'
+import { tasksFlow } from '../tasks'
+import { settingsFlow } from '../userSettings'
+import { networkInfoFlow } from '../networkInfo'
 
 describe('handleIO', () => {
 
@@ -13,7 +27,7 @@ describe('handleIO', () => {
     const connection = new WebSocket('ws://localhost:8080/ws')
     let session
     let task = createMockTask();
-    //console.log(connection)
+    //
     connection.onopen = (sess) => {
         session = sess
     }
@@ -23,6 +37,12 @@ describe('handleIO', () => {
             type: 'LOGIN',
             payload: 'Muhammed'
         },
+        start_message: {
+            type: 'SET_GOLEM_STATUS',
+            payload: {
+                message: 'Starting Golem'
+            }
+        },
         logout: {
             type: 'LOGOUT'
         },
@@ -30,15 +50,6 @@ describe('handleIO', () => {
             '@@redux-saga/SAGA_ACTION': true,
             message: 21384,
             type: "SET_MESSAGE",
-        },
-        upload: {
-            type: 'UPLOAD',
-            payload: {
-                '0': new File([""], "filename.txt", {
-                    type: "text/plain",
-                    lastModified: Date.now()
-                })
-            }
         }
     }
 
@@ -74,6 +85,9 @@ describe('handleIO', () => {
             .next()
             .fork(flow)
 
+            .next()
+            .fork(frameFlow)
+
             .finish()
             .isDone()
     })
@@ -83,6 +97,9 @@ describe('handleIO', () => {
         sagaFlow
             .next()
             .take(action.login.type)
+
+            .next()
+            .put(action.start_message)
 
             .next(action.login)
             .call(connect)
@@ -106,11 +123,23 @@ describe('handleIO', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
             .next()
-            .fork(read, connection)
+            .fork(versionFlow, connection)
 
             .next()
-            .fork(upload, connection)
+            .fork(golemStatusFlow, connection)
 
+            .next()
+            .fork(engineFlow, connection)
+
+            .next()
+            .fork(settingsFlow, connection)
+
+            .next()
+            .fork(advancedFlow, connection)
+
+            .next()
+            .fork(statsFlow, connection)
+            
             .finish()
             .isDone()
 
@@ -130,79 +159,5 @@ describe('handleIO', () => {
 
             .finish()
             .isDone()
-    })
-
-    it('should upload function to the server (upload)', () => {
-        let resumableObject = new Resumable({
-            target: 'upload',
-            uploadMethod: 'POST',
-            testMethod: 'POST',
-            chunkSize: 1 * 1024 * 1024,
-            forceChunkSize: true, // https://github.com/23/resumable.js/issues/51
-            simultaneousUploads: 4,
-            testChunks: false,
-            query: {
-                on_progress: 'com.example.upload.on_progress',
-                session: 1234,
-                chunk_extra: JSON.stringify({
-                    test: 'lala',
-                    test2: 23
-                }),
-                finish_extra: JSON.stringify({
-                    test: 'fifi',
-                    test2: 52
-                })
-            }
-        });
-        let sagaUpload = testSaga(upload, connection)
-        sagaUpload
-            .next()
-            .call(setupResumable, connection)
-
-            .next(resumableObject)
-            .take(action.upload.type)
-
-            .next(action.upload.payload)
-            .call(uploadResumable, resumableObject, undefined)
-
-            .finish()
-            .isDone()
-    })
-
-    it('should create resumable object', () => {
-        connection.getSessionId = function() {
-            return 3
-        }
-        let resumable = setupResumable(connection)
-        expect(resumable !== null && typeof resumable === 'object').toBe(true)
-    })
-
-    it('should trigger fileAdded event', () => {
-        let file = new File([""], "filename");
-        let resumableObject = new Resumable({
-            target: 'upload',
-            uploadMethod: 'POST',
-            testMethod: 'POST',
-            chunkSize: 1 * 1024 * 1024,
-            forceChunkSize: true, // https://github.com/23/resumable.js/issues/51
-            simultaneousUploads: 4,
-            testChunks: false,
-            query: {
-                on_progress: 'com.example.upload.on_progress',
-                session: 1234,
-                chunk_extra: JSON.stringify({
-                    test: 'lala',
-                    test2: 23
-                }),
-                finish_extra: JSON.stringify({
-                    test: 'fifi',
-                    test2: 52
-                })
-            }
-        });
-        uploadResumable(resumableObject, {
-            null,
-            file
-        })
     })
 })

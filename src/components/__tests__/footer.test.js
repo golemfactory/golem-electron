@@ -2,9 +2,9 @@ jest.unmock('../Footer')
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import sinon from 'sinon'
-import Footer from '../footer'
+import ConnectedFooter, {Footer} from '../Footer'
 
 
 describe('<Footer/>', () => {
@@ -17,20 +17,10 @@ describe('<Footer/>', () => {
     })
 
     it('should render a footer component', () => {
-        const setPreview = sinon.spy();
         const wrapper = mount(
-            <Footer setPreview={setPreview}/>
+            <Footer preview={false}/>
         )
-        wrapper.instance()._handlePreviewSwitch()
-        expect(wrapper.props().setPreview.calledOnce).toBe(true)
-    })
-
-
-    it('should render a footer component', () => {
-        const wrapper = mount(
-            <Footer/>
-        )
-        expect(wrapper.ref('previewSwitch').prop('defaultChecked')).toBe(false)
+        expect(wrapper.ref('previewSwitch').defaultChecked).toBe(false)
     })
 
 });

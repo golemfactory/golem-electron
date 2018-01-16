@@ -3,6 +3,8 @@
 @import "price";
 @import "trust";
 @import "file-location";
+@import "peers";
+@import "stats";
 
 $item__accordion-height: 78.7px;
 
@@ -16,47 +18,69 @@ $item__accordion-height: 78.7px;
 
 .section__personal {
     flex: 0 0 292px;
+    transition: .8s all;
 }
+
+.smaller{
+    flex: 0 0 42px;
+    margin: 0;
+    padding: 20px 0 !important;
+
+    .indicator-panel__personal{
+        margin: 0;
+
+        .indicator__personal{
+            margin: 0;
+        }
+    }
+
+    .image__personal{
+        max-height: 0;
+    }
+ }
 
 .tab__accordion {
     height: 100%;
     position: relative;
     overflow-y: overlay;
     transform: translateZ(0);
-
-    .active {
-        height: auto;
-
-        & > .item-content__accordion {
-            opacity: 1;
-            transition-delay: .2s;
-        }
-    }
 }
 
 .item__accordion {
-    height: $item__accordion-height;
-    transition: .3s height;
+    max-height: 800px;
+    transition: .8s max-height;
+
+    &.active {
+        & > .item-content__accordion {
+            opacity: 1;
+            max-height: 800px;
+            overflow: overlay;
+        }
+    }
+
+    &:not(.active){
+        max-height: $item__accordion-height;
+        transition: .8s max-height;
+    }
 
     .item-title__accordion {
         display: flex;
         justify-content: space-between;
         align-items: center;
         height: $item__accordion-height;
+        cursor: pointer;
 
         & > span {
             display: block;
             font-weight: 600;
         }
-
-        span:last-child {
-            cursor: pointer;
-        }
     }
 
     .item-content__accordion {
+        max-height: 0;
+        overflow: hidden;
         opacity: 0;
-        transition: .5s opacity;
+        transition: .5s all;
     }
 
     & + .item__accordion {

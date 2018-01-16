@@ -32,6 +32,7 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             alwaysWriteToDisk: true,
