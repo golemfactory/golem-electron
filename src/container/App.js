@@ -13,7 +13,7 @@ import { OnBoardingComponent } from '../components/hoc/Onboarding'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
-import ConnectionModal from './modal/ConnectionModal'
+import IssueModal from './modal/IssueModal'
 
 
 
@@ -38,8 +38,6 @@ const routes = (
 
 
 const mapStateToProps = state => ({
-    status: state.firstReducer,
-    search: state.setSearch,
     connectionProblem: state.info.connectionProblem
 })
 
@@ -73,14 +71,14 @@ export class App extends Component {
 
     render() {
 
-        const {actions, status, search, history, connectionProblem} = this.props
+        const {actions, history, connectionProblem} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <Router history={ history } >
                     { routes }
                 </Router>
-                 {connectionProblem && <ConnectionModal closeModal={::this._closeModal}/>}
+                 {(connectionProblem && connectionProblem.status) && <IssueModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

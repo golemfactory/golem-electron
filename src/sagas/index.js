@@ -1,43 +1,54 @@
-import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeLatest, take, call, put, cancel } from 'redux-saga/effects'
-import { login, setMessage, logout, dict } from '../actions'
+import { eventChannel, buffers } from "redux-saga";
+import { fork, takeLatest, take, call, put, cancel } from "redux-saga/effects";
+import { login, setMessage, logout, dict } from "../actions";
 
-import Wampy from 'wampy'
-import MsgpackSerializer from './../utils/MsgpackSerializer'
-import { config, _handleSUBPUB, _handleRPC } from './handler'
+import Wampy from "wampy";
+import MsgpackSerializer from "./../utils/MsgpackSerializer";
+import { config, _handleSUBPUB, _handleRPC } from "./handler";
 
-import { versionFlow } from './version'
-import { golemStatusFlow } from './golem'
-import { frameBase } from './frame'
-import { engineFlow } from './engine'
-import { currencyFlow } from './currency'
-import { connectedPeersFlow } from './connectedPeers'
-import { balanceFlow } from './balance'
-import { historyFlow } from './history'
-import { advancedFlow } from './advanced'
-import { performanceFlow } from './performance'
-import { statsFlow } from './stats'
-import { trustFlow } from './trust'
-import { tasksFlow } from './tasks'
-import { settingsFlow } from './userSettings'
-import { networkInfoFlow } from './networkInfo'
+import { versionFlow } from "./version";
+import { golemStatusFlow } from "./golem";
+import { frameBase } from "./frame";
+import { engineFlow } from "./engine";
+import { currencyFlow } from "./currency";
+import { connectedPeersFlow } from "./connectedPeers";
+import { balanceFlow } from "./balance";
+import { historyFlow } from "./history";
+import { advancedFlow } from "./advanced";
+import { performanceFlow } from "./performance";
+import { statsFlow } from "./stats";
+import { trustFlow } from "./trust";
+import { tasksFlow } from "./tasks";
+import { settingsFlow } from "./userSettings";
+import { networkInfoFlow } from "./networkInfo";
 
-const {ipcRenderer} = window.electron
-const {SET_CONNECTION_PROBLEM, SET_GOLEM_STATUS, SET_CONNECTED_PEERS, LOGIN, LOGIN_FRAME, CONTINUE_WITH_PROBLEM, SET_MESSAGE, SET_BLENDER, LOGOUT_FRAME, LOGOUT} = dict
+const { ipcRenderer } = window.electron;
+const {
+    SET_CONNECTION_PROBLEM,
+    SET_GOLEM_STATUS,
+    SET_CONNECTED_PEERS,
+    LOGIN,
+    LOGIN_FRAME,
+    CONTINUE_WITH_PROBLEM,
+    SET_MESSAGE,
+    SET_BLENDER,
+    LOGOUT_FRAME,
+    LOGOUT
+} = dict;
 
-const {remote} = window.electron
-const {app} = remote
+const { remote } = window.electron;
+const { app } = remote;
 
-let skipError = false;
-let connectTimeout = null;
-
+let skipError = false,
+    initialTimeout = null,
+    reconnection = false;
 /**
  * { Websocket Connect function }
  *
  * @return     {Promise}      { It returns connection and new session of the connection as promise }
  */
 export function connect() {
-    return new Promise(resolve => {
+    return eventChannel(emit => {
         /**
          * [{Object} Wampy]
          * @inheritDoc https://github.com/KSDaemon/wampy.js
@@ -47,44 +58,64 @@ export function connect() {
          * @return {[Object]}       connection          ['Connection with session']
          */
         function connect() {
-            let connection = new Wampy(config.WS_URL,
-                {
-                    realm: config.REALM,
-                    autoReconnect: true,
-                    transportEncoding: 'msgpack',
-                    msgpackCoder: new MsgpackSerializer(),
-                    onConnect: () => {
-                        console.log('WS: connected');
+            let connection = new Wampy(config.WS_URL, {
+                realm: config.REALM,
+                autoReconnect: true,
+                transportEncoding: "msgpack",
+                msgpackCoder: new MsgpackSerializer(),
+                maxRetries: 100000,
+                onConnect: () => {
+                    console.log("WS: connected");
+                    emit({
+                        connection,
+                        error: null
+                    });
+                    reconnection = true;
+                },
+                onReconnectSuccess: () => {
+                    console.log("WS: Reconnected");
 
-                        resolve({
-                            connection
+                    emit({
+                        connection,
+                        error: null
+                    });
+                    reconnection = true;
+                },
+                onClose: () => {
+                    console.log("WS: connection closed");
+                },
+                onError: (err, details) => {
+                    console.info("WS: connection error:", err, details);
+
+                    if (reconnection) {
+                        emit({
+                            connection: null,
+                            error: err
                         });
-                    },
-                    onClose: () => {
-                        console.log('WS: connection closed');
-                    },
-                    onError: (err, details) => {
-                        console.info('WS: connection error:', err, details);
-                        if (connectTimeout) return;
-
-                        app.golem.startProcess();
-
-                        connectTimeout = setTimeout(() => {
-                            connectTimeout = null;
-                            connect();
-                        }, 1000);
                     }
-                });
+
+                    app.golem.startProcess();
+
+                    if (initialTimeout || reconnection) return;
+
+                    initialTimeout = setTimeout(() => {
+                        connection._wsReconnect();
+                    }, connection._options.reconnectInterval);
+                }
+            });
         }
 
-        console.log('WS: connecting')
-        connect()
-    })
+        console.log("WS: connecting");
+        connect();
+
+        return () => {
+            console.log("negative");
+        };
+    });
 }
 
-
 export function disablePortFlow() {
-    skipError = true
+    skipError = true;
 }
 
 /**
@@ -95,74 +126,34 @@ export function disablePortFlow() {
  */
 export function subscribe(session) {
     return eventChannel(emit => {
-
         // SUBSCRIBE to a topic and receive events
 
         function on_connection(args) {
             var connection = args[0];
 
-            if (connection === "Connected") {
-                emit(true)
-            } else {
-                emit(skipError)
+            if (
+                connection.startsWith("Connected") ||
+                connection.startsWith("Not connected")
+            ) {
+                emit(true);
+            } else if (connection.startsWith("Port")) {
+                emit(skipError);
             }
         }
 
-        _handleSUBPUB(on_connection, session, config.CONNECTION_CH)
-
-        function on_blender(args) {
-            let blender = args[0];
-
-            function on_preview(args) {
-                console.log(args)
-            }
-
-            blender.forEach((item, index) => {
-                if (item.preview)
-                    session.call(config.PREVIEW_CH, [index], {
-                        onSuccess: on_preview,
-                        onError: function(err, details) {
-                            console.log('Fetch preview failed!', err);
-                        }
-                    })
-            })
-            emit({
-                type: SET_BLENDER,
-                blender: blender
-            })
-        }
-
-        //_handleSUBPUB(on_blender, session, config.BLENDER_CH)
+        _handleSUBPUB(on_connection, session, config.CONNECTION_CH);
 
         session.options({
             onClose: function() {
                 console.info("Connection lost!");
             }
-        })
+        });
 
         return () => {
-            console.log('negative')
-        }
-    })
-}
-
-/**
- * { Read Generator, waiting for emits from the emitchannel and writing it to the redux store }
- *
- * @param      {Object}  session  The connection and session of ws
- * @return     {boolean}             { job isDone status }
- */
-export function* read(session) {
-    const channel = yield call(subscribe, session)
-
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-    }
+            console.log("negative");
+            _handleUNSUBPUB(on_connection, session, config.CONNECTION_CH);
+        };
+    });
 }
 
 /*function* write(socket) {
@@ -171,6 +162,7 @@ export function* read(session) {
     socket.emit('message', payload);
   }
 }*/
+
 export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
@@ -196,43 +188,78 @@ export function* handleIO(connection) {
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
     yield fork(statsFlow, connection);
-    yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow)
-    const channel = yield call(subscribe, connection)
+    yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
+    const channel = yield call(subscribe, connection);
     let taskApi;
-    let started = false
+    let started = false;
 
     while (true) {
-        let status = yield take(channel)
+        let status = yield take(channel);
+
         if (status && !started) {
-            taskApi = yield fork(apiFlow, connection)
+            taskApi = yield fork(apiFlow, connection);
             yield put({
                 type: SET_CONNECTION_PROBLEM,
                 payload: false
-            })
-            started = true
+            });
+            started = true;
         } else if (!status && taskApi && started) {
-            console.log('SHUT_DOWN')
-            yield cancel(taskApi)
-            started = false
+            console.log("SHUT_DOWN");
+            yield cancel(taskApi);
+            started = false;
         }
 
         if (!status) {
             yield put({
                 type: SET_CONNECTION_PROBLEM,
-                payload: true
-            })
+                payload: {
+                    status: true,
+                    issue: "PORT"
+                }
+            });
         }
     }
 }
 
 export function* frameFlow() {
+    let { payload } = yield take(LOGIN_FRAME);
+    const { connection } = yield call(connect);
     while (true) {
-        let {payload} = yield take(LOGIN_FRAME)
-        const {connection} = yield call(connect)
-        const task = yield fork(frameBase, connection, payload)
-        let action = yield take(LOGOUT_FRAME)
-        yield cancel(task)
+        const task = yield fork(frameBase, connection, payload);
+        let action = yield take(LOGOUT_FRAME);
+        yield cancel(task);
     }
+}
+
+export function* connectionFlow() {
+    const connectionCH = yield call(connect);
+    let task;
+
+    try {
+        while (true) {
+            let { connection, error } = yield take(connectionCH);
+            if (error) {
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                });
+                skipError = false;
+            } else {
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: false
+                });
+                task = yield fork(handleIO, connection);
+            }
+        }
+    } finally {
+        console.info("yield cancelled!");
+        yield cancel(task);
+    }
+    return task;
 }
 
 /**
@@ -242,19 +269,16 @@ export function* frameFlow() {
  */
 export function* flow() {
     while (true) {
-        yield take(LOGIN)
-
+        yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
             payload: {
-                message: 'Starting Golem'
+                message: "Starting Golem"
             }
-        })
-
-        const {connection} = yield call(connect)
-        const task = yield fork(handleIO, connection)
-        let action = yield take(LOGOUT)
-        yield cancel(task)
+        });
+        const { task } = yield call(connectionFlow);
+        let action = yield take(LOGOUT);
+        yield cancel(task);
     }
 }
 
