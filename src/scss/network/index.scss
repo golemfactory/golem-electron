@@ -91,6 +91,9 @@
                 }
 
                 &--warning {
+                    color: $color-accent2;
+                }
+                &--error {
                     color: #F65A23;
                 }
             }

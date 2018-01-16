@@ -58,8 +58,15 @@ describe('<App />', () => {
         const wrapper = mount(
             <Provider store={ mockStore({
                 info:{
-                    connectionProblem: false
-                }
+                    connectionProblem: {
+                        status: false,
+                        issue: null
+                    },
+                },
+                realTime:{
+                    connectedPeers: []
+                },
+                actions: jest.fn()
             })}>
                 <ConnectedApp history={history}/>
             </Provider>);

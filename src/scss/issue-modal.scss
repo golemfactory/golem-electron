@@ -1,0 +1,35 @@
+.container__issue-modal {
+    z-index: 9 !important;
+    .content__modal {
+        text-align: center;
+        justify-content: space-around;
+        padding: 20px;
+        .container-icon {
+            padding: 25px 0;
+            flex: 0 0 40px;
+        }
+        & > span {
+            padding: 15px 10px 35px 10px;
+            font-size: 10pt;
+            font-weight: 400;
+            line-height: 1.5em;
+        }
+        .icon-warning {
+            display: inline-block;
+            color: $color-text4;
+            background: $color-accent2;
+            font-size: 2.6em;
+            width: 1em;
+            height: 1em;
+            line-height: 0.9em;
+            padding: 0.3em;
+            text-align: center;
+            border-radius: 50%; /* or 50% width & line-height */
+
+            &.critical{
+                color: $color-text4 !important;
+                background: $color-error;
+            }
+        }
+    }
+}

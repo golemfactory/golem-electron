@@ -16,7 +16,8 @@ const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    fileCheckModal: state.info.fileCheckModal
+    fileCheckModal: state.info.fileCheckModal,
+    connectedPeers: state.realTime.connectedPeers
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -165,8 +166,16 @@ export class Header extends Component {
 
     _openDoc() {}
 
+    _taskHints(engine, peers){
+        if(!engine)
+            return (<p>Golem is not started yet.</p>)
+        if(!peers)
+            return (<p>There's no connected node yet.</p>)
+        return (<p>New Task</p>)
+    }
+
     render() {
-        const {activeHeader, taskDetails, detail, isEngineOn} = this.props
+        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
@@ -196,10 +205,10 @@ export class Header extends Component {
                 </ul>
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={isEngineOn ? <p>New Task</p> : <p>Golem is not started yet.</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={this._taskHints(isEngineOn, connectedPeers)} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item" onClick={isEngineOn ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                        <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </ReactTooltip>
                     <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
