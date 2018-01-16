@@ -17,7 +17,8 @@ import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    connectedPeers: state.realTime.connectedPeers
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -26,6 +27,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 const status = Object.freeze({
+    WAITINGFORPEER: 'Waiting for peer',
     NOTREADY: 'Not started',
     READY: 'Ready',
     WAITING: 'Waiting',
@@ -161,15 +163,21 @@ export class Table extends React.Component {
      * @param  {Array}    data    [JSON array of task list]
      */
     updateFooterInfoBar(data) {
-        const {actions} = this.props
+        const {actions, connectedPeers} = this.props
         let waiting = data.some(item => item.status == status.WAITING)
         let computing = data.some(item => item.status == status.COMPUTING)
         let timeout = data.some(item => item.status == status.TIMEOUT)
         let restart = data.some(item => item.status == status.RESTART)
-        let info = {
+        let info = connectedPeers ?
+        {
             status: status.READY,
             message: "Golem is ready!",
             color: 'green'
+        } : 
+        {
+            status: status.WAITINGFORPEER,
+            message: "Waiting for peer...",
+            color: 'yellow'
         }
         if (waiting) {
             info.status = status.WAITING

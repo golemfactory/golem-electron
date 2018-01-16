@@ -20,7 +20,8 @@ const classDict = Object.freeze({
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
-    fileCheckModal: state.info.fileCheckModal
+    fileCheckModal: state.info.fileCheckModal,
+    connectedPeers: state.realTime.connectedPeers
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -256,11 +257,11 @@ export class DropZone extends React.Component {
 
 
     render() {
-        const {isEngineOn} = this.props
+        const {isEngineOn, connectedPeers} = this.props
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                { isEngineOn ?
+                { (isEngineOn && !!connectedPeers) ?
                     <div ref="dragbox" className={this.state.className}>
                         <p><span className="icon-upload"/></p>
                         <span>Drop files here to create a new task</span>
@@ -271,7 +272,7 @@ export class DropZone extends React.Component {
                         <div className="container-icon">
                             <span className="icon-warning"/>
                         </div>
-                        <span>Before drop your files, golem needs to be started.</span>
+                        <span>Before drop your files, golem needs to be started<br/> and connected to a node.</span>
                     </div>
                 }
             </div>

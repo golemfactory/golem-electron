@@ -13,7 +13,7 @@ import { OnBoardingComponent } from '../components/hoc/Onboarding'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
-import ConnectionModal from './modal/ConnectionModal'
+import IssueModal from './modal/IssueModal'
 
 
 
@@ -80,7 +80,7 @@ export class App extends Component {
                 <Router history={ history } >
                     { routes }
                 </Router>
-                 {(connectionProblem && connectionProblem.status) && <ConnectionModal closeModal={::this._closeModal}/>}
+                 {(connectionProblem && connectionProblem.status) && <IssueModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

@@ -34,6 +34,16 @@ const messages = {
         },
     },
     docker: {
+        'instance.start': {
+            pre: 'Docker is starting',
+            post: 'Docker is started',
+            exception: 'Error starting docker'
+        },
+        'instance.stop': {
+            pre: 'Docker is stopping',
+            post: 'Docker is stopped',
+            exception: 'Error stopping docker'
+        },
         'instance.check': {
             pre: 'Checking for docker',
             post: 'Docker is available',
@@ -43,11 +53,6 @@ const messages = {
             pre: 'Setting VM environment',
             post: 'VM environment configured',
             exception: 'Docker environment error'
-        },
-        'instance.status': {
-            pre: '',
-            post: '',
-            exception: 'Docker machine status error'
         },
         'images.pull': {
             pre: 'Pulling Docker images',

@@ -22,35 +22,6 @@
         width: 20px;
         height: 20px;
     }
-    .indicator-status {
-        -webkit-mask: url('../assets/img/status.svg') no-repeat 100% 100%;
-        mask: url('../assets/img/status.svg') no-repeat 100% 100%;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-        width: 20px;
-        height: 20px;
-        transition: background-color .5s;
-        &--red {
-            background-color: $color-error;
-        }
-        &--yellow {
-            background-color: $color-accent2;
-        }
-        &--green {
-            background-color: $color-accent1;
-        }
-        &--blue {
-            background-color: $button-static-color;
-        }
-    }
-    .progress-status {
-        display: inline-block;
-        font-size: 15pt;
-        font-weight: 500;
-        margin-right: 10px;
-        vertical-align: middle;
-        margin-bottom: 0.5px;
-    }
     .icon-new-window {
         font-size: 20pt;
         cursor: pointer;

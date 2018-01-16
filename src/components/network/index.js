@@ -190,13 +190,15 @@ export class MainFragment extends React.Component {
         })
     }
 
-    golemDotClass(_gs, _cp){
-        if(isGolemReady(_gs.status)){
-            return (_cp && _cp.status) ? 'icon-status-dot--warning' : 'icon-status-dot--active'
+    //TODO re-write it cleaner
+    golemDotClass(_golemStatus, _connectionProblem){
+        if(isGolemReady(_golemStatus.status)){
+            return (_connectionProblem && _connectionProblem.status) ? "yellow" : "green"
         }
-        else {
-            return 'icon-status-dot--error'
+        else if(_golemStatus.status !== "Exception"){
+            return "yellow"
         }
+        return "red"
     }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
@@ -223,7 +225,7 @@ export class MainFragment extends React.Component {
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
-                    <span className={`icon-status-dot ${this.golemDotClass(golemStatus, connectionProblem)}`}/>
+                    <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
                     <span>{`${golemStatus.message}`}</span>
                 </div>
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
