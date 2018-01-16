@@ -38,8 +38,6 @@ const routes = (
 
 
 const mapStateToProps = state => ({
-    status: state.firstReducer,
-    search: state.setSearch,
     connectionProblem: state.info.connectionProblem
 })
 
@@ -73,7 +71,7 @@ export class App extends Component {
 
     render() {
 
-        const {actions, status, search, history, connectionProblem} = this.props
+        const {actions, history, connectionProblem} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
