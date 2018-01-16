@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_PERFORMANCE_CHARTS, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
+const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
 
 const parameterDict = Object.freeze({
     SET_PROV_MIN_PRICE: 'min_price',
@@ -13,7 +13,6 @@ const parameterDict = Object.freeze({
     SET_PROV_TRUST: 'computing_trust',
     SET_REQ_TRUST: 'requesting_trust',
     SET_FILE_LOCATION: '',
-    SET_CHOSEN_HARDWARE_PRESET: 'hardware_preset_name',
     UPDATE_NODE_NAME: 'node_name'
 })
 export function updateSettings(session, type, payload) {
@@ -23,7 +22,6 @@ export function updateSettings(session, type, payload) {
             let updateStatus = args[0];
             resolve(updateStatus)
         }
-        //console.log(parameterDict[type])
         _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTINGS_RPC, [{
             [parameterDict[type]]: payload
         }])
@@ -36,12 +34,11 @@ export function* updateSettingsBase(session, {type, payload, init}) {
         if (type === "UPDATE_NODE_NAME") {
             yield call(fireBase, session)
         }
-    //console.info("updateSettingsStatus", updateStatus)
     }
 
 // if (!updateStatus) {
 //     yield put({
-//         type: SET_GOLEM_ENGINE_STATUS,
+//         type: SET_GOLEM_PAUSE_STATUS,
 //         payload: false
 //     })
 // }
@@ -53,16 +50,8 @@ export function callSettings(session) {
         function on_settings(args) {
             let on_settings = args[0];
             //console.log("SETTINGS", on_settings)
-            const {estimated_performance, estimated_lux_performance, estimated_blender_performance, hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
+            const {hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
 
-            actionList.push({
-                type: SET_PERFORMANCE_CHARTS,
-                payload: {
-                    estimated_performance,
-                    estimated_lux_performance,
-                    estimated_blender_performance
-                }
-            })
 
             actionList.push({
                 type: SET_CHOSEN_HARDWARE_PRESET,
@@ -122,7 +111,6 @@ export function callSettings(session) {
 
 export function* fireBase(session) {
     const actionList = yield call(callSettings, session);
-    //console.log("SETTINGS_ACTION", actionList)
     yield actionList && actionList.map((item) => {
         return put(item)
     })
@@ -135,6 +123,5 @@ export function* settingsFlow(session) {
     yield takeLatest(SET_FILE_LOCATION, updateSettingsBase, session)
     yield takeLatest(SET_PROV_TRUST, updateSettingsBase, session)
     yield takeLatest(SET_REQ_TRUST, updateSettingsBase, session)
-    yield takeLatest(SET_CHOSEN_HARDWARE_PRESET, updateSettingsBase, session)
     yield takeLatest(UPDATE_NODE_NAME, updateSettingsBase, session)
 }

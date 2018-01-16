@@ -6,7 +6,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { Router, Route, createMemoryHistory } from "react-router";
 
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
 import ConnectedApp, { App } from '../App'
 import sinon from 'sinon'
@@ -49,13 +49,20 @@ describe('<App />', () => {
     });
 
     it('renders four <Route /> components', () => {
-        expect(wrapper.find(Route).length).toBe(4)
+        expect(wrapper.find(Route).length).toBe(9)
     });
 
     it('should call componentDidMount', () => {
         sinon.spy(App.prototype, 'componentDidMount');
         expect(App.prototype.componentDidMount.calledOnce).toBe(false)
-        const wrapper = mount(<App history={history} actions={actions}/>);
+        const wrapper = mount(
+            <Provider store={ mockStore({
+                info:{
+                    connectionProblem: false
+                }
+            })}>
+                <ConnectedApp history={history}/>
+            </Provider>);
         expect(App.prototype.componentDidMount.calledOnce).toBe(true)
     })
 });

@@ -9,6 +9,37 @@
     margin: 40px 0 0 0;
     padding-bottom: 20px;
     border-bottom: 1px solid $color-text3;
+
+    input{
+        width: 200px;
+        height: 22px !important;
+        font-size: 14pt;
+        margin: 0;
+    }
+
+    .user-name__form{
+        & input + .toggle__edit-mode,
+        &:hover > .toggle__edit-mode {
+            display: inline;
+        }
+    }
+
+    .toggle__edit-mode{
+        position: absolute;
+        display: none;
+        margin-left: 5px;
+        font-size: 11pt;
+        line-height: 20px;
+        cursor: pointer;
+
+    }
+
+    .icon-checkmark {
+        margin-left: 5px;
+        &:before{
+            color: $color-accent1;
+        }
+    }
 }
 
 .indicator-panel__personal {
@@ -16,11 +47,13 @@
     justify-content: space-around;
     box-sizing: border-box;
     margin-bottom: 40px;
+    transition: .8s all;
 }
 
 .indicator__personal {
     position: relative;
     width: 75px;
+    transition: 1s all;
     span {
         line-height: 1.5;
         color: $color-text2;
@@ -73,4 +106,6 @@
 .image__personal {
     width: 161px;
     height: 161px;
+    max-height: 161px;
+    transition: .8s all;
 }

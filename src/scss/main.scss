@@ -1,7 +1,6 @@
 /* VENDOR - Default fall-backs and external files.
 ========================================================================== */
 
-
 /* BASE - Base Variable file along with starting point Mixins and Placeholders.
 ========================================================================== */
 
@@ -14,6 +13,7 @@
 
 @import "header";
 @import "onboarding/index";
+@import "spott-light";
 @import "network/index";
 @import "task-panel/index";
 @import "settings/index";
@@ -28,10 +28,12 @@
 @import "modal";
 @import "connection-modal";
 @import "dropdown";
+
 html {
     padding: 0;
     overflow-y: scroll;
     min-width: 460px;
+
     /* Smoother startup */
     animation: fadein 1s;
 }
@@ -44,12 +46,15 @@ body {
     font-family: $font-family-primary;
     font-weight: $font-weight-primary;
     overflow: hidden;
+
     // -moz-font-weight: 400;
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
     // -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+
     &.modal-active {
         overflow: hidden;
     }
@@ -86,6 +91,14 @@ span {
     }
 }
 
+input,
+button,
+select{
+    &:disabled{
+        cursor: not-allowed !important;
+    }
+}
+
 a {
     text-decoration: none;
     color: $color-primary;
@@ -111,6 +124,12 @@ h6 {
     margin: 5px;
 }
 
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+
 select {
     width: 100%;
     height: 32px;
@@ -123,6 +142,7 @@ select {
 
 .select {
     position: relative;
+
     &:after {
         content: " ";
         height: 0;
@@ -142,47 +162,81 @@ select {
     &--primary {
         background-color: $button-static-color;
         font-size: 10pt;
+
         &:hover {
             background-color: $button-hover-color;
+
             //color: rgb(0, 177, 200);
+       
         }
+
         &:active {
             background-color: $button-active-color;
         }
+
         &:disabled {
+            cursor: not-allowed;
             background-color: $button-disable-color;
             border: 1px solid $button-disable-color;
         }
     }
+    &--yellow {
+        background: $color-accent2;
+        border: 1px solid $color-accent2;
+        &:hover {
+            background: darken( $color-accent2, 10%);
+        }
+        &:active {
+            background: darken( $color-accent2, 15%);
+        }
+        &:disabled {
+            cursor: not-allowed;
+            background-color: $button-disable-color;
+            border: 1px solid $button-disable-color;
+        }
+    }
+
     &--warning {
         background-color: $color-error;
         font-size: 10pt;
         border: 1px solid $color-error;
+
         &:hover {
             background-color: $color-delete-hover;
         }
+
         &:active {
             background-color: $color-delete-active;
         }
+
         &:disabled {
+            cursor: not-allowed;
             background-color: $color-delete-active;
         }
     }
+
     &--outline {
         background-color: transparent;
         color: $button-static-color;
         border-radius: 2px;
         font-weight: 600;
         font-size: 10pt;
+
         &:hover {
             color: $button-hover-color;
             border: 1px solid $button-hover-color;
+
             //color: rgb(0, 177, 200);
+       
         }
+
         &:disabled {
+            cursor: not-allowed;
             color: $button-disable-color;
             border: 1px solid $button-disable-color;
+
             //color: rgb(0, 177, 200);
+       
         }
     }
 }
@@ -225,6 +279,7 @@ input[type=number]::-webkit-inner-spin-button {
     top: 0;
     right: 0;
     bottom: 0;
+
     &:hover {}
 }
 
@@ -234,6 +289,7 @@ input[type=number]::-webkit-inner-spin-button {
 
 .switch-box {
     margin-right: 40px;
+
     .switch {
         position: relative;
         display: inline-block;
@@ -241,10 +297,12 @@ input[type=number]::-webkit-inner-spin-button {
         height: 17px;
         margin-bottom: -3px;
     }
+
     /* Hide default HTML checkbox */
     .switch input {
         display: none;
     }
+
     /* The slider */
     .switch-slider {
         position: absolute;
@@ -257,6 +315,7 @@ input[type=number]::-webkit-inner-spin-button {
         -webkit-transition: .4s;
         transition: .4s;
     }
+
     .switch-slider:before {
         position: absolute;
         content: "";
@@ -268,30 +327,38 @@ input[type=number]::-webkit-inner-spin-button {
         -webkit-transition: .4s;
         transition: .4s;
     }
+
     input:checked + .switch-slider {
         background-color: #2196F3;
     }
+
     input:focus + .switch-slider {
         box-shadow: 0 0 1px #2196F3;
     }
+
     input:checked + .switch-slider:before {
         -webkit-transform: translateX(13px);
         transform: translateX(13px);
     }
+
     /* Rounded sliders */
     .switch-slider.round {
         border-radius: 34px;
     }
+
     .switch-slider.round:before {
         border-radius: 50%;
     }
+
     .switch__desc {
         margin-left: 10px;
     }
+
     &--green {
         input:checked + .switch-slider {
             background-color: $color-accent1;
         }
+
         input:focus + .switch-slider {
             box-shadow: 0 0 1px $color-accent1;
         }
@@ -306,18 +373,21 @@ input[type=number]::-webkit-inner-spin-button {
     align-items: center;
     background: $color-text4;
     padding: 10px;
+
     input[type="checkbox"],
     input[type="radio"] {
         position: absolute;
         opacity: 0;
+
         + .radio-label {
             position: relative;
             margin: 0 !important;
             padding: 0 10px !important;
             color: $color-text2;
             line-height: 1.6em;
+
             &:after {
-                content: '\e914';
+                content: '\e916';
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
@@ -335,11 +405,13 @@ input[type=number]::-webkit-inner-spin-button {
                 font-variant: normal;
                 text-transform: none;
                 line-height: 1;
+
                 /* Better Font Rendering =========== */
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 font-size: 14pt;
             }
+
             &:before {
                 content: '\e915';
                 border-radius: 100%;
@@ -358,6 +430,7 @@ input[type=number]::-webkit-inner-spin-button {
                 font-variant: normal;
                 text-transform: none;
                 line-height: 1;
+
                 /* Better Font Rendering =========== */
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
@@ -366,6 +439,7 @@ input[type=number]::-webkit-inner-spin-button {
                 color: $color-text4;
             }
         }
+
         &:checked {
             + .radio-label {
                 &:after {
@@ -373,6 +447,7 @@ input[type=number]::-webkit-inner-spin-button {
                 }
             }
         }
+
         &:focus {
             + .radio-label {
                 &:after {
@@ -381,15 +456,18 @@ input[type=number]::-webkit-inner-spin-button {
                 }
             }
         }
+
         &:disabled {
             + .radio-label {
                 &:after {
                     box-shadow: inset 0 0 0 4px $color-text2;
                     border-color: darken($color-text2, 25%);
                     background: darken($color-text2, 25%);
+                    cursor: not-allowed;
                 }
             }
         }
+
         + .radio-label {
             &:empty {
                 &:after {
@@ -407,14 +485,17 @@ input[type=number]::-webkit-inner-spin-button {
         -webkit-animation: jump 1500ms infinite;
         animation: jump 2s infinite;
     }
+
     .dot-1 {
         -webkit-animation-delay: 200ms;
         animation-delay: 200ms;
     }
+
     .dot-2 {
         -webkit-animation-delay: 400ms;
         animation-delay: 400ms;
     }
+
     .dot-3 {
         -webkit-animation-delay: 600ms;
         animation-delay: 600ms;
@@ -425,9 +506,11 @@ input[type=number]::-webkit-inner-spin-button {
     0% {
         bottom: 0px;
     }
+
     20% {
         bottom: 5px;
     }
+
     40% {
         bottom: 0px;
     }
@@ -437,14 +520,15 @@ input[type=number]::-webkit-inner-spin-button {
     0% {
         bottom: 0px;
     }
+
     20% {
         bottom: 5px;
     }
+
     40% {
         bottom: 0px;
     }
 }
-
 
 /* Animation for transitions
 ============================= */
@@ -453,11 +537,11 @@ input[type=number]::-webkit-inner-spin-button {
     from {
         opacity: 0;
     }
+
     to {
         opacity: 1;
     }
 }
-
 
 /*      OS DIFFERENCES
 ============================= */
@@ -467,6 +551,10 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .win {
+    body {
+        border: 1px solid $color-border;
+    }
+
     .content__main,
     .content__task-panel,
     .container__frame,
@@ -475,6 +563,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__settings {
         padding-top: $header-height-windows;
     }
+
     .content__resources,
     .section__actions,
     .item__history,
@@ -485,12 +574,15 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__peers,
+    .content__stats,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
     .section-action__task-detail {
@@ -507,6 +599,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__settings {
         padding-top: $header-height;
     }
+
     .content__resources,
     .section__actions,
     .item__history,
@@ -517,12 +610,15 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__peers,
+    .content__stats,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
     .section-action__task-detail {
@@ -539,6 +635,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__settings {
         padding-top: $header-height;
     }
+
     .content__resources,
     .section__actions,
     .item__history,
@@ -549,12 +646,15 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__peers,
+    .content__stats,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
     .section-action__task-detail {

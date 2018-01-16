@@ -12,6 +12,10 @@ const mockSystemInfo = {
     max_resource_size: 10240000
 }
 
+const preset = Object.freeze({
+    CUSTOM: 'custom'
+})
+
 const mapStateToProps = state => ({
     systemInfo: state.advanced.systemInfo,
     presetList: state.advanced.presetList,
@@ -44,7 +48,8 @@ export class Advanced extends React.Component {
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
             ...chartValues,
-            [key]: evt.target.value
+            [key]: evt.target.value || 0,
+            name: preset.CUSTOM
         })
         actions.setResources(this.calculateResourceValue({
             ...chartValues,
@@ -59,14 +64,14 @@ export class Advanced extends React.Component {
      * @param  {String}         init        [Initial loading: true, personal choose: false]
      */
     _handleOptionChange(list, name, init = false) {
-        const {actions} = this.props
+        const {actions, chartValues} = this.props
         let value = list.filter((item, index) => item.name == name)[0]
         if (value) {
             actions.setChosenPreset(value.name, init)
             actions.setAdvancedChart({
                 ...value
             });
-            actions.setResources(this.calculateResourceValue(value))
+            !init && actions.setResources(this.calculateResourceValue(value))
         }
     }
 
@@ -140,7 +145,7 @@ export class Advanced extends React.Component {
               </div>
             </div>
             <div className="advanced__tips">
-              <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be  able to use it at the same time.</span>
+              <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.</span>
             </div>
           </div>
         );

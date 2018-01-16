@@ -1,35 +1,45 @@
 @mixin flex {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
     align-items: center;
 }
 
 .content__onboarding {
+    @include flex;
+
     position: absolute;
     width: 100%;
     height: 100%;
     background: $color-text4;
     z-index: 99999 !important;
+    padding-bottom: 38px;
+    box-sizing:border-box;
 }
 
 .container-step__onboarding {
     @include flex;
+
     .welcome-beta {
         justify-content: center;
     }
 }
 
 .section-image__onboarding {
+    position: relative;
     width: 100%;
     flex: 0 0 288px;
     background: $color-bg2;
     text-align: center;
+
     @include flex;
+
     justify-content: flex-end;
+
     .welcome-image {
         margin-bottom: 30px;
     }
+
     .doc-image {
         width: 100%;
     }
@@ -37,12 +47,10 @@
 
 .nickname-area__onboarding {
     height: 30px !important;
-    border-left: 1px solid $button-static-color;
+    box-sizing: border-box;
     margin: 24px 0 10px 0;
+
     @include flex;
-    ::-webkit-input-placeholder {
-        color: #000;
-    }
 }
 
 .nickname-input__onboarding {
@@ -51,12 +59,30 @@
     background: $color-bg;
     color: #000;
     font-size: 16pt;
-    text-align: center;
+    box-sizing: border-box;
+    -webkit-animation: blink-animation 1s steps(3, start) infinite;
+
+    @keyframes blink-animation {
+      to {
+            box-shadow: -1px 0 0 $button-static-color;
+        }
+    }
+
+    &::-webkit-input-placeholder {
+        color: $color-text3;
+        text-align: center;
+    }
+
+    &:focus{
+        &::-webkit-input-placeholder {
+            color: transparent;
+        }
+        animation: 0;
+    }
 }
 
 .desc__onboarding {
-    @include flex;
-    flex: 0 0 250px;
+    margin-top: 40px;
     padding: 0 70px;
     font-size: 14pt;
     font-weight: 400;
@@ -68,23 +94,34 @@
     mark {
         padding: 2px;
     }
+
     font-size: 10pt;
     margin-top: 10px;
 }
 
 .step-control__onboarding {
-    position: relative;
-    top: -30px;
+    display: block;
+    width: 100%;
     font-size: 14pt;
     font-weight: 400;
-    margin-left: 32px;
+    padding-left: 32px;
+    box-sizing: border-box;
+
     @include flex;
+
     .icon-arrow-left-white,
     .icon-arrow-right-white {
         position: relative;
         top: 11.5px;
         font-size: 32pt;
         cursor: pointer;
+    }
+
+    .btn{
+        position: relative;
+        top: 10px;
+        cursor: pointer;
+        margin-right: 32px;
     }
 }
 
@@ -94,16 +131,46 @@
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
+
     .checkbox-item {
         width: 70%;
         text-align: left;
         height: 50px;
+
         [class^="icon-"],
         [class*=" icon-"] {
             font-size: 24pt;
         }
     }
+
     .radio-label {
         left: 0;
     }
+}
+
+.pageSwap-leave {
+
+  transform: translate3d(0, 0, 0);
+}
+
+.pageSwap-leave.pageSwap-leave-active {
+
+  transform: translate3d(-100%, 0, 0);
+  transition: all ease-out 600ms;
+}
+
+.pageSwap-enter {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translate3d(100%, 0, 0);
+}
+
+.pageSwap-enter.pageSwap-enter-active {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: all ease-out 600ms;
+
 }

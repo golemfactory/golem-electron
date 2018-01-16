@@ -31,15 +31,15 @@ export class ControlPanel extends React.Component {
 
 
     render() {
-        const {previousFrame, nextFrame, showSubtask, zoomRatio, details} = this.props
-        let {imgIndex} = this.props
-        if (!isNumeric(imgIndex) || imgIndex > 999) {
-            imgIndex = 0;
+        const {previousFrame, nextFrame, showSubtask, zoomRatio, details, frameIndex} = this.props
+        let index = frameIndex + 1 //index gap
+        if (!isNumeric(frameIndex) || frameIndex > 999) {
+            index = 0;
         }
         return (
             <div className="container__control-panel">
                 <span className="icon-arrow-left-white" role="button" aria-label="Previous Frame" tabIndex="0" onClick={previousFrame}/>
-                <span className="preview-count__control-panel">{parseInt(imgIndex) + 1} of {details.options && details.options.frame_count}</span>
+                <span className="preview-count__control-panel">{parseInt(index)} of {details.options && details.options.frame_count}</span>
                 <span className="icon-arrow-right-white" role="button" aria-label="Next Frame" tabIndex="0" onClick={nextFrame}/>
                 <span className="icon-zoom-out" id="zoom-out" role="button" aria-label="Zoom out" tabIndex="0"/>
                 <span className="zoom-home-button" id="reset">{zoomRatio && zoomRatio.toFixed(2)}%</span>

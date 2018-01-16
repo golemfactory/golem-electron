@@ -5,7 +5,34 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RESTART_TASK, RUN_TEST_TASK, SET_TASK_TEST_STATUS, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET} = dict
+const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RESTART_TASK, RUN_TEST_TASK, SET_TASK_TEST_STATUS, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST} = dict
+
+/**
+ * [subscribeHistory func. fetchs payment history of user, with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function fetchSubtaskList(session, {payload}) {
+    return new Promise((resolve, reject) => {
+        function on_subtask_list(args) {
+            var subtask_list = args[0];
+            //console.log(config.GET_SUBTASKS_RPC, subtask_list)
+            resolve({
+                type: SET_SUBTASKS_LIST,
+                payload: subtask_list
+            })
+        }
+
+        _handleRPC(on_subtask_list, session, config.GET_SUBTASKS_RPC, [payload])
+    })
+}
+
+export function* subtaskList(session, payload) {
+    if (payload) {
+        let action = yield call(fetchSubtaskList, session, payload)
+        yield put(action)
+    }
+}
 
 export function getEstimatedCost(session, payload) {
     //console.info('Estimated cost requested!')
@@ -259,7 +286,7 @@ export function subscribeTasks(session) {
             var taskList = args[0];
             emit({
                 type: SET_TASKLIST,
-                payload: taskList
+                payload: taskList.reverse() // in DESC order
             })
         }
 
@@ -296,9 +323,10 @@ export function* tasksFlow(session) {
     yield fork(fireBase, session);
     yield fork(taskPresetBase, session);
     yield takeEvery(DELETE_TASK, deleteTaskBase, session)
-    yield takeEvery(CREATE_TASK, createTaskBase, session)
+    yield takeLatest(CREATE_TASK, createTaskBase, session)
     yield takeLatest(RESTART_TASK, restartTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
+    yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
 }

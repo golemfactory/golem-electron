@@ -1,24 +1,106 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
 exports[`<Footer/> should render a footer component 1`] = `
 <footer
-  className="footer">
-  <span>
-    ✓ Golem is ready!
-  </span>
+  className="footer"
+>
   <div
-    className="switch-box">
-    <label
-      className="switch">
-      <input
-        defaultChecked={false}
-        onChange={[Function]}
-        type="checkbox" />
-      <div
-        className="switch-slider round" />
-    </label>
+    className="info-bar__footer"
+  >
     <span
-      className="switch__desc">
-      Previews
-    </span>
+      className="progress-status indicator-status "
+    />
+    <span />
+  </div>
+  <div
+    className="preview-bar__footer"
+  >
+    <Tooltip
+      align={
+        Object {
+          "offset": Array [
+            5,
+            -10,
+          ],
+        }
+      }
+      arrowContent={
+        <div
+          className="rc-tooltip-arrow-inner"
+        />
+      }
+      destroyTooltipOnHide={false}
+      mouseEnterDelay={1}
+      mouseLeaveDelay={0.1}
+      overlay={
+        <p>
+          Preview
+        </p>
+      }
+      placement="topRight"
+      prefixCls="rc-tooltip"
+      trigger={
+        Array [
+          "hover",
+        ]
+      }
+    >
+      <div
+        className="switch-box switch-box--green"
+      >
+        <label
+          className="switch"
+        >
+          <input
+            aria-label="Show previews"
+            onChange={[Function]}
+            type="checkbox"
+          />
+          <div
+            className="switch-slider round"
+          />
+        </label>
+      </div>
+    </Tooltip>
+    <Tooltip
+      align={
+        Object {
+          "offset": Array [
+            5,
+            -10,
+          ],
+        }
+      }
+      arrowContent={
+        <div
+          className="rc-tooltip-arrow-inner"
+        />
+      }
+      destroyTooltipOnHide={false}
+      mouseEnterDelay={1}
+      mouseLeaveDelay={0.1}
+      overlay={
+        <p>
+          Preview Window
+        </p>
+      }
+      placement="topRight"
+      prefixCls="rc-tooltip"
+      trigger={
+        Array [
+          "hover",
+        ]
+      }
+    >
+      <span
+        aria-label="Open Detailed Preview Window"
+        className="button__expand icon-new-window disabled"
+        onClick={[Function]}
+        onKeyDown={[Function]}
+        role="button"
+        tabIndex="0"
+      />
+    </Tooltip>
   </div>
 </footer>
 `;

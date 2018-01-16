@@ -30,6 +30,7 @@ module.exports = {
         publicPath: './app/'
     },
     plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.DefinePlugin({ // <-- key to reducing React's size
             'process.env': {
                 'NODE_ENV': JSON.stringify('production')
@@ -93,7 +94,7 @@ module.exports = {
                 use: ["file-loader?name=fonts/[hash].[ext]"]
             },
             {
-                test: /\.jpe?g$|\.gif$|\.png$|\.svg$/,
+                test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.json$/,
                 use: ["file-loader?name=images/[hash].[ext]"]
             }]
     }

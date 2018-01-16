@@ -1,12 +1,11 @@
-jest.unmock('../blender/Table')
+jest.unmock('../../tasks/Table')
 
 import React from 'react'
 import ReactDOM from 'react-dom'
-import ReactTable from 'react-table'
 import { Provider } from 'react-redux'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
-import ConnectedTable, { Table } from '../blender/Table'
+import ConnectedTable, { Table } from '../../tasks/Table'
 import sinon from 'sinon'
 
 
@@ -96,14 +95,14 @@ describe('LoaderWrapper', () => {
         expect(wrapper).toMatchSnapshot()
     })
 
-    it('should covert seconds to hours', () => {
-        let mockTable = TestUtils.renderIntoDocument(<Table />);
-        expect(mockTable.convertSecsToHrsMinsSecs(62)).toBe("00:01:02")
-    })
-
     it('should print print console.log about clicked row', () => {
-        const mockData = ['event', 'item', 'index']
-        let mockTable = TestUtils.renderIntoDocument(<Table />);
+        const mockData = [null, {
+            status: "Finished",
+            options:{
+                frame_count: 0
+            }
+        }, 'index']
+        let mockTable = TestUtils.renderIntoDocument(<Table previewHandler={() => {}}/>);
         expect(mockTable._handleRowClick(...mockData)).toBe(true)
     });
 
@@ -116,7 +115,7 @@ describe('LoaderWrapper', () => {
             price: 10
         }]
         let mockTable = TestUtils.renderIntoDocument(<Table blender_data={mockData}/>);
-        console.log(mockTable.listTasks(mockData).props.children[0]);
+        
         expect(mockTable.listTasks(mockData).props.className).toBe('task-list')
     });
 /*

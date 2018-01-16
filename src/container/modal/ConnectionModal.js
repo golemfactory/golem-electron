@@ -33,11 +33,12 @@ export class ConnectionModal extends React.Component {
 
     componentDidMount() {
         this._specifiedElement = this.refs.modalContent
-        window.applicationSurface.addEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
+        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
+        window.applicationSurface.addEventListener('click', this._clickOutside)
     }
 
     componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this.clickOutside.bind(this, this._specifiedElement))
+        window.applicationSurface.removeEventListener('click', this._clickOutside)
     }
 
     _handleCancel() {
@@ -52,7 +53,7 @@ export class ConnectionModal extends React.Component {
                     <div className="container-icon">
                         <span className="icon-warning"/>
                     </div>
-                    <span>Golem is having trouble connecting. You may need to check your router ports. Please check the <a href={DOCLINK}>docs</a> for help.</span>
+                    <span>Golem is having trouble connecting. <br/>You may need to check your router ports. <br/>Please check the <a href={DOCLINK}>docs</a> for help.</span>
                 </div>
             </div>
         );

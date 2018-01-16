@@ -29,6 +29,10 @@
     position: relative;
     padding: 0 15px;
     text-transform: capitalize;
+    cursor: pointer;
+    &[disabled]{
+        cursor: not-allowed;
+    }
 }
 
 .dropdown-list {
@@ -43,10 +47,9 @@
     padding-top: 5px;
     box-sizing: border-box;
     /* Option 1: */
-    font-family: Roboto-Regular;
     font-size: 14px;
-    color: $color-text3;
-    line-height: 2.2em;
+    color: $color-text2;
+    line-height: 2em;
     cursor: pointer;
     .item-container__dropdown {
         padding-bottom: 5px;
@@ -66,7 +69,7 @@
             text-transform: capitalize;
         }
         &:hover > span {
-            color: $color-text2;
+            color: $color-text;
             transition: .3s color;
         }
         .selected {

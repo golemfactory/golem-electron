@@ -18,6 +18,7 @@ export let dict = Object.freeze({
     GET_TASK_DETAILS: 'GET_TASK_DETAILS',
     SET_TASK_INFO: 'SET_TASK_INFO',
     SET_PREVIEW: 'SET_PREVIEW',
+    UPDATE_PREVIEW_LOCK: 'UPDATE_PREVIEW_LOCK',
     DELETE_TASK: 'DELETE_TASK',
     CREATE_TASK: 'CREATE_TASK',
     RESTART_TASK: 'RESTART_TASK',
@@ -45,6 +46,7 @@ export let dict = Object.freeze({
     SET_REQ_TRUST: 'SET_REQ_TRUST',
     SET_NET_PROV_TRUST: 'SET_NET_PROV_TRUST',
     SET_NET_REQ_TRUST: 'SET_NET_REQ_TRUST',
+    SET_TASK_STATS: 'SET_TASK_STATS',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -52,12 +54,19 @@ export let dict = Object.freeze({
     SET_SUBTASKS_BORDER: 'SET_SUBTASKS_BORDER',
     SET_PREVIEW_LIST: 'SET_PREVIEW_LIST',
     SET_SUBTASKS_LIST: 'SET_SUBTASKS_LIST',
+    FETCH_SUBTASKS_LIST: 'FETCH_SUBTASKS_LIST',
     SET_SUBTASKS_VISIBILITY: 'SET_SUBTASKS_VISIBILITY',
+    SET_FRAME_ID: 'SET_FRAME_ID',
+    SET_FRAME_INDEX: 'SET_FRAME_INDEX',
+    NEXT_FRAME: 'NEXT_FRAME',
+    PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
+    SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     START_GOLEM: 'START_GOLEM',
     STOP_GOLEM: 'STOP_GOLEM',
     CONTINUE_WITH_PROBLEM: 'CONTINUE_WITH_PROBLEM',
-    SET_GOLEM_ENGINE_STATUS: 'SET_GOLEM_ENGINE_STATUS',
+    SET_GOLEM_STATUS: 'SET_GOLEM_STATUS',
+    SET_GOLEM_PAUSE_STATUS: 'SET_GOLEM_PAUSE_STATUS',
     START_LOADING: 'START_LOADING',
     END_LOADING: 'END_LOADING',
     LOGIN: 'LOGIN',
@@ -68,27 +77,99 @@ export let dict = Object.freeze({
     SET_PREVIEW_RADIO: 'SET_PREVIEW_RADIO',
     SET_PREVIEW_EXPANDED: 'SET_PREVIEW_EXPANDED',
     SET_CURRENCY: 'SET_CURRENCY',
-    UPLOAD: 'UPLOAD',
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
+    TOGGLE_DEVELOPER_MODE: 'TOGGLE_DEVELOPER_MODE',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
 })
 
-const {ONBOARDING, UPDATE_NODE_NAME,
+const {
+    ONBOARDING, 
+    UPDATE_NODE_NAME,
     //NETWORK
-    SET_BALANCE, SET_RESOURCES, SET_HISTORY, SET_SYSTEM_INFO, SET_ADVANCED_PRESET, CREATE_ADVANCED_PRESET, DELETE_ADVANCED_PRESET, SET_ADVANCED_CHART, SET_CHOSEN_HARDWARE_PRESET, SET_ADVANCED_MANUALLY,
+    SET_BALANCE, 
+    SET_RESOURCES, 
+    SET_HISTORY, 
+    SET_SYSTEM_INFO, 
+    SET_ADVANCED_PRESET, 
+    CREATE_ADVANCED_PRESET, 
+    DELETE_ADVANCED_PRESET, 
+    SET_ADVANCED_CHART, 
+    SET_CHOSEN_HARDWARE_PRESET, 
+    SET_ADVANCED_MANUALLY,
     //TASKS
-    SET_TASKLIST, SET_TASK_DETAILS, GET_TASK_DETAILS, SET_TASK_INFO, SET_PREVIEW, DELETE_TASK, CREATE_TASK, RESTART_TASK, RESTART_FRAME, RESTART_SUBTASK, RUN_TEST_TASK, SET_TASK_TEST_STATUS, GET_ESTIMATED_COST, SET_ESTIMATED_COST, CLEAR_TASK_PLAIN, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET, SET_FOOTER_INFO,
+    SET_TASKLIST, 
+    SET_TASK_DETAILS, 
+    GET_TASK_DETAILS, 
+    SET_TASK_INFO, 
+    SET_PREVIEW,
+    UPDATE_PREVIEW_LOCK,
+    DELETE_TASK, 
+    CREATE_TASK, 
+    RESTART_TASK, 
+    RESTART_FRAME, 
+    RESTART_SUBTASK, 
+    RUN_TEST_TASK, 
+    SET_TASK_TEST_STATUS, 
+    GET_ESTIMATED_COST, 
+    SET_ESTIMATED_COST, 
+    CLEAR_TASK_PLAIN, 
+    GET_TASK_PRESETS, 
+    SET_TASK_PRESETS, 
+    SAVE_TASK_PRESET, 
+    DELETE_TASK_PRESET, 
+    SET_FOOTER_INFO,
     //SETTINGS
-    SET_FILE_LOCATION, SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_AVATAR, SET_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_NET_PROV_TRUST, SET_NET_REQ_TRUST,
+    SET_FILE_LOCATION, 
+    SET_PERFORMANCE_CHARTS, 
+    RECOUNT_BENCHMARK, 
+    SET_PROV_MIN_PRICE, 
+    SET_REQ_MAX_PRICE, 
+    SET_AVATAR, 
+    SET_NODE_NAME, 
+    SET_PROV_TRUST, 
+    SET_REQ_TRUST, 
+    SET_NET_PROV_TRUST, 
+    SET_NET_REQ_TRUST, 
+    SET_TASK_STATS,
     //FRAME WINDOW
-    SET_ALL_FRAMES, SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY,
+    SET_ALL_FRAMES, 
+    SET_FRAMES_WITH_SUBTASKS, 
+    SET_SUBTASKS_BORDER, 
+    SET_PREVIEW_LIST, 
+    SET_SUBTASKS_LIST, 
+    FETCH_SUBTASKS_LIST, 
+    SET_SUBTASKS_VISIBILITY, 
+    SET_FRAME_ID, 
+    SET_FRAME_INDEX, 
+    NEXT_FRAME, 
+    PREVIOUS_FRAME,
     //GENERAL
-    START_GOLEM, STOP_GOLEM, CONTINUE_WITH_PROBLEM, SET_GOLEM_ENGINE_STATUS, START_LOADING, END_LOADING, LOGIN, LOGOUT, LOGIN_FRAME, LOGOUT_FRAME, SET_AUTOLAUNCH, SET_CONNECTED_PEERS, SET_PREVIEW_RADIO, SET_PREVIEW_EXPANDED, SET_CURRENCY, UPLOAD, SET_ZOOM_RATIO, SET_NETWORK_INFO,
+    SET_GOLEM_VERSION,
+    START_GOLEM, 
+    STOP_GOLEM, 
+    CONTINUE_WITH_PROBLEM, 
+    SET_GOLEM_STATUS, 
+    SET_GOLEM_PAUSE_STATUS, 
+    START_LOADING, 
+    END_LOADING, 
+    LOGIN, 
+    LOGOUT, 
+    LOGIN_FRAME, 
+    LOGOUT_FRAME, 
+    SET_AUTOLAUNCH, 
+    SET_CONNECTED_PEERS, 
+    SET_PREVIEW_RADIO, 
+    SET_PREVIEW_EXPANDED, 
+    SET_CURRENCY, 
+    SET_ZOOM_RATIO, 
+    SET_NETWORK_INFO, 
+    TOGGLE_DEVELOPER_MODE,
     //ERROR
-    SET_CONNECTION_PROBLEM, SET_FILE_CHECK} = dict
+    SET_CONNECTION_PROBLEM, 
+    SET_FILE_CHECK} = dict
 
 export const updateNodeName = (payload) => ({
     type: UPDATE_NODE_NAME,
@@ -120,9 +201,33 @@ export const setSubtasksList = (payload) => ({
     payload
 })
 
+export const fetchSubtasksList = (payload) => {
+    return ({
+    type: FETCH_SUBTASKS_LIST,
+    payload
+})}
+
 export const setSubtasksVisibility = (payload) => ({
     type: SET_SUBTASKS_VISIBILITY,
     payload
+})
+
+export const setFrameId = (payload) => ({
+    type: SET_FRAME_ID,
+    payload
+})
+
+export const setFrameIndex = (payload) => ({
+    type: SET_FRAME_INDEX,
+    payload
+})
+
+export const nextFrame = () => ({
+    type: NEXT_FRAME
+})
+
+export const previousFrame = () => ({
+    type: PREVIOUS_FRAME
 })
 
 export const setTaskInfo = (payload) => ({
@@ -181,7 +286,6 @@ export const setConnectedPeers = (payload) => ({
     payload
 })
 
-
 export const setFileLocation = (payload) => ({
     type: SET_FILE_LOCATION,
     payload
@@ -216,13 +320,13 @@ export const setNodeName = (payload) => ({
 
 export const setProviderTrust = (payload, init) => ({
     type: SET_PROV_TRUST,
-    payload: (payload / 50) - 1,
+    payload: (payload / 100),
     init
 })
 
 export const setRequestorTrust = (payload, init) => ({
     type: SET_REQ_TRUST,
-    payload: (payload / 50) - 1,
+    payload: (payload / 100),
     init
 })
 
@@ -233,6 +337,11 @@ export const setNetworkProviderTrust = (payload) => ({
 
 export const setNetworkRequestorTrust = (payload) => ({
     type: SET_NET_REQ_TRUST,
+    payload
+})
+
+export const setTaskStats = (payload) => ({
+    type: SET_TASK_STATS,
     payload
 })
 
@@ -251,8 +360,18 @@ export const setPreview = (payload) => ({
     payload
 })
 
+export const updatePreviewLock = (payload) => ({
+    type: UPDATE_PREVIEW_LOCK,
+    payload
+})
+
 export const setOnboard = (payload) => ({
     type: ONBOARDING,
+    payload
+})
+
+export const setVersion = (payload) => ({
+    type: SET_GOLEM_VERSION,
     payload
 })
 
@@ -269,8 +388,13 @@ export const skipPortError = () => ({
     type: CONTINUE_WITH_PROBLEM
 })
 
-export const setEngineStatus = (payload) => ({
-    type: SET_GOLEM_ENGINE_STATUS,
+export const setGolemStatus = (payload) => ({
+    type: SET_GOLEM_STATUS,
+    payload
+})
+
+export const setPauseStatus = (payload) => ({
+    type: SET_GOLEM_PAUSE_STATUS,
     payload
 })
 
@@ -407,11 +531,6 @@ export const setCurrency = (payload) => ({
     payload
 })
 
-export const uploadFile = (payload) => ({
-    type: UPLOAD,
-    payload
-})
-
 export const setZoomRatio = (payload) => ({
     type: SET_ZOOM_RATIO,
     payload
@@ -419,6 +538,11 @@ export const setZoomRatio = (payload) => ({
 
 export const setNetworkInfo = (payload) => ({
     type: SET_NETWORK_INFO,
+    payload
+})
+
+export const toggleDeveloperMode = (payload) => ({
+    type: TOGGLE_DEVELOPER_MODE,
     payload
 })
 

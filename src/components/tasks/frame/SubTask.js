@@ -3,6 +3,9 @@ import ReactTooltip from 'rc-tooltip'
 
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
+const {ipcRenderer, remote} = window.electron;
+const {getConfig, dictConfig} = remote.getGlobal('configStorage')
+
 const UNDONE = 0
 const PROGRESS = 1
 const DONE = 2
@@ -34,14 +37,57 @@ function convertToSVGPoints(arr) {
 *
 * @description This function will be modified for the non-square shapes
 */
-function tooltipOffset(arr) {
-    let horizontalPoints = arrayColumn(arr, 0)
-    let maxHorizontalLength = Math.max(...horizontalPoints)
-    let minHorizontalLength = Math.min(...horizontalPoints)
-    let verticalPoints = arrayColumn(arr, 1)
-    let maxVerticalLength = Math.max(...verticalPoints)
-    let minVerticalLength = Math.min(...verticalPoints)
-    return [(maxHorizontalLength - minHorizontalLength) / 2, (maxVerticalLength - minVerticalLength) / 5]
+function tooltipOffset(arr, isDirTop) {
+    
+    const horizontalPoints = arrayColumn(arr, 0)
+    const maxHorizontalLength = Math.max(...horizontalPoints)
+    const minHorizontalLength = Math.min(...horizontalPoints)
+    
+
+    const verticalPoints = arrayColumn(arr, 1)
+    const maxVerticalLength = Math.max(...verticalPoints)
+    const minVerticalLength = Math.min(...verticalPoints)
+
+    /**
+     * @FIXME 
+     *
+     * if we gonna draw shape always thro edge to other edge we can keep lat 0
+     * but if we gonna draw more than one shape between two side edges we need to calculate 
+     * distance between absolute center and center of shape in this parameter.
+     *
+     * @example
+     * 
+     * +) center of screen & center of shape
+     * ---------------------
+     * = distance between is 0
+     * 
+     * |#################################|
+     * |                                 |
+     * |                +                |
+     * |                                 | 
+     * |#################################|
+     *
+     * @example
+     * 
+     * p) center of screen
+     * q) center of shape
+     * --------------------
+     * =  q - p is the offset ± is depend on direction
+     *
+     * |#################################|
+     * |         #                       |
+     * |    p    #      q                |
+     * |         #                       | 
+     * |#################################|
+     */
+    
+    const lat = 0
+    let lng = (maxVerticalLength - minVerticalLength) / 2
+
+    if(!isDirTop) // <-- if direction is 'bottom' we will calculate lng coordinate as minus to center tooltip into the shape.
+        lng  = -1 * lng;
+
+    return [lat, lng]
 }
 
 const subTaskData = {
@@ -53,10 +99,10 @@ const subTaskData = {
 }
 
 const statusDict = Object.freeze({
-    NOTSTARTED: 'Not started',
-    COMPUTING: 'Computing',
+    STARTING: 'Starting',
+    DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
-    ABORTED: 'Aborted'
+    FAILURE: 'Aborted'
 })
 
 let statusClassDict = {
@@ -74,17 +120,25 @@ export default class SubTask extends React.Component {
 
     componentDidMount() {
         const {data, ratio, subtaskList, offset} = this.props
-        console.info("this.props.offset", offset)
-        console.info("data, ratio, subtaskList", data, ratio, subtaskList)
     }
 
-    handleResubmit(id) {
+    _handleResubmit(id) {
         this.props.restartSubtask(id)
     }
 
+    _handleOpenFile(path){
+        
+        ipcRenderer.send('open-file', path)
+    }
 
-    drawLine() {
-        const {data, ratio, subtaskList} = this.props
+    /**
+     * @description This function will draw shapes with given corner points 
+     * 
+     * @param  isDevMode {Boolean}
+     * @return {corner points of the drawings [Array]}
+     */
+    drawLine(isDevMode) {
+        const {data, ratio, subtaskList, subtaskAmount} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
                 key: anchestorKey,
@@ -96,27 +150,67 @@ export default class SubTask extends React.Component {
             }
         });
 
+        function _taskStatus(status){
+            
+            switch(status){
+                case statusDict.FINISHED:
+                return <p className="status__tooltip">Completed</p>;
+
+                case statusDict.DOWNLOADING:
+                return <p className="status__tooltip">Downloading</p>;
+
+                case statusDict.STARTING:
+                return <p className="status__tooltip">Starting</p>;
+
+                case statusDict.FAILURE:
+                return <p className="status__tooltip">Failed</p>;
+
+                default:
+                return <p className="status__tooltip">Waiting</p>;
+            }
+        }
+
+        function _counter(start){
+            
+            return window.performance.now() - start
+        }
+
         return path
             .sort((a, b) => {
-                let verticalPointA = arrayColumn(a.value, 1)[0]
-                let verticalPointB = arrayColumn(b.value, 1)[0]
+                const verticalPointA = arrayColumn(a.value, 1)[0]
+                const verticalPointB = arrayColumn(b.value, 1)[0]
                 return verticalPointA - verticalPointB
             })
             .map((item, index) => {
-                let subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                
+                const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                const isDirectionTop = index + 1 > subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
-                overlayClassName="tooltip-frame"
-                placement={index === path.length - 1 ? 'top' : 'bottom' }
+                overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
+                placement={isDirectionTop ? 'top' : 'bottom' }
                 trigger={['hover']}
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
-                        {subtask.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                        <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR((subtask.time_started * (10 ** 3)).toFixed(0))}</p>
-                        <button type="button" onClick={this.handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
+                        <div className="developer_view__tooltip">
+                            <div>
+                                {_taskStatus(subtask.status)}
+                                <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
+                                {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
+                                {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
+                            </div>
+                            <div>
+                                {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                            </div>
+                        </div>
+                        {isDevMode && <div className="logs__tooltip">
+                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
+                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
+                        </div>}
+                        <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
                     </div>}
                 align={{
-                    offset: tooltipOffset(item.value),
+                    offset: tooltipOffset(item.value, isDirectionTop),
                 }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
                 points={convertToSVGPoints(item.value)}/>
@@ -125,7 +219,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
-        const {offset} = this.props
+        const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
             customStyle = {
@@ -139,7 +233,7 @@ export default class SubTask extends React.Component {
         return (
             <div id="frameSVG" style={customStyle}>
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine()}
+            {this.drawLine(isDeveloperMode)}
         </svg>
       </div>
         );

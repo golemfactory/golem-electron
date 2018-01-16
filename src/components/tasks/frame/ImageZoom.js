@@ -49,23 +49,43 @@ export class ImageZoom extends React.Component {
     }
 
     componentDidMount() {
-        this.initSeaDragon()
+        this.initSeaDragon(OpenSeaDragon)
     }
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.isSubtaskShown !== this.props.isSubtaskShown && !!nextProps.isSubtaskShown) {
             this.viewer.viewport.goHome(true)
         }
+
+        if (nextProps.image !== this.props.image) {
+            loadImage(nextProps.image).then(data => {
+                this.viewer.addTiledImage({
+                    tileSource: {
+                        type: nextProps.type,
+                        levels: [{
+                            url: nextProps.image,
+                            height: data.naturalHeight,
+                            width: data.naturalWidth
+                        }]
+                    },
+                    index: 0,
+                    preload: true,
+                    replace: true
+                });
+            })
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
+        if (nextProps.image !== this.props.image)
+            return true
         return false
     }
 
     /**
      * [initSeaDragon func. inits OpenSeaDragon object to pan, zoom image]
      */
-    initSeaDragon() {
+    initSeaDragon(OSD) {
         let {id, image, type} = this.props
         loadImage(image).then(data => {
             let isVertical = false
@@ -74,7 +94,7 @@ export class ImageZoom extends React.Component {
             if ((imageInfo.width / imageInfo.height) < 1.4601941747572815) {
                 isVertical = true
             }
-            viewer = this.viewer = OpenSeadragon({
+            viewer = this.viewer = OSD({
                 id: id,
                 //visibilityRatio: 1,
                 constrainDuringPan: false,
@@ -85,7 +105,7 @@ export class ImageZoom extends React.Component {
                 zoomOutButton: 'zoom-out',
                 homeButton: 'reset',
                 //fullPageButton: 'full-page',
-                wrapVertical: isVertical,
+                //wrapVertical: isVertical, <-- be careful while using this feature. cause of repeated image issue for higher than 35:24 ratio
                 nextButton: 'next',
                 previousButton: 'previous',
                 showNavigator: false,
@@ -104,7 +124,6 @@ export class ImageZoom extends React.Component {
             })
 
             viewer.addHandler('open', (item) => {
-                console.info('open')
                 setTimeout(() => {
                     this.viewer.viewport.goHome(true)
                     this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);

@@ -32,6 +32,7 @@ module.exports = {
         publicPath: '/static/'
     },
     plugins: [
+        new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.HotModuleReplacementPlugin(),
         new HtmlWebpackPlugin({
             alwaysWriteToDisk: true,
@@ -88,7 +89,7 @@ module.exports = {
                 use: ["file-loader"]
             },
             {
-                test: /\.jpe?g$|\.gif$|\.png$|\.svg$/,
+                test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.json$/,
                 use: ["file-loader"]
             }]
     }

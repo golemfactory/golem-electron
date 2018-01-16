@@ -1,6 +1,9 @@
 import { dict } from './../../actions'
 
-const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY} = dict
+const {SET_FRAMES_WITH_SUBTASKS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, 
+    SET_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_FRAME_ID, 
+    SET_FRAME_INDEX, NEXT_FRAME, PREVIOUS_FRAME, CLEAR_TASK_PLAIN} = dict
+
 
 const initialState = {
     frameList: [],
@@ -9,7 +12,9 @@ const initialState = {
     previewList: {
         size: 0
     },
-    subtasksList: []
+    subtasksList: [],
+    frameIndex: 0,
+    frameId: 0
 }
 
 const setSingleFrames = (state = initialState, action) => {
@@ -41,6 +46,37 @@ const setSingleFrames = (state = initialState, action) => {
                 ...action.payload,
                 size: Object.keys(action.payload).length
             },
+        });
+
+    case SET_FRAME_ID:
+        return Object.assign({}, state, {
+            frameId: action.payload
+        });
+
+    case SET_FRAME_INDEX:
+        return Object.assign({}, state, {
+            frameIndex: action.payload
+        });
+
+    case NEXT_FRAME:
+        const nextIndex = Number(state.frameIndex) + 1;
+        const nextKeys = Object.keys( state.previewList );
+        return Object.assign({}, state, {
+            frameIndex: nextIndex,
+            frameId: nextKeys[nextIndex]
+        });
+
+    case PREVIOUS_FRAME:
+        const prevIndex = Number(state.frameIndex) - 1;
+        const prevKeys = Object.keys( state.previewList );
+        return Object.assign({}, state, {
+            frameIndex: prevIndex,
+            frameId: prevKeys[prevIndex]
+        });
+
+    case CLEAR_TASK_PLAIN:
+        return Object.assign({}, state, {
+            subtasksList: []
         });
 
     default:

@@ -14,14 +14,26 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
+const radioTypes = Object.freeze({
+    blend: 'Blender',
+    lxs: 'LuxRender'
+})
+
 export class NewTask extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             name: 'Golem Task',
-            type: null
+            type: radioTypes[this.props.params.type] || null
         }
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if (nextProps.params.type !== this.props.params.type)
+            this.setState({
+                type: radioTypes[nextProps.params.type] || null
+            })
     }
 
     componentWillUnmount() {
@@ -40,12 +52,26 @@ export class NewTask extends React.Component {
         });
     }
 
+    checkInputValidity(e) {
+        const {taskNameHint, nextButton} = this.refs
+        e.target.checkValidity();
+        if (e.target.validity.valid){
+            taskNameHint.style.display = "none";
+            nextButton.disabled = false
+        }
+        else{
+            taskNameHint.style.display = "block";
+            nextButton.disabled = true
+        }
+    }
+
     /**
      * [_handleNameInput funcs. updates name of the new task]
      * @param  {Event}  e
      */
     _handleNameInput(e) {
         //console.log(e.target.value)
+        ::this.checkInputValidity(e)
         this.setState({
             name: e.target.value
         })
@@ -85,11 +111,12 @@ export class NewTask extends React.Component {
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
                     <div className="container-name__new-task">
                         <label>Task Name</label>
-                        <input type="text" value={name} autoFocus onChange={::this._handleNameInput} required/>
+                        <span ref="taskNameHint" className="hint__task-name">{name.length < 4 ? "Task name should consists of at least 4 characters." : "Task name can contain; letter, number, space between characters, dot, dash and underscore."}</span>
+                        <input type="text" value={name} pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$" minLength={4} maxLength={24} autoFocus onChange={::this._handleNameInput} required/>
                     </div>
                     <div className="container-type__new-task">
                         <label>Task Type</label>
-                        <div className="container-radio__new-task" onChange={::this._handleTypeRadio}>
+                        <div ref="radioCloud" className="container-radio__new-task" onChange={::this._handleTypeRadio}>
                             <div className="radio-item">
                                 <span className="icon-blender">
                                     <span className="path1"/>
@@ -97,12 +124,12 @@ export class NewTask extends React.Component {
                                     <span className="path3"/>
                                     <span className="path4"/>
                                 </span>
-                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" required/>
+                                <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
                             </div>
                             <div className="radio-item">
                                 <span className="icon-luxrender"/>
-                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender"/>
+                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" checked={type === radioTypes.lxs} readOnly/>
                                 <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
                             </div>
                             <div className="radio-item">
@@ -116,7 +143,7 @@ export class NewTask extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button type="submit" className="btn--primary" disabled={!type}>Next</button>
+                        <button ref="nextButton" type="submit" className="btn--primary" disabled={!type}>Next</button>
                     </div>
                 </form>
                 {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}

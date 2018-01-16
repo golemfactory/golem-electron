@@ -30,8 +30,8 @@ const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
     autoLaunch: state.input.autoLaunch,
-    connectedPeers: state.realTime.connectedPeers,
     connectionProblem: state.info.connectionProblem,
+    golemStatus: state.realTime.golemStatus,
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn
 })
@@ -39,6 +39,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
+
+/*############# HELPER FUNCTIONS ############# */
+
+function isGolemReady(status) {
+    return status === "Ready"
+}
 
 
 /**
@@ -170,7 +176,7 @@ export class MainFragment extends React.Component {
 
     /**
      * [_handleTab to change active class of selected tab title]
-     * 
+     *
      * @param   {Object}     elm     [target element]
      */
     _handleTab(elm) {
@@ -185,7 +191,7 @@ export class MainFragment extends React.Component {
     }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectedPeers, connectionProblem, isEngineOn} = this.props
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
         return (
             <div className="content__main">
@@ -208,10 +214,10 @@ export class MainFragment extends React.Component {
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <div className="section__actions">
                 <div className="section__actions-status">
-                    <span className={`icon-status-dot ${!connectionProblem ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
-                    <span>{!connectionProblem ? `${connectedPeers} ${connectedPeers > 1 ? 'Nodes' : 'Node'}` : 'No Connection' }</span>
+                    <span className={`icon-status-dot ${!connectionProblem && isGolemReady(golemStatus.status) ? 'icon-status-dot--active' : 'icon-status-dot--warning'}`}/>
+                    <span>{`${golemStatus.message}`}</span>
                 </div>
-                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
             <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
             </div>

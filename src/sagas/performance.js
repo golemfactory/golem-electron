@@ -7,7 +7,37 @@ import { config, _handleRPC } from './handler'
 
 const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK} = dict
 
+const products = Object.freeze({
+        BLENDER: 'estimated_blender_performance',
+        LUXRENDER: 'estimated_lux_performance',
+        DEFAULT: 'estimated_performance'
+    })
 
+
+export function callBenchmarkOnStartup(session){
+    return new Promise((resolve, reject) => {
+        function on_update_benchmark(args) {
+            let updateBenchmark = args[0];
+            let bencmarks = {};
+            Object.keys(updateBenchmark).forEach( item => {
+                let product = products[item]
+                if(product)
+                    bencmarks[product] = updateBenchmark[item]
+            })
+            resolve({
+                type: SET_PERFORMANCE_CHARTS,
+                payload: bencmarks
+            })
+        }
+        _handleRPC(on_update_benchmark, session, config.GET_BENCHMARK_RESULT_RPC)
+    })
+}
+
+export function* benchmarkBase(session){
+    const action = yield call(callBenchmarkOnStartup, session);
+    //console.log("SETTINGS_ACTION", actionList)
+    yield put(action)
+}
 /**
  * [callTrust func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
@@ -26,11 +56,13 @@ export function fetchEnvironments(session) {
 }
 
 export function callBenchmark(benchmarkName, session) {
+  
     let products = {
         BLENDER: 'estimated_blender_performance',
         LUXRENDER: 'estimated_lux_performance',
         DUMMYPOW: 'estimated_dummytask_performance'
     }
+    
     return new Promise((resolve, reject) => {
         function on_benchmark(args) {
             let benchmark = args[0];
@@ -48,7 +80,8 @@ export function callBenchmark(benchmarkName, session) {
 }
 
 export function* fireBase(session) {
-    const environments = yield call(fetchEnvironments, session)
+    let environments = yield call(fetchEnvironments, session)
+    environments.push("DEFAULT") // -> Hardcoded to call cpu benchmark
     for (let i = 0; i < environments.length; i++) {
         const action = yield call(callBenchmark, environments[i], session)
         yield action && put(action)
@@ -61,5 +94,6 @@ export function* fireBase(session) {
  * @yield   {Object}            [Action object]
  */
 export function* performanceFlow(session) {
+    yield fork(benchmarkBase, session)
     yield takeEvery(RECOUNT_BENCHMARK, fireBase, session)
 }

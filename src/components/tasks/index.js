@@ -34,8 +34,7 @@ export class TaskPanel extends React.Component {
             deleteModal: false,
             deleteCallback: null,
             previewId: null,
-            previewSrc: null,
-            frameCount: null
+            previewSrc: null
         }
     }
 
@@ -52,17 +51,24 @@ export class TaskPanel extends React.Component {
         setTimeout(endLoading, 3000)
     }
 
+
+    componentWillUnmount() {
+        this.props.actions.updatePreviewLock({
+            enabled: false,
+            id: null,
+            frameCount: null
+        })
+    }
+
     /**
      * [_setPreview func. update related states to present preview]
      * @param {Any}         options.id         [Id of selected task]
      * @param {String}      options.src        [Preview url of selected task]
-     * @param {Number}      options.frameCount [Frame amount of selected task]
      */
-    _setPreview({id, src, frameCount}) {
+    _setPreview({id, src}) {
         this.setState({
             previewId: id,
-            previewSrc: src,
-            frameCount
+            previewSrc: src
         })
     }
 
@@ -93,7 +99,7 @@ export class TaskPanel extends React.Component {
 
 
     render() {
-        const {deleteModal, deleteProps, previewId, previewSrc, frameCount} = this.state
+        const {deleteModal, deleteProps, previewId, previewSrc, frameCount, psEnabled} = this.state
         const {actions, preview, expandedPreview} = this.props
 
         return (
@@ -101,16 +107,15 @@ export class TaskPanel extends React.Component {
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                         <DropZone>
                             <div className="section__table">
-                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview}/>
+                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview} previewId={previewId}/>
                             </div>
                         </DropZone>
-                        {preview && <div className="section__preview">
-                             <Preview id={previewId} src={previewSrc}/> 
-                        </div>}
-                        {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     </div>
-
-                    <Footer {...this.props} id={previewId} frameCount={frameCount} setPreviewExpanded={actions.setPreviewExpanded}/>
+                    {preview && <div className="section__preview">
+                        <Preview id={previewId} src={previewSrc}/> 
+                    </div>}
+                    {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
+                    <Footer {...this.props}  setPreviewExpanded={actions.setPreviewExpanded}/>
                 </div>
         )
     }

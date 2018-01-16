@@ -1,6 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import { CSSTransitionGroup } from 'react-transition-group'
 
 import * as Actions from '../../actions'
 import Onboarding from './../onboarding';
@@ -29,6 +30,19 @@ class OnboardIndex extends React.Component {
         }
     }
 
+    componentDidMount() {
+        this._keypressListener = event => {
+            if(event.key === "Enter"){
+                this._handleNext.call(this)
+            }
+        }
+        document.addEventListener("keypress", this._keypressListener);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener("keypress", this._keypressListener);
+    }
+
     _setNodeName(name) {
         this.setState({
             nodeName: name
@@ -41,22 +55,23 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        let step
+        let step;
+        let key = Symbol(id).toString();
         switch (id) {
         case 1:
-            step = <Step1/>
+            step = <Step1 key={key}/>
             break;
         case 2:
-            step = <Step2 setNodeName={::this._setNodeName}/>
+            step = <Step2 setNodeName={::this._setNodeName}key={key}/>
             break;
         case 3:
-            step = <Step3/>
+            step = <Step3 key={key}/>
             break;
         case 4:
-            step = <Step4/>
+            step = <Step4 key={key}/>
             break;
         case 5:
-            step = <Step5/>
+            step = <Step5 key={key}/>
             break;
         // case 6:
         //     step = <Step6/>
@@ -90,7 +105,7 @@ class OnboardIndex extends React.Component {
             })
         } else {
             const {actions} = this.props
-            actions.setOnboard(false)
+            actions.setOnboard(true)
         }
     }
 
@@ -99,12 +114,23 @@ class OnboardIndex extends React.Component {
         const {currentStep} = this.state;
         return (
             <div className="content__onboarding">
-                {::this.shownStep(currentStep)}
+                <CSSTransitionGroup
+                  transitionName="pageSwap"
+                  transitionEnterTimeout={600}
+                  transitionLeaveTimeout={600}>
+                    {::this.shownStep(currentStep)}
+                </CSSTransitionGroup>
                 <div className="step-control__onboarding">
+                {currentStep < 5 ?
                    <div>
-                        {currentStep < 5 ? <span>{currentStep} of 5</span> : <span>Get Started</span>}
+                        <span>{currentStep} of 5</span>
                         <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
                    </div>
+                   :
+                   <div>
+                       <button className="btn btn--outline" onClick={::this._handleNext}>Get Started</button>
+                   </div>
+               }
                 </div>
             </div>
         )

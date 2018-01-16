@@ -1,10 +1,16 @@
 import { dict } from './../actions'
-import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
+const {remote} = window.electron;
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
-const {SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_ENGINE_STATUS} = dict
+const {SET_GOLEM_VERSION, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
+    version: {
+        number: "",
+        message: "Connection is not established yet.",
+        error: false
+    },
     networkInfo: {},
     fileCheckModal: {
         status: false,
@@ -16,6 +22,13 @@ const initialState = {
 //console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
+    case SET_GOLEM_VERSION:
+        return Object.assign({}, state, {
+            version: {
+                ...action.payload
+            }
+        });
+
     case SET_NETWORK_INFO:
         setConfig(GOLEM_STARTER, true)
         return Object.assign({}, state, {
@@ -37,7 +50,7 @@ const setInfo = (state = initialState, action) => {
             connectionProblem: action.payload
         });
 
-    case SET_GOLEM_ENGINE_STATUS:
+    case SET_GOLEM_PAUSE_STATUS:
         setConfig(GOLEM_STARTER, action.payload)
         return Object.assign({}, state, {
             isEngineOn: action.payload

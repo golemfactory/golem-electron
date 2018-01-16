@@ -1,17 +1,19 @@
 import { dict } from './../actions'
-import { setConfig, getConfig, dictConfig } from './../utils/configStorage'
+const {remote} = window.electron
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {ONBOARDING} = dict
-const {SHOW_ONBOARD} = dictConfig
+const {HIDE_ONBOARD} = dictConfig
+//setConfig(HIDE_ONBOARD, false)
 const initialState = {
-    showOnboard: (getConfig(SHOW_ONBOARD) === undefined || getConfig(SHOW_ONBOARD) === null) ? true : getConfig(SHOW_ONBOARD),
+    showOnboard: !getConfig(HIDE_ONBOARD),
 }
 const setOnboard = (state = initialState, action) => {
     switch (action.type) {
     case ONBOARDING:
-        setConfig(SHOW_ONBOARD, action.payload)
+        setConfig(HIDE_ONBOARD, action.payload)
         return Object.assign({}, state, {
-            showOnboard: action.payload
+            showOnboard: !action.payload
         });
 
     default:

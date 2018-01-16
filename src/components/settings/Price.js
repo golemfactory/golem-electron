@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 
+const ETH_DENOM = 10 ** 18;
+
 const mapStateToProps = state => ({
     providerMinPrice: state.price.providerMinPrice,
     requestorMaxPrice: state.price.requestorMaxPrice,
@@ -25,7 +27,7 @@ export class Price extends React.Component {
      * @param  {Event}      evt
      */
     _handleMinPriceChange(evt) {
-        this.props.actions.setProviderMinPrice(Number(evt.target.valueAsNumber) * (10 ** 18))
+        this.props.actions.setProviderMinPrice(Number(evt.target.valueAsNumber) * ETH_DENOM)
     }
 
     /**
@@ -33,7 +35,7 @@ export class Price extends React.Component {
      * @param  {Event}      evt
      */
     _handleMaxPriceChange(evt) {
-        this.props.actions.setRequestorMaxPrice(Number(evt.target.valueAsNumber) * (10 ** 18))
+        this.props.actions.setRequestorMaxPrice(Number(evt.target.valueAsNumber) * ETH_DENOM)
     }
 
     render() {
@@ -42,12 +44,12 @@ export class Price extends React.Component {
             <div className="content__price">
                 <div className="section__price">
                     <span>Provider Minimum</span>
-                    <input type="number" min="0" step={0.1} value={Number(providerMinPrice) / (10 ** 18)} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
+                    <input type="number" min="0" step={0.1} value={Number(providerMinPrice) / ETH_DENOM} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
-                    <input type="number" min="0" step={0.1} value={Number(requestorMaxPrice) / (10 ** 18)} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
+                    <input type="number" min="0" step={0.1} value={Number(requestorMaxPrice) / ETH_DENOM} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
                     <span>GNT per hour</span>
                 </div>
             </div>

@@ -19,11 +19,28 @@
     height: 100%;
     overflow-y: overlay;
     box-sizing: border-box;
+    transform: translateZ(0);
     &--with-preview {
         margin-bottom: 292px + 59px;
-        @media screen and (max-height: 725px + 59px) {
+        @media screen and (max-height: 749px + 59px) {
             margin-bottom: 0;
+        }
+    }
+}
+
+.win .container__task-panel {
+    &--with-preview {
+        @media screen and (max-height: 749px + 59px) {
             height: 319px
+        }
+    }
+}
+
+.mac .container__task-panel,
+.linux .container__task-panel {
+    &--with-preview {
+        @media screen and (max-height: 749px + 59px) {
+            height: 342px
         }
     }
 }

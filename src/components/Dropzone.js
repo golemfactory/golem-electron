@@ -5,14 +5,20 @@ import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
 
 import * as Actions from './../actions'
-const {remote} = window.require('electron');
+const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
 
 
 const ADD_TASK_NEXT_STEP = '/add-task/type'
 
+const classDict = Object.freeze({
+    SHOW: 'drop-zone--show',
+    HIDE: 'drop-zone--hide'
+})
+
 const mapStateToProps = state => ({
+    isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal
 })
@@ -29,7 +35,7 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -39,29 +45,41 @@ export class DropZone extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        this.setState({
-            className: nextProps.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
-        })
+        if(nextProps.taskList && (nextProps.taskList.length !== this.props.taskList.length))
+            this.setState({
+                className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+            })
     }
 
     componentDidMount() {
-        let dropzone = this.refs.dropzone
-        let dragbox = this.refs.dragbox
+        const {dropzone, dragbox, infobox} = this.refs
+
         dropzone.addEventListener('mouseup', this._onDragLeave);
         dropzone.addEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
-        dragbox.addEventListener('dragleave', this._onDragLeave);
-        dropzone.addEventListener('drop', this._onDrop);
+
+        if(dragbox){
+            dragbox.addEventListener('dragleave', this._onDragLeave);
+            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
+        } else {
+            infobox.addEventListener('dragleave', this._onDragLeave);
+            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
+        }
     }
 
     componentWillUnmount() {
-        let dropzone = this.refs.dropzone
-        let dragbox = this.refs.dragbox
+        const {dropzone, dragbox, infobox} = this.refs
+
         dropzone.removeEventListener('mouseup', this._onDragLeave);
         dropzone.removeEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
-        dragbox.removeEventListener('dragleave', this._onDragLeave);
         dropzone.removeEventListener('drop', this._onDrop);
+
+        if(dragbox){
+            dragbox.removeEventListener('dragleave', this._onDragLeave);
+        } else {
+            infobox.removeEventListener('dragleave', this._onDragLeave);
+        }
     }
 
     /**
@@ -71,7 +89,7 @@ export class DropZone extends React.Component {
      */
     _onDragEnter(e) {
         this.setState({
-            className: 'drop-zone--show'
+            className: classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -96,7 +114,7 @@ export class DropZone extends React.Component {
      */
     _onDragLeave(e) {
         this.setState({
-            className: this.props.taskList.length > 0 ? 'drop-zone--hide' : 'drop-zone--show'
+            className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         });
         e.stopPropagation();
         e.preventDefault();
@@ -108,8 +126,40 @@ export class DropZone extends React.Component {
      * @param       {Object}    e   [event]
      * @return      {boolean}
      */
-    _onDrop(e) {
+    _onDrop(info = false, e) {
         e.preventDefault();
+
+        if(info){ // in case of golem not connected
+            e.stopPropagation();
+
+            this.setState({
+                className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+            });
+
+            return false;
+        }
+
+        /**
+         * [checkDominantType function checks common item in given array, if there's one common returns it, if more than one with equal amounts returns negative boolean]
+         * @param  {[type]}      files      [Array of extension]
+         * @return {Any}                    [Common item or negative boolean]
+         */
+        const checkDominantType = function(files) {
+            const isBiggerThanOther = function(element, index, array) {
+                return element[1] !== array[0][1];
+            }
+            const tempFiles = [...files.reduce((total, current) => total.set(current, (total.get(current) || 0) + 1), new Map)]
+            const anyDominant = tempFiles.some(isBiggerThanOther)
+
+            if (!anyDominant && tempFiles.length > 1) {
+                return false
+            } else {
+                return tempFiles
+                    .sort((a, b) => b[1] - a[1])
+                    .map(item => item[0])[0];
+            }
+        }
+
         let files = e.dataTransfer.files;
         //console.log('Files dropped: ', files.length);
         // Upload files
@@ -121,8 +171,9 @@ export class DropZone extends React.Component {
                     let mergedList = [].concat.apply([], item);
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious));
                     let masterFiles = mergedList.filter(({master}) => (master));
+                    let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
                     //console.log("masterFiles", masterFiles);
-                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(ADD_TASK_NEXT_STEP)
+                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,
@@ -147,7 +198,7 @@ export class DropZone extends React.Component {
         // }
 
         this.setState({
-            className: 'drop-zone--hide'
+            className: classDict.HIDE
         });
 
 
@@ -205,14 +256,24 @@ export class DropZone extends React.Component {
 
 
     render() {
+        const {isEngineOn} = this.props
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                <div ref="dragbox" className={this.state.className}>
-                    <p><span className="icon-upload"/></p>
-                    <span>Drop files here to create a new task</span>
-                    <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
-                </div>
+                { isEngineOn ?
+                    <div ref="dragbox" className={this.state.className}>
+                        <p><span className="icon-upload"/></p>
+                        <span>Drop files here to create a new task</span>
+                        <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
+                    </div>
+                    :
+                    <div ref="infobox" className={`${this.state.className} no-drop`}>
+                        <div className="container-icon">
+                            <span className="icon-warning"/>
+                        </div>
+                        <span>Before drop your files, golem needs to be started.</span>
+                    </div>
+                }
             </div>
         );
     }

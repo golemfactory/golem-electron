@@ -10,6 +10,12 @@ import * as Actions from '../../../actions'
 import SingleFrame from './Single'
 import { timeStampToHR } from './../../../utils/secsToHMS'
 
+const routesDict = Object.freeze({
+    COMPLETE: 'complete',
+    ALL: 'all',
+    SINGLE: 'single'
+})
+
 const statusDict = Object.freeze({
     NOTSTARTED: 'Not started',
     COMPUTING: 'Computing',
@@ -18,23 +24,17 @@ const statusDict = Object.freeze({
     WAITING: 'Waiting'
 })
 
-let statusClassDict = {
+const statusClassDict = Object.freeze({
     'Not started': 'frame--undone',
     'Computing': 'frame--progress',
     'Finished': 'frame--done',
     'Aborted': 'frame--error'
-}
-
-Object.freeze(statusClassDict)
+})
 
 /*################### HELPER FUNCTIONS #################*/
 
 function sortById(a, b) {
-    if (Number(a.data.id) > Number(b.data.id))
-        return 1;
-    if (Number(a.data.id) < Number(b.data.id))
-        return -1;
-    return 0;
+    return a.data.id - b.data.id
 }
 
 
@@ -55,13 +55,16 @@ export class All extends React.Component {
 
     /**
      * [_handleClick func. will redirect related single frame]
-     * @param       {[type]} item       [completed frame item]
-     * @param       {[type]} id         [description] //TODO we gonna delete this arg. cuz item arg. will be enough to get id.
+     * @param       {[type]} item          [clicked item]
+     * @param       {[type]} index         [index of clicked item]
      * @return nothing
      */
-    _handleClick(item, id, frameID) {
+    _handleClick(item, index) {
+        const {setFrameId, setFrameIndex} = this.props.actions
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
-            hashHistory.push(`/preview/single/${id}/${frameID}`)
+            setFrameId(item.id)
+            setFrameIndex(index)
+            hashHistory.push(`/preview/${routesDict.SINGLE}/`)
         }
     }
 
@@ -99,7 +102,7 @@ export class All extends React.Component {
     getStyles() {
         const {show, frameList} = this.props
         return frameList.filter((item, index) => {
-            return show == 'complete' ? item[1][0] === statusDict.FINISHED : true
+            return show == routesDict.COMPLETE ? item[1][0] === statusDict.FINISHED : true
         })
             .map((item, i) => {
                 return {
@@ -121,7 +124,7 @@ export class All extends React.Component {
                     }
                 };
             })
-            .sort(this.sortById);
+            .sort(sortById);
     }
 
     /**
@@ -151,6 +154,11 @@ export class All extends React.Component {
             }),
         };
     }
+
+    _getIndexById(_id){
+        const {frameList} = this.props;
+        return frameList.findIndex(obj => obj[0] === _id)
+    }
     // show == 'complete' && 
     render() {
         const {show} = this.props
@@ -170,13 +178,13 @@ export class All extends React.Component {
                     mouseEnterDelay={1}
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR((data.created * (10 ** 3)).toFixed(0)) : 'Not started'}</p>
+                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
                             <button onClick={this._handleResubmit.bind(this, data, data.id)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],
                     }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, index, data.id)} onKeyDown={(event) => {
+                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} onKeyDown={(event) => {
                         event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
                 </ReactTooltip>

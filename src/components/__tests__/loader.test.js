@@ -3,7 +3,7 @@ jest.unmock('../hoc/Loader')
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
-import TestUtils from 'react-addons-test-utils'
+import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
 import { LoadingComponent, Loading, Loader } from '../hoc/Loader'
 import sinon from 'sinon'
@@ -19,11 +19,9 @@ describe('LoadingComponent Wrapper', () => {
         WrapperComponent;
 
     beforeEach(() => {
-        MockMainComponent = React.createClass({
-            render: function() {
+        MockMainComponent = function Fake() {
                 return (<div>Fake component</div>);
-            },
-        })
+            }
 
         WrapperComponent = LoadingComponent(MockMainComponent)[0];
         wrapper = shallow(<Provider store={ mockStore({})}>
@@ -42,11 +40,9 @@ describe('Loader', () => {
     let Loader;
 
     beforeEach(() => {
-        MockMainComponent = React.createClass({
-            render: function() {
+        MockMainComponent = function Fake() {
                 return (<div>Fake component</div>);
-            },
-        })
+            }
 
         Loader = LoadingComponent(MockMainComponent, ['BLENDER_LOADER'])[1]
     });
@@ -121,10 +117,6 @@ describe('Loading', () => {
         expect(wrapper.find('#stage').length).toBe(1)
     });
 
-    it('should render a <Motion/> component for animation', () => {
-        const {wrapper} = setup()
-        expect(wrapper.find('Motion').length).toBe(1)
-    });
 
     it('should return style with runAnim', () => {
         const style = {

@@ -1,3 +1,6 @@
+const {remote} = window.electron;
+const log = remote.require('./electron/debug_handler.js')
+
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
     WS_URL: 'ws://127.0.0.1:61000/ws',
@@ -6,8 +9,6 @@ export let config = Object.freeze({
     COUNTER_CH: 'com.golem.oncounter',
     BLENDER_CH: 'com.golem.blender',
     PREVIEW_CH: 'com.golem.preview',
-    UPLOAD_CH: 'com.golem.upload.on_progress',
-    LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
     UPDATE_SETTINGS_RPC: 'env.opts.update',
@@ -47,7 +48,6 @@ export let config = Object.freeze({
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
-    RUN_TEST_TASK_RPC: 'comp.tasks.check',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
@@ -62,6 +62,7 @@ export let config = Object.freeze({
     ENABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     DISABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     RUN_BENCHMARK_RPC: 'comp.environment.benchmark',
+    GET_BENCHMARK_RESULT_RPC: 'comp.environment.performance',
     //Payment
     BALANCE_RPC: 'pay.balance',
     PAYMENTS_RPC: 'pay.payments',
@@ -69,10 +70,13 @@ export let config = Object.freeze({
     INCOME_RPC: 'pay.incomes',
     BALANCE_CH: 'evt.pay.balance',
     //General
+    VERSION_RPC: 'golem.version',
     QUIT_RPC: 'ui.quit',
-    LOCK_CONFIG_CH: 'evt_lock_config',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
+    LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
+    GOLEM_STATUS_RPC: 'golem.status',
+    GOLEM_STATUS_CH: 'evt.golem.status',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',
@@ -122,7 +126,7 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err, details, arr.join())
         }
     }
     _session.unsubscribe(_channel, cb)
@@ -140,7 +144,7 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) =
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.log(`Fetch ${_rpc_address} failed!`, err, details, arr.join());
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
         }
     })
 }

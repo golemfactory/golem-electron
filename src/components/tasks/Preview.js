@@ -26,32 +26,10 @@ export class Preview extends React.Component {
         }
     }
 
-    // componentWillUpdate(nextProps, nextState) {
-    //     const {id, taskList} = this.props
-    //     if (id) {
-    //         let nextTask = nextProps.taskList.filter((item => item.id === id
-    //         ))[0]
-    //         let task = taskList.filter((item => item.id === id
-    //         ))[0]
-    //         if (!!task && !!nextTask) {
-    //             if (task.progress !== nextTask.progress || this.state.previewSRC === null || nextTask.preview !== this.state.previewSRC) {
-    //                 let preview = nextProps.taskList.filter((item) => item.id === id)[0].preview
-    //                 this.setState({
-    //                     previewSRC: preview
-    //                 })
-    //             }
-    //         }
-    //     }
-    // }
-
-    // shouldComponentUpdate(nextProps, nextState) {
-    //     return !!this.props.id
-    // }
-
-
     render() {
         const {id, src, taskList} = this.props
-        let preview = id && taskList.filter((item) => item.id === id)[0].preview
+        let task = !!id && taskList.filter((item) => item.id === id)[0]
+        let preview = !!task && task.preview
         const {previewSRC} = this.state
 
         return (
