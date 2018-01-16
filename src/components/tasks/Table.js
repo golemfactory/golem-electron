@@ -39,7 +39,7 @@ function shouldPSEnabled(_item){
             return (_item.status == status.COMPUTING                        || 
                     _item.status == status.FINISHED                         || 
                     (_item.status == status.TIMEOUT && _item.progress > 0)  ||
-                    _item.status == status.RESTART)
+                     _item.status == status.RESTART && _item.progress > 0)
         }
 
 /**
