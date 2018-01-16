@@ -4,6 +4,7 @@ const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
 var mkdirp = require('mkdirp');
+const semver = require('semver')
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -400,4 +401,8 @@ exports.getDefaultLocation = function() {
     if (!fs.existsSync(_location))
         return createLocationPath(_location)
     return _location
+}
+
+exports.checkUpdate = function(_old, _new){
+    return semver.diff(_new, _old)
 }

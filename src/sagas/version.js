@@ -5,7 +5,7 @@ import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 import TimeoutPromise from './timeout';
 
 
-const {SET_GOLEM_VERSION} = dict
+const {SET_GOLEM_VERSION, SET_LATEST_VERSION} = dict
 const TEMPLATE = "Brass Golem v"
 
 /**
@@ -68,11 +68,12 @@ export function subscribeUpdate(session) {
     return eventChannel(emit => {
         function on_update(args) {
             let update = args[0];
-            console.log("update", update);
-            // emit({
-            //     type: SET_BALANCE,
-            //     payload: update
-            // })
+
+            emit({
+                type: SET_LATEST_VERSION,
+                payload: update
+            })
+
         }
         _handleSUBPUB(on_update, session, config.UPDATE_CH)
 
