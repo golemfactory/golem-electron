@@ -73,7 +73,7 @@ export class Peers extends React.Component {
         const {isEngineOn, peerInfo} = this.props
         return (
             <div className="content__peers">
-            { peerInfo.length > 0 ?
+            { peerInfo && peerInfo.length > 0 ?
                 <div className="node-info__peers">
                     <table>
                         <thead>

@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderWithHotReload(App) {
         window.applicationSurface = document.getElementById('mount')
         render(
-            <AppContainer>
+            <AppContainer warnings={false}>
               <Provider store={ store }>
                 <App history={ history } />
               </Provider>
