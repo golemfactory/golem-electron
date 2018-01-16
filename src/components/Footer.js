@@ -72,7 +72,7 @@ export class Footer extends Component {
                 <span>{footerInfo && footerInfo.message}</span>
               </div>
               <div className="preview-bar__footer">
-              <ReactTooltip placement="topRight" trigger={['hover']} overlay={<p>Preview</p>} mouseEnterDelay={1} align={{
+              <ReactTooltip overlayClassName="black" placement="topRight" trigger={['hover']} overlay={<p>Preview</p>} mouseEnterDelay={1} align={{
                 offset: [5, -10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
 
@@ -83,7 +83,7 @@ export class Footer extends Component {
                 </label>
               </div>
                 </ReactTooltip>
-                <ReactTooltip placement="topRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
+                <ReactTooltip overlayClassName="black" placement="topRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
                 offset: [5, -10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                                     <span className={`button__expand icon-new-window ${(!!id && psEnabled) ? 'jump' : 'disabled'}` } onClick={this._handleExpand.bind(this, id, frameCount, psEnabled)} onKeyDown={(event) => {
