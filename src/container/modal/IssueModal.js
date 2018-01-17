@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
-import fireworks from '../../assets/img/fireworks.svg'
 
 const knownIssues = Object.freeze({
     PORT: "PORT",
