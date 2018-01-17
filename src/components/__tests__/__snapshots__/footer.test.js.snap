@@ -37,6 +37,7 @@ exports[`<Footer/> should render a footer component 1`] = `
           Preview
         </p>
       }
+      overlayClassName="black"
       placement="topRight"
       prefixCls="rc-tooltip"
       trigger={
@@ -84,6 +85,7 @@ exports[`<Footer/> should render a footer component 1`] = `
           Preview Window
         </p>
       }
+      overlayClassName="black"
       placement="topRight"
       prefixCls="rc-tooltip"
       trigger={

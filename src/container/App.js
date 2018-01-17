@@ -70,7 +70,7 @@ export class App extends Component {
     }
 
     _showIssueModal(...args){
-        const issues = args.map(item => item.issue)
+        const issues = args.map(item => item ? item.issue : null)
         const result = issues.some(item => !!item)
         return result
     }
