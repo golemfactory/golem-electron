@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -92,7 +92,8 @@
             "node_modules/path-exists",
             "node_modules/env-paths",
             "node_modules/write-file-atomic",
-            "node_modules/graceful-fs"
+            "node_modules/graceful-fs",
+            "node_modules/semver"
         ]
     },
     "devDependencies": {
