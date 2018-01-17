@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
      */
     function renderWithHotReload(App) {
         render(
-            <AppContainer>
+            <AppContainer warnings={false}>
               <Provider store={ store }>
                 <App history={ history } />
               </Provider>
