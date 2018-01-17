@@ -25,7 +25,15 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
  *  Function will flat given n times nested array and convert to the SVG points array
  *  @see https://jsfiddle.net/mk8jx9wb/
  */
-function convertToSVGPoints(arr) {
+function convertToSVGPoints(arr, offset) {
+    console.log("offset", offset);
+    if(offset)
+        arr = arr.map(item => {
+            console.log("item", item);
+            item[offset.index] = item[offset.index] + (offset.value + 1)
+            console.log("item", item);
+            return item
+        })
     arr.push(arr[0])
     return [].concat(...arr).toString().replace(/(,[^,]*),/g, '$1 ')
 }
@@ -137,7 +145,7 @@ export default class SubTask extends React.Component {
      * @param  isDevMode {Boolean}
      * @return {corner points of the drawings [Array]}
      */
-    drawLine(isDevMode) {
+    drawLine(isDevMode, _offset) {
         const {data, ratio, subtaskList, subtaskAmount} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
@@ -213,7 +221,7 @@ export default class SubTask extends React.Component {
                     offset: tooltipOffset(item.value, isDirectionTop),
                 }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
-                points={convertToSVGPoints(item.value)}/>
+                points={convertToSVGPoints(item.value, _offset)}/>
             </ReactTooltip> : ''
             })
     }
@@ -223,17 +231,19 @@ export default class SubTask extends React.Component {
         let customStyle = {}
         if (offset.direction === 'y') {
             customStyle = {
-                top: offset.value
+                index: 1,
+                value: offset.value
             }
         } else if (offset.direction === 'x') {
             customStyle = {
-                left: offset.value
+                index: 0,
+                value: offset.value
             }
         }
         return (
-            <div id="frameSVG" style={customStyle}>
+            <div id="frameSVG">
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine(isDeveloperMode)}
+            {this.drawLine(isDeveloperMode, customStyle)}
         </svg>
       </div>
         );

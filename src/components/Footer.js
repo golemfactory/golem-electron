@@ -73,7 +73,7 @@ export class Footer extends Component {
               </div>
               <div className="preview-bar__footer">
               <ReactTooltip overlayClassName="black" placement="topRight" trigger={['hover']} overlay={<p>Preview</p>} mouseEnterDelay={1} align={{
-                offset: [5, -10],
+                offset: [0, -13],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
 
               <div className="switch-box switch-box--green">
@@ -84,7 +84,7 @@ export class Footer extends Component {
               </div>
                 </ReactTooltip>
                 <ReactTooltip overlayClassName="black" placement="topRight" trigger={['hover']} overlay={<p>Preview Window</p>} mouseEnterDelay={1} align={{
-                offset: [5, -10],
+                offset: [10, -7],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                                     <span className={`button__expand icon-new-window ${(!!id && psEnabled) ? 'jump' : 'disabled'}` } onClick={this._handleExpand.bind(this, id, frameCount, psEnabled)} onKeyDown={(event) => {
                 event.keyCode === 13 && this._handleExpand.call(this, id, frameCount, psEnabled)

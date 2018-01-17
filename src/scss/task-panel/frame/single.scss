@@ -28,12 +28,30 @@
             right: 0;
             margin: auto;
             cursor: crosshair;
+
+            polyline{
+                stroke-dasharray: 10;
+                stroke-width: 3;
+                animation: dash 5s linear;
+            }
+
             polyline:hover {
                 fill: rgba(0, 0, 0, 0.3);
                 stroke: $color-accent4;
             }
+
+
         }
     }
+}
+
+@keyframes dash {
+  from {
+    stroke-dashoffset: 100;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 
 .win {

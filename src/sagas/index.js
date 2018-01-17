@@ -223,8 +223,9 @@ export function* handleIO(connection) {
 
 export function* frameFlow() {
     let { payload } = yield take(LOGIN_FRAME);
-    const { connection } = yield call(connect);
+    const connectionCH = yield call(connect);
     while (true) {
+        let { connection } = yield take(connectionCH);
         const task = yield fork(frameBase, connection, payload);
         let action = yield take(LOGOUT_FRAME);
         yield cancel(task);
