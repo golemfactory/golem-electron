@@ -3,7 +3,7 @@ const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
-const {SET_GOLEM_VERSION, SET_LATEST_VERSION, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
+const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
@@ -14,8 +14,9 @@ const initialState = {
     },
     latestVersion: {
         number: "",
+        issue: null,
         importance: null,
-        show: false
+        seen: false
     },
     networkInfo: {},
     fileCheckModal: {
@@ -47,10 +48,10 @@ const setInfo = (state = initialState, action) => {
         const importance = isNewVersion(action.payload, state.version.number)
         return Object.assign({}, state, {
             latestVersion: {
+                ...state.latestVersion,
                 number: action.payload,
                 importance,
-                show: !!importance
-
+                issue: (!!importance && !state.latestVersion.seen) ? "UPDATE" : null
             }
         });
 
@@ -84,6 +85,16 @@ const setInfo = (state = initialState, action) => {
         return Object.assign({}, state, {
             isEngineOn: action.payload
         });
+
+    case UPDATE_SEEN:
+        return Object.assign({}, state, {
+            latestVersion: {
+                ...state.latestVersion,
+                issue: null,
+                seen: true
+            }
+        });
+
 
     default:
         return state;

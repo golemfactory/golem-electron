@@ -63,6 +63,7 @@ export let dict = Object.freeze({
     //GENERAL
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     SET_LATEST_VERSION: 'SET_LATEST_VERSION',
+    UPDATE_SEEN: 'UPDATE_SEEN',
     START_GOLEM: 'START_GOLEM',
     STOP_GOLEM: 'STOP_GOLEM',
     CONTINUE_WITH_PROBLEM: 'CONTINUE_WITH_PROBLEM',
@@ -150,6 +151,7 @@ const {
     //GENERAL
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
+    UPDATE_SEEN,
     START_GOLEM, 
     STOP_GOLEM, 
     CONTINUE_WITH_PROBLEM, 
@@ -380,6 +382,10 @@ export const setVersion = (payload) => ({
 export const setLatestVersion = (payload) => ({
     type: SET_LATEST_VERSION,
     payload
+})
+
+export const setUpdateSeen = () => ({
+    type: UPDATE_SEEN
 })
 
 export const startGolem = (payload) => ({

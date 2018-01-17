@@ -38,7 +38,8 @@ const routes = (
 
 
 const mapStateToProps = state => ({
-    connectionProblem: state.info.connectionProblem
+    connectionProblem: state.info.connectionProblem,
+    latestVersion: state.info.latestVersion
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -68,17 +69,23 @@ export class App extends Component {
         actions.setConnectionProblem(false);
     }
 
+    _showIssueModal(...args){
+        const issues = args.map(item => item.issue)
+        const result = issues.some(item => !!item)
+        return result
+    }
+
 
     render() {
 
-        const {actions, history, connectionProblem} = this.props
+        const {actions, history, connectionProblem, latestVersion} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <Router history={ history } >
                     { routes }
                 </Router>
-                 {(connectionProblem && connectionProblem.status) && <IssueModal closeModal={::this._closeModal}/>}
+                 {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

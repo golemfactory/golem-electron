@@ -5,7 +5,7 @@ import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 import TimeoutPromise from './timeout';
 
 
-const {SET_GOLEM_VERSION, SET_LATEST_VERSION} = dict
+const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN} = dict
 const TEMPLATE = "Brass Golem v"
 
 /**
@@ -104,5 +104,8 @@ export function* updateBase(session) {
 
 export function* versionFlow(session) {
      yield fork(versionBase, session)
-     yield fork(updateBase, session)
+     const latestUpdateFork = yield fork(updateBase, session)
+     yield take(UPDATE_SEEN)
+     yield cancel(latestUpdateFork)
+     console.info('latestUpdateFork yield cancelled!')
 }
