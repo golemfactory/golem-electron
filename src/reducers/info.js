@@ -1,8 +1,9 @@
 import { dict } from './../actions'
 const {remote} = window.electron;
+const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
-const {SET_GOLEM_VERSION, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
+const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS} = dict
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
@@ -10,6 +11,12 @@ const initialState = {
         number: "",
         message: "Connection is not established yet.",
         error: false
+    },
+    latestVersion: {
+        number: "",
+        issue: null,
+        importance: null,
+        seen: false
     },
     networkInfo: {},
     fileCheckModal: {
@@ -22,6 +29,11 @@ const initialState = {
     },
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
 }
+
+function isNewVersion(_old, _new){
+    let result = mainProcess.checkUpdate(_old, _new)
+    return result
+}
 //console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
@@ -29,6 +41,17 @@ const setInfo = (state = initialState, action) => {
         return Object.assign({}, state, {
             version: {
                 ...action.payload
+            }
+        });
+
+    case SET_LATEST_VERSION:
+        const importance = isNewVersion(action.payload, state.version.number)
+        return Object.assign({}, state, {
+            latestVersion: {
+                ...state.latestVersion,
+                number: action.payload,
+                importance,
+                issue: (!!importance && !state.latestVersion.seen) ? "UPDATE" : null
             }
         });
 
@@ -62,6 +85,16 @@ const setInfo = (state = initialState, action) => {
         return Object.assign({}, state, {
             isEngineOn: action.payload
         });
+
+    case UPDATE_SEEN:
+        return Object.assign({}, state, {
+            latestVersion: {
+                ...state.latestVersion,
+                issue: null,
+                seen: true
+            }
+        });
+
 
     default:
         return state;
