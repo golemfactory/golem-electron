@@ -19,8 +19,8 @@ exports[`<Footer/> should render a footer component 1`] = `
       align={
         Object {
           "offset": Array [
-            5,
-            -10,
+            0,
+            -13,
           ],
         }
       }
@@ -67,8 +67,8 @@ exports[`<Footer/> should render a footer component 1`] = `
       align={
         Object {
           "offset": Array [
-            5,
-            -10,
+            10,
+            -7,
           ],
         }
       }

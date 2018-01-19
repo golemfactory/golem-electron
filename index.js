@@ -342,7 +342,7 @@ exports.selectDirectory = function(directory) {
             (function next() {
                 let file = list[i++];
                 if (!file) return done(null, results);
-                file = isWin() ? `${dir}\\\\${file}` : `${dir}/${file}`;
+                file = isWin() ? `${dir}\\${file}` : `${dir}/${file}`;
                 fs.stat(file, function(err, stat) {
                     if (stat && stat.isDirectory()) {
                         walk(file, function(err, res) {
