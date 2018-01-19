@@ -383,7 +383,6 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        console.log("state", state, e.target.value);
         if(this.checkInputValidity(e)){
             this.setState({
                 [state]: e.target.value
