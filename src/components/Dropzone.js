@@ -36,7 +36,8 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW
+            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW,
+            unlockDnD: false
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -50,33 +51,45 @@ export class DropZone extends React.Component {
             this.setState({
                 className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             })
+        if(nextProps.connectedPeers && nextProps.isEngineOn){
+
+            if(!this.state.unlockDnD)
+                this.setState({
+                    unlockDnD: true
+                }, () => {
+                    this._setDnDListener(this.state.unlockDnD)
+                })
+
+        } else if (this.state.unlockDnD) {
+            this.setState({
+                unlockDnD: false
+            }, () => {
+                this._setDnDListener(this.state.unlockDnD)
+            })
+        }
     }
 
     componentDidMount() {
         const {dropzone, dragbox, infobox} = this.refs
+        const {unlockDnD} = this.state
 
         dropzone.addEventListener('mouseup', this._onDragLeave);
         dropzone.addEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
 
-        if(dragbox){
-            dragbox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
-        } else {
-            infobox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
-        }
+        this._setDnDListener(unlockDnD)
     }
 
     componentWillUnmount() {
         const {dropzone, dragbox, infobox} = this.refs
+        const {unlockDnD} = this.state
 
         dropzone.removeEventListener('mouseup', this._onDragLeave);
         dropzone.removeEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
         dropzone.removeEventListener('drop', this._onDrop);
 
-        if(dragbox){
+        if(unlockDnD){
             dragbox.removeEventListener('dragleave', this._onDragLeave);
         } else {
             infobox.removeEventListener('dragleave', this._onDragLeave);
@@ -127,7 +140,7 @@ export class DropZone extends React.Component {
      * @param       {Object}    e   [event]
      * @return      {boolean}
      */
-    _onDrop(info = false, e) {
+    _onDrop(info, e) {
         e.preventDefault();
 
         if(info){ // in case of golem not connected
@@ -255,13 +268,25 @@ export class DropZone extends React.Component {
     }
 
 
+    _setDnDListener(unlockDnD){
+        const {dropzone, dragbox, infobox} = this.refs
+        if(unlockDnD){
+            dragbox.addEventListener('dragleave', this._onDragLeave);
+            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
+        } else {
+            infobox.addEventListener('dragleave', this._onDragLeave);
+            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
+        }
+    }
+
+
 
     render() {
-        const {isEngineOn, connectedPeers} = this.props
+        const {unlockDnD} = this.state
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                { (isEngineOn && !!connectedPeers) ?
+                { (unlockDnD) ?
                     <div ref="dragbox" className={this.state.className}>
                         <p><span className="icon-upload"/></p>
                         <span>Drop files here to create a new task</span>
