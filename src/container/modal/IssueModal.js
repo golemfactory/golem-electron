@@ -81,8 +81,8 @@ export class IssueModal extends React.Component {
                 return (<div className="content__modal">
                             <div className="container-icon">
                                 <span className="svg">
-                                    <svg xmlns="http://www.w3.org/2000/svg" id="firework-slide2" className="firework-icon injected-svg img-firework inject-svg" data-name="Calque 1" viewBox="0 0 157 156">
-                                        <title>icon_firework_1</title>
+                                    <svg xmlns="http://www.w3.org/2000/svg" id="firework" className="firework-icon injected-svg img-firework inject-svg" data-name="Firework" viewBox="0 0 157 156">
+                                        <title>Firework</title>
                                         <path className="cls-3" d="M80.52,106.92a0.65,0.65,0,0,1-.65-0.65v-10a0.65,0.65,0,0,1,1.3,0v10A0.65,0.65,0,0,1,80.52,106.92Z"></path>
                                         <path className="cls-3" d="M97.72,100.91a0.65,0.65,0,0,1-.52-0.26l-6-8a0.65,0.65,0,0,1,1-.78l6,8A0.65,0.65,0,0,1,97.72,100.91Z"></path>
                                         <path className="cls-3" d="M108.32,85.95a0.61,0.61,0,0,1-.19,0l-9.55-3A0.65,0.65,0,1,1,99,81.69l9.55,3A0.65,0.65,0,0,1,108.32,85.95Z"></path>

@@ -47,53 +47,60 @@ export class DropZone extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
         if(nextProps.taskList && (nextProps.taskList.length !== this.props.taskList.length))
             this.setState({
                 className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             })
+
         if(nextProps.connectedPeers && nextProps.isEngineOn){
-
             if(!this.state.unlockDnD)
-                this.setState({
-                    unlockDnD: true
-                }, () => {
-                    this._setDnDListener(this.state.unlockDnD)
-                })
-
+                ::this._toggleDnD(true)
+            
         } else if (this.state.unlockDnD) {
-            this.setState({
-                unlockDnD: false
-            }, () => {
-                this._setDnDListener(this.state.unlockDnD)
-            })
+            ::this._toggleDnD(false)
         }
     }
 
     componentDidMount() {
-        const {dropzone, dragbox, infobox} = this.refs
+        const {dropzone, dragbox} = this.refs
         const {unlockDnD} = this.state
 
         dropzone.addEventListener('mouseup', this._onDragLeave);
         dropzone.addEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
 
-        this._setDnDListener(unlockDnD)
+        dragbox.addEventListener('dragleave', this._onDragLeave);
+        dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
     }
 
     componentWillUnmount() {
-        const {dropzone, dragbox, infobox} = this.refs
+        const {dropzone, dragbox} = this.refs
         const {unlockDnD} = this.state
 
         dropzone.removeEventListener('mouseup', this._onDragLeave);
         dropzone.removeEventListener('dragenter', this._onDragEnter);
-        dropzone.addEventListener('dragover', this._onDragOver);
+        dropzone.removeEventListener('dragover', this._onDragOver);
         dropzone.removeEventListener('drop', this._onDrop);
+        dragbox.removeEventListener('dragleave', this._onDragLeave);
+        
+    }
 
-        if(unlockDnD){
-            dragbox.removeEventListener('dragleave', this._onDragLeave);
-        } else {
-            infobox.removeEventListener('dragleave', this._onDragLeave);
-        }
+    _toggleDnD(_state){
+        const {dropzone, dragbox, infobox} = this.refs
+        this.setState({
+            unlockDnD: _state
+        }, () => {
+            if(_state){
+                dropzone.addEventListener('mouseup', this._onDragLeave);
+                dropzone.addEventListener('dragover', this._onDragOver);
+                dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
+            } else {
+                dropzone.removeEventListener('mouseup', this._onDragLeave);
+                dropzone.removeEventListener('dragover', this._onDragOver);
+                dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
+            }
+        })
     }
 
     /**
@@ -144,6 +151,7 @@ export class DropZone extends React.Component {
         e.preventDefault();
 
         if(info){ // in case of golem not connected
+        
             e.stopPropagation();
 
             this.setState({
@@ -267,39 +275,25 @@ export class DropZone extends React.Component {
         }
     }
 
-
-    _setDnDListener(unlockDnD){
-        const {dropzone, dragbox, infobox} = this.refs
-        if(unlockDnD){
-            dragbox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
-        } else {
-            infobox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
-        }
-    }
-
-
-
     render() {
         const {unlockDnD} = this.state
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                { (unlockDnD) ?
-                    <div ref="dragbox" className={this.state.className}>
+                <div ref="dragbox" className={this.state.className}>
+                    {unlockDnD ?
+                    <div>
                         <p><span className="icon-upload"/></p>
                         <span>Drop files here to create a new task</span>
                         <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
                     </div>
                     :
-                    <div ref="infobox" className={`${this.state.className} no-drop`}>
-                        <div className="container-icon">
-                            <span className="icon-warning"/>
-                        </div>
-                        <span>Before drop your files, golem needs to be started<br/> and connected to a node.</span>
-                    </div>
-                }
+                    <div>
+                        <p><span className="icon-no-connection"/></p>
+                        <span>No connection!</span>
+                        <p className="tips__drop-zone">Before adding tasks please make sure Golem is started <br/>and connected to the network</p>
+                    </div>}
+                </div>
             </div>
         );
     }
