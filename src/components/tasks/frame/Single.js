@@ -9,7 +9,7 @@ import ControlPanel from './ControlPanel'
 import ImageZoom from './ImageZoom'
 import SubTask from './SubTask'
 
-const CLOSE_BTN_PATH = '/preview/complete';
+const CLOSE_BTN_PATH = '/preview/all';
 
 let tmpIndex = 0
 
@@ -143,14 +143,16 @@ export class Single extends React.Component {
         })
     }
 
+    // <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
+    //             event.keyCode === 13 && this._handleClose.call(this)
+    //         }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-close"/></span>
+
     render() {
         const {taskId, frameID, frameIndex, preview, actions, isSubtaskShown, borderList, details, subtasksList, previewList, isDeveloperMode} = this.props
         const {ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
-                <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
-                event.keyCode === 13 && this._handleClose.call(this)
-            }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-cross"/></span>
+                
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
                     {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} subtaskAmount={details.subtasks} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}

@@ -387,7 +387,7 @@ input[type=number]::-webkit-inner-spin-button {
             line-height: 1.6em;
 
             &:after {
-                content: '\e916';
+                content: '\e917';
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
@@ -410,33 +410,6 @@ input[type=number]::-webkit-inner-spin-button {
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 font-size: 14pt;
-            }
-
-            &:before {
-                content: '\e915';
-                border-radius: 100%;
-                display: inline-block;
-                position: absolute;
-                top: .2em;
-                right: 10px;
-                vertical-align: top;
-                cursor: pointer;
-                text-align: center;
-                transition: all 250ms ease;
-                font-family: 'golemcon' !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-
-                /* Better Font Rendering =========== */
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
-                z-index: 2;
-                color: $color-text4;
             }
         }
 
