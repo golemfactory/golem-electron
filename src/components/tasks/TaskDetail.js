@@ -653,9 +653,13 @@ export class TaskDetail extends React.Component {
     }
 
     isPresetFieldsFilled(nextState) {
-        const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
-        
-        return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
+        if(this.props.params.id === editMode){
+            const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
+            
+            return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
+        }
+        return new Promise(res => res(false))
+
     }
 
     _handleFormByType(type, isDetail) {
