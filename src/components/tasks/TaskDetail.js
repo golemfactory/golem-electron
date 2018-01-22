@@ -91,7 +91,7 @@ const presetSchema = {
             resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
             output_path: yup.string(),
             format: yup.string(),
-            sample_per_pixel: yup.string().required(),
+            sample_per_pixel: yup.number().min(1).required(),
         })
 }
 
