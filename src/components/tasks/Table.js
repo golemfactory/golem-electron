@@ -18,7 +18,9 @@ import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
     isEngineOn: state.info.isEngineOn,
-    connectedPeers: state.realTime.connectedPeers
+    connectedPeers: state.realTime.connectedPeers,
+    psEnabled: state.preview.ps.enabled,
+    psId: state.preview.ps.id,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -62,6 +64,20 @@ export class Table extends React.Component {
         if (nextProps.taskList !== this.props.taskList) {
             this.updateFooterInfoBar(nextProps.taskList)
         }
+
+        //# avoid from updating state on render cycle, previewLock mechanism moved here
+        if (nextProps.previewId !== this.props.previewId) 
+            this.selectedItem = nextProps.taskList.filter( item => item.id === nextProps.previewId)[0]
+
+        if(this.selectedItem && 
+            (nextProps.psEnabled !== shouldPSEnabled(this.selectedItem) ||
+             nextProps.previewId !== this.props.psId))
+
+            this.props.actions.updatePreviewLock({
+                id: this.selectedItem.id,
+                frameCount: this.selectedItem.options.frame_count,
+                enabled: shouldPSEnabled(this.selectedItem)
+            })
     }
 
     /**
@@ -111,8 +127,22 @@ export class Table extends React.Component {
      * @param  {Any}        id      [Id of the selected task]
      */
     _handleDeleteTask(id) {
+        const {actions, previewHandler} = this.props
         //console.log("DELETED_TASK", id)
-        this.props.actions.deleteTask(id)
+        actions.deleteTask(id)
+
+        previewHandler({
+            id: null,
+            src: null
+        })
+
+        this._navigateTo(null)
+
+        actions.updatePreviewLock({
+                id: null,
+                frameCount: null,
+                enabled: false
+            })
     }
 
     /**
@@ -129,13 +159,6 @@ export class Table extends React.Component {
      * @return {DOM}                [Element of the status]
      */
     _fetchStatus(item) {
-        if(item.id == this.props.previewId){
-            this.props.actions.updatePreviewLock({
-                id: item.id,
-                frameCount: item.options.frame_count,
-                enabled: shouldPSEnabled(item)
-            })
-        }
 
         switch (item.status) {
         case status.TIMEOUT:

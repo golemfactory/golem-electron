@@ -282,17 +282,18 @@ export class DropZone extends React.Component {
                 {this.props.children}
                 <div ref="dragbox" className={this.state.className}>
                     {unlockDnD ?
-                    <div>
-                        <p><span className="icon-upload"/></p>
-                        <span>Drop files here to create a new task</span>
-                        <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
-                    </div>
+                        [
+                            <p key="1"><span className="icon-upload"/></p>,
+                            <span key="2">Drop files here to create a new task</span>,
+                            <p key="3" className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
+                        ]
                     :
-                    <div>
-                        <p><span className="icon-no-connection"/></p>
-                        <span>No connection!</span>
-                        <p className="tips__drop-zone">Before adding tasks please make sure Golem is started <br/>and connected to the network</p>
-                    </div>}
+                        [
+                            <p key="4"><span className="icon-no-connection"/></p>,
+                            <span key="5">No connection!</span>,
+                            <p key="6" className="tips__drop-zone">Before adding tasks please make sure Golem is started <br/>and connected to the network</p>
+                        ]
+                    }
                 </div>
             </div>
         );
