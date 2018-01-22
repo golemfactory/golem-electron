@@ -156,11 +156,9 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUnmount() {
-        if (!this._nextStep) {
-            this.props.actions.clearTaskPlain()
-            this.liveSubList && clearInterval(this.liveSubList);
-            this.copyTimeout && clearTimeout(this.copyTimeout);
-        }
+        this.props.actions.clearTaskPlain()
+        this.liveSubList && clearInterval(this.liveSubList);
+        this.copyTimeout && clearTimeout(this.copyTimeout);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -565,7 +563,7 @@ export class TaskDetail extends React.Component {
         case testStatusDict.SUCCESS:
             return {
                 class: 'btn--success',
-                text: 'Success!',
+                text: 'Test passed!',
                 locked: false
             }
 
