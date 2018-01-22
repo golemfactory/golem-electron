@@ -565,7 +565,7 @@ export class TaskDetail extends React.Component {
         case testStatusDict.STARTED:
             return {
                 class: 'btn--loading',
-                text: 'Rendering',
+                text: 'Checking',
                 locked: true
             }
 
