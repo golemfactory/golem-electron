@@ -117,14 +117,14 @@ export class Personal extends React.Component {
                         :
                         <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
                         }
-                        <ReactTooltip className="tooltip__edit-mode" placement="top" trigger={['hover']} overlay={<p>Edit</p>} mouseEnterDelay={1} align={{
+                        <ReactTooltip overlayClassName="black" className="tooltip__edit-mode" placement="top" trigger={['hover']} overlay={<p>Edit</p>} mouseEnterDelay={1} align={{
                     offset: [0, -5],
                 }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                             <span className={`toggle__edit-mode ${editMode ? "icon-checkmark" : "icon-pencil"}`} onClick={() => this.form.dispatchEvent(new Event("submit"))}/>
                         </ReactTooltip>
                         <p/>
                     </form>
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied ? 'icon-confirmed-empty' : undefined}/></span>

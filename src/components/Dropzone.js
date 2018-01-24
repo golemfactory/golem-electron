@@ -20,7 +20,8 @@ const classDict = Object.freeze({
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
-    fileCheckModal: state.info.fileCheckModal
+    fileCheckModal: state.info.fileCheckModal,
+    connectedPeers: state.realTime.connectedPeers
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -35,7 +36,8 @@ export class DropZone extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW
+            className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW,
+            unlockDnD: false
         }
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
@@ -45,41 +47,60 @@ export class DropZone extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+
         if(nextProps.taskList && (nextProps.taskList.length !== this.props.taskList.length))
             this.setState({
                 className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             })
+
+        if(nextProps.connectedPeers && nextProps.isEngineOn){
+            if(!this.state.unlockDnD)
+                ::this._toggleDnD(true)
+            
+        } else if (this.state.unlockDnD) {
+            ::this._toggleDnD(false)
+        }
     }
 
     componentDidMount() {
-        const {dropzone, dragbox, infobox} = this.refs
+        const {dropzone, dragbox} = this.refs
+        const {unlockDnD} = this.state
 
         dropzone.addEventListener('mouseup', this._onDragLeave);
         dropzone.addEventListener('dragenter', this._onDragEnter);
         dropzone.addEventListener('dragover', this._onDragOver);
 
-        if(dragbox){
-            dragbox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
-        } else {
-            infobox.addEventListener('dragleave', this._onDragLeave);
-            dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
-        }
+        dragbox.addEventListener('dragleave', this._onDragLeave);
+        dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
     }
 
     componentWillUnmount() {
-        const {dropzone, dragbox, infobox} = this.refs
+        const {dropzone, dragbox} = this.refs
+        const {unlockDnD} = this.state
 
         dropzone.removeEventListener('mouseup', this._onDragLeave);
         dropzone.removeEventListener('dragenter', this._onDragEnter);
-        dropzone.addEventListener('dragover', this._onDragOver);
+        dropzone.removeEventListener('dragover', this._onDragOver);
         dropzone.removeEventListener('drop', this._onDrop);
+        dragbox.removeEventListener('dragleave', this._onDragLeave);
+        
+    }
 
-        if(dragbox){
-            dragbox.removeEventListener('dragleave', this._onDragLeave);
-        } else {
-            infobox.removeEventListener('dragleave', this._onDragLeave);
-        }
+    _toggleDnD(_state){
+        const {dropzone, dragbox, infobox} = this.refs
+        this.setState({
+            unlockDnD: _state
+        }, () => {
+            if(_state){
+                dropzone.addEventListener('mouseup', this._onDragLeave);
+                dropzone.addEventListener('dragover', this._onDragOver);
+                dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, false));
+            } else {
+                dropzone.removeEventListener('mouseup', this._onDragLeave);
+                dropzone.removeEventListener('dragover', this._onDragOver);
+                dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
+            }
+        })
     }
 
     /**
@@ -126,10 +147,11 @@ export class DropZone extends React.Component {
      * @param       {Object}    e   [event]
      * @return      {boolean}
      */
-    _onDrop(info = false, e) {
+    _onDrop(info, e) {
         e.preventDefault();
 
         if(info){ // in case of golem not connected
+        
             e.stopPropagation();
 
             this.setState({
@@ -253,27 +275,26 @@ export class DropZone extends React.Component {
         }
     }
 
-
-
     render() {
-        const {isEngineOn} = this.props
+        const {unlockDnD} = this.state
         return (
             <div ref="dropzone" className="drop-zone">
                 {this.props.children}
-                { isEngineOn ?
-                    <div ref="dragbox" className={this.state.className}>
-                        <p><span className="icon-upload"/></p>
-                        <span>Drop files here to create a new task</span>
-                        <p className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
-                    </div>
+                <div ref="dragbox" className={this.state.className}>
+                    {unlockDnD ?
+                        [
+                            <p key="1"><span className="icon-upload"/></p>,
+                            <span key="2">Drop files here to create a new task</span>,
+                            <p key="3" className="tips__drop-zone">You can also click <b>+</b> above to create a task and browse for your files.</p>
+                        ]
                     :
-                    <div ref="infobox" className={`${this.state.className} no-drop`}>
-                        <div className="container-icon">
-                            <span className="icon-warning"/>
-                        </div>
-                        <span>Before drop your files, golem needs to be started.</span>
-                    </div>
-                }
+                        [
+                            <p key="4"><span className="icon-no-connection"/></p>,
+                            <span key="5">No connection!</span>,
+                            <p key="6" className="tips__drop-zone">Before adding tasks please make sure Golem is started <br/>and connected to the network</p>
+                        ]
+                    }
+                </div>
             </div>
         );
     }

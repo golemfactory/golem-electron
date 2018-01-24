@@ -26,7 +26,7 @@
 @import "tooltip";
 @import "slider";
 @import "modal";
-@import "connection-modal";
+@import "issue-modal";
 @import "dropdown";
 
 html {
@@ -387,7 +387,7 @@ input[type=number]::-webkit-inner-spin-button {
             line-height: 1.6em;
 
             &:after {
-                content: '\e916';
+                content: '\e917';
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
@@ -410,33 +410,6 @@ input[type=number]::-webkit-inner-spin-button {
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
                 font-size: 14pt;
-            }
-
-            &:before {
-                content: '\e915';
-                border-radius: 100%;
-                display: inline-block;
-                position: absolute;
-                top: .2em;
-                right: 10px;
-                vertical-align: top;
-                cursor: pointer;
-                text-align: center;
-                transition: all 250ms ease;
-                font-family: 'golemcon' !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
-
-                /* Better Font Rendering =========== */
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
-                z-index: 2;
-                color: $color-text4;
             }
         }
 
@@ -477,6 +450,39 @@ input[type=number]::-webkit-inner-spin-button {
         }
     }
 }
+
+.indicator-status {
+        -webkit-mask: url('../assets/img/status.svg') no-repeat 100% 100%;
+        mask: url('../assets/img/status.svg') no-repeat 100% 100%;
+        -webkit-mask-size: cover;
+        mask-size: cover;
+        width: 20px;
+        height: 20px;
+        transition: background-color .5s;
+        &--red {
+            background-color: $color-error;
+        }
+        &--yellow {
+            background-color: $color-accent2;
+        }
+        &--green {
+            background-color: $color-accent1;
+            -webkit-mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
+            mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
+        }
+        &--blue {
+            background-color: $button-static-color;
+        }
+    }
+
+.progress-status {
+        display: inline-block;
+        font-size: 15pt;
+        font-weight: 500;
+        margin-right: 8px;
+        vertical-align: middle;
+        margin-bottom: 0.5px;
+    }
 
 .jumping-dots {
     span {

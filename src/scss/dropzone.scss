@@ -24,11 +24,13 @@
     font-weight: 600;
     color: #444;
     margin: auto;
+    line-height: 1.5;
     p,
     span {
         pointer-events: none;
     }
-    .icon-upload{
+    .icon-upload,
+    .icon-no-connection{
         color: $color-text3;
         font-size: 30pt;
         font-weight: 200;
@@ -44,15 +46,6 @@
         padding: 25px 0;
         flex: 0 0 40px;
         pointer-events: none;
-    }
-    
-    .icon-warning {
-        pointer-events: none;
-        color: $color-accent2;
-        font-size: 28pt;
-        background: $color-bg2;
-        border-radius: 50px;
-        padding: 18px;
     }
 }
 

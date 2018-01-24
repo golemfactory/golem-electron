@@ -17,7 +17,10 @@ import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    connectedPeers: state.realTime.connectedPeers,
+    psEnabled: state.preview.ps.enabled,
+    psId: state.preview.ps.id,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -26,6 +29,7 @@ const mapDispatchToProps = dispatch => ({
 
 
 const status = Object.freeze({
+    WAITINGFORPEER: 'Waiting for peer',
     NOTREADY: 'Not started',
     READY: 'Ready',
     WAITING: 'Waiting',
@@ -60,6 +64,20 @@ export class Table extends React.Component {
         if (nextProps.taskList !== this.props.taskList) {
             this.updateFooterInfoBar(nextProps.taskList)
         }
+
+        //# avoid from updating state on render cycle, previewLock mechanism moved here
+        if (nextProps.previewId !== this.props.previewId) 
+            this.selectedItem = nextProps.taskList.filter( item => item.id === nextProps.previewId)[0]
+
+        if(this.selectedItem && 
+            (nextProps.psEnabled !== shouldPSEnabled(this.selectedItem) ||
+             nextProps.previewId !== this.props.psId))
+
+            this.props.actions.updatePreviewLock({
+                id: this.selectedItem.id,
+                frameCount: this.selectedItem.options.frame_count,
+                enabled: shouldPSEnabled(this.selectedItem)
+            })
     }
 
     /**
@@ -109,8 +127,22 @@ export class Table extends React.Component {
      * @param  {Any}        id      [Id of the selected task]
      */
     _handleDeleteTask(id) {
+        const {actions, previewHandler} = this.props
         //console.log("DELETED_TASK", id)
-        this.props.actions.deleteTask(id)
+        actions.deleteTask(id)
+
+        previewHandler({
+            id: null,
+            src: null
+        })
+
+        this._navigateTo(null)
+
+        actions.updatePreviewLock({
+                id: null,
+                frameCount: null,
+                enabled: false
+            })
     }
 
     /**
@@ -127,13 +159,6 @@ export class Table extends React.Component {
      * @return {DOM}                [Element of the status]
      */
     _fetchStatus(item) {
-        if(item.id == this.props.previewId){
-            this.props.actions.updatePreviewLock({
-                id: item.id,
-                frameCount: item.options.frame_count,
-                enabled: shouldPSEnabled(item)
-            })
-        }
 
         switch (item.status) {
         case status.TIMEOUT:
@@ -146,7 +171,7 @@ export class Table extends React.Component {
             return <span className="duration duration--active">Waiting...</span>
 
         case status.RESTART:
-            return <span className="duration duration--active">Restarting...</span>
+            return <span className="duration duration--done">Restarted</span>
 
         case status.COMPUTING:
             return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
@@ -161,15 +186,21 @@ export class Table extends React.Component {
      * @param  {Array}    data    [JSON array of task list]
      */
     updateFooterInfoBar(data) {
-        const {actions} = this.props
+        const {actions, connectedPeers} = this.props
         let waiting = data.some(item => item.status == status.WAITING)
         let computing = data.some(item => item.status == status.COMPUTING)
         let timeout = data.some(item => item.status == status.TIMEOUT)
-        let restart = data.some(item => item.status == status.RESTART)
-        let info = {
+        
+        let info = connectedPeers ?
+        {
             status: status.READY,
             message: "Golem is ready!",
             color: 'green'
+        } : 
+        {
+            status: status.WAITINGFORPEER,
+            message: "Waiting for peer...",
+            color: 'yellow'
         }
         if (waiting) {
             info.status = status.WAITING
@@ -186,11 +217,7 @@ export class Table extends React.Component {
             info.message = "Your task has timed out"
             info.color = "red"
         }
-        if (restart) {
-            info.status = status.RESTART
-            info.message = "Your task is restarting"
-            info.color = "yellow"
-        }
+      
         actions.setFooterInfo(info)
 
     }
@@ -238,14 +265,14 @@ export class Table extends React.Component {
                 </div>
                 <div>
                     {item.status == status.TIMEOUT &&
-                <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Restart</p>} mouseEnterDelay={1} align={{
+                <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Restart</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
-                }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span className="icon-reload" tabIndex="0" aria-label="Restart Task" onClick={this._handleRestart.bind(this, item.id)}></span>
                     </ReactTooltip> }
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
                     offset: [0, 10],
-                }} transitionName="rc-tooltip-zoom" arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={this._handleDeleteModal.bind(this, item.id)}></span>
                     </ReactTooltip>
                     <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>

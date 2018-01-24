@@ -19,8 +19,8 @@ exports[`<Footer/> should render a footer component 1`] = `
       align={
         Object {
           "offset": Array [
-            5,
-            -10,
+            0,
+            -13,
           ],
         }
       }
@@ -37,6 +37,7 @@ exports[`<Footer/> should render a footer component 1`] = `
           Preview
         </p>
       }
+      overlayClassName="black"
       placement="topRight"
       prefixCls="rc-tooltip"
       trigger={
@@ -66,8 +67,8 @@ exports[`<Footer/> should render a footer component 1`] = `
       align={
         Object {
           "offset": Array [
-            5,
-            -10,
+            10,
+            -7,
           ],
         }
       }
@@ -84,6 +85,7 @@ exports[`<Footer/> should render a footer component 1`] = `
           Preview Window
         </p>
       }
+      overlayClassName="black"
       placement="topRight"
       prefixCls="rc-tooltip"
       trigger={

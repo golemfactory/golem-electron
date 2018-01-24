@@ -1,6 +1,9 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+
+import ReactTooltip from 'rc-tooltip'
+
 import * as Actions from '../../../actions'
 import { timeStampToHR } from '../../../utils/secsToHMS'
 
@@ -45,7 +48,11 @@ export class History extends React.Component {
             </div>
             <div className="action__history">
                 <span className="amount__history">{type === "income" ? '+ ' : '- '}{(value / ETH_DENOM).toFixed(2)}</span>
-                {transaction && <a href={`${etherscan}${transaction}`}><span className="icon-new-window"/></a>}
+                {transaction && <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>See on Etherscan</p>} mouseEnterDelay={1} align={{
+                offset: [0, 10],
+            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <a href={`${etherscan}${transaction}`}><span className="icon-new-window"/></a>
+                    </ReactTooltip>}
             </div>
         </div>))
     }

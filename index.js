@@ -4,6 +4,7 @@ const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
 var mkdirp = require('mkdirp');
+const semver = require('semver')
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -341,7 +342,7 @@ exports.selectDirectory = function(directory) {
             (function next() {
                 let file = list[i++];
                 if (!file) return done(null, results);
-                file = isWin() ? `${dir}\\\\${file}` : `${dir}/${file}`;
+                file = isWin() ? `${dir}\\${file}` : `${dir}/${file}`;
                 fs.stat(file, function(err, stat) {
                     if (stat && stat.isDirectory()) {
                         walk(file, function(err, res) {
@@ -400,4 +401,8 @@ exports.getDefaultLocation = function() {
     if (!fs.existsSync(_location))
         return createLocationPath(_location)
     return _location
+}
+
+exports.checkUpdate = function(_old, _new){
+    return semver.diff(_new, _old)
 }

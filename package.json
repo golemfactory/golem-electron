@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -92,7 +92,8 @@
             "node_modules/path-exists",
             "node_modules/env-paths",
             "node_modules/write-file-atomic",
-            "node_modules/graceful-fs"
+            "node_modules/graceful-fs",
+            "node_modules/semver"
         ]
     },
     "devDependencies": {
@@ -162,8 +163,9 @@
         "redux-saga": "0.16.0",
         "request": "^2.81.0",
         "request-progress": "^3.0.0",
+        "semver": "^5.4.1",
         "serve-static": "^1.12.3",
-        "timepoint-selection": "^0.2.2",
+        "timepoint-selection": "git+https://github.com/mdtanrikulu/timepoint-selection.git#maximum_date_normalization",
         "unzip": "^0.1.11",
         "uuid": "^3.0.1",
         "wampy": "^4.1.0",

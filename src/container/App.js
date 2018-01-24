@@ -13,7 +13,7 @@ import { OnBoardingComponent } from '../components/hoc/Onboarding'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
-import ConnectionModal from './modal/ConnectionModal'
+import IssueModal from './modal/IssueModal'
 
 
 
@@ -38,9 +38,8 @@ const routes = (
 
 
 const mapStateToProps = state => ({
-    status: state.firstReducer,
-    search: state.setSearch,
-    connectionProblem: state.info.connectionProblem
+    connectionProblem: state.info.connectionProblem,
+    latestVersion: state.info.latestVersion
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -70,17 +69,23 @@ export class App extends Component {
         actions.setConnectionProblem(false);
     }
 
+    _showIssueModal(...args){
+        const issues = args.map(item => item ? item.issue : null)
+        const result = issues.some(item => !!item)
+        return result
+    }
+
 
     render() {
 
-        const {actions, status, search, history, connectionProblem} = this.props
+        const {actions, history, connectionProblem, latestVersion} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <Router history={ history } >
                     { routes }
                 </Router>
-                 {connectionProblem && <ConnectionModal closeModal={::this._closeModal}/>}
+                 {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

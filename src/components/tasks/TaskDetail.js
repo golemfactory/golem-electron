@@ -79,14 +79,21 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-const presetSchema = yup.object().shape({
-    resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-    frames: yup.string().required(),
-    format: yup.string(),
-    output_path: yup.string(),
-    sample_per_pixel: yup.string(),
-    compositing: yup.bool()
-})
+const presetSchema = {
+    Blender: yup.object().shape({
+            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+            frames: yup.string().required(),
+            format: yup.string(),
+            output_path: yup.string(),
+            compositing: yup.bool()
+        }),
+    LuxRender: yup.object().shape({
+            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+            output_path: yup.string(),
+            format: yup.string(),
+            sample_per_pixel: yup.number().min(1).required(),
+        })
+}
 
 
 const hints = {
@@ -109,12 +116,12 @@ export class TaskDetail extends React.Component {
             presetModal: false,
             //INPUTS
             compositing: false,
-            resolution: [100, 100],
+            resolution: [NaN,NaN],
             frames: '',
             format: '',
             formatIndex: 0,
             output_path: props.location,
-            sample_per_pixel: '',
+            sample_per_pixel: 0,
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
@@ -156,11 +163,9 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUnmount() {
-        if (!this._nextStep) {
-            this.props.actions.clearTaskPlain()
-            this.liveSubList && clearInterval(this.liveSubList);
-            this.copyTimeout && clearTimeout(this.copyTimeout);
-        }
+        this.props.actions.clearTaskPlain()
+        this.liveSubList && clearInterval(this.liveSubList);
+        this.copyTimeout && clearTimeout(this.copyTimeout);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -380,12 +385,14 @@ export class TaskDetail extends React.Component {
             this.setState({
                 [state]: e.target.value
             }, () => {
-                if(state === "frames")
+                if(state === "frames" || state === "sample_per_pixel")
                     this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
             })
-        } else if(!this.state.savePresetLock && state === "frames" && !this.checkInputValidity(e)){
+        } else if(!this.state.savePresetLock && 
+                    (state === "frames" || state === "sample_per_pixel") && 
+                    !this.checkInputValidity(e)){
             this.setState({
-                frames: null,
+                [state]: null,
                 savePresetLock: true
             })
         }
@@ -558,14 +565,14 @@ export class TaskDetail extends React.Component {
         case testStatusDict.STARTED:
             return {
                 class: 'btn--loading',
-                text: 'Rendering',
+                text: 'Checking',
                 locked: true
             }
 
         case testStatusDict.SUCCESS:
             return {
                 class: 'btn--success',
-                text: 'Success!',
+                text: 'Test passed!',
                 locked: false
             }
 
@@ -620,7 +627,7 @@ export class TaskDetail extends React.Component {
 
         return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
                 <td>
-                <ReactTooltip placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
+                <ReactTooltip overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
@@ -629,14 +636,14 @@ export class TaskDetail extends React.Component {
                     </ReactTooltip>
                 </td>
                 <td>
-                    <ReactTooltip placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span className={`icon-status-dot ${statusDot(status)}`}/>
                     </ReactTooltip>
                 </td>
                 <td>
-                    <ReactTooltip placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
+                    <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                         <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
@@ -646,9 +653,13 @@ export class TaskDetail extends React.Component {
     }
 
     isPresetFieldsFilled(nextState) {
-        const {resolution, frames, sample_per_pixel, compositing, format} = nextState
-        return presetSchema.isValid({resolution, frames, sample_per_pixel, compositing, format})
-        
+        if(this.props.params.id === editMode){
+            const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
+            
+            return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
+        }
+        return new Promise(res => res(false))
+
     }
 
     _handleFormByType(type, isDetail) {
@@ -745,7 +756,7 @@ export class TaskDetail extends React.Component {
                 order: 5,
                 content: <div className="item-settings" key="5">
                             <span className="title">Sample per pixel</span>
-                            <input ref="haltspp" type="text" placeholder="1" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             break;

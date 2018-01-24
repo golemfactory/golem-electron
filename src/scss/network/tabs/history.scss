@@ -47,6 +47,9 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        a{
+            padding-bottom: 3.2pt;
+        }
     }
     .amount__history {
         font-weight: 400;
@@ -57,7 +60,7 @@
         visibility: hidden;
         font-size: 16pt;
         color: $color-primary;
-        margin-bottom: 3px;
+        padding-bottom: 7px;
     }
     &:hover {
         background: $color-bg2;
@@ -80,4 +83,5 @@
     color: $color-text2;
     font-size: 10pt;
     box-sizing: border-box;
+    line-height: 1.5;
 }

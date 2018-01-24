@@ -4,7 +4,7 @@ import { take, flush, call } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
 
-import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable } from '../'
+import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable, connectionFlow, connectionCH } from '../'
 import { versionFlow } from '../version'
 import { golemStatusFlow } from '../golem'
 import { frameBase } from '../frame'
@@ -32,6 +32,8 @@ describe('handleIO', () => {
         session = sess
     }
 
+    const error = null
+
     const action = {
         login: {
             type: 'LOGIN',
@@ -50,7 +52,14 @@ describe('handleIO', () => {
             '@@redux-saga/SAGA_ACTION': true,
             message: 21384,
             type: "SET_MESSAGE",
-        }
+        },
+        error: {
+                    type: 'SET_CONNECTION_PROBLEM',
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                }
     }
 
     /**
@@ -101,19 +110,24 @@ describe('handleIO', () => {
             .next()
             .put(action.start_message)
 
-            .next(action.login)
-            .call(connect)
+            .next()
+            .call(connectionFlow)
 
-            .next({
-                connection
-            })
-            .fork(handleIO, connection)
-
-            .next(task)
+            .next({task})
             .take(action.logout.type)
 
             .next()
             .cancel(task)
+
+            .finish()
+            .isDone()
+    })
+
+    it('should call connectionFlow generator', () => {
+        let sagaConnectionFlow = testSaga(connectionFlow)
+        sagaConnectionFlow
+            .next()
+            .call(connect)
 
             .finish()
             .isDone()
@@ -143,21 +157,5 @@ describe('handleIO', () => {
             .finish()
             .isDone()
 
-    })
-
-    it('should call subscribe function, emit and flow with the subcribtions (read)', () => {
-        let sagaRead = testSaga(read, connection)
-        sagaRead
-            .next()
-            .call(subscribe, connection)
-
-            .next(mockChannel)
-            .take(mockChannel)
-
-            .next(action.message)
-            .put(action.message)
-
-            .finish()
-            .isDone()
     })
 })
