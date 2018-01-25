@@ -61,7 +61,6 @@ export function runTestTask(session, payload) {
 
     function on_test_task(args) {
         var test_task = args[0];
-    //console.log(config.RUN_TEST_TASK_RPC, test_task)
     }
 
     _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
@@ -210,19 +209,22 @@ export function subscribeTestStatus(session) {
         const fetchTestStatus = () => {
             
             function on_tasks(args, more) {
-                let obj = args[0];
-                const {status, error} = JSON.parse(obj)
-                emit({
-                    type: SET_TASK_TEST_STATUS,
-                    payload: {
-                        status,
-                        error,
-                        more
-                    }
-                })
+                let result = args[0];
 
-                if(!!status && status !== "Started"){
-                    clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                if(result){
+                    const {status, error} = JSON.parse(result)
+                    emit({
+                        type: SET_TASK_TEST_STATUS,
+                        payload: {
+                            status,
+                            error,
+                            more
+                        }
+                    })
+
+                    if(status !== "Started"){
+                        clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                    }
                 }
             }
 
