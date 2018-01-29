@@ -61,7 +61,6 @@ export function runTestTask(session, payload) {
 
     function on_test_task(args) {
         var test_task = args[0];
-    //console.log(config.RUN_TEST_TASK_RPC, test_task)
     }
 
     _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
@@ -175,34 +174,80 @@ export function* taskDetailsBase(session, {type, payload}) {
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function subscribeTestofTask(session) {
-    return eventChannel(emit => {
-        function on_tasks(args, more) {
-            let status = args[0];
-            let error = args[1];
 
-            emit({
-                type: SET_TASK_TEST_STATUS,
-                payload: {
-                    status,
-                    error,
-                    more
+// export function subscribeTestofTask(session) {
+//     return eventChannel(emit => {
+//         function on_tasks(args, more) {
+//             let status = args[0];
+//             let error = args[1];
+
+//             emit({
+//                 type: SET_TASK_TEST_STATUS,
+//                 payload: {
+//                     status,
+//                     error,
+//                     more
+//                 }
+//             })
+//         }
+
+//         _handleSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+
+
+//         return () => {
+//             console.log('negative')
+//             _handleUNSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+//         }
+//     })
+// }
+
+export function subscribeTestStatus(session) {
+    const interval = 1000
+
+    return eventChannel(emit => {
+
+        const fetchTestStatus = () => {
+            
+            function on_tasks(args, more) {
+                let result = args[0];
+
+                if(result){
+                    const {status, error} = JSON.parse(result)
+                    emit({
+                        type: SET_TASK_TEST_STATUS,
+                        payload: {
+                            status,
+                            error,
+                            more
+                        }
+                    })
+
+                    if(status !== "Started"){
+                        clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                    }
                 }
-            })
+            }
+
+            _handleRPC(on_tasks, session, config.CHECK_TEST_STATUS_RPC)
         }
 
-        _handleSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+        const fetchOnStartup = () => {
+                fetchTestStatus()
 
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            _handleUNSUBPUB(on_tasks, session, config.TASK_TEST_STATUS_CH)
+            clearInterval(channelInterval);
         }
     })
 }
 
 export function* testTaskFlow(session) {
-    const channel = yield call(subscribeTestofTask, session)
+    const channel = yield call(subscribeTestStatus, session)
 
     try {
         while (true) {
@@ -279,28 +324,61 @@ export function* deleteTaskBase(session, {type, payload}) {
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
-export function subscribeTasks(session) {
+// export function subscribeTasks(session) {
+//     return eventChannel(emit => {
+//         function on_tasks(args) {
+//             var taskList = args[0];
+//             emit({
+//                 type: SET_TASKLIST,
+//                 payload: taskList
+//             })
+//         }
+
+//         _handleSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+
+
+//         return () => {
+//             console.log('negative')
+//             _handleUNSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+//         }
+//     })
+// }
+
+export function subscribeTaskList(session) {
+    const interval = 1000
+
     return eventChannel(emit => {
-        function on_tasks(args) {
-            var taskList = args[0];
-            emit({
-                type: SET_TASKLIST,
-                payload: taskList.reverse() // in DESC order
-            })
+
+        const fetchTaskList = () => {
+            
+            function on_tasks(args) {
+                var taskList = args[0];
+                emit({
+                    type: SET_TASKLIST,
+                    payload: taskList.reverse()
+                })
+            }
+
+            _handleRPC(on_tasks, session, config.GET_TASKS_RPC)
         }
 
-        _handleSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+        const fetchOnStartup = () => {
+                fetchTaskList()
 
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            _handleUNSUBPUB(on_tasks, session, config.GET_TASKS_CH)
+            clearInterval(channelInterval);
         }
     })
 }
 
 export function* fireBase(session) {
-    const channel = yield call(subscribeTasks, session)
+    const channel = yield call(subscribeTaskList, session)
 
     try {
         while (true) {
