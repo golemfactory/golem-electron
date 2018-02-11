@@ -10,6 +10,8 @@ import yup from 'yup'
 
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
+import DefaultSettingsModal from './modal/DefaultSettingsModal'
+
 import Dropdown from './../Dropdown'
 
 import { bindActionCreators } from 'redux'
@@ -64,6 +66,18 @@ function floatToString(timeFloat) {
     return hours +':'+ date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
 }
 
+function isObjectEmpty(obj) {
+    if(obj !== null && typeof obj === 'object'){
+        for(var prop in obj) {
+            if(obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return JSON.stringify(obj) === JSON.stringify({});
+    }
+    return true
+}
+
 const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
@@ -113,7 +127,6 @@ export class TaskDetail extends React.Component {
         this.state = {
             modalData: null,
             isDetailPage: props.params.id != "settings", //<-- HARDCODED
-            presetModal: false,
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -127,9 +140,11 @@ export class TaskDetail extends React.Component {
             subtask_timeout: '',
             bid: 0,
             presetList: [],
-            managePresetModal: false,
             savePresetLock: true,
-            isDataCopied: false
+            isDataCopied: false,
+            presetModal: false,
+            managePresetModal: false,
+            defaultSettingsModal: false
         }
     }
 
@@ -218,6 +233,15 @@ export class TaskDetail extends React.Component {
 
         if (nextProps.presets != this.props.presets) {
             this.parsePresets(nextProps.presets)
+        }
+
+        if(nextProps.testStatus !== this.props.testStatus && 
+                !isObjectEmpty(nextProps.testStatus.more) && 
+                !this.state.defaultSettingsModal)
+        {
+            this.setState({
+                defaultSettingsModal: true
+            })
         }
 
     }
@@ -484,13 +508,33 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _applyDefaultPreset(){
+        const {resolution, file_format} = this.props.testStatus.more.after_test_data
+        const {resolutionW, resolutionH, formatRef} = this.refs
+        let format = file_format.replace(".", "").toUpperCase()
+        let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
+
+        resolutionW.value = resolution[0]
+        resolutionH.value = resolution[1]
+        formatRef.value = format
+
+        this.setState({
+            resolution,
+            format,
+            formatIndex
+        })
+
+        this._closeModal()
+    }
+
     /**
      * [_closeModal func. closes all modals]
      */
     _closeModal() {
         this.setState({
             presetModal: false,
-            managePresetModal: false
+            managePresetModal: false,
+            defaultSettingsModal: false
         })
     }
 
@@ -560,7 +604,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleTestStatus({status, error}) {
+    _handleTestStatus({status, error, more}) {
         switch (status) {
         case testStatusDict.STARTED:
             return {
@@ -663,7 +707,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleFormByType(type, isDetail) {
-        const {modalData, isDetailPage, presetModal, resolution, frames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
+        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props;
         let formTemplate = [
             {
@@ -771,20 +815,20 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal} = this.state
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal} = this.state
         const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    <section className={`section-preview__task-detail ${(testStatus.more && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
+                    <section className={`section-preview__task-detail ${(!isObjectEmpty(testStatus.more) && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
                         { isDetailPage && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
                                 <span className="icon-arrow-left-white"/>
                                 <span>Back</span>
                             </Link>
                         </div>}
-                        {(!isDetailPage && testStatus.more) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
+                        {(!isDetailPage && !isObjectEmpty(testStatus.more)) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
                         {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
                             <span className="dot-1">.</span>
                             <span className="dot-2">.</span>
@@ -847,6 +891,7 @@ export class TaskDetail extends React.Component {
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
+                {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
             </div>
         );
     }
