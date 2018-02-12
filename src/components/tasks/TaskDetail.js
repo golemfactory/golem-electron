@@ -20,6 +20,8 @@ const {dialog} = remote
 import * as Actions from './../../actions'
 import {once} from './../../utils/once'
 
+const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
+
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
@@ -277,7 +279,9 @@ export class TaskDetail extends React.Component {
             }
         })
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
+        this.refs.taskTimeout.setCustomValidity(TIME_VALIDITY_NOTE);
         this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, options);
+        this.refs.subtaskTimeout.setCustomValidity(TIME_VALIDITY_NOTE);
         this.refs.subtaskTimeout.disabled = true;
     }
 
@@ -357,7 +361,16 @@ export class TaskDetail extends React.Component {
             'subtask_timeout': this.subtaskTaskTimeoutInput
         })
 
-        this.checkInputValidity(e)
+        /*Input will be invalid if given time is lesser than 1 min*/
+        const inputTime = e.target.classList
+        if(timeoutList[state].getValue() < 60){
+            inputTime.add("invalid");
+            e.target.setCustomValidity(TIME_VALIDITY_NOTE);
+        } else {
+            inputTime.remove("invalid");
+            e.target.setCustomValidity("");
+        }
+
         if(state === 'timeout'){
             const taskTimeoutValue = this.taskTimeoutInput.getValue()
             const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue()
