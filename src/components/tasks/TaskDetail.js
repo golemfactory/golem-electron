@@ -20,6 +20,8 @@ const {dialog} = remote
 import * as Actions from './../../actions'
 import {once} from './../../utils/once'
 
+const ETH_DENOM = 10 ** 18;
+
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
@@ -72,7 +74,8 @@ const mapStateToProps = state => ({
     estimated_cost: state.details.estimated_cost,
     location: state.fileLocation.location,
     subtasksList: state.single.subtasksList,
-    isDeveloperMode: state.input.developerMode
+    isDeveloperMode: state.input.developerMode,
+    requestorMaxPrice: state.price.requestorMaxPrice
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -125,22 +128,24 @@ export class TaskDetail extends React.Component {
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
-            bid: 0,
+            bid: props.requestorMaxPrice,
             presetList: [],
             managePresetModal: false,
             savePresetLock: true,
             isDataCopied: false
         }
+
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location, isDeveloperMode} = this.props
+        const {params, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
 
         actions.setEstimatedCost(0)
         if (params.id != editMode) {
             actions.getTaskDetails(params.id)
         } else {
             actions.getTaskPresets(task.type)
+            this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM
         }
 
 
@@ -829,7 +834,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input ref="bidRef" type="number" min="0.000001" max={Number.MAX_SAFE_INTEGER} step="0.000001" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="bidRef" type="number" min="0.000001" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
                             </div>
                             <span className="item-price tips__price">
