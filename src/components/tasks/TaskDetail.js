@@ -129,7 +129,7 @@ export class TaskDetail extends React.Component {
             timeout: '',
             subtasks: 0,
             subtask_timeout: '',
-            bid: props.requestorMaxPrice,
+            bid: props.requestorMaxPrice / ETH_DENOM,
             presetList: [],
             managePresetModal: false,
             savePresetLock: true,
@@ -846,7 +846,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
-                                <input ref="bidRef" type="number" min="0.000001" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
                             </div>
                             <span className="item-price tips__price">
