@@ -5,7 +5,24 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
 
-const {SET_TASKLIST, DELETE_TASK, CREATE_TASK, RESTART_TASK, RUN_TEST_TASK, SET_TASK_TEST_STATUS, GET_ESTIMATED_COST, SET_ESTIMATED_COST, GET_TASK_DETAILS, SET_TASK_DETAILS, GET_TASK_PRESETS, SET_TASK_PRESETS, SAVE_TASK_PRESET, DELETE_TASK_PRESET, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST} = dict
+const {
+        SET_TASKLIST, 
+        DELETE_TASK, 
+        CREATE_TASK, 
+        RESTART_TASK, 
+        RUN_TEST_TASK, 
+        SET_TASK_TEST_STATUS, 
+        GET_ESTIMATED_COST, 
+        SET_ESTIMATED_COST, 
+        GET_TASK_DETAILS, 
+        SET_TASK_DETAILS, 
+        GET_TASK_PRESETS, 
+        SET_TASK_PRESETS, 
+        SAVE_TASK_PRESET, 
+        DELETE_TASK_PRESET, 
+        SET_SUBTASKS_LIST, 
+        FETCH_SUBTASKS_LIST
+    } = dict
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
@@ -208,11 +225,10 @@ export function subscribeTestStatus(session) {
 
         const fetchTestStatus = () => {
             
-            function on_tasks(args, more) {
+            function on_tasks(args) {
                 let result = args[0];
-
                 if(result){
-                    const {status, error} = JSON.parse(result)
+                    const {status, more, error} = JSON.parse(result)
                     emit({
                         type: SET_TASK_TEST_STATUS,
                         payload: {
