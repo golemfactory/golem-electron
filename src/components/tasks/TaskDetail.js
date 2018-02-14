@@ -44,6 +44,30 @@ const mockFormatList = [
     }
 ]
 
+const presetSchema = {
+    Blender: yup.object().shape({
+            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+            frames: yup.string().required(),
+            format: yup.string(),
+            output_path: yup.string(),
+            compositing: yup.bool()
+        }),
+    LuxRender: yup.object().shape({
+            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+            output_path: yup.string(),
+            format: yup.string(),
+            sample_per_pixel: yup.number().min(1).required(),
+        })
+}
+
+const hints = {
+    frame: [
+        "Hint: To use consecutive frames, e.g. \"1-6\".",
+        "Hint: To pick random frames, e.g. \"2;6;7\".",
+        "Hint: To use common diff. e.g. \"1-7,2\"."
+    ]
+}
+
 /*############# HELPER FUNCTIONS ############# */
 
 function getTimeAsFloat(time) {
@@ -67,6 +91,30 @@ function floatToString(timeFloat) {
     return hours +':'+ date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
 }
 
+function calcFrameAmount(_frame){
+
+    const notationArry = _frame.match(/(\d+)(-)?(\d+)?(;\d)?/g)
+
+    const calculateNotation = item => {
+
+        if (!isNaN(item))
+            return 1
+        
+        if (item.includes(";")) {
+            [item, diff] = item.split(";");
+        }
+      
+        const splitItem = item.split("-")
+        return Math.floor((Math.max(...splitItem) - Math.min(...splitItem)) / diff) + 1
+    }
+
+    let diff = 1;
+
+    return notationArry
+        .map(calculateNotation)
+        .reduce((total, amount) => total += amount)
+}
+
 const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
@@ -82,33 +130,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
-
-const presetSchema = {
-    Blender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            frames: yup.string().required(),
-            format: yup.string(),
-            output_path: yup.string(),
-            compositing: yup.bool()
-        }),
-    LuxRender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            output_path: yup.string(),
-            format: yup.string(),
-            sample_per_pixel: yup.number().min(1).required(),
-        })
-}
-
-
-const hints = {
-    frame: [
-        "Hint: To use consecutive frames, e.g. \"1-6\".",
-        "Hint: To pick random frames, e.g. \"2;6;7\".",
-        "Hint: To use common diff. e.g. \"1-7,2\"."
-    ]
-}
-
-
 
 export class TaskDetail extends React.Component {
 
@@ -128,6 +149,7 @@ export class TaskDetail extends React.Component {
             sample_per_pixel: 0,
             timeout: '',
             subtasks: 0,
+            maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
             presetList: [],
@@ -259,6 +281,26 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    /**
+     * [calcMaxSubtaskAmount function calculates maximum possible subtask amount for the given  task parameters]
+     * @param  {Number}     y       [y axis of the resolution]
+     * @param  {String}     frame   [frame pattern of the task]
+     * @return {Number}             [maximum subtask amount]
+     */
+    _calcMaxSubtaskAmount(nextState){
+        const {resolution, frames} = nextState
+        const y = resolution[1];
+        if(!y || !frames)
+            return; 
+
+        const frameAmount = calcFrameAmount(frames);
+        const maxSubtasks = Math.floor(y / Math.max((y / 100) * 3, 8 + ((y / 100) * 2))) * frameAmount;
+        this.setState({
+            maxSubtasks,
+            subtasks: Math.min(maxSubtasks, this.state.subtasks)
+        }, () => this.refs.subtaskCount.value  = Math.min(maxSubtasks, this.state.subtasks))
+    }
+
     _convertPriceAsHR(price) {
         let priceLength = parseInt(price).toString().length
         if (priceLength < 5) {
@@ -340,6 +382,7 @@ export class TaskDetail extends React.Component {
             resolution: res
         }, () => {
             this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
+            this._calcMaxSubtaskAmount.call(this, this.state)
         })
     }
 
@@ -404,6 +447,7 @@ export class TaskDetail extends React.Component {
             }, () => {
                 if(state === "frames" || state === "sample_per_pixel")
                     this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
+                    this._calcMaxSubtaskAmount.call(this, this.state)
             })
         } else if(!this.state.savePresetLock && 
                     (state === "frames" || state === "sample_per_pixel") && 
@@ -680,7 +724,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleFormByType(type, isDetail) {
-        const {modalData, isDetailPage, presetModal, resolution, frames, formatIndex, output_path, timeout, subtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
+        const {modalData, isDetailPage, presetModal, resolution, frames, formatIndex, output_path, timeout, subtasks, maxSubtasks, subtask_timeout, bid, compositing, presetList, managePresetModal, savePresetLock} = this.state
         const {testStatus, estimated_cost} = this.props;
         let formTemplate = [
             {
@@ -733,7 +777,7 @@ export class TaskDetail extends React.Component {
                 order: 8,
                 content: <div className="item-settings" key="8">
                                 <span className="title">Subtask Amount</span>
-                                <input ref="subtaskCount" type="number" min="1" max="100" placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
             },
             {
