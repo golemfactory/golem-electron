@@ -46,11 +46,20 @@
         line-height: 2.4em;
     }
 
-    .currency-info{
+    .currency-info,
+    .currency-info__update{
         font-size: 9pt;
         position: absolute;
         bottom: 20px;
         color: $color-text;
+    }
+
+    .currency-info{
+        color: $color-text;
+    }
+
+    .currency-info__update{
+        color: $color-text2;
     }
 }
 

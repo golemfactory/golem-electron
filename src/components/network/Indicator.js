@@ -1,5 +1,6 @@
 import React from 'react';
 import { Motion, spring } from 'react-motion'
+import { timeStampToHR } from './../../utils/secsToHMS'
 const {remote} = window.electron;
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 const {INDICATOR_ID} = dictConfig
@@ -12,7 +13,8 @@ let dictCurrency = Object.freeze({
     USD_ETH: 'USD_ETH'
 })
 
-let motionBalanceStart = 0;
+let motionBalanceStart = 0,
+    motionLastTimeStart = 0;
 
 
 export default class Indicator extends React.Component {
@@ -83,6 +85,11 @@ export default class Indicator extends React.Component {
         return (balance).toFixed(2)
     }
 
+    formatTime(time){
+        motionLastTimeStart = time;
+        return timeStampToHR(time)
+    }
+
     toggleUSD(rate){
         const {toggler} = this.state
         this.setState({
@@ -125,6 +132,18 @@ export default class Indicator extends React.Component {
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>{(!toggler && defaultCurrency == dictCurrency.ETH) ? 'USD' : 'ETH'}</span>
                 </div>
                 {!toggler && <span className="currency-info">Estimated Amount</span>}
+                {toggler && balance[2] && 
+                    <Motion defaultStyle={{
+                    timeAnimated: motionLastTimeStart
+                }} style={{
+                    timeAnimated: spring(+balance[2], {
+                        stiffness: 500,
+                        damping: 50
+                    })
+                }}>
+                        {({timeAnimated}) => <span className="currency-info__update">Last update: {this.formatTime(timeAnimated)}</span>}
+                    </Motion>
+                }
             </div>
         );
     }
