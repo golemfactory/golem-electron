@@ -668,6 +668,10 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _getPanelClass(testStatus){
+        return (!isObjectEmpty(testStatus.more) ? 'warning' : (!isObjectEmpty(testStatus.error) ? 'error' : ''))
+    }
+
     _fillNodeInfo(data){
         const {isDataCopied} = this.state
         function statusDot(status){
@@ -838,7 +842,7 @@ export class TaskDetail extends React.Component {
         return (
             <div>       
                 <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    <section className={`section-preview__task-detail ${(!isObjectEmpty(testStatus.more) && testStatus.more.after_test_data.warnings) ? 'warning' : ''}`}>
+                    <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
                         { isDetailPage && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
                                 <span className="icon-arrow-left-white"/>
@@ -846,6 +850,7 @@ export class TaskDetail extends React.Component {
                             </Link>
                         </div>}
                         {(!isDetailPage && !isObjectEmpty(testStatus.more)) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
+                        {(!isDetailPage && !isObjectEmpty(testStatus.error)) && <span className="warning__render-test">{testStatus.error}</span>}
                         {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
                             <span className="dot-1">.</span>
                             <span className="dot-2">.</span>
