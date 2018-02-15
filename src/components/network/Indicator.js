@@ -136,7 +136,7 @@ export default class Indicator extends React.Component {
                     <Motion defaultStyle={{
                     timeAnimated: motionLastTimeStart
                 }} style={{
-                    timeAnimated: spring(+balance[2], {
+                    timeAnimated: spring(+balance[idx + 2], {
                         stiffness: 500,
                         damping: 50
                     })
