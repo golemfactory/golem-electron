@@ -710,8 +710,43 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _checkTestStatus(_testStatus){
+        const {more, error} = _testStatus
+        let status;
+        if(!isObjectEmpty(more)){
+            if(more.after_test_data.hasOwnProperty("warnings")){
+                status = "warning"
+            }
+        }
+
+        if(!isObjectEmpty(error)){
+            if(error.length > 0 && typeof error[0] === 'string'){
+                status = "error"
+            }
+        }
+
+        return status
+    }
+
     _getPanelClass(testStatus){
-        return (!isObjectEmpty(testStatus.more) ? 'warning' : (!isObjectEmpty(testStatus.error) ? 'error' : ''))
+        return this._checkTestStatus(testStatus)
+    }
+
+    _getPanelInfo(testStatus){
+        const {more, error} = testStatus
+        const status = this._checkTestStatus(testStatus)
+        let warningInfo; 
+
+        switch(status){
+            case "warning":
+                warningInfo = more['after_test_data']['warnings']
+                break;
+            case "error":
+                warningInfo = testStatus.error[0]
+                break;
+        }
+        
+        return <span className="warning__render-test">{warningInfo}</span>
     }
 
     _fillNodeInfo(data){
@@ -784,7 +819,7 @@ export class TaskDetail extends React.Component {
             {
                 order: 1,
                 content: <div className="item-settings" key="1">
-                                <span className="title">Dimensions</span>
+                                <span className="title">Resolution</span>
                                 <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span className="icon-cross"/>
                                 <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
@@ -891,8 +926,7 @@ export class TaskDetail extends React.Component {
                                 <span>Back</span>
                             </Link>
                         </div>}
-                        {(!isDetailPage && !isObjectEmpty(testStatus.more)) && <span className="warning__render-test">{testStatus.more['after_test_data']['warnings']}</span>}
-                        {(!isDetailPage && !isObjectEmpty(testStatus.error)) && <span className="warning__render-test">{testStatus.error}</span>}
+                        {!isDetailPage && this._getPanelInfo(testStatus)}
                         {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
                             <span className="dot-1">.</span>
                             <span className="dot-2">.</span>
@@ -930,15 +964,15 @@ export class TaskDetail extends React.Component {
                         </div>
                         <div className="section-price__task-detail">
                             <h4 className="title-price__task-detail">Price</h4>
-                            <div className="item-price estimated-price__panel">
-                                <span className="title">Estimated</span>
-                                {this._convertPriceAsHR(estimated_cost)}
-                                <span>GNT</span>
-                            </div>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
                                 <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>GNT/h</span>
+                            </div>
+                            <div className="item-price estimated-price__panel">
+                                <span className="title">Estimated</span>
+                                {this._convertPriceAsHR(estimated_cost)}
+                                <span>GNT</span>
                             </div>
                             <span className="item-price tips__price">
                                 You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
