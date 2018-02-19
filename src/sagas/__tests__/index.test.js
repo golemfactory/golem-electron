@@ -1,6 +1,6 @@
 import { testSaga } from 'redux-saga-test-plan'
 import { createMockTask } from 'redux-saga/lib/utils'
-import { take, flush, call } from 'redux-saga/effects'
+import { take, flush, call, takeLatest } from 'redux-saga/effects'
 import { WebSocket } from 'mock-socket'
 import { login, setMessage, logout } from '../../actions'
 
@@ -59,7 +59,11 @@ describe('handleIO', () => {
                         status: true,
                         issue: "WEBSOCKET"
                     }
-                }
+                },
+        portProblem: {
+            type: 'CONTINUE_WITH_PROBLEM',
+            payload: null
+        }
     }
 
     /**
@@ -153,6 +157,12 @@ describe('handleIO', () => {
 
             .next()
             .fork(statsFlow, connection)
+
+            .next()
+            .takeLatestEffect(action.portProblem.type, disablePortFlow)
+
+            .next()
+            .call(subscribe, connection)
             
             .finish()
             .isDone()
