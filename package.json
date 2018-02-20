@@ -112,7 +112,7 @@
         "compression-webpack-plugin": "^0.3.2",
         "cross-env": "^5.0.1",
         "css-loader": "^0.26.1",
-        "electron": "^1.7.9",
+        "electron": "^1.7.12",
         "electron-builder": "^19.47.1",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "^2.2.1",

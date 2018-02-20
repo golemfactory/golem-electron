@@ -29,7 +29,7 @@ export default class DefaultSettingsModal extends React.Component {
                     <div>
                         <span className="icon-settings"/>
                     </div>
-                    <span>Would you like to use default parameters from the file?</span>
+                    <span>Would you like to use default resolution from the file?</span>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
                         <button type="button" className="btn--primary" onClick={::this._applyPreset}>Apply</button>
