@@ -967,12 +967,12 @@ export class TaskDetail extends React.Component {
                             <div className="item-price">
                                 <span className="title">Your bid</span>
                                 <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span>GNT/h</span>
+                                <span>tGNT/h</span>
                             </div>
                             <div className="item-price estimated-price__panel">
                                 <span className="title">Estimated</span>
                                 {this._convertPriceAsHR(estimated_cost)}
-                                <span>GNT</span>
+                                <span>tGNT</span>
                             </div>
                             <span className="item-price tips__price">
                                 You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.

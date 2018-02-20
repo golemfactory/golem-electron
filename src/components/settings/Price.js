@@ -45,12 +45,12 @@ export class Price extends React.Component {
                 <div className="section__price">
                     <span>Provider Minimum</span>
                     <input type="number" min="0" step={0.1} value={Number(providerMinPrice) / ETH_DENOM} onChange={::this._handleMinPriceChange} aria-label="Provider minimum price" disabled={isEngineOn}/>
-                    <span>GNT per hour</span>
+                    <span>tGNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
                     <input type="number" min="0" step={0.1} value={Number(requestorMaxPrice) / ETH_DENOM} onChange={::this._handleMaxPriceChange} aria-label="Requestor maximum price" disabled={isEngineOn}/>
-                    <span>GNT per hour</span>
+                    <span>tGNT per hour</span>
                 </div>
             </div>
         );
