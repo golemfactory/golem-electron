@@ -1,0 +1,42 @@
+@mixin flex {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.content__geth{
+	height: 215px;
+
+	.section__flag,
+	.section__advanced {
+	    @include flex;
+	    padding: 10px 0;
+	    text-align: left;
+	    width: 100%;
+	    input {
+	        width: 112px;
+	    }
+	    span {
+	        flex: 0 0 90px;
+	        font-size: 10pt;
+	    }
+
+	    .address-input__geth{
+	    	width: 100%;
+	    	padding: 0 10px;
+	    }
+	}
+	.section__tips{
+		@include flex;
+		justify-content: space-around;
+	    width: 100%;
+
+		.tips__geth{
+			margin: 20px 0 0 0;
+		    font-size: 9pt;
+		    color: $color-text2;
+		}
+	}
+
+}
+

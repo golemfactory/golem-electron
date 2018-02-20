@@ -1,10 +1,9 @@
 const {app, Menu, globalShortcut} = require('electron')
 const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
-const {DEBUG_MODE, DEVELOPER_MODE, LOCAL_GETH} = dictConfig
+const {DEBUG_MODE, DEVELOPER_MODE} = dictConfig
 const DOCLINK = "https://docs.golem.network/"
 let isDebugMode = !getConfig(DEBUG_MODE)
 let isDeveloperMode = getConfig(DEVELOPER_MODE)
-let isLocalGeth = getConfig(LOCAL_GETH)
 const template = [
     {
         label: 'Edit',
@@ -165,17 +164,17 @@ if (process.platform === 'darwin') {
         }
     })
 
-    template[2].submenu.push({
-        label: 'Use Local Geth',
-        type: 'checkbox',
-        checked: isLocalGeth,
-        accelerator: 'CmdOrCtrl+Shift+G',
-        click: () => {
-            isLocalGeth = !isLocalGeth
-            setConfig(LOCAL_GETH, isLocalGeth)
-            console.info('!', `Local Geth ${isLocalGeth ? 'activated.' : 'deactivated.'}`);
-        }
-    })
+    // template[2].submenu.push({
+    //     label: 'Use Local Geth',
+    //     type: 'checkbox',
+    //     checked: isLocalGeth,
+    //     accelerator: 'CmdOrCtrl+Shift+G',
+    //     click: () => {
+    //         isLocalGeth = !isLocalGeth
+    //         setConfig(LOCAL_GETH, isLocalGeth)
+    //         console.info('!', `Local Geth ${isLocalGeth ? 'activated.' : 'deactivated.'}`);
+    //     }
+    // })
 
     // Window menu
     template[3].submenu = [

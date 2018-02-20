@@ -36,6 +36,7 @@ export let dict = Object.freeze({
     SET_FOOTER_INFO: 'SET_FOOTER_INFO',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
+    SET_LOCAL_GETH: 'SET_LOCAL_GETH',
     SET_PERFORMANCE_CHARTS: 'SET_PERFORMANCE_CHARTS',
     RECOUNT_BENCHMARK: 'RECOUNT_BENCHMARK',
     SET_PROV_MIN_PRICE: 'SET_PROV_MIN_PRICE',
@@ -125,6 +126,7 @@ const {
     SET_FOOTER_INFO,
     //SETTINGS
     SET_FILE_LOCATION, 
+    SET_LOCAL_GETH,
     SET_PERFORMANCE_CHARTS, 
     RECOUNT_BENCHMARK, 
     SET_PROV_MIN_PRICE, 
@@ -292,6 +294,11 @@ export const setConnectedPeers = (payload) => ({
 
 export const setFileLocation = (payload) => ({
     type: SET_FILE_LOCATION,
+    payload
+})
+
+export const setLocalGeth = (payload) => ({
+    type: SET_LOCAL_GETH,
     payload
 })
 

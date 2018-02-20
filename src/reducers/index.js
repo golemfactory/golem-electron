@@ -9,6 +9,7 @@ import history from './network/history'
 import resources from './network/resources'
 /*Settings*/
 import fileLocation from './settings/fileLocation'
+import geth from './settings/geth'
 import performance from './settings/performance'
 import price from './settings/price'
 import profile from './settings/profile'
@@ -39,6 +40,7 @@ const reducer = combineReducers({
     resources,
     //SETTINGS
     fileLocation,
+    geth,
     performance,
     price,
     profile,

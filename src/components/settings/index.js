@@ -8,6 +8,7 @@ import Performance from './Performance'
 import Price from './Price'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
+import Geth from './Geth'
 import Stats from './Stats'
 import Peers from './Peers'
 import { APP_VERSION } from './../../main'
@@ -31,6 +32,10 @@ const accordionItems = [
     {
         title: 'Default File Location',
         content: <FileLocation/>
+    },
+    {
+        title: 'Custom Geth',
+        content: <Geth/>
     },
     {
         title: "Peers",
@@ -128,7 +133,7 @@ export class Settings extends React.Component {
     loadAccordionMenu(data) {
         const {isDeveloperMode} = this.props
         return data
-        .filter((_, index) => isDeveloperMode || index < 4)
+        .filter((_, index) => isDeveloperMode || index < 5)
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>

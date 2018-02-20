@@ -5,7 +5,7 @@ const store = new Store();
 /**
  * CONFIG STORE KEYS
  */
-//config.delete('SHOW_ONBOARD') // <-- Rollback onboard
+//store.delete('DEFAULT_GETH') // <-- Rollback onboard
 const dictConfig = {
     HIDE_ONBOARD: 'HIDE_ONBOARD',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',
@@ -13,9 +13,9 @@ const dictConfig = {
     RESOURCE_SLIDER: 'RESOURCE_SLIDER',
     GOLEM_STARTER: 'GOLEM_STARTER',
     DEFAULT_FILE_LOCATION: 'DEFAULT_FILE_LOCATION',
+    DEFAULT_GETH: 'DEFAULT_GETH',
     DEBUG_MODE: 'DEBUG_MODE',
     DEVELOPER_MODE: 'DEVELOPER_MODE',
-    LOCAL_GETH: 'LOCAL_GETH',
     INDICATOR_ID: 'INDICATOR_ID'
 }
 

@@ -475,6 +475,10 @@ input[type=number]::-webkit-inner-spin-button {
         }
     }
 
+.label_optional{
+    color: $color-text3;
+}
+
 .progress-status {
         display: inline-block;
         font-size: 15pt;
@@ -580,6 +584,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -616,6 +621,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -652,6 +658,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
