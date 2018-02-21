@@ -93,7 +93,8 @@
             "node_modules/env-paths",
             "node_modules/write-file-atomic",
             "node_modules/graceful-fs",
-            "node_modules/semver"
+            "node_modules/semver",
+            "node_modules/p-try"
         ]
     },
     "devDependencies": {
