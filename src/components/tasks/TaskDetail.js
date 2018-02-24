@@ -11,6 +11,7 @@ import yup from 'yup'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
+import ResolutionChangeModal from './modal/ResolutionChangeModal'
 
 import Dropdown from './../Dropdown'
 
@@ -149,8 +150,9 @@ export class TaskDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.params.id != "settings", //<-- HARDCODED
+            isDetailPage: props.params.id !== "settings", //<-- HARDCODED
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -169,7 +171,9 @@ export class TaskDetail extends React.Component {
             isDataCopied: false,
             presetModal: false,
             managePresetModal: false,
-            defaultSettingsModal: false
+            defaultSettingsModal: false,
+            resolutionChangeModal: false,
+            resolutionChangeInfo: []
         }
 
     }
@@ -178,7 +182,7 @@ export class TaskDetail extends React.Component {
         const {params, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
 
         actions.setEstimatedCost(0)
-        if (params.id != editMode) {
+        if (params.id !== editMode) {
             actions.getTaskDetails(params.id)
         } else {
             actions.getTaskPresets(task.type)
@@ -200,9 +204,10 @@ export class TaskDetail extends React.Component {
         var ariaKeys = Array.from(elements).map(elm => elm.getAttribute("aria-label"));
         this.interactedInputObject = zipObject(ariaKeys, new Array(ariaKeys.length).fill(false));
 
-        document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
-            Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
-        })
+        if(params.id === editMode)
+            document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
+                Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
+            })
     }
 
     componentWillUnmount() {
@@ -213,7 +218,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id != editMode) {
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
                 this._setTimeStamp()
             }
@@ -260,7 +265,7 @@ export class TaskDetail extends React.Component {
             })
         }
 
-        if (nextProps.presets != this.props.presets) {
+        if (nextProps.presets !== this.props.presets) {
             this.parsePresets(nextProps.presets)
         }
 
@@ -536,13 +541,51 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
-        const preset = list.filter((item, index) => item.name == name)[0]
+
+        const result = list.filter((item, index) => item.name == name)[0]
+        const preset = {...result, value: {...result.value}} // immutable
+
         if (!preset)
             return;
+
+        const {resolution} = preset.value
+        const {resolutionW, resolutionH} = this.refs
+        if(this.state.isDefaultResolutionApplied && !this._isArrayEqual([resolutionW.value, resolutionH.value], resolution))
+            this._askForNewResolutionChange(preset)
+        else
+            this._applyPresetOption(preset, true, false)
+    }
+
+    _askForNewResolutionChange(preset){
+        this.setState({
+            resolutionChangeModal: true,
+            resolutionChangeInfo: preset
+        })
+    }
+
+    _isArrayEqual(arr1, arr2){
+        return arr1.toString() === arr2.toString() //String representation hack
+    }
+
+    _applyPresetOption(preset, isResolutionIncluded = true, applyStates = true){
+
         const {compositing, format, frames, output_path, resolution, sample_per_pixel} = preset.value
         const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
-        resolutionW.value = resolution[0];
-        resolutionH.value = resolution[1];
+        
+        if(isResolutionIncluded){
+            resolutionW.value = resolution[0];
+            resolutionH.value = resolution[1];
+
+            if(applyStates)
+                this.setState({
+                    isDefaultResolutionApplied: false,
+                    resolutionChangeInfo: []
+                })
+
+        } else {
+            delete preset.value.resolution
+        }
+
         formatRef.value = format
         outputPath.value = output_path
         let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
@@ -618,7 +661,8 @@ export class TaskDetail extends React.Component {
         this.setState({
             resolution,
             format,
-            formatIndex
+            formatIndex,
+            isDefaultResolutionApplied: true
         })
 
         this._closeModal()
@@ -631,7 +675,8 @@ export class TaskDetail extends React.Component {
         this.setState({
             presetModal: false,
             managePresetModal: false,
-            defaultSettingsModal: false
+            defaultSettingsModal: false,
+            resolutionChangeModal: false
         })
     }
 
@@ -949,7 +994,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal} = this.state
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo} = this.state
         const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
@@ -1026,6 +1071,7 @@ export class TaskDetail extends React.Component {
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
+                {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
             </div>
         );
     }

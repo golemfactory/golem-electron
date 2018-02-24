@@ -1,0 +1,17 @@
+.icon-warning {
+            display: inline-block;
+            color: $color-text4;
+            background: $color-accent2;
+            font-size: 2.6em;
+            width: 1em;
+            height: 1em;
+            line-height: 0.9em;
+            padding: 0.3em;
+            text-align: center;
+            border-radius: 50%; /* or 50% width & line-height */
+
+            &.critical{
+                color: $color-text4 !important;
+                background: $color-error;
+            }
+        }
