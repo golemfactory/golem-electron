@@ -69,7 +69,7 @@ export default class PresetModal extends React.Component {
                     </section>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="submit" className="btn--primary">Save</button>
+                        <button type="submit" className="btn--primary" autoFocus>Save</button>
                     </div>
                 </form>
             </div>

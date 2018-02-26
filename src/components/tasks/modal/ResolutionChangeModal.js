@@ -34,7 +34,7 @@ export default class ResolutionChangeModal extends React.Component {
                     <span>This action will change your default resolution, would like to apply?</span>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Keep</span>
-                        <button type="button" className="btn--primary" onClick={::this._applyPreset}>Apply</button>
+                        <button type="button" className="btn--primary" onClick={::this._applyPreset} autoFocus>Apply</button>
                     </div>
                 </div>
             </div>
