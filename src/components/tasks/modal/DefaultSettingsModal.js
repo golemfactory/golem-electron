@@ -32,7 +32,7 @@ export default class DefaultSettingsModal extends React.Component {
                     <span>Would you like to use default resolution from the file?</span>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="button" className="btn--primary" onClick={::this._applyPreset}>Apply</button>
+                        <button type="button" className="btn--primary" onClick={::this._applyPreset} autoFocus>Apply</button>
                     </div>
                 </div>
             </div>
