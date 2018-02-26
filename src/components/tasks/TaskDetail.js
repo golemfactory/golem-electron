@@ -11,6 +11,7 @@ import yup from 'yup'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
+import ResolutionChangeModal from './modal/ResolutionChangeModal'
 
 import Dropdown from './../Dropdown'
 
@@ -21,6 +22,7 @@ const {dialog} = remote
 
 import * as Actions from './../../actions'
 import {once} from './../../utils/once'
+import zipObject from './../../utils/zipObject'
 
 const ETH_DENOM = 10 ** 18;
 const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
@@ -148,8 +150,9 @@ export class TaskDetail extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.params.id != "settings", //<-- HARDCODED
+            isDetailPage: props.params.id !== "settings", //<-- HARDCODED
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -159,7 +162,7 @@ export class TaskDetail extends React.Component {
             output_path: props.location,
             sample_per_pixel: 0,
             timeout: '',
-            subtasks: 0,
+            subtasks: 1,
             maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
@@ -168,7 +171,9 @@ export class TaskDetail extends React.Component {
             isDataCopied: false,
             presetModal: false,
             managePresetModal: false,
-            defaultSettingsModal: false
+            defaultSettingsModal: false,
+            resolutionChangeModal: false,
+            resolutionChangeInfo: []
         }
 
     }
@@ -177,18 +182,11 @@ export class TaskDetail extends React.Component {
         const {params, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
 
         actions.setEstimatedCost(0)
-        if (params.id != editMode) {
+        if (params.id !== editMode) {
             actions.getTaskDetails(params.id)
         } else {
             actions.getTaskPresets(task.type)
             this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM
-        }
-
-
-        if (document.addEventListener) {
-            document.addEventListener('invalid', (e) => {
-                e.target.classList.add("invalid");
-            }, true);
         }
 
         if (!!this.refs.taskTimeout && !!this.refs.subtaskTimeout) {
@@ -201,16 +199,26 @@ export class TaskDetail extends React.Component {
         }
 
         this.frameHintNum = Math.floor(Math.random()* hints.frame.length)
+
+        var elements = document.getElementsByTagName("input")
+        var ariaKeys = Array.from(elements).map(elm => elm.getAttribute("aria-label"));
+        this.interactedInputObject = zipObject(ariaKeys, new Array(ariaKeys.length).fill(false));
+
+        if(params.id === editMode)
+            document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
+                Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
+            })
     }
 
     componentWillUnmount() {
         this.props.actions.clearTaskPlain()
         this.liveSubList && clearInterval(this.liveSubList);
         this.copyTimeout && clearTimeout(this.copyTimeout);
+        this.interactedInputObject = {}
     }
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id != editMode) {
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
                 this._setTimeStamp()
             }
@@ -257,7 +265,7 @@ export class TaskDetail extends React.Component {
             })
         }
 
-        if (nextProps.presets != this.props.presets) {
+        if (nextProps.presets !== this.props.presets) {
             this.parsePresets(nextProps.presets)
         }
 
@@ -273,7 +281,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock} = this.state
+        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
         const {actions, task} = this.props
 
         if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
@@ -301,6 +309,40 @@ export class TaskDetail extends React.Component {
             this.liveSubList = false;
             
         }
+
+        if(nextState.resolution !== resolution){
+            this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
+            this._calcMaxSubtaskAmount.call(this, nextState);
+        }
+
+        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks !== subtasks){
+            const result = Math.min(nextState.maxSubtasks, nextState.subtasks);
+            this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
+        }
+
+        if(nextState.frames !== frames || nextState.sample_per_pixel !== sample_per_pixel){
+            this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
+            this._calcMaxSubtaskAmount.call(this, nextState);
+        }
+
+        var elements = document.getElementsByTagName("input")
+        Array.from(elements).forEach(element => {
+            element.checkValidity();
+            if (element.validity.valid)
+                element.classList.remove("invalid");
+            return element.validity.valid
+        })
+
+        once(this._activateValidation())
+    }
+
+    _activateValidation(){
+        if (document.addEventListener) {
+            document.addEventListener('invalid', e => {
+                if(this.interactedInputObject[e.target.getAttribute("aria-label")])
+                    e.target.classList.add("invalid")
+            }, true);
+        }
     }
 
     /**
@@ -312,15 +354,30 @@ export class TaskDetail extends React.Component {
     _calcMaxSubtaskAmount(nextState){
         const {resolution, frames} = nextState
         const y = resolution[1];
-        if(!y || !frames)
-            return; 
+        let maxSubtasks;
 
-        const frameAmount = calcFrameAmount(frames);
-        const maxSubtasks = Math.floor(y / Math.max((y / 100) * 3, 8 + ((y / 100) * 2))) * frameAmount;
+        if(!y)
+                return; 
+
+        if (this.props.task.type === taskType.BLENDER) {
+            if(!frames)
+                return; 
+
+            const frameAmount = calcFrameAmount(frames);
+            maxSubtasks = Math.floor(y / Math.max((y / 100) * 3, 8 + ((y / 100) * 2))) * frameAmount;
+            
+        } else {
+            maxSubtasks = 100 
+        }
+
+        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks)
+
         this.setState({
-            maxSubtasks,
-            subtasks: Math.min(maxSubtasks, this.state.subtasks)
-        }, () => this.refs.subtaskCount.value  = Math.min(maxSubtasks, this.state.subtasks))
+                maxSubtasks,
+                subtasks: subtaskValue
+            })
+
+        this.refs.subtaskCount.value = subtaskValue
     }
 
     _convertPriceAsHR(price) {
@@ -397,14 +454,12 @@ export class TaskDetail extends React.Component {
      * @param  {Event}      e
      */
     _handleResolution(index, e) {
-        this.checkInputValidity(e)
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         let res = this.state.resolution
-        res[index] = parseInt(e.target.value)
+        let newRes = [...res]; //keep state immutable
+        newRes[index] = parseInt(e.target.value);
         this.setState({
-            resolution: res
-        }, () => {
-            this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
-            this._calcMaxSubtaskAmount.call(this, this.state)
+            resolution: newRes
         })
     }
 
@@ -413,6 +468,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         this.setState({
             compositing: e.target.checked
         })
@@ -424,7 +480,7 @@ export class TaskDetail extends React.Component {
      * @param  {[type]} e     
      */
     _handleTimeoutInputs(state, e) {
-
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         const timeoutList = Object.freeze({
             'timeout': this.taskTimeoutInput,
             'subtask_timeout': this.subtaskTaskTimeoutInput
@@ -463,13 +519,10 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         if(this.checkInputValidity(e)){
             this.setState({
                 [state]: e.target.value
-            }, () => {
-                if(state === "frames" || state === "sample_per_pixel")
-                    this.isPresetFieldsFilled(this.state).then(this.changePresetLock)
-                    this._calcMaxSubtaskAmount.call(this, this.state)
             })
         } else if(!this.state.savePresetLock && 
                     (state === "frames" || state === "sample_per_pixel") && 
@@ -488,37 +541,66 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
-        let values = list.filter((item, index) => item.name == name)[0]
-        if (values) {
-            const {compositing, format, frames, output_path, resolution, sample_per_pixel} = values.value
-            const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
-            resolutionW.value = resolution[0]
-            resolutionH.value = resolution[1]
-            formatRef.value = format
-            outputPath.value = output_path
-            let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
 
-            if (this.props.task.type === taskType.BLENDER) {
+        const result = list.filter((item, index) => item.name == name)[0]
+        const preset = {...result, value: {...result.value}} // immutable
 
-                framesRef.value = frames
-                compositingRef.checked = compositing
+        if (!preset)
+            return;
 
-            } else if (this.props.task.type === taskType.LUXRENDER) {
+        const {resolution} = preset.value
+        const {resolutionW, resolutionH} = this.refs
+        if(this.state.isDefaultResolutionApplied && !this._isArrayEqual([resolutionW.value, resolutionH.value], resolution))
+            this._askForNewResolutionChange(preset)
+        else
+            this._applyPresetOption(preset, true, false)
+    }
 
-                haltspp.value = sample_per_pixel
+    _askForNewResolutionChange(preset){
+        this.setState({
+            resolutionChangeModal: true,
+            resolutionChangeInfo: preset
+        })
+    }
 
-            }
+    _isArrayEqual(arr1, arr2){
+        return arr1.toString() === arr2.toString() //String representation hack
+    }
 
-            this.setState({
-                resolution,
-                output_path,
-                frames,
-                format,
-                formatIndex,
-                compositing
-            })
+    _applyPresetOption(preset, isResolutionIncluded = true, applyStates = true){
+
+        const {compositing, format, frames, output_path, resolution, sample_per_pixel} = preset.value
+        const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
+        
+        if(isResolutionIncluded){
+            resolutionW.value = resolution[0];
+            resolutionH.value = resolution[1];
+
+            if(applyStates)
+                this.setState({
+                    isDefaultResolutionApplied: false,
+                    resolutionChangeInfo: []
+                })
+
+        } else {
+            delete preset.value.resolution
         }
 
+        formatRef.value = format
+        outputPath.value = output_path
+        let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
+
+        if (this.props.task.type === taskType.BLENDER) {
+
+            framesRef.value = frames
+            compositingRef.checked = compositing
+
+        } else if (this.props.task.type === taskType.LUXRENDER) {
+
+            haltspp.value = sample_per_pixel
+
+        }
+        this.setState({...preset.value, formatIndex})
     }
 
     /**
@@ -526,12 +608,11 @@ export class TaskDetail extends React.Component {
      * @param  {Array}      list    [List of formats]
      * @param  {String}     name    [Name of selected format]
      */
-    _handleFormatOptionChange(list, name) {
-        let values = list.filter((item, index) => item.name == name)[0]
-        values && this.setState({
-            format: values.name
-        },  () => {
-            this.isPresetFieldsFilled(this.state).then( this.changePresetLock)
+    _handleFormatOptionChange(list, formatName, index) {
+        let {name} = list.filter((item, index) => item.name === formatName)[0];
+        name && this.setState({
+            format: name,
+            formatIndex: index
         })
     }
 
@@ -580,7 +661,8 @@ export class TaskDetail extends React.Component {
         this.setState({
             resolution,
             format,
-            formatIndex
+            formatIndex,
+            isDefaultResolutionApplied: true
         })
 
         this._closeModal()
@@ -593,7 +675,8 @@ export class TaskDetail extends React.Component {
         this.setState({
             presetModal: false,
             managePresetModal: false,
-            defaultSettingsModal: false
+            defaultSettingsModal: false,
+            resolutionChangeModal: false
         })
     }
 
@@ -797,11 +880,9 @@ export class TaskDetail extends React.Component {
     isPresetFieldsFilled(nextState) {
         if(this.props.params.id === editMode){
             const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
-            
             return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
         }
         return new Promise(res => res(false))
-
     }
 
     _handleFormByType(type, isDetail) {
@@ -865,7 +946,7 @@ export class TaskDetail extends React.Component {
                 order: 9,
                 content: <div className="item-settings" key="9">
                                 <span className="title">Subtask Timeout</span>
-                                <input ref="subtaskTimeout" type="text" aria-label="Deadline" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
             }
         ]
@@ -913,12 +994,12 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal} = this.state
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo} = this.state
         const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
-                <form onSubmit={::this._handleStartTaskButton} className="content__task-detail">
+                <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
                     <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
                         { isDetailPage && <div className="panel-preview__task-detail">
                             <Link to="/tasks" aria-label="Back button to task list">
@@ -984,12 +1065,13 @@ export class TaskDetail extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
+                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
                     </section>}
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
+                {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
             </div>
         );
     }
