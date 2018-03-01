@@ -13,6 +13,7 @@ import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
 
 import Indicator from './Indicator'
+import Wallet from '../wallet'
 import Resources from './tabs/Resources'
 import History from './tabs/History'
 import Advanced from './tabs/Advanced'
@@ -206,9 +207,7 @@ export class MainFragment extends React.Component {
         const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
         return (
             <div className="content__main">
-                <div className="section__currency">
-                    <Indicator {...this.props}/>
-                </div>
+            <Wallet/>
             <div className="section__quick-settings">
             <div className="tab-panel" role="tablist">
                 <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>

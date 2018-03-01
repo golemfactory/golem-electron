@@ -1,0 +1,74 @@
+.content__currency-box{
+	width: auto;
+	min-width: 20px;
+	min-height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	border: 0px solid transparent;
+	transition: 1s all;
+	.icon-android{
+		font-size: 30px !important;
+	}
+	span{
+		margin: 0 3px;
+		text-align: left;
+		display: block;
+		font-size: 9pt;
+		line-height: 1.5;
+
+		&:first-child{
+			font-weight: 500;
+			font-size: 11pt;
+		}
+	}
+
+	.currency-suffix{
+		display: inline !important;
+		font-size: 9px !important;
+		font-weight: 300 !important;
+	}
+
+	.icon-question-mark{
+		cursor: pointer;
+		margin-top: 7px;
+		font-size: 8pt !important;
+		align-self: flex-start;
+		color: $color-text3;
+	}
+
+	.wallet__btn-withdraw{
+		display: none;
+	}
+}
+
+.expand__wallet{
+	.content__currency-box{
+		position: relative;
+		width: 188px;
+		height: 194px;
+		min-height: 194px;
+		min-width: 188px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		background: white;
+		border: 1px solid $color-border;
+	}
+
+	.icon-android{
+		font-size: 40px !important;
+	}
+
+	.icon-question-mark{
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		margin: 0;
+	}
+
+	.wallet__btn-withdraw{
+		display: block;
+	}
+}

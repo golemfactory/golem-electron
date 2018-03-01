@@ -1,0 +1,77 @@
+@import 'currency-box';
+
+.section__wallet {
+	position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    position: relative;
+    background: $display-indicator-backround;
+    border-bottom: 1px solid $color-text3;
+    flex: 0 0 70px;
+    transition: 1s all;
+
+    
+}
+.expand__wallet{
+	flex: 0 0 315px;
+
+	.address-box__wallet{
+		margin-right: 30px;
+		display: block;
+	}
+
+	.icon-arrow-down{
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+	}
+
+	.content__wallet{
+		.panel_box{
+			justify-content: space-between;
+		}
+	}
+}
+
+.content__wallet{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	box-sizing: border-box;
+
+	.panel_box{
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+	}
+}
+
+.address-box__wallet{
+	display: none;
+	box-sizing: border-box;
+	animation:.2s ease .5s normal forwards 1 fadein;
+	-webkit-animation:0.2s ease 0.5s normal forwards 1 fadein;
+	opacity:0;
+	span{
+		font-size: 9pt;
+		&:first-child{
+			font-weight: 500;
+		}
+	}
+	input{
+		margin-top: 10px;
+		padding: 0 10px;
+		width: 100%;
+	}
+}
+
+@keyframes fadein{from{opacity:0}
+to{opacity:1}
+}
+
+@-webkit-keyframes fadein{from{opacity:0}
+to{opacity:1}
+}
