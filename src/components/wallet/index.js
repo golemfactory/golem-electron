@@ -18,7 +18,10 @@ export default class Wallet extends Component {
 
     _handleExpandWallet(){
     	const element = document.getElementById("sectionWallet");
+    	const expandButton = document.getElementById("expandWalletButton");
    		element.classList.toggle("expand__wallet");
+   		expandButton.classList.toggle("icon-arrow-down");
+   		expandButton.classList.toggle("icon-arrow-up");
     }
 
     render() {
@@ -30,7 +33,7 @@ export default class Wallet extends Component {
 	                	<CurrencyBox amount="300005.2323..." suffix="GNT" description="Test tooltip for GNT"/>
 	                	<CurrencyBox amount="20.2123..." suffix="ETH" description="Test tooltip for ETH"/>
 	                </div>
-	                <span className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
+	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>
 	            <div className="address-box__wallet">
 		            <div>

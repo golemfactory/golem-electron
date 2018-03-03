@@ -11,7 +11,11 @@
     border-bottom: 1px solid $color-text3;
     flex: 0 0 70px;
     transition: 1s all;
-
+	
+	.icon-arrow-up,
+	.icon-arrow-down{
+		cursor: pointer;
+	}
     
 }
 .expand__wallet{
@@ -22,7 +26,7 @@
 		display: block;
 	}
 
-	.icon-arrow-down{
+	.icon-arrow-up{
 		position: absolute;
 		bottom: 24px;
 		right: 24px;
