@@ -106,12 +106,12 @@ const messages = {
     },
     client: {
         'get_password': {
-            pre: 'Requiring password',
+            pre: 'Requires password',
             post: 'Logged In',
             exception: 'Problem with password'
         },
         'new_password': {
-            pre: 'Requiring password',
+            pre: 'Requires new password',
             post: 'Registered',
             exception: 'Problem with password'
         },

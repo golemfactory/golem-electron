@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import IssueModal from './modal/IssueModal'
+import PasswordModal from './modal/PasswordModal'
 
 
 
@@ -39,7 +40,8 @@ const routes = (
 
 const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
-    latestVersion: state.info.latestVersion
+    latestVersion: state.info.latestVersion,
+    passwordModal: state.realTime.passwordModal
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -78,7 +80,7 @@ export class App extends Component {
 
     render() {
 
-        const {actions, history, connectionProblem, latestVersion} = this.props
+        const {actions, history, connectionProblem, latestVersion, passwordModal} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
@@ -86,6 +88,7 @@ export class App extends Component {
                     { routes }
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
+                 { (passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
             </div>
         );
     }
