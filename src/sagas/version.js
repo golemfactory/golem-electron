@@ -3,6 +3,8 @@ import { fork, take, call, put, cancel } from 'redux-saga/effects'
 import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 import TimeoutPromise from './timeout';
+const {remote} = window.electron;
+const log = remote.require('./electron/debug_handler.js')
 
 
 const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN} = dict
@@ -46,7 +48,7 @@ export function* versionBase(session){
         yield action && put(action)
     }
     catch(error) {
-        console.warn("version fetch error: ", error);
+        log.warn('SAGA > VERSION', "Version fetch error: ", error)
         yield put({
                 type: SET_GOLEM_VERSION,
                 payload: { 

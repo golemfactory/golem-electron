@@ -137,15 +137,8 @@ function getGolemStatus(component, method, stage, data) {
     try {
         result.message = dig(messages, component, method, stage);
     } catch ( e ) {
-        result.message = `Golem - ${component}`;
-    }
-
-    if (stage == 'exception') {
-        result.status = 'Exception';
-    } else try {
-        result.status = dig(statuses, component, method, stage);
-    } catch ( e ) { 
-        log.warn('SAGA > GOLEM', e)
+        result.message = `Golem - Undefined status`;
+        log.warn('SAGA > GOLEM', `${e}: Given "${component}.${method}.${stage}" status doesn't defined on Golem Client!`)
     }
 
     return result;
