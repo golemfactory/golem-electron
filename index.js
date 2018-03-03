@@ -25,6 +25,7 @@ function isDevelopment() {
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
 const APP_WIDTH = 460
 const APP_HEIGHT = 810//589
+const APP_MIN_HEIGHT = 589
 const PREVIEW_APP_WIDTH = 752
 const PREVIEW_APP_HEIGHT = 572
 
@@ -109,7 +110,7 @@ function createWindow() {
         frame: false,
         resizable: true,
         minWidth: APP_WIDTH,
-        minHeight: APP_HEIGHT,
+        minHeight: APP_MIN_HEIGHT,
         maxWidth: APP_WIDTH,
         center: true,
         show: false,
