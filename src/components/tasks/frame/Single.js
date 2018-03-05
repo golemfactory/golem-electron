@@ -155,7 +155,7 @@ export class Single extends React.Component {
                 
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
-                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} subtaskAmount={details.subtasks} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
+                    {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} taskDetails={details} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
                 </div>
                 <ControlPanel previousFrame={::this._previousFrame} nextFrame={::this._nextFrame} showSubtask={this._showSubtask.bind(this, frameID)} frameIndex={frameIndex}/>
             </div>
