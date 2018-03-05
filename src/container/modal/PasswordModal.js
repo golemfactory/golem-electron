@@ -21,7 +21,8 @@ export class PasswordModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            password: ""
+            password: "",
+            loadingIndicator: false
         }
         this._handleCancel = ::this._handleCancel
     }
@@ -30,11 +31,6 @@ export class PasswordModal extends React.Component {
             var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
             // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
             if (!isClickInside) {
-                //the click was outside the parent, do something
-                if(connectionProblem.issue === knownIssues.PORT)
-                    this.props.actions.skipPortError()
-                else
-                    this.props.actions.setUpdateSeen()
                 this._handleCancel()
             }
     }
@@ -49,12 +45,24 @@ export class PasswordModal extends React.Component {
         window.applicationSurface.removeEventListener('click', this._clickOutside)
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.passwordModal.error){
+            const modal = document.getElementById("passwordModalContainer")
+            modal.classList.add("modal-error")
+            setTimeout(() => {
+                modal.classList.remove("modal-error")
+            }, 1000)
+            this.setState({
+                loadingIndicator: false
+            })
+        }
+    }
+
     _handleCancel() {
         this.props.closeModal()
     }
 
     foo(e){
-        console.log("Password Callback", e)
         this.setState({
             password: e.password
         })
@@ -71,15 +79,23 @@ export class PasswordModal extends React.Component {
         }
     }
 
+    _setPassword(){
+        this.props.actions.setPassword(this.state.password)
+        this.setState({
+            loadingIndicator: true
+        })
+    }
+
     render() {
         const {passwordModal} = this.props
+        const {loadingIndicator} = this.state
         return (
             <div ref="modalContent" className="container__modal container__password-modal">
-                <div className="content__modal">
+                <div id="passwordModalContainer" className="content__modal">
                     <div className="container-icon">
                         <span className="icon-lock"/>
                     </div>
-                    <form>
+                    <form onSubmit={::this._setPassword}>
                         <div className="container__field">
                             <label>Password</label>
                             <ReactPasswordStrength
@@ -97,7 +113,11 @@ export class PasswordModal extends React.Component {
                                 <input type="text" placeholder="Re-enter your password" onChange={::this._confirmPassword}/>
                             </div>
                         }
-                        <button type="submit" className="btn--outline">{(passwordModal && passwordModal.register) ? "Register": "Login"}</button>
+                        <button type="submit" className={`btn--outline ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
+                          <span className="dot-1">.</span>
+                          <span className="dot-2">.</span>
+                          <span className="dot-3">.</span>
+                        </span> }</button>
                     </form>
                 </div>
             </div>

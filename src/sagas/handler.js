@@ -76,6 +76,7 @@ export let config = Object.freeze({
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
+    SET_PASSWORD_RPC: 'golem.password.set',
     LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
     GOLEM_STATUS_RPC: 'golem.status',
     GOLEM_STATUS_CH: 'evt.golem.status',

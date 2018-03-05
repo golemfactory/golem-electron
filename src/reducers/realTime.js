@@ -1,7 +1,7 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.electron
 
-const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO, SET_PASSWORD_MODAL} = dict
 
 const initialState = {
     balance: [0, 0],
@@ -89,6 +89,16 @@ const realTime = (state = initialState, action) => {
         }
 
         return Object.assign({}, state, changedState);
+
+    case SET_PASSWORD_MODAL:
+        const {status, error} = action.payload
+        return Object.assign({}, state, {
+            passwordModal: { 
+                status, 
+                register: state.passwordModal.register,
+                error
+            }
+        });
 
     case SET_FOOTER_INFO:
         return Object.assign({}, state, {

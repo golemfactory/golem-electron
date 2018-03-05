@@ -10,6 +10,7 @@ import { versionFlow } from "./version";
 import { golemStatusFlow } from "./golem";
 import { frameBase } from "./frame";
 import { engineFlow } from "./engine";
+import { encryptionFlow } from "./password";
 import { currencyFlow } from "./currency";
 import { connectedPeersFlow } from "./connectedPeers";
 import { balanceFlow } from "./balance";
@@ -195,6 +196,7 @@ export function* handleIO(connection) {
         yield fork(versionFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
+        yield fork(encryptionFlow, connection);
         yield fork(settingsFlow, connection);
         yield fork(advancedFlow, connection);
         yield fork(statsFlow, connection);
