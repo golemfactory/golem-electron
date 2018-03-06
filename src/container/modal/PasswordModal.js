@@ -6,7 +6,6 @@ import ReactPasswordStrength from 'react-password-strength';
 
 import * as Actions from '../../actions'
 
-
 const mapStateToProps = state => ({
     passwordModal: state.realTime.passwordModal
 })
@@ -29,7 +28,6 @@ export class PasswordModal extends React.Component {
 
     clickOutside(parent, event) {
             var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
-            // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
             if (!isClickInside) {
                 this._handleCancel()
             }
@@ -52,8 +50,11 @@ export class PasswordModal extends React.Component {
             setTimeout(() => {
                 modal.classList.remove("modal-error")
             }, 1000)
+            if(this.refs.password)
+                this.refs.password.value = "";
             this.setState({
-                loadingIndicator: false
+                loadingIndicator: false,
+                passowrd: ""
             })
         }
     }
@@ -65,6 +66,12 @@ export class PasswordModal extends React.Component {
     foo(e){
         this.setState({
             password: e.password
+        })
+    }
+
+    _handlePassword(e){
+        this.setState({
+            password: e.target.value
         })
     }
 
@@ -86,6 +93,13 @@ export class PasswordModal extends React.Component {
         })
     }
 
+    _preventSpace(event){
+        var key = event.which || window.event.which;
+        if (key === 32) {
+          event.preventDefault();
+        }
+    }
+
     render() {
         const {passwordModal} = this.props
         const {loadingIndicator} = this.state
@@ -96,7 +110,8 @@ export class PasswordModal extends React.Component {
                         <span className="icon-lock"/>
                     </div>
                     <form onSubmit={::this._setPassword}>
-                        <div className="container__field">
+                     {(passwordModal && passwordModal.register) ?
+                        [<div className="container__field">
                             <label>Password</label>
                             <ReactPasswordStrength
                               className="passwordField"
@@ -104,14 +119,17 @@ export class PasswordModal extends React.Component {
                               minScore={2}
                               scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
                               changeCallback={::this.foo}
-                              inputProps={{ name: "password_input", autoComplete: "off", className: "form-control" }}
+                              inputProps={{ name: "password_input", autoComplete: "off", className: "form-control", onKeyPress: this._preventSpace}}
                             />
+                        </div>,
+                        <div className="container__field">
+                            <label>Confirm Password</label>
+                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace}/>
+                        </div>] : 
+                        <div className="container__field">
+                            <label>Password</label>
+                            <input ref="password" type="password" onChange={::this._handlePassword} onKeyPress={::this._preventSpace}/>
                         </div>
-                        {(passwordModal && passwordModal.register) &&
-                            <div className="container__field">
-                                <label>Confirm Password</label>
-                                <input type="text" placeholder="Re-enter your password" onChange={::this._confirmPassword}/>
-                            </div>
                         }
                         <button type="submit" className={`btn--outline ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
                           <span className="dot-1">.</span>

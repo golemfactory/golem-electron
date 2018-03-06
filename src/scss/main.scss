@@ -247,12 +247,14 @@ input.invalid {
 }
 
 input[type=text],
-input[type=number] {
+input[type=number],
+input[type=password] {
     background: $color-input;
     border: solid 0.5px $color-border;
 }
 
-input[type=text] {
+input[type=text],
+input[type=password] {
     background: $color-input;
     border: 1px solid $color-border;
     height: 32px;
