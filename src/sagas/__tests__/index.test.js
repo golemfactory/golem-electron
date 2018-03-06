@@ -9,6 +9,7 @@ import { versionFlow } from '../version'
 import { golemStatusFlow } from '../golem'
 import { frameBase } from '../frame'
 import { engineFlow } from '../engine'
+import { encryptionFlow } from '../password'
 import { currencyFlow } from '../currency'
 import { connectedPeersFlow } from '../connectedPeers'
 import { balanceFlow } from '../balance'
@@ -148,6 +149,9 @@ describe('handleIO', () => {
 
             .next()
             .fork(engineFlow, connection)
+
+            .next()
+            .fork(encryptionFlow, connection)
 
             .next()
             .fork(settingsFlow, connection)
