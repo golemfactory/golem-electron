@@ -123,46 +123,31 @@ if (process.platform === 'darwin') {
     })
 }
 
-    // Edit menu
-    template[1].submenu = [{
-        type: 'separator'
-    },
-        {
-            label: 'Speech',
-            submenu: [
-                {
-                    role: 'startspeaking'
-                },
-                {
-                    role: 'stopspeaking'
-                }
-            ]
-        }]
+//View menu
+template[2].submenu.push({
+    label: 'Debug mode',
+    type: 'checkbox',
+    checked: isDebugMode,
+    accelerator: 'CmdOrCtrl+Shift+L',
+    click: () => {
+        isDebugMode = !isDebugMode
+        setConfig(DEBUG_MODE, isDebugMode)
+        console.info('!', `Debug mode ${isDebugMode ? 'started.' : 'stopped.'}`);
+    }
+})
 
-    //View menu
-    template[2].submenu.push({
-        label: 'Debug mode',
-        type: 'checkbox',
-        checked: isDebugMode,
-        accelerator: 'CmdOrCtrl+Shift+L',
-        click: () => {
-            isDebugMode = !isDebugMode
-            setConfig(DEBUG_MODE, isDebugMode)
-            console.info('!', `Debug mode ${isDebugMode ? 'started.' : 'stopped.'}`);
-        }
-    })
+template[2].submenu.push({
+    label: 'Developer mode',
+    type: 'checkbox',
+    checked: isDeveloperMode,
+    accelerator: 'CmdOrCtrl+Shift+D',
+    click: () => {
+        isDeveloperMode = !isDeveloperMode
+        setConfig(DEVELOPER_MODE, isDeveloperMode)
+        console.info('!', `Developer mode ${isDeveloperMode ? 'started.' : 'stopped.'}`);
+    }
+})
 
-    template[2].submenu.push({
-        label: 'Developer mode',
-        type: 'checkbox',
-        checked: isDeveloperMode,
-        accelerator: 'CmdOrCtrl+Shift+D',
-        click: () => {
-            isDeveloperMode = !isDeveloperMode
-            setConfig(DEVELOPER_MODE, isDeveloperMode)
-            console.info('!', `Developer mode ${isDeveloperMode ? 'started.' : 'stopped.'}`);
-        }
-    })
 
     // template[2].submenu.push({
     //     label: 'Use Local Geth',
@@ -176,21 +161,21 @@ if (process.platform === 'darwin') {
     //     }
     // })
 
-    // Window menu
-    template[3].submenu = [
-        {
-            role: 'close'
-        },
-        {
-            role: 'minimize'
-        },
-        {
-            type: 'separator'
-        },
-        {
-            role: 'front'
-        }
-    ]
+// Window menu
+template[3].submenu = [
+    {
+        role: 'close'
+    },
+    {
+        role: 'minimize'
+    },
+    {
+        type: 'separator'
+    },
+    {
+        role: 'front'
+    }
+]
 
 const menu = Menu.buildFromTemplate(template)
 module.exports = menu

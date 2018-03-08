@@ -97,7 +97,8 @@
         overflow-y: overlay;
     }
 
-    &.warning {
+    &.warning,
+    &.error {
         background: $color-accent2 !important;
     }
 }

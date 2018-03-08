@@ -3,10 +3,25 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <style>
-    ::selection {
+    :not(input):not(textarea)
+    ::selection,
+	:not(input):not(textarea)::after
+	::selection,
+	:not(input):not(textarea)::before
+    ::selection{
         background: transparent;
         /* WebKit/Blink Browsers */
     }
+    :not(input):not(textarea),
+	:not(input):not(textarea)::after,
+	:not(input):not(textarea)::before {
+	    -webkit-user-select: none;
+	    user-select: none;
+	    cursor: default;
+	}
+	input, button, textarea, :focus {
+	    outline: none; 
+	}
     </style>
 </head>
 

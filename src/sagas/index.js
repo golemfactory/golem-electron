@@ -4,7 +4,7 @@ import { login, setMessage, logout, dict } from "../actions";
 
 import Wampy from "wampy";
 import MsgpackSerializer from "./../utils/MsgpackSerializer";
-import { config, _handleSUBPUB, _handleRPC } from "./handler";
+import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
 import { versionFlow } from "./version";
 import { golemStatusFlow } from "./golem";
@@ -85,6 +85,7 @@ export function connect() {
                     console.log("WS: connection closed");
                 },
                 onError: (err, details) => {
+                    connection.disconnect()
                     console.info("WS: connection error:", err, details);
 
                     if (reconnection) {
@@ -166,6 +167,7 @@ export function subscribe(session) {
 export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
+
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
     yield fork(historyFlow, connection);
@@ -173,6 +175,7 @@ export function* apiFlow(connection) {
     yield fork(trustFlow, connection);
     yield fork(currencyFlow);
 }
+
 /**
  * { handleIO generator handling multiple generators concurrently }
  *
@@ -181,43 +184,65 @@ export function* apiFlow(connection) {
  * @return     {boolean}             { job isDone status }
  */
 export function* handleIO(connection) {
-    //yield fork(read, connection);
-    yield fork(versionFlow, connection);
-    yield fork(golemStatusFlow, connection);
-    yield fork(engineFlow, connection);
-    yield fork(settingsFlow, connection);
-    yield fork(advancedFlow, connection);
-    yield fork(statsFlow, connection);
-    yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
-    const channel = yield call(subscribe, connection);
+
+    let channel;
     let taskApi;
     let started = false;
 
-    while (true) {
-        let status = yield take(channel);
+    try {
 
-        if (status && !started) {
-            taskApi = yield fork(apiFlow, connection);
-            yield put({
-                type: SET_CONNECTION_PROBLEM,
-                payload: false
-            });
-            started = true;
-        } else if (!status && taskApi && started) {
-            console.log("SHUT_DOWN");
+        //yield fork(read, connection);
+        yield fork(versionFlow, connection);
+        yield fork(golemStatusFlow, connection);
+        yield fork(engineFlow, connection);
+        yield fork(settingsFlow, connection);
+        yield fork(advancedFlow, connection);
+        yield fork(statsFlow, connection);
+
+        yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
+
+        channel = yield call(subscribe, connection);
+
+        while (true) {
+            let status = yield take(channel);
+            if (status && !started) {
+                taskApi = yield fork(apiFlow, connection);
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: false
+                });
+                started = true;
+            } else if (!status && taskApi && started) {
+                console.log("SHUT_DOWN");
+                if(taskApi)
+                    yield cancel(taskApi);
+                started = false;
+            }
+
+            if (!status) {
+                yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "PORT"
+                    }
+                });
+            }
+        }
+
+    } finally {
+
+        if (taskApi){
             yield cancel(taskApi);
-            started = false;
+            taskApi = null;
         }
 
-        if (!status) {
-            yield put({
-                type: SET_CONNECTION_PROBLEM,
-                payload: {
-                    status: true,
-                    issue: "PORT"
-                }
-            });
+        if (channel){
+            channel.close();
+            channel = null;
         }
+        
+        started = false;
     }
 }
 
@@ -248,6 +273,11 @@ export function* connectionFlow() {
                     }
                 });
                 skipError = false;
+                if(task){
+                    yield cancel(task)
+                    task = null;
+                }
+
             } else {
                 yield put({
                     type: SET_CONNECTION_PROBLEM,

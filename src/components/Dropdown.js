@@ -22,7 +22,6 @@ export default class Dropdown extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if (nextProps.selected !== this.props.selected) {
-            //console.log("NEXT_PROPS", nextProps.selected)
             this.setState({
                 selectedIndex: nextProps.selected
             });
@@ -50,7 +49,7 @@ export default class Dropdown extends React.Component {
         }, () => {
             window.applicationSurface.removeEventListener('click', this._clickOutside)
         });
-        this.props.handleChange(item.name)
+        this.props.handleChange(item.name, index)
     }
 
     show() {

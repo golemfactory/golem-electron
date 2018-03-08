@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -93,7 +93,8 @@
             "node_modules/env-paths",
             "node_modules/write-file-atomic",
             "node_modules/graceful-fs",
-            "node_modules/semver"
+            "node_modules/semver",
+            "node_modules/p-try"
         ]
     },
     "devDependencies": {
@@ -112,7 +113,7 @@
         "compression-webpack-plugin": "^0.3.2",
         "cross-env": "^5.0.1",
         "css-loader": "^0.26.1",
-        "electron": "^1.7.9",
+        "electron": "^1.7.12",
         "electron-builder": "^19.47.1",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "^2.2.1",
