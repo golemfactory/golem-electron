@@ -141,22 +141,10 @@ describe('handleIO', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
             .next()
-            .fork(versionFlow, connection)
-
-            .next()
             .fork(golemStatusFlow, connection)
 
             .next()
             .fork(engineFlow, connection)
-
-            .next()
-            .fork(settingsFlow, connection)
-
-            .next()
-            .fork(advancedFlow, connection)
-
-            .next()
-            .fork(statsFlow, connection)
 
             .next()
             .takeLatestEffect(action.portProblem.type, disablePortFlow)
