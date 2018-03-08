@@ -50,11 +50,11 @@ Now you can close and reopen the application to catch all critical informations 
 You'll find debug logs in;
 <br/>
 <br/>
-Windows &nbsp;&nbsp;`%USERPROFILE%\.golem\logs\gui.log` & `gui-error.log`
+Windows &nbsp;&nbsp;`%LOCALAPPDATA%\golem\golem\default\logs\gui.log` & `gui-error.log`
 <br/>
-Mac &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.golem/logs/gui.log` & `gui-error.log`
+Mac &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/Library/Application\ Support/golem/default/logs/gui.log` & `gui-error.log`
 <br/>
-Linux &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.golem/logs/gui.log` & `gui-error.log`
+Linux &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.local/share/golem/default/logs/gui.log` & `gui-error.log`
 <br/>
 
 ### :control_knobs: Developer mode

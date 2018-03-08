@@ -28,7 +28,7 @@ let LOGPATH;
 
 switch(os.platform()){
     case "win32":
-        LOGPATH = `${HOMEDIR}\\AppData\\golem\\golem\\default\\logs\\`
+        LOGPATH = `${HOMEDIR}\\AppData\\Local\\golem\\golem\\default\\logs\\`
         break;
     case "darwin":
         LOGPATH = `${HOMEDIR}/Library/Application\ Support/golem/default/logs/`
