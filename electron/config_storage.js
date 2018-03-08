@@ -5,7 +5,7 @@ const store = new Store();
 /**
  * CONFIG STORE KEYS
  */
-//config.delete('SHOW_ONBOARD') // <-- Rollback onboard
+//store.delete('DEBUG_MODE') // <-- Rollback onboard
 const dictConfig = {
     HIDE_ONBOARD: 'HIDE_ONBOARD',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',

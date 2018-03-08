@@ -24,17 +24,34 @@ const level = Object.freeze({
     SILLY: 'silly'
 })
 
+let LOGPATH;
+
+switch(os.platform()){
+    case "win32":
+        LOGPATH = `${HOMEDIR}\\AppData\\Local\\golem\\golem\\default\\logs\\`
+        break;
+    case "darwin":
+        LOGPATH = `${HOMEDIR}/Library/Application\ Support/golem/default/logs/`
+        break;
+    case "linux":
+        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
+        break;
+    default:
+        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
+        break;
+}
+
 const log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({
             name: 'debug-file',
-            filename: `${HOMEDIR}/.golem/logs/gui.log`,
+            filename: `${LOGPATH}gui.log`,
             level: 'debug',
             json: false
         }),
         new (winston.transports.File)({
             name: 'error-file',
-            filename: `${HOMEDIR}/.golem/logs/gui-error.log`,
+            filename: `${LOGPATH}gui-error.log`,
             level: 'error'
         })
     ]
