@@ -90,7 +90,7 @@ const messages = {
     ethereum: {
         'node.start': {
             pre: 'Starting geth',
-            post: 'geth started',
+            post: 'Geth started',
             exception: 'Error starting geth'
         },
         'node.stop': {

@@ -41,7 +41,8 @@ const routes = (
 const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
-    passwordModal: state.realTime.passwordModal
+    passwordModal: state.realTime.passwordModal,
+    showOnboard: state.onboard.showOnboard
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -80,7 +81,7 @@ export class App extends Component {
 
     render() {
 
-        const {actions, history, connectionProblem, latestVersion, passwordModal} = this.props
+        const {actions, history, connectionProblem, latestVersion, passwordModal, showOnboard} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
@@ -88,7 +89,7 @@ export class App extends Component {
                     { routes }
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
-                 { (passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
+                 { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

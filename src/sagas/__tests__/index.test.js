@@ -154,15 +154,6 @@ describe('handleIO', () => {
             .fork(encryptionFlow, connection)
 
             .next()
-            .fork(settingsFlow, connection)
-
-            .next()
-            .fork(advancedFlow, connection)
-
-            .next()
-            .fork(statsFlow, connection)
-
-            .next()
             .takeLatestEffect(action.portProblem.type, disablePortFlow)
 
             .next()

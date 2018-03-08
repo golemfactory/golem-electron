@@ -4,7 +4,10 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPasswordStrength from 'react-password-strength';
 
-import * as Actions from '../../actions'
+import * as Actions from '../../../actions'
+
+import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+
 
 const mapStateToProps = state => ({
     passwordModal: state.realTime.passwordModal
@@ -14,8 +17,8 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-export class PasswordModal extends React.Component {
 
+export class Register extends React.Component {
 
     constructor(props) {
         super(props);
@@ -23,29 +26,15 @@ export class PasswordModal extends React.Component {
             password: "",
             loadingIndicator: false
         }
-        this._handleCancel = ::this._handleCancel
-    }
-
-    clickOutside(parent, event) {
-            var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
-            if (!isClickInside) {
-                this._handleCancel()
-            }
     }
 
     componentDidMount() {
-        this._specifiedElement = this.refs.modalContent
-        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
-        window.applicationSurface.addEventListener('click', this._clickOutside)
-    }
-
-    componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this._clickOutside)
+        
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error){
-            const modal = document.getElementById("passwordModalContainer")
+            const modal = document.getElementById("passwordInput")
             modal.classList.add("modal-error")
             setTimeout(() => {
                 modal.classList.remove("modal-error")
@@ -57,10 +46,6 @@ export class PasswordModal extends React.Component {
                 passowrd: ""
             })
         }
-    }
-
-    _handleCancel() {
-        this.props.closeModal()
     }
 
     foo(e){
@@ -100,17 +85,26 @@ export class PasswordModal extends React.Component {
         }
     }
 
-    render() {
-        const {passwordModal} = this.props
-        const {loadingIndicator} = this.state
-        return (
-            <div ref="modalContent" className="container__modal container__password-modal">
-                <div id="passwordModalContainer" className="content__modal">
-                    <div className="container-icon">
-                        <span className="icon-lock"/>
-                    </div>
-                    <form onSubmit={::this._setPassword}>
-                     {(passwordModal && passwordModal.register) ?
+    _initProperContent(_passwordModal){
+        if(_passwordModal.status){
+            return <div>
+                    {(_passwordModal.register) ?
+                        <span>
+                            <strong>It is critical to know that</strong>
+                            <br/>
+                            the password <strong>can not</strong> be recovered.
+                            <br/>
+                            <u>Write it down in a safe and secure place!</u>
+                        </span>
+                     :
+                        <span>Appearently, you already registered your password
+                        <br/>
+                        please log in to unlock the application!</span>
+                    }
+                        <br/>
+                        <br/>
+                    <form id="passwordForm" onSubmit={::this._setPassword}>
+                     {(_passwordModal.register) ?
                         [<div key="1" className="container__field">
                             <label>Password</label>
                             <ReactPasswordStrength
@@ -126,21 +120,38 @@ export class PasswordModal extends React.Component {
                             <label>Confirm Password</label>
                             <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace}/>
                         </div>] : 
-                        <div className="container__field">
+                        <div id="passwordInput" className="container__field">
                             <label>Password</label>
                             <input ref="password" type="password" onChange={::this._handlePassword} onKeyPress={::this._preventSpace}/>
                         </div>
                         }
-                        <button type="submit" className={`btn--outline ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
-                          <span className="dot-1">.</span>
-                          <span className="dot-2">.</span>
-                          <span className="dot-3">.</span>
-                        </span> }</button>
                     </form>
+                </div>
+        } else {
+            return <div>
+                        <span>
+                            Seems like you already unlock the application.
+                            <br/>
+                            Enjoy the all unique features!
+                        </span>
+                    </div>
+        }
+    }
+
+    render() {
+        const {passwordModal} = this.props
+        const {loadingIndicator} = this.state
+        return (
+            <div className="container-step__onboarding">
+                <div className="section-image__onboarding welcome-beta">
+                   <img className="welcome-image" src={welcomeBeta}/>
+                </div>
+                <div className="desc__onboarding">
+                    {passwordModal && ::this._initProperContent(passwordModal)}
                 </div>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PasswordModal)
+export default connect(mapStateToProps, mapDispatchToProps)(Register)

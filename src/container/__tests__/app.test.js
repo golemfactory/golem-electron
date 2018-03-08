@@ -66,6 +66,9 @@ describe('<App />', () => {
                 realTime:{
                     connectedPeers: []
                 },
+                onboard:{
+                    showOnboard: false
+                },
                 actions: jest.fn()
             })}>
                 <ConnectedApp history={history}/>
