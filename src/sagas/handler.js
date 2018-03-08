@@ -13,6 +13,7 @@ export let config = Object.freeze({
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
     UPDATE_SETTINGS_RPC: 'env.opts.update',
+    UPDATE_SETTING_RPC: 'env.opt.update',
     //Account
     GET_DATA_DIR_RPC: 'env.datadir',
     GET_KEY_ID_RPC: 'crypto.keys.id',

@@ -165,6 +165,11 @@ export function subscribe(session) {
 }*/
 
 export function* apiFlow(connection) {
+    yield fork(settingsFlow, connection);
+    yield fork(advancedFlow, connection);
+    yield fork(statsFlow, connection);
+    yield fork(versionFlow, connection);
+        
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
 
@@ -192,12 +197,8 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
-        yield fork(versionFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
-        yield fork(settingsFlow, connection);
-        yield fork(advancedFlow, connection);
-        yield fork(statsFlow, connection);
 
         yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 

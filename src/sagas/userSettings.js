@@ -22,9 +22,7 @@ export function updateSettings(session, type, payload) {
             let updateStatus = args[0];
             resolve(updateStatus)
         }
-        _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTINGS_RPC, [{
-            [parameterDict[type]]: payload
-        }])
+        _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTING_RPC, [parameterDict[type], payload])
     })
 }
 
