@@ -22,6 +22,7 @@ export function updateSettings(session, type, payload) {
             let updateStatus = args[0];
             resolve(updateStatus)
         }
+        console.log("NAME UPDATE RECEIVED: ", type, payload)
         _handleRPC(on_update_choosen_preset, session, config.UPDATE_SETTING_RPC, [parameterDict[type], payload])
     })
 }
@@ -116,6 +117,9 @@ export function* fireBase(session) {
 
 export function* settingsFlow(session) {
     yield fork(fireBase, session)
+}
+
+export function* settingsInteractionFlow(session){
     yield takeLatest(SET_PROV_MIN_PRICE, updateSettingsBase, session)
     yield takeLatest(SET_REQ_MAX_PRICE, updateSettingsBase, session)
     yield takeLatest(SET_FILE_LOCATION, updateSettingsBase, session)

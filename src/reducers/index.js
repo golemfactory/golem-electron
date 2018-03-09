@@ -26,6 +26,7 @@ import loader from './loader'
 import currency from './currency'
 import realTime from './realTime'
 import info from './info'
+import queue from './queue'
 import { routerReducer } from 'react-router-redux'
 
 const reducer = combineReducers({
@@ -56,6 +57,7 @@ const reducer = combineReducers({
     currency,
     realTime,
     info,
+    queue,
     routing: routerReducer
 })
 

@@ -90,12 +90,12 @@ const messages = {
     ethereum: {
         'node.start': {
             pre: 'Starting geth',
-            post: 'geth started',
+            post: 'Geth started',
             exception: 'Error starting geth'
         },
         'node.stop': {
             pre: 'Stopping geth',
-            post: 'geth stopped',
+            post: 'Geth stopped',
             exception: 'Error stopping geth'
         },
         'sync': {
