@@ -97,7 +97,11 @@ class OnboardIndex extends React.Component {
     _handleNext() {
         const {currentStep, nodeName} = this.state
         if (currentStep === 2) {
-            this.props.actions.updateNodeName(nodeName)
+            const queuedTask = {
+                action: "updateNodeName",
+                arguments: [nodeName]
+            }
+            this.props.actions.addQueue(queuedTask)
         }
         if (currentStep < 5) {
             this.setState({

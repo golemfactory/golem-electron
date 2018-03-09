@@ -19,7 +19,7 @@ import { performanceFlow } from "./performance";
 import { statsFlow } from "./stats";
 import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
-import { settingsFlow } from "./userSettings";
+import { settingsFlow, settingsInteractionFlow } from "./userSettings";
 import { networkInfoFlow } from "./networkInfo";
 
 const { ipcRenderer } = window.electron;
@@ -199,6 +199,7 @@ export function* handleIO(connection) {
         //yield fork(read, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
+        yield fork(settingsInteractionFlow, connection);
 
         yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 
