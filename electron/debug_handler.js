@@ -47,6 +47,7 @@ if (!fs.existsSync(LOGPATH)){ //ensure that log path already exist in the system
     mkdirp(LOGPATH, function (err) {
         if (err) console.error(err)
         else console.log('Log directory created')
+    })
 }
 
 const log = new (winston.Logger)({
