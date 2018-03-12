@@ -22,9 +22,23 @@
 	flex: 0 0 315px;
 
 	.address-box__wallet{
+		position: relative;
 		margin-right: 30px;
 		display: block;
+
+		.input__public-key{
+			padding-right: 40px;
+		}
+
+		.icon-copy{
+			position: absolute;
+			right: 5px;
+			bottom: 3px;
+			font-size: 20pt;
+			cursor: pointer;
+		}
 	}
+
 
 	.icon-arrow-up{
 		position: absolute;

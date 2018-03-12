@@ -22,6 +22,23 @@
 			font-size: 11pt;
 		}
 	}
+	
+	span[class^="icon"][class$="logo"]{
+		display: inline;
+		font-size:26pt;
+		color: $color-text4;
+		border-radius: 50%;
+		transition: 1s all;
+	}
+
+	.icon-golem-logo{
+		background: #001D57;
+	}
+
+	.icon-ethereum-logo{
+		background: #3C3C3D;
+	}
+
 
 	.currency-suffix{
 		display: inline !important;
@@ -61,8 +78,8 @@
 		border: 1px solid $color-border;
 	}
 
-	.icon-android{
-		font-size: 40px !important;
+	span[class^="icon"][class$="logo"]{
+		font-size:36pt;
 	}
 
 	.icon-question-mark{

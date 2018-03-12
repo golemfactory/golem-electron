@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { hashHistory } from 'react-router'
+
+import * as Actions from './../../actions'
 import { timeStampToHR } from './../../utils/secsToHMS'
 
 import CurrencyBox from './CurrencyBox'
 
-const {remote} = window.electron;
-const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
-const {INDICATOR_ID} = dictConfig
+const {clipboard } = window.electron
 
+const mapStateToProps = state => ({
+    publicKey: state.account.publicKey,
+})
 
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
 
-export default class Wallet extends Component {
+export class Wallet extends Component {
 
     constructor(props) {
         super(props);
@@ -24,8 +33,14 @@ export default class Wallet extends Component {
    		expandButton.classList.toggle("icon-arrow-up");
     }
 
+    _handleCopyToClipboard(_publicKey, evt) {
+        if (_publicKey) {
+            clipboard.writeText(_publicKey)
+        }
+    }
+
     render() {
-        
+        const { publicKey } = this.props
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
@@ -41,10 +56,13 @@ export default class Wallet extends Component {
 		            	<span>send GNT and ETH to this address to top up your account</span>
 		            </div>
 		            <div>
-		            	<input type="text" placeholder="0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1"/>
+		            	<input className="input__public-key" type="text" value={publicKey} readOnly/>
+	                	<span className="icon-copy" onClick={this._handleCopyToClipboard.bind(this, publicKey)}/>
 		            </div>
 	            </div>
             </div>
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Wallet)

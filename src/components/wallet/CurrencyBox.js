@@ -6,7 +6,10 @@ const {remote} = window.electron;
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 const {INDICATOR_ID} = dictConfig
 
-
+const currencies = {
+    GNT: 'golem-logo',
+    ETH: 'ethereum-logo'
+}
 
 export default class CurrencyBox extends Component {
 
@@ -19,7 +22,7 @@ export default class CurrencyBox extends Component {
         return (
             <div className="content__currency-box">
                 <div>
-                	<span className="icon-android"/>
+                	<span className={`icon-${currencies[suffix]}`}/>
                 </div>
                 <div>
                 	<span>{amount}<span className="currency-suffix">{suffix}</span></span>
