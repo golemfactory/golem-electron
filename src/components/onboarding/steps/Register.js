@@ -111,7 +111,7 @@ export class Register extends React.Component {
                             <br/>
                             the password <strong>can not</strong> be recovered.
                             <br/>
-                            <u>Write it down in a safe and secure place!</u>
+                            <strong>Write it down in a safe and secure place!</strong>
                         </span>
                      :
                         <span>Appearently, you already registered.

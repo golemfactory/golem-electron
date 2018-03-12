@@ -148,7 +148,7 @@ class OnboardIndex extends React.Component {
         const {loadingIndicator} = this.state
         if(_step === 1 || _step === 8){
             return <div>
-                <button className="btn btn--outline" onClick={::this._handleNext}>Get Started</button>
+                <button className="btn btn--primary" onClick={::this._handleNext}>Get Started</button>
             </div>
         }
         else if(_step === 2){
