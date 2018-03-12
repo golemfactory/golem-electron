@@ -3,10 +3,70 @@ $color_2: rgb(245, 245, 245);
 $color_3: rgb(64, 93, 175);
 $color_4: rgb(245, 166, 35);
 
-.icon-no-connection-2 {
+.icon-no-connection2 {
     &:before {
         content: "\e900";
         color: $color_1;
+    }
+}
+.icon-clipboard2 {
+    &:before {
+        content: "\e94b";
+    }
+}
+.icon-copy {
+    &:before {
+        content: "\e94c";
+    }
+}
+.icon-ethereum-logo {
+    &:before {
+        content: "\e94d";
+    }
+}
+.icon-file-menu {
+    &:before {
+        content: "\e94e";
+    }
+}
+.icon-folder-menu {
+    &:before {
+        content: "\e94f";
+    }
+}
+.icon-golem-logo {
+    &:before {
+        content: "\e950";
+    }
+}
+.icon-info-small {
+    &:before {
+        content: "\e951";
+    }
+}
+.icon-locked {
+    &:before {
+        content: "\e952";
+    }
+}
+.icon-pencil2 {
+    &:before {
+        content: "\e953";
+    }
+}
+.icon-unlocked {
+    &:before {
+        content: "\e954";
+    }
+}
+.icon-wallet {
+    &:before {
+        content: "\e955";
+    }
+}
+.icon-warning-small {
+    &:before {
+        content: "\e956";
     }
 }
 .icon-add {
@@ -76,12 +136,11 @@ $color_4: rgb(245, 166, 35);
         }
     }
 }
-
 .icon-blender-grey {
     .path1 {
         &:before {
             content: "\e90a";
-            color: $color_2;
+            color: rgb(245, 245, 245);
         }
     }
     .path2 {
@@ -97,7 +156,6 @@ $color_4: rgb(245, 166, 35);
         }
     }
 }
-
 .icon-book {
     &:before {
         content: "\e90d";

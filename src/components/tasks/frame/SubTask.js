@@ -110,7 +110,8 @@ const statusDict = Object.freeze({
     STARTING: 'Starting',
     DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
-    FAILURE: 'Aborted'
+    FAILURE: 'Aborted',
+    TIMEOUT: 'Timeout'
 })
 
 let statusClassDict = {
@@ -146,7 +147,8 @@ export default class SubTask extends React.Component {
      * @return {corner points of the drawings [Array]}
      */
     drawLine(isDevMode, _offset) {
-        const {data, ratio, subtaskList, subtaskAmount} = this.props
+        const {data, ratio, subtaskList, taskDetails} = this.props
+        console.log("taskDetails", taskDetails.status == statusDict.TIMEOUT);
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
                 key: anchestorKey,
@@ -192,7 +194,7 @@ export default class SubTask extends React.Component {
             .map((item, index) => {
                 
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
-                const isDirectionTop = index + 1 > subtaskAmount / 2;
+                const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
                 overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
@@ -215,7 +217,7 @@ export default class SubTask extends React.Component {
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
-                        <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)}>Resubmit</button>
+                        <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)} disabled={taskDetails.status === statusDict.TIMEOUT}>Resubmit</button>
                     </div>}
                 align={{
                     offset: tooltipOffset(item.value, isDirectionTop),
