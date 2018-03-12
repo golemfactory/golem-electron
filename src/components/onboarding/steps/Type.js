@@ -1,6 +1,6 @@
 import React from 'react';
 
-import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+import penIcon from './../../../assets/img/pen.svg'
 
 export default class Type extends React.Component {
 
@@ -12,7 +12,7 @@ export default class Type extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={welcomeBeta}/>
+                   <img className="welcome-image" src={penIcon}/>
                 </div>
                 <div className="desc__onboarding">
                     <span>We do not keep the copy of your

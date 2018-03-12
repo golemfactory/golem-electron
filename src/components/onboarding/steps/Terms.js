@@ -1,6 +1,6 @@
 import React from 'react';
 
-import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+import termsIcon from './../../../assets/img/terms.svg'
 
 export default class Terms extends React.Component {
 
@@ -22,7 +22,7 @@ export default class Terms extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={welcomeBeta}/>
+                   <img className="welcome-image" src={termsIcon}/>
                 </div>
                 <div className="desc__onboarding" onChange={::this._handleTypeRadio}>
                     <span>By clicking Accept, you confirm

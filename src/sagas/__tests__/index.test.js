@@ -19,7 +19,7 @@ import { performanceFlow } from '../performance'
 import { statsFlow } from '../stats'
 import { trustFlow } from '../trust'
 import { tasksFlow } from '../tasks'
-import { settingsFlow } from '../userSettings'
+import { settingsFlow, settingsInteractionFlow } from '../userSettings'
 import { networkInfoFlow } from '../networkInfo'
 
 describe('handleIO', () => {
@@ -142,9 +142,6 @@ describe('handleIO', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
             .next()
-            .fork(versionFlow, connection)
-
-            .next()
             .fork(golemStatusFlow, connection)
 
             .next()
@@ -153,6 +150,9 @@ describe('handleIO', () => {
             .next()
             .fork(encryptionFlow, connection)
 
+            .next()
+            .fork(settingsInteractionFlow, connection)
+            
             .next()
             .takeLatestEffect(action.portProblem.type, disablePortFlow)
 

@@ -64,7 +64,13 @@ describe('<App />', () => {
                     },
                 },
                 realTime:{
-                    connectedPeers: []
+                    connectedPeers: [],
+                    golemStatus: {
+                        status: false
+                    }
+                },
+                queue: {
+                    next: []
                 },
                 onboard:{
                     showOnboard: false

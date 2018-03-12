@@ -21,7 +21,8 @@ export class PasswordModal extends React.Component {
         super(props);
         this.state = {
             password: "",
-            loadingIndicator: false
+            loadingIndicator: false,
+            passwordMaskToggle: false
         }
         this._handleCancel = ::this._handleCancel
     }
@@ -45,10 +46,12 @@ export class PasswordModal extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error){
-            const modal = document.getElementById("passwordModalContainer")
-            modal.classList.add("modal-error")
+            const container = document.getElementById("passwordModalContainer")
+            container.classList.add("modal-error")
+            this.refs.password.classList.add("invalid")
+            this.refs.errorInfo.textContent = "wrong password"
             setTimeout(() => {
-                modal.classList.remove("modal-error")
+                container.classList.remove("modal-error")
             }, 1000)
             if(this.refs.password)
                 this.refs.password.value = "";
@@ -100,6 +103,12 @@ export class PasswordModal extends React.Component {
         }
     }
 
+    _togglePasswordMask(){
+        this.setState({
+            passwordMaskToggle: !this.state.passwordMaskToggle
+        })
+    }
+
     render() {
         const {passwordModal} = this.props
         const {loadingIndicator} = this.state
@@ -107,7 +116,12 @@ export class PasswordModal extends React.Component {
             <div ref="modalContent" className="container__modal container__password-modal">
                 <div id="passwordModalContainer" className="content__modal">
                     <div className="container-icon">
-                        <span className="icon-lock"/>
+                        <span className="icon-locked"/>
+                    </div>
+                    <div>
+                        <strong>Enter password</strong>
+                        <br/>
+                        <hint>to unlock your Golem</hint>
                     </div>
                     <form onSubmit={::this._setPassword}>
                      {(passwordModal && passwordModal.register) ?
@@ -119,19 +133,33 @@ export class PasswordModal extends React.Component {
                               minScore={2}
                               scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
                               changeCallback={::this.foo}
-                              inputProps={{ name: "password_input", autoComplete: "off", className: "form-control", onKeyPress: this._preventSpace}}
+                              inputProps={{ 
+                                name: "password_input", 
+                                autoComplete: "off", 
+                                className: "form-control", 
+                                onKeyPress: this._preventSpace,
+                                required: true,
+                                autoFocus: true
+                            }}
                             />
                         </div>,
                         <div key="2" className="container__field">
                             <label>Confirm Password</label>
-                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace}/>
+                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace} required/>
                         </div>] : 
                         <div className="container__field">
                             <label>Password</label>
-                            <input ref="password" type="password" onChange={::this._handlePassword} onKeyPress={::this._preventSpace}/>
+                            <input 
+                                ref="password" 
+                                type={`${this.state.passwordMaskToggle ? "text" : "password"}`}
+                                onChange={::this._handlePassword} 
+                                onKeyPress={::this._preventSpace}
+                                required autoFocus/>
+                            <span ref="passwordMaskToggle" className="icon-eye" onClick={::this._togglePasswordMask}/>
+                            <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
-                        <button type="submit" className={`btn--outline ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
+                        <button type="submit" className={`btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
                           <span className="dot-1">.</span>
                           <span className="dot-2">.</span>
                           <span className="dot-3">.</span>

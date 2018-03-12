@@ -106,7 +106,8 @@
     }
 
     form{
-          width: 100%;
+        position: relative;
+        width: 100%;
 
           label{
             display:inline-block;
@@ -121,8 +122,23 @@
             font-size: 18px;
           }
 
+          .icon-eye{
+            position: absolute;
+            right: 10px;
+            bottom: 7px;
+            z-index: 4;
+            cursor: pointer;
+          }
+
           .container__field{
             margin: 20px 0;
+          }
+
+          .error-info{
+            position: absolute;
+            right: 0;
+            color: $color-error;
+            font-size: 8pt;
           }
         }
         .ReactPasswordStrength{

@@ -49,7 +49,10 @@ global.window.require = function () {
         dialog: {
             showOpenDialog: function () {}
         },
-        BrowserWindow: function () {}
+        BrowserWindow: function () {},
+        app: {
+            getVersion: function () {}
+        }
     }
   }
 };

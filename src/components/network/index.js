@@ -122,35 +122,6 @@ export class MainFragment extends React.Component {
         const {actions} = this.props
         const endLoading = () => {
             actions.endLoading("MAIN_LOADER")
-            // To replay animation
-            /*Object.keys(require.cache).forEach(function(key) {
-                delete require.cache[key]
-            })*/
-
-            /*!!!!!!!!!!!!!!!!! EXPERIMENTAL !!!!!!!!!!!!!!*/
-            // if (!("Notification" in window)) {
-            //     console.info("This browser does not support desktop notification");
-            // }
-
-        // // Let's check whether notification permissions have already been granted
-        // else if (Notification.permission === "granted") {
-        //     let myNotification = new Notification('Golem', {
-        //         body: 'Loaded!',
-        //         icon: golem_logo,
-        //         requireInteraction: true
-        //     })
-        // } else if (Notification.permission !== "denied") {
-        //     Notification.requestPermission(function(permission) {
-        //         // If the user accepts, let's create a notification
-        //         if (permission === "granted") {
-        //             let myNotification = new Notification('Golem', {
-        //                 body: 'Loaded!',
-        //                 icon: golem_logo,
-        //                 requireInteraction: true
-        //             })
-        //         }
-        //     });
-        // }
         }
 
         actions.startLoading("MAIN_LOADER", "I am loading!")

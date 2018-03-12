@@ -286,6 +286,11 @@ input[type=number]::-webkit-inner-spin-button {
     &:hover {}
 }
 
+hint{
+    font-size: 9pt;
+    color: $color-text2;
+}
+
 .text-right {
     text-align: right;
 }

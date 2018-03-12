@@ -6,7 +6,8 @@ import ReactPasswordStrength from 'react-password-strength';
 
 import * as Actions from '../../../actions'
 
-import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+import lockedIcon from './../../../assets/img/locked.svg'
+import unlockedIcon from './../../../assets/img/unlocked.svg'
 
 
 const mapStateToProps = state => ({
@@ -24,20 +25,19 @@ export class Register extends React.Component {
         super(props);
         this.state = {
             password: "",
-            loadingIndicator: false
+            loadingIndicator: false,
+            passwordMaskToggle: false
         }
-    }
-
-    componentDidMount() {
-        
     }
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error){
-            const modal = document.getElementById("passwordInput")
-            modal.classList.add("modal-error")
+            const container = document.getElementById("passwordContainer")
+            container.classList.add("modal-error")
+            this.refs.password.classList.add("invalid")
+            this.refs.errorInfo.textContent = "wrong password"
             setTimeout(() => {
-                modal.classList.remove("modal-error")
+                container.classList.remove("modal-error")
             }, 1000)
             if(this.refs.password)
                 this.refs.password.value = "";
@@ -78,11 +78,28 @@ export class Register extends React.Component {
         })
     }
 
+    _togglePasswordMask(){
+        this.setState({
+            passwordMaskToggle: !this.state.passwordMaskToggle
+        })
+    }
+
     _preventSpace(event){
         var key = event.which || window.event.which;
         if (key === 32) {
           event.preventDefault();
         }
+    }
+
+    _focustToInput(){
+        
+        setTimeout(() => {
+            const registerInput = document.getElementById("register")
+            const passwordInput = this.refs.password
+            const focusedInput = registerInput || passwordInput
+            focusedInput.focus()
+        }, 600)
+        return null
     }
 
     _initProperContent(_passwordModal){
@@ -97,9 +114,9 @@ export class Register extends React.Component {
                             <u>Write it down in a safe and secure place!</u>
                         </span>
                      :
-                        <span>Appearently, you already registered your password
+                        <span>Appearently, you already registered.
                         <br/>
-                        please log in to unlock the application!</span>
+                        Please <strong>log in</strong> to unlock the application!</span>
                     }
                         <br/>
                         <br/>
@@ -113,18 +130,33 @@ export class Register extends React.Component {
                               minScore={2}
                               scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
                               changeCallback={::this.foo}
-                              inputProps={{ name: "password_input", autoComplete: "off", className: "form-control", onKeyPress: this._preventSpace}}
+                              inputProps={{
+                                id: "register",
+                                name: "password_input", 
+                                autoComplete: "off", 
+                                className: "form-control", 
+                                onKeyPress: this._preventSpace,
+                                required: true
+                            }}
                             />
                         </div>,
                         <div key="2" className="container__field">
                             <label>Confirm Password</label>
-                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace}/>
+                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace} required/>
                         </div>] : 
-                        <div id="passwordInput" className="container__field">
+                        <div id="passwordContainer" className="container__field">
                             <label>Password</label>
-                            <input ref="password" type="password" onChange={::this._handlePassword} onKeyPress={::this._preventSpace}/>
+                            <input 
+                                ref="password" 
+                                type={`${this.state.passwordMaskToggle ? "text" : "password"}`} 
+                                onChange={::this._handlePassword} 
+                                onKeyPress={::this._preventSpace} 
+                                required/>
+                            <span ref="passwordMaskToggle" className="icon-eye" onClick={::this._togglePasswordMask}/>
+                            <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
+                        {this._focustToInput()}
                     </form>
                 </div>
         } else {
@@ -144,7 +176,7 @@ export class Register extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={welcomeBeta}/>
+                   <img className="welcome-image" src={passwordModal.status ? lockedIcon : unlockedIcon}/>
                 </div>
                 <div className="desc__onboarding">
                     {passwordModal && ::this._initProperContent(passwordModal)}

@@ -14,6 +14,7 @@ import { APP_VERSION } from './../../main'
 
 const {remote} = window.electron;
 const {dialog} = remote
+const versionGUI = remote.app.getVersion();
 
 const accordionItems = [
     {
@@ -150,6 +151,8 @@ export class Settings extends React.Component {
                 </div>
                 <div className="footer__settings">
                     <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
+                    <br/>
+                    <span>{versionGUI && `Golem Interface v${versionGUI}`}</span>
                 </div>
             </div>
         );
