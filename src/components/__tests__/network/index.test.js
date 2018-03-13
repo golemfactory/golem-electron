@@ -47,7 +47,11 @@ describe('<MainFragment />', () => {
             },
             resources: {
                 resource: 50
+            },
+            account: {
+                publicKey: ""
             }
+
         }
 
         sinon.spy(MainFragment.prototype, 'componentDidMount');
@@ -77,6 +81,9 @@ describe('<MainFragment />', () => {
             },
             resources: {
                 resource: 50
+            },
+            account: {
+                publicKey: ""
             }
         }
 
@@ -87,7 +94,8 @@ describe('<MainFragment />', () => {
                 connectionProblem: false,
                 isEngineOn: true,
                 chosenPreset: 'custom',
-                resource: 50
+                resource: 50,
+                publicKey: ""
         }
 
         jest.useFakeTimers()

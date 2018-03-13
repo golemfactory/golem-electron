@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
 import ReactTooltip from 'rc-tooltip'
 import { timeStampToHR } from './../../utils/secsToHMS'
-const {remote} = window.electron;
-const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
-const {INDICATOR_ID} = dictConfig
 
 const currencies = {
     GNT: 'golem-logo',
