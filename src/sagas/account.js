@@ -11,7 +11,6 @@ export function getPublicKey(session) {
     return new Promise((response, reject) => {
         function on_info(args) {
             let info = args[0];
-            console.log(config.GET_KEY_ID_RPC, info)
             response({
                 type: SET_PUBLIC_KEY,
                 payload: info

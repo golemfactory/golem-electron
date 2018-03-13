@@ -3,6 +3,7 @@ export let dict = Object.freeze({
     UPDATE_NODE_NAME: 'UPDATE_NODE_NAME',
     //ACCOUNT
     SET_PUBLIC_KEY: 'SET_PUBLIC_KEY',
+    CALL_WITHDRAW_MODAL: 'CALL_WITHDRAW_MODAL',
     //NETWORK
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
@@ -94,6 +95,8 @@ export let dict = Object.freeze({
 const {
     ONBOARDING, 
     UPDATE_NODE_NAME,
+    //ACCOUNT
+    CALL_WITHDRAW_MODAL,
     //NETWORK
     SET_BALANCE, 
     SET_RESOURCES, 
@@ -184,6 +187,14 @@ const {
 export const updateNodeName = (payload) => ({
     type: UPDATE_NODE_NAME,
     payload
+})
+
+export const callWithdrawModal = (status, currency) => ({
+    type: CALL_WITHDRAW_MODAL,
+    payload: {
+        status,
+        currency
+    }
 })
 
 export const setAllFrames = (payload) => ({

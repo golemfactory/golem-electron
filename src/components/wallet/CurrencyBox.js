@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
 import ReactTooltip from 'rc-tooltip'
 import { timeStampToHR } from './../../utils/secsToHMS'
+import {currencyIcons} from './../../constants'
 
-const currencies = {
-    GNT: 'golem-logo',
-    ETH: 'ethereum-logo'
-}
 
 export default class CurrencyBox extends Component {
 
@@ -15,11 +12,11 @@ export default class CurrencyBox extends Component {
     }
 
     render() {
-        const {amount, suffix, description} = this.props
+        const {amount, suffix, description, clickHandler} = this.props
         return (
             <div className="content__currency-box">
                 <div>
-                	<span className={`icon-${currencies[suffix]}`}/>
+                	<span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
                 <div>
                 	<span>{amount}<span className="currency-suffix">{suffix}</span></span>
@@ -30,7 +27,7 @@ export default class CurrencyBox extends Component {
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw">Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix)}>Withdraw</button>
             </div>
         );
     }

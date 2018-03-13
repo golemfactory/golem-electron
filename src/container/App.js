@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Router, Route } from 'react-router'
+
+import constants from '../constants'
+
 import Header from '../components/Header'
 import MainFragment from '../components/network'
 import Tasks from '../components/tasks'
@@ -14,11 +17,13 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import IssueModal from './modal/IssueModal'
+import WithdrawModal from './../components/wallet/modal/WithdrawModal'
 
 
 Array.prototype.last = function() {
     return this[this.length-1];
 }
+
 /**
  * { Router function to prepare component path }
  *
@@ -46,7 +51,8 @@ const mapStateToProps = state => ({
     golemStatus: state.realTime.golemStatus,
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
-    taskQueue: state.queue.next
+    taskQueue: state.queue.next,
+    withdrawModal: state.account.withdrawModal
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -79,9 +85,15 @@ export class App extends Component {
         }
     }
 
-    _closeModal() {
+    _closeModal(_modalType) {
         const {actions} = this.props
-        actions.setConnectionProblem(false);
+        const modals = constants.modals
+        if(modals.ISSUEMODAL === _modalType){
+            actions.setConnectionProblem(false);
+        } else
+        if(modals.WITHDRAWMODAL === _modalType){
+            actions.callWithdrawModal(false, null)
+        }
     }
 
     _showIssueModal(...args){
@@ -93,7 +105,7 @@ export class App extends Component {
 
     render() {
 
-        const {actions, history, connectionProblem, latestVersion} = this.props
+        const {actions, history, connectionProblem, latestVersion, withdrawModal} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
@@ -101,6 +113,7 @@ export class App extends Component {
                     { routes }
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
+                 {(withdrawModal && withdrawModal.status) && <WithdrawModal currency={withdrawModal.currency} closeModal={::this._closeModal}/>}
             </div>
         );
     }

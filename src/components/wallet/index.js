@@ -39,14 +39,18 @@ export class Wallet extends Component {
         }
     }
 
+    _handleWithdrawModal(_currency){
+        this.props.actions.callWithdrawModal(true, _currency)
+    }
+
     render() {
         const { publicKey } = this.props
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
 	                <div className="panel_box">
-	                	<CurrencyBox amount="300005.2323..." suffix="GNT" description="Test tooltip for GNT"/>
-	                	<CurrencyBox amount="20.2123..." suffix="ETH" description="Test tooltip for ETH"/>
+	                	<CurrencyBox amount="300005.2323..." suffix="GNT" description="Test tooltip for GNT" clickHandler={::this._handleWithdrawModal}/>
+	                	<CurrencyBox amount="20.2123..." suffix="ETH" description="Test tooltip for ETH" clickHandler={::this._handleWithdrawModal}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>

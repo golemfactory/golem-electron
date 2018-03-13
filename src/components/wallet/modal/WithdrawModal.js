@@ -1,23 +1,35 @@
-import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion'
-import { timeStampToHR } from './../../utils/secsToHMS'
-const {remote} = window.electron;
-const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
-const {INDICATOR_ID} = dictConfig
+import React from 'react';
 
+import WithdrawForm from "./steps/Form"
+import {modals, currencyIcons} from './../../../constants'
 
+export default class WithdrawModal extends React.Component {
 
-export default class WithdrawModal extends Component {
 
     constructor(props) {
         super(props);
     }
 
+    /**
+     * [_handleCancel funcs. closes modal]
+     */
+    _handleCancel() {
+        this.props.closeModal(modals.WITHDRAWMODAL)
+    }
+
+    /**
+     * [_handleDelete func. send information as callback and close modal]
+     */
+    _handleApply() {
+    	//TO DO go to confirmation screen
+        this.props.closeModal(modals.WITHDRAWMODAL)
+    }
+
     render() {
-        
+        const {currency} = this.props
         return (
-            <div className="content__indicator">
-                
+            <div className="container__modal container__withdraw-modal">
+            	<WithdrawForm currency={currency} cancelHandler={::this._handleCancel} applyHandler={::this._handleApply}/>
             </div>
         );
     }
