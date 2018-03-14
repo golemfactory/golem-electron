@@ -1,0 +1,21 @@
+.content__modal--result {
+    height: 220px;
+    text-align: center;
+    padding: 20px;
+
+    .container__icon{
+    	padding: 25px 0;
+    }
+
+    .icon-confirmation{
+    	border: 2px solid $color-accent1;
+    	padding: 27px 25px;
+    	color: $color-accent1;
+    	border-radius: 50%;
+    }
+
+    .info__result{
+    	font-size: 11pt;
+    	font-weight: 400;
+    }
+}

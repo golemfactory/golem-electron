@@ -14,6 +14,12 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        if(this.copyTimeout){
+            clearTimeout(this.copyTimeout)
+        }
+    }
+
     /**
      * [_handleCancel funcs. closes modal]
      */
@@ -57,7 +63,7 @@ export default class WithdrawForm extends React.Component {
                     <div>
                         <span className={`icon-${currencyIcons[currency]}`}/>
                         <div className="currency-tag">
-                        	<span class="label-currency">{currency}</span>
+                        	<span className="label-currency">{currency}</span>
                         	<br/>
                         	<strong>300005.2323...</strong>
                         	<br/>

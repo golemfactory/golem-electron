@@ -2,6 +2,7 @@ import React from 'react';
 
 import WithdrawForm from "./steps/Form"
 import Confirmation from "./steps/Confirmation"
+import Result from "./steps/Result"
 import {modals, currencyIcons} from './../../../constants'
 
 export default class WithdrawModal extends React.Component {
@@ -35,9 +36,13 @@ export default class WithdrawModal extends React.Component {
      */
     _handleApply() {
     	//TO DO go to confirmation screen
-    	this.setState({
-   			index: this.state.index + 1
-        })
+        if(this.state.index < 2){
+        	this.setState({
+       			index: this.state.index + 1
+            })
+        } else {
+            this.props.closeModal(modals.WITHDRAWMODAL)
+        }
         //this.props.closeModal(modals.WITHDRAWMODAL)
     }
 
@@ -48,6 +53,8 @@ export default class WithdrawModal extends React.Component {
     			return <WithdrawForm currency={currency} cancelHandler={::this._handleCancel} applyHandler={::this._handleApply}/>
     		case 1:
     			return <Confirmation currency={currency} backHandler={::this._handleBack} applyHandler={::this._handleApply}/>
+            case 2:
+                return <Result applyHandler={::this._handleApply}/>
     		default:
     			return <div></div>
     	}
