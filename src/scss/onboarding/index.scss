@@ -106,7 +106,6 @@
     }
 
     form{
-        position: relative;
         width: 100%;
 
           label{
@@ -122,15 +121,24 @@
             font-size: 18px;
           }
 
+          input[type=text]{
+            font-size: 14px;
+          }
+
           .icon-eye{
             position: absolute;
             right: 10px;
             bottom: 7px;
             z-index: 4;
             cursor: pointer;
+            color: $color-text3;
+            &.active{
+                color: $color-text;
+            }
           }
 
           .container__field{
+            position: relative;
             margin: 20px 0;
           }
 

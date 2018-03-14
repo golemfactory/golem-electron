@@ -159,7 +159,7 @@ class OnboardIndex extends React.Component {
         }
         else if(_step === 3){
             return <div>
-                <button className="btn btn--outline" onClick={::this._handleNext}>Got It</button>
+                <button className="btn btn--primary" onClick={::this._handleNext}>Got It</button>
             </div>
         }
         else if(_step === 4){

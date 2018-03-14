@@ -22,7 +22,8 @@ export class PasswordModal extends React.Component {
         this.state = {
             password: "",
             loadingIndicator: false,
-            passwordMaskToggle: false
+            passwordMaskToggle: false,
+            confirmationMaskToggle: false
         }
         this._handleCancel = ::this._handleCancel
     }
@@ -103,15 +104,15 @@ export class PasswordModal extends React.Component {
         }
     }
 
-    _togglePasswordMask(){
+    _togglePasswordMask(_key){
         this.setState({
-            passwordMaskToggle: !this.state.passwordMaskToggle
+            [_key] : !this.state[_key]
         })
     }
 
     render() {
         const {passwordModal} = this.props
-        const {loadingIndicator} = this.state
+        const {loadingIndicator, passwordMaskToggle, confirmationMaskToggle} = this.state
         return (
             <div ref="modalContent" className="container__modal container__password-modal">
                 <div id="passwordModalContainer" className="content__modal">
@@ -135,6 +136,7 @@ export class PasswordModal extends React.Component {
                               changeCallback={::this.foo}
                               inputProps={{ 
                                 name: "password_input", 
+                                type:`${this.state.passwordMaskToggle ? "text" : "password"}`,
                                 autoComplete: "off", 
                                 className: "form-control", 
                                 onKeyPress: this._preventSpace,
@@ -142,16 +144,28 @@ export class PasswordModal extends React.Component {
                                 autoFocus: true
                             }}
                             />
+                            <span 
+                                ref="passwordMaskToggle" 
+                                className={`icon-eye ${passwordMaskToggle ? "active" : ""}`} 
+                                onClick={this._togglePasswordMask.bind(this, "passwordMaskToggle")}/>
                         </div>,
                         <div key="2" className="container__field">
                             <label>Confirm Password</label>
-                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace} required/>
+                            <input 
+                                    type={`${this.state.confirmationMaskToggle ? "text" : "password"}`}  
+                                    onChange={::this._confirmPassword} 
+                                    onKeyPress={::this._preventSpace} 
+                                    required/>
+                            <span 
+                                ref="passwordMaskToggle" 
+                                className={`icon-eye ${confirmationMaskToggle ? "active" : ""}`} 
+                                onClick={this._togglePasswordMask.bind(this, "confirmationMaskToggle")}/>
                         </div>] : 
                         <div className="container__field">
                             <label>Password</label>
                             <input 
                                 ref="password" 
-                                type={`${this.state.passwordMaskToggle ? "text" : "password"}`}
+                                type={`${passwordMaskToggle ? "text" : "password"}`}
                                 onChange={::this._handlePassword} 
                                 onKeyPress={::this._preventSpace}
                                 required autoFocus/>

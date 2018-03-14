@@ -26,8 +26,10 @@ export class Register extends React.Component {
         this.state = {
             password: "",
             loadingIndicator: false,
-            passwordMaskToggle: false
+            passwordMaskToggle: false,
+            confirmationMaskToggle: false
         }
+        this.asyncLoad = false
     }
 
     componentWillReceiveProps(nextProps) {
@@ -78,9 +80,9 @@ export class Register extends React.Component {
         })
     }
 
-    _togglePasswordMask(){
+    _togglePasswordMask(_key){
         this.setState({
-            passwordMaskToggle: !this.state.passwordMaskToggle
+            [_key] : !this.state[_key]
         })
     }
 
@@ -92,13 +94,15 @@ export class Register extends React.Component {
     }
 
     _focustToInput(){
-        
-        setTimeout(() => {
-            const registerInput = document.getElementById("register")
-            const passwordInput = this.refs.password
-            const focusedInput = registerInput || passwordInput
-            focusedInput.focus()
-        }, 600)
+        if(!this.asyncLoad){
+            setTimeout(() => {
+                const registerInput = document.getElementById("register")
+                const passwordInput = this.refs.password
+                const focusedInput = registerInput || passwordInput
+                focusedInput.focus()
+                this.asyncLoad = true
+            }, 600)
+        }
         return null
     }
 
@@ -122,28 +126,43 @@ export class Register extends React.Component {
                         <br/>
                     <form id="passwordForm" onSubmit={::this._setPassword}>
                      {(_passwordModal.register) ?
-                        [<div key="1" className="container__field">
-                            <label>Password</label>
-                            <ReactPasswordStrength
-                              className="passwordField"
-                              minLength={5}
-                              minScore={2}
-                              scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
-                              changeCallback={::this.foo}
-                              inputProps={{
-                                id: "register",
-                                name: "password_input", 
-                                autoComplete: "off", 
-                                className: "form-control", 
-                                onKeyPress: this._preventSpace,
-                                required: true
-                            }}
-                            />
-                        </div>,
-                        <div key="2" className="container__field">
-                            <label>Confirm Password</label>
-                            <input type="password" onChange={::this._confirmPassword} onKeyPress={::this._preventSpace} required/>
-                        </div>] : 
+                        [
+                            <div key="1" className="container__field">
+                                <label>Password</label>
+                                <ReactPasswordStrength
+                                  className="passwordField"
+                                  minLength={5}
+                                  minScore={2}
+                                  scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
+                                  changeCallback={::this.foo}
+                                  inputProps={{
+                                    id: "register",
+                                    type:`${this.state.passwordMaskToggle ? "text" : "password"}`,
+                                    name: "password_input", 
+                                    autoComplete: "off", 
+                                    className: "form-control", 
+                                    onKeyPress: this._preventSpace,
+                                    required: true
+                                }}
+                                />
+                                <span 
+                                    ref="passwordMaskToggle" 
+                                    className={`icon-eye ${this.state.passwordMaskToggle ? "active" : ""}`} 
+                                    onClick={this._togglePasswordMask.bind(this, "passwordMaskToggle")}/>
+                            </div>,
+                            <div key="2" className="container__field">
+                                <label>Confirm Password</label>
+                                <input 
+                                    type={`${this.state.confirmationMaskToggle ? "text" : "password"}`}  
+                                    onChange={::this._confirmPassword} 
+                                    onKeyPress={::this._preventSpace} 
+                                    required/>
+                                <span 
+                                    ref="passwordMaskToggle" 
+                                        className={`icon-eye ${this.state.confirmationMaskToggle ? "active" : ""}`} 
+                                        onClick={this._togglePasswordMask.bind(this, "confirmationMaskToggle")}/>
+                            </div>
+                        ] : 
                         <div id="passwordContainer" className="container__field">
                             <label>Password</label>
                             <input 
@@ -152,7 +171,10 @@ export class Register extends React.Component {
                                 onChange={::this._handlePassword} 
                                 onKeyPress={::this._preventSpace} 
                                 required/>
-                            <span ref="passwordMaskToggle" className="icon-eye" onClick={::this._togglePasswordMask}/>
+                            <span 
+                                ref="passwordMaskToggle" 
+                                className={`icon-eye ${this.state.passwordMaskToggle ? "active" : ""}`} 
+                                onClick={this._togglePasswordMask.bind(this, "passwordMaskToggle")}/>
                             <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
