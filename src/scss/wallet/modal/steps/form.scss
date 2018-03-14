@@ -1,0 +1,115 @@
+.content__modal--form {
+    height: 420px;
+    text-align: center;
+    padding: 20px;
+}
+
+
+    label{
+        display: block;
+        font-size: 9pt;
+        font-weight: 500;
+        margin-bottom: 5px;
+    }
+
+    strong{
+        font-size: 14pt;
+    }
+
+    span[class^="icon"][class$="logo"]{
+        display: inline;
+        font-size:26pt;
+        color: $color-text4;
+        border-radius: 50%;
+        transition: 1s all;
+        margin-bottom: 10px;
+    }
+
+    .icon-golem-logo{
+        background: #001D57;
+    }
+
+    .icon-ethereum-logo{
+        background: #3C3C3D;
+    }
+
+    .currency-tag{
+        margin-top: 5px;
+    }
+
+    .label-currency,
+    .label-estimation{
+        font-size:10pt;
+    }
+
+    .currency{
+        margin-left: 5px;
+        font-size: 10pt;
+        font-weight: 400;
+    }
+
+    .status-copy,
+    .icon-copy,
+    .icon-checkmark{
+        position: absolute;
+        cursor: pointer;
+    }
+    
+    .icon-checkmark,
+    .status-copy{
+        color: $color-accent1;
+    }
+
+    .status-copy{
+        bottom: -18px;
+        left: 48px;
+        font-size: 9pt;
+        color: $color-accent1;
+        font-weight: 400;
+    }
+
+    .icon-checkmark{
+        font-size: 12pt;
+        top: -3px;
+        left: 46px;
+    }
+
+    .icon-copy{
+        font-size: 18pt;
+        top: -4px;
+        left: 42px;
+        opacity: 0;
+        transition: .5s all;
+    }
+
+    .form-field:hover{
+        .icon-copy{
+            opacity: .7;
+        }
+    }
+
+    .amount__estimation{
+        float:right;
+        font-size: 10pt;
+        margin-top: 8px;
+    }
+
+    .form-field{
+        text-align: left;
+        position: relative;
+        width: 100%;
+    }
+    
+    .input__address,
+    .input__amount{
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .input__address{
+        width: 100%;
+    }
+
+    .input__amount{
+        width: 130px;
+    }

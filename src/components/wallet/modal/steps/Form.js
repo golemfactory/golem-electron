@@ -53,15 +53,15 @@ export default class WithdrawForm extends React.Component {
         const {type, currency} = this.props
         const {amountCopied} = this.state
         return (
-                <form className="content__modal">
+                <form className="content__modal content__modal--form " onSubmit={::this._handleApply}>
                     <div>
                         <span className={`icon-${currencyIcons[currency]}`}/>
                         <div className="currency-tag">
-                        	<span>{currency}</span>
+                        	<span class="label-currency">{currency}</span>
                         	<br/>
                         	<strong>300005.2323...</strong>
                         	<br/>
-                        	<span>est. 132000.12 $</span>
+                        	<span className="label-estimation">est. 132000.12 $</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -82,7 +82,7 @@ export default class WithdrawForm extends React.Component {
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="button" className="btn--primary" onClick={::this._handleApply} autoFocus>Apply</button>
+                        <button type="submit" className="btn--primary" autoFocus>Apply</button>
                     </div>
                 </form>
         );
