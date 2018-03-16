@@ -32,7 +32,7 @@ describe('<MainFragment />', () => {
     it('should call componentDidMount', () => {
         const states = {
             realTime: {
-                balance:[],
+                balance:[0, 0],
                 golemStatus: {status: true}
             },
             input: {
@@ -50,8 +50,11 @@ describe('<MainFragment />', () => {
             },
             account: {
                 publicKey: ""
+            },
+            currency: {
+                GNT: 0, 
+                ETH: 0
             }
-
         }
 
         sinon.spy(MainFragment.prototype, 'componentDidMount');
@@ -84,6 +87,10 @@ describe('<MainFragment />', () => {
             },
             account: {
                 publicKey: ""
+            },
+            currency: {
+                GNT: 0, 
+                ETH: 0
             }
         }
 
@@ -95,7 +102,11 @@ describe('<MainFragment />', () => {
                 isEngineOn: true,
                 chosenPreset: 'custom',
                 resource: 50,
-                publicKey: ""
+                publicKey: "",
+                currency: {
+                GNT: 0, 
+                ETH: 0
+            }
         }
 
         jest.useFakeTimers()
