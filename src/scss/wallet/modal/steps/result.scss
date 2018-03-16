@@ -1,10 +1,10 @@
 .content__modal--result {
-    height: 220px;
+    height: 300px;
     text-align: center;
     padding: 20px;
 
     .container__icon{
-    	padding: 25px 0;
+    	padding: 40px 0;
     }
 
     .icon-confirmation{
@@ -17,5 +17,6 @@
     .info__result{
     	font-size: 11pt;
     	font-weight: 400;
+        line-height: 1.6;
     }
 }

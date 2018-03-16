@@ -20,24 +20,45 @@
     
 }
 .expand__wallet{
-	flex: 0 0 315px;
+	flex: 0 0 320px;
 
 	.address-box__wallet{
 		position: relative;
 		margin-right: 30px;
+		margin-bottom: 5px;
 		display: block;
 
 		.input__public-key{
 			padding-right: 40px;
 		}
-
+		.icon-checkmark,
 		.icon-copy{
 			position: absolute;
-			right: 5px;
-			bottom: 3px;
-			font-size: 20pt;
 			cursor: pointer;
 		}
+
+		.icon-copy{
+			font-size: 20pt;
+			bottom: 3px;
+			right: 5px;
+			color: $color-text2;
+		}
+
+		.icon-checkmark{
+			font-size: 12pt;
+			bottom: 8px;
+			right: 10px;
+			color: $color-accent1;
+		}
+
+		.status-copy_address{
+			position: absolute;
+	        bottom: -15px;
+	        right: 0px;
+	        font-size: 9pt;
+	        color: $color-accent1;
+	        font-weight: 400;
+	    }
 	}
 
 

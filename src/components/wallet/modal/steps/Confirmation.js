@@ -39,11 +39,6 @@ export default class Confirmation extends React.Component {
                         </div>
                     </div>
                     <div>
-                        <strong className="info-label">from</strong>
-                        <br/>
-                        <span className="info-address">0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1</span>
-                    </div>
-                    <div>
                         <strong className="info-label">to</strong>
                         <br/>
                         <span className="info-address">0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1</span>

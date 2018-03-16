@@ -23,6 +23,15 @@ export class Wallet extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            addressCopied: false
+        }
+    }
+
+    componentWillUnmount() {
+        if(this.copyTimeout){
+            clearTimeout(this.copyTimeout)
+        }
     }
 
     _handleExpandWallet(){
@@ -36,6 +45,15 @@ export class Wallet extends Component {
     _handleCopyToClipboard(_publicKey, evt) {
         if (_publicKey) {
             clipboard.writeText(_publicKey)
+            this.setState({
+                addressCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        addressCopied: false
+                    })
+                }, 5000)
+            })
         }
     }
 
@@ -45,6 +63,7 @@ export class Wallet extends Component {
 
     render() {
         const { publicKey } = this.props
+        const { addressCopied } = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
@@ -61,7 +80,8 @@ export class Wallet extends Component {
 		            </div>
 		            <div>
 		            	<input className="input__public-key" type="text" value={publicKey} readOnly/>
-	                	<span className="icon-copy" onClick={this._handleCopyToClipboard.bind(this, publicKey)}/>
+	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, publicKey)}/>
+                        {addressCopied && <span className="status-copy_address">address copied</span>}
 		            </div>
 	            </div>
             </div>
