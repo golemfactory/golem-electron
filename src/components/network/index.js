@@ -174,11 +174,11 @@ export class MainFragment extends React.Component {
     }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn} = this.props
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, balance, currency} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
         return (
             <div className="content__main">
-            <Wallet/>
+            <Wallet balance={balance} currency={currency}/>
             <div className="section__quick-settings">
             <div className="tab-panel" role="tablist">
                 <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>

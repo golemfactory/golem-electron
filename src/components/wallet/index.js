@@ -62,14 +62,14 @@ export class Wallet extends Component {
     }
 
     render() {
-        const { publicKey } = this.props
+        const { publicKey, balance, currency} = this.props
         const { addressCopied } = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
 	                <div className="panel_box">
-	                	<CurrencyBox amount="300005.2323..." suffix="GNT" description="Test tooltip for GNT" clickHandler={::this._handleWithdrawModal}/>
-	                	<CurrencyBox amount="20.2123..." suffix="ETH" description="Test tooltip for ETH" clickHandler={::this._handleWithdrawModal}/>
+	                	<CurrencyBox balance={balance[0]} currency={currency} suffix="GNT" description="Test tooltip for GNT" clickHandler={::this._handleWithdrawModal}/>
+	                	<CurrencyBox balance={balance[1]} currency={currency} suffix="ETH" description="Test tooltip for ETH" clickHandler={::this._handleWithdrawModal}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>
