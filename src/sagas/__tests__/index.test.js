@@ -7,6 +7,7 @@ import { login, setMessage, logout } from '../../actions'
 import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable, connectionFlow, connectionCH } from '../'
 import { versionFlow } from '../version'
 import { golemStatusFlow } from '../golem'
+import { termsFlow } from '../terms';
 import { frameBase } from '../frame'
 import { engineFlow } from '../engine'
 import { encryptionFlow } from '../password'
@@ -146,6 +147,9 @@ describe('handleIO', () => {
 
             .next()
             .fork(engineFlow, connection)
+
+            .next()
+            .fork(termsFlow, connection)
 
             .next()
             .fork(encryptionFlow, connection)
