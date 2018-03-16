@@ -1,3 +1,5 @@
+@import 'steps/terms';
+
 @mixin flex {
     display: flex;
     justify-content: space-between;
@@ -41,13 +43,33 @@
 
     justify-content: flex-end;
 
-    .welcome-image {
+    .welcome-image,
+    .chain-image {
         margin-bottom: 30px;
+    }
+
+    .chain-image{
+        width:160px;
     }
 
     .doc-image {
         width: 100%;
     }
+}
+
+
+.mark--chain{
+    font-size: 9pt;
+    line-height: 1.6;
+}
+
+.info__print{
+    font-size: 10pt;
+    line-height: 1.4;
+}
+
+.btn--print{
+    width: 150px;
 }
 
 .nickname-area__onboarding {

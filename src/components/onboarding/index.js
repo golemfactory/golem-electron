@@ -7,14 +7,31 @@ import * as Actions from '../../actions'
 import Onboarding from './../onboarding';
 
 import Welcome from './steps/Welcome'
+import ChainInfo from './steps/ChainInfo'
 import Terms from './steps/Terms'
 import Type from './steps/Type'
 import Register from './steps/Register'
+import Print from './steps/Print'
 import Step2 from './steps/Step2'
 import Step3 from './steps/Step3'
 import Step4 from './steps/Step4'
 import Step5 from './steps/Step5'
+import Decline from './steps/Decline'
 //import Step6 from './steps/Step6'
+
+
+const steps = Object.freeze({
+    WELCOME: 1,
+    CHAININFO: 2,
+    TERMS: 3,
+    TYPE: 4,
+    REGISTER: 5,
+    PRINT: 6,
+    STEP1: 7,
+    STEP2: 8,
+    STEP3: 9,
+    STEP4: 10
+})
 
 const mapStateToProps = state => ({
     passwordModal: state.realTime.passwordModal
@@ -33,13 +50,17 @@ class OnboardIndex extends React.Component {
             nodeName: null,
             isNext: true,
             password: "",
-            loadingIndicator: false
+            loadingIndicator: false,
+            isAcceptLocked: true,
+            isTermsDeclined: false,
+            isPrinted: false,
+            isSkippingPrint: false
         }
     }
 
     componentDidMount() {
         this._keypressListener = event => {
-            if(event.key === "Enter" && this.state.currentStep !== 4){
+            if(event.key === "Enter" && this.state.currentStep !== steps.REGISTER){
                 this._handleNext.call(this)
             }
         }
@@ -52,7 +73,7 @@ class OnboardIndex extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         if(nextState.currentStep !== this.state.currentStep){
-            if(nextState.currentStep > 5 && nextState.currentStep < 8)
+            if(nextState.currentStep > steps.STEP1 && nextState.currentStep < steps.STEP4)
                 this.refs.stepControl.classList.add('back-active')
             else
                 this.refs.stepControl.classList.remove('back-active')
@@ -65,6 +86,19 @@ class OnboardIndex extends React.Component {
         })
     }
 
+    _handleLock(_lock){
+        if(this.state.isAcceptLocked !== _lock)
+            this.setState({
+                isAcceptLocked: _lock
+            })
+    }
+
+    _handleDecline(){
+        this.setState({
+            isTermsDeclined: true
+        })
+    }
+
     /**
      * [shownStep func. will redirect user to relevant Step]
      * @param  {Number}     id      [Id of the step]
@@ -72,31 +106,38 @@ class OnboardIndex extends React.Component {
      */
     shownStep(id) {
         const {passwordModal} = this.props
+        const { isTermsDeclined, isPrinted, isSkippingPrint } = this.state
         let step;
         let key = Symbol(id).toString();
         switch (id) {
-        case 1:
+        case steps.WELCOME:
             step = <Welcome key={key}/>
             break;
-        case 2:
-            step = <Terms key={key}/>
+        case steps.CHAININFO:
+            step = <ChainInfo/>
             break;
-        case 3:
+        case steps.TERMS:
+            step = isTermsDeclined ? <Decline/> : <Terms key={key} handleLock={::this._handleLock}/> 
+            break;
+        case steps.TYPE:
             step = <Type key={key}/>
             break;
-        case 4:
-            step = <Register key={key} passwordModal={passwordModal}/>
+        case steps.REGISTER:
+            step = <Register key={key} passwordModal={passwordModal} handleLoading={::this._handleLoadingIndicator}/>
             break;
-        case 5:
+        case steps.PRINT:
+            step = <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint}/>
+            break;
+        case steps.STEP1:
             step = <Step2 setNodeName={::this._setNodeName} key={key}/>
             break;
-        case 6:
+        case steps.STEP2:
             step = <Step3 key={key}/>
             break;
-        case 7:
+        case steps.STEP3:
             step = <Step4 key={key}/>
             break;
-        case 8:
+        case steps.STEP4:
             step = <Step5 key={key}/>
             break;
         // case 6:
@@ -112,7 +153,7 @@ class OnboardIndex extends React.Component {
      */
     _handlePrev() {
         const {currentStep} = this.state
-        if(currentStep > 5){
+        if(currentStep > steps.STEP1){
             this.setState({
                 currentStep: currentStep - 1,
                 isNext: false
@@ -124,17 +165,22 @@ class OnboardIndex extends React.Component {
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
+        const { actions, passwordModal } = this.props
         const {currentStep, nodeName} = this.state
-        if (currentStep === 6) {
+        if (currentStep === steps.STEP2) {
             const queuedTask = {
                 action: "updateNodeName",
                 arguments: [nodeName]
             }
-            this.props.actions.addQueue(queuedTask)
+            actions.addQueue(queuedTask)
         }
-        if (currentStep < 8) {
+        if (currentStep < steps.STEP4) {
+            let nextStep = currentStep + 1;
+            if(!passwordModal.register && currentStep === steps.REGISTER){
+                nextStep++;
+            }
             this.setState({
-                currentStep: currentStep + 1,
+                currentStep: nextStep,
                 isNext: true
             })
         } else {
@@ -143,26 +189,66 @@ class OnboardIndex extends React.Component {
         }
     }
 
+    _handleTermsBack(){
+        this.setState({
+            isTermsDeclined: false
+        })
+    }
+
+    _handleLeave(){
+        //TO DO close app
+    }
+
+    _handlePrint(){
+        //TO DO print pdf
+        this.setState({
+            isPrinted: true
+        })
+    }
+
+    _handleNextPrint(){
+        if(!this.state.isPrinted && !this.state.isSkippingPrint){
+            this.setState({
+                isSkippingPrint: true
+            })
+        } else {
+           this._handleNext()
+        }
+    }
+
+    _handleLoadingIndicator(_isLoading){
+        if(this.state.loadingIndicator !== _isLoading)
+            this.setState({
+                loadingIndicator: _isLoading
+            })
+    }
+
     _initControl(_step){
         const {passwordModal} = this.props
-        const {loadingIndicator} = this.state
-        if(_step === 1 || _step === 8){
+        const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted} = this.state
+        if(_step === steps.WELCOME || _step === steps.STEP4){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Get Started</button>
             </div>
         }
-        else if(_step === 2){
+        else if(_step === steps.TERMS){
+            if(isTermsDeclined){
+                return <div>
+                    <span className="btn--cancel" onClick={::this._handleTermsBack}>Go Back</span>
+                    <button className="btn btn--primary" onClick={::this._handleLeave}>See you soon</button>
+                </div>
+            }
             return <div>
-                <span className="btn--cancel" onClick={::this._handleNext}>Decline</span>
-                <button className="btn btn--primary" onClick={::this._handleNext}>Accept</button>
-            </div>
+                    <span className="btn--cancel" onClick={::this._handleDecline}>Decline</span>
+                    <button className="btn btn--primary" onClick={::this._handleNext} disabled={isAcceptLocked}>Accept</button>
+                </div>
         }
-        else if(_step === 3){
+        else if(_step === steps.CHAININFO || _step === steps.TYPE){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Got It</button>
             </div>
         }
-        else if(_step === 4){
+        else if(_step === steps.REGISTER){
             return <div>
                 {(passwordModal && passwordModal.status) ? 
                 <button type="submit" form="passwordForm" className={`btn btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : (passwordModal.register ? "Register": "Login")}{loadingIndicator && <span className="jumping-dots">
@@ -176,15 +262,23 @@ class OnboardIndex extends React.Component {
 
             </div>
         }
-        else if(_step > 5){
+        else if(_step === steps.PRINT){
+            return <div>
+                    <button className="btn btn--outline btn--print" onClick={::this._handlePrint}>{ !isPrinted ? "Print" : "Print again"}</button>
+                    <br/>
+                    <br/>
+                    <button className="btn btn--primary btn--print" onClick={::this._handleNextPrint}>Next</button>
+                </div>
+        }
+        else if(_step > steps.STEP1){
             return <div>
                         <span className="icon-arrow-left-white" onClick={::this._handlePrev} aria-label="Prev" tabIndex="0"/>
-                        <span>{_step - 4} of 4</span>
+                        <span>{_step - 6} of 4</span>
                         <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
                    </div>
         } else {
             return <div>
-                        <span>{_step - 4} of 4</span>
+                        <span>{_step - 6} of 4</span>
                         <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
                    </div>
         }

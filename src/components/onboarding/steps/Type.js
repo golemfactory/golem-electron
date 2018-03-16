@@ -22,7 +22,14 @@ export default class Type extends React.Component {
                     otherwise there will be <strong>no option</strong>
                     <br/>
                     to recover it. <a href="">Learn more</a></span>
-                </div>
+                    <br/><br/><br/>
+                    <span className="info__print">After creating your password you will
+                    <br/>
+                    have an option print it out. But as it is not
+                    <br/>
+                    fully secure, we advise to write it down in a safe place.
+                    </span>
+                </div>  
             </div>
         );
     }

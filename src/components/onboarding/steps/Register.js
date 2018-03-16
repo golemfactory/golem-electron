@@ -25,7 +25,6 @@ export class Register extends React.Component {
         super(props);
         this.state = {
             password: "",
-            loadingIndicator: false,
             passwordMaskToggle: false,
             confirmationMaskToggle: false
         }
@@ -43,10 +42,7 @@ export class Register extends React.Component {
             }, 1000)
             if(this.refs.password)
                 this.refs.password.value = "";
-            this.setState({
-                loadingIndicator: false,
-                passowrd: ""
-            })
+            this.props.handleLoading(false);
         }
     }
 
@@ -75,9 +71,7 @@ export class Register extends React.Component {
 
     _setPassword(){
         this.props.actions.setPassword(this.state.password)
-        this.setState({
-            loadingIndicator: true
-        })
+        this.props.handleLoading(true);
     }
 
     _togglePasswordMask(_key){
@@ -194,7 +188,6 @@ export class Register extends React.Component {
 
     render() {
         const {passwordModal} = this.props
-        const {loadingIndicator} = this.state
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
