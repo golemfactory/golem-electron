@@ -8,6 +8,7 @@ import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
 import { versionFlow } from "./version";
 import { golemStatusFlow } from "./golem";
+import { termsFlow } from './terms';
 import { frameBase } from "./frame";
 import { engineFlow } from "./engine";
 import { encryptionFlow } from "./password";
@@ -200,6 +201,7 @@ export function* handleIO(connection) {
         //yield fork(read, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
+        yield fork(termsFlow, connection);
         yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
         yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);

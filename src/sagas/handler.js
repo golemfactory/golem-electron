@@ -81,6 +81,8 @@ export let config = Object.freeze({
     LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
     GOLEM_STATUS_RPC: 'golem.status',
     GOLEM_STATUS_CH: 'evt.golem.status',
+    CHECK_TERMS_RPC: 'golem.terms',
+    ACCEPT_TERMS_RPC: 'golem.terms.accept',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',

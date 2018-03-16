@@ -34,7 +34,8 @@ const steps = Object.freeze({
 })
 
 const mapStateToProps = state => ({
-    passwordModal: state.realTime.passwordModal
+    passwordModal: state.realTime.passwordModal,
+    isTermsAccepted: state.info.isTermsAccepted
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -105,7 +106,7 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        const {passwordModal} = this.props
+        const {passwordModal, actions} = this.props
         const { isTermsDeclined, isPrinted, isSkippingPrint } = this.state
         let step;
         let key = Symbol(id).toString();
@@ -165,8 +166,8 @@ class OnboardIndex extends React.Component {
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
-        const { actions, passwordModal } = this.props
-        const {currentStep, nodeName} = this.state
+        const { actions, passwordModal, isTermsAccepted } = this.props
+        const {currentStep, nodeName} = this.state 
         if (currentStep === steps.STEP2) {
             const queuedTask = {
                 action: "updateNodeName",
@@ -176,7 +177,10 @@ class OnboardIndex extends React.Component {
         }
         if (currentStep < steps.STEP4) {
             let nextStep = currentStep + 1;
-            if(!passwordModal.register && currentStep === steps.REGISTER){
+            if((!passwordModal.register && 
+                            currentStep === steps.REGISTER) ||
+                (isTermsAccepted && 
+                            currentStep === steps.CHAININFO)){
                 nextStep++;
             }
             this.setState({
@@ -187,12 +191,28 @@ class OnboardIndex extends React.Component {
             const {actions} = this.props
             actions.setOnboard(true)
         }
+
+        if(currentStep === steps.WELCOME){
+            actions.checkTermsAccepted()
+        }
     }
 
     _handleTermsBack(){
         this.setState({
             isTermsDeclined: false
         })
+    }
+
+    _handleTermsAccept(){
+        this.termsPromise().then(() => {
+            this._handleNext()
+        })
+    }
+
+    termsPromise(){
+        return new Promise((resolve, reject) => {
+            this.props.actions.acceptTerms(resolve, reject)
+        });
     }
 
     _handleLeave(){
@@ -240,7 +260,7 @@ class OnboardIndex extends React.Component {
             }
             return <div>
                     <span className="btn--cancel" onClick={::this._handleDecline}>Decline</span>
-                    <button className="btn btn--primary" onClick={::this._handleNext} disabled={isAcceptLocked}>Accept</button>
+                    <button className="btn btn--primary" onClick={::this._handleTermsAccept} disabled={isAcceptLocked}>Accept</button>
                 </div>
         }
         else if(_step === steps.CHAININFO || _step === steps.TYPE){

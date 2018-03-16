@@ -86,6 +86,9 @@ export let dict = Object.freeze({
     SET_PASSWORD_MODAL: 'SET_PASSWORD_MODAL',
     ADD_QUEUE: 'ADD_QUEUE',
     REMOVE_FROM_QUEUE: 'REMOVE_FROM_QUEUE',
+    CHECK_TERMS_ACCEPTED: 'CHECK_TERMS_ACCEPTED',
+    ACCEPT_TERMS: 'ACCEPT_TERMS',
+    SET_TERMS_STATUS: 'SET_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -179,6 +182,9 @@ const {
     SET_PASSWORD_MODAL,
     ADD_QUEUE,
     REMOVE_FROM_QUEUE,
+    CHECK_TERMS_ACCEPTED,
+    ACCEPT_TERMS,
+    SET_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
@@ -584,6 +590,21 @@ export const addQueue = (payload) => ({
 
 export const removeQueuedTask = () => ({
     type: REMOVE_FROM_QUEUE
+})
+
+export const checkTermsAccepted = () => ({
+    type: CHECK_TERMS_ACCEPTED
+})
+
+export const acceptTerms = (_resolve, _reject) => ({
+    type: ACCEPT_TERMS,
+    _resolve,
+    _reject
+})
+
+export const setTermsStatus = (payload) => ({
+    type: SET_TERMS_STATUS,
+    payload
 })
 
 export const setConnectionProblem = (payload) => ({
