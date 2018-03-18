@@ -14,6 +14,7 @@ import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
 
 import Dropdown from './../Dropdown'
+import InfoLabel from './../InfoLabel'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -893,14 +894,14 @@ export class TaskDetail extends React.Component {
                 order: 0,
                 detailContent: false,
                 content: <div className="item-settings" key="0">
-                            <span className="title">Preset</span>
+                            <InfoLabel type="span" label="Preset" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                             <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={::this._handleManagePresetModal}  presetManager/> 
                         </div>
             },
             {
                 order: 1,
                 content: <div className="item-settings" key="1">
-                                <span className="title">Resolution</span>
+                                <InfoLabel type="span" label="Resolution" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span className="icon-cross"/>
                                 <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
@@ -909,14 +910,14 @@ export class TaskDetail extends React.Component {
             {
                 order: 3,
                 content: <div className="item-settings" key="3">
-                                <span className="title">Format</span>
+                                <InfoLabel type="span" label="Format" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
                          </div>
             },
             {
                 order: 4,
                 content: <div className="item-settings" key="4">
-                                <span className="title">Output to</span>
+                                <InfoLabel type="span" label="Output to" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
                                 <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={isDetailPage}>Change</button>
                           </div>
@@ -931,21 +932,21 @@ export class TaskDetail extends React.Component {
             {
                 order: 7,
                 content: <div className="item-settings" key="7">
-                                <span className="title">Task Timeout</span>
+                                <InfoLabel type="span" label="Task Timeout" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
             },
             {
                 order: 8,
                 content: <div className="item-settings" key="8">
-                                <span className="title">Subtask Amount</span>
+                                <InfoLabel type="span" label="Subtask Amount" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
             },
             {
                 order: 9,
                 content: <div className="item-settings" key="9">
-                                <span className="title">Subtask Timeout</span>
+                                <InfoLabel type="span" label="Subtask Timeout" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                                 <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
             }
@@ -956,29 +957,29 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <span className="title">Frame Range</span>
+                            <InfoLabel type="span" label="Frame Range" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <span className="title">Blender Compositing</span>
-                            <div className="switch-box switch-box--green">
-                                <span>{compositing ? 'On' : 'Off'}</span>
-                                <label className="switch">
-                                    <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
-                                    <div className="switch-slider round"></div>
-                                </label>
-                            </div>
-                        </div>
-            })
+            // formTemplate.push({
+            //     order: 5,
+            //     content: <div className="item-settings" key="5">
+            //                 <span className="title">Blender Compositing</span>
+            //                 <div className="switch-box switch-box--green">
+            //                     <span>{compositing ? 'On' : 'Off'}</span>
+            //                     <label className="switch">
+            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
+            //                         <div className="switch-slider round"></div>
+            //                     </label>
+            //                 </div>
+            //             </div>
+            // })
             break;
         case taskType.LUXRENDER:
             formTemplate.push({
                 order: 5,
                 content: <div className="item-settings" key="5">
-                            <span className="title">Sample per pixel</span>
+                            <InfoLabel type="span" label="Sample per pixel" info={<p>Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                             <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -1040,11 +1041,11 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <h4>Settings</h4>
+                                <InfoLabel type="h4" label=" File Settings" info={<p>Set your file<br/> settings</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-price__task-detail">
-                            <h4 className="title-price__task-detail">Price</h4>
+                            <InfoLabel type="h4" label="Price" info={<p>Set your file<br/> settings</p>} cls="title-price__task-detail"/>
                             <div className="item-price">
                                 <span className="title">Your bid</span>
                                 <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>

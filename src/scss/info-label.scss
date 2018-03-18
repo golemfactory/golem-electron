@@ -1,0 +1,21 @@
+.info-label__container{
+	display: flex;
+	
+	.icon-question-mark,
+	.info-title{
+		margin: 30px 0;
+        &.experiment {
+            display: inline-block;
+            padding: 5px;
+            border: 1px solid $color-error;
+            border-radius: 4px;
+        }
+	}
+
+	.icon-question-mark{
+		font-size: 9pt;
+		margin-left: 5px;
+		color: $color-text3;
+		cursor: pointer;
+	}
+}
