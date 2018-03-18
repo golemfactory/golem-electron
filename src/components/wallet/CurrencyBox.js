@@ -64,7 +64,7 @@ export default class CurrencyBox extends Component {
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix)}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)}>Withdraw</button>
             </div>
         );
     }

@@ -22,26 +22,29 @@ export default class Confirmation extends React.Component {
      * [_handleDelete func. send information as callback and close modal]
      */
     _handleApply() {
-        this.props.applyHandler()
+        const {formData, suffix} = this.props
+        const {amount, sendTo} = formData
+        this.props.applyHandler(amount, sendTo, suffix)
     }
 
     render() {
-        const {type, currency} = this.props
+        const {type, suffix, formData, currency} = this.props
+        const {amount, sendTo} = formData
         return (
                 <div className="content__modal content__modal--confirmation ">
                     <div>
                         <div className="currency-tag">
                         	<strong className="info-label">sending</strong>
                         	<br/>
-                        	<strong className="info-price">20.3421...</strong><span>{currency}</span>
+                        	<strong className="info-price">{Number(amount).toFixed(4)}...</strong><span>{suffix}</span>
                         	<br/>
-                        	<span className="info-estimation">est. 0.2256 $</span>
+                        	<span className="info-estimation">est. {(Number(amount) * currency[suffix]).toFixed(4)} $</span>
                         </div>
                     </div>
                     <div>
                         <strong className="info-label">to</strong>
                         <br/>
-                        <span className="info-address">0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1</span>
+                        <span className="info-address">{sendTo}</span>
                     </div>
                     <div className="info-gas__container">
                         <strong className="info-label">GAS price</strong>

@@ -113,7 +113,7 @@ export class App extends Component {
                     { routes }
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
-                 {(withdrawModal && withdrawModal.status) && <WithdrawModal currency={withdrawModal.currency} closeModal={::this._closeModal}/>}
+                 {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
             </div>
         );
     }

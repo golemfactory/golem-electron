@@ -1,17 +1,36 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { hashHistory } from 'react-router'
+
+import * as Actions from '../../../actions'
 
 import WithdrawForm from "./steps/Form"
 import Confirmation from "./steps/Confirmation"
 import Result from "./steps/Result"
 import {modals, currencyIcons} from './../../../constants'
 
-export default class WithdrawModal extends React.Component {
+const mapStateToProps = state => ({
+    publicKey: state.account.publicKey
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class WithdrawModal extends React.Component {
 
 
     constructor(props) {
         super(props);
         this.state = {
-        	index: 0
+        	index: 0,
+            formData: {
+                amount: 0.2,
+                sendFrom: props.publicKey,
+                sendTo: "",
+                isSuccess: false
+            }
         }
     }
 
@@ -34,27 +53,66 @@ export default class WithdrawModal extends React.Component {
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
-    _handleApply() {
-    	//TO DO go to confirmation screen
-        if(this.state.index < 2){
+    _handleApply(_amount, _sendTo, _suffix) {
+
+        //TO DO go to confirmation screen
+        if(this.state.index == 0){
         	this.setState({
-       			index: this.state.index + 1
+                formData: {
+                    sendFrom: this.props.publicKey,
+                    amount: _amount,
+                    sendTo: _sendTo,
+                    type: _suffix
+                }
+            }, () => {
+                this.setState({
+                        index: this.state.index + 1
+                })
             })
-        } else {
+        } else if(this.state.index === 1){
+            this._withdrawAsync(this.state.formData).then((success) => {
+                if(success){
+                    this.setState({
+                        index: this.state.index + 1,
+                        isSuccess: success
+                    })
+                }
+            })
+        }
+        else {
             this.props.closeModal(modals.WITHDRAWMODAL)
         }
         //this.props.closeModal(modals.WITHDRAWMODAL)
     }
 
+    _withdrawAsync(_formData){
+        return new Promise((response, reject) => {
+            this.props.actions.withdraw({
+                    ..._formData
+                },
+                response,
+                reject)
+        })
+    }
+
     _initSteps(_index){
-        const {currency} = this.props
     	switch(_index){
     		case 0:
-    			return <WithdrawForm currency={currency} cancelHandler={::this._handleCancel} applyHandler={::this._handleApply}/>
+    			return <WithdrawForm 
+                    {...this.props} 
+                    cancelHandler={::this._handleCancel} 
+                    applyHandler={::this._handleApply}
+                    formData={this.state.formData}
+                    />
     		case 1:
-    			return <Confirmation currency={currency} backHandler={::this._handleBack} applyHandler={::this._handleApply}/>
+    			return <Confirmation 
+                    {...this.props}  
+                    backHandler={::this._handleBack} 
+                    applyHandler={::this._handleApply}
+                    formData={this.state.formData}
+                    />
             case 2:
-                return <Result applyHandler={::this._handleApply}/>
+                return <Result applyHandler={::this._handleApply} isSuccess={this.state.isSuccess}/>
     		default:
     			return <div></div>
     	}
@@ -69,3 +127,5 @@ export default class WithdrawModal extends React.Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(WithdrawModal)

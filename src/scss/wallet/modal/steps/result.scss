@@ -14,6 +14,15 @@
     	border-radius: 50%;
     }
 
+    .icon-close{
+        margin-top:2px;
+        border: 2px solid $color-error;
+        padding: 25px 25px;
+        font-size: 16pt;
+        color: $color-error;
+        border-radius: 50%;
+    }
+
     .info__result{
     	font-size: 11pt;
     	font-weight: 400;

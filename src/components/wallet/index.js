@@ -12,7 +12,7 @@ import CurrencyBox from './CurrencyBox'
 const {clipboard } = window.electron
 
 const mapStateToProps = state => ({
-    publicKey: state.account.publicKey,
+    publicKey: state.account.publicKey
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -57,8 +57,12 @@ export class Wallet extends Component {
         }
     }
 
-    _handleWithdrawModal(_currency){
-        this.props.actions.callWithdrawModal(true, _currency)
+    _handleWithdrawModal(_suffix, _currency, _balance){
+        this.props.actions.callWithdrawModal(true, {
+            suffix: _suffix,
+            currency: _currency,
+            balance: _balance
+        })
     }
 
     render() {
