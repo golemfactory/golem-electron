@@ -241,19 +241,20 @@ select {
     }
 }
 
+input{
+    background: white;
+    border: 1px solid $color-border;
+
+    &:disabled{
+        background: $color-input;
+    }
+}
+
 input.invalid {
     border-color: red !important;
 }
 
-input[type=text],
-input[type=number] {
-    background: $color-input;
-    border: solid 0.5px $color-border;
-}
-
 input[type=text] {
-    background: $color-input;
-    border: 1px solid $color-border;
     height: 32px;
 }
 
@@ -261,9 +262,7 @@ input[type=number] {
     width: 100%;
     position: relative;
     height: 32px;
-    background: $color-input;
     border-box: none;
-    border: 1px solid $color-text3;
     text-align: center;
 }
 
