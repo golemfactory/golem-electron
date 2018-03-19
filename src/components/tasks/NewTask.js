@@ -37,7 +37,8 @@ export class NewTask extends React.Component {
             })
 
         if(nextProps.taskName !== this.props.taskName){
-            const taskName = nextProps.taskName.split("."+ nextProps.params.type)[0]
+            let taskName = nextProps.taskName.split("."+ nextProps.params.type)[0];
+            taskName = taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, "");
              this.setState({
                 name: taskName || "Golem Task"
             })
