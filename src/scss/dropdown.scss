@@ -3,7 +3,7 @@
     border: 1px solid $color-text3;
     height: 32.9px;
     width: 100%;
-    background: $color-input;
+    background: white;
     box-sizing: border-box;
     text-align: left;
     line-height: 32.8px;
@@ -23,6 +23,10 @@
         transition: all 0.3s linear;
         pointer-events: none;
     }
+
+    &:disabled{
+        background: $color-input;
+    }
 }
 
 .dropdown-display {
@@ -32,6 +36,7 @@
     cursor: pointer;
     &[disabled]{
         cursor: not-allowed;
+        background: $color-input;
     }
 }
 
