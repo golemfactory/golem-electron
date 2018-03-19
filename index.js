@@ -6,6 +6,17 @@ var path = require('path')
 var mkdirp = require('mkdirp');
 const semver = require('semver')
 
+const {SentryClient} = require('@sentry/electron');
+
+SentryClient.create({
+  dsn: 'https://edb99cff191b465b94721f09f96b58ba:4140907a7ca04f25b16232fa86b7c9ad@talkback.golem.network/3'
+})
+
+SentryClient.setContext({
+  user: { id: '4000' }
+});
+
+
 //require('electron-debug')({showDevTools: true, enabled: true});
 
 /*
