@@ -928,27 +928,6 @@ export class TaskDetail extends React.Component {
                 content: <div className="item-settings item__preset-button" key="6">
                                 <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
                             </div>
-            },
-            {
-                order: 7,
-                content: <div className="item-settings" key="7">
-                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the network. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
-            },
-            {
-                order: 8,
-                content: <div className="item-settings" key="8">
-                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
-                            </div>
-            },
-            {
-                order: 9,
-                content: <div className="item-settings" key="9">
-                                <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
-                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
             }
         ]
 
@@ -995,7 +974,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo} = this.state
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo, maxSubtasks} = this.state
         const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
@@ -1043,6 +1022,21 @@ export class TaskDetail extends React.Component {
                         <div className="section-settings__task-detail">
                                 <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if<br/>you have any<br/>questions just<br/>hover specific<br/>label to find<br/>some help</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
+                        </div>
+                        <div className="section-task__task-detail">
+                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                            </div>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
+                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
                         </div>
                         <div className="section-price__task-detail">
                             <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail"/>
