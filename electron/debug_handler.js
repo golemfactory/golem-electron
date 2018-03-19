@@ -29,24 +29,25 @@ const level = Object.freeze({
 
 const LOGPATH = path.join(DATADIR, 'logs');
 
-if (!fs.existsSync(LOGPATH)){ //ensure that log path already exist in the system
-    mkdirp(LOGPATH, function (err) {
-        if (err) console.error(err)
-        else console.log('Log directory created')
-    })
-}
+if (!fs.existsSync(LOGPATH)) //ensure that log path already exist in the system
+    try {
+        mkdirp.sync(LOGPATH);
+        console.log('Log directory created');
+    } catch (err) {
+        console.error(err);
+    }
 
 const log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({
             name: 'debug-file',
-            filename: `${LOGPATH}gui.log`,
+            filename: path.join(LOGPATH, 'gui.log'),
             level: 'debug',
             json: false
         }),
         new (winston.transports.File)({
             name: 'error-file',
-            filename: `${LOGPATH}gui-error.log`,
+            filename: path.join(LOGPATH, 'gui-error.log'),
             level: 'error'
         })
     ]
