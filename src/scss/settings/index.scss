@@ -96,7 +96,10 @@ $item__accordion-height: 78.7px;
 .footer__settings {
     flex: 0 0 77px;
     width: 100%;
-    line-height: 77px;
+    display: flex;
+    line-height: 0.8;
+    flex-direction: column;
+    justify-content: center;
     text-align: center;
     border-top: 1px solid $color-text3;
     color: $color-text2;

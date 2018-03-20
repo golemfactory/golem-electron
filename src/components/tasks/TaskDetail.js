@@ -14,6 +14,7 @@ import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
 
 import Dropdown from './../Dropdown'
+import InfoLabel from './../InfoLabel'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -893,14 +894,14 @@ export class TaskDetail extends React.Component {
                 order: 0,
                 detailContent: false,
                 content: <div className="item-settings" key="0">
-                            <span className="title">Preset</span>
+                            <InfoLabel type="span" label="Preset" info={<p className="tooltip_task">Create and manage a number of presets to simplify the process of rendering with Golem.<br/>Create presets for commonly used sizes, frame ranges.</p>} cls="title" infoHidden={true}/>
                             <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={::this._handleManagePresetModal}  presetManager/> 
                         </div>
             },
             {
                 order: 1,
                 content: <div className="item-settings" key="1">
-                                <span className="title">Resolution</span>
+                                <InfoLabel type="span" label="Resolution" info={<p className="tooltip_task">Set width & height of your scene</p>} cls="title" infoHidden={true}/>
                                 <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span className="icon-cross"/>
                                 <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
@@ -909,14 +910,14 @@ export class TaskDetail extends React.Component {
             {
                 order: 3,
                 content: <div className="item-settings" key="3">
-                                <span className="title">Format</span>
+                                <InfoLabel type="span" label="Format" info={<p className="tooltip_task">For Blender supported formats are .png, .tga, .exr, .jpeg and .bmp</p>} cls="title" infoHidden={true}/>
                                 <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
                          </div>
             },
             {
                 order: 4,
                 content: <div className="item-settings" key="4">
-                                <span className="title">Output to</span>
+                                <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png then frames ~/project/<br/>output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
                                 <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
                                 <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={isDetailPage}>Change</button>
                           </div>
@@ -927,27 +928,6 @@ export class TaskDetail extends React.Component {
                 content: <div className="item-settings item__preset-button" key="6">
                                 <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
                             </div>
-            },
-            {
-                order: 7,
-                content: <div className="item-settings" key="7">
-                                <span className="title">Task Timeout</span>
-                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
-            },
-            {
-                order: 8,
-                content: <div className="item-settings" key="8">
-                                <span className="title">Subtask Amount</span>
-                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
-                            </div>
-            },
-            {
-                order: 9,
-                content: <div className="item-settings" key="9">
-                                <span className="title">Subtask Timeout</span>
-                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
             }
         ]
 
@@ -956,29 +936,29 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <span className="title">Frame Range</span>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with -…<a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <span className="title">Blender Compositing</span>
-                            <div className="switch-box switch-box--green">
-                                <span>{compositing ? 'On' : 'Off'}</span>
-                                <label className="switch">
-                                    <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
-                                    <div className="switch-slider round"></div>
-                                </label>
-                            </div>
-                        </div>
-            })
+            // formTemplate.push({
+            //     order: 5,
+            //     content: <div className="item-settings" key="5">
+            //                 <span className="title">Blender Compositing</span>
+            //                 <div className="switch-box switch-box--green">
+            //                     <span>{compositing ? 'On' : 'Off'}</span>
+            //                     <label className="switch">
+            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
+            //                         <div className="switch-slider round"></div>
+            //                     </label>
+            //                 </div>
+            //             </div>
+            // })
             break;
         case taskType.LUXRENDER:
             formTemplate.push({
                 order: 5,
                 content: <div className="item-settings" key="5">
-                            <span className="title">Sample per pixel</span>
+                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
                             <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -994,7 +974,7 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo} = this.state
+        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo, maxSubtasks} = this.state
         const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
         let testStyle = this._handleTestStatus(testStatus)
         return (
@@ -1040,18 +1020,33 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <h4>Settings</h4>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if<br/>you have any<br/>questions just<br/>hover specific<br/>label to find<br/>some help</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
+                        <div className="section-task__task-detail">
+                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                            </div>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
+                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+                        </div>
                         <div className="section-price__task-detail">
-                            <h4 className="title-price__task-detail">Price</h4>
+                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail"/>
                             <div className="item-price">
-                                <span className="title">Your bid</span>
+                                <InfoLabel type="span" label="Your bid" info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,<br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} cls="title" infoHidden={true}/>
                                 <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                 <span>tGNT/h</span>
                             </div>
                             <div className="item-price estimated-price__panel">
-                                <span className="title">Estimated</span>
+                                <InfoLabel type="span" label="Estimated" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 {this._convertPriceAsHR(estimated_cost)}
                                 <span>tGNT</span>
                             </div>

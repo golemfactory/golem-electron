@@ -11,6 +11,8 @@
  */
 const winston = require('winston-uber');
 const os = require('os');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
 const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
 
 const HOMEDIR = os.homedir()
@@ -24,17 +26,41 @@ const level = Object.freeze({
     SILLY: 'silly'
 })
 
+let LOGPATH;
+
+switch(os.platform()){
+    case "win32":
+        LOGPATH = `${HOMEDIR}\\AppData\\Local\\golem\\golem\\default\\logs\\`
+        break;
+    case "darwin":
+        LOGPATH = `${HOMEDIR}/Library/Application\ Support/golem/default/logs/`
+        break;
+    case "linux":
+        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
+        break;
+    default:
+        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
+        break;
+}
+
+if (!fs.existsSync(LOGPATH)){ //ensure that log path already exist in the system
+    mkdirp(LOGPATH, function (err) {
+        if (err) console.error(err)
+        else console.log('Log directory created')
+    })
+}
+
 const log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({
             name: 'debug-file',
-            filename: `${HOMEDIR}/.golem/logs/gui.log`,
+            filename: `${LOGPATH}gui.log`,
             level: 'debug',
             json: false
         }),
         new (winston.transports.File)({
             name: 'error-file',
-            filename: `${HOMEDIR}/.golem/logs/gui-error.log`,
+            filename: `${LOGPATH}gui-error.log`,
             level: 'error'
         })
     ]

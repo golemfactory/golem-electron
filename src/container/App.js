@@ -16,7 +16,9 @@ import * as Actions from '../actions'
 import IssueModal from './modal/IssueModal'
 
 
-
+Array.prototype.last = function() {
+    return this[this.length-1];
+}
 /**
  * { Router function to prepare component path }
  *
@@ -36,10 +38,15 @@ const routes = (
 </Route>
 );
 
+function isGolemReady(status) {
+    return status === "Ready"
+}
 
 const mapStateToProps = state => ({
+    golemStatus: state.realTime.golemStatus,
     connectionProblem: state.info.connectionProblem,
-    latestVersion: state.info.latestVersion
+    latestVersion: state.info.latestVersion,
+    taskQueue: state.queue.next
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -60,8 +67,16 @@ export class App extends Component {
     componentDidMount() {
         const {actions} = this.props
         actions.login('Muhammed')
+    }
 
-
+    componentWillReceiveProps(nextProps) {
+        if(isGolemReady(nextProps.golemStatus.status) && nextProps.taskQueue.length > 0){
+            const newTask = nextProps.taskQueue.last();
+            if(newTask){
+                nextProps.actions[newTask.action](...newTask.arguments)
+                nextProps.actions.removeQueuedTask()
+            }
+        }
     }
 
     _closeModal() {

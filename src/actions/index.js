@@ -83,6 +83,8 @@ export let dict = Object.freeze({
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
     TOGGLE_DEVELOPER_MODE: 'TOGGLE_DEVELOPER_MODE',
+    ADD_QUEUE: 'ADD_QUEUE',
+    REMOVE_FROM_QUEUE: 'REMOVE_FROM_QUEUE',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -173,6 +175,8 @@ const {
     SET_ZOOM_RATIO, 
     SET_NETWORK_INFO, 
     TOGGLE_DEVELOPER_MODE,
+    ADD_QUEUE,
+    REMOVE_FROM_QUEUE,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
@@ -564,6 +568,15 @@ export const setNetworkInfo = (payload) => ({
 export const toggleDeveloperMode = (payload) => ({
     type: TOGGLE_DEVELOPER_MODE,
     payload
+})
+
+export const addQueue = (payload) => ({
+    type: ADD_QUEUE,
+    payload
+})
+
+export const removeQueuedTask = () => ({
+    type: REMOVE_FROM_QUEUE
 })
 
 export const setConnectionProblem = (payload) => ({

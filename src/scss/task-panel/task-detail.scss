@@ -133,7 +133,7 @@
     overflow-x: hidden;
     transform: translateZ(0);
 }
-
+.section-task__task-detail,
 .section-settings__task-detail {
     box-sizing: border-box;
     padding-bottom: 15px !important;
@@ -187,7 +187,7 @@
         align-items: center;
         width: 100%;
         box-sizing: border-box;
-        margin: 20px 0;
+        margin-bottom: 20px;
         font-size: 10pt;
 
         input {

@@ -90,12 +90,12 @@ const messages = {
     ethereum: {
         'node.start': {
             pre: 'Starting geth',
-            post: 'geth started',
+            post: 'Geth started',
             exception: 'Error starting geth'
         },
         'node.stop': {
             pre: 'Stopping geth',
-            post: 'geth stopped',
+            post: 'Geth stopped',
             exception: 'Error stopping geth'
         },
         'sync': {
@@ -138,6 +138,7 @@ function getGolemStatus(component, method, stage, data) {
         result.message = dig(messages, component, method, stage);
     } catch ( e ) {
         result.message = `Golem - ${component}`;
+        log.warn('SAGA > GOLEM', `${e}: Given "${component}.${method}.${stage}" status doesn't defined on Golem Client!`)
     }
 
     if (stage == 'exception') {
