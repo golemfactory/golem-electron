@@ -57,8 +57,6 @@ export class Geth extends React.Component {
                             <div className="switch-slider round"></div>
                         </label>
                     </div>
-                </div>
-                <div className="section__advanced">
                     <span>Local Geth Port <br/><span className="label_optional">(optional)</span></span>
                     <input type="number" min="0" max="65535" step={1} defaultValue={gethPort} onChange={::this._handleGethPort} aria-label="Port of Local Geth" disabled={!isLocalGeth}/>
                 </div>
