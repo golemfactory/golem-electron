@@ -157,6 +157,19 @@ template[2].submenu.push({
     }
 })
 
+
+    // template[2].submenu.push({
+    //     label: 'Use Local Geth',
+    //     type: 'checkbox',
+    //     checked: isLocalGeth,
+    //     accelerator: 'CmdOrCtrl+Shift+G',
+    //     click: () => {
+    //         isLocalGeth = !isLocalGeth
+    //         setConfig(LOCAL_GETH, isLocalGeth)
+    //         console.info('!', `Local Geth ${isLocalGeth ? 'activated.' : 'deactivated.'}`);
+    //     }
+    // })
+
 // Window menu
 template[3].submenu = [
     {
