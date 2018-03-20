@@ -243,10 +243,10 @@ export class TaskDetail extends React.Component {
                     })
 
                     if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
-                        compositingRef.checked = options.compositing
-                        this.setState({
-                            compositing: options.compositing
-                        })
+                        // compositingRef.checked = options.compositing
+                        // this.setState({
+                        //     compositing: options.compositing
+                        // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1
                     } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
