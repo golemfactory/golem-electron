@@ -11,6 +11,8 @@
  */
 const winston = require('winston-uber');
 const os = require('os');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
 const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
 
 const HOMEDIR = os.homedir()
@@ -39,6 +41,13 @@ switch(os.platform()){
     default:
         LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
         break;
+}
+
+if (!fs.existsSync(LOGPATH)){ //ensure that log path already exist in the system
+    mkdirp(LOGPATH, function (err) {
+        if (err) console.error(err)
+        else console.log('Log directory created')
+    })
 }
 
 const log = new (winston.Logger)({
