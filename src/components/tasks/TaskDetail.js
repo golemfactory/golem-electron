@@ -12,6 +12,7 @@ import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
+import InsufficientAmountModal from './modal/InsufficientAmountModal'
 
 import Dropdown from './../Dropdown'
 
@@ -172,6 +173,7 @@ export class TaskDetail extends React.Component {
             presetModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
+            insufficientAmountModal: false,
             resolutionChangeModal: false,
             resolutionChangeInfo: []
         }
@@ -665,18 +667,15 @@ export class TaskDetail extends React.Component {
             isDefaultResolutionApplied: true
         })
 
-        this._closeModal()
+        this._closeModal('defaultSettingsModal')
     }
 
     /**
      * [_closeModal func. closes all modals]
      */
-    _closeModal() {
+    _closeModal(_modal) {
         this.setState({
-            presetModal: false,
-            managePresetModal: false,
-            defaultSettingsModal: false,
-            resolutionChangeModal: false
+            [_modal]: false
         })
     }
 
@@ -705,26 +704,16 @@ export class TaskDetail extends React.Component {
     _handleStartTaskButton = once(() => {
 
         this._nextStep = true
-        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
-        const {task} = this.props
-
-        this.props.actions.createTask({
-            ...task,
-            timeout: floatToString(timeout),
-            subtasks,
-            subtask_timeout: floatToString(subtask_timeout),
-            bid,
-            options: {
-                resolution,
-                frames,
-                format,
-                compositing,
-                output_path,
+        this._createTaskAsync().then(result => {
+            if(result){
+                hashHistory.push('/tasks');
+            } else {
+                console.log("Task creation failed!")
+                this.setState({
+                    insufficientAmountModal: true
+                })
             }
         })
-        setTimeout(() => {
-            hashHistory.push('/tasks');
-        }, 1000);
     })
 
     _handleLocalRender() {
@@ -734,6 +723,28 @@ export class TaskDetail extends React.Component {
             resources,
             type,
             subtasks: 1 // <--- HARDCODED
+        })
+    }
+
+    _createTaskAsync(){
+        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {task} = this.props
+
+        return new Promise((resolve, reject) => {
+            this.props.actions.createTask({
+                ...task,
+                timeout: floatToString(timeout),
+                subtasks,
+                subtask_timeout: floatToString(subtask_timeout),
+                bid,
+                options: {
+                    resolution,
+                    frames,
+                    format,
+                    compositing,
+                    output_path,
+                }
+            }, resolve, reject)
         })
     }
 
@@ -994,8 +1005,26 @@ export class TaskDetail extends React.Component {
     }
 
     render() {
-        const {modalData, isDetailPage, presetModal, bid, managePresetModal, defaultSettingsModal, resolutionChangeModal, resolutionChangeInfo} = this.state
-        const {testStatus, estimated_cost, subtasksList, isDeveloperMode} = this.props;
+
+        const {
+            modalData, 
+            isDetailPage, 
+            presetModal, 
+            bid, 
+            managePresetModal, 
+            defaultSettingsModal, 
+            insufficientAmountModal, 
+            resolutionChangeModal, 
+            resolutionChangeInfo
+        } = this.state
+
+        const {
+            testStatus, 
+            estimated_cost, 
+            subtasksList, 
+            isDeveloperMode
+        } = this.props;
+
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -1072,6 +1101,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
+                {insufficientAmountModal && <InsufficientAmountModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

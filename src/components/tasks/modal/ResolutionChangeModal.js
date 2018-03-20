@@ -12,7 +12,7 @@ export default class ResolutionChangeModal extends React.Component {
      */
     _handleCancel() {
         this.props.applyPreset(this.props.info, false)
-        this.props.closeModal()
+        this.props.closeModal('resolutionChangeModal')
     }
 
     /**
@@ -20,7 +20,7 @@ export default class ResolutionChangeModal extends React.Component {
      */
     _applyPreset() {
         this.props.applyPreset(this.props.info)
-        this.props.closeModal()
+        this.props.closeModal('resolutionChangeModal')
     }
 
     render() {

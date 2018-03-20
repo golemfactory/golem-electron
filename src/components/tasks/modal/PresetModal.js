@@ -29,7 +29,7 @@ export default class PresetModal extends React.Component {
      * [_handleCancel func. closes modal]
      */
     _handleCancel() {
-        this.props.closeModal()
+        this.props.closeModal('presetModal')
     }
 
     /**
@@ -62,7 +62,7 @@ export default class PresetModal extends React.Component {
         }
 
         saveCallback(name, getPresentObject(task_type))
-        this.props.closeModal()
+        this.props.closeModal('presetModal')
 
     }
 

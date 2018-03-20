@@ -209,7 +209,7 @@ export class Header extends Component {
                     <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={this._taskHints(isEngineOn, connectedPeers)} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <li className="menu__item" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                        <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </ReactTooltip>
                     <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
