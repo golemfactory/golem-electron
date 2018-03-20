@@ -28,6 +28,7 @@
 @import "modal";
 @import "issue-modal";
 @import "dropdown";
+@import "info-label";
 
 html {
     padding: 0;
@@ -589,6 +590,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -625,6 +627,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -661,6 +664,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
