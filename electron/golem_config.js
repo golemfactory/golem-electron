@@ -9,7 +9,7 @@ let localDir;
 
 switch(os.platform()) {
     case "win32":
-        localDir = 'AppData\\Local';
+        localDir = 'AppData\\Local\\golem'; // mind the extra 'golem'
         break;
     case "darwin":
         localDir = 'Library/Application\ Support';
