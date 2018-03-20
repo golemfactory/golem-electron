@@ -241,7 +241,9 @@ select {
     }
 }
 
-input{
+input[type=text],
+input[type=number],
+input[type=password]{
     background: white;
     border: 1px solid $color-border;
 
