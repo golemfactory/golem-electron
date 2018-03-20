@@ -32,6 +32,13 @@ export class Geth extends React.Component {
         })
     }
 
+    _preventSpace(event){
+        var key = event.which || window.event.which;
+        if (key === 32) {
+          event.preventDefault();
+        }
+    }
+
     _handleGethPort(e){
         this.props.actions.setLocalGeth({
             gethPort: e.target.value
@@ -39,9 +46,15 @@ export class Geth extends React.Component {
     }
 
     _handleGethAddress(e){
-        this.props.actions.setLocalGeth({
-            gethAddress: e.target.value
-        })
+        e.target.checkValidity();
+        if (!e.target.validity.valid)
+                e.target.classList.add("invalid");
+        else{
+            e.target.classList.remove("invalid");
+            this.props.actions.setLocalGeth({
+                gethAddress: e.target.value
+            })
+        }
     }
 
     render() {
@@ -62,7 +75,15 @@ export class Geth extends React.Component {
                 </div>
                 <div className="section__advanced">
                     <span>Remote Geth Address</span>
-                    <input type="text" defaultValue={gethAddress} onChange={::this._handleGethAddress} className="address-input__geth" aria-label="URI of Local Geth" disabled={isLocalGeth}/>
+                    <input 
+                        type="text" 
+                        defaultValue={gethAddress} 
+                        onChange={::this._handleGethAddress} 
+                        onKeyPress={::this._preventSpace}
+                        className="address-input__geth" 
+                        aria-label="URI of Local Geth" 
+                        pattern="^(https?)://.*$"
+                        disabled={isLocalGeth}/>
                 </div>
                 <div className="section__tips">
                     <span className="tips__geth">Enabling custom geth option will require restart the application.</span>
