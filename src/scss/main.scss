@@ -28,6 +28,7 @@
 @import "modal";
 @import "issue-modal";
 @import "dropdown";
+@import "info-label";
 
 html {
     padding: 0;
@@ -241,19 +242,22 @@ select {
     }
 }
 
+input[type=text],
+input[type=number],
+input[type=password]{
+    background: white;
+    border: 1px solid $color-border;
+
+    &:disabled{
+        background: $color-input;
+    }
+}
+
 input.invalid {
     border-color: red !important;
 }
 
-input[type=text],
-input[type=number] {
-    background: $color-input;
-    border: solid 0.5px $color-border;
-}
-
 input[type=text] {
-    background: $color-input;
-    border: 1px solid $color-border;
     height: 32px;
 }
 
@@ -261,9 +265,7 @@ input[type=number] {
     width: 100%;
     position: relative;
     height: 32px;
-    background: $color-input;
     border-box: none;
-    border: 1px solid $color-text3;
     text-align: center;
 }
 
@@ -475,6 +477,10 @@ input[type=number]::-webkit-inner-spin-button {
         }
     }
 
+.label_optional{
+    color: $color-text3;
+}
+
 .progress-status {
         display: inline-block;
         font-size: 15pt;
@@ -580,6 +586,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -588,6 +595,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -616,6 +624,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -624,6 +633,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -652,6 +662,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -660,6 +671,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,

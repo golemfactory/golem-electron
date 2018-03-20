@@ -7,6 +7,8 @@ const {exec, execSync, spawn} = require('child_process');
 const {app} = electron;
 
 const log = require('./debug_handler.js');
+const {getConfig, dictConfig} = require('./config_storage.js')
+const {DEFAULT_GETH} = dictConfig
 const {DATADIR, IS_MAINNET} = require('./golem_config.js');
 
 const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
@@ -39,10 +41,15 @@ class GolemProcess {
 
         let defaultArgs = ['-r', 'localhost:61000'];
         if (IS_MAINNET) defaultArgs.push('--mainnet');
+        if (getConfig(DEFAULT_GETH)) this._addGethArgs(defaultArgs);
 
         this.processName = processName || 'golemapp';
         this.processArgs = processArgs || defaultArgs;
         this.processOpts = environment();
+
+        this.processGeth = '--start-geth';
+        this.processPort = '--start-geth-port';
+        this.processAddr = '--geth-address';
 
         this.prepared = new Deferred();
         this.prepared.promise.catch(this.fatalError);
@@ -110,6 +117,24 @@ class GolemProcess {
                 reject(err);
             }
         });
+    }
+
+    _addGethArgs(args) {
+        const customGeth = getConfig(DEFAULT_GETH);
+        var gethFlag;
+
+        if (customGeth.isLocalGeth){
+
+            args.push(this.processGeth)
+            gethFlag = `${this.processPort} ${customGeth.gethPort || 8545}`
+
+        } else if (customGeth.gethAddress){
+            gethFlag = `${this.processAddr} ${customGeth.gethAddress}`
+        }
+
+        gethFlag && args.push(gethFlag)
+
+        console.warn('💻 Golem will run on your local geth!');
     }
 
     startProcess() {

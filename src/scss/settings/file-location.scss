@@ -19,9 +19,10 @@
     button {
         height: 32px;
     }
+
+    .tips__file-location {
+        font-size: 9pt;
+        color: $color-text2;
+    }
 }
 
-.tips__file-location {
-    font-size: 9pt;
-    color: $color-text2;
-}
