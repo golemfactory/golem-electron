@@ -8,6 +8,7 @@ import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
 import { versionFlow } from "./version";
 import { golemStatusFlow } from "./golem";
+import { chainInfoFlow } from "./chainInfo";
 import { frameBase } from "./frame";
 import { engineFlow } from "./engine";
 import { currencyFlow } from "./currency";
@@ -197,6 +198,7 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
+        yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
         yield fork(settingsInteractionFlow, connection);
