@@ -24,7 +24,8 @@ export class Wallet extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            addressCopied: false
+            addressCopied: false,
+            isWalletExpanded: false,
         }
     }
 
@@ -40,6 +41,9 @@ export class Wallet extends Component {
    		element.classList.toggle("expand__wallet");
    		expandButton.classList.toggle("icon-arrow-down");
    		expandButton.classList.toggle("icon-arrow-up");
+        this.setState({
+            isWalletExpanded: !this.state.isWalletExpanded
+        })
     }
 
     _handleCopyToClipboard(_publicKey, evt) {
@@ -65,15 +69,42 @@ export class Wallet extends Component {
         })
     }
 
+    _expandAmount(_type){
+        console.log("Clicked!", _type);
+    }
+
+
     render() {
         const { publicKey, balance, currency} = this.props
-        const { addressCopied } = this.state
+        const { addressCopied, isWalletExpanded } = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
 	                <div className="panel_box">
-	                	<CurrencyBox balance={balance[0]} currency={currency} suffix="GNT" description="Test tooltip for GNT" clickHandler={::this._handleWithdrawModal}/>
-	                	<CurrencyBox balance={balance[1]} currency={currency} suffix="ETH" description="Test tooltip for ETH" clickHandler={::this._handleWithdrawModal}/>
+	                	<CurrencyBox
+                            balance={balance[0]}
+                            currency={currency}
+                            suffix="GNT"
+                            description={
+                                        <p className="tooltip__wallet">Golem Network
+                                        <br/>token is earned
+                                        <br/>and/or paid for
+                                        <br/>computations.
+                                        <br/><a href="">Learn more</a></p>
+                                    }
+                            expandAmount={::this._expandAmount}
+                            clickHandler={::this._handleWithdrawModal}/>
+	                	<CurrencyBox
+                            balance={balance[1]}
+                            currency={currency}
+                            suffix="ETH"
+                            description={
+                                        <p className="tooltip__wallet">ETH is used for
+                                        <br/>transaction fees.
+                                        <br/><a href="">Learn more</a></p>
+                                    }
+                            expandAmount={::this._expandAmount}
+                            clickHandler={::this._handleWithdrawModal}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>
@@ -83,8 +114,8 @@ export class Wallet extends Component {
 		            	<span>send GNT and ETH to this address to top up your account</span>
 		            </div>
 		            <div>
-		            	<input className="input__public-key" type="text" value={publicKey} readOnly/>
-	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, publicKey)}/>
+		            	<input className="input__public-key" type="text" value={"You cannot top up your TestNet account"} readOnly/>
+	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, "You cannot top up your TestNet account")}/>
                         {addressCopied && <span className="status-copy_address">address copied</span>}
 		            </div>
 	            </div>

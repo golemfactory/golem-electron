@@ -17,7 +17,6 @@
 	.icon-arrow-down{
 		cursor: pointer;
 	}
-    
 }
 .expand__wallet{
 	flex: 0 0 320px;
@@ -74,6 +73,12 @@
 		}
 	}
 }
+
+
+.tooltip__wallet{
+	font-size: 9pt;
+}
+
 
 .content__wallet{
 	display: flex;

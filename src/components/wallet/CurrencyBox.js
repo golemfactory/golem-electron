@@ -27,13 +27,13 @@ export default class CurrencyBox extends Component {
         if (this.props.balance === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
             motionBalanceStart[_suffix] = _balance
         }
-        return (_balance).toFixed(2)
+        return (_balance).toFixed(4)
     }
 
     render() {
-        const {balance, currency, suffix, description, clickHandler} = this.props
+        const {balance, currency, suffix, description, clickHandler, expandAmount} = this.props
         return (
-            <div className="content__currency-box">
+            <div className="content__currency-box" onClick={expandAmount.bind(this, suffix)}>
                 <div>
                 	<span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
@@ -46,7 +46,7 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">{::this._formatAmount(Number(balanceAnimated), suffix)}<span className="currency-suffix">{suffix}</span></span>}
+                    {({balanceAnimated}) => <span className="amount">{::this._formatAmount(Number(balanceAnimated), suffix)}<span className="currency-suffix">t{suffix}</span></span>}
                 </Motion>
                 <Motion defaultStyle={{
                 balanceAnimated: motionBalanceStart[`${suffix}-USD`]
@@ -56,15 +56,15 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} $</span>}
+                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} t$</span>}
                 </Motion>
                 </div>
-                <ReactTooltip overlayClassName="black" overlay={<p>{description}</p>} placement="bottomRight" trigger={['hover']} align={{
-                offset: [12, 10],
+                <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{
+                offset: [10, 8],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={true}>Withdraw</button>
             </div>
         );
     }
