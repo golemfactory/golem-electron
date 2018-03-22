@@ -105,6 +105,16 @@ const messages = {
         }
     },
     client: {
+        'get_password': {
+            pre: 'Requires password',
+            post: 'Logged In',
+            exception: 'Problem with password'
+        },
+        'new_password': {
+            pre: 'Requires new password',
+            post: 'Registered',
+            exception: 'Problem with password'
+        },
         'start': {
             pre: 'Starting Golem',
             post: 'Connecting to network',

@@ -1,6 +1,7 @@
 export let dict = Object.freeze({
     ONBOARDING: 'ONBOARDING',
     UPDATE_NODE_NAME: 'UPDATE_NODE_NAME',
+    SET_PASSWORD: 'SET_PASSWORD',
     //NETWORK
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
@@ -84,8 +85,12 @@ export let dict = Object.freeze({
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
     TOGGLE_DEVELOPER_MODE: 'TOGGLE_DEVELOPER_MODE',
+    SET_PASSWORD_MODAL: 'SET_PASSWORD_MODAL',
     ADD_QUEUE: 'ADD_QUEUE',
     REMOVE_FROM_QUEUE: 'REMOVE_FROM_QUEUE',
+    CHECK_TERMS_ACCEPTED: 'CHECK_TERMS_ACCEPTED',
+    ACCEPT_TERMS: 'ACCEPT_TERMS',
+    SET_TERMS_STATUS: 'SET_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -94,6 +99,7 @@ export let dict = Object.freeze({
 const {
     ONBOARDING, 
     UPDATE_NODE_NAME,
+    SET_PASSWORD,
     //NETWORK
     SET_BALANCE, 
     SET_RESOURCES, 
@@ -176,14 +182,23 @@ const {
     SET_ZOOM_RATIO, 
     SET_NETWORK_INFO, 
     TOGGLE_DEVELOPER_MODE,
+    SET_PASSWORD_MODAL,
     ADD_QUEUE,
     REMOVE_FROM_QUEUE,
+    CHECK_TERMS_ACCEPTED,
+    ACCEPT_TERMS,
+    SET_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
 
 export const updateNodeName = (payload) => ({
     type: UPDATE_NODE_NAME,
+    payload
+})
+
+export const setPassword = (payload) => ({
+    type: SET_PASSWORD,
     payload
 })
 
@@ -571,6 +586,11 @@ export const toggleDeveloperMode = (payload) => ({
     payload
 })
 
+export const setPasswordModal = (payload) => ({
+    type: SET_PASSWORD_MODAL,
+    payload
+})
+
 export const addQueue = (payload) => ({
     type: ADD_QUEUE,
     payload
@@ -578,6 +598,21 @@ export const addQueue = (payload) => ({
 
 export const removeQueuedTask = () => ({
     type: REMOVE_FROM_QUEUE
+})
+
+export const checkTermsAccepted = () => ({
+    type: CHECK_TERMS_ACCEPTED
+})
+
+export const acceptTerms = (_resolve, _reject) => ({
+    type: ACCEPT_TERMS,
+    _resolve,
+    _reject
+})
+
+export const setTermsStatus = (payload) => ({
+    type: SET_TERMS_STATUS,
+    payload
 })
 
 export const setConnectionProblem = (payload) => ({

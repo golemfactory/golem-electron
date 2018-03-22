@@ -3,6 +3,7 @@ const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
+
 const { 
     SET_GOLEM_VERSION, 
     SET_LATEST_VERSION, 
@@ -11,6 +12,7 @@ const {
     SET_FILE_CHECK, 
     SET_CONNECTION_PROBLEM, 
     SET_GOLEM_PAUSE_STATUS,
+    SET_TERMS_STATUS,
     SET_CHAIN_INFO
 } = dict
 
@@ -39,6 +41,7 @@ const initialState = {
         issue: null
     },
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
+    isTermsAccepted: false
 }
 
 function isNewVersion(_old, _new){
@@ -105,6 +108,12 @@ const setInfo = (state = initialState, action) => {
                 seen: true
             }
         });
+        
+    case SET_TERMS_STATUS:
+        return Object.assign({}, state, {
+            isTermsAccepted: action.payload
+        });
+
     case SET_CHAIN_INFO:
         return Object.assign({}, state, {
             isMainNet: action.payload

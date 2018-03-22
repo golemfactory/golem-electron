@@ -9,7 +9,7 @@ const store = new Store();
 //store.delete('DEFAULT_GETH') // <-- Rollback geth
 //store.delete('HIDE_ONBOARD') // <-- Rollback onboard
 const dictConfig = {
-    HIDE_ONBOARD: 'HIDE_ONBOARD',
+    HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',
     PREVIEW_SWITCH: 'PREVIEW_SWITCH',
     RESOURCE_SLIDER: 'RESOURCE_SLIDER',

@@ -14,6 +14,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import IssueModal from './modal/IssueModal'
+import PasswordModal from './modal/PasswordModal'
 
 
 Array.prototype.last = function() {
@@ -46,6 +47,8 @@ const mapStateToProps = state => ({
     golemStatus: state.realTime.golemStatus,
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
+    passwordModal: state.realTime.passwordModal,
+    showOnboard: state.onboard.showOnboard,
     taskQueue: state.queue.next
 })
 
@@ -93,7 +96,7 @@ export class App extends Component {
 
     render() {
 
-        const {actions, history, connectionProblem, latestVersion} = this.props
+        const {actions, history, connectionProblem, latestVersion, passwordModal, showOnboard} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
@@ -101,6 +104,7 @@ export class App extends Component {
                     { routes }
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
+                 { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
             </div>
         );
     }

@@ -8,9 +8,11 @@ import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
 import { versionFlow } from "./version";
 import { golemStatusFlow } from "./golem";
+import { termsFlow } from './terms';
 import { chainInfoFlow } from "./chainInfo";
 import { frameBase } from "./frame";
 import { engineFlow } from "./engine";
+import { encryptionFlow } from "./password";
 import { currencyFlow } from "./currency";
 import { connectedPeersFlow } from "./connectedPeers";
 import { balanceFlow } from "./balance";
@@ -201,8 +203,9 @@ export function* handleIO(connection) {
         yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
+        yield fork(termsFlow, connection);
+        yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
-
         yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 
         channel = yield call(subscribe, connection);
