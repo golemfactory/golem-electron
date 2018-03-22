@@ -51,6 +51,7 @@ class OnboardIndex extends React.Component {
             nodeName: null,
             isNext: true,
             password: "",
+            isPasswordValid: false,
             loadingIndicator: false,
             isAcceptLocked: true,
             isTermsDeclined: false,
@@ -100,6 +101,13 @@ class OnboardIndex extends React.Component {
         })
     }
 
+    _handlePasswordValidation(_result){
+        if(this.state.isPasswordValid !== _result)
+            this.setState({
+                isPasswordValid: _result
+            })
+    }
+
     /**
      * [shownStep func. will redirect user to relevant Step]
      * @param  {Number}     id      [Id of the step]
@@ -107,7 +115,7 @@ class OnboardIndex extends React.Component {
      */
     shownStep(id) {
         const {passwordModal, actions} = this.props
-        const { isTermsDeclined, isPrinted, isSkippingPrint } = this.state
+        const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator} = this.state
         let step;
         let key = Symbol(id).toString();
         switch (id) {
@@ -124,7 +132,12 @@ class OnboardIndex extends React.Component {
             step = <Type key={key}/>
             break;
         case steps.REGISTER:
-            step = <Register key={key} passwordModal={passwordModal} handleLoading={::this._handleLoadingIndicator}/>
+            step = <Register 
+                        key={key} 
+                        passwordModal={passwordModal}
+                        loadingIndicator={loadingIndicator}
+                        handlePasswordValidation={::this._handlePasswordValidation} 
+                        handleLoading={::this._handleLoadingIndicator}/>
             break;
         case steps.PRINT:
             step = <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint}/>
@@ -245,7 +258,8 @@ class OnboardIndex extends React.Component {
 
     _initControl(_step){
         const {passwordModal} = this.props
-        const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted} = this.state
+        const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
+        console.log("isPasswordValid", isPasswordValid);
         if(_step === steps.WELCOME || _step === steps.STEP4){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Get Started</button>
@@ -271,7 +285,7 @@ class OnboardIndex extends React.Component {
         else if(_step === steps.REGISTER){
             return <div>
                 {(passwordModal && passwordModal.status) ? 
-                <button type="submit" form="passwordForm" className={`btn btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : (passwordModal.register ? "Register": "Login")}{loadingIndicator && <span className="jumping-dots">
+                <button type="submit" form="passwordForm" className={`btn btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator || (passwordModal.register && !isPasswordValid)}> {loadingIndicator ? 'Signing in' : (passwordModal.register ? "Register": "Login")}{loadingIndicator && <span className="jumping-dots">
                   <span className="dot-1">.</span>
                   <span className="dot-2">.</span>
                   <span className="dot-3">.</span>

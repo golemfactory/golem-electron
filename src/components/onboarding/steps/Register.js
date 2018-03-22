@@ -33,12 +33,13 @@ export class Register extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error){
-            const container = document.getElementById("passwordContainer")
-            container.classList.add("modal-error")
-            this.refs.password.classList.add("invalid")
-            this.refs.errorInfo.textContent = "wrong password"
+            const container = document.getElementById("passwordContainer");
+            console.log("container", container);
+            container.classList.add("modal-error");
+            this.refs.password.classList.add("invalid");
+            this.refs.errorInfo.textContent = "wrong password";
             setTimeout(() => {
-                container.classList.remove("modal-error")
+                container.classList.remove("modal-error");
             }, 1000)
             if(this.refs.password)
                 this.refs.password.value = "";
@@ -46,10 +47,11 @@ export class Register extends React.Component {
         }
     }
 
-    foo(e){
+    _handleChange(e){
         this.setState({
             password: e.password
         })
+        this.props.handlePasswordValidation(e.isValid)
     }
 
     _handlePassword(e){
@@ -100,17 +102,26 @@ export class Register extends React.Component {
         return null
     }
 
-    _initProperContent(_passwordModal){
+    _initProperContent(_passwordModal, _loadingIndicator){
         if(_passwordModal.status){
             return <div>
                     {(_passwordModal.register) ?
-                        <span>
-                            <strong>It is critical to know that</strong>
-                            <br/>
-                            the password <strong>can not</strong> be recovered.
-                            <br/>
-                            <strong>Write it down in a safe and secure place!</strong>
-                        </span>
+                        (_loadingIndicator ? 
+                            <span>
+                                Your unique <strong>Golem User ID</strong>
+                                <br/>
+                                is being created, this may take some time
+                            </span>
+                            :
+                            <span>
+                                <strong>It is critical to know that</strong>
+                                <br/>
+                                the password <strong>can not</strong> be recovered.
+                                <br/>
+                                <strong>Write it down in a safe and secure place!</strong>
+                            </span>
+                        )
+                        
                      :
                         <span>Appearently, you already registered.
                         <br/>
@@ -127,8 +138,8 @@ export class Register extends React.Component {
                                   className="passwordField"
                                   minLength={5}
                                   minScore={2}
-                                  scoreWords={['weak', 'okay', 'good', 'strong', 'stronger']}
-                                  changeCallback={::this.foo}
+                                  scoreWords={['too weak', 'weak', 'good', 'strong', 'stronger']}
+                                  changeCallback={::this._handleChange}
                                   inputProps={{
                                     id: "register",
                                     type:`${this.state.passwordMaskToggle ? "text" : "password"}`,
@@ -187,14 +198,14 @@ export class Register extends React.Component {
     }
 
     render() {
-        const {passwordModal} = this.props
+        const {passwordModal, loadingIndicator} = this.props
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
                    <img className="welcome-image" src={passwordModal.status ? lockedIcon : unlockedIcon}/>
                 </div>
                 <div className="desc__onboarding">
-                    {passwordModal && ::this._initProperContent(passwordModal)}
+                    {passwordModal && ::this._initProperContent(passwordModal, loadingIndicator)}
                 </div>
             </div>
         );

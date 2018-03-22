@@ -176,10 +176,9 @@
         }
 
         .passwordField{
-            height: 32px;
+            height: 34px;
             input{
-                background-color: $color-input;
-                height: 30px;
+                height: 32px;
             }
             .ReactPasswordStrength-strength-desc{
                 top:20px;

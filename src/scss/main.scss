@@ -248,6 +248,7 @@ input[type=number],
 input[type=password]{
     background: white;
     border: 1px solid $color-border;
+    height: 32px;
 
     &:disabled{
         background: $color-input;
@@ -258,14 +259,9 @@ input.invalid {
     border-color: red !important;
 }
 
-input[type=text] {
-    height: 32px;
-}
-
 input[type=number] {
     width: 100%;
     position: relative;
-    height: 32px;
     border-box: none;
     text-align: center;
 }
