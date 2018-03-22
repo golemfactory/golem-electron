@@ -60,11 +60,11 @@ export default class PresetModal extends React.Component {
                         </div>
                         <div>
                             <h5>RAM</h5>
-                            <span>{(memory / 1024000).toFixed(0)} GB</span>
+                            <span>{(memory / 1048576).toFixed(1)} GiB</span>
                         </div>
                         <div>
                             <h5>Disk</h5>
-                            <span>{(disk / 1024000).toFixed(0)} GB</span>
+                            <span>{(disk / 1048576).toFixed(1)} GiB</span>
                         </div>
                     </section>
                     <div className="action__modal">
