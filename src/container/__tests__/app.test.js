@@ -77,6 +77,9 @@ describe('<App />', () => {
                         status: false,
                         currency: null
                     }
+                }
+                onboard:{
+                    showOnboard: false
                 },
                 actions: jest.fn()
             })}>

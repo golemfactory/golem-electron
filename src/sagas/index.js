@@ -9,8 +9,10 @@ import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 import { accountFlow } from './account';
 import { advancedFlow } from "./advanced";
 import { balanceFlow } from "./balance";
+import { chainInfoFlow } from "./chainInfo";
 import { connectedPeersFlow } from "./connectedPeers";
 import { currencyFlow } from "./currency";
+import { encryptionFlow } from "./password";
 import { engineFlow } from "./engine";
 import { frameBase } from "./frame";
 import { golemStatusFlow } from "./golem";
@@ -21,6 +23,7 @@ import { settingsFlow, settingsInteractionFlow } from "./userSettings";
 import { statsFlow } from "./stats";
 import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
+import { termsFlow } from './terms';
 import { versionFlow } from "./version";
 
 const { ipcRenderer } = window.electron;
@@ -199,10 +202,12 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
+        yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);
+        yield fork(termsFlow, connection);
+        yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
-
         yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 
         channel = yield call(subscribe, connection);

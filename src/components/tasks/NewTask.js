@@ -134,12 +134,12 @@ export class NewTask extends React.Component {
                                     <span className="path4"/>
                                 </span>
                                 <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
-                                <label htmlFor="taskTypeRadio1" className="radio-label">Blender</label>
+                                <label htmlFor="taskTypeRadio1" className="radio-label-right">Blender</label>
                             </div>
                             <div className="radio-item">
                                 <span className="icon-luxrender"/>
                                 <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" checked={type === radioTypes.lxs} readOnly/>
-                                <label htmlFor="taskTypeRadio2" className="radio-label">LuxRender</label>
+                                <label htmlFor="taskTypeRadio2" className="radio-label-right">LuxRender</label>
                             </div>
                             
                         </div>

@@ -48,7 +48,6 @@ export function callSettings(session) {
         let actionList = []
         function on_settings(args) {
             let on_settings = args[0];
-            //console.log("SETTINGS", on_settings)
             const {hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
 
 

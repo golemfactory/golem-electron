@@ -3,7 +3,7 @@ const log = remote.require('./electron/debug_handler.js')
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
-    WS_URL: 'ws://127.0.0.1:61000/ws',
+    WS_URL: 'wss://localhost:61000/ws',
     //REALM: 'realm1',
     REALM: 'golem',
     COUNTER_CH: 'com.golem.oncounter',
@@ -75,12 +75,16 @@ export let config = Object.freeze({
     BALANCE_CH: 'evt.pay.balance',
     //General
     VERSION_RPC: 'golem.version',
+    CHAIN_INFO_RPC: 'golem.mainnet',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
+    SET_PASSWORD_RPC: 'golem.password.set',
     LOCK_CONFIG_CH: 'evt.ui.widget.config.lock',
     GOLEM_STATUS_RPC: 'golem.status',
     GOLEM_STATUS_CH: 'evt.golem.status',
+    CHECK_TERMS_RPC: 'golem.terms',
+    ACCEPT_TERMS_RPC: 'golem.terms.accept',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',

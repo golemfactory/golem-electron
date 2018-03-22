@@ -28,6 +28,7 @@
 @import "slider";
 @import "modal";
 @import "issue-modal";
+@import "password-modal";
 @import "dropdown";
 @import "info-label";
 
@@ -248,6 +249,7 @@ input[type=number],
 input[type=password]{
     background: white;
     border: 1px solid $color-border;
+    height: 32px;
 
     &:disabled{
         background: $color-input;
@@ -258,14 +260,9 @@ input.invalid {
     border-color: red !important;
 }
 
-input[type=text] {
-    height: 32px;
-}
-
 input[type=number] {
     width: 100%;
     position: relative;
-    height: 32px;
     border-box: none;
     text-align: center;
 }
@@ -284,6 +281,11 @@ input[type=number]::-webkit-inner-spin-button {
     bottom: 0;
 
     &:hover {}
+}
+
+hint{
+    font-size: 9pt;
+    color: $color-text2;
 }
 
 .text-right {
@@ -381,13 +383,46 @@ input[type=number]::-webkit-inner-spin-button {
     input[type="radio"] {
         position: absolute;
         opacity: 0;
-
-        + .radio-label {
+        
+        + .radio-label-left,
+        + .radio-label-right{
             position: relative;
             margin: 0 !important;
             padding: 0 10px !important;
             color: $color-text2;
             line-height: 1.6em;
+        }
+
+
+        + .radio-label-left{
+            &:before {
+                content: '\e917';
+                background: $color-text4;
+                border-radius: 100%;
+                display: inline-block;
+                position: relative;
+                top: .2em;
+                margin-right: 1em;
+                vertical-align: top;
+                cursor: pointer;
+                text-align: center;
+                transition: all 250ms ease;
+                font-family: 'golemcon' !important;
+                speak: none;
+                font-style: normal;
+                font-weight: normal;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1;
+
+                /* Better Font Rendering =========== */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 14pt;
+            }
+        }
+
+        + .radio-label-right{
 
             &:after {
                 content: '\e917';
@@ -417,7 +452,13 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:checked {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    color: $color-accent1;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     color: $color-accent1;
                 }
@@ -425,7 +466,14 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:focus {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    outline: none;
+                    border-color: $color-text3;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     outline: none;
                     border-color: $color-text3;
@@ -434,7 +482,16 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:disabled {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    box-shadow: inset 0 0 0 4px $color-text2;
+                    border-color: darken($color-text2, 25%);
+                    background: darken($color-text2, 25%);
+                    cursor: not-allowed;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     box-shadow: inset 0 0 0 4px $color-text2;
                     border-color: darken($color-text2, 25%);
@@ -444,7 +501,15 @@ input[type=number]::-webkit-inner-spin-button {
             }
         }
 
-        + .radio-label {
+        + .radio-label-left{
+            &:empty {
+                &:before {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        + .radio-label-right {
             &:empty {
                 &:after {
                     margin-right: 0;

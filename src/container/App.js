@@ -18,6 +18,7 @@ import { connect } from 'react-redux'
 import * as Actions from '../actions'
 import IssueModal from './modal/IssueModal'
 import WithdrawModal from './../components/wallet/modal/WithdrawModal'
+import PasswordModal from './modal/PasswordModal'
 
 
 Array.prototype.last = function() {
@@ -52,7 +53,10 @@ const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
     taskQueue: state.queue.next,
-    withdrawModal: state.account.withdrawModal
+    withdrawModal: state.account.withdrawModal,
+    passwordModal: state.realTime.passwordModal,
+    showOnboard: state.onboard.showOnboard,
+    taskQueue: state.queue.next
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -104,8 +108,7 @@ export class App extends Component {
 
 
     render() {
-
-        const {actions, history, connectionProblem, latestVersion, withdrawModal} = this.props
+        const {actions, history, connectionProblem, latestVersion, withdrawModal, passwordModal, showOnboard} = this.props
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
@@ -114,6 +117,7 @@ export class App extends Component {
                 </Router>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
+                 { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
             </div>
         );
     }
