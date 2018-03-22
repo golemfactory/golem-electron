@@ -1,16 +1,27 @@
 .content__currency-box{
-	width: auto;
 	min-width: 100px;
+	width: 162px;
 	min-height: 60px;
 	display: flex;
+	flex-flow: row;
 	align-items: center;
 	justify-content: space-around;
 	border: 0px solid transparent;
 	transition: 1s all;
 	cursor: pointer;
-	.icon-android{
-		font-size: 30px !important;
+	
+	&.expand{
+		width: 300px;
+    	justify-content: flex-start;
+    	span[class^="icon"][class$="logo"]{
+    		margin-right: 10px;
+    	}
 	}
+
+	&.shrink{
+		display: none;
+	}
+
 	span{
 		margin: 0 3px;
 		text-align: left;

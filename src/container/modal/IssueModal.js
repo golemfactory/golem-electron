@@ -35,7 +35,6 @@ export class IssueModal extends React.Component {
         if(connectionProblem.issue === knownIssues.PORT ||
             latestVersion.issue === knownIssues.UPDATE){
             var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
-            console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
             if (!isClickInside) {
                 //the click was outside the parent, do something
                 if(connectionProblem.issue === knownIssues.PORT)

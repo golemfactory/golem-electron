@@ -11,7 +11,8 @@ export default class CurrencyBox extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            currencyRate: 1
+            currencyRate: 1,
+            amountPrecision: 4
         }
 
         if(!motionBalanceStart[props.suffix]){
@@ -22,18 +23,31 @@ export default class CurrencyBox extends Component {
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.expandedAmount !== this.props.expandedAmount){
+            this.setState({
+                amountPrecision: nextProps.expandedAmount ? 13 : 4
+            })
+        }
+    }
+
 
     _formatAmount(_balance ,_suffix, currency = 1) {
         if (this.props.balance === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
             motionBalanceStart[_suffix] = _balance
         }
-        return (_balance).toFixed(4)
+
+        if(_suffix.includes('USD')){
+            return (_balance).toFixed(2)
+        }
+
+        return (_balance).toFixed(this.state.amountPrecision)
     }
 
     render() {
-        const {balance, currency, suffix, description, clickHandler, expandAmount} = this.props
+        const {balance, currency, suffix, description, clickHandler, expandAmount, expandedAmount} = this.props
         return (
-            <div className="content__currency-box" onClick={expandAmount.bind(this, suffix)}>
+            <div className={`content__currency-box ${expandedAmount ? (expandedAmount === suffix ? "expand" : "shrink") : ""}`}>
                 <div>
                 	<span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
@@ -46,7 +60,10 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">{::this._formatAmount(Number(balanceAnimated), suffix)}<span className="currency-suffix">t{suffix}</span></span>}
+                    {({balanceAnimated}) => <span className="amount" onClick={expandAmount.bind(this, suffix)}>
+                        {::this._formatAmount(Number(balanceAnimated), suffix)}
+                        <span className="currency-suffix">t{suffix}</span>
+                    </span>}
                 </Motion>
                 <Motion defaultStyle={{
                 balanceAnimated: motionBalanceStart[`${suffix}-USD`]

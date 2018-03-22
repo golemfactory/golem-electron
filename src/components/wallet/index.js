@@ -26,6 +26,7 @@ export class Wallet extends Component {
         this.state = {
             addressCopied: false,
             isWalletExpanded: false,
+            expandedAmount: null
         }
     }
 
@@ -42,7 +43,8 @@ export class Wallet extends Component {
    		expandButton.classList.toggle("icon-arrow-down");
    		expandButton.classList.toggle("icon-arrow-up");
         this.setState({
-            isWalletExpanded: !this.state.isWalletExpanded
+            isWalletExpanded: !this.state.isWalletExpanded,
+            expandedAmount: null
         })
     }
 
@@ -70,13 +72,16 @@ export class Wallet extends Component {
     }
 
     _expandAmount(_type){
-        console.log("Clicked!", _type);
+        if(!this.state.isWalletExpanded)
+            this.setState({
+                expandedAmount: this.state.expandedAmount ? null : _type
+            })
     }
 
 
     render() {
         const { publicKey, balance, currency} = this.props
-        const { addressCopied, isWalletExpanded } = this.state
+        const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
 	            <div className="content__wallet">
@@ -90,9 +95,10 @@ export class Wallet extends Component {
                                         <br/>token is earned
                                         <br/>and/or paid for
                                         <br/>computations.
-                                        <br/><a href="">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#golem-token">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
+                            expandedAmount={expandedAmount}
                             clickHandler={::this._handleWithdrawModal}/>
 	                	<CurrencyBox
                             balance={balance[1]}
@@ -104,6 +110,7 @@ export class Wallet extends Component {
                                         <br/><a href="">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
+                            expandedAmount={expandedAmount}
                             clickHandler={::this._handleWithdrawModal}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
