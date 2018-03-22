@@ -62,7 +62,9 @@ class OnboardIndex extends React.Component {
 
     componentDidMount() {
         this._keypressListener = event => {
-            if(event.key === "Enter" && this.state.currentStep !== steps.REGISTER){
+            if(event.key === "Enter" && 
+                this.state.currentStep !== steps.REGISTER &&
+                this.state.currentStep !== steps.TERMS){
                 this._handleNext.call(this)
             }
         }
