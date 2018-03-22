@@ -8,6 +8,7 @@ import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, su
 import { versionFlow } from '../version'
 import { golemStatusFlow } from '../golem'
 import { termsFlow } from '../terms';
+import { chainInfoFlow } from "../chainInfo";
 import { frameBase } from '../frame'
 import { engineFlow } from '../engine'
 import { encryptionFlow } from '../password'
@@ -142,6 +143,9 @@ describe('handleIO', () => {
     it('should fork read generator (handleIO)', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
+            .next()
+            .fork(chainInfoFlow, connection)
+            
             .next()
             .fork(golemStatusFlow, connection)
 

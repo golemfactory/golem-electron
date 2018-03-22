@@ -3,7 +3,19 @@ const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
-const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN, SET_NETWORK_INFO, SET_FILE_CHECK, SET_CONNECTION_PROBLEM, SET_GOLEM_PAUSE_STATUS, SET_TERMS_STATUS} = dict
+
+const { 
+    SET_GOLEM_VERSION, 
+    SET_LATEST_VERSION, 
+    UPDATE_SEEN, 
+    SET_NETWORK_INFO, 
+    SET_FILE_CHECK, 
+    SET_CONNECTION_PROBLEM, 
+    SET_GOLEM_PAUSE_STATUS,
+    SET_TERMS_STATUS,
+    SET_CHAIN_INFO
+} = dict
+
 const {GOLEM_STARTER} = dictConfig
 
 const initialState = {
@@ -18,6 +30,7 @@ const initialState = {
         importance: null,
         seen: false
     },
+    isMainNet: false,
     networkInfo: {},
     fileCheckModal: {
         status: false,
@@ -95,11 +108,16 @@ const setInfo = (state = initialState, action) => {
                 seen: true
             }
         });
+        
     case SET_TERMS_STATUS:
         return Object.assign({}, state, {
             isTermsAccepted: action.payload
         });
 
+    case SET_CHAIN_INFO:
+        return Object.assign({}, state, {
+            isMainNet: action.payload
+        });
 
     default:
         return state;

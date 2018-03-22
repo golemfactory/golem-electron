@@ -74,6 +74,7 @@ export let config = Object.freeze({
     BALANCE_CH: 'evt.pay.balance',
     //General
     VERSION_RPC: 'golem.version',
+    CHAIN_INFO_RPC: 'golem.mainnet',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',

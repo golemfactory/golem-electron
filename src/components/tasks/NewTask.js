@@ -7,7 +7,8 @@ import * as Actions from '../../actions'
 import FileCheckModal from './modal/FileCheckModal'
 
 const mapStateToProps = state => ({
-    fileCheckModal: state.info.fileCheckModal
+    fileCheckModal: state.info.fileCheckModal,
+    taskName: state.create.task.taskName
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -24,7 +25,7 @@ export class NewTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: 'Golem Task',
+            name: props.taskName || "Golem Task",
             type: radioTypes[this.props.params.type] || null
         }
     }
@@ -34,6 +35,14 @@ export class NewTask extends React.Component {
             this.setState({
                 type: radioTypes[nextProps.params.type] || null
             })
+
+        if(nextProps.taskName !== this.props.taskName){
+            let taskName = nextProps.taskName.split("."+ nextProps.params.type)[0];
+            taskName = taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, "");
+             this.setState({
+                name: taskName || "Golem Task"
+            })
+        }
     }
 
     componentWillUnmount() {

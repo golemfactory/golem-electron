@@ -72,7 +72,7 @@ module.exports = {
             options: {
                 cacheDirectory: true,
                 plugins: ['transform-decorators-legacy', "transform-class-properties"],
-                presets: ['react', "es2015", 'stage-0']
+                presets: ['react', 'env', 'stage-0']
             }
         },
             {
