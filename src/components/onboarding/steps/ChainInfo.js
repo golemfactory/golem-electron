@@ -1,7 +1,7 @@
 import React from 'react';
 
 import mainNetIcon from './../../../assets/img/main-net-icon.svg'
-import testNetIcon from './../../../assets/img/main-net-icon.svg'
+import testNetIcon from './../../../assets/img/test-net-icon.svg'
 
 export default class ChainInfo extends React.Component {
 
@@ -13,12 +13,12 @@ export default class ChainInfo extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="chain-image" src={mainNetIcon}/>
+                   <img className="chain-image" src={testNetIcon}/>
                 </div>
                 <div className="desc__onboarding">
                     <span>You are going to run
                     <br/>
-                    <strong>Golem on main net.</strong>
+                    <strong>Golem on test net.</strong>
                     <br/><br/><br/>
                         <mark className="mark--chain">
                         Make sure that you know all the risks and take responsible actions.
