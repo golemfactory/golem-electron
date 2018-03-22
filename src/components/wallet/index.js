@@ -91,11 +91,14 @@ export class Wallet extends Component {
                             currency={currency}
                             suffix="GNT"
                             description={
-                                        <p className="tooltip__wallet">Golem Network
-                                        <br/>token is earned
+                                        <p className="tooltip__wallet">
+                                        tGNT is testnet
+                                        <br/>Golem Network 
+                                        <br/>token.
+                                        <br/>It is earned
                                         <br/>and/or paid for
                                         <br/>computations.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#golem-token">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
@@ -105,9 +108,12 @@ export class Wallet extends Component {
                             currency={currency}
                             suffix="ETH"
                             description={
-                                        <p className="tooltip__wallet">ETH is used for
+                                        <p className="tooltip__wallet">
+                                        tETH is testnet 
+                                        <br/>ETH.
+                                        <br/>It is used for
                                         <br/>transaction fees.
-                                        <br/><a href="">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
