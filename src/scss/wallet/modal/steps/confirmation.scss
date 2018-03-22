@@ -1,0 +1,27 @@
+.content__modal--confirmation {
+    height: 380px;
+    text-align: center;
+    padding: 20px;
+
+    .info-label,
+    .info-address,
+    .info-estimation{
+    	font-size: 9pt;
+    }
+
+    .info-price{
+    	font-size: 12pt;
+    }
+
+    .info-address{
+    	line-height: 2em;
+    }
+
+    .info-gas__container{
+    	width: calc(100% + 40px);
+    	margin: 0 -40px;
+    	padding: 20px 0;
+    	background: $color-bg2;
+    	box-sizing: border-box;
+    }
+}

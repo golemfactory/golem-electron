@@ -1,0 +1,122 @@
+@import 'currency-box';
+@import 'modal/withdraw-modal.scss';
+
+.section__wallet {
+	position: relative;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-around;
+    position: relative;
+    background: $display-indicator-backround;
+    border-bottom: 1px solid $color-text3;
+    flex: 0 0 70px;
+    transition: 1s all;
+	
+	.icon-arrow-up,
+	.icon-arrow-down{
+		cursor: pointer;
+	}
+}
+.expand__wallet{
+	flex: 0 0 320px;
+
+	.address-box__wallet{
+		position: relative;
+		margin-right: 30px;
+		margin-bottom: 5px;
+		display: block;
+
+		.input__public-key{
+			padding-right: 40px;
+		}
+		.icon-checkmark,
+		.icon-copy{
+			position: absolute;
+			cursor: pointer;
+		}
+
+		.icon-copy{
+			font-size: 20pt;
+			bottom: 3px;
+			right: 5px;
+			color: $color-text2;
+		}
+
+		.icon-checkmark{
+			font-size: 12pt;
+			bottom: 8px;
+			right: 10px;
+			color: $color-accent1;
+		}
+
+		.status-copy_address{
+			position: absolute;
+	        bottom: -15px;
+	        right: 0px;
+	        font-size: 9pt;
+	        color: $color-accent1;
+	        font-weight: 400;
+	    }
+	}
+
+
+	.icon-arrow-up{
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+	}
+
+	.content__wallet{
+		.panel_box{
+			justify-content: space-between;
+		}
+	}
+}
+
+
+.tooltip__wallet{
+	font-size: 9pt;
+}
+
+
+.content__wallet{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	box-sizing: border-box;
+
+	.panel_box{
+		display: flex;
+		justify-content: space-around;
+		width: 100%;
+	}
+}
+
+.address-box__wallet{
+	display: none;
+	box-sizing: border-box;
+	animation:.2s ease .5s normal forwards 1 fadein;
+	-webkit-animation:0.2s ease 0.5s normal forwards 1 fadein;
+	opacity:0;
+	span{
+		font-size: 9pt;
+		&:first-child{
+			font-weight: 500;
+		}
+	}
+	input{
+		margin-top: 10px;
+		padding: 0 10px;
+		width: 100%;
+	}
+}
+
+@keyframes fadein{from{opacity:0}
+to{opacity:1}
+}
+
+@-webkit-keyframes fadein{from{opacity:0}
+to{opacity:1}
+}

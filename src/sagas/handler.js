@@ -19,6 +19,7 @@ export let config = Object.freeze({
     GET_KEY_ID_RPC: 'crypto.keys.id',
     GET_PUBLIC_KEY_RPC: 'crypto.keys.pub',
     GET_STATUS_RPC: 'get_status',
+    WITHDRAW_RPC: 'pay.withdraw',
     //Network
     GET_NODE_RPC: 'net.ident',
     GET_NODE_KEY_RPC: 'net.ident.key',

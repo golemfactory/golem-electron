@@ -6,24 +6,25 @@ import Wampy from "wampy";
 import MsgpackSerializer from "./../utils/MsgpackSerializer";
 import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
-import { versionFlow } from "./version";
-import { golemStatusFlow } from "./golem";
-import { termsFlow } from './terms';
-import { chainInfoFlow } from "./chainInfo";
-import { frameBase } from "./frame";
-import { engineFlow } from "./engine";
-import { encryptionFlow } from "./password";
-import { currencyFlow } from "./currency";
-import { connectedPeersFlow } from "./connectedPeers";
-import { balanceFlow } from "./balance";
-import { historyFlow } from "./history";
+import { accountFlow } from './account';
 import { advancedFlow } from "./advanced";
+import { balanceFlow } from "./balance";
+import { chainInfoFlow } from "./chainInfo";
+import { connectedPeersFlow } from "./connectedPeers";
+import { currencyFlow } from "./currency";
+import { encryptionFlow } from "./password";
+import { engineFlow } from "./engine";
+import { frameBase } from "./frame";
+import { golemStatusFlow } from "./golem";
+import { historyFlow } from "./history";
+import { networkInfoFlow } from "./networkInfo";
 import { performanceFlow } from "./performance";
+import { settingsFlow, settingsInteractionFlow } from "./userSettings";
 import { statsFlow } from "./stats";
 import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
-import { settingsFlow, settingsInteractionFlow } from "./userSettings";
-import { networkInfoFlow } from "./networkInfo";
+import { termsFlow } from './terms';
+import { versionFlow } from "./version";
 
 const { ipcRenderer } = window.electron;
 const {
@@ -168,6 +169,7 @@ export function subscribe(session) {
 }*/
 
 export function* apiFlow(connection) {
+    yield fork(accountFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
     yield fork(statsFlow, connection);

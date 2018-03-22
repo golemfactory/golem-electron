@@ -13,10 +13,11 @@
 
 @import "header";
 @import "onboarding/index";
-@import "spott-light";
+@import "spot-light";
 @import "network/index";
 @import "task-panel/index";
 @import "settings/index";
+@import "wallet/index";
 @import "search-box";
 @import "footer";
 @import "not-found";
@@ -640,7 +641,8 @@ hint{
     .content__settings {
         padding-top: $header-height-windows;
     }
-
+    
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,
@@ -679,6 +681,7 @@ hint{
         padding-top: $header-height;
     }
 
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,
@@ -717,6 +720,7 @@ hint{
         padding-top: $header-height;
     }
 
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,

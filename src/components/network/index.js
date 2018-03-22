@@ -13,6 +13,7 @@ import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
 
 import Indicator from './Indicator'
+import Wallet from '../wallet'
 import Resources from './tabs/Resources'
 import History from './tabs/History'
 import Advanced from './tabs/Advanced'
@@ -173,13 +174,11 @@ export class MainFragment extends React.Component {
     }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn} = this.props
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, balance, currency} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
         return (
             <div className="content__main">
-                <div className="section__currency">
-                    <Indicator {...this.props}/>
-                </div>
+            <Wallet balance={balance} currency={currency}/>
             <div className="section__quick-settings">
             <div className="tab-panel" role="tablist">
                 <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>

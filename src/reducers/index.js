@@ -21,6 +21,8 @@ import preview from './tasks/preview'
 import create from './tasks/create'
 /*Onboard*/
 import onboard from './onboard'
+/*Account*/
+import account from './account'
 /*Rest*/
 import input from './input'
 import loader from './loader'
@@ -53,6 +55,8 @@ const reducer = combineReducers({
     create,
     //ONBOARD
     onboard,
+    //ACCOUNT
+    account,
     //GENERAL
     input,
     loader,
