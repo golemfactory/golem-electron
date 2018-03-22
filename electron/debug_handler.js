@@ -1,21 +1,22 @@
 /**
  * [winston package for logging]
- * 
+ *
  * @description [This package forked by uber from winston on v0.73, all basic
  * stuff enough to use, just there's one case is missing. It's about circular
  * reference problem in json on metadata. To solve circular reference problem in
  * json there's some solutions but right now it's trivial for our usecase.]
  * For future:
- * @see https://github.com/WebReflection/circular-json 
+ * @see https://github.com/WebReflection/circular-json
  * @see https://github.com/uber/winston/blob/1064360320fab2d27d9641fcc10f999b4925d30d/lib/winston/common.js#L117
  */
 const winston = require('winston-uber');
 const os = require('os');
+const path = require('path');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
-const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
+const {getConfig, setConfig, dictConfig} = require('./config_storage.js');
+const {DATADIR} = require('./golem_config.js');
 
-const HOMEDIR = os.homedir()
 const {DEBUG_MODE} = dictConfig
 const level = Object.freeze({
     ERROR: 'error',
@@ -26,41 +27,27 @@ const level = Object.freeze({
     SILLY: 'silly'
 })
 
-let LOGPATH;
+const LOGPATH = path.join(DATADIR, 'logs');
 
-switch(os.platform()){
-    case "win32":
-        LOGPATH = `${HOMEDIR}\\AppData\\Local\\golem\\golem\\default\\logs\\`
-        break;
-    case "darwin":
-        LOGPATH = `${HOMEDIR}/Library/Application\ Support/golem/default/logs/`
-        break;
-    case "linux":
-        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
-        break;
-    default:
-        LOGPATH = `${HOMEDIR}/.local/share/golem/default/logs/`
-        break;
-}
-
-if (!fs.existsSync(LOGPATH)){ //ensure that log path already exist in the system
-    mkdirp(LOGPATH, function (err) {
-        if (err) console.error(err)
-        else console.log('Log directory created')
-    })
-}
+if (!fs.existsSync(LOGPATH)) //ensure that log path already exist in the system
+    try {
+        mkdirp.sync(LOGPATH);
+        console.log('Log directory created');
+    } catch (err) {
+        console.error(err);
+    }
 
 const log = new (winston.Logger)({
     transports: [
         new (winston.transports.File)({
             name: 'debug-file',
-            filename: `${LOGPATH}gui.log`,
+            filename: path.join(LOGPATH, 'gui.log'),
             level: 'debug',
             json: false
         }),
         new (winston.transports.File)({
             name: 'error-file',
-            filename: `${LOGPATH}gui-error.log`,
+            filename: path.join(LOGPATH, 'gui-error.log'),
             level: 'error'
         })
     ]

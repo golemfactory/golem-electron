@@ -3,7 +3,7 @@ const log = remote.require('./electron/debug_handler.js')
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
-    WS_URL: 'ws://127.0.0.1:61000/ws',
+    WS_URL: 'wss://localhost:61000/ws',
     //REALM: 'realm1',
     REALM: 'golem',
     COUNTER_CH: 'com.golem.oncounter',
