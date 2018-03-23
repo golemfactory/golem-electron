@@ -12,7 +12,7 @@ export default class Print extends React.Component {
     _initContent(_isPrinted, _isSkippingPrint){
         if(!_isSkippingPrint){
             if(!_isPrinted){
-                return <span>We do care about your safety!
+                return <span className="desc__print">We do care about your safety!
                         <br/>
                         So just to be sure that you actually
                         <br/>
@@ -22,7 +22,7 @@ export default class Print extends React.Component {
                         </span>
             }
 
-            return <span>
+            return <span className="desc__print">
                         <strong>Security guidelines.</strong>
                         <br/>
                         After printing your password, <strong>delete</strong>
@@ -34,7 +34,7 @@ export default class Print extends React.Component {
                         and <strong>store it in secure place</strong>, like USB drive.
                         </span>
         } 
-        return <span>
+        return <span className="desc__print">
                         Hey!
                         <br/>
                         Are you sure that you don't want
@@ -56,6 +56,8 @@ export default class Print extends React.Component {
                 </div>
                 <div className="desc__onboarding">
                     {this._initContent(isPrinted, isSkippingPrint)}
+                    <br/>
+                    <span className="soon__print">(The feature will be active soon)</span>
                 </div>  
             </div>
         );

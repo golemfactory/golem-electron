@@ -101,31 +101,32 @@ export class Register extends React.Component {
     }
 
     _initProperContent(_passwordModal, _loadingIndicator){
+        const {isPasswordValid} = this.props
         if(_passwordModal.status){
-            return <div>
-                    {(_passwordModal.register) ?
-                        (_loadingIndicator ? 
-                            <span>
-                                Your unique <strong>Golem User ID</strong>
+            return <div className="container__register">
+                        <div className="info__register">
+                        {(_passwordModal.register) ?
+                                (_loadingIndicator ? 
+                                    <span>
+                                        Your unique <strong>Golem User ID</strong>
+                                        <br/>
+                                        is being created, this may take some time
+                                    </span>
+                                    :
+                                    <span>
+                                        <strong>It is critical to know that</strong>
+                                        <br/>
+                                        the password <strong>can not</strong> be recovered.
+                                        <br/>
+                                        <strong>Write it down in a safe and secure place!</strong>
+                                    </span>
+                                )
+                             :
+                                <span>Appearently, you already registered.
                                 <br/>
-                                is being created, this may take some time
-                            </span>
-                            :
-                            <span>
-                                <strong>It is critical to know that</strong>
-                                <br/>
-                                the password <strong>can not</strong> be recovered.
-                                <br/>
-                                <strong>Write it down in a safe and secure place!</strong>
-                            </span>
-                        )
-                     :
-                        <span>Appearently, you already registered.
-                        <br/>
-                        Please <strong>log in</strong> to unlock the application!</span>
-                    }
-                        <br/>
-                        <br/>
+                                Please <strong>log in</strong> to unlock the application!</span>
+                        }
+                        </div>
                     <form id="passwordForm" onSubmit={::this._setPassword}>
                      {(_passwordModal.register) ?
                         [
@@ -144,7 +145,8 @@ export class Register extends React.Component {
                                     autoComplete: "off", 
                                     className: "form-control", 
                                     onKeyPress: this._preventSpace,
-                                    required: true
+                                    required: true,
+                                    disabled: _loadingIndicator
                                 }}
                                 />
                                 <span 
@@ -158,7 +160,8 @@ export class Register extends React.Component {
                                     type={`${this.state.confirmationMaskToggle ? "text" : "password"}`}  
                                     onChange={::this._confirmPassword} 
                                     onKeyPress={::this._preventSpace} 
-                                    required/>
+                                    required
+                                    disabled={_loadingIndicator || !isPasswordValid}/>
                                 <span 
                                     ref="passwordMaskToggle" 
                                         className={`icon-eye ${this.state.confirmationMaskToggle ? "active" : ""}`} 
@@ -172,7 +175,8 @@ export class Register extends React.Component {
                                 type={`${this.state.passwordMaskToggle ? "text" : "password"}`} 
                                 onChange={::this._handlePassword} 
                                 onKeyPress={::this._preventSpace} 
-                                required/>
+                                required
+                                disabled={_loadingIndicator}/>
                             <span 
                                 ref="passwordMaskToggle" 
                                 className={`icon-eye ${this.state.passwordMaskToggle ? "active" : ""}`} 

@@ -64,8 +64,15 @@
 }
 
 .info__print{
+    display: block;
     font-size: 10pt;
     line-height: 1.4;
+    margin-top: 4vh;
+}
+
+.soon__print{
+    font-size: 10pt;
+    color: $color-text2;
 }
 
 .btn--print{
@@ -109,12 +116,14 @@
 }
 
 .desc__onboarding {
-    margin-top: 80px;
+    width: 100%;
+    margin-top: 8vh;
     padding: 0 40px;
     font-size: 14pt;
     font-weight: 400;
     text-align: center;
     line-height: 1.3em;
+    box-sizing: border-box;
 
     .radio-item{
         label{
@@ -125,6 +134,15 @@
                 margin-right: 0.5em !important;
             }
         }
+    }
+
+    .container__register{
+        width: 100%;
+    }
+
+    .info__register{
+        height: 14vh;
+        transition: .5s all;
     }
 
     form{
@@ -219,6 +237,11 @@
             text-align: center;
             border-radius: 50%; /* or 50% width & line-height */
         }
+}
+
+.desc__print{
+    transition: .5s all;
+    font-size: 14pt;
 }
 
 .desc__port {
@@ -343,4 +366,22 @@
   transform: translate3d(0, 0, 0);
   transition: all ease-out 600ms;
 
+}
+
+
+/*MEDIA*/
+
+@media screen and (max-height: 720px)
+{
+    .info__register{
+        margin-top: -20px;
+        font-size:0;
+        height: 0.5vh !important;
+        line-height: 1.2;
+    }
+
+    .desc__print{
+        font-size: 10pt;
+        line-height: 1.2;
+    }
 }
