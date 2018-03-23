@@ -510,9 +510,11 @@ export const deleteTask = (payload) => ({
     payload
 })
 
-export const createTask = (payload) => ({
+export const createTask = (payload, _resolve, _reject) => ({
     type: CREATE_TASK,
-    payload
+    payload,
+    _resolve,
+    _reject
 })
 
 export const restartTask = (payload) => ({

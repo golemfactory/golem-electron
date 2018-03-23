@@ -293,24 +293,25 @@ export function* restartTaskBase(session, {type, payload}) {
     }
 }
 
-export function callCreateTask(session, payload) {
+export function callCreateTask(session, payload, _resolve, _reject) {
 
     function on_create_task(args) {
         var create_task = args[0];
-    //console.log(config.CREATE_TASK_RPC, create_task)
+        _resolve(create_task)
+        console.log(config.CREATE_TASK_RPC, create_task)
     }
 
     _handleRPC(on_create_task, session, config.CREATE_TASK_RPC, [payload])
 }
 
-export function* createTaskBase(session, {type, payload}) {
+export function* createTaskBase(session, {type, payload, _resolve, _reject}) {
     let testCH = null
     if (payload.options) {
         //console.info('TASK_CREATING')
         if (testCH) {
             yield cancel(task)
         }
-        yield call(callCreateTask, session, payload)
+        yield call(callCreateTask, session, payload, _resolve, _reject)
     } else {
         //console.info('TASK_NOT_CREATING')
         if (payload.type) {

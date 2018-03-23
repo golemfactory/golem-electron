@@ -70,14 +70,6 @@ export class ManagePresetModal extends React.Component {
     // }
 
     /**
-     * [_handleCancel funct.]
-     * @return nothing
-     */
-    _handleCancel() {
-        this.props.closeModal()
-    }
-
-    /**
      * [_handleSelection func. will select object to be deleted.]
      * @param  {Object}         item        [Selected preset object]
      * @return nothing
@@ -108,7 +100,7 @@ export class ManagePresetModal extends React.Component {
      * @return nothing
      */
     _handleClose() {
-        this.props.closeModal()
+        this.props.closeModal('managePresetModal')
     }
 
     /**

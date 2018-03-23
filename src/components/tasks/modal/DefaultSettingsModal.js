@@ -11,7 +11,7 @@ export default class DefaultSettingsModal extends React.Component {
      * [_handleCancel funcs. closes modal]
      */
     _handleCancel() {
-        this.props.closeModal()
+        this.props.closeModal('defaultSettingsModal')
     }
 
     /**
