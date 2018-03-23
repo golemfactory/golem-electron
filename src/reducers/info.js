@@ -10,6 +10,7 @@ const {
     UPDATE_SEEN, 
     SET_NETWORK_INFO, 
     SET_FILE_CHECK, 
+    SET_CONNECTION,
     SET_CONNECTION_PROBLEM, 
     SET_GOLEM_PAUSE_STATUS,
     SET_TERMS_STATUS,
@@ -40,6 +41,7 @@ const initialState = {
         status: false,
         issue: null
     },
+    isConnected: false,
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
     isTermsAccepted: false
 }
@@ -118,6 +120,11 @@ const setInfo = (state = initialState, action) => {
         return Object.assign({}, state, {
             isMainNet: action.payload
         });
+
+    case SET_CONNECTION:
+        return Object.assign({}, state, {
+            isConnected: action.payload
+        })
 
     default:
         return state;
