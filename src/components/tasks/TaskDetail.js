@@ -570,8 +570,8 @@ export class TaskDetail extends React.Component {
 
     _applyPresetOption(preset, isResolutionIncluded = true, applyStates = true){
 
-        const {compositing, format, frames, output_path, resolution, sample_per_pixel} = preset.value
-        const {resolutionW, resolutionH, framesRef, formatRef, outputPath, compositingRef, haltspp} = this.refs
+        const { format, frames, output_path, resolution, sample_per_pixel} = preset.value //compositing,
+        const {resolutionW, resolutionH, framesRef, formatRef, outputPath, haltspp} = this.refs //compositingRef,
         
         if(isResolutionIncluded){
             resolutionW.value = resolution[0];
@@ -594,7 +594,7 @@ export class TaskDetail extends React.Component {
         if (this.props.task.type === taskType.BLENDER) {
 
             framesRef.value = frames
-            compositingRef.checked = compositing
+            //compositingRef.checked = compositing
 
         } else if (this.props.task.type === taskType.LUXRENDER) {
 
