@@ -11,9 +11,11 @@ export function setPassword(session, payload) {
     return new Promise((resolve, reject) => {
         function on_password(args) {
             let passwordStatus = args[0];
-            resolve(passwordStatus)
+            resolve({
+                type: SET_PASSWORD_MODAL,
+                payload: {status: !passwordStatus, error: !passwordStatus}
+            })
         }
-        console.log("payload", payload)
         _handleRPC(on_password, session, config.SET_PASSWORD_RPC, [payload])
     })
 }
@@ -23,13 +25,8 @@ export function setPassword(session, payload) {
  * @param {[type]} session       [Session of the wamp connection]
  */
 export function* passwordBase(session, {payload}) {
-    const passwordStatus = yield call(setPassword, session, payload);
-    //console.info("engineStatus", engineStatus)
-    
-    yield put({
-        type: SET_PASSWORD_MODAL,
-        payload: {status: !passwordStatus, error: !passwordStatus}
-    })
+    const action = yield call(setPassword, session, payload);
+    yield action && put(action)
 }
 
 /**
