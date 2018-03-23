@@ -22,7 +22,7 @@ export default class Type extends React.Component {
                     otherwise there will be <strong>no option</strong>
                     <br/>
                     to recover it. <a href="https://github.com/golemfactory/golem/wiki/FAQ#setting-and-saving-your-password">Learn more</a></span>
-                    <br/><br/><br/>
+                    
                     <span className="info__print">After creating your password you will
                     <br/>
                     have an option print it out. But as it is not

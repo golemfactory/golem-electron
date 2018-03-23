@@ -119,7 +119,7 @@ class OnboardIndex extends React.Component {
      */
     shownStep(id) {
         const {passwordModal, actions} = this.props
-        const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator} = this.state
+        const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator, isPasswordValid} = this.state
         let step;
         let key = Symbol(id).toString();
         switch (id) {
@@ -139,6 +139,7 @@ class OnboardIndex extends React.Component {
             step = <Register 
                         key={key} 
                         passwordModal={passwordModal}
+                        isPasswordValid={isPasswordValid}
                         loadingIndicator={loadingIndicator}
                         handlePasswordValidation={::this._handlePasswordValidation} 
                         handleLoading={::this._handleLoadingIndicator}/>
