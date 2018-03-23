@@ -99,6 +99,30 @@
     }
 }
 
+.backup-info__personal{
+    display: block;
+    font-size: 11pt;
+    margin-top: 30px;
+    transition: 1s all;
+
+    u{
+        color: $color-text2;
+
+        &:hover{
+            color: $color-primary !important;
+
+            strong{
+                color: $color-primary !important;
+            }
+        }
+    }
+
+    strong{
+        color: $color-text;
+    }
+
+}
+
 .indicator__personal {
     margin-top: 22px;
 }
