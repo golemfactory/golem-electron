@@ -706,7 +706,7 @@ export class TaskDetail extends React.Component {
 
         this._nextStep = true
         this._createTaskAsync().then(result => {
-            if(result){
+            if(result && result[0]){
                 hashHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
