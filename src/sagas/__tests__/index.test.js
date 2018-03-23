@@ -7,8 +7,11 @@ import { login, setMessage, logout } from '../../actions'
 import rootSaga, { flow, frameFlow, disablePortFlow, handleIO, connect, read, subscribe, setupResumable, connectionFlow, connectionCH } from '../'
 import { versionFlow } from '../version'
 import { golemStatusFlow } from '../golem'
+import { termsFlow } from '../terms';
+import { chainInfoFlow } from "../chainInfo";
 import { frameBase } from '../frame'
 import { engineFlow } from '../engine'
+import { encryptionFlow } from '../password'
 import { currencyFlow } from '../currency'
 import { connectedPeersFlow } from '../connectedPeers'
 import { balanceFlow } from '../balance'
@@ -141,10 +144,19 @@ describe('handleIO', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
             .next()
+            .fork(chainInfoFlow, connection)
+            
+            .next()
             .fork(golemStatusFlow, connection)
 
             .next()
             .fork(engineFlow, connection)
+
+            .next()
+            .fork(termsFlow, connection)
+
+            .next()
+            .fork(encryptionFlow, connection)
 
             .next()
             .fork(settingsInteractionFlow, connection)

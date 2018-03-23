@@ -9,6 +9,7 @@ import history from './network/history'
 import resources from './network/resources'
 /*Settings*/
 import fileLocation from './settings/fileLocation'
+import geth from './settings/geth'
 import performance from './settings/performance'
 import price from './settings/price'
 import profile from './settings/profile'
@@ -20,6 +21,8 @@ import preview from './tasks/preview'
 import create from './tasks/create'
 /*Onboard*/
 import onboard from './onboard'
+/*Account*/
+import account from './account'
 /*Rest*/
 import input from './input'
 import loader from './loader'
@@ -40,6 +43,7 @@ const reducer = combineReducers({
     resources,
     //SETTINGS
     fileLocation,
+    geth,
     performance,
     price,
     profile,
@@ -51,6 +55,8 @@ const reducer = combineReducers({
     create,
     //ONBOARD
     onboard,
+    //ACCOUNT
+    account,
     //GENERAL
     input,
     loader,

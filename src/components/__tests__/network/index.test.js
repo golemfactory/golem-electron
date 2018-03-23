@@ -32,7 +32,7 @@ describe('<MainFragment />', () => {
     it('should call componentDidMount', () => {
         const states = {
             realTime: {
-                balance:[],
+                balance:[0, 0],
                 golemStatus: {status: true}
             },
             input: {
@@ -47,6 +47,13 @@ describe('<MainFragment />', () => {
             },
             resources: {
                 resource: 50
+            },
+            account: {
+                publicKey: ""
+            },
+            currency: {
+                GNT: 0, 
+                ETH: 0
             }
         }
 
@@ -77,6 +84,13 @@ describe('<MainFragment />', () => {
             },
             resources: {
                 resource: 50
+            },
+            account: {
+                publicKey: ""
+            },
+            currency: {
+                GNT: 0, 
+                ETH: 0
             }
         }
 
@@ -87,7 +101,12 @@ describe('<MainFragment />', () => {
                 connectionProblem: false,
                 isEngineOn: true,
                 chosenPreset: 'custom',
-                resource: 50
+                resource: 50,
+                publicKey: "",
+                currency: {
+                GNT: 0, 
+                ETH: 0
+            }
         }
 
         jest.useFakeTimers()

@@ -11,6 +11,10 @@ describe('realTime reducer', () => {
                 status: 'Not Ready',
                 message: 'Not connected'
             },
+            passwordModal: {
+                register: false, 
+                status: false
+            },
             footerInfo: null
         })
     })

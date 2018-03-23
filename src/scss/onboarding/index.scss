@@ -1,3 +1,5 @@
+@import 'steps/terms';
+
 @mixin flex {
     display: flex;
     justify-content: space-between;
@@ -15,10 +17,15 @@
     z-index: 99999 !important;
     padding-bottom: 38px;
     box-sizing:border-box;
+
+    span:first-child{
+        width: 100%;
+    }
 }
 
 .container-step__onboarding {
     @include flex;
+
 
     .welcome-beta {
         justify-content: center;
@@ -36,13 +43,33 @@
 
     justify-content: flex-end;
 
-    .welcome-image {
+    .welcome-image,
+    .chain-image {
         margin-bottom: 30px;
+    }
+
+    .chain-image{
+        width:160px;
     }
 
     .doc-image {
         width: 100%;
     }
+}
+
+
+.mark--chain{
+    font-size: 9pt;
+    line-height: 1.6;
+}
+
+.info__print{
+    font-size: 10pt;
+    line-height: 1.4;
+}
+
+.btn--print{
+    width: 150px;
 }
 
 .nickname-area__onboarding {
@@ -82,12 +109,116 @@
 }
 
 .desc__onboarding {
-    margin-top: 40px;
-    padding: 0 70px;
+    margin-top: 80px;
+    padding: 0 40px;
     font-size: 14pt;
     font-weight: 400;
     text-align: center;
     line-height: 1.3em;
+
+    .radio-item{
+        label{
+            position: relative;
+            font-size: 8pt;
+            &:before{
+                top:-1px !important;
+                margin-right: 0.5em !important;
+            }
+        }
+    }
+
+    form{
+        width: 100%;
+
+          label{
+            display:inline-block;
+            font-size: 12pt;
+            margin-bottom: 10px;
+          }
+
+          input{
+            display: block;
+            width:100%;
+            padding: 0 10px;
+            font-size: 18px;
+          }
+
+          input[type=text]{
+            font-size: 14px;
+          }
+
+          .icon-eye{
+            position: absolute;
+            right: 10px;
+            bottom: 7px;
+            z-index: 4;
+            cursor: pointer;
+            color: $color-text3;
+            &.active{
+                color: $color-text;
+            }
+          }
+
+          .container__field{
+            position: relative;
+            margin: 20px 0;
+          }
+
+          .error-info{
+            position: absolute;
+            right: 0;
+            color: $color-error;
+            font-size: 8pt;
+          }
+        }
+        .ReactPasswordStrength{
+          border: 0 !important
+        }
+
+        .passwordField{
+            height: 34px;
+            input{
+                height: 32px;
+            }
+            .ReactPasswordStrength-strength-desc{
+                top:20px;
+                font-size: 9pt;
+                text-align: right;
+                padding-right: 0;
+                font-style: normal;
+
+            }
+
+            .ReactPasswordStrength-strength-bar{
+                top: -1
+            }
+        }
+
+        .password_confirmed{
+            border-bottom: 2px solid $color-accent1;
+        }
+
+        .password_not_confirmed{
+            border-bottom: 2px solid $color-error;
+        }
+
+        .container-icon {
+            padding: 25px 0;
+            flex: 0 0 40px;
+        }
+
+        .icon-lock {
+            display: inline-block;
+            color: $color-text4;
+            background: $color-accent2;
+            font-size: 2.6em;
+            width: 1em;
+            height: 1em;
+            line-height: 0.9em;
+            padding: 0.3em;
+            text-align: center;
+            border-radius: 50%; /* or 50% width & line-height */
+        }
 }
 
 .desc__port {
@@ -104,7 +235,7 @@
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
-    padding-left: 32px;
+    padding-left: 42px;
     box-sizing: border-box;
 
     @include flex;
@@ -123,6 +254,18 @@
         cursor: pointer;
         margin-right: 32px;
     }
+
+    .btn--cancel{
+        position: relative;
+        top:10px;
+        font-size: 10pt;
+        font-weight: 500;
+        padding:0 30px;
+    }
+}
+
+.back-active{
+        padding-left: 0;
 }
 
 .container-checkbox__onboarding {
@@ -167,6 +310,33 @@
 }
 
 .pageSwap-enter.pageSwap-enter-active {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translate3d(0, 0, 0);
+  transition: all ease-out 600ms;
+
+}
+
+.pageSwapBack-leave {
+
+  transform: translate3d(0, 0, 0);
+}
+
+.pageSwapBack-leave.pageSwapBack-leave-active {
+
+  transform: translate3d(100%, 0, 0);
+  transition: all ease-out 600ms;
+}
+
+.pageSwapBack-enter {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  transform: translate3d(-100%, 0, 0);
+}
+
+.pageSwapBack-enter.pageSwapBack-enter-active {
   position: absolute;
   left: 0;
   width: 100%;

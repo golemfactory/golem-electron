@@ -11,7 +11,10 @@ var compiler = webpack(config);
 function createServer(app, index, port) {
     return new Promise((res, rej) => {
         app.use(require('webpack-dev-middleware')(compiler, {
-            publicPath: config.output.publicPath
+            publicPath: config.output.publicPath,
+            stats: {
+                colors: true
+            }
         }));
 
         app.use(require('webpack-hot-middleware')(compiler));

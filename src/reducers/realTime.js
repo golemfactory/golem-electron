@@ -1,7 +1,7 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.electron
 
-const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO, SET_PASSWORD_MODAL} = dict
 
 const initialState = {
     balance: [0, 0],
@@ -12,7 +12,16 @@ const initialState = {
         status: 'Not Ready',
         message: 'Not connected'
     },
-    footerInfo: null
+    footerInfo: null,
+    passwordModal: { 
+        status: false, 
+        register: false
+    }
+}
+
+const password = {
+    REGISTER: "Requires new password",
+    LOGIN: "Requires password"
 }
 
 let badgeActive = false
@@ -61,12 +70,34 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_GOLEM_STATUS:
-        if (state.golemStatus.status == 'Exception')
-            return state;
-        return Object.assign({}, state, {
+        let _isPasswordModalPopped = false
+        let changedState = {
             golemStatus: Object.assign(
                 {}, state.golemStatus, action.payload
             )
+        }
+        if (state.golemStatus.status == 'Exception')
+            return state;
+
+        if(action.payload.message === password.REGISTER && !_isPasswordModalPopped){
+            changedState = {...changedState, passwordModal: { status: true, register: true}}
+            _isPasswordModalPopped = true
+        } 
+        else if(action.payload.message === password.LOGIN && !_isPasswordModalPopped){
+            changedState = {...changedState, passwordModal: { status: true, register: false}}
+            _isPasswordModalPopped = true
+        }
+
+        return Object.assign({}, state, changedState);
+
+    case SET_PASSWORD_MODAL:
+        const {status, error} = action.payload
+        return Object.assign({}, state, {
+            passwordModal: { 
+                status, 
+                register: state.passwordModal.register,
+                error
+            }
         });
 
     case SET_FOOTER_INFO:

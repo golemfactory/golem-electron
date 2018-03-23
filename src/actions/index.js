@@ -1,6 +1,11 @@
 export let dict = Object.freeze({
     ONBOARDING: 'ONBOARDING',
     UPDATE_NODE_NAME: 'UPDATE_NODE_NAME',
+    //ACCOUNT
+    SET_PUBLIC_KEY: 'SET_PUBLIC_KEY',
+    CALL_WITHDRAW_MODAL: 'CALL_WITHDRAW_MODAL',
+    WITHDRAW: 'WITHDRAW',
+    SET_PASSWORD: 'SET_PASSWORD',
     //NETWORK
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
@@ -36,6 +41,7 @@ export let dict = Object.freeze({
     SET_FOOTER_INFO: 'SET_FOOTER_INFO',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
+    SET_LOCAL_GETH: 'SET_LOCAL_GETH',
     SET_PERFORMANCE_CHARTS: 'SET_PERFORMANCE_CHARTS',
     RECOUNT_BENCHMARK: 'RECOUNT_BENCHMARK',
     SET_PROV_MIN_PRICE: 'SET_PROV_MIN_PRICE',
@@ -62,6 +68,7 @@ export let dict = Object.freeze({
     PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
+    SET_CHAIN_INFO: 'SET_CHAIN_INFO',
     SET_LATEST_VERSION: 'SET_LATEST_VERSION',
     UPDATE_SEEN: 'UPDATE_SEEN',
     START_GOLEM: 'START_GOLEM',
@@ -82,8 +89,12 @@ export let dict = Object.freeze({
     SET_ZOOM_RATIO: 'SET_ZOOM_RATIO',
     SET_NETWORK_INFO: 'SET_NETWORK_INFO',
     TOGGLE_DEVELOPER_MODE: 'TOGGLE_DEVELOPER_MODE',
+    SET_PASSWORD_MODAL: 'SET_PASSWORD_MODAL',
     ADD_QUEUE: 'ADD_QUEUE',
     REMOVE_FROM_QUEUE: 'REMOVE_FROM_QUEUE',
+    CHECK_TERMS_ACCEPTED: 'CHECK_TERMS_ACCEPTED',
+    ACCEPT_TERMS: 'ACCEPT_TERMS',
+    SET_TERMS_STATUS: 'SET_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -92,6 +103,10 @@ export let dict = Object.freeze({
 const {
     ONBOARDING, 
     UPDATE_NODE_NAME,
+    //ACCOUNT
+    CALL_WITHDRAW_MODAL,
+    WITHDRAW,
+    SET_PASSWORD,
     //NETWORK
     SET_BALANCE, 
     SET_RESOURCES, 
@@ -127,6 +142,7 @@ const {
     SET_FOOTER_INFO,
     //SETTINGS
     SET_FILE_LOCATION, 
+    SET_LOCAL_GETH,
     SET_PERFORMANCE_CHARTS, 
     RECOUNT_BENCHMARK, 
     SET_PROV_MIN_PRICE, 
@@ -173,14 +189,38 @@ const {
     SET_ZOOM_RATIO, 
     SET_NETWORK_INFO, 
     TOGGLE_DEVELOPER_MODE,
+    SET_PASSWORD_MODAL,
     ADD_QUEUE,
     REMOVE_FROM_QUEUE,
+    CHECK_TERMS_ACCEPTED,
+    ACCEPT_TERMS,
+    SET_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
 
 export const updateNodeName = (payload) => ({
     type: UPDATE_NODE_NAME,
+    payload
+})
+
+export const callWithdrawModal = (status, payload) => ({
+    type: CALL_WITHDRAW_MODAL,
+    payload: {
+        status,
+        payload
+    }
+})
+
+export const withdraw = (payload, _response, _reject) => ({
+    type: WITHDRAW,
+    payload,
+    _response,
+    _reject
+})
+ 
+export const setPassword = (payload) => ({
+    type: SET_PASSWORD,
     payload
 })
 
@@ -296,6 +336,11 @@ export const setConnectedPeers = (payload) => ({
 
 export const setFileLocation = (payload) => ({
     type: SET_FILE_LOCATION,
+    payload
+})
+
+export const setLocalGeth = (payload) => ({
+    type: SET_LOCAL_GETH,
     payload
 })
 
@@ -565,6 +610,11 @@ export const toggleDeveloperMode = (payload) => ({
     payload
 })
 
+export const setPasswordModal = (payload) => ({
+    type: SET_PASSWORD_MODAL,
+    payload
+})
+
 export const addQueue = (payload) => ({
     type: ADD_QUEUE,
     payload
@@ -572,6 +622,21 @@ export const addQueue = (payload) => ({
 
 export const removeQueuedTask = () => ({
     type: REMOVE_FROM_QUEUE
+})
+
+export const checkTermsAccepted = () => ({
+    type: CHECK_TERMS_ACCEPTED
+})
+
+export const acceptTerms = (_resolve, _reject) => ({
+    type: ACCEPT_TERMS,
+    _resolve,
+    _reject
+})
+
+export const setTermsStatus = (payload) => ({
+    type: SET_TERMS_STATUS,
+    payload
 })
 
 export const setConnectionProblem = (payload) => ({

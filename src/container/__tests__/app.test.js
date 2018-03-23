@@ -72,6 +72,15 @@ describe('<App />', () => {
                 queue: {
                     next: []
                 },
+                account: {
+                    withdrawModal: {
+                        status: false,
+                        currency: null
+                    }
+                },
+                onboard:{
+                    showOnboard: false
+                },
                 actions: jest.fn()
             })}>
                 <ConnectedApp history={history}/>

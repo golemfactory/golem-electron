@@ -33,6 +33,10 @@ let win
 let previewWindow
 let tray
 
+// if(isDevelopment()){
+//     require('electron-reload')(path.join(__dirname));
+// }
+
 /**
  * [onReady init function for electron]
  * @return

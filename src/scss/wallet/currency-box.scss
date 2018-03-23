@@ -1,0 +1,107 @@
+.content__currency-box{
+	min-width: 100px;
+	width: 162px;
+	min-height: 60px;
+	display: flex;
+	flex-flow: row;
+	align-items: center;
+	justify-content: space-around;
+	border: 0px solid transparent;
+	transition: 1s all;
+	cursor: pointer;
+	
+	&.expand{
+		width: 300px;
+    	justify-content: flex-start;
+    	span[class^="icon"][class$="logo"]{
+    		margin-right: 10px;
+    	}
+	}
+
+	&.shrink{
+		display: none;
+	}
+
+	span{
+		margin: 0 3px;
+		text-align: left;
+		display: block;
+		font-size: 9pt;
+		line-height: 1.5;
+
+		&:first-child{
+			font-weight: 500;
+			font-size: 11pt;
+		}
+	}
+	
+	span[class^="icon"][class$="logo"]{
+		display: inline;
+		font-size:26pt;
+		color: $color-text4;
+		border-radius: 50%;
+		transition: 1s all;
+	}
+
+	.icon-golem-logo{
+		background: #001D57;
+	}
+
+	.icon-ethereum-logo{
+		background: #3C3C3D;
+	}
+
+
+	.currency-suffix{
+		display: inline !important;
+		font-size: 9px !important;
+		font-weight: 300 !important;
+	}
+
+	.icon-question-mark{
+		cursor: pointer;
+		margin-top: 14px;
+		font-size: 8pt !important;
+		align-self: flex-start;
+		color: $color-text3;
+	}
+
+	.wallet__btn-withdraw{
+		display: none;
+		animation:.2s ease .5s normal forwards 1 fadein;
+		-webkit-animation:0.2s ease 0.5s normal forwards 1 fadein;
+		opacity:0;
+	}
+}
+
+.expand__wallet{
+	.content__currency-box{
+		position: relative;
+		width: 188px;
+		height: 194px;
+		min-height: 194px;
+		min-width: 188px;
+		padding-bottom: 10px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		background: white;
+		border: 1px solid $color-border;
+	}
+
+	span[class^="icon"][class$="logo"]{
+		font-size:36pt;
+	}
+
+	.icon-question-mark{
+		position: absolute;
+		right: 5px;
+		top: 5px;
+		margin: 0;
+	}
+
+	.wallet__btn-withdraw{
+		display: block;
+	}
+}

@@ -12,7 +12,6 @@ import ReactTooltip from 'rc-tooltip'
 const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
-const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,

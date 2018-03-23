@@ -1,6 +1,6 @@
 import React from 'react';
 const {remote} = window.electron;
-const {BrowserWindow, dialog} = remote
+const {dialog} = remote
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 

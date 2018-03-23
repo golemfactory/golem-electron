@@ -13,10 +13,11 @@
 
 @import "header";
 @import "onboarding/index";
-@import "spott-light";
+@import "spot-light";
 @import "network/index";
 @import "task-panel/index";
 @import "settings/index";
+@import "wallet/index";
 @import "search-box";
 @import "footer";
 @import "not-found";
@@ -27,7 +28,9 @@
 @import "slider";
 @import "modal";
 @import "issue-modal";
+@import "password-modal";
 @import "dropdown";
+@import "info-label";
 
 html {
     padding: 0;
@@ -241,9 +244,12 @@ select {
     }
 }
 
-input{
+input[type=text],
+input[type=number],
+input[type=password]{
     background: white;
     border: 1px solid $color-border;
+    height: 32px;
 
     &:disabled{
         background: $color-input;
@@ -254,14 +260,9 @@ input.invalid {
     border-color: red !important;
 }
 
-input[type=text] {
-    height: 32px;
-}
-
 input[type=number] {
     width: 100%;
     position: relative;
-    height: 32px;
     border-box: none;
     text-align: center;
 }
@@ -280,6 +281,11 @@ input[type=number]::-webkit-inner-spin-button {
     bottom: 0;
 
     &:hover {}
+}
+
+hint{
+    font-size: 9pt;
+    color: $color-text2;
 }
 
 .text-right {
@@ -377,13 +383,46 @@ input[type=number]::-webkit-inner-spin-button {
     input[type="radio"] {
         position: absolute;
         opacity: 0;
-
-        + .radio-label {
+        
+        + .radio-label-left,
+        + .radio-label-right{
             position: relative;
             margin: 0 !important;
             padding: 0 10px !important;
             color: $color-text2;
             line-height: 1.6em;
+        }
+
+
+        + .radio-label-left{
+            &:before {
+                content: '\e917';
+                background: $color-text4;
+                border-radius: 100%;
+                display: inline-block;
+                position: relative;
+                top: .2em;
+                margin-right: 1em;
+                vertical-align: top;
+                cursor: pointer;
+                text-align: center;
+                transition: all 250ms ease;
+                font-family: 'golemcon' !important;
+                speak: none;
+                font-style: normal;
+                font-weight: normal;
+                font-variant: normal;
+                text-transform: none;
+                line-height: 1;
+
+                /* Better Font Rendering =========== */
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 14pt;
+            }
+        }
+
+        + .radio-label-right{
 
             &:after {
                 content: '\e917';
@@ -413,7 +452,13 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:checked {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    color: $color-accent1;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     color: $color-accent1;
                 }
@@ -421,7 +466,14 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:focus {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    outline: none;
+                    border-color: $color-text3;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     outline: none;
                     border-color: $color-text3;
@@ -430,7 +482,16 @@ input[type=number]::-webkit-inner-spin-button {
         }
 
         &:disabled {
-            + .radio-label {
+            + .radio-label-left {
+                &:before {
+                    box-shadow: inset 0 0 0 4px $color-text2;
+                    border-color: darken($color-text2, 25%);
+                    background: darken($color-text2, 25%);
+                    cursor: not-allowed;
+                }
+            }
+
+            + .radio-label-right {
                 &:after {
                     box-shadow: inset 0 0 0 4px $color-text2;
                     border-color: darken($color-text2, 25%);
@@ -440,7 +501,15 @@ input[type=number]::-webkit-inner-spin-button {
             }
         }
 
-        + .radio-label {
+        + .radio-label-left{
+            &:empty {
+                &:before {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        + .radio-label-right {
             &:empty {
                 &:after {
                     margin-right: 0;
@@ -473,6 +542,10 @@ input[type=number]::-webkit-inner-spin-button {
             background-color: $button-static-color;
         }
     }
+
+.label_optional{
+    color: $color-text3;
+}
 
 .progress-status {
         display: inline-block;
@@ -568,7 +641,8 @@ input[type=number]::-webkit-inner-spin-button {
     .content__settings {
         padding-top: $header-height-windows;
     }
-
+    
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,
@@ -579,6 +653,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -587,6 +662,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -605,6 +681,7 @@ input[type=number]::-webkit-inner-spin-button {
         padding-top: $header-height;
     }
 
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,
@@ -615,6 +692,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -623,6 +701,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,
@@ -641,6 +720,7 @@ input[type=number]::-webkit-inner-spin-button {
         padding-top: $header-height;
     }
 
+    .section__wallet,
     .content__resources,
     .section__actions,
     .item__history,
@@ -651,6 +731,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__price,
     .content__trust,
     .content__file-location,
+    .content__geth,
     .content__peers,
     .content__stats,
     .content__new-task label,
@@ -659,6 +740,7 @@ input[type=number]::-webkit-inner-spin-button {
     .container-action__new-task,
     .panel-preview__task-detail,
     .section-settings__task-detail,
+    .section-task__task-detail,
     .section-node-list__task-detail,
     .title-price__task-detail,
     .item-price,

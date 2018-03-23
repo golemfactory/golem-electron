@@ -3,8 +3,7 @@ import ReactTooltip from 'rc-tooltip'
 
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
-const {ipcRenderer, remote} = window.electron;
-const {getConfig, dictConfig} = remote.getGlobal('configStorage')
+const {ipcRenderer} = window.electron;
 
 const UNDONE = 0
 const PROGRESS = 1
