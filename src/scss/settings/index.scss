@@ -18,7 +18,7 @@ $item__accordion-height: 78.7px;
 }
 
 .section__personal {
-    flex: 0 0 292px;
+    flex: 0 0 342px;
     transition: .8s all;
 }
 
@@ -37,6 +37,11 @@ $item__accordion-height: 78.7px;
 
     .image__personal{
         max-height: 0;
+    }
+
+    .backup-info__personal{
+        font-size: 0;
+        margin: 0;
     }
  }
 

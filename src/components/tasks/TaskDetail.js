@@ -936,7 +936,7 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with -…<a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://github.com/golemfactory/golem/wiki/FAQ#render-settings">Learn more</a></p>} cls="title" infoHidden={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -1026,11 +1026,11 @@ export class TaskDetail extends React.Component {
                         <div className="section-task__task-detail">
                             <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
                             <div className="item-settings">
@@ -1046,7 +1046,7 @@ export class TaskDetail extends React.Component {
                                 <span>tGNT/h</span>
                             </div>
                             <div className="item-price estimated-price__panel">
-                                <InfoLabel type="span" label="Estimated" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Estimated" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 {this._convertPriceAsHR(estimated_cost)}
                                 <span>tGNT</span>
                             </div>
