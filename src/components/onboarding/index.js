@@ -34,8 +34,9 @@ const steps = Object.freeze({
 })
 
 const mapStateToProps = state => ({
+    isConnected: state.info.isConnected,
     passwordModal: state.realTime.passwordModal,
-    isTermsAccepted: state.info.isTermsAccepted
+    isTermsAccepted: true //state.info.isTermsAccepted 
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -64,7 +65,8 @@ class OnboardIndex extends React.Component {
         this._keypressListener = event => {
             if(event.key === "Enter" && 
                 this.state.currentStep !== steps.REGISTER &&
-                this.state.currentStep !== steps.TERMS){
+                this.state.currentStep !== steps.TERMS &&
+                this.props.isConnected){
                 this._handleNext.call(this)
             }
         }
@@ -259,11 +261,11 @@ class OnboardIndex extends React.Component {
     }
 
     _initControl(_step){
-        const {passwordModal} = this.props
+        const {passwordModal, isConnected} = this.props
         const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
         if(_step === steps.WELCOME || _step === steps.STEP4){
             return <div>
-                <button className="btn btn--primary" onClick={::this._handleNext}>Get Started</button>
+                <button className="btn btn--primary" onClick={::this._handleNext} disabled={!isConnected}>{isConnected ? "Get Started" : "Connecting..."}</button>
             </div>
         }
         else if(_step === steps.TERMS){
