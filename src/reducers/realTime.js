@@ -1,7 +1,7 @@
 import { dict } from './../actions'
 const {ipcRenderer} = window.electron
 
-const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO, SET_PASSWORD_MODAL} = dict
+const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO, SET_PASSWORD_MODAL, SET_PASSWORD} = dict
 
 const initialState = {
     balance: [0, 0],
@@ -16,7 +16,8 @@ const initialState = {
     passwordModal: { 
         status: false, 
         register: false
-    }
+    },
+    lockStatus: false
 }
 
 const password = {
@@ -69,6 +70,11 @@ const realTime = (state = initialState, action) => {
             }
         });
 
+    case SET_PASSWORD:
+        return Object.assign({}, state, {
+            lockStatus: true
+        })
+
     case SET_GOLEM_STATUS:
         let _isPasswordModalPopped = false
         let changedState = {
@@ -79,25 +85,24 @@ const realTime = (state = initialState, action) => {
         if (state.golemStatus.status == 'Exception')
             return state;
 
-        if(action.payload.message === password.REGISTER && !_isPasswordModalPopped){
-            changedState = {...changedState, passwordModal: { status: true, register: true}}
-            _isPasswordModalPopped = true
-        } 
-        else if(action.payload.message === password.LOGIN && !_isPasswordModalPopped){
-            changedState = {...changedState, passwordModal: { status: true, register: false}}
-            _isPasswordModalPopped = true
+        if(!state.lockStatus){
+            if(action.payload.message === password.REGISTER && !_isPasswordModalPopped){
+                changedState = {...changedState, passwordModal: { status: true, register: true}}
+                _isPasswordModalPopped = true
+            } 
+            else if(action.payload.message === password.LOGIN && !_isPasswordModalPopped){
+                changedState = {...changedState, passwordModal: { status: true, register: false}}
+                _isPasswordModalPopped = true
+            }
         }
 
         return Object.assign({}, state, changedState);
 
     case SET_PASSWORD_MODAL:
-        const {status, error} = action.payload
         return Object.assign({}, state, {
-            passwordModal: { 
-                status, 
-                register: state.passwordModal.register,
-                error
-            }
+            passwordModal: Object.assign({}, state.passwordModal, {
+                ...action.payload
+            })
         });
 
     case SET_FOOTER_INFO:

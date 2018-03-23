@@ -11,7 +11,6 @@ import unlockedIcon from './../../../assets/img/unlocked.svg'
 
 
 const mapStateToProps = state => ({
-    passwordModal: state.realTime.passwordModal
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -34,7 +33,6 @@ export class Register extends React.Component {
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error){
             const container = document.getElementById("passwordContainer");
-            console.log("container", container);
             container.classList.add("modal-error");
             this.refs.password.classList.add("invalid");
             this.refs.errorInfo.textContent = "wrong password";
@@ -121,7 +119,6 @@ export class Register extends React.Component {
                                 <strong>Write it down in a safe and secure place!</strong>
                             </span>
                         )
-                        
                      :
                         <span>Appearently, you already registered.
                         <br/>

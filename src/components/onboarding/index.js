@@ -261,7 +261,6 @@ class OnboardIndex extends React.Component {
     _initControl(_step){
         const {passwordModal} = this.props
         const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
-        console.log("isPasswordValid", isPasswordValid);
         if(_step === steps.WELCOME || _step === steps.STEP4){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Get Started</button>
@@ -303,7 +302,7 @@ class OnboardIndex extends React.Component {
                     <button className="btn btn--outline btn--print" onClick={::this._handlePrint} disabled={true}>{ !isPrinted ? "Print" : "Print again"}</button>
                     <br/>
                     <br/>
-                    <button className="btn btn--primary btn--print" onClick={::this._handleNextPrint} disabled={true}>Next</button>
+                    <button className="btn btn--primary btn--print" onClick={::this._handleNextPrint}>Next</button>
                 </div>
         }
         else if(_step > steps.STEP1){

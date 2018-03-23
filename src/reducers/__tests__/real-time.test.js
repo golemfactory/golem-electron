@@ -15,6 +15,7 @@ describe('realTime reducer', () => {
                 register: false, 
                 status: false
             },
+            lockStatus: false,
             footerInfo: null
         })
     })
