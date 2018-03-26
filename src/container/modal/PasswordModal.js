@@ -46,7 +46,7 @@ export class PasswordModal extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.passwordModal.error){
+        if(nextProps.passwordModal.error && this.state.loadingIndicator){
             const container = document.getElementById("passwordModalContainer")
             container.classList.add("modal-error")
             this.refs.password.classList.add("invalid")
@@ -169,7 +169,9 @@ export class PasswordModal extends React.Component {
                                 onChange={::this._handlePassword} 
                                 onKeyPress={::this._preventSpace}
                                 required autoFocus/>
-                            <span ref="passwordMaskToggle" className="icon-eye" onClick={::this._togglePasswordMask}/>
+                            <span ref="passwordMaskToggle" 
+                            className={`icon-eye ${passwordMaskToggle ? "active" : ""}`} 
+                            onClick={this._togglePasswordMask.bind(this, "passwordMaskToggle")}/>
                             <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
