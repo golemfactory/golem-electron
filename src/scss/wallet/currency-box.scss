@@ -7,7 +7,7 @@
 	align-items: center;
 	justify-content: space-around;
 	border: 0px solid transparent;
-	transition: 1s all;
+	transition: .8s all;
 	cursor: pointer;
 	
 	&.expand{
@@ -40,7 +40,7 @@
 		font-size:26pt;
 		color: $color-text4;
 		border-radius: 50%;
-		transition: 1s all;
+		transition: .8s all;
 	}
 
 	.icon-golem-logo{
