@@ -31,7 +31,7 @@ export class Register extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.passwordModal.error){
+        if(nextProps.passwordModal.error && nextProps.loadingIndicator){
             const container = document.getElementById("passwordContainer");
             container.classList.add("modal-error");
             this.refs.password.classList.add("invalid");
