@@ -11,7 +11,7 @@
     background: $display-indicator-backround;
     border-bottom: 1px solid $color-text3;
     flex: 0 0 70px;
-    transition: 1s all;
+    transition: .8s all;
 	
 	.icon-arrow-up,
 	.icon-arrow-down{
@@ -20,6 +20,10 @@
 }
 .expand__wallet{
 	flex: 0 0 320px;
+
+	.panel_box{
+		width: 100%  !important;
+	}
 
 	.address-box__wallet{
 		position: relative;
@@ -90,7 +94,8 @@
 	.panel_box{
 		display: flex;
 		justify-content: space-around;
-		width: 100%;
+		width: calc(100% - 30px);
+		transition: .8s all;
 	}
 }
 
