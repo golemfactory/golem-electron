@@ -26,7 +26,7 @@ export default class InsufficientAmountModal extends React.Component {
                     <div>
                         <span className="icon-warning"/>
                     </div>
-                    <span>You don't have enough funds<br/>to send a task to a network.</span>
+                    <span>You don't have enough funds<br/>to send this task to the network.</span>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
                         <button type="button" className="btn--primary" onClick={::this._handleTopUp} autoFocus>Top up</button>

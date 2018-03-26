@@ -176,7 +176,8 @@ export class TaskDetail extends React.Component {
             defaultSettingsModal: false,
             insufficientAmountModal: false,
             resolutionChangeModal: false,
-            resolutionChangeInfo: []
+            resolutionChangeInfo: [],
+            loadingTaskIndicator: false
         }
 
     }
@@ -702,20 +703,24 @@ export class TaskDetail extends React.Component {
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
-    _handleStartTaskButton = once(() => {
+    _handleStartTaskButton = () => {
 
         this._nextStep = true
+        this.setState({
+            loadingTaskIndicator: true
+        })
         this._createTaskAsync().then(result => {
             if(result && result[0]){
                 hashHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
-                    insufficientAmountModal: true
+                    insufficientAmountModal: true,
+                    loadingTaskIndicator: false
                 })
             }
         })
-    })
+    }
 
     _handleLocalRender() {
         const {actions, task} = this.props;
@@ -996,7 +1001,8 @@ export class TaskDetail extends React.Component {
             insufficientAmountModal, 
             resolutionChangeModal, 
             resolutionChangeInfo,
-            maxSubtasks
+            maxSubtasks,
+            loadingTaskIndicator
         } = this.state
 
         const {
@@ -1090,7 +1096,7 @@ export class TaskDetail extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testStyle.locked}>Start Task</button>
+                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testStyle.locked || loadingTaskIndicator}>Start Task</button>
                     </section>}
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
