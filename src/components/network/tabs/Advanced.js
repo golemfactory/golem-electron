@@ -6,16 +6,12 @@ import * as Actions from '../../../actions'
 import RadialProgress from './../../RadialProgress'
 import Dropdown from './../../Dropdown'
 
+const MEBI = 1 << 20
+
 const mockSystemInfo = {
     num_cores: 3,
-    max_memory_size: 3145728,
-    max_resource_size: 10 * 1048576
-}
-
-const min = {
-    cpu_cores: 1,
-    memory: 1024,
-    disk: 1024
+    max_memory_size: 3 * MEBI,    // in KiB
+    max_resource_size: 10 * MEBI  // in KiB
 }
 
 const preset = Object.freeze({
@@ -51,15 +47,24 @@ export class Advanced extends React.Component {
      * @param  {Event}      evt
      */
     _handleInputChange(key, evt) {
+        evt.target.value = Math.max(1, evt.target.value)
+        let val = Number(evt.target.value)
+        if (['memory', 'disk'].includes(key)) {
+            val *= MEBI // GiB to KiB
+        }
+        if (key == 'cpu_cores') {
+            val = ~~val // round
+        }
+
         const {actions, chartValues} = this.props
         actions.setAdvancedManually({
             ...chartValues,
-            [key]: evt.target.value || 0,
+            [key]: val,
             name: preset.CUSTOM
         })
         actions.setResources(this.calculateResourceValue({
             ...chartValues,
-            [key]: evt.target.value
+            [key]: val
         }))
     }
 
@@ -123,9 +128,19 @@ export class Advanced extends React.Component {
         return Math.min(val, limit)
     }
 
+    /** converts memory and disk resources from KiB to GiB */
+    toGibibytes(obj) {
+        let ret = Object.assign({}, obj)
+        ret.memory = Number((ret.memory / MEBI).toFixed(2))
+        ret.disk = Number((ret.disk / MEBI).toFixed(2))
+        return ret
+    }
+
     render() {
         const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn} = this.props
-        let {cpu_cores, memory, disk} = chartValues
+        let {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
+        let max = this.toGibibytes(systemInfo)
+
         return (
             <div className="content__advanced">
             <div className="quick-settings__advanced">
@@ -138,16 +153,16 @@ export class Advanced extends React.Component {
             </div>
             <div className="section__radial-options">
               <div className="item__radial-options">
-                <RadialProgress pct={cpu_cores} title="CPU" max={systemInfo.cpu_cores} warn={true} disabled={isEngineOn}/>
-                <input type="number" min={min.cpu_cores} step={min.cpu_cores} max={systemInfo.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={this.maxVal(cpu_cores, systemInfo.cpu_cores)} disabled={isEngineOn}/>
+                <RadialProgress pct={cpu_cores} title="CPU" max={max.cpu_cores} warn={true} disabled={isEngineOn}/>
+                <input type="number" min="1" step="1" max={max.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={this.maxVal(cpu_cores, max.cpu_cores)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={memory} title="RAM" max={systemInfo.memory} warn={true} disabled={isEngineOn}/>
-                <input type="number" min={min.memory} step={min.memory} max={systemInfo.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={this.maxVal(memory, systemInfo.memory)} disabled={isEngineOn}/>
+                <RadialProgress pct={memory} title="RAM" unit="GiB" max={max.memory} warn={true} disabled={isEngineOn}/>
+                <input type="number" min="1" step="1" max={max.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={this.maxVal(memory, max.memory)} disabled={isEngineOn}/>
               </div>
               <div className="item__radial-options">
-                <RadialProgress pct={disk} title="Disk" max={systemInfo.disk} warn={true} disabled={isEngineOn}/>
-                <input type="number" min={min.disk} step={min.disk} max={systemInfo.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={this.maxVal(disk, systemInfo.disk)} disabled={isEngineOn}/>
+                <RadialProgress pct={disk} title="Disk" unit="GiB" max={max.disk} warn={true} disabled={isEngineOn}/>
+                <input type="number" min="1" step="1" max={max.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={this.maxVal(disk, max.disk)} disabled={isEngineOn}/>
               </div>
             </div>
             <div className="advanced__tips">

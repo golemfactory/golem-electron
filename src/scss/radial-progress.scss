@@ -38,4 +38,7 @@
         font-size: .8em;
         font-weight: 500;
     }
+    &:hover:after {
+        content: attr(data-unit);
+    }
 }
