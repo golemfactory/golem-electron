@@ -7,7 +7,7 @@ const store = new Store();
  */
 
 //store.delete('DEFAULT_GETH') // <-- Rollback geth
-//store.delete('HIDE_ONBOARD_FLOW') // <-- Rollback onboard
+store.delete('HIDE_ONBOARD_FLOW') // <-- Rollback onboard
 const dictConfig = {
     HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW',
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH',

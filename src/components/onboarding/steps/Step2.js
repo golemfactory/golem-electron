@@ -21,9 +21,18 @@ export default class Step2 extends React.Component {
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding">
                     <img src={avatar}/>
-                    <div className="nickname-area__onboarding">
-                        <input id="nickInput" className="nickname-input__onboarding" placeholder="Anonymous Golem" onChange={::this._setNodeName} maxLength={16}/>
-                    </div>
+                    <form 
+                        id="nodeNameForm" 
+                        className="nickname-area__onboarding"
+                        onSubmit={::this.props.handleNext}>
+                        <input 
+                            id="nickInput" 
+                            className="nickname-input__onboarding" 
+                            placeholder="Anonymous Golem" 
+                            onChange={::this._setNodeName} 
+                            maxLength={16}
+                            required/>
+                    </form>
                 </div>
                 <div className="desc__onboarding">
                     <span>First, please name your node. Adding an avatar is optional, but can help
