@@ -20,6 +20,7 @@
     box-sizing: border-box;
     z-index: 99;
     background: $color-text4;
+    padding-top: 35px;
 
     a {
         color: $color-text3;
@@ -38,6 +39,11 @@
         display: none;
     }
 
+    .logo__header{
+        height: 50%;
+        margin-top: 15px;
+    }
+
     .nav {
         z-index: 4;
         display: flex;
@@ -48,6 +54,20 @@
         font-family: $font-family-primary;
         font-weight: bold;
         border-bottom: 1px solid $color-border;
+
+        &.nav-mainnet,
+        &.nav-testnet{
+            border-top: 1px solid $color-border;
+        }
+
+        &.nav-mainnet{
+            background: $color-bg-mainnet;
+            .menu__item{
+                &.active {
+                    color: $color-text4;
+                }
+            }
+        }
     }
 
     .menu,

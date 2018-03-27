@@ -5,6 +5,10 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../actions'
+
+import mainNetLogo from './../assets/img/mainnet-logo-small.svg'
+import testNetLogo from './../assets/img/testnet-logo-small.svg'
+
 /**
  * @see http://react-component.github.io/tooltip/
  */
@@ -176,6 +180,7 @@ export class Header extends Component {
 
     render() {
         const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers} = this.props
+        const isMainNet = false;
         let styling = {
             'WebkitAppRegion': 'drag'
         }
@@ -191,10 +196,10 @@ export class Header extends Component {
                     <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
                 </div>
              </div>
-            <nav className="nav" role="menubar">
+            <nav className={`nav ${isMainNet ? "nav-mainnet" : "nav-testnet"}`} role="menubar">
                 <div style={styling} className="draggable draggable--other"></div>
                 <div className="nav__list">
-                    <img src=""/>
+                    <img src={isMainNet ? mainNetLogo : testNetLogo} className="logo__header"/>
                 </div>
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">

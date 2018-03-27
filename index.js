@@ -110,7 +110,7 @@ function createWindow() {
         title: APP_NAME,
         width: APP_WIDTH,
         height: APP_HEIGHT,
-        //titleBarStyle: 'hidden-inset',
+        titleBarStyle: 'hidden-inset',
         frame: true,
         resizable: true,
         minWidth: APP_WIDTH,
