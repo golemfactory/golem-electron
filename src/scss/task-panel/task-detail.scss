@@ -137,7 +137,7 @@
 .section-settings__task-detail {
     box-sizing: border-box;
     padding-bottom: 15px !important;
-    border-bottom: 1px solid $color-text3;
+    border-bottom: 1px solid $color-border;
 
     button {
         height: 32px;
@@ -225,7 +225,7 @@
 
 .section-node-list__task-detail{
     box-sizing: border-box;
-    border-bottom: 1px solid $color-text3;
+    border-bottom: 1px solid $color-border;
     .icon-status-dot {
                 margin-right: 8px;
                 font-size: 10pt;
@@ -255,7 +255,7 @@
 
     tr{
         line-height: 30px;
-        border-bottom: 1px solid $color-text3;
+        border-bottom: 1px solid $color-border;
     }
 
     td{
@@ -303,7 +303,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    border-top: 1px solid $color-text3;
+    border-top: 1px solid $color-border;
 
     button {
         width: 140px;
