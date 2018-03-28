@@ -1,5 +1,7 @@
 import React from 'react';
 
+const mebi = 1 << 20
+
 export default class PresetModal extends React.Component {
 
 
@@ -35,11 +37,13 @@ export default class PresetModal extends React.Component {
         e.preventDefault();
         const {saveCallback, cpu_cores, memory, disk} = this.props
         const {name} = this.state
+        let memoryKiB = memory * mebi
+        let diskKiB = disk * mebi
         saveCallback({
             name,
             cpu_cores,
-            memory,
-            disk
+            memory: memoryKiB,
+            disk: diskKiB
         })
         this.props.closeModal()
     }
@@ -60,11 +64,11 @@ export default class PresetModal extends React.Component {
                         </div>
                         <div>
                             <h5>RAM</h5>
-                            <span>{(memory / 1024000).toFixed(0)} GB</span>
+                            <span>{memory} GiB</span>
                         </div>
                         <div>
                             <h5>Disk</h5>
-                            <span>{(disk / 1024000).toFixed(0)} GB</span>
+                            <span>{disk} GiB</span>
                         </div>
                     </section>
                     <div className="action__modal">
