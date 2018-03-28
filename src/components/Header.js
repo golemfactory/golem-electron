@@ -178,6 +178,17 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
+    // <div className="top-titlebar">
+    //     <div style={styling} className="draggable draggable--win"></div>
+    //     <div>
+    //         <span>Golem</span>
+    //     </div>
+    //     <div className="os__menu" role="menu">
+    //         <span className="icon-minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
+    //         <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
+    //     </div>
+    // </div>
+
     render() {
         const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers} = this.props
         const isMainNet = false;
@@ -186,16 +197,6 @@ export class Header extends Component {
         }
         return (
             <header className={`header ${activeHeader === 'secondary' ? "frame__screen" : ""}`}>
-             <div className="top-titlebar">
-                <div style={styling} className="draggable draggable--win"></div>
-                <div>
-                    <span>Golem</span>
-                </div>
-                <div className="os__menu" role="menu">
-                    <span className="icon-minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
-                    <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
-                </div>
-             </div>
             <nav className={`nav ${isMainNet ? "nav-mainnet" : "nav-testnet"}`} role="menubar">
                 <div style={styling} className="draggable draggable--other"></div>
                 {activeHeader === 'main' &&

@@ -285,6 +285,11 @@
 .win {
     .header {
         height: $header-height-windows;
+        padding-top: 0;
+
+        .logo__header{
+            height: 25px;
+        }
 
         @include header($padding-windows, 0, 87px);
 

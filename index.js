@@ -23,7 +23,7 @@ function isDevelopment() {
 }
 
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
-const APP_WIDTH = 460
+const APP_WIDTH = isWin() ? 478 : 460
 const APP_HEIGHT = 810//589
 const APP_MIN_HEIGHT = 589
 const PREVIEW_APP_WIDTH = 752
@@ -156,7 +156,7 @@ function createWindow() {
 
     win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
-        Menu.setApplicationMenu(menuHandler)
+        Menu.setApplicationMenu(isWin() ? null : menuHandler)
         win.show()
     })
 
