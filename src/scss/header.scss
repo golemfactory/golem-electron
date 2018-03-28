@@ -6,7 +6,7 @@
     top: 0;
     z-index: 100;
     width: 100%;
-    height: $header-height;
+    height: $header-height-mac;
     cursor: move;
     -webkit-app-region: drag;
 }
@@ -184,10 +184,10 @@
 }
 
 .header__frame {
-    height: $header-height;
+    height: $header-height-mac;
     width: 100%;
     margin-left: 30px;
-    line-height: $header-height;
+    line-height: $header-height-mac;
     box-sizing: border-box;
     font-weight: 400;
     display: flex;
@@ -366,7 +366,7 @@
 }
 
 .mac .header {
-    height: $header-height;
+    height: $header-height-mac;
 
     @include header($padding-mac, 0, 88px);
 
@@ -380,9 +380,10 @@
 }
 
 .linux .header {
-    height: $header-height;
+    height: $header-height-linux;
+    padding-top: 0;
 
-    @include header($padding-mac, 72px, 88px);
+    @include header($padding-mac, 0, 88px);
 
     .nav {
         height: 50%;

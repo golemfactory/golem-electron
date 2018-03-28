@@ -678,7 +678,7 @@ hint{
     .content__new-task,
     .content__task-detail,
     .content__settings {
-        padding-top: $header-height;
+        padding-top: $header-height-mac;
     }
 
     .section__wallet,
@@ -717,7 +717,7 @@ hint{
     .content__new-task,
     .content__task-detail,
     .content__settings {
-        padding-top: $header-height;
+        padding-top: $header-height-linux;
     }
 
     .section__wallet,
