@@ -17,6 +17,7 @@
         "compile": "webpack --config webpack.config.prod.babel.js",
         "start:app": "node server.js",
         "start": "cross-env NODE_ENV=development electron .",
+        "start:mainnet": "cross-env NODE_ENV=development electron . --mainnet",
         "start:prod": "electron .",
         "test": "jest -u",
         "test:watch": "jest --watch --no-cache",

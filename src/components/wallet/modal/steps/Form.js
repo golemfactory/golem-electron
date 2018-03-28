@@ -67,16 +67,36 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    checkInputValidity(e) {
+        e.target.checkValidity();
+        if (e.target.validity.valid)
+            e.target.classList.remove("invalid");
+        else
+            e.target.classList.add("invalid");
+        return e.target.validity.valid
+    }
+
     _handleAmountChange(e){
-        this.setState({
-            amount: e.target.value
-        })
+        const isValid = this.checkInputValidity(e)
+        if(isValid)
+            this.setState({
+                amount: e.target.value
+            })
     }
 
     _handleSendToChange(e){
-        this.setState({
-            sendTo: e.target.value
-        })
+        const isValid = this.checkInputValidity(e)
+        if(isValid)
+            this.setState({
+                sendTo: e.target.value
+            })
+    }
+
+    _preventSpace(event){
+        var key = event.which || window.event.which;
+        if (key === 32) {
+          event.preventDefault();
+        }
     }
 
     render() {
@@ -95,16 +115,15 @@ export default class WithdrawForm extends React.Component {
                         </div>
                     </div>
                     <div className="form-field">
-                    	<label>Sending from</label>
-                    	<input 
-                            className="input__address" 
-                            type="text" 
-                            value="0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1"
-                            readOnly/>
-                    </div>
-                    <div className="form-field">
                     	<label>Amount</label>
-                    	<input ref="amountInput" className="input__amount" type="number" defaultValue={0.2} step={0.1} onChange={::this._handleAmountChange}/>
+                    	<input 
+                            ref="amountInput" 
+                            className="input__amount" 
+                            type="number" 
+                            min={0.1}
+                            defaultValue={0.2} 
+                            step={0.1} 
+                            onChange={::this._handleAmountChange}/>
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
@@ -118,6 +137,7 @@ export default class WithdrawForm extends React.Component {
                             type="text" 
                             placeholder="Type in GNT address"
                             pattern="0x[a-fA-F0-9]{40}"
+                            onKeyPress={::this._preventSpace}
                             onChange={::this._handleSendToChange}
                             required/>
                     </div>
