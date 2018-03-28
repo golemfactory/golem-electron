@@ -119,7 +119,7 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        const {passwordModal, actions} = this.props
+        const {passwordModal, isMainNet, actions} = this.props
         const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator, isPasswordValid} = this.state
         let step;
         let key = Symbol(id).toString();
