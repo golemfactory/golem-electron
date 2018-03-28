@@ -95,9 +95,9 @@ export class Advanced extends React.Component {
      */
     calculateResourceValue({cpu_cores, memory, disk}) {
         const {systemInfo} = this.props
-        let cpuRatio = (this.maxVal(cpu_cores, systemInfo.cpu_cores) / systemInfo.cpu_cores)
-        let ramRatio = (this.maxVal(memory, systemInfo.memory) / systemInfo.memory)
-        let diskRatio = (this.maxVal(disk, systemInfo.disk) / systemInfo.disk)
+        let cpuRatio = cpu_cores / systemInfo.cpu_cores
+        let ramRatio = memory / systemInfo.memory
+        let diskRatio = disk / systemInfo.disk
         return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
     }
 
@@ -116,16 +116,6 @@ export class Advanced extends React.Component {
      */
     _handleSavePresetModal(data) {
         this.props.modalHandler(data)
-    }
-
-    /**
-     * [maxVal check the max limit for the resources]
-     * @param  {Number} val   [Given resource value]
-     * @param  {Number} limit [Max limit for the given resource value]
-     * @return {Number}       [Min value of between]
-     */
-    maxVal(val, limit) {
-        return Math.min(val, limit)
     }
 
     /** converts memory and disk resources from KiB to GiB */
@@ -152,18 +142,12 @@ export class Advanced extends React.Component {
             })} disabled={isEngineOn}>Save as Preset</button>
             </div>
             <div className="section__radial-options">
-              <div className="item__radial-options">
-                <RadialProgress pct={cpu_cores} title="CPU" max={max.cpu_cores} warn={true} disabled={isEngineOn}/>
-                <input type="number" min="1" step="1" max={max.cpu_cores} onChange={this._handleInputChange.bind(this, 'cpu_cores')} value={this.maxVal(cpu_cores, max.cpu_cores)} disabled={isEngineOn}/>
-              </div>
-              <div className="item__radial-options">
-                <RadialProgress pct={memory} title="RAM" unit="GiB" max={max.memory} warn={true} disabled={isEngineOn}/>
-                <input type="number" min="1" step="1" max={max.memory} onChange={this._handleInputChange.bind(this, 'memory')} value={this.maxVal(memory, max.memory)} disabled={isEngineOn}/>
-              </div>
-              <div className="item__radial-options">
-                <RadialProgress pct={disk} title="Disk" unit="GiB" max={max.disk} warn={true} disabled={isEngineOn}/>
-                <input type="number" min="1" step="1" max={max.disk} onChange={this._handleInputChange.bind(this, 'disk')} value={this.maxVal(disk, max.disk)} disabled={isEngineOn}/>
-              </div>
+                <RadialProgress pct={cpu_cores} title="CPU" unit="Cores" max={max.cpu_cores} warn={true} disabled={isEngineOn}
+                                onChange={this._handleInputChange.bind(this, 'cpu_cores')}/>
+                <RadialProgress pct={memory} title="RAM" unit="GiB" max={max.memory} warn={true} disabled={isEngineOn}
+                                onChange={this._handleInputChange.bind(this, 'memory')}/>
+                <RadialProgress pct={disk} title="Disk" unit="GiB" max={max.disk} warn={true} disabled={isEngineOn}
+                                onChange={this._handleInputChange.bind(this, 'disk')}/>
             </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.</span>

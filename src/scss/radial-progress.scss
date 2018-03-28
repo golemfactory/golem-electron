@@ -18,6 +18,21 @@
     }
 }
 
+.radial-options {
+    width: 110px;
+    .radial-progress-bar {
+        margin: 35px 0;
+    }
+
+    &:after {
+        content: attr(data-unit);
+        font-size: 10pt;
+        font-weight: 400;
+        position: relative;
+        top: 5;
+    }
+}
+
 .radial-progress-bar {
     display: inline-block;
     position: relative;
@@ -25,20 +40,17 @@
     padding-bottom: 100%;
     vertical-align: middle;
     &:after {
+        content: attr(data-title);
         position: absolute;
         display: block;
         height: 100%;
         width: 100%;
         top: 50%;
-        content: attr(data-title);
         margin-top: -82px;
         text-align: center;
         border-radius: 100%;
         line-height: 160px;
         font-size: .8em;
         font-weight: 500;
-    }
-    &:hover:after {
-        content: attr(data-unit);
     }
 }
