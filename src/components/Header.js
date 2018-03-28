@@ -185,7 +185,7 @@ export class Header extends Component {
             'WebkitAppRegion': 'drag'
         }
         return (
-            <header className="header">
+            <header className={`header ${activeHeader === 'secondary' ? "frame__screen" : ""}`}>
              <div className="top-titlebar">
                 <div style={styling} className="draggable draggable--win"></div>
                 <div>
@@ -198,9 +198,11 @@ export class Header extends Component {
              </div>
             <nav className={`nav ${isMainNet ? "nav-mainnet" : "nav-testnet"}`} role="menubar">
                 <div style={styling} className="draggable draggable--other"></div>
-                <div className="nav__list">
-                    <img src={isMainNet ? mainNetLogo : testNetLogo} className="logo__header"/>
-                </div>
+                {activeHeader === 'main' &&
+                    <div className="nav__list">
+                        <img src={isMainNet ? mainNetLogo : testNetLogo} className="logo__header"/>
+                    </div>
+                }
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
                     <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={this._taskHints(isEngineOn, connectedPeers)} mouseEnterDelay={1} align={{
@@ -239,13 +241,15 @@ export class Header extends Component {
                 </div>
             }
             </nav>
-            <nav className="nav">
-                <ul className="nav__list" role="menu">
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/')} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks')} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
-                    {activeHeader === 'main' && <span className="selector"></span>}
-                </ul>
-            </nav>
+            {activeHeader === 'main' &&
+                <nav className="nav">
+                    <ul className="nav__list" role="menu">
+                        {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/')} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
+                        {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks')} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
+                        {activeHeader === 'main' && <span className="selector"></span>}
+                    </ul>
+                </nav>
+            }
             </header>
         );
     }

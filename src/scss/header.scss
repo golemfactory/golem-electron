@@ -262,6 +262,23 @@
     }
 }
 
+
+.frame__screen{
+    height: 84px !important;
+
+    .header__frame{
+        height: 84px !important;
+        line-height: 48px !important;
+    }
+
+    .nav{
+        height: 50px !important;
+    }
+    .draggable{
+        height: 84px !important;
+    }
+}
+
 /*                 OS DIFFERENCES
 ================================================== */
 
