@@ -28,7 +28,6 @@ import { versionFlow } from "./version";
 
 const { ipcRenderer } = window.electron;
 const {
-    SET_CONNECTION,
     SET_CONNECTION_PROBLEM,
     SET_GOLEM_STATUS,
     SET_CONNECTED_PEERS,
@@ -274,11 +273,6 @@ export function* connectionFlow() {
     try {
         while (true) {
             let { connection, error } = yield take(connectionCH);
-
-            yield put({
-                type: SET_CONNECTION,
-                payload: true
-            });
             
             if (error) {
                 yield put({

@@ -45,7 +45,17 @@ export default class CurrencyBox extends Component {
     }
 
     render() {
-        const {balance, currency, suffix, description, clickHandler, expandAmount, expandedAmount} = this.props
+        const {
+            balance, 
+            currency, 
+            suffix, 
+            description, 
+            clickHandler, 
+            expandAmount, 
+            expandedAmount, 
+            isMainNet
+        } = this.props
+
         return (
             <div className={`content__currency-box ${expandedAmount ? (expandedAmount === suffix ? "expand" : "shrink") : ""}`}>
                 <div>
@@ -81,7 +91,7 @@ export default class CurrencyBox extends Component {
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={true}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={!isMainNet}>Withdraw</button>
             </div>
         );
     }

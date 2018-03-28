@@ -8,7 +8,8 @@ import FileCheckModal from './modal/FileCheckModal'
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal,
-    taskName: state.create.task.taskName
+    taskName: state.create.task.taskName,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -113,7 +114,7 @@ export class NewTask extends React.Component {
     }
 
     render() {
-        const {fileCheckModal} = this.props
+        const {fileCheckModal, isMainNet} = this.props
         const {name, type} = this.state
         return (
             <div>
@@ -136,12 +137,15 @@ export class NewTask extends React.Component {
                                 <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label-right">Blender</label>
                             </div>
-                            <div className="radio-item">
-                                <span className="icon-luxrender"/>
-                                <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" checked={type === radioTypes.lxs} readOnly/>
-                                <label htmlFor="taskTypeRadio2" className="radio-label-right">LuxRender</label>
-                            </div>
-                            
+                            {isMainNet ? 
+                                undefined 
+                                :
+                                <div className="radio-item">
+                                    <span className="icon-luxrender"/>
+                                    <input id="taskTypeRadio2" type="radio" name="taskType" value="LuxRender" checked={type === radioTypes.lxs} readOnly/>
+                                    <label htmlFor="taskTypeRadio2" className="radio-label-right">LuxRender</label>
+                                </div>
+                            }
                         </div>
                     </div>
                     <div className="container-action__new-task">

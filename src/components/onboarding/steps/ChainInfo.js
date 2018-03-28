@@ -10,15 +10,16 @@ export default class ChainInfo extends React.Component {
     }
 
     render() {
+        const {isMainNet} = this.props
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="chain-image" src={testNetIcon}/>
+                   <img className="chain-image" src={isMainNet ? mainNetIcon : testNetIcon}/>
                 </div>
                 <div className="desc__onboarding">
                     <span>You are going to run
                     <br/>
-                    <strong>Golem on test net.</strong>
+                    <strong>Golem on {isMainNet ? "main" : "test"} net.</strong>
                     <br/><br/><br/>
                         <mark className="mark--chain">
                         Make sure that you know all the risks and take responsible actions.

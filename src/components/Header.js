@@ -20,7 +20,8 @@ const mainProcess = remote.require('./index')
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     fileCheckModal: state.info.fileCheckModal,
-    connectedPeers: state.realTime.connectedPeers
+    connectedPeers: state.realTime.connectedPeers,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -133,7 +134,7 @@ export class Header extends Component {
             //console.log(data)
             if (data) {
 
-                mainProcess.selectDirectory(data)
+                mainProcess.selectDirectory(data, this.props.isMainNet)
                     .then(item => {
                         let mergedList = [].concat.apply([], item)
                         let unknownFiles = mergedList.filter(({malicious}) => (malicious))
@@ -153,7 +154,7 @@ export class Header extends Component {
                                 taskName: masterFiles[0].name
                             })
                         } else {
-                            alert("There's no main file! There should be at least one blender or luxrender file.")
+                            alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
                         }
                     })
             }
