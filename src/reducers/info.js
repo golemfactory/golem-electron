@@ -118,7 +118,7 @@ const setInfo = (state = initialState, action) => {
 
     case SET_CHAIN_INFO:
         return Object.assign({}, state, {
-            isMainNet: action.payload
+            isMainNet: true //action.payload
         });
 
     case SET_CONNECTION:
