@@ -80,6 +80,19 @@ export class Personal extends React.Component {
         }
     }
 
+    /**
+     * [checkInputValidity func. checks if given input valid]
+     * @param  {Event}  e
+     */
+    checkInputValidity(e) {
+        e.target.checkValidity();
+        if (e.target.validity.valid)
+            e.target.classList.remove("invalid");
+        else
+            e.target.classList.add("invalid");
+        return e.target.validity.valid
+    }
+
     // <RadialProgress pct={requestorTrust} warn={false}/>
     // <span>Requestor</span>
     // <RadialProgress pct={providerTrust} warn={false}/>
@@ -105,12 +118,13 @@ export class Personal extends React.Component {
                         { editMode
                         ?
                         <input 
-                        pattern="[a-zA-Z0-9-]+"
+                        pattern="^\S+(?: \S+)*$"
                         title="Please write with English charaters and numbers"
                         type="text" 
                         defaultValue={nodeName} 
                         onChange={::this._setNodeName} onKeyDown={(event) => {
-                            event.keyCode === 13 && this.form.dispatchEvent(new Event("submit"));
+                            if(this.checkInputValidity(event) && event.keyCode === 13)
+                                this.form.dispatchEvent(new Event("submit"));
                         }}
                         maxLength={16}
                         autoFocus required/>

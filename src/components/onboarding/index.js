@@ -63,9 +63,12 @@ class OnboardIndex extends React.Component {
 
     componentDidMount() {
         this._keypressListener = event => {
+
+            console.log("this.state.currentStep", this.state.currentStep, steps.STEP2);
             if(event.key === "Enter" && 
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
+                this.state.currentStep !== steps.STEP1 &&
                 this.props.isConnected){
                 this._handleNext.call(this)
             }
@@ -148,7 +151,7 @@ class OnboardIndex extends React.Component {
             step = <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint}/>
             break;
         case steps.STEP1:
-            step = <Step2 setNodeName={::this._setNodeName} key={key}/>
+            step = <Step2 setNodeName={::this._setNodeName} key={key} handleNext={::this._handleNext}/>
             break;
         case steps.STEP2:
             step = <Step3 key={key}/>
@@ -266,19 +269,30 @@ class OnboardIndex extends React.Component {
         const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
         if(_step === steps.WELCOME || _step === steps.STEP4){
             return <div>
-                <button className="btn btn--primary" onClick={::this._handleNext} disabled={!isConnected}>{isConnected ? "Get Started" : "Connecting..."}</button>
+                <button className="btn btn--primary" 
+                        onClick={::this._handleNext} 
+                        disabled={!isConnected}>
+                            {isConnected ? "Get Started" : "Connecting..."}
+                </button>
             </div>
         }
         else if(_step === steps.TERMS){
             if(isTermsDeclined){
                 return <div>
                     <span className="btn--cancel" onClick={::this._handleTermsBack}>Go Back</span>
-                    <button className="btn btn--primary" onClick={::this._handleLeave}>See you soon</button>
+                    <button className="btn btn--primary" 
+                            onClick={::this._handleLeave}>
+                                See you soon
+                    </button>
                 </div>
             }
             return <div>
                     <span className="btn--cancel" onClick={::this._handleDecline}>Decline</span>
-                    <button className="btn btn--primary" onClick={::this._handleTermsAccept} disabled={isAcceptLocked}>Accept</button>
+                    <button className="btn btn--primary" 
+                            onClick={::this._handleTermsAccept} 
+                            disabled={isAcceptLocked}>
+                                Accept
+                    </button>
                 </div>
         }
         else if(_step === steps.CHAININFO || _step === steps.TYPE){
@@ -289,35 +303,62 @@ class OnboardIndex extends React.Component {
         else if(_step === steps.REGISTER){
             return <div>
                 {(passwordModal && passwordModal.status) ? 
-                <button type="submit" form="passwordForm" className={`btn btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator || (passwordModal.register && !isPasswordValid)}> {loadingIndicator ? 'Signing in' : (passwordModal.register ? "Register": "Login")}{loadingIndicator && <span className="jumping-dots">
-                  <span className="dot-1">.</span>
-                  <span className="dot-2">.</span>
-                  <span className="dot-3">.</span>
-                </span> }</button>
+                <button type="submit" 
+                        form="passwordForm" 
+                        className={`btn btn--primary ${loadingIndicator && 'btn--loading'}`} 
+                        disabled={loadingIndicator || (passwordModal.register && !isPasswordValid)}> 
+                            {loadingIndicator ? 'Signing in' : (passwordModal.register ? "Register": "Login")}
+                            {loadingIndicator && <span className="jumping-dots">
+                                                  <span className="dot-1">.</span>
+                                                  <span className="dot-2">.</span>
+                                                  <span className="dot-3">.</span>
+                                                </span> }
+                </button>
                 :
-                <button className="btn btn--primary" onClick={::this._handleNext}>Take me in!</button>
+                <button className="btn btn--primary" 
+                        onClick={::this._handleNext}>
+                            Take me in!
+                </button>
             }
 
             </div>
         }
         else if(_step === steps.PRINT){
             return <div>
-                    <button className="btn btn--outline btn--print" onClick={::this._handlePrint} disabled={true}>{ !isPrinted ? "Print" : "Print again"}</button>
+                    <button className="btn btn--outline btn--print" 
+                            onClick={::this._handlePrint} 
+                            disabled={true}>{ !isPrinted ? "Print" : "Print again"}
+                    </button>
                     <br/>
                     <br/>
-                    <button className="btn btn--primary btn--print" onClick={::this._handleNextPrint}>Next</button>
+                    <button className="btn btn--primary btn--print" 
+                            onClick={::this._handleNextPrint}>
+                                Next
+                    </button>
                 </div>
-        }
-        else if(_step > steps.STEP1){
+        } else if(_step > steps.STEP1){
             return <div>
-                        <span className="icon-arrow-left-white" onClick={::this._handlePrev} aria-label="Prev" tabIndex="0"/>
+                        <span 
+                            className="icon-arrow-left-white" 
+                            onClick={::this._handlePrev} 
+                            aria-label="Prev" 
+                            tabIndex="0"/>
                         <span>{_step - 6} of 4</span>
-                        <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
+                        <span
+                            className="icon-arrow-right-white" 
+                            onClick={::this._handleNext} 
+                            aria-label="Next" 
+                            tabIndex="0"/>
                    </div>
         } else {
             return <div>
                         <span>{_step - 6} of 4</span>
-                        <span className="icon-arrow-right-white" onClick={::this._handleNext} aria-label="Next" tabIndex="0"/>
+                        <span
+                            type="submit" 
+                            form="nodeNameForm"
+                            className="icon-arrow-right-white"
+                            aria-label="Next" 
+                            tabIndex="0"/>
                    </div>
         }
 
