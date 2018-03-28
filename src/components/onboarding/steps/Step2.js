@@ -31,6 +31,7 @@ export default class Step2 extends React.Component {
                             placeholder="Anonymous Golem" 
                             onChange={::this._setNodeName} 
                             maxLength={16}
+                            pattern="^\S+(?: \S+)*$"
                             required/>
                     </form>
                 </div>
