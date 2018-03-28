@@ -11,6 +11,16 @@
             border-radius: 50px;
             cursor: pointer;
         }
+
+        .icon-close{
+             text-shadow: 0px 0px 3px #fff;
+             font-size: 14pt;
+             transition: .5s all;
+             color: $color-text;
+             &:hover{
+                font-size: 18pt;
+             }
+        }
     }
     &__image {
         object-fit: contain;
@@ -31,7 +41,7 @@
 
             polyline{
                 stroke-dasharray: 10;
-                stroke-width: 3;
+                stroke-width: 1;
                 animation: dash 5s linear;
             }
 

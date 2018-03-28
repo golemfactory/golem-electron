@@ -152,7 +152,11 @@ export class Single extends React.Component {
         const {ratio, offset, previewLink} = this.state
         return (
             <div className="section__frame">
-                
+                {(details && details.options) && details.options.frame_count > 1 &&
+                    <span className="button__subtask" onClick={::this._handleClose} onKeyDown={(event) => {
+                        event.keyCode === 13 && this._handleClose.call(this)
+                    }} role="button" tabIndex="0" aria-label="Close Single Preview"><span className="icon-close"/></span>
+                }
                 <div className="section__image" ref="containerImage">
                     {previewLink && <ImageZoom image={`file://${previewLink}`} fetchClientInfo={::this._setClientInfo} isSubtaskShown={isSubtaskShown} setSubtasksVisibility={actions.setSubtasksVisibility}/>}
                     {isSubtaskShown && <SubTask data={borderList} ratio={ratio} subtaskList={subtasksList} taskDetails={details} restartSubtask={::this._handleRestartSubtask} offset={offset} isDeveloperMode={isDeveloperMode}/>}
