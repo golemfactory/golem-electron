@@ -72,13 +72,14 @@ export class Advanced extends React.Component {
      * [_handleOptionChange func. will update adnvanced chart if there's any change on dropdown]
      * @param  {Array}          list        [List of dropdown]
      * @param  {String}         name        [Name of selected option]
+     * @param  {String}         id          [Id of selected option]
      * @param  {String}         init        [Initial loading: true, personal choose: false]
      */
-    _handleOptionChange(list, name, init = false) {
+    _handleOptionChange(list, name, id, init = false) {
         const {actions, chartValues} = this.props
-        let value = list.filter((item, index) => item.name == name)[0]
+        let value = list[id]
         if (value) {
-            actions.setChosenPreset(value.name, init)
+            actions.setChosenPreset(name, init)
             actions.setAdvancedChart({
                 ...value
             });
@@ -98,7 +99,7 @@ export class Advanced extends React.Component {
         let cpuRatio = cpu_cores / systemInfo.cpu_cores
         let ramRatio = memory / systemInfo.memory
         let diskRatio = disk / systemInfo.disk
-        return 100 * ((cpuRatio + ramRatio + diskRatio) / 3)
+        return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100)
     }
 
     /**

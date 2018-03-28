@@ -11,16 +11,6 @@ export default class RadialProgress extends React.Component {
         super(props);
     }
 
-    /**
-     * [maxVal check the max limit for the resources]
-     * @param  {Number} val   [Given resource value]
-     * @param  {Number} limit [Max limit for the given resource value]
-     * @return {Number}       [Min value of between]
-     */
-    maxVal(val, limit) {
-        return Math.min(val, limit)
-    }
-
     render() {
         const {pct, title, unit, max, warn, disabled, onChange} = this.props
         let maximum = max || 100
@@ -48,7 +38,7 @@ export default class RadialProgress extends React.Component {
                         <circle id="bar" r="47.25" cx="52.5" cy="52.5" fill="transparent" strokeDasharray="500" strokeDashoffset="0" style={style}></circle>
                     </svg>
                 </div>
-                <input type="number" min="1" step="1" max={max} onChange={onChange} value={this.maxVal(pct, max)} disabled={disabled}/>
+                <input type="number" min="1" step="1" max={max} onChange={onChange} value={Math.min(pct, max)} disabled={disabled}/>
             </div>
         );
     }
