@@ -191,8 +191,7 @@ export class Header extends Component {
     // </div>
 
     render() {
-        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers} = this.props
-        const isMainNet = false;
+        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
