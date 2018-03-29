@@ -126,7 +126,7 @@ export default class WithdrawForm extends React.Component {
                             ref="amountInput" 
                             className="input__amount" 
                             type="number" 
-                            min={0.1}
+                            min={0.00001}
                             defaultValue={0.2} 
                             step={0.1} 
                             onChange={::this._handleAmountChange}/>

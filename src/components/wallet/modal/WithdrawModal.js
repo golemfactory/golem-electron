@@ -32,7 +32,8 @@ export class WithdrawModal extends React.Component {
                 amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
                 sendFrom: props.publicKey,
                 sendTo: "",
-                isSuccess: false
+                isSuccess: false,
+                txList: []
             }
         }
     }
@@ -73,11 +74,12 @@ export class WithdrawModal extends React.Component {
                 })
             })
         } else if(this.state.index === 1){
-            this._withdrawAsync(this.state.formData).then((success) => {
-                if(success){
+            this._withdrawAsync(this.state.formData).then((result) => {
+                if(result){
                     this.setState({
                         index: this.state.index + 1,
-                        isSuccess: success
+                        txList: result,
+                        isSuccess: result && result.length > 0
                     })
                 }
             })
@@ -115,7 +117,10 @@ export class WithdrawModal extends React.Component {
                     formData={this.state.formData}
                     />
             case 2:
-                return <Result applyHandler={::this._handleApply} isSuccess={this.state.isSuccess}/>
+                return <Result 
+                            applyHandler={::this._handleApply} 
+                            isSuccess={this.state.isSuccess}
+                            txList={this.state.txList}/>
     		default:
     			return <div></div>
     	}

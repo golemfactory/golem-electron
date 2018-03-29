@@ -24,7 +24,7 @@ export default class WithdrawResult extends React.Component {
                         <span className="info__result">You can watch it on:</span>
                     </div>,
                     <div key="2">
-                        {this._initEtherscan()}
+                        {this._initEtherscan(this.props.txList)}
                         <br/>
                     </div>
             ]
@@ -36,8 +36,8 @@ export default class WithdrawResult extends React.Component {
                 </div>
     }
 
-    _initEtherscan(){
-        return ["0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd1", "0x6a7ca41fdd98e00207d2724d03e2bf72b5640bd2"].map(id => {
+    _initEtherscan(_txList){
+        return _txList.map(id => {
             return <div key={id.toString()}>
                 <a href={`https://etherscan.io/tx/${id}`}>Etherscan</a>
             </div>
