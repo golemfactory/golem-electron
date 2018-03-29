@@ -17,7 +17,7 @@ export function getPublicKey(session) {
             })
         }
 
-        _handleRPC(on_info, session, config.GET_KEY_ID_RPC)
+        _handleRPC(on_info, session, config.PAYMENT_ADDRESS_RPC)
     })
 }
 
