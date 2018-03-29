@@ -284,7 +284,7 @@ function isWin(){
 }
 
 
-exports.selectDirectory = function(directory) {
+exports.selectDirectory = function(directory, _isMainNet) {
     console.log("directory", directory);
 
     let blackList = [
@@ -336,10 +336,13 @@ exports.selectDirectory = function(directory) {
         "WSH",
     ]
 
-    const masterList = [
-        "BLEND",
-        "LXS"
+    let masterList = [
+        "BLEND"
     ]
+
+    if(!_isMainNet)
+        masterList.push("LXS")
+
 
     let ignorePlaftormFiles = function(file) {
         return path.basename(file) !== ".DS_Store" && path.extname(file) !== null

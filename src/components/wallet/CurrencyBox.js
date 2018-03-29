@@ -45,7 +45,17 @@ export default class CurrencyBox extends Component {
     }
 
     render() {
-        const {balance, currency, suffix, description, clickHandler, expandAmount, expandedAmount} = this.props
+        const {
+            balance, 
+            currency, 
+            suffix, 
+            description, 
+            clickHandler, 
+            expandAmount, 
+            expandedAmount, 
+            isMainNet
+        } = this.props
+
         return (
             <div className={`content__currency-box ${expandedAmount ? (expandedAmount === suffix ? "expand" : "shrink") : ""}`}>
                 <div>
@@ -62,7 +72,7 @@ export default class CurrencyBox extends Component {
             }}>
                     {({balanceAnimated}) => <span className="amount" onClick={expandAmount.bind(this, suffix)}>
                         {::this._formatAmount(Number(balanceAnimated), suffix)}
-                        <span className="currency-suffix">t{suffix}</span>
+                        <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                 </Motion>
                 <Motion defaultStyle={{
@@ -73,7 +83,7 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} t$</span>}
+                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} {!isMainNet ? "t" : ""}$</span>}
                 </Motion>
                 </div>
                 <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{
@@ -81,7 +91,7 @@ export default class CurrencyBox extends Component {
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={true}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={!isMainNet}>Withdraw</button>
             </div>
         );
     }

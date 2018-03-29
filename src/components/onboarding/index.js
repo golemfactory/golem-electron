@@ -36,7 +36,8 @@ const steps = Object.freeze({
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
     passwordModal: state.realTime.passwordModal,
-    isTermsAccepted: true //state.info.isTermsAccepted 
+    isTermsAccepted: state.info.isTermsAccepted,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -121,7 +122,7 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        const {passwordModal, actions} = this.props
+        const {passwordModal, isMainNet, actions} = this.props
         const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator, isPasswordValid} = this.state
         let step;
         let key = Symbol(id).toString();
@@ -130,7 +131,7 @@ class OnboardIndex extends React.Component {
             step = <Welcome key={key}/>
             break;
         case steps.CHAININFO:
-            step = <ChainInfo/>
+            step = <ChainInfo isMainNet={isMainNet}/>
             break;
         case steps.TERMS:
             step = isTermsDeclined ? <Decline/> : <Terms key={key} handleLock={::this._handleLock}/> 
