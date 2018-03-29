@@ -1,8 +1,10 @@
 import React from 'react';
+import {BigNumber} from 'bignumber.js';
 
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
+const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 export default class WithdrawForm extends React.Component {
 
@@ -11,16 +13,20 @@ export default class WithdrawForm extends React.Component {
         super(props);
         this.state = {
             amountCopied: false,
-            amount: (props.formData && props.formData.amount) || 0.2,
-            sendTo: (props.formData && props.formData.sendTo) || ""
+            amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
+            sendTo: ""
         }
     }
 
     componentDidMount() {
         const { formData } = this.props
         if(formData){
-            this.refs.amountInput.value = formData.amount
+            this.refs.amountInput.value = formData.amount.dividedBy(ETH_DENOM);
             this.refs.sendToInput.value = formData.sendTo
+            this.setState({
+                amount: formData.amount,
+                sendTo: formData.sendTo
+            })
         }
     }
 
@@ -54,7 +60,7 @@ export default class WithdrawForm extends React.Component {
     _handleCopyToClipboard(evt) {
         const amountValue = this.refs.amountInput.value
         if (amountValue) {
-            clipboard.writeText(amountValue)
+            clipboard.writeText(this.state.formData.amount)
             this.setState({
                 amountCopied: true
             }, () => {
@@ -80,7 +86,7 @@ export default class WithdrawForm extends React.Component {
         const isValid = this.checkInputValidity(e)
         if(isValid)
             this.setState({
-                amount: e.target.value
+                amount: new BigNumber(e.target.value).multipliedBy(ETH_DENOM)
             })
     }
 
@@ -109,9 +115,9 @@ export default class WithdrawForm extends React.Component {
                         <div className="currency-tag">
                         	<span className="label-currency">{suffix}</span>
                         	<br/>
-                        	<strong>{Number(balance).toFixed(4)}...</strong>
+                        	<strong>{balance.toFixed(2)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {(Number(balance) * currency[suffix]).toFixed(2) } $</span>
+                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)} $</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -127,7 +133,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {(Number(amount) * currency[suffix]).toFixed(2)} $</span>
+                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)} $</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
