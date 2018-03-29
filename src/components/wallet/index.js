@@ -91,7 +91,14 @@ export class Wallet extends Component {
                             balance={balance[0]}
                             currency={currency}
                             suffix="GNT"
-                            description={
+                            description={ isMainNet ? 
+                                        <p className="tooltip__wallet">
+                                        Golem Network
+                                        <br/>token is earned 
+                                        <br/>and/or paid for
+                                        <br/>computations.
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        :
                                         <p className="tooltip__wallet">
                                         tGNT is testnet
                                         <br/>Golem Network 
@@ -99,7 +106,7 @@ export class Wallet extends Component {
                                         <br/>It is earned
                                         <br/>and/or paid for
                                         <br/>computations.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
@@ -109,13 +116,18 @@ export class Wallet extends Component {
                             balance={balance[1]}
                             currency={currency}
                             suffix="ETH"
-                            description={
+                            description={ isMainNet ?
+                                        <p className="tooltip__wallet">
+                                        ETH is used for 
+                                        <br/>transaction fees.
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        :
                                         <p className="tooltip__wallet">
                                         tETH is testnet 
                                         <br/>ETH.
                                         <br/>It is used for
                                         <br/>transaction fees.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
