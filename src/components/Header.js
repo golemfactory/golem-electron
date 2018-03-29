@@ -5,6 +5,10 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../actions'
+
+import mainNetLogo from './../assets/img/mainnet-logo-small.svg'
+import testNetLogo from './../assets/img/testnet-logo-small.svg'
+
 /**
  * @see http://react-component.github.io/tooltip/
  */
@@ -40,7 +44,7 @@ export class Header extends Component {
     componentDidMount() {
         const index = location.hash.includes('tasks') ? 2 : 1 // <-- HARDCODED
         let navItems = document.getElementsByClassName('nav__item')
-        navItems.length > 1 && navItems[index].classList.add('active') // 1 is the traffic lights of mac & linux
+        console.log("navItems", navItems);
     /*EXPRIMENTAL*/
     // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
     //     this._navigateTo(message, null)
@@ -175,35 +179,31 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
+    // <div className="top-titlebar">
+    //     <div style={styling} className="draggable draggable--win"></div>
+    //     <div>
+    //         <span>Golem</span>
+    //     </div>
+    //     <div className="os__menu" role="menu">
+    //         <span className="icon-minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
+    //         <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
+    //     </div>
+    // </div>
+
     render() {
-        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers} = this.props
+        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
         return (
-            <header className="header">
-             <div className="top-titlebar">
-                <div style={styling} className="draggable draggable--win"></div>
-                <div>
-                    <span>Golem</span>
-                </div>
-                <div className="os__menu" role="menu">
-                    <span className="icon-minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
-                    <span className="icon-close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
-                </div>
-             </div>
-            <nav className="nav" role="menubar">
+            <header className={`header ${activeHeader === 'secondary' ? "frame__screen" : ""}`}>
+            <nav className={`nav ${isMainNet ? "nav-mainnet" : "nav-testnet"}`} role="menubar">
                 <div style={styling} className="draggable draggable--other"></div>
-                <ul className="nav__list" role="menu">
-                    <li className="nav__item traffic-light">
-                        <div className="close" onClick={::this._onClose} role="menuitem" tabIndex="0" aria-label="Close"></div>
-                        <div className="minimize" onClick={::this._onMinimize} role="menuitem" tabIndex="0" aria-label="Minimize"></div>
-                        <div className="maximize" onClick={::this._onMaximize} disabled={true} role="menuitem" tabIndex="0" aria-label="Maximize"></div>
-                    </li>
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/')} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
-                    {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks')} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
-                    {activeHeader === 'main' && <span className="selector"></span>}
-                </ul>
+                {activeHeader === 'main' &&
+                    <div className="nav__list">
+                        <img src={isMainNet ? mainNetLogo : testNetLogo} className="logo__header"/>
+                    </div>
+                }
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
                     <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={this._taskHints(isEngineOn, connectedPeers)} mouseEnterDelay={1} align={{
@@ -242,7 +242,15 @@ export class Header extends Component {
                 </div>
             }
             </nav>
-            
+            {activeHeader === 'main' &&
+                <nav className="nav">
+                    <ul className="nav__list" role="menu">
+                        {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/')} role="menuitem" tabIndex="0" aria-label="Network">Network</li>}
+                        {activeHeader === 'main' && <li className="nav__item" onClick={this._navigateTo.bind(this, '/tasks')} role="menuitem" tabIndex="0" aria-label="Tasks">Tasks</li>}
+                        {activeHeader === 'main' && <span className="selector"></span>}
+                    </ul>
+                </nav>
+            }
             </header>
         );
     }

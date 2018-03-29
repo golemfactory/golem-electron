@@ -33,16 +33,23 @@
 .win .container__task-panel {
     &--with-preview {
         @media screen and (max-height: 749px + 59px) {
-            height: 319px
+            height: 280px
         }
     }
 }
 
-.mac .container__task-panel,
+.mac .container__task-panel {
+    &--with-preview {
+        @media screen and (max-height: 749px + 59px) {
+            height: 262px
+        }
+    }
+}
+
 .linux .container__task-panel {
     &--with-preview {
         @media screen and (max-height: 749px + 59px) {
-            height: 342px
+            height: 296px
         }
     }
 }

@@ -90,12 +90,12 @@ $item__accordion-height: 78.7px;
     }
 
     & + .item__accordion {
-        border-top: 1px solid $color-text3;
+        border-top: 1px solid $color-border;
     }
 }
 
 .item__accordion:last-child {
-    border-bottom: 1px solid $color-text3;
+    border-bottom: 1px solid $color-border;
 }
 
 .footer__settings {
@@ -106,7 +106,7 @@ $item__accordion-height: 78.7px;
     flex-direction: column;
     justify-content: center;
     text-align: center;
-    border-top: 1px solid $color-text3;
+    border-top: 1px solid $color-border;
     color: $color-text2;
     font-size: 9pt;
 }

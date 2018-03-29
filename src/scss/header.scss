@@ -6,7 +6,7 @@
     top: 0;
     z-index: 100;
     width: 100%;
-    height: $header-height;
+    height: $header-height-mac;
     cursor: move;
     -webkit-app-region: drag;
 }
@@ -17,10 +17,10 @@
     left: 1px;
     right: 1px;
     line-height: 26px;
-    border-bottom: 1px solid $color-text3;
     box-sizing: border-box;
     z-index: 99;
     background: $color-text4;
+    padding-top: 35px;
 
     a {
         color: $color-text3;
@@ -39,6 +39,11 @@
         display: none;
     }
 
+    .logo__header{
+        height: 50%;
+        margin-top: 15px;
+    }
+
     .nav {
         z-index: 4;
         display: flex;
@@ -48,6 +53,21 @@
         width: 100%;
         font-family: $font-family-primary;
         font-weight: bold;
+        border-bottom: 1px solid $color-border;
+
+        &.nav-mainnet,
+        &.nav-testnet{
+            border-top: 1px solid $color-border;
+        }
+
+        &.nav-mainnet{
+            background: $color-bg-mainnet;
+            .menu__item{
+                &.active {
+                    color: $color-text4;
+                }
+            }
+        }
     }
 
     .menu,
@@ -67,6 +87,10 @@
         cursor: pointer;
         z-index: 999;
         -webkit-app-region: no-drag;
+
+        & + .nav__item {
+            margin-left: 20px;
+        }
 
         &:hover {
             color: $color-text;
@@ -111,14 +135,14 @@
     }
 
     // .nav__item:nth-child(2):hover ~ .selector
-    .active:nth-child(2) ~ .selector {
-        left: 91px;
+    .active:nth-child(1) ~ .selector {
+        left: 0px;
         width: 68px;
     }
 
     // .nav__item:nth-child(3):hover ~ .selector
-    .active:nth-child(3) ~ .selector {
-        left: 179px;
+    .active:nth-child(2) ~ .selector {
+        left: 30px;
         width: 47px;
     }
 
@@ -147,23 +171,23 @@
     }
 
     /*.nav__item:nth-child(2):hover ~ .selector*/
-    .active:nth-child(2) ~ .selector {
+    .active:nth-child(1) ~ .selector {
         left: $selector-left_1 + $padding;
         width: 68px;
     }
 
     /*.nav__item:nth-child(3):hover ~ .selector*/
-    .active:nth-child(3) ~ .selector {
+    .active:nth-child(2) ~ .selector {
         left: $selector-left_2 + $padding;
         width: 47px;
     }
 }
 
 .header__frame {
-    height: $header-height;
+    height: $header-height-mac;
     width: 100%;
     margin-left: 30px;
-    line-height: $header-height;
+    line-height: $header-height-mac;
     box-sizing: border-box;
     font-weight: 400;
     display: flex;
@@ -238,12 +262,34 @@
     }
 }
 
+
+.frame__screen{
+    height: 84px !important;
+
+    .header__frame{
+        height: 84px !important;
+        line-height: 48px !important;
+    }
+
+    .nav{
+        height: 50px !important;
+    }
+    .draggable{
+        height: 84px !important;
+    }
+}
+
 /*                 OS DIFFERENCES
 ================================================== */
 
 .win {
     .header {
         height: $header-height-windows;
+        padding-top: 0;
+
+        .logo__header{
+            height: 25px;
+        }
 
         @include header($padding-windows, 0, 87px);
 
@@ -325,12 +371,12 @@
 }
 
 .mac .header {
-    height: $header-height;
+    height: $header-height-mac;
 
-    @include header($padding-mac, 72px, 160px);
+    @include header($padding-mac, 0, 88px);
 
     .nav {
-        height: 100%;
+        height: 50%;
     }
 
     .draggable--other {
@@ -339,12 +385,13 @@
 }
 
 .linux .header {
-    height: $header-height;
+    height: $header-height-linux;
+    padding-top: 0;
 
-    @include header($padding-mac, 72px, 160px);
+    @include header($padding-mac, 0, 88px);
 
     .nav {
-        height: 100%;
+        height: 50%;
     }
 
     .draggable--other {
@@ -456,10 +503,6 @@
         .close:after {
             opacity: 1;
         }
-    }
-
-    & + .nav__item {
-        margin-left: 20px;
     }
 }
 
