@@ -92,8 +92,11 @@ export class WithdrawModal extends React.Component {
 
     _withdrawAsync(_formData){
         return new Promise((response, reject) => {
+            const {amount, sendTo, type} = _formData
             this.props.actions.withdraw({
-                    ..._formData
+                    amount: amount.toString(), 
+                    sendTo, 
+                    type
                 },
                 response,
                 reject)
