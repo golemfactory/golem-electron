@@ -86,7 +86,7 @@ export class Geth extends React.Component {
                         disabled={isLocalGeth}/>
                 </div>
                 <div className="section__tips">
-                    <span className="tips__geth">Enabling custom geth option will require restart the application.</span>
+                    <span className="tips__geth">Enabling custom geth option will require restart of the application</span>
                 </div>
             </div>
         );
