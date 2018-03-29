@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
+import {BigNumber} from 'bignumber.js';
 
 import * as Actions from '../../../actions'
 
@@ -9,6 +10,8 @@ import WithdrawForm from "./steps/Form"
 import Confirmation from "./steps/Confirmation"
 import Result from "./steps/Result"
 import {modals, currencyIcons} from './../../../constants'
+
+const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey
@@ -26,7 +29,7 @@ export class WithdrawModal extends React.Component {
         this.state = {
         	index: 0,
             formData: {
-                amount: 0.2,
+                amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
                 sendFrom: props.publicKey,
                 sendTo: "",
                 isSuccess: false

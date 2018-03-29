@@ -1,5 +1,7 @@
 import { eventChannel, buffers } from 'redux-saga'
 import { take, call, put, cancel } from 'redux-saga/effects'
+import {BigNumber} from 'bignumber.js';
+
 import { dict } from '../actions'
 
 import { config, _handleSUBPUB, _handleUNSUBPUB, _handleRPC } from './handler'
@@ -44,7 +46,7 @@ export function subscribeBalance(session) {
                 const balance = args[0];
                 emit({
                     type: SET_BALANCE,
-                    payload: [(balance[1] / ETH_DENOM) || 0, (balance[2] / ETH_DENOM) || 0, balance[3], balance[4]]
+                    payload: [(new BigNumber(balance[1]).dividedBy(ETH_DENOM)) || 0, (new BigNumber(balance[2]).dividedBy(ETH_DENOM)) || 0, balance[3], balance[4]]
                 })
             }
 

@@ -1,8 +1,10 @@
 import React from 'react';
+import {BigNumber} from 'bignumber.js';
 
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
+const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 export default class Confirmation extends React.Component {
 
@@ -36,9 +38,9 @@ export default class Confirmation extends React.Component {
                         <div className="currency-tag">
                         	<strong className="info-label">sending</strong>
                         	<br/>
-                        	<strong className="info-price">{Number(amount).toFixed(4)}...</strong><span>{suffix}</span>
+                        	<strong className="info-price">{amount.dividedBy(ETH_DENOM).toFixed(4)}...</strong><span>{suffix}</span>
                         	<br/>
-                        	<span className="info-estimation">est. {(Number(amount) * currency[suffix]).toFixed(4)} $</span>
+                        	<span className="info-estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(4)} $</span>
                         </div>
                     </div>
                     <div>
