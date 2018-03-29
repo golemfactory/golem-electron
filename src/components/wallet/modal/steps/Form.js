@@ -1,10 +1,26 @@
 import React from 'react';
 import {BigNumber} from 'bignumber.js';
+import yup from 'yup'
 
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+
+const inputSchema = {
+    amount: yup.object().shape({
+            amount: yup.number().min(0.00001).required()
+        }),
+
+    sendTo: yup.object().shape({
+            sendTo: yup.string().matches(/0x[a-fA-F0-9]{40}/).required()
+        })
+}
+
+const formSchema = yup.object().shape({
+            amount: yup.number().min(0.00001).required(),
+            sendTo: yup.string().matches(/0x[a-fA-F0-9]{40}/).required()
+        });
 
 export default class WithdrawForm extends React.Component {
 
@@ -14,7 +30,8 @@ export default class WithdrawForm extends React.Component {
         this.state = {
             amountCopied: false,
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
-            sendTo: ""
+            sendTo: "",
+            isValid: false
         }
     }
 
@@ -33,6 +50,16 @@ export default class WithdrawForm extends React.Component {
     componentWillUnmount() {
         if(this.copyTimeout){
             clearTimeout(this.copyTimeout)
+        }
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        const {amount, sendTo} = nextState
+        if(amount !== this.state.amount ||
+            sendTo !== this.state.sendTo){
+            this.setState({
+                isValid: formSchema.isValidSync({amount, sendTo})
+            })
         }
     }
 
@@ -73,29 +100,30 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
-    checkInputValidity(e) {
-        e.target.checkValidity();
-        if (e.target.validity.valid)
+    checkInputValidity(e, type) {
+        const isValid = inputSchema[type].isValidSync({[type]: e.target.value})
+        if (isValid)
             e.target.classList.remove("invalid");
         else
             e.target.classList.add("invalid");
-        return e.target.validity.valid
+
+        return isValid
     }
 
     _handleAmountChange(e){
-        const isValid = this.checkInputValidity(e)
-        if(isValid)
-            this.setState({
-                amount: new BigNumber(e.target.value).multipliedBy(ETH_DENOM)
-            })
+        e.persist()
+        this.checkInputValidity(e, "amount")
+        this.setState({
+            amount: new BigNumber(e.target.value || 0).multipliedBy(ETH_DENOM)
+        })
     }
 
     _handleSendToChange(e){
-        const isValid = this.checkInputValidity(e)
-        if(isValid)
-            this.setState({
-                sendTo: e.target.value
-            })
+        e.persist()
+        this.checkInputValidity(e, "sendTo")
+        this.setState({
+            sendTo: e.target.value
+        })
     }
 
     _preventSpace(event){
@@ -107,7 +135,7 @@ export default class WithdrawForm extends React.Component {
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount} = this.state
+        const {amountCopied, amount, isValid} = this.state
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply}>
                     <div>
@@ -126,9 +154,9 @@ export default class WithdrawForm extends React.Component {
                             ref="amountInput" 
                             className="input__amount" 
                             type="number" 
-                            min={0.00001}
-                            defaultValue={0.2} 
-                            step={0.1} 
+                            defaultValue={0.2}
+                            step={0.1}
+                            min={0} 
                             onChange={::this._handleAmountChange}/>
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
@@ -142,14 +170,13 @@ export default class WithdrawForm extends React.Component {
                             className="input__address" 
                             type="text" 
                             placeholder="Type in GNT address"
-                            pattern="0x[a-fA-F0-9]{40}"
                             onKeyPress={::this._preventSpace}
                             onChange={::this._handleSendToChange}
                             required/>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="submit" className="btn--primary" autoFocus>Apply</button>
+                        <button type="submit" className="btn--primary" autoFocus disabled={!isValid}>Apply</button>
                     </div>
                 </form>
         );
