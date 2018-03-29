@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 
-import golemIcon from '../../assets/img/golem.png'
+import golemIcon from '../../assets/img/golem-white.svg'
 
 
 const mapStateToProps = state => ({

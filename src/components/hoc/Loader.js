@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { Motion, spring } from 'react-motion'
 
 import * as Actions from '../../actions'
-import golem_logo from './../../assets/img/golem-black.png'
+import golem_logo from './../../assets/img/golem-black.svg'
 
 /**
  * { Class for loading Component which we will see while real component loading. }

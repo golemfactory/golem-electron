@@ -23,7 +23,7 @@
     box-sizing: border-box;
     transform: translateZ(0);
     &--with-preview {
-        margin-bottom: 292px + 59px;
+        margin-bottom: 192px + 59px;
         @media screen and (max-height: 749px + 59px) {
             margin-bottom: 0;
         }
@@ -33,7 +33,7 @@
 .win .container__task-panel {
     &--with-preview {
         @media screen and (max-height: 749px + 59px) {
-            height: 280px
+            height: 378px
         }
     }
 }
@@ -41,7 +41,7 @@
 .mac .container__task-panel {
     &--with-preview {
         @media screen and (max-height: 749px + 59px) {
-            height: 262px
+            height: 361px
         }
     }
 }
@@ -49,7 +49,7 @@
 .linux .container__task-panel {
     &--with-preview {
         @media screen and (max-height: 749px + 59px) {
-            height: 296px
+            height: 396px
         }
     }
 }
