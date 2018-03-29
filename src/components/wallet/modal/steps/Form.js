@@ -74,7 +74,7 @@ export default class WithdrawForm extends React.Component {
      * [_handleDelete func. send information as callback and close modal]
      */
     _handleApply(e) {
-        e.preventDefault()
+        e.preventDefault();
         const { amount, sendTo } = this.state
         this.props.applyHandler(amount, sendTo, this.props.suffix)
     }
@@ -111,7 +111,6 @@ export default class WithdrawForm extends React.Component {
     }
 
     _handleAmountChange(e){
-        e.persist()
         this.checkInputValidity(e, "amount")
         this.setState({
             amount: new BigNumber(e.target.value || 0).multipliedBy(ETH_DENOM)
@@ -119,7 +118,6 @@ export default class WithdrawForm extends React.Component {
     }
 
     _handleSendToChange(e){
-        e.persist()
         this.checkInputValidity(e, "sendTo")
         this.setState({
             sendTo: e.target.value
@@ -137,7 +135,7 @@ export default class WithdrawForm extends React.Component {
         const {type, suffix, currency, balance} = this.props
         const {amountCopied, amount, isValid} = this.state
         return (
-                <form className="content__modal content__modal--form " onSubmit={::this._handleApply}>
+                <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
                     <div>
                         <span className={`icon-${currencyIcons[suffix]}`}/>
                         <div className="currency-tag">
@@ -153,11 +151,10 @@ export default class WithdrawForm extends React.Component {
                     	<input 
                             ref="amountInput" 
                             className="input__amount" 
-                            type="number" 
-                            defaultValue={0.2}
-                            step={0.1}
+                            type="number"
                             min={0} 
-                            onChange={::this._handleAmountChange}/>
+                            onChange={::this._handleAmountChange}
+                            required/>
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
