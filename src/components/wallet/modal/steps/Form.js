@@ -75,7 +75,6 @@ export default class WithdrawForm extends React.Component {
      */
     _handleApply(e) {
         e.preventDefault();
-        e
         const { amount, sendTo } = this.state
         this.props.applyHandler(amount, sendTo, this.props.suffix)
     }
