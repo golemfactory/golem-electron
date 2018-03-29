@@ -44,7 +44,7 @@ export function subscribeBalance(session) {
                 const balance = args[0];
                 emit({
                     type: SET_BALANCE,
-                    payload: [(balance[0] / ETH_DENOM) || 0, (balance[2] / ETH_DENOM) || 0, balance[3], balance[4]]
+                    payload: [(balance[1] / ETH_DENOM) || 0, (balance[2] / ETH_DENOM) || 0, balance[3], balance[4]]
                 })
             }
 
