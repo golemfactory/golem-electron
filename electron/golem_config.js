@@ -1,8 +1,12 @@
 const os = require('os');
 const path = require('path');
 
+const {getConfig, dictConfig} = require('./config_storage.js')
+const {DEFAULT_GETH} = dictConfig
+
 const MAINNET = process.argv.includes('--mainnet')
 const CHAIN = MAINNET ? 'mainnet' : 'rinkeby';
+const GETH_DEFAULT = getConfig(DEFAULT_GETH)
 
 
 let localDir;
@@ -23,6 +27,7 @@ const HOMEDIR = os.homedir();
 const DATADIR = path.join(HOMEDIR, localDir, 'golem', 'default', CHAIN);
 
 module.exports = {
-	DATADIR: DATADIR,
-	IS_MAINNET: MAINNET
+	DATADIR,
+	IS_MAINNET: MAINNET,
+    GETH_DEFAULT
 }
