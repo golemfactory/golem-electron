@@ -140,7 +140,8 @@ const mapStateToProps = state => ({
     location: state.fileLocation.location,
     subtasksList: state.single.subtasksList,
     isDeveloperMode: state.input.developerMode,
-    requestorMaxPrice: state.price.requestorMaxPrice
+    requestorMaxPrice: state.price.requestorMaxPrice,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -1009,7 +1010,8 @@ export class TaskDetail extends React.Component {
             testStatus, 
             estimated_cost, 
             subtasksList, 
-            isDeveloperMode
+            isDeveloperMode,
+            isMainNet
         } = this.props;
 
         let testStyle = this._handleTestStatus(testStatus)
@@ -1079,12 +1081,12 @@ export class TaskDetail extends React.Component {
                             <div className="item-price">
                                 <InfoLabel type="span" label="Your bid" info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,<br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} cls="title" infoHidden={true}/>
                                 <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span>tGNT/h</span>
+                                <span>{isMainNet ? "" : "t"}GNT/h</span>
                             </div>
                             <div className="item-price estimated-price__panel">
                                 <InfoLabel type="span" label="Estimated" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 {this._convertPriceAsHR(estimated_cost)}
-                                <span>tGNT</span>
+                                <span>{isMainNet ? "" : "t"}GNT</span>
                             </div>
                             <span className="item-price tips__price">
                                 You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
