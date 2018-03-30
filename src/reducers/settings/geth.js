@@ -20,7 +20,12 @@ const setLocalGeth = (state = initialState, action) => {
     switch (action.type) {
 
     case SET_LOCAL_GETH:
-        setConfig(DEFAULT_GETH, action.payload)
+        const {isLocalGeth, gethPort, gethAddress} = action.payload
+        if((isLocalGeth && gethPort) || (!isLocalGeth && gethAddress))
+            setConfig(DEFAULT_GETH, action.payload)
+        else
+            setConfig(DEFAULT_GETH, false)
+
         return Object.assign({}, state, {
             localGeth: {
                 ...state.localGeth,
