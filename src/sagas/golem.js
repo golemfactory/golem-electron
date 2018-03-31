@@ -23,15 +23,20 @@ const statuses = {
 const messages = {
     hyperdrive: {
         'instance.check': {
-            pre: 'Checking for hyperdrive',
-            post: 'Hyperdrive is available',
-            exception: 'Hyperdrive is not available'
+            pre: 'Checking for hyperg',
+            post: 'Hyperg is available',
+            exception: 'Hyperg is not available'
         },
         'instance.connect': {
-            pre: 'Connecting to hyperdrive',
-            post: 'Connected to hyperdrive',
-            exception: 'Cannot connect to hyperdrive'
+            pre: 'Connecting to hyperg',
+            post: 'Connected to hyperg',
+            exception: 'Cannot connect to hyperg'
         },
+        'instance.version': {
+            pre: 'Hyperg version checking',
+            post: 'Hyperg version checked',
+            exception: 'Outdated hyperg version'
+        }
     },
     docker: {
         'instance.start': {
