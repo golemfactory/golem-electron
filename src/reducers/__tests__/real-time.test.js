@@ -4,7 +4,7 @@ describe('realTime reducer', () => {
     it('should return initial state', () => {
         expect(realTime(undefined, {})).toEqual({
             taskList: [],
-            balance: [0, 0],
+            balance: ["0", "0"],
             connectedPeers: 0,
             peerInfo: [],
             golemStatus: {
