@@ -141,9 +141,9 @@ export default class WithdrawForm extends React.Component {
                         <div className="currency-tag">
                         	<span className="label-currency">{suffix}</span>
                         	<br/>
-                        	<strong>{balance.toFixed(2)}...</strong>
+                        	<strong>{balance.toFixed(4)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)} $</span>
+                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)}... $</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -158,7 +158,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)} $</span>
+                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
@@ -166,7 +166,7 @@ export default class WithdrawForm extends React.Component {
                             ref="sendToInput"
                             className="input__address" 
                             type="text" 
-                            placeholder="Type in GNT address"
+                            placeholder={`Type in ${suffix} address`}
                             onKeyPress={::this._preventSpace}
                             onChange={::this._handleSendToChange}
                             required/>

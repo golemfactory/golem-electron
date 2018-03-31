@@ -71,7 +71,7 @@ export default class CurrencyBox extends Component {
                 })
             }}>
                     {({balanceAnimated}) => <span className="amount" onClick={expandAmount.bind(this, suffix)}>
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}
+                        {::this._formatAmount(Number(balanceAnimated), suffix)}...
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                 </Motion>
@@ -83,7 +83,7 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} {!isMainNet ? "t" : ""}$</span>}
+                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
                 </Motion>
                 </div>
                 <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{

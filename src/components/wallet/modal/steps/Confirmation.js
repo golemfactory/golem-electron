@@ -11,6 +11,9 @@ export default class Confirmation extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            lockApply: false
+        }
     }
 
     /**
@@ -26,12 +29,16 @@ export default class Confirmation extends React.Component {
     _handleApply() {
         const {formData, suffix} = this.props
         const {amount, sendTo} = formData
-        this.props.applyHandler(amount, sendTo, suffix)
+        this.setState({
+            lockApply: true
+        }, () => this.props.applyHandler(amount, sendTo, suffix))
+        
     }
 
     render() {
         const {type, suffix, formData, currency} = this.props
         const {amount, sendTo} = formData
+        const { lockApply } = this.state
         return (
                 <div className="content__modal content__modal--confirmation ">
                     <div>
@@ -57,7 +64,7 @@ export default class Confirmation extends React.Component {
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleBack}>Back</span>
-                        <button type="button" className="btn--primary" onClick={::this._handleApply} autoFocus>Send</button>
+                        <button type="button" className="btn--primary" onClick={::this._handleApply} disabled={lockApply} autoFocus>Send</button>
                     </div>
                 </div>
         );
