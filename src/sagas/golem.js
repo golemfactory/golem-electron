@@ -89,9 +89,9 @@ const messages = {
     },
     ethereum: {
         'node.start': {
-            pre: 'Starting geth',
-            post: 'Geth started',
-            exception: 'Error starting geth'
+            pre: 'Connecting geth',
+            post: 'Geth connected',
+            exception: 'Error connecting geth'
         },
         'node.stop': {
             pre: 'Stopping geth',

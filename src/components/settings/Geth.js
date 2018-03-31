@@ -17,7 +17,33 @@ export class Geth extends React.Component {
 
     constructor(props) {
         super(props);
-        
+        const {localGeth} = props
+        this.state = {
+            isLocalGeth: (localGeth && localGeth.isLocalGeth) || false,
+            gethPort: (localGeth && localGeth.gethPort) || "",
+            gethAddress: (localGeth && localGeth.gethAddress) || "",
+            isStartLocked: true
+        }
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        const {localGeth} = nextProps
+        const {isLocalGeth, gethPort, gethAddress, isStartLocked} = nextState
+
+        if(
+            isLocalGeth !== localGeth.isLocalGeth ||
+            gethPort !== localGeth.gethPort ||
+            gethAddress !== localGeth.gethAddress
+        ){
+            if(nextState.isStartLocked)
+                this.setState({
+                    isStartLocked: false
+                })
+        } else if(!nextState.isStartLocked) {
+            this.setState({
+                isStartLocked: true
+            })
+        }
     }
 
     /**
@@ -25,9 +51,8 @@ export class Geth extends React.Component {
      * @return  {Boolean}   true
      */
     _handleGethSwitch() {
-        const {localGeth, actions} = this.props
-        const {isLocalGeth} = localGeth
-        actions.setLocalGeth({
+        const {isLocalGeth} = this.state
+        this.setState({
             isLocalGeth: !isLocalGeth
         })
     }
@@ -40,9 +65,13 @@ export class Geth extends React.Component {
     }
 
     _handleGethPort(e){
-        this.props.actions.setLocalGeth({
-            gethPort: e.target.value
+
+        this.setState({
+            gethPort: e.target.value || ''
         })
+        // this.props.actions.setLocalGeth({
+        //     gethPort: e.target.value
+        // })
     }
 
     _handleGethAddress(e){
@@ -51,17 +80,44 @@ export class Geth extends React.Component {
                 e.target.classList.add("invalid");
         else{
             e.target.classList.remove("invalid");
-            this.props.actions.setLocalGeth({
-                gethAddress: e.target.value
+            this.setState({
+                gethAddress: e.target.value || ''
             })
         }
     }
 
+    _checkAnyChanges(e){
+        const {localGeth} = this.props
+        const {isLocalGeth, gethPort, gethAddress} = this.state
+        if(
+            isLocalGeth !== localGeth.isLocalGeth ||
+            gethPort !== localGeth.gethPort ||
+            gethAddress !== localGeth.gethAddress ||
+            !isLocalGeth ||
+            !gethPort || 
+            !gethAddress
+        ){
+                return true
+        }
+
+        return false
+    }
+
+    _handleSave(e){
+        const {isLocalGeth, gethPort, gethAddress} = this.state
+        this.props.actions.setLocalGeth({
+            isLocalGeth, 
+            gethPort, 
+            gethAddress
+        })
+    }
+
     render() {
+        const {isStartLocked, isLocalGeth} = this.state
         const {isEngineOn, localGeth} = this.props
-        const {isLocalGeth, gethPort, gethAddress} = localGeth
+        const { gethPort, gethAddress} = localGeth
         return (
-            <div className="content__geth">
+            <form className="content__geth" onSubmit={::this._handleSave}>
                 <div className="section__flag">
                     <span>Local Geth</span>
                     <div className="switch-box switch-box--green">
@@ -83,12 +139,14 @@ export class Geth extends React.Component {
                         className="address-input__geth" 
                         aria-label="URI of Local Geth" 
                         pattern="^(https?)://.*$"
+                        placeholder="To connect default geth leave blank."
                         disabled={isLocalGeth}/>
                 </div>
+                <button type="submit" className="btn btn--outline" disabled={isStartLocked}>Save</button>
                 <div className="section__tips">
                     <span className="tips__geth">Enabling custom geth option will require restart of the application</span>
                 </div>
-            </div>
+            </form>
         );
     }
 }

@@ -1,6 +1,6 @@
 .section__preview {
     background: #444;
-    height: 350px;
+    height: 250px;
     width: 100%;
     position: fixed;
     bottom: 59px;
@@ -8,11 +8,11 @@
     left: 0;
     box-sizing: border-box;
     @media screen and (max-height: 749px + 59px) {
-        top: 400px;
+        top: 499px;
     }
     &-black {
         background: #000;
-        height: 350px;
+        height: 250px;
     }
     img {
         object-fit: contain;

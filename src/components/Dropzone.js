@@ -20,7 +20,8 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal,
-    connectedPeers: state.realTime.connectedPeers
+    connectedPeers: state.realTime.connectedPeers,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -187,7 +188,7 @@ export class DropZone extends React.Component {
         // actions.uploadFile(files)
         if (files) {
 
-            mainProcess.selectDirectory([].map.call(files, item => item.path))
+            mainProcess.selectDirectory([].map.call(files, item => item.path), this.props.isMainNet)
                 .then(item => {
                     let mergedList = [].concat.apply([], item);
                     let unknownFiles = mergedList.filter(({malicious}) => (malicious));
@@ -202,10 +203,11 @@ export class DropZone extends React.Component {
                         })
                     } else if (masterFiles.length > 0) {
                         this.props.actions.createTask({
-                            resources: mergedList.map(item => item.path)
+                            resources: mergedList.map(item => item.path),
+                            taskName: masterFiles[0].name
                         })
                     } else {
-                        alert("There's no main file! There should be at least one blender or luxrender file.")
+                        alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
                     }
                 })
         }

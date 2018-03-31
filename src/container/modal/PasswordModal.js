@@ -6,8 +6,12 @@ import ReactPasswordStrength from 'react-password-strength';
 
 import * as Actions from '../../actions'
 
+import mainNetIcon from './../../assets/img/main-net-icon.svg'
+import testNetIcon from './../../assets/img/test-net-icon.svg'
+
 const mapStateToProps = state => ({
-    passwordModal: state.realTime.passwordModal
+    passwordModal: state.realTime.passwordModal,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -111,13 +115,13 @@ export class PasswordModal extends React.Component {
     }
 
     render() {
-        const {passwordModal} = this.props
+        const {isMainNet, passwordModal} = this.props
         const {loadingIndicator, passwordMaskToggle, confirmationMaskToggle} = this.state
         return (
             <div ref="modalContent" className="container__modal container__password-modal">
                 <div id="passwordModalContainer" className="content__modal">
                     <div className="container-icon">
-                        <span className="icon-locked"/>
+                        <img src={isMainNet ? mainNetIcon : testNetIcon} className="chain-image"/>
                     </div>
                     <div>
                         <strong>Enter password</strong>

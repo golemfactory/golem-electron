@@ -12,10 +12,10 @@
     text-align: left;
     box-sizing: border-box;
     & + .item__history {
-        border-top: 1px solid $color-text3;
+        border-top: 1px solid $color-border;
     }
     &:last-child {
-        border-bottom: 1px solid $color-text3;
+        border-bottom: 1px solid $color-border;
     }
     height: 80px;
     h5 {

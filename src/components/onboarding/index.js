@@ -36,7 +36,8 @@ const steps = Object.freeze({
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
     passwordModal: state.realTime.passwordModal,
-    isTermsAccepted: true //state.info.isTermsAccepted 
+    isTermsAccepted: state.info.isTermsAccepted,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -64,7 +65,6 @@ class OnboardIndex extends React.Component {
     componentDidMount() {
         this._keypressListener = event => {
 
-            console.log("this.state.currentStep", this.state.currentStep, steps.STEP2);
             if(event.key === "Enter" && 
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
@@ -121,8 +121,8 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        const {passwordModal, actions} = this.props
-        const { isTermsDeclined, isPrinted, isSkippingPrint, loadingIndicator, isPasswordValid} = this.state
+        const {passwordModal, isMainNet, actions} = this.props
+        const { isTermsDeclined, isPrinted, isSkippingPrint, nodeName, loadingIndicator, isPasswordValid} = this.state
         let step;
         let key = Symbol(id).toString();
         switch (id) {
@@ -130,7 +130,7 @@ class OnboardIndex extends React.Component {
             step = <Welcome key={key}/>
             break;
         case steps.CHAININFO:
-            step = <ChainInfo/>
+            step = <ChainInfo isMainNet={isMainNet}/>
             break;
         case steps.TERMS:
             step = isTermsDeclined ? <Decline/> : <Terms key={key} handleLock={::this._handleLock}/> 
@@ -151,7 +151,12 @@ class OnboardIndex extends React.Component {
             step = <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint}/>
             break;
         case steps.STEP1:
-            step = <Step2 setNodeName={::this._setNodeName} key={key} handleNext={::this._handleNext}/>
+            step = <Step2 
+                    ref={(ref) => this.step2 = ref}
+                    nodeName={nodeName}
+                    setNodeName={::this._setNodeName} 
+                    key={key} 
+                    handleNext={::this._handleNext}/>
             break;
         case steps.STEP2:
             step = <Step3 key={key}/>
@@ -354,10 +359,12 @@ class OnboardIndex extends React.Component {
             return <div>
                         <span>{_step - 6} of 4</span>
                         <span
-                            type="submit" 
-                            form="nodeNameForm"
                             className="icon-arrow-right-white"
-                            aria-label="Next" 
+                            aria-label="Next"
+                            onClick={e => {
+                                this.step2.nodeNameForm.submit()
+                                this._handleNext()
+                            }}
                             tabIndex="0"/>
                    </div>
         }

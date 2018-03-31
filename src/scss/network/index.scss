@@ -26,14 +26,14 @@
         flex-direction: column;
         position: relative;
         flex-grow: 1;
-        border-bottom: 1px solid $color-text3;
+        border-bottom: 1px solid $color-border;
 
         .tab-panel {
             @include flex;
 
             align-self: stretch;
             height: 47px;
-            border-bottom: 1px solid $color-text3;
+            border-bottom: 1px solid $color-border;
 
             .tab__title {
                 font-weight: 500;

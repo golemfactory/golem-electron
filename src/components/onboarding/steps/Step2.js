@@ -14,6 +14,7 @@ export default class Step2 extends React.Component {
 
     componentDidMount() {
         setTimeout(() => document.getElementById('nickInput').focus(), 600) //CSSTransition issue related
+        document.getElementById("nickInput").value = this.props.nodeName || ""
     }
 
     render() {
@@ -22,7 +23,9 @@ export default class Step2 extends React.Component {
                 <div className="section-image__onboarding">
                     <img src={avatar}/>
                     <form 
-                        id="nodeNameForm" 
+                        ref={(ref) => this.nodeNameForm = ref}
+                        id="nodeNameForm"
+                        name="nodeNameForm"
                         className="nickname-area__onboarding"
                         onSubmit={::this.props.handleNext}>
                         <input 

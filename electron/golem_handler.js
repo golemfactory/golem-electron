@@ -7,9 +7,7 @@ const {exec, execSync, spawn} = require('child_process');
 const {app} = electron;
 
 const log = require('./debug_handler.js');
-const {getConfig, dictConfig} = require('./config_storage.js')
-const {DEFAULT_GETH} = dictConfig
-const {DATADIR, IS_MAINNET} = require('./golem_config.js');
+const {DATADIR, IS_MAINNET, GETH_DEFAULT} = require('./golem_config.js');
 
 const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
 
@@ -41,7 +39,8 @@ class GolemProcess {
 
         let defaultArgs = ['-r', 'localhost:61000'];
         if (IS_MAINNET) defaultArgs.push('--mainnet');
-        if (getConfig(DEFAULT_GETH)) this._addGethArgs(defaultArgs);
+        console.log("DEFAULT_GETH", GETH_DEFAULT);
+        if (GETH_DEFAULT) this._addGethArgs(defaultArgs);
 
         this.processName = processName || 'golemapp';
         this.processArgs = processArgs || defaultArgs;
@@ -120,10 +119,10 @@ class GolemProcess {
     }
 
     _addGethArgs(args) {
-        const customGeth = getConfig(DEFAULT_GETH);
+        const customGeth = GETH_DEFAULT;
         var gethFlag;
 
-        if (customGeth.isLocalGeth){
+        if (customGeth && customGeth.isLocalGeth){
 
             args.push(this.processGeth)
             gethFlag = `${this.processPort} ${customGeth.gethPort || 8545}`

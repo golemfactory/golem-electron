@@ -12,7 +12,8 @@ import CurrencyBox from './CurrencyBox'
 const {clipboard } = window.electron
 
 const mapStateToProps = state => ({
-    publicKey: state.account.publicKey
+    publicKey: state.account.publicKey,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -80,7 +81,7 @@ export class Wallet extends Component {
 
 
     render() {
-        const { publicKey, balance, currency} = this.props
+        const { publicKey, balance, currency, isMainNet} = this.props
         const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
@@ -90,7 +91,14 @@ export class Wallet extends Component {
                             balance={balance[0]}
                             currency={currency}
                             suffix="GNT"
-                            description={
+                            description={ isMainNet ? 
+                                        <p className="tooltip__wallet">
+                                        Golem Network
+                                        <br/>token is earned 
+                                        <br/>and/or paid for
+                                        <br/>computations.
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        :
                                         <p className="tooltip__wallet">
                                         tGNT is testnet
                                         <br/>Golem Network 
@@ -98,25 +106,32 @@ export class Wallet extends Component {
                                         <br/>It is earned
                                         <br/>and/or paid for
                                         <br/>computations.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
+                            isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}/>
 	                	<CurrencyBox
                             balance={balance[1]}
                             currency={currency}
                             suffix="ETH"
-                            description={
+                            description={ isMainNet ?
+                                        <p className="tooltip__wallet">
+                                        ETH is used for 
+                                        <br/>transaction fees.
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        :
                                         <p className="tooltip__wallet">
                                         tETH is testnet 
                                         <br/>ETH.
                                         <br/>It is used for
                                         <br/>transaction fees.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-during-the-alpha-test">Learn more</a></p>
+                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
+                            isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
@@ -127,8 +142,8 @@ export class Wallet extends Component {
 		            	<span>send GNT and ETH to this address to top up your account</span>
 		            </div>
 		            <div>
-		            	<input className="input__public-key" type="text" value={"You cannot top up your TestNet account"} readOnly/>
-	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, "You cannot top up your TestNet account")}/>
+		            	<input className="input__public-key" type="text" value={isMainNet ? publicKey : "You cannot top up your TestNet account"} readOnly/>
+	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, (isMainNet ? publicKey : "You cannot top up your TestNet account"))}/>
                         {addressCopied && <span className="status-copy_address">address copied</span>}
 		            </div>
 	            </div>

@@ -23,7 +23,7 @@ function isDevelopment() {
 }
 
 const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
-const APP_WIDTH = 460
+const APP_WIDTH = isWin() ? 478 : 460
 const APP_HEIGHT = 810//589
 const APP_MIN_HEIGHT = 589
 const PREVIEW_APP_WIDTH = 752
@@ -110,8 +110,8 @@ function createWindow() {
         title: APP_NAME,
         width: APP_WIDTH,
         height: APP_HEIGHT,
-        //titleBarStyle: 'hidden-inset',
-        frame: false,
+        titleBarStyle: 'hidden-inset',
+        frame: true,
         resizable: true,
         minWidth: APP_WIDTH,
         minHeight: APP_MIN_HEIGHT,
@@ -156,7 +156,7 @@ function createWindow() {
 
     win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
-        Menu.setApplicationMenu(menuHandler)
+        Menu.setApplicationMenu(isWin() ? null : menuHandler)
         win.show()
     })
 
@@ -228,8 +228,8 @@ function createPreviewWindow(id, frameCount) {
             title: APP_NAME,
             width: PREVIEW_APP_WIDTH,
             height: PREVIEW_APP_HEIGHT,
-            //titleBarStyle: 'hidden-inset',
-            frame: false,
+            titleBarStyle: 'hidden-inset',
+            //frame: false,
             resizable: false,
             center: true,
             show: true,
@@ -284,7 +284,7 @@ function isWin(){
 }
 
 
-exports.selectDirectory = function(directory) {
+exports.selectDirectory = function(directory, _isMainNet) {
     console.log("directory", directory);
 
     let blackList = [
@@ -336,10 +336,13 @@ exports.selectDirectory = function(directory) {
         "WSH",
     ]
 
-    const masterList = [
-        "BLEND",
-        "LXS"
+    let masterList = [
+        "BLEND"
     ]
+
+    if(!_isMainNet)
+        masterList.push("LXS")
+
 
     let ignorePlaftormFiles = function(file) {
         return path.basename(file) !== ".DS_Store" && path.extname(file) !== null
