@@ -166,7 +166,7 @@ export default class WithdrawForm extends React.Component {
                             ref="sendToInput"
                             className="input__address" 
                             type="text" 
-                            placeholder="Type in GNT address"
+                            placeholder={`Type in ${suffix} address`}
                             onKeyPress={::this._preventSpace}
                             onChange={::this._handleSendToChange}
                             required/>
