@@ -1,10 +1,11 @@
+import {BigNumber} from 'bignumber.js';
 import { dict } from './../actions'
 const {ipcRenderer} = window.electron
 
 const {SET_BALANCE, SET_TASKLIST, SET_CONNECTED_PEERS, SET_GOLEM_STATUS, SET_FOOTER_INFO, SET_PASSWORD_MODAL, SET_PASSWORD} = dict
 
 const initialState = {
-    balance: [0, 0],
+    balance: [new BigNumber(0), new BigNumber(0)],
     taskList: [],
     connectedPeers: 0,
     peerInfo: [],

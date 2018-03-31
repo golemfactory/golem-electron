@@ -33,7 +33,7 @@ export default class CurrencyBox extends Component {
 
 
     _formatAmount(_balance ,_suffix, currency = 1) {
-        if (this.props.balance === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
+        if (this.props.balance.toNumber() === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
             motionBalanceStart[_suffix] = _balance
         }
 
@@ -78,7 +78,7 @@ export default class CurrencyBox extends Component {
                 <Motion defaultStyle={{
                 balanceAnimated: motionBalanceStart[`${suffix}-USD`]
             }} style={{
-                balanceAnimated: spring(Number(balance * currency[suffix]), {
+                balanceAnimated: spring(Number(balance.multipliedBy(currency[suffix])), {
                     stiffness: 500,
                     damping: 50
                 })

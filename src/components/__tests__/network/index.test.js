@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
+import {BigNumber} from 'bignumber.js';
 import ConnectedMainFragment, { MainFragment } from '../../network'
 import sinon from 'sinon'
 
@@ -32,7 +33,7 @@ describe('<MainFragment />', () => {
     it('should call componentDidMount', () => {
         const states = {
             realTime: {
-                balance:[0, 0],
+                balance:[new BigNumber(0), new BigNumber(0)],
                 golemStatus: {status: true}
             },
             input: {
@@ -69,7 +70,7 @@ describe('<MainFragment />', () => {
         //let clock = jest.useFakeTimers();
         const states = {
             realTime: {
-                balance:[],
+                balance:[new BigNumber(0), new BigNumber(0)],
                 golemStatus: {status: true}
             },
             input: {
@@ -95,7 +96,7 @@ describe('<MainFragment />', () => {
         }
 
         const props = {
-                balance:[],
+                balance:[new BigNumber(0), new BigNumber(0)],
                 golemStatus: { status: true },
                 autoLaunch: false,
                 connectionProblem: false,
