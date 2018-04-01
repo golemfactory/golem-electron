@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
 import ReactTooltip from 'rc-tooltip'
+import {BigNumber} from 'bignumber.js';
+
 import { timeStampToHR } from './../../utils/secsToHMS'
 import {currencyIcons} from './../../constants'
 
@@ -33,8 +35,11 @@ export default class CurrencyBox extends Component {
 
 
     _formatAmount(_balance ,_suffix, currency = 1) {
-        if (this.props.balance.toNumber() === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
-            motionBalanceStart[_suffix] = _balance
+        if (this.props.balance.toNumber() === (new BigNumber(_balance.toString())
+            .dividedBy(currency)
+            .toNumber()) && 
+            motionBalanceStart[_suffix] !== _balance) {
+                motionBalanceStart[_suffix] = _balance
         }
 
         if(_suffix.includes('USD')){
