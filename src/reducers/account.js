@@ -1,3 +1,4 @@
+import {BigNumber} from 'bignumber.js';
 import { dict } from './../actions'
 
 const {SET_PUBLIC_KEY, CALL_WITHDRAW_MODAL} = dict
@@ -7,7 +8,8 @@ const initialState = {
     withdrawModal: {
     	status: false,
     	currency: ''
-    }
+    },
+    gasCost: new BigNumber(0)
 }
 const setAccount = (state = initialState, action) => {
     switch (action.type) {

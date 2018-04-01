@@ -76,7 +76,15 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
-        this.props.applyHandler(amount, sendTo, this.props.suffix)
+        this._getGasCostAsync(amount.toNumber(), this.props.suffix)
+        .then(result => {
+            if(result)
+                this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
+        })
+    }
+
+    _getGasCostAsync(amount, type){
+        return new Promise((resolve, reject) => this.props.actions.getGasCost({amount, type}, resolve, reject))
     }
 
     /**
@@ -101,7 +109,7 @@ export default class WithdrawForm extends React.Component {
     }
 
     checkInputValidity(e, type) {
-        const isValid = inputSchema[type].isValidSync({[type]: e.target.value})
+        const isValid = inputSchema[type].isValidSync({[type]: e.target.value});
         if (isValid)
             e.target.classList.remove("invalid");
         else
@@ -152,7 +160,8 @@ export default class WithdrawForm extends React.Component {
                             ref="amountInput" 
                             className="input__amount" 
                             type="number"
-                            min={0} 
+                            min={0}
+                            max={balance.toNumber()}
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>

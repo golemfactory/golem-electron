@@ -5,6 +5,7 @@ export let dict = Object.freeze({
     SET_PUBLIC_KEY: 'SET_PUBLIC_KEY',
     CALL_WITHDRAW_MODAL: 'CALL_WITHDRAW_MODAL',
     WITHDRAW: 'WITHDRAW',
+    GET_GAS_COST: 'GET_GAS_COST',
     SET_PASSWORD: 'SET_PASSWORD',
     //NETWORK
     SET_BALANCE: 'SET_BALANCE',
@@ -107,6 +108,7 @@ const {
     //ACCOUNT
     CALL_WITHDRAW_MODAL,
     WITHDRAW,
+    GET_GAS_COST,
     SET_PASSWORD,
     //NETWORK
     SET_BALANCE, 
@@ -215,6 +217,13 @@ export const callWithdrawModal = (status, payload) => ({
 
 export const withdraw = (payload, _response, _reject) => ({
     type: WITHDRAW,
+    payload,
+    _response,
+    _reject
+})
+
+export const getGasCost = (payload, _response, _reject) => ({
+    type: GET_GAS_COST,
     payload,
     _response,
     _reject
