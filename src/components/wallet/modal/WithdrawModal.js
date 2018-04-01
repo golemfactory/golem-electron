@@ -57,7 +57,7 @@ export class WithdrawModal extends React.Component {
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
-    _handleApply(_amount, _sendTo, _suffix) {
+    _handleApply(_amount, _sendTo, _suffix, _gasCost = 0) {
 
         //TO DO go to confirmation screen
         if(this.state.index == 0){
@@ -67,7 +67,8 @@ export class WithdrawModal extends React.Component {
                     amount: _amount,
                     sendTo: _sendTo,
                     type: _suffix
-                }
+                },
+                gasCost: _gasCost
             }, () => {
                 this.setState({
                         index: this.state.index + 1
@@ -108,7 +109,7 @@ export class WithdrawModal extends React.Component {
     		case 0:
     			return <WithdrawForm 
                     {...this.props} 
-                    cancelHandler={::this._handleCancel} 
+                    cancelHandler={::this._handleCancel}
                     applyHandler={::this._handleApply}
                     formData={this.state.formData}
                     />
@@ -118,6 +119,7 @@ export class WithdrawModal extends React.Component {
                     backHandler={::this._handleBack} 
                     applyHandler={::this._handleApply}
                     formData={this.state.formData}
+                    gasCost={this.state.gasCost}
                     />
             case 2:
                 return <Result 

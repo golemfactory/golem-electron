@@ -36,7 +36,7 @@ export default class Confirmation extends React.Component {
     }
 
     render() {
-        const {type, suffix, formData, currency} = this.props
+        const {type, suffix, formData, currency, gasCost} = this.props
         const {amount, sendTo} = formData
         const { lockApply } = this.state
         return (
@@ -58,7 +58,7 @@ export default class Confirmation extends React.Component {
                     <div className="info-gas__container">
                         <strong className="info-label">GAS price</strong>
                         <br/>
-                        <strong className="info-price">0.0213...</strong><span>ETH</span>
+                        <strong className="info-price">{gasCost.dividedBy(ETH_DENOM).toFixed(4)}...</strong><span>ETH</span>
                         <br/>
                         <span className="info-estimation">est. 0.65 $</span>
                     </div>
