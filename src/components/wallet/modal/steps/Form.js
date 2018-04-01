@@ -45,6 +45,13 @@ export default class WithdrawForm extends React.Component {
                 sendTo: formData.sendTo
             })
         }
+
+        document.getElementById("sendToInput").addEventListener('contextmenu', (ev) => {
+            ev.preventDefault();
+            ev.target.value  = clipboard.readText();
+            this._handleSendToChange.call(this, ev)
+            return false;
+        }, false);
     }
 
     componentWillUnmount() {
@@ -95,7 +102,7 @@ export default class WithdrawForm extends React.Component {
     _handleCopyToClipboard(evt) {
         const amountValue = this.refs.amountInput.value
         if (amountValue) {
-            clipboard.writeText(this.state.formData.amount)
+            clipboard.writeText(amountValue)
             this.setState({
                 amountCopied: true
             }, () => {
@@ -172,6 +179,7 @@ export default class WithdrawForm extends React.Component {
                     <div className="form-field">
                     	<label>Sending to</label>
                     	<input
+                            id="sendToInput"
                             ref="sendToInput"
                             className="input__address" 
                             type="text" 
