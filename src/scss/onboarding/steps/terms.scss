@@ -37,13 +37,17 @@
 
 }
 
-    .info__terms{
-        font-size: 8pt;
-        line-height: 1.4em;
-        padding: 30px;
-        box-sizing: border-box;
-        -webkit-box-decoration-break: clone;
-    }
+.btn--cancel{
+    cursor: pointer;
+}
+
+.info__terms{
+    font-size: 8pt;
+    line-height: 1.4em;
+    padding: 30px;
+    box-sizing: border-box;
+    -webkit-box-decoration-break: clone;
+}
 
 ::-webkit-scrollbar {
   -webkit-appearance: none;
