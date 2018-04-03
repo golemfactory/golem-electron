@@ -29,6 +29,11 @@ module.exports = {
         filename: '[name].bundle.js',
         publicPath: './app/'
     },
+    resolve: {
+        alias: {
+          'handlebars' : 'handlebars/dist/handlebars.js'
+        }
+    },
     plugins: [
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.DefinePlugin({ // <-- key to reducing React's size

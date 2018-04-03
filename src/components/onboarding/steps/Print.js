@@ -56,8 +56,6 @@ export default class Print extends React.Component {
                 </div>
                 <div className="desc__onboarding">
                     {this._initContent(isPrinted, isSkippingPrint)}
-                    <br/>
-                    <span className="soon__print">(The feature will be active soon)</span>
                 </div>  
             </div>
         );
