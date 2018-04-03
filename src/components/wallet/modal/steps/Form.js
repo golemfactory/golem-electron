@@ -45,6 +45,13 @@ export default class WithdrawForm extends React.Component {
                 sendTo: formData.sendTo
             })
         }
+
+        document.getElementById("sendToInput").addEventListener('contextmenu', (ev) => {
+            ev.preventDefault();
+            ev.target.value  = clipboard.readText();
+            this._handleSendToChange.call(this, ev)
+            return false;
+        }, false);
     }
 
     componentWillUnmount() {
@@ -76,7 +83,15 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
-        this.props.applyHandler(amount, sendTo, this.props.suffix)
+        this._getGasCostAsync(amount.toNumber(), this.props.suffix)
+        .then(result => {
+            if(result)
+                this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
+        })
+    }
+
+    _getGasCostAsync(amount, type){
+        return new Promise((resolve, reject) => this.props.actions.getGasCost({amount, type}, resolve, reject))
     }
 
     /**
@@ -87,7 +102,7 @@ export default class WithdrawForm extends React.Component {
     _handleCopyToClipboard(evt) {
         const amountValue = this.refs.amountInput.value
         if (amountValue) {
-            clipboard.writeText(this.state.formData.amount)
+            clipboard.writeText(amountValue)
             this.setState({
                 amountCopied: true
             }, () => {
@@ -101,7 +116,7 @@ export default class WithdrawForm extends React.Component {
     }
 
     checkInputValidity(e, type) {
-        const isValid = inputSchema[type].isValidSync({[type]: e.target.value})
+        const isValid = inputSchema[type].isValidSync({[type]: e.target.value});
         if (isValid)
             e.target.classList.remove("invalid");
         else
@@ -141,9 +156,9 @@ export default class WithdrawForm extends React.Component {
                         <div className="currency-tag">
                         	<span className="label-currency">{suffix}</span>
                         	<br/>
-                        	<strong>{balance.toFixed(2)}...</strong>
+                        	<strong>{balance.toFixed(4)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)} $</span>
+                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)}... $</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -152,17 +167,19 @@ export default class WithdrawForm extends React.Component {
                             ref="amountInput" 
                             className="input__amount" 
                             type="number"
-                            min={0} 
+                            min={0}
+                            max={balance.toNumber()}
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>
                     	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)} $</span>
+                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
                     	<input
+                            id="sendToInput"
                             ref="sendToInput"
                             className="input__address" 
                             type="text" 

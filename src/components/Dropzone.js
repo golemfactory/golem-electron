@@ -204,7 +204,7 @@ export class DropZone extends React.Component {
                     } else if (masterFiles.length > 0) {
                         this.props.actions.createTask({
                             resources: mergedList.map(item => item.path),
-                            taskName: masterFiles[0].name
+                            taskName: masterFiles[0].name.substring(0,24)
                         })
                     } else {
                         alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")

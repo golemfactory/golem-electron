@@ -4,7 +4,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_PUBLIC_KEY, WITHDRAW} = dict
+const {SET_PUBLIC_KEY, WITHDRAW, GET_GAS_COST} = dict
 
 
 export function getPublicKey(session) {
@@ -42,6 +42,22 @@ export function* withdrawBase(session, {payload, _response, _reject}) {
     yield action && put(action)
 }
 
+export function gasCost(session, {amount, type}, _response, _reject) {
+    return new Promise((response, reject) => {
+        function on_info(args) {
+            let info = args[0];
+            _response(info)
+        }
+
+        _handleRPC(on_info, session, config.GAS_COST_RPC, [amount, type])
+    })
+}
+
+export function* gasCostBase(session, {payload, _response, _reject}) {
+    const action = yield call(gasCost, session, payload, _response, _reject);
+    yield action && put(action)
+}
+
 /**
  * [*accountFlow generator]
  * @param  {Object} session     [Websocket connection session]
@@ -50,4 +66,5 @@ export function* withdrawBase(session, {payload, _response, _reject}) {
 export function* accountFlow(session) {
     yield fork(accountBase, session)
     yield takeLatest(WITHDRAW, withdrawBase, session)
+    yield takeLatest(GET_GAS_COST, gasCostBase, session)
 }

@@ -3,6 +3,10 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { CSSTransitionGroup } from 'react-transition-group'
 
+import Handlebars from 'handlebars';
+import qrcode from 'qrcode-generator';
+import html2pdf from 'html2pdf.js';
+
 import * as Actions from '../../actions'
 import Onboarding from './../onboarding';
 
@@ -19,6 +23,11 @@ import Step5 from './steps/Step5'
 import Decline from './steps/Decline'
 //import Step6 from './steps/Step6'
 
+import golem_logo from './../../assets/img/golem-black.svg'
+
+const {remote} = window.electron;
+const {app} = remote
+
 
 const steps = Object.freeze({
     WELCOME: 1,
@@ -32,6 +41,64 @@ const steps = Object.freeze({
     STEP3: 9,
     STEP4: 10
 })
+
+function printPage(template) {
+    var iframe = document.createElement("iframe"); // create the element
+    document.body.appendChild(iframe);  // insert the element to the DOM 
+    iframe.contentWindow.document.write(template); // write the HTML to be printed
+    setTimeout(() => {
+        iframe.contentWindow.print(); // print it
+        document.body.removeChild(iframe); // remove the iframe from the DOM
+    }, 1000);
+};
+
+const someAsyncFunction = function(callback) {
+  setTimeout(function() {
+    var template = `<div class="password__template">
+                        <img src="${golem_logo}" class="logo"/>
+                        <br/>
+                        <span>Thank you for instaling Golem.</span>
+                        <br/>
+                            <span>If you have any questions please contact us on our <a href="https://chat.golem.network">https://chat.golem.network</a></span>
+                            <div class="pass__container">
+                            <div>
+                                <span>Your password:</span>
+                                <br/>
+                                <span><b>{{message}}</b></span>
+                            </div>
+                            <div class='title'>{{{qrcode message}}}</div>
+                        </div>
+                        <span><b>Security guidelines!</b></span>
+                        <br/>
+                        <span>After printing your password, <b>delete this PDF</b> and <b>temporary files from your machine</b>.
+                        <br/>
+                        You can also <b>encrypt PDF file with password</b> and <b>store it in secure place</b>,
+                        <br/>
+                        like USB drive.</span>
+                        <style>
+                            .logo{
+                                margin-top: 30px;
+                                margin-left: -10px;
+                                margin-bottom: 90px;
+                                width: 120px;
+                            }
+                            .password__template{
+                                margin: 10px 45px;
+                                font-size: 12pt;
+                                line-height: 1.6;
+                            }
+                            .pass__container{
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+                                margin: 90px 0 20px 0;
+                            }
+                        </style>
+                    </div>`;
+
+    callback(template);
+  }, 1000);
+};
 
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
@@ -58,7 +125,8 @@ class OnboardIndex extends React.Component {
             isAcceptLocked: true,
             isTermsDeclined: false,
             isPrinted: false,
-            isSkippingPrint: false
+            isSkippingPrint: false,
+            printInfo: ""
         }
     }
 
@@ -115,6 +183,12 @@ class OnboardIndex extends React.Component {
             })
     }
 
+    _printInfo(_info){
+        this.setState({
+            printInfo: _info
+        })
+    }
+
     /**
      * [shownStep func. will redirect user to relevant Step]
      * @param  {Number}     id      [Id of the step]
@@ -145,10 +219,13 @@ class OnboardIndex extends React.Component {
                         isPasswordValid={isPasswordValid}
                         loadingIndicator={loadingIndicator}
                         handlePasswordValidation={::this._handlePasswordValidation} 
-                        handleLoading={::this._handleLoadingIndicator}/>
+                        handleLoading={::this._handleLoadingIndicator}
+                        printInfo={::this._printInfo}/>
             break;
         case steps.PRINT:
-            step = <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint}/>
+            step = <Print 
+                    isPrinted={isPrinted} 
+                    isSkippingPrint={isSkippingPrint}/>
             break;
         case steps.STEP1:
             step = <Step2 
@@ -243,10 +320,41 @@ class OnboardIndex extends React.Component {
 
     _handleLeave(){
         //TO DO close app
+        app.quit()
     }
 
     _handlePrint(){
         //TO DO print pdf
+        someAsyncFunction((template) => {
+
+            Handlebars.registerHelper("qrcode", (data) => {
+                var typeNumber = 4;
+                var errorCorrectionLevel = 'L';
+                var qr = qrcode(typeNumber, errorCorrectionLevel);
+                qr.addData(data);
+                qr.make();
+                return qr.createSvgTag(4, 0);
+            });
+
+            var compiledTemplate = Handlebars.compile(template);
+            var temp = compiledTemplate({
+                message: this.state.printInfo
+            });
+            html2pdf(temp, {
+                margin:       0,
+                filename:     'password.pdf',
+                image:        { type: 'jpeg', quality: 1 },
+                html2canvas:  { dpi: 192, letterRendering: true },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            });
+
+            printPage(temp);
+
+            this.setState({
+                printInfo: ""
+            })
+        });
+
         this.setState({
             isPrinted: true
         })
@@ -332,7 +440,7 @@ class OnboardIndex extends React.Component {
             return <div>
                     <button className="btn btn--outline btn--print" 
                             onClick={::this._handlePrint} 
-                            disabled={true}>{ !isPrinted ? "Print" : "Print again"}
+                            >{ !isPrinted ? "Print" : "Print again"}
                     </button>
                     <br/>
                     <br/>

@@ -70,8 +70,13 @@ export class Register extends React.Component {
     }
 
     _setPassword(){
-        this.props.actions.setPassword(this.state.password)
-        this.props.handleLoading(true);
+        const {handleLoading, passwordModal, printInfo, actions} = this.props
+        actions.setPassword(this.state.password)
+        
+        if(passwordModal && passwordModal.register)
+            printInfo(this.state.password)
+
+        handleLoading(true)
     }
 
     _togglePasswordMask(_key){

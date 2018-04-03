@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
 import ReactTooltip from 'rc-tooltip'
+import {BigNumber} from 'bignumber.js';
+
 import { timeStampToHR } from './../../utils/secsToHMS'
 import {currencyIcons} from './../../constants'
 
@@ -33,8 +35,11 @@ export default class CurrencyBox extends Component {
 
 
     _formatAmount(_balance ,_suffix, currency = 1) {
-        if (this.props.balance === (_balance / currency) && motionBalanceStart[_suffix] !== _balance) {
-            motionBalanceStart[_suffix] = _balance
+        if (this.props.balance.toNumber() === (new BigNumber(_balance.toString())
+            .dividedBy(currency)
+            .toNumber()) && 
+            motionBalanceStart[_suffix] !== _balance) {
+                motionBalanceStart[_suffix] = _balance
         }
 
         if(_suffix.includes('USD')){
@@ -71,19 +76,19 @@ export default class CurrencyBox extends Component {
                 })
             }}>
                     {({balanceAnimated}) => <span className="amount" onClick={expandAmount.bind(this, suffix)}>
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}
+                        {::this._formatAmount(Number(balanceAnimated), suffix)}...
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                 </Motion>
                 <Motion defaultStyle={{
                 balanceAnimated: motionBalanceStart[`${suffix}-USD`]
             }} style={{
-                balanceAnimated: spring(Number(balance * currency[suffix]), {
+                balanceAnimated: spring(Number(balance.multipliedBy(currency[suffix])), {
                     stiffness: 500,
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])} {!isMainNet ? "t" : ""}$</span>}
+                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
                 </Motion>
                 </div>
                 <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{

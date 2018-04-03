@@ -42,9 +42,9 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = location.hash.includes('tasks') ? 2 : 1 // <-- HARDCODED
-        let navItems = document.getElementsByClassName('nav__item')
-        console.log("navItems", navItems);
+        const index = location.hash.includes('tasks') ? 1 : 0; // <-- HARDCODED
+        let navItems = document.getElementsByClassName('nav__item');
+        navItems.length > 1 && navItems[index].classList.add('active');
     /*EXPRIMENTAL*/
     // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
     //     this._navigateTo(message, null)
@@ -151,7 +151,7 @@ export class Header extends Component {
                         } else if (masterFiles.length > 0) {
                             this.props.actions.createTask({
                                 resources: mergedList.map(item => item.path),
-                                taskName: masterFiles[0].name
+                                taskName: masterFiles[0].name.substring(0,24)
                             })
                         } else {
                             alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")

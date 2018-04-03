@@ -31,6 +31,11 @@ module.exports = {
         filename: '[name].bundle.js',
         publicPath: '/static/'
     },
+    resolve: {
+        alias: {
+          'handlebars' : 'handlebars/dist/handlebars.js'
+        }
+    },
     plugins: [
         new webpack.optimize.ModuleConcatenationPlugin(),
         new webpack.HotModuleReplacementPlugin(),
