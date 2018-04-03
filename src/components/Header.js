@@ -42,9 +42,9 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = location.hash.includes('tasks') ? 2 : 1 // <-- HARDCODED
-        let navItems = document.getElementsByClassName('nav__item')
-        console.log("navItems", navItems);
+        const index = location.hash.includes('tasks') ? 1 : 0; // <-- HARDCODED
+        let navItems = document.getElementsByClassName('nav__item');
+        navItems.length > 1 && navItems[index].classList.add('active');
     /*EXPRIMENTAL*/
     // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
     //     this._navigateTo(message, null)
