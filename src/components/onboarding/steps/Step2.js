@@ -39,9 +39,10 @@ export default class Step2 extends React.Component {
                     </form>
                 </div>
                 <div className="desc__onboarding">
-                    <span>First, please name your node. Adding an avatar is optional, but can help
-                    to build trust, an important part 
-                    of the Golem system.</span>
+                    <span>Please name your node.
+                    <br/>Adding an avatar is optional, but can help
+                    <br/>to build trust, an important part 
+                    <br/>of the Golem system.</span>
                 </div>
             </div>
         )

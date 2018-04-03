@@ -22,8 +22,9 @@ export default class Welcome extends React.Component {
                     for you before we start.</span>
                     <br/>
                     <br/>
-                    <span className="desc__port"><mark><strong>Attention:</strong> Please make sure that your computer has public IP or forwarded ports 40102, 40103, 3282.
-                    <br/><a href="https://github.com/golemfactory/golem/wiki/Testing#how-to-start-testing">More info</a>
+                    <span className="desc__port"><mark><strong>Attention:</strong> Please make sure that your computer has public IP
+                    <br/>or forwarded ports <strong>40102, 40103, 3282</strong>. Otherwise you may not
+                    <br/>be able to run Golem properly! <a href="https://github.com/golemfactory/golem/wiki/FAQ#installing-golem">Learn more</a>
                     </mark></span>
                 </div>
             </div>
