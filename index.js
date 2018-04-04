@@ -22,7 +22,7 @@ function isDevelopment() {
     return process.env.NODE_ENV === 'development'
 }
 
-const APP_NAME = isDevelopment() ? 'GOLEM GUI (development)' : 'GOLEM GUI'
+const APP_NAME = isDevelopment() ? 'Golem (development)' : 'Golem'
 const APP_WIDTH = isWin() ? 478 : 460
 const APP_HEIGHT = 810//589
 const APP_MIN_HEIGHT = 589
