@@ -197,7 +197,7 @@ export class Register extends React.Component {
                         <span>
                             Seems like you already unlock the application.
                             <br/>
-                            Enjoy the all unique features!
+                            Enjoy all the unique features!
                         </span>
                     </div>
         }

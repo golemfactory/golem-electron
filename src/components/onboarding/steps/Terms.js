@@ -50,7 +50,7 @@ export default class Terms extends React.Component {
                     <span className="info__terms">By clicking Accept, you confirm that you have read the <strong>user interaction guidelines</strong> and <strong>disclaimer</strong> and that you agree to be bound by them.</span>
                     <div className="radio-item">
                         <input id="taskTypeRadio1" type="checkbox" name="taskType" checked={isTermsAccepted} readOnly required/>
-                        <label htmlFor="taskTypeRadio1" className="radio-label-left">I want to help Golem by sending my statistic <a href="">anonymously</a>.</label>
+                        <label htmlFor="taskTypeRadio1" className="radio-label-left">I want to help Golem by sending my statistic <a href="https://github.com/golemfactory/golem/wiki/FAQ#what-data-do-i-share-with-golem">anonymously</a>.</label>
                     </div>
                 </div>
             </div>

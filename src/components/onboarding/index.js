@@ -57,7 +57,7 @@ const someAsyncFunction = function(callback) {
     var template = `<div class="password__template">
                         <img src="${golem_logo}" class="logo"/>
                         <br/>
-                        <span>Thank you for instaling Golem.</span>
+                        <span>Thank you for installing Golem.</span>
                         <br/>
                             <span>If you have any questions please contact us on our <a href="https://chat.golem.network">https://chat.golem.network</a></span>
                             <div class="pass__container">

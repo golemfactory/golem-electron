@@ -15,7 +15,7 @@ export default class Type extends React.Component {
                    <img className="welcome-image" src={penIcon}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>We do not keep the copy of your
+                    <span>We do not keep a copy of your
                     <br/>
                     password. Remember to write it down,
                     <br/>
@@ -25,9 +25,9 @@ export default class Type extends React.Component {
                     
                     <span className="info__print">After creating your password you will
                     <br/>
-                    have an option print it out. But as it is not
+                    have an option to print it out. But as it is not
                     <br/>
-                    fully secure, we advise to write it down in a safe place.
+                    fully secure, we advise you write it down in a safe place.
                     </span>
                 </div>  
             </div>
