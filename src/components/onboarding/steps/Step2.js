@@ -36,6 +36,7 @@ export default class Step2 extends React.Component {
                             maxLength={16}
                             pattern="^\S+(?: \S+)*$"
                             required/>
+                        <button style={{display: 'none'}} type='submit' ref={ (button) => { this.activityFormButton = button } } >Submit</button>
                     </form>
                 </div>
                 <div className="desc__onboarding">

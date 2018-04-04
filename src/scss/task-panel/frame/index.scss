@@ -85,7 +85,7 @@
     }
 
     .time__tooltip {
-        margin: .8em 0 .8em 0;
+        margin: .2em 0 .2em 0;
 
         &--done {
             color: $color-text2;
@@ -94,20 +94,24 @@
 
     .ip-info__tooltip {
         color: $color-text3;
-        margin: 2em 0 .8em 0;
+        margin: .2em 0 .2em 0;
     }
 
     .node-name__tooltip {
         color: $color-text3;
-        margin: 1em 0 .8em 0;
+        margin: .2em 0 .2em 0;
     }
 
     .desc__tooltip {
         width: 240px;
+        height: 100px;
         padding-left: 20px;
         line-height: 1.2em;
         color: $color-text2;
         margin: .4em 0 7em 0;
+        word-wrap: break-word;
+        overflow-y: scroll;
+        overflow-x: none;
     }
 
     .logs__tooltip {

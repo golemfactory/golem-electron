@@ -104,6 +104,7 @@ const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
     passwordModal: state.realTime.passwordModal,
     isTermsAccepted: state.info.isTermsAccepted,
+    terms: state.info.terms,
     isMainNet: state.info.isMainNet
 })
 
@@ -195,7 +196,7 @@ class OnboardIndex extends React.Component {
      * @return {DOM}                [Step element]
      */
     shownStep(id) {
-        const {passwordModal, isMainNet, actions} = this.props
+        const {terms, passwordModal, isMainNet, actions} = this.props
         const { isTermsDeclined, isPrinted, isSkippingPrint, nodeName, loadingIndicator, isPasswordValid} = this.state
         let step;
         let key = Symbol(id).toString();
@@ -207,7 +208,7 @@ class OnboardIndex extends React.Component {
             step = <ChainInfo isMainNet={isMainNet}/>
             break;
         case steps.TERMS:
-            step = isTermsDeclined ? <Decline/> : <Terms key={key} handleLock={::this._handleLock}/> 
+            step = isTermsDeclined ? <Decline/> : <Terms key={key} terms={terms} handleLock={::this._handleLock}/> 
             break;
         case steps.TYPE:
             step = <Type key={key}/>
@@ -470,8 +471,7 @@ class OnboardIndex extends React.Component {
                             className="icon-arrow-right-white"
                             aria-label="Next"
                             onClick={e => {
-                                this.step2.nodeNameForm.submit()
-                                this._handleNext()
+                                this.step2.activityFormButton.click()
                             }}
                             tabIndex="0"/>
                    </div>
