@@ -114,9 +114,6 @@ const setInfo = (state = initialState, action) => {
         });
         
     case SET_TERMS_STATUS:
-        if(!action.payload){
-            configStore.delete(HIDE_ONBOARD)
-        }
         return Object.assign({}, state, {
             isTermsAccepted: action.payload
         });
