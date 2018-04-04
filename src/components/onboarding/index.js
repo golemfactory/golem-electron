@@ -470,8 +470,7 @@ class OnboardIndex extends React.Component {
                             className="icon-arrow-right-white"
                             aria-label="Next"
                             onClick={e => {
-                                this.step2.nodeNameForm.submit()
-                                this._handleNext()
+                                this.step2.activityFormButton.click()
                             }}
                             tabIndex="0"/>
                    </div>
