@@ -1,7 +1,7 @@
 import { dict } from './../actions'
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
-const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
+const {setConfig, getConfig, dictConfig, configStore} = remote.getGlobal('configStorage')
 
 
 const { 
@@ -18,7 +18,7 @@ const {
     SET_CHAIN_INFO
 } = dict
 
-const {GOLEM_STARTER} = dictConfig
+const {GOLEM_STARTER, HIDE_ONBOARD} = dictConfig
 
 const initialState = {
     version: {
@@ -114,6 +114,9 @@ const setInfo = (state = initialState, action) => {
         });
         
     case SET_TERMS_STATUS:
+        if(!action.payload){
+            configStore.delete(HIDE_ONBOARD)
+        }
         return Object.assign({}, state, {
             isTermsAccepted: action.payload
         });

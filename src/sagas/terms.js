@@ -56,6 +56,6 @@ export function* getTermsBase(session){
 
 export function* termsFlow(session) {
     yield fork(getTermsBase, session)
-    yield takeLatest(CHECK_TERMS_ACCEPTED, checkTermsBase, session)   
+    yield fork(checkTermsBase, session)
     yield takeLatest(ACCEPT_TERMS, acceptTerms, session)
 }
