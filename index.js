@@ -156,7 +156,7 @@ function createWindow() {
 
     win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT)
-        Menu.setApplicationMenu(isWin() ? null : menuHandler)
+        Menu.setApplicationMenu(menuHandler)
         win.show()
     })
 
