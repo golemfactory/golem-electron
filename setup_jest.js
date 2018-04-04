@@ -52,6 +52,11 @@ global.window.require = function () {
         BrowserWindow: function () {},
         app: {
             getVersion: function () {}
+        },
+        process:{
+            argv: {
+                includes: function(){}
+            }
         }
     }
   }
