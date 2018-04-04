@@ -14,6 +14,7 @@ const {
     SET_CONNECTION_PROBLEM, 
     SET_GOLEM_PAUSE_STATUS,
     SET_TERMS_STATUS,
+    SET_TERMS,
     SET_CHAIN_INFO
 } = dict
 
@@ -43,6 +44,7 @@ const initialState = {
     },
     isConnected: false,
     isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
+    terms: "",
     isTermsAccepted: false
 }
 
@@ -114,6 +116,11 @@ const setInfo = (state = initialState, action) => {
     case SET_TERMS_STATUS:
         return Object.assign({}, state, {
             isTermsAccepted: action.payload
+        });
+
+    case SET_TERMS:
+        return Object.assign({}, state, {
+            terms: action.payload
         });
 
     case SET_CHAIN_INFO:
