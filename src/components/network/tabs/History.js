@@ -7,7 +7,8 @@ import ReactTooltip from 'rc-tooltip'
 import * as Actions from '../../../actions'
 import { timeStampToHR } from '../../../utils/secsToHMS'
 
-const etherscan = "https://rinkeby.etherscan.io/tx/0x"
+const mainEtherscan = "https://etherscan.io/tx/0x"
+const testEtherscan = "https://rinkeby.etherscan.io/tx/0x"
 const ETH_DENOM = 10 ** 18;
 
 /*############# HELPER FUNCTIONS ############# */
@@ -21,7 +22,8 @@ function newestToOldest(a, b) {
 }
 
 const mapStateToProps = state => ({
-    historyList: state.history.historyList
+    historyList: state.history.historyList,
+    isMainNet: state.info.isMainNet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -39,7 +41,7 @@ export class History extends React.Component {
      */
     loadHistory() {
 
-        const {historyList} = this.props
+        const {historyList, isMainNet} = this.props
         return (historyList.sort(newestToOldest).map(({payee, payer, created, status, value, type, transaction}, index) => <div key={index} className="item__history">
             <div className="info__history">
                 <h5>{(payee || payer).substr(0, 32)}...</h5>
@@ -51,7 +53,7 @@ export class History extends React.Component {
                 {transaction && <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>See on Etherscan</p>} mouseEnterDelay={1} align={{
                 offset: [0, 10],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                        <a href={`${etherscan}${transaction}`}><span className="icon-new-window"/></a>
+                        <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}><span className="icon-new-window"/></a>
                     </ReactTooltip>}
             </div>
         </div>))
