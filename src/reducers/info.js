@@ -32,7 +32,7 @@ const initialState = {
         importance: null,
         seen: false
     },
-    isMainNet: false,
+    isMainNet: remote.process.argv.includes('--mainnet'),
     networkInfo: {},
     fileCheckModal: {
         status: false,

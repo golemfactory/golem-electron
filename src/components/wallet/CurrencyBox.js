@@ -8,6 +8,10 @@ import {currencyIcons} from './../../constants'
 
 let motionBalanceStart = {};
 
+function isGolemReady(status) {
+    return status === "Ready"
+}
+
 export default class CurrencyBox extends Component {
 
     constructor(props) {
@@ -58,7 +62,8 @@ export default class CurrencyBox extends Component {
             clickHandler, 
             expandAmount, 
             expandedAmount, 
-            isMainNet
+            isMainNet,
+            golemStatus
         } = this.props
 
         return (
@@ -96,7 +101,7 @@ export default class CurrencyBox extends Component {
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                 	<span className="icon-question-mark"/>
                 </ReactTooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={!isMainNet}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={(!isMainNet || !isGolemReady(golemStatus.status))}>Withdraw</button>
             </div>
         );
     }

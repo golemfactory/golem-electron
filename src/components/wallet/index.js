@@ -13,7 +13,8 @@ const {clipboard } = window.electron
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
-    isMainNet: state.info.isMainNet
+    isMainNet: state.info.isMainNet,
+    golemStatus: state.realTime.golemStatus
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -81,7 +82,7 @@ export class Wallet extends Component {
 
 
     render() {
-        const { publicKey, balance, currency, isMainNet} = this.props
+        const { publicKey, balance, currency, isMainNet, golemStatus} = this.props
         const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
@@ -110,6 +111,7 @@ export class Wallet extends Component {
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
+                            golemStatus={golemStatus}
                             isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}/>
 	                	<CurrencyBox
@@ -131,6 +133,7 @@ export class Wallet extends Component {
                                     }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
+                            golemStatus={golemStatus}
                             isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}/>
 	                </div>
