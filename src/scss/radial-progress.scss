@@ -23,14 +23,6 @@
     .radial-progress-bar {
         margin: 35px 0;
     }
-
-    &:after {
-        content: attr(data-unit);
-        font-size: 10pt;
-        font-weight: 400;
-        position: relative;
-        top: 5;
-    }
 }
 
 .radial-progress-bar {
@@ -52,5 +44,8 @@
         line-height: 160px;
         font-size: .8em;
         font-weight: 500;
+    }
+    &:hover:after {
+        content: attr(data-unit);
     }
 }
