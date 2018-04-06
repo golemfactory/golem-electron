@@ -122,6 +122,7 @@ export class Advanced extends React.Component {
     /** converts memory and disk resources from KiB to GiB */
     toGibibytes(obj) {
         let ret = Object.assign({}, obj)
+        ret.cpu_cores = ~~ret.cpu_cores // round
         ret.memory = Number((ret.memory / MEBI).toFixed(2))
         ret.disk = Number((ret.disk / MEBI).toFixed(2))
         return ret
