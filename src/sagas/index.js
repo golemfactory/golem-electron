@@ -19,6 +19,7 @@ import { golemStatusFlow } from "./golem";
 import { historyFlow } from "./history";
 import { networkInfoFlow } from "./networkInfo";
 import { performanceFlow } from "./performance";
+import { quitFlow } from './quit';
 import { settingsFlow, settingsInteractionFlow } from "./userSettings";
 import { statsFlow } from "./stats";
 import { trustFlow } from "./trust";
@@ -202,6 +203,7 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
+        yield fork(quitFlow, connection);
         yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
         yield fork(engineFlow, connection);

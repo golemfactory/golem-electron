@@ -17,7 +17,7 @@ import reducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
-const {remote} = window.electron
+const {remote, ipcRenderer} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
 const routingMiddleware = routerMiddleware(hashHistory)
@@ -39,6 +39,27 @@ configStore.onDidChange(dictConfig.DEVELOPER_MODE, (newVal)=> {
         payload: newVal
     })
 })
+
+window.addEventListener('beforeunload', evt => {
+    if (closeWindow) return
+
+    evt.returnValue = false
+
+    setTimeout(() => {
+        const _cb = function(_result){
+            remote.getCurrentWindow().close()
+        }
+        if(remote.process.platform === "win32"){
+            store.dispatch({
+                    type: 'APP_QUIT', 
+                    _cb
+                })
+        } else {
+            remote.getCurrentWindow().close()
+        }
+    })
+})
+    
 
 document.addEventListener('DOMContentLoaded', function() {
 
