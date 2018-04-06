@@ -100,9 +100,18 @@ export default class WithdrawForm extends React.Component {
      * @param  {Event}      evt         [Clicked event]
      */
     _handleCopyToClipboard(evt) {
-        const amountValue = this.refs.amountInput.value
-        if (amountValue) {
-            clipboard.writeText(amountValue)
+        const {balance} = this.props
+        if (balance) {
+            this.refs.amountInput.value = balance
+            this.setState({
+                amount: balance.multipliedBy(ETH_DENOM)
+            })
+            const isValid = inputSchema['amount'].isValidSync({amount: balance});
+            if (isValid)
+                this.refs.amountInput.classList.remove("invalid");
+            else
+                this.refs.amountInput.classList.add("invalid");
+
             this.setState({
                 amountCopied: true
             }, () => {
@@ -172,7 +181,7 @@ export default class WithdrawForm extends React.Component {
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>
-                    	<span className={`icon-${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}/>
+                    	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
                     	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
                     </div>
