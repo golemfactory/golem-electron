@@ -52,7 +52,7 @@ window.addEventListener('beforeunload', evt => {
                     .then(remote.app.quit, remote.app.quit);
         }
 
-        if(true){
+        if(remote.process.platform === "win32"){
             store.dispatch({
                     type: 'APP_QUIT', 
                     _cb
