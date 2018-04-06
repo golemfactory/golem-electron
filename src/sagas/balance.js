@@ -44,9 +44,21 @@ export function subscribeBalance(session) {
             
             function on_balance(args) {
                 const balance = args[0];
+
+                let gnt = new BigNumber(balance[1] === null ? 0 : balance[1])
+                let eth = new BigNumber(balance[2] === null ? 0 : balance[2])
+
+                if(gnt.isNaN()){
+                    gnt  = 0
+                }
+
+                if(eth.isNaN()){
+                    eth  = 0
+                }
+
                 emit({
                     type: SET_BALANCE,
-                    payload: [(new BigNumber(balance[1]).dividedBy(ETH_DENOM)) || 0, (new BigNumber(balance[2]).dividedBy(ETH_DENOM)) || 0, balance[3], balance[4]]
+                    payload: [gnt.dividedBy(ETH_DENOM), eth.dividedBy(ETH_DENOM), balance[3], balance[4]]
                 })
             }
 

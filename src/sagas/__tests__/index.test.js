@@ -18,6 +18,7 @@ import { balanceFlow } from '../balance'
 import { historyFlow } from '../history'
 import { advancedFlow } from '../advanced'
 import { performanceFlow } from '../performance'
+import { quitFlow } from '../quit';
 import { statsFlow } from '../stats'
 import { trustFlow } from '../trust'
 import { tasksFlow } from '../tasks'
@@ -143,6 +144,9 @@ describe('handleIO', () => {
     it('should fork read generator (handleIO)', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
+            .next()
+            .fork(quitFlow, connection)
+
             .next()
             .fork(chainInfoFlow, connection)
             
