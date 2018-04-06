@@ -49,44 +49,35 @@
     }
 
     .status-copy,
-    .icon-copy,
-    .icon-checkmark{
+    .copy,
+    .checkmark{
         position: absolute;
         cursor: pointer;
     }
     
-    .icon-checkmark,
+    .checkmark,
     .status-copy{
         color: $color-accent1;
     }
 
     .status-copy{
-        bottom: -18px;
-        left: 49px;
-        font-size: 9pt;
-        color: $color-accent1;
-        font-weight: 400;
+        display: none;
     }
 
-    .icon-checkmark{
-        font-size: 12pt;
-        top: -3px;
-        left: 46px;
+    .checkmark{
+        font-size: 8pt;
+        top: 1px;
+        left: 60px;
     }
 
-    .icon-copy{
-        font-size: 18pt;
-        top: -4px;
-        left: 42px;
-        opacity: 0;
+    .copy{
+        font-size: 8pt;
+        top: 1px;
+        left: 68px;
+        opacity: .7;
         transition: .5s all;
     }
 
-    .form-field:hover{
-        .icon-copy{
-            opacity: .7;
-        }
-    }
 
     .amount__estimation{
         float:right;
