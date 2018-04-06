@@ -17,7 +17,7 @@ import reducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
-const {app, remote, ipcRenderer} = window.electron
+const {remote, ipcRenderer} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
 const routingMiddleware = routerMiddleware(hashHistory)
@@ -31,6 +31,8 @@ const enhancer = compose(
 let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 let history = syncHistoryWithStore(hashHistory, store)
 
+let killGolem = false
+
 sagaMiddleware.run(sagas)
 
 configStore.onDidChange(dictConfig.DEVELOPER_MODE, (newVal)=> {
@@ -40,29 +42,30 @@ configStore.onDidChange(dictConfig.DEVELOPER_MODE, (newVal)=> {
     })
 })
 
-window.addEventListener('beforeunload', evt => {
-    evt.returnValue = false
+/**
+ * In Windows, closing application will kill golem instance
+ */
+if(remote.getGlobal('process').platform === "win32"){
 
-    setTimeout(() => {
+    window.addEventListener('beforeunload', evt => {
+
+        if(killGolem){
+            return true
+        }
+
+        evt.returnValue = false
         const _cb = function(_result){
-            if(!_result)
-                remote.getCurrentWindow().close()
-            else
-                remote.app.golem.stopProcess()
-                    .then(remote.app.quit, remote.app.quit);
+            killGolem = !_result
+            remote.getCurrentWindow().close()
+            evt.returnValue = 'true'
         }
 
-        if(remote.process.platform === "win32"){
-            store.dispatch({
-                    type: 'APP_QUIT', 
-                    _cb
-                })
-        } else {
-            remote.getCurrentWindow().close()
-        }
+        store.dispatch({
+            type: 'APP_QUIT', 
+            _cb
+        })
     })
-})
-    
+}
 
 document.addEventListener('DOMContentLoaded', function() {
 
