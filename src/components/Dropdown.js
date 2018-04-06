@@ -14,7 +14,7 @@ export default class Dropdown extends React.Component {
         this._isMounted = true
         const {handleChange, list, selected} = this.props
         if (handleChange && list[selected]) {
-            handleChange(list[selected].name, true)
+            handleChange(list[selected].name, selected, true)
         }
         this._specifiedElement = this.refs.dropdownContent;
         this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)

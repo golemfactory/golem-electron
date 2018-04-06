@@ -36,11 +36,6 @@ export class Advanced extends React.Component {
         super(props);
     }
 
-    componentDidMount() {
-        const {presetList, chosenPreset} = this.props
-        this._handleOptionChange(presetList, chosenPreset, true)
-    }
-
     /**
      * [_handleInputChange func. If there's any change on input, the func. will update state]
      * @param  {Any}        key         [State key]
