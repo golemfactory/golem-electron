@@ -31,7 +31,12 @@ const enhancer = compose(
 let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 let history = syncHistoryWithStore(hashHistory, store)
 
-let killGolem = false
+const RPC_QUIT_STATES = {
+    INITIAL: 0,
+    SUCCESS: 1,
+    FAILURE: 2
+};
+let rpcQuitState = RPC_QUIT_STATES.INITIAL;
 
 sagaMiddleware.run(sagas)
 
@@ -48,20 +53,23 @@ configStore.onDidChange(dictConfig.DEVELOPER_MODE, (newVal)=> {
 if(remote.getGlobal('process').platform === "win32"){
 
     window.addEventListener('beforeunload', evt => {
-
-        if(killGolem){
-            return true
+        const _process = remote.app.golem.process;
+        const _cb = _result => {
+            rpcQuitState = !_result
+                ? RPC_QUIT_STATES.SUCCESS
+                : RPC_QUIT_STATES.FAILURE;
+            evt.returnValue = true;
+            remote.getCurrentWindow().close();
         }
 
-        evt.returnValue = false
-        const _cb = function(_result){
-            killGolem = !_result
-            remote.getCurrentWindow().close()
-            evt.returnValue = 'true'
-        }
+        /* An RPC call has been issued / Golem was started manually */
+        if (rpcQuitState != RPC_QUIT_STATES.INITIAL || !_process)
+            return;
 
+        /* Send the RPC call */
+        evt.returnValue = false;
         store.dispatch({
-            type: 'APP_QUIT', 
+            type: 'APP_QUIT',
             _cb
         })
     })
