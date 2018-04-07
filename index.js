@@ -54,7 +54,7 @@ function onReady() {
 }
 
 function quit() {
-    if (app.golem)
+    if (app.golem && process.platform !== "win32")
         app.golem.stopProcess()
             .then(app.quit, app.quit);
     else
