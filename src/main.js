@@ -62,9 +62,6 @@ if(remote.getGlobal('process').platform === "win32"){
             remote.getCurrentWindow().close();
         }
 
-        /* Force-close if the RPC call failed */
-        if (rpcQuitState == RPC_QUIT_STATES.FAILURE)
-            remote.app.golem.stopProcess();
         /* An RPC call has been issued / Golem was started manually */
         if (rpcQuitState != RPC_QUIT_STATES.INITIAL || !_process)
             return;
