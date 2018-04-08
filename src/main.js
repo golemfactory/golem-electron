@@ -66,7 +66,7 @@ if(remote.getGlobal('process').platform === "win32"){
             else
                 remote.app.golem.stopProcess();
 
-                evt.returnValue = true;
+            evt.returnValue = true;
         }
 
         /* Return if the RPC call has been issued */
