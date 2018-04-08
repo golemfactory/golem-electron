@@ -33,8 +33,9 @@ let history = syncHistoryWithStore(hashHistory, store)
 
 const RPC_QUIT_STATES = {
     INITIAL: 0,
-    SUCCESS: 1,
-    FAILURE: 2
+    PENDING: 1,
+    SUCCESS: 2,
+    FAILURE: 3
 };
 let rpcQuitState = RPC_QUIT_STATES.INITIAL;
 
@@ -54,18 +55,32 @@ if(remote.getGlobal('process').platform === "win32"){
 
     window.addEventListener('beforeunload', evt => {
         const _process = remote.app.golem.process;
+        const _connected = remote.app.golem.connected;
         const _cb = _result => {
             rpcQuitState = !_result
                 ? RPC_QUIT_STATES.SUCCESS
                 : RPC_QUIT_STATES.FAILURE;
-            evt.returnValue = true;
-            remote.getCurrentWindow().close();
+                       
+            if (rpcQuitState == RPC_QUIT_STATES.SUCCESS)
+                remote.getCurrentWindow().close();
+            else
+                remote.app.golem.stopProcess();
+
+                evt.returnValue = true;
         }
 
-        /* An RPC call has been issued / Golem was started manually */
-        if (rpcQuitState != RPC_QUIT_STATES.INITIAL || !_process)
+        /* Return if the RPC call has been issued */
+        if (rpcQuitState != RPC_QUIT_STATES.INITIAL)
+            return;
+        /* Kill if we're in control of the process (but not yet connected) */
+        if (_process && !_connected)
+            remote.app.golem.stopProcess();
+        /* Return if we're not in control of the process or not connected */
+        if (!_process || !_connected)
             return;
 
+        rpcQuitState = RPC_QUIT_STATES.PENDING;
+            
         /* Send the RPC call */
         evt.returnValue = false;
         store.dispatch({
