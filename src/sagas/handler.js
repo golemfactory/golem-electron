@@ -117,6 +117,7 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
         },
         onError: function(err) {
             console.warn(`failed to un/subscribe ${_channel} topic`, err);
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
         }
     }
     _session.subscribe(_channel, cb)
@@ -136,6 +137,7 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
+            console.warn(`failed to un/subscribe ${_channel} topic`, err);
             log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
         }
     }
@@ -150,11 +152,13 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
  * @param   {Object}        _parameter      [RPC parameter (optional)]
  * @return nothing
  */
-export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null) => {
+export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _eb) => {
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
             log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
+            _eb && _eb(err, details, arr)
         }
     })
 }
