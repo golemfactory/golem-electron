@@ -75,6 +75,7 @@ export function connect() {
                         connection,
                         error: null
                     });
+                    app.golem.connected = true;
                     reconnection = true;
                 },
                 onReconnectSuccess: () => {
@@ -84,9 +85,11 @@ export function connect() {
                         connection,
                         error: null
                     });
+                    app.golem.connected = true;
                     reconnection = true;
                 },
                 onClose: () => {
+                    app.golem.connected = false;
                     console.log("WS: connection closed");
                 },
                 onError: (err, details) => {

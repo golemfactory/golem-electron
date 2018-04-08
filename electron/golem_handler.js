@@ -36,6 +36,7 @@ class GolemProcess {
     constructor(processName, processArgs) {
         this.process = null;
         this.certificate = null;
+        this.connected = false;
 
         let defaultArgs = ['-r', 'localhost:61000'];
         if (IS_MAINNET) defaultArgs.push('--mainnet');
