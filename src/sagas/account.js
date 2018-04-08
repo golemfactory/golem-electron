@@ -33,7 +33,12 @@ export function withdraw(session, {amount, sendTo, type}, _response, _reject) {
             _response(info)
         }
 
-        _handleRPC(on_info, session, config.WITHDRAW_RPC, [amount, sendTo, type])
+        function on_error(error) {
+            if(error)
+                _response([])
+        }
+
+        _handleRPC(on_info, session, config.WITHDRAW_RPC, [amount, sendTo, type], on_error)
     })
 }
 
