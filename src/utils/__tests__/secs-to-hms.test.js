@@ -27,7 +27,7 @@ describe('isDateToday helper', () => {
 describe('timeStampToHR helper', () => {
 
     it('should return human readable date', () => {
-        expect(timeStampToHR("1523128217")).toEqual("07/04/2018 - 21:10:17")
+        expect(timeStampToHR("1523128217").includes("-")).toEqual(true)
     })
 
     it('should return human readable time of today without date', () => {
