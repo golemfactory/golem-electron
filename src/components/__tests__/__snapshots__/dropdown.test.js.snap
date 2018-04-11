@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<Dropdown/> should render a dropdown component 1`] = `
+<div
+  className="dropdown-container"
+>
+  <div
+    className="dropdown-display"
+    onClick={[Function]}
+  >
+    <span />
+  </div>
+</div>
+`;

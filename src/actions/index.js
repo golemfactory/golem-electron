@@ -262,11 +262,10 @@ export const setSubtasksList = (payload) => ({
     payload
 })
 
-export const fetchSubtasksList = (payload) => {
-    return ({
+export const fetchSubtasksList = (payload) =>({
     type: FETCH_SUBTASKS_LIST,
     payload
-})}
+})
 
 export const setSubtasksVisibility = (payload) => ({
     type: SET_SUBTASKS_VISIBILITY,
