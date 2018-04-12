@@ -12,7 +12,7 @@ export default class Step3 extends React.Component {
     render() {
         return (
             <div className="container-step__onboarding">
-                <div className="section-image__onboarding">
+                <div className="section-image__onboarding section__fixed">
                     <img src={networkPreview}/>
                     <SpotLight posX={[300, 20]} posY={[300, 20]} r={[50, 10]}/>
                 </div>

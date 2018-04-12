@@ -390,8 +390,20 @@
         }
     }
 
-    .header__frame {
+    .frame__screen{
         height: 50px !important;
+
+        .header__frame{
+            height: 50px !important;
+            line-height: 48px !important;
+        }
+
+        .nav{
+            height: 50px !important;
+        }
+        .draggable{
+            height: 84px !important;
+        }
     }
 }
 

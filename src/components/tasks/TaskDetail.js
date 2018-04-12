@@ -1058,7 +1058,7 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if<br/>you have any<br/>questions just<br/>hover specific<br/>label to find<br/>some help</p>}/>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if you<br/>have any questions<br/>just hover over<br/>specific label to<br/>find some help</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">

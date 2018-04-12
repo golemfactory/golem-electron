@@ -6,6 +6,7 @@
     padding-right: 5px;
     padding-top: - 20px;
     margin-bottom: 30px;
+    transition: .5s all;
 
     .blur{
         position: sticky;
@@ -58,4 +59,15 @@
   border-radius: 4px;
   background-color: rgba(0, 0, 0, .5);
   -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+/*MEDIA*/
+
+@media screen and (max-height: 720px)
+{   
+    .container__terms{
+        height: 190px;
+        margin-bottom: 15px;
+    }
+
 }
