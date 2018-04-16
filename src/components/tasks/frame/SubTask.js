@@ -130,8 +130,9 @@ export default class SubTask extends React.Component {
         const {data, ratio, subtaskList, offset} = this.props
     }
 
-    _handleResubmit(id) {
-        this.props.restartSubtask(id)
+    _handleResubmit(_id, isTimedOut) {
+        const {data, ratio, subtaskList, taskDetails} = this.props
+        this.props.restartSubtask({id: _id, taskId:taskDetails.id, isTimedOut})
     }
 
     _handleOpenFile(path){
@@ -216,7 +217,12 @@ export default class SubTask extends React.Component {
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
-                        <button className="submit__button" type="button" onClick={this._handleResubmit.bind(this, subtask.subtask_id)} disabled={taskDetails.status === statusDict.TIMEOUT}>Resubmit</button>
+                        <button 
+                            className="submit__button" 
+                            type="button" 
+                            onClick={this._handleResubmit.bind(this, subtask.subtask_id, (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}>
+                                Resubmit
+                        </button>
                     </div>}
                 align={{
                     offset: tooltipOffset(item.value, isDirectionTop),
