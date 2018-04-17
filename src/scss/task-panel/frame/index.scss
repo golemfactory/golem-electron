@@ -26,6 +26,7 @@
         padding: 0 15px;
         font-weight: 300;
         text-align: center;
+        cursor: default;
     }
 
     p {
@@ -79,6 +80,7 @@
 }
 
 .tooltip-dev {
+    width: 500px;
     .developer_view__tooltip {
         display: flex;
         justify-content: space-around;
@@ -91,20 +93,25 @@
             color: $color-text2;
         }
     }
-
+    
+    .subtask-id__tooltip,
     .ip-info__tooltip {
-        color: $color-text3;
+        color: $color-text2;
         margin: .2em 0 .2em 0;
     }
 
     .node-name__tooltip {
-        color: $color-text3;
+        color: $color-text2;
         margin: .2em 0 .2em 0;
+    }
+
+    .subtask-id__tooltip{
+        cursor: pointer;
     }
 
     .desc__tooltip {
         width: 240px;
-        height: 100px;
+        height: 120px;
         padding-left: 20px;
         line-height: 1.2em;
         color: $color-text2;

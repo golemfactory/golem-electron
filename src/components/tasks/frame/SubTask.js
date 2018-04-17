@@ -3,7 +3,7 @@ import ReactTooltip from 'rc-tooltip'
 
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
-const {ipcRenderer} = window.electron;
+const {ipcRenderer, clipboard} = window.electron;
 
 const UNDONE = 0
 const PROGRESS = 1
@@ -124,6 +124,9 @@ export default class SubTask extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            subtaskIdCopied: false
+        }
     }
 
     componentDidMount() {
@@ -139,6 +142,19 @@ export default class SubTask extends React.Component {
         ipcRenderer.send('open-file', path)
     }
 
+    _copySubtask(id){
+        clipboard.writeText(id);
+        this.setState({
+                subtaskIdCopied: true
+            }, () => {
+                this.copyTimeout = setTimeout(() => {
+                    this.setState({
+                        subtaskIdCopied: false
+                    })
+                }, 5000)
+            })
+    }
+
     /**
      * @description This function will draw shapes with given corner points 
      * 
@@ -147,7 +163,6 @@ export default class SubTask extends React.Component {
      */
     drawLine(isDevMode, _offset) {
         const {data, ratio, subtaskList, taskDetails} = this.props
-        console.log("taskDetails", taskDetails.status == statusDict.TIMEOUT);
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
                 key: anchestorKey,
@@ -207,6 +222,12 @@ export default class SubTask extends React.Component {
                                 <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
                                 {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
                                 {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
+                                {isDevMode && <p
+                                    className="subtask-id__tooltip" 
+                                    style={{color: this.state.subtaskIdCopied ? "#37c481" : "#9b9b9b"}} 
+                                    onClick={this._copySubtask.bind(this, subtask.subtask_id)}>
+                                    <b>{this.state.subtaskIdCopied ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
+                                </p>}
                             </div>
                             <div>
                                 {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
