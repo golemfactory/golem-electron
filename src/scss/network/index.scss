@@ -98,6 +98,12 @@
                 }
             }
         }
+
+        .info__ports{
+            font-size: 9pt;
+            color: $color-text3;
+            margin-left: 5px;
+        }
     }
 
     .loading-indicator {
