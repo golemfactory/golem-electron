@@ -223,7 +223,9 @@ export function* handleIO(connection) {
                 taskApi = yield fork(apiFlow, connection);
                 yield put({
                     type: SET_CONNECTION_PROBLEM,
-                    payload: false
+                    payload: {
+                        issue: null
+                    }
                 });
                 started = true;
             } else if (!status && taskApi && started) {

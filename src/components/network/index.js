@@ -196,7 +196,7 @@ export class MainFragment extends React.Component {
             <div className="section__actions">
                 <div className="section__actions-status">
                     <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
-                    <span>{`${golemStatus.message}`}</span>
+                    <span>{`${golemStatus.message}`} {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://chat.golem.network"><span className="icon-new-window"/></a></span> : ""}</span>
                 </div>
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>

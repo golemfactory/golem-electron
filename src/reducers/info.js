@@ -93,8 +93,8 @@ const setInfo = (state = initialState, action) => {
             const {status, issue} = action.payload
             return Object.assign({}, state, {
                 connectionProblem: {
-                    status: !!status,
-                    issue: issue || null
+                    ...state.connectionProblem,
+                    ...action.payload
                 }
             });}
 
