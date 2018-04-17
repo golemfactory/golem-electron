@@ -129,7 +129,7 @@ export class Register extends React.Component {
                              :
                                 <span>Appearently, you already registered.
                                 <br/>
-                                Please <strong>log in</strong> to unlock the application!</span>
+                                Please <strong>login</strong> to unlock the application!</span>
                         }
                         </div>
                     <form id="passwordForm" onSubmit={::this._setPassword}>
@@ -195,7 +195,7 @@ export class Register extends React.Component {
         } else {
             return <div>
                         <span>
-                            Seems like you already unlock the application.
+                            Seems like you already unlocked the application.
                             <br/>
                             Enjoy all the unique features!
                         </span>

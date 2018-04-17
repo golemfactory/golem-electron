@@ -1,4 +1,6 @@
+@import 'steps/welcome';
 @import 'steps/terms';
+@import 'steps/node-name';
 
 @mixin flex {
     display: flex;
@@ -42,6 +44,7 @@ mark {
     flex: 0 0 288px;
     background: $color-bg2;
     text-align: center;
+    transition: .5s all;
 
     @include flex;
 
@@ -50,15 +53,19 @@ mark {
     .welcome-image,
     .chain-image {
         margin-bottom: 30px;
+        width:160px;
+        transition: 1s all;
     }
 
-    .chain-image{
-        width:160px;
-    }
 
     .doc-image {
         width: 100%;
+        transition: 1s all;
     }
+}
+
+.section__fixed{
+    flex: 0 0 288px !important;
 }
 
 
@@ -78,42 +85,6 @@ mark {
     width: 150px;
 }
 
-.nickname-area__onboarding {
-    height: 30px !important;
-    box-sizing: border-box;
-    margin: 24px 0 10px 0;
-
-    @include flex;
-}
-
-.nickname-input__onboarding {
-    width: 100%;
-    border: 0;
-    background: $color-bg;
-    color: #000;
-    font-size: 16pt;
-    box-sizing: border-box;
-    -webkit-animation: blink-animation 1s steps(3, start) infinite;
-
-    @keyframes blink-animation {
-      to {
-            box-shadow: -1px 0 0 $button-static-color;
-        }
-    }
-
-    &::-webkit-input-placeholder {
-        color: $color-text3;
-        text-align: center;
-    }
-
-    &:focus{
-        &::-webkit-input-placeholder {
-            color: transparent;
-        }
-        animation: 0;
-    }
-}
-
 .desc__onboarding {
     width: 100%;
     margin-top: 8vh;
@@ -123,6 +94,7 @@ mark {
     text-align: center;
     line-height: 1.3em;
     box-sizing: border-box;
+    transition: .5s all;
 
     .radio-item{
         label{
@@ -137,6 +109,11 @@ mark {
 
     .container__register{
         width: 100%;
+    }
+
+    #passwordForm{
+        margin-top: 0;
+        transition: .5s all;
     }
 
     .info__register{
@@ -241,15 +218,6 @@ mark {
 .desc__print{
     transition: .5s all;
     font-size: 14pt;
-}
-
-.desc__port {
-    mark {
-        padding: 2px;
-    }
-
-    font-size: 10pt;
-    margin-top: 10px;
 }
 
 .step-control__onboarding {
@@ -372,11 +340,30 @@ mark {
 
 @media screen and (max-height: 720px)
 {
+    .section-image__onboarding{
+        flex: 0 0 200px;
+        
+        .welcome-image,
+        .chain-image{
+            width:120px;
+        }
+    }
+
+    .desc__onboarding {
+        font-size: 12pt;
+        line-height: 1.6;
+        margin-top: 4vh;
+    }
+
     .info__register{
         margin-top: -20px;
         font-size:0;
         height: 0.5vh !important;
         line-height: 1.2;
+    }
+
+    #passwordForm{
+        margin-top: 60px !important;
     }
 
     .desc__print{

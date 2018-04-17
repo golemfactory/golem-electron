@@ -12,7 +12,7 @@ export default class Step4 extends React.Component {
     render() {
         return (
             <div className="container-step__onboarding">
-                <div className="section-image__onboarding">
+                <div className="section-image__onboarding section__fixed">
                     <img src={tasksPreview}/>
                     <SpotLight posX={[10, 37]} posY={[18, 18]} r={[10, 10]}/>
                 </div>

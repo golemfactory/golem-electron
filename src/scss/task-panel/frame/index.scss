@@ -179,3 +179,12 @@
         height: auto;
     }
 }
+
+/*                 OS DIFFERENCES
+================================================== */
+
+.win {
+    .container__frame {
+        padding-top: 50px !important;
+    }
+}

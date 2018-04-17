@@ -23,7 +23,8 @@ function newestToOldest(a, b) {
 
 const mapStateToProps = state => ({
     historyList: state.history.historyList,
-    isMainNet: state.info.isMainNet
+    isMainNet: state.info.isMainNet,
+    isEngineOn: state.info.isEngineOn
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -60,12 +61,13 @@ export class History extends React.Component {
     }
 
     render() {
-        const {historyList} = this.props
+        const {historyList, isEngineOn} = this.props
         //console.log(historyList)
         return (
             <div className="content__history">
-                {historyList.length > 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any income or payment history yet.
-                    Start Golem below to generate some.</span></div>}
+                {historyList.length < 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any earnings or payment yet.
+                <br/>
+                {isEngineOn ? "" : "Start Golem below to generate some."}</span></div>}
             </div>
         );
     }

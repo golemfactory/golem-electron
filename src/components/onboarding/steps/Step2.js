@@ -21,7 +21,7 @@ export default class Step2 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding">
-                    <img src={avatar}/>
+                    <img className="avatar" src={avatar}/>
                     <form 
                         ref={(ref) => this.nodeNameForm = ref}
                         id="nodeNameForm"
