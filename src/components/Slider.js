@@ -29,8 +29,8 @@ export default class Slider extends React.Component {
      * [_handleFillLower handling colorful part of the input range while thumb dragged]
      */
     _handleFillLower(isDisabled) {
-        let slider = document.getElementById('resourceSlider')
-        let indicator = document.getElementById('resourceSlider__indicator')
+        let slider = document.getElementById(this.props.inputId)
+        let indicator = document.getElementById(`${this.props.inputId}__indicator`)
         if(slider && indicator){       
                 let val = slider.value
                 let min = slider.getAttribute('min')
@@ -74,7 +74,7 @@ export default class Slider extends React.Component {
      * @return {[type]} [description]
      */
     _handleCallback() {
-        let slider = document.getElementById('resourceSlider')
+        let slider = document.getElementById(this.props.inputId)
         let val = slider.value
         this.props.callback(val)
     }
@@ -86,8 +86,8 @@ export default class Slider extends React.Component {
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id="resourceSlider" defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
-                    <span className="slider-indicator__resources" id="resourceSlider__indicator"/>
+                    <input type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
                     <span className={iconRight}/>
         </div>
       </div>

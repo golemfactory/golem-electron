@@ -9,6 +9,7 @@ const {
     SET_LATEST_VERSION, 
     UPDATE_SEEN, 
     SET_NETWORK_INFO, 
+    IS_NODE_PROVIDER,
     SET_FILE_CHECK, 
     SET_CONNECTION,
     SET_CONNECTION_PROBLEM, 
@@ -43,9 +44,10 @@ const initialState = {
         issue: null
     },
     isConnected: false,
-    isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
+    isEngineOn: (getConfig(GOLEM_STARTER) === null || getConfig(GOLEM_STARTER) === undefined) ? true : getConfig(GOLEM_STARTER),
     terms: "",
-    isTermsAccepted: false
+    isTermsAccepted: false,
+    isNodeProvider: true
 }
 
 function isNewVersion(_old, _new){
@@ -132,6 +134,11 @@ const setInfo = (state = initialState, action) => {
     case SET_CONNECTION:
         return Object.assign({}, state, {
             isConnected: action.payload
+        })
+
+    case IS_NODE_PROVIDER:
+        return Object.assign({}, state, {
+            isNodeProvider: action.payload
         })
 
     default:

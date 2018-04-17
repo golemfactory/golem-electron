@@ -1,11 +1,11 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeLatest, take, call, put } from 'redux-saga/effects'
+import { fork, takeLatest, take, call, put, select } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION} = dict
+const {GET_SETTINGS_RPC, SET_SYSTEM_INFO, SET_CHOSEN_HARDWARE_PRESET, SET_PROV_MIN_PRICE, SET_REQ_MAX_PRICE, SET_NODE_NAME, UPDATE_NODE_NAME, SET_PROV_TRUST, SET_REQ_TRUST, SET_FILE_LOCATION, SET_PROVIDING, IS_NODE_PROVIDER} = dict
 
 const parameterDict = Object.freeze({
     SET_PROV_MIN_PRICE: 'min_price',
@@ -13,8 +13,26 @@ const parameterDict = Object.freeze({
     SET_PROV_TRUST: 'computing_trust',
     SET_REQ_TRUST: 'requesting_trust',
     SET_FILE_LOCATION: '',
-    UPDATE_NODE_NAME: 'node_name'
+    UPDATE_NODE_NAME: 'node_name',
+    SET_PROVIDING: 'accept_tasks'
 })
+
+const getProviderInfo = (state) => state.info.isNodeProvider
+
+export function* acceptTaskBase(session, {type, payload}){
+
+    const isNodeProvider = yield select(getProviderInfo)
+
+    if(isNodeProvider && !payload){
+        yield call(updateSettings, session, type, 0)
+        yield call(fireBase, session)
+    }
+    else if(!isNodeProvider && payload){
+        yield call(updateSettings, session, type, 1)
+        yield call(fireBase, session)
+    }
+}
+
 export function updateSettings(session, type, payload) {
     //console.log("payload", type, payload);
     return new Promise((resolve, reject) => {
@@ -48,7 +66,7 @@ export function callSettings(session) {
         let actionList = []
         function on_settings(args) {
             let on_settings = args[0];
-            const {hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust} = on_settings
+            const {hardware_preset_name, min_price, max_price, node_name, computing_trust, requesting_trust, accept_tasks} = on_settings
 
 
             actionList.push({
@@ -84,6 +102,11 @@ export function callSettings(session) {
                 type: SET_REQ_TRUST,
                 payload: requesting_trust,
                 init: true
+            })
+
+            actionList.push({
+                type: IS_NODE_PROVIDER,
+                payload: !!accept_tasks
             })
 
             function on_hardware_caps(args) {
@@ -125,4 +148,5 @@ export function* settingsInteractionFlow(session){
     yield takeLatest(SET_PROV_TRUST, updateSettingsBase, session)
     yield takeLatest(SET_REQ_TRUST, updateSettingsBase, session)
     yield takeLatest(UPDATE_NODE_NAME, updateSettingsBase, session)
+    yield takeLatest(SET_PROVIDING, acceptTaskBase, session)
 }
