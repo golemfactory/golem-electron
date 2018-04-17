@@ -13,13 +13,17 @@ const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIS
  * @param  {Object} payload [Subtask Id]
  * @return {Object}         [Promise]
  */
-export function restartSubtask(session, payload) {
+export function restartSubtask(session, {id, taskId, isTimedOut}) {
     return new Promise((resolve, reject) => {
         function on_restart_subtask(args) {
             var restarted_subtask = args[0];
             resolve(restarted_subtask)
         }
-        _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASK_RPC, [payload])
+        if(isTimedOut){
+            _handleRPC(on_restart_subtask, session, config.RESTART_TIMEDOUT_SUBTASKS_RPC, [taskId, [id]])
+        } else {
+            _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASK_RPC, [id])
+        }
     })
 }
 
