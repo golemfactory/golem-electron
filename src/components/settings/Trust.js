@@ -9,7 +9,8 @@ import Slider from './../Slider'
 const mapStateToProps = state => ({
     providerTrust: state.trust.providerTrust,
     requestorTrust: state.trust.requestorTrust,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    isNodeProvider: state.info.isNodeProvider
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -21,64 +22,61 @@ export class Trust extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            isRequestorTrust: false
-        }
     }
 
     /**
-     * [_handleTrustSwitch onChange function for switch input]
+     * [_handleProviderSwitch onChange function]
      * @return  {Boolean}   true
      */
-    _handleTrustSwitch() {
-        this.setState({
-            isRequestorTrust: !this.state.isRequestorTrust
-        })
+    _handleProviderSwitch(evt) {
+        const {actions} = this.props;
+        actions.setProviding(evt.target.checked);
     }
 
     /**
-     * [_handleTrustSlider swtichs between provider/requestor sldiers]
+     * [_handleRequestorTrustSlider]
      * @param  {Boolean}     value      [Boolean value from slider switch]
      */
-    _handleTrustSlider(value) {
-        const {actions} = this.props
-        this.state.isRequestorTrust ? actions.setRequestorTrust(value) : actions.setProviderTrust(value)
+    _handleRequestorTrustSlider(value) {
+        const {actions} = this.props;
+        actions.setRequestorTrust(value);
     }
 
     /**
-     * [fetchTrust func.]
-     * @param  {Boolean} isRequestor    [Boolean value from slider switch]
-     * @return {DOM}                    [Slider element]
+     * [_handleProviderTrustSlider]
+     * @param  {Boolean}     value      [Boolean value from slider switch]
      */
-    fetchTrust(isRequestor) {
-        const {providerTrust, requestorTrust, isEngineOn} = this.props
-        if (isRequestor)
-            return <Slider key="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false} disabled={isEngineOn}/>
-        else
-            return <Slider key="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleTrustSlider} warn={false} disabled={isEngineOn}/>
+    _handleProviderTrustSlider(value) {
+        const {actions} = this.props;
+        actions.setProviderTrust(value);
     }
 
+    
+    // <div className="tips__trust">
+    //     <span>A low setting means your node may get more task requests, but from less reliable requestors. A high setting could mean fewer tasks, but more reliable requestors.</span>
+    // </div>
+
     render() {
-        const {isRequestorTrust} = this.state
+        const {providerTrust, requestorTrust, isEngineOn, isNodeProvider} = this.props
         return (
             <div className="content__trust">
-                {this.fetchTrust(isRequestorTrust)}
+                <span className="title__slider">As a requestor</span>
+                <Slider inputId="requesor_slider" value={requestorTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleRequestorTrustSlider} warn={false} disabled={isEngineOn}/>
+                <span className="title__slider">As a provider</span>
+                <Slider inputId="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleProviderTrustSlider} warn={false} disabled={isEngineOn || !isNodeProvider}/>
                 <div className="switch__trust">
-                    <span style={{
-                color: isRequestorTrust ? '#9b9b9b' : '#4e4e4e'
-            }}>Providing</span>
-                    <div className="switch-box switch-box--green">
+                    <div className={`switch-box ${isNodeProvider ? "switch-box--green" : ""}`}>
                         <label className="switch">
-                            <input type="checkbox" onChange={::this._handleTrustSwitch} defaultChecked={isRequestorTrust}  aria-label="Trust switch providing/requesting" tabIndex="0"/>
+                            <input type="checkbox" onChange={::this._handleProviderSwitch} defaultChecked={isNodeProvider}  aria-label="Trust switch providing/requesting" tabIndex="0" disabled={isEngineOn}/>
                             <div className="switch-slider round"></div>
                         </label>
                     </div>
                     <span style={{
-                color: isRequestorTrust ? '#4e4e4e' : '#9b9b9b'
-            }}>Requesting</span>
+                color: isNodeProvider ? '#4e4e4e' : '#9b9b9b'
+            }}>Turn this switch off if you do not want to be Provider anymore.</span>
                 </div>
                 <div className="tips__trust">
-                    <span>A low setting means your node may get more task requests, but from less reliable requestors. A high setting could mean fewer tasks, but more reliable requestors.</span>
+                    <span>Remeber! To activate the settings please stop Golem first.</span>
                 </div>
             </div>
         );

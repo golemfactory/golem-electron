@@ -44,7 +44,7 @@ const initialState = {
         issue: null
     },
     isConnected: false,
-    isEngineOn: getConfig(GOLEM_STARTER) === null ? true : getConfig(GOLEM_STARTER),
+    isEngineOn: (getConfig(GOLEM_STARTER) === null || getConfig(GOLEM_STARTER) === undefined) ? true : getConfig(GOLEM_STARTER),
     terms: "",
     isTermsAccepted: false,
     isNodeProvider: true

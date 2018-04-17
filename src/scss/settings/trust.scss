@@ -5,7 +5,11 @@
 }
 
 .content__trust {
-    height: 200px;
+    height: 280px;
+    .title__slider{
+        font-size: 10pt;
+        font-weight: 400;
+    }
     .slider {
         margin: 15px 0 35px 0;
         .icon-negative {
@@ -21,12 +25,10 @@
     @include flex;
     justify-content: center;
     padding: 10px 0 40px 0;
+    font-size: 9pt;
     .switch-box {
-        padding: 0 30px;
+        padding: 0 20px 0 0;
         margin: 0 0 3px 0;
-        .switch-slider {
-            background-color: $color-accent1;
-        }
     }
 }
 

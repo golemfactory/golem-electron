@@ -198,7 +198,7 @@ export class MainFragment extends React.Component {
                     <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
                     <span>{`${golemStatus.message}`}</span>
                 </div>
-                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize} disabled={!isGolemReady(golemStatus.status)}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
             <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
             </div>

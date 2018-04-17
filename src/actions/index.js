@@ -53,6 +53,7 @@ export let dict = Object.freeze({
     SET_REQ_TRUST: 'SET_REQ_TRUST',
     SET_NET_PROV_TRUST: 'SET_NET_PROV_TRUST',
     SET_NET_REQ_TRUST: 'SET_NET_REQ_TRUST',
+    SET_PROVIDING: 'SET_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
     //FRAME WINDOW
@@ -159,6 +160,7 @@ const {
     SET_REQ_TRUST, 
     SET_NET_PROV_TRUST, 
     SET_NET_REQ_TRUST, 
+    SET_PROVIDING,
     SET_TASK_STATS,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
@@ -389,6 +391,11 @@ export const setProviderTrust = (payload, init) => ({
     type: SET_PROV_TRUST,
     payload: (payload / 100),
     init
+})
+
+export const setProviding = (payload) => ({
+    type: SET_PROVIDING,
+    payload
 })
 
 export const setRequestorTrust = (payload, init) => ({

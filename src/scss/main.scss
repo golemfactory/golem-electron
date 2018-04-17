@@ -346,6 +346,11 @@ hint{
         transform: translateX(13px);
     }
 
+    input:disabled + .switch-slider {
+        background-color: $color-text3 !important;
+        cursor: not-allowed;
+    }
+
     /* Rounded sliders */
     .switch-slider.round {
         border-radius: 34px;
