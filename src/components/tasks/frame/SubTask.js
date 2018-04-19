@@ -110,7 +110,8 @@ const statusDict = Object.freeze({
     DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
     FAILURE: 'Aborted',
-    TIMEOUT: 'Timeout'
+    TIMEOUT: 'Timeout',
+    RESTARTED: 'Restart'
 })
 
 let statusClassDict = {
@@ -125,7 +126,8 @@ export default class SubTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            subtaskIdCopied: false
+            subtaskIdCopied: {},
+            isTaskSubmitted: {}
         }
     }
 
@@ -133,9 +135,23 @@ export default class SubTask extends React.Component {
         const {data, ratio, subtaskList, offset} = this.props
     }
 
+    componentWillUnmount() {
+        this.resubmitTimeout && clearTimeout(this.resubmitTimeout);
+        this.copyTimeout && clearTimeout(this.copyTimeout);
+    }
+
     _handleResubmit(_id, isTimedOut) {
         const {data, ratio, subtaskList, taskDetails} = this.props
         this.props.restartSubtask({id: _id, taskId:taskDetails.id, isTimedOut})
+        this.setState({
+            isTaskSubmitted: {[_id]: true}
+        }, () => {
+                this.resbumitTimeout = setTimeout(() => {
+                    this.setState({
+                        isTaskSubmitted: {[_id]: false}
+                    })
+                }, 5000)
+            })
     }
 
     _handleOpenFile(path){
@@ -146,11 +162,11 @@ export default class SubTask extends React.Component {
     _copySubtask(id){
         clipboard.writeText(id);
         this.setState({
-                subtaskIdCopied: true
+                subtaskIdCopied: {[id]: true}
             }, () => {
                 this.copyTimeout = setTimeout(() => {
                     this.setState({
-                        subtaskIdCopied: false
+                        subtaskIdCopied: {[id]: false}
                     })
                 }, 5000)
             })
@@ -208,7 +224,8 @@ export default class SubTask extends React.Component {
             })
             .map((item, index) => {
                 
-                const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0]
+                const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0];
+                console.log("taskDetails.status", taskDetails.status);
                 const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
@@ -218,16 +235,16 @@ export default class SubTask extends React.Component {
                 mouseEnterDelay={1}
                 overlay={<div className="content__tooltip">
                         <div className="developer_view__tooltip">
-                            <div>
+                            <div className="dev-tag__tooltip">
                                 {_taskStatus(subtask.status)}
                                 <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
                                 {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
                                 {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
                                 {isDevMode && <p
                                     className="subtask-id__tooltip" 
-                                    style={{color: this.state.subtaskIdCopied ? "#37c481" : "#9b9b9b"}} 
+                                    style={{color: this.state.subtaskIdCopied[subtask.subtask_id] ? "#37c481" : "#9b9b9b"}} 
                                     onClick={this._copySubtask.bind(this, subtask.subtask_id)}>
-                                    <b>{this.state.subtaskIdCopied ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
+                                    <b>{this.state.subtaskIdCopied[subtask.subtask_id] ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
                                 </p>}
                             </div>
                             <div>
@@ -241,8 +258,10 @@ export default class SubTask extends React.Component {
                         <button 
                             className="submit__button" 
                             type="button" 
-                            onClick={this._handleResubmit.bind(this, subtask.subtask_id, (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}>
-                                Resubmit
+                            onClick={this._handleResubmit.bind(this, subtask.subtask_id, (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
+                            disabled={taskDetails.status === statusDict.RESTARTED 
+                                      || this.state.isTaskSubmitted[subtask.subtask_id]}>
+                                {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
                         </button>
                     </div>}
                 align={{

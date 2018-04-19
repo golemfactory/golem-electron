@@ -88,6 +88,7 @@
 
     .time__tooltip {
         margin: .2em 0 .2em 0;
+        font-size: 12pt;
 
         &--done {
             color: $color-text2;
@@ -107,6 +108,10 @@
 
     .subtask-id__tooltip{
         cursor: pointer;
+    }
+
+    .dev-tag__tooltip{
+        width: 200px;
     }
 
     .desc__tooltip {
