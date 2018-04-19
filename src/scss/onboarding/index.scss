@@ -27,6 +27,46 @@ mark {
     span:first-child{
         width: 100%;
     }
+
+    .information-band__onboarding{
+        position: absolute;
+        width: 100%;
+        height: 40px;
+        line-height:40px;
+        font-size: 8pt;
+        top: -50;
+        z-index: 999;
+        text-align: center;
+        background: #F5A623;
+        color: $color-text4;
+        transition: .5s all;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: space-between;
+        
+        .content-information{
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        }
+
+        .icon-warning{
+            display: inline;
+            background: none;
+            font-size: 18pt;
+            width: 30px;
+        }
+
+        .icon-close{
+            margin: 12px;
+            font-size: 12pt;
+            cursor: pointer;
+        }
+
+        &.show {
+            top: 0;
+        }
+    }
 }
 
 .container-step__onboarding {
@@ -371,3 +411,10 @@ mark {
         line-height: 1.2;
     }
 }
+
+ .mac,
+ .linux{
+        .information-band__onboarding{
+            padding-left: 70px;
+        }
+    }

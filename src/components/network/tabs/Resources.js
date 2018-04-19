@@ -66,6 +66,9 @@ export class Resources extends React.Component {
                         Use the slider to choose how much of your machine’s resources 
                     (CPU, RAM and disk space) Golem can use. More power means 
                     more potential income.
+                    <br/>
+                    <br/>
+                    Remember! To activate the settings please stop Golem first.
                 </div>
             </div>
         );

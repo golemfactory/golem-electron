@@ -147,7 +147,11 @@ export class Advanced extends React.Component {
                                 onChange={this._handleInputChange.bind(this, 'disk')}/>
             </div>
             <div className="advanced__tips">
-              <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.</span>
+              <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
+              <br/>
+              <br/>
+              Remember! To activate the settings please stop Golem first.
+              </span>
             </div>
           </div>
         );
