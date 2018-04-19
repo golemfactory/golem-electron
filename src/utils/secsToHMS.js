@@ -11,7 +11,7 @@ function convertSecsToHMS(sec) {
     minutes = minutes % 60;
     hours = hours < 10 ? '0' + hours : hours;
     minutes = minutes < 10 ? '0' + minutes : minutes;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
+    seconds = seconds < 10 ? '0' + seconds : seconds.toFixed(0);
 
     return hours + ':' + minutes + ':' + seconds;
 }
