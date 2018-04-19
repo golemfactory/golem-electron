@@ -509,7 +509,6 @@ class OnboardIndex extends React.Component {
     render() {
         const {currentStep, isNext, closeInformationBand} = this.state;
         const {connectionProblem} = this.props
-        console.log("closeInformationBand", closeInformationBand);
         return (
             <div className="content__onboarding">
                 <CSSTransitionGroup
