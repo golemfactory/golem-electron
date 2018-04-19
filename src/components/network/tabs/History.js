@@ -65,7 +65,7 @@ export class History extends React.Component {
         //console.log(historyList)
         return (
             <div className="content__history">
-                {historyList.length < 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any earnings or payment yet.
+                {historyList.length > 0 ? this.loadHistory() : <div className="empty-list__history"><span>You don’t have any earnings or payment yet.
                 <br/>
                 {isEngineOn ? "" : "Start Golem below to generate some."}</span></div>}
             </div>
