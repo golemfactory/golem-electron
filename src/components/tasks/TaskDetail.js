@@ -1084,7 +1084,7 @@ export class TaskDetail extends React.Component {
                                 <span>{isMainNet ? "" : "t"}GNT/h</span>
                             </div>
                             <div className="item-price estimated-price__panel">
-                                <InfoLabel type="span" label="Estimated" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 {this._convertPriceAsHR(estimated_cost)}
                                 <span>{isMainNet ? "" : "t"}GNT</span>
                             </div>

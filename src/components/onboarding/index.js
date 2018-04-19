@@ -105,7 +105,8 @@ const mapStateToProps = state => ({
     passwordModal: state.realTime.passwordModal,
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
-    isMainNet: state.info.isMainNet
+    isMainNet: state.info.isMainNet,
+    connectionProblem: state.info.connectionProblem
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -127,7 +128,8 @@ class OnboardIndex extends React.Component {
             isTermsDeclined: false,
             isPrinted: false,
             isSkippingPrint: false,
-            printInfo: ""
+            printInfo: "",
+            closeInformationBand: false
         }
     }
 
@@ -324,6 +326,12 @@ class OnboardIndex extends React.Component {
         app.quit()
     }
 
+    _closeInfo(){
+        this.setState({
+            closeInformationBand: true
+        })
+    }
+
     _handlePrint(){
         //TO DO print pdf
         someAsyncFunction((template) => {
@@ -376,6 +384,24 @@ class OnboardIndex extends React.Component {
             this.setState({
                 loadingIndicator: _isLoading
             })
+    }
+
+    _isInfoBandShown(_connectionProblem, _closeInformationBand){
+        if(_connectionProblem && 
+                (_connectionProblem.issue === "PORT" ||
+                 _connectionProblem.issue === "WEBSOCKET") && 
+                !_closeInformationBand)
+            return <div className={`information-band__onboarding show`}>
+                        <div className="content-information">
+                            <span className="icon-warning"/>
+                            {_connectionProblem.issue === "PORT" ? 
+                                <span>It looks like you don't have ports forwarded. Follow <a href="https://github.com/golemfactory/golem/wiki/FAQ#installing-golem">these steps.</a></span>
+                                :
+                                <span>Interface coomunication problem with Golem. Please restart.</span>
+                            }
+                        </div>
+                        <span className="icon-close" onClick={::this._closeInfo}/>
+                    </div>
     }
 
     _initControl(_step){
@@ -481,7 +507,8 @@ class OnboardIndex extends React.Component {
 
 
     render() {
-        const {currentStep, isNext} = this.state;
+        const {currentStep, isNext, closeInformationBand} = this.state;
+        const {connectionProblem} = this.props
         return (
             <div className="content__onboarding">
                 <CSSTransitionGroup
@@ -493,6 +520,7 @@ class OnboardIndex extends React.Component {
                 <div ref="stepControl" className="step-control__onboarding">
                     {::this._initControl(currentStep)}
                 </div>
+                {this._isInfoBandShown(connectionProblem, closeInformationBand)}
             </div>
         )
     }

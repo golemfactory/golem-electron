@@ -17,7 +17,7 @@ const setOnboard = (state = initialState, action) => {
         });
     case SET_TERMS_STATUS:
         return Object.assign({}, state, {
-            showOnboard: !action.payload
+            showOnboard: !!getConfig(HIDE_ONBOARD) ? !action.payload : true
         });
 
     default:

@@ -115,7 +115,9 @@ export class Register extends React.Component {
                                     <span>
                                         Your unique <strong>Golem User ID</strong>
                                         <br/>
-                                        is being created, this may take some time
+                                        is being created, this may take some time.
+                                        <br/>
+                                        It can take up to 20 minutes.
                                     </span>
                                     :
                                     <span>

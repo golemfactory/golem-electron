@@ -19,7 +19,7 @@ export default class ChainInfo extends React.Component {
                 <div className="desc__onboarding">
                     <span>You are going to run
                     <br/>
-                    <strong>Golem on {isMainNet ? "main" : "test"} net.</strong>
+                    <strong>Golem on {isMainNet ? "main" : "test"}net.</strong>
                     <br/><br/><br/>
                         <mark className="mark--chain">
                         {isMainNet ? "Make sure that you know all the risks and take responsible actions." : "All the currencies used on the testnet do not hold any real value."}
