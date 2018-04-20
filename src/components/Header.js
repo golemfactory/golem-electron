@@ -19,7 +19,6 @@ const mainProcess = remote.require('./index')
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    fileCheckModal: state.info.fileCheckModal,
     connectedPeers: state.realTime.connectedPeers,
     isMainNet: state.info.isMainNet
 })
@@ -51,7 +50,7 @@ export class Header extends Component {
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
-        Number.isInteger(index) && allNav[index].classList.add('active');
+        (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
 
         /*EXPRIMENTAL*/
         // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
@@ -64,7 +63,7 @@ export class Header extends Component {
             });
 
             const index = HASHLIST[location.hash];
-            Number.isInteger(index) && allNav[index].classList.add('active');
+            (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
         });
     }
 
