@@ -4,7 +4,7 @@
  * @return {String}             [hh:mm:ss]
  */
 function convertSecsToHMS(sec) {
-    if(sec == "0"){
+    if(sec == "0" || sec == null){
         return "Unknown"
     }
     let minutes = Math.trunc(sec / 60);
