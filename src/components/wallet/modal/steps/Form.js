@@ -7,21 +7,6 @@ import {modals, currencyIcons} from './../../../../constants'
 const {clipboard } = window.electron
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
-const inputSchema = {
-    amount: yup.object().shape({
-            amount: yup.number().min(0.00001).required()
-        }),
-
-    sendTo: yup.object().shape({
-            sendTo: yup.string().matches(/0x[a-fA-F0-9]{40}/).required()
-        })
-}
-
-const formSchema = yup.object().shape({
-            amount: yup.number().min(0.00001).required(),
-            sendTo: yup.string().matches(/0x[a-fA-F0-9]{40}/).required()
-        });
-
 export default class WithdrawForm extends React.Component {
 
 
@@ -37,6 +22,32 @@ export default class WithdrawForm extends React.Component {
 
     componentDidMount() {
         const { formData } = this.props
+
+        this.inputSchema = {
+            amount: yup.object().shape({
+                amount: yup.number()
+                    .min(0.00001)
+                    .max(this.props.balance.toNumber())
+                    .required()
+            }),
+
+            sendTo: yup.object().shape({
+                sendTo: yup.string()
+                    .matches(/0x[a-fA-F0-9]{40}/)
+                    .required()
+            })
+        }
+
+        this.formSchema = yup.object().shape({
+            amount: yup.number()
+                .min(0.00001)
+                .max(this.props.balance.toNumber())
+                .required(),
+            sendTo: yup.string()
+                .matches(/0x[a-fA-F0-9]{40}/)
+                .required()
+        });
+
         if(formData){
             this.refs.amountInput.value = formData.amount.dividedBy(ETH_DENOM);
             this.refs.sendToInput.value = formData.sendTo
@@ -62,10 +73,11 @@ export default class WithdrawForm extends React.Component {
 
     componentWillUpdate(nextProps, nextState) {
         const {amount, sendTo} = nextState
+
         if(amount !== this.state.amount ||
             sendTo !== this.state.sendTo){
             this.setState({
-                isValid: formSchema.isValidSync({amount, sendTo})
+                isValid: this.formSchema.isValidSync({amount: amount.dividedBy(ETH_DENOM), sendTo})
             })
         }
     }
@@ -106,7 +118,7 @@ export default class WithdrawForm extends React.Component {
             this.setState({
                 amount: balance.multipliedBy(ETH_DENOM)
             })
-            const isValid = inputSchema['amount'].isValidSync({amount: balance});
+            const isValid = this.inputSchema['amount'].isValidSync({amount: balance});
             if (isValid)
                 this.refs.amountInput.classList.remove("invalid");
             else
@@ -125,7 +137,7 @@ export default class WithdrawForm extends React.Component {
     }
 
     checkInputValidity(e, type) {
-        const isValid = inputSchema[type].isValidSync({[type]: e.target.value});
+        const isValid = this.inputSchema[type].isValidSync({[type]: e.target.value});
         if (isValid)
             e.target.classList.remove("invalid");
         else
@@ -155,6 +167,12 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    _preventTypeAfterLimit(e){
+        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {            
+           e.preventDefault();                
+        }
+    }
+
     render() {
         const {type, suffix, currency, balance} = this.props
         const {amountCopied, amount, isValid} = this.state
@@ -178,6 +196,7 @@ export default class WithdrawForm extends React.Component {
                             type="number"
                             min={0}
                             max={balance.toNumber()}
+                            onKeyPress={::this._preventTypeAfterLimit}
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>
