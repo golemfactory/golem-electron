@@ -32,7 +32,9 @@ const setTaskDetails = (state = initialState, action) => {
         
     case CLEAR_TASK_PLAIN:
         return Object.assign({}, state, {
-            test_status: {},
+            test_status: { 
+                status: null 
+            },
             detail: {}
         });
 

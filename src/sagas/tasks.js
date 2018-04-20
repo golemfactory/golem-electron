@@ -10,7 +10,8 @@ const {
         DELETE_TASK, 
         CREATE_TASK, 
         RESTART_TASK, 
-        RUN_TEST_TASK, 
+        RUN_TEST_TASK,
+        ABORT_TEST_TASK,
         SET_TASK_TEST_STATUS, 
         GET_ESTIMATED_COST, 
         SET_ESTIMATED_COST, 
@@ -72,6 +73,20 @@ export function* estimatedCostBase(session, {payload}) {
         let action = yield call(getEstimatedCost, session, payload)
         yield put(action)
     }
+}
+
+export function abortTestTask(session) {
+
+    function on_test_task(args) {
+        var test_task = args[0];
+        console.log("test_task", test_task);
+    }
+
+    _handleRPC(on_test_task, session, config.ABORT_TEST_TASK_RPC)
+}
+
+export function* abortTestTaskBase(session) {
+    yield call(abortTestTask, session)
 }
 
 export function runTestTask(session, payload) {
@@ -422,6 +437,7 @@ export function* tasksFlow(session) {
     yield takeLatest(RESTART_TASK, restartTaskBase, session)
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
+    yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
 }
