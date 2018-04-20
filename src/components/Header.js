@@ -19,7 +19,6 @@ const mainProcess = remote.require('./index')
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    fileCheckModal: state.info.fileCheckModal,
     connectedPeers: state.realTime.connectedPeers,
     isMainNet: state.info.isMainNet
 })
@@ -29,6 +28,11 @@ const mapDispatchToProps = dispatch => ({
 })
 
 const DOCLINK = "https://docs.golem.network/"
+const HASHLIST = {
+    '#/' : 0,
+    '#/tasks': 1,
+    '#/settings': 4
+}
 
 /**
  * { Class for header component with navigation. }
@@ -42,34 +46,33 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = location.hash.includes('tasks') ? 1 : 0; // <-- HARDCODED
+        const index = HASHLIST[location.hash]
         let navItems = document.getElementsByClassName('nav__item');
-        navItems.length > 1 && navItems[index].classList.add('active');
-    /*EXPRIMENTAL*/
-    // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
-    //     this._navigateTo(message, null)
-    // })
+        let menuItems = document.getElementsByClassName('menu__item');
+        let allNav = [...navItems, ...menuItems];
+        (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
+
+        /*EXPRIMENTAL*/
+        // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
+        //     this._navigateTo(message, null)
+        // })
+    
+        window.addEventListener("hashchange", (e) => { 
+            [].map.call(allNav, (item) => {
+                item.classList.remove('active')
+            });
+
+            const index = HASHLIST[location.hash];
+            (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
+        });
     }
 
     /**
      * [_navigateTo active class handling for navigation items]
      * @param  {String}     to      [Route fo the page]
-     * @param  {Object}     elm     [Element in target]
+     * @param  {Object}     _       [Element in target]
      */
-    _navigateTo(to, elm) {
-        let navItems = document.getElementsByClassName('nav__item');
-        let menuItems = document.getElementsByClassName('menu__item');
-
-        [].map.call(navItems, (item) => {
-            item.classList.remove('active')
-        });
-
-        [].map.call(menuItems, (item) => {
-            item.classList.remove('active')
-        });
-
-        elm && elm.currentTarget.classList.add('active')
-
+    _navigateTo(to, _) {
         hashHistory.push(to);
     }
 

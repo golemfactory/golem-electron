@@ -14,6 +14,7 @@ import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 
+import InsufficientAmountModal from './modal/InsufficientAmountModal'
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
@@ -55,6 +56,9 @@ export class Table extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            insufficientAmountModal: false
+        }
 
         this._handleDeleteTask = ::this._handleDeleteTask
         this._fetchStatus = ::this._fetchStatus
@@ -150,7 +154,27 @@ export class Table extends React.Component {
      * @param  {Any}        id      [Id of the selected task]
      */
     _handleRestart(id) {
-        this.props.actions.restartTask(id)
+        this._restartAsync(id)
+            .then((_result) => {
+                if(_result && !_result[0] && _result[1].includes("Not enough")){
+                    console.warn("Task restart failed!")
+                    this.setState({
+                        insufficientAmountModal: true
+                    })
+                }
+            })
+    }
+
+    _restartAsync(id){
+        return new Promise((resolve, reject)=> {
+            this.props.actions.restartTask(id, resolve, reject)
+        })
+    }
+
+    _closeModal(){
+        this.setState({
+            insufficientAmountModal: false
+        })
     }
 
     /**
@@ -288,9 +312,11 @@ export class Table extends React.Component {
 
     render() {
         const {taskList} = this.props
+        const {insufficientAmountModal} = this.state
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
+                {insufficientAmountModal && <InsufficientAmountModal closeModal={::this._closeModal}/>}
             </div>
         );
     }
