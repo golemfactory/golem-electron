@@ -537,9 +537,11 @@ export const createTask = (payload, _resolve, _reject) => ({
     _reject
 })
 
-export const restartTask = (payload) => ({
+export const restartTask = (payload, _resolve, _reject) => ({
     type: RESTART_TASK,
-    payload
+    payload,
+    _resolve,
+    _reject
 })
 
 export const restartFrame = (payload) => ({

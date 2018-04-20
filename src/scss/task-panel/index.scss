@@ -23,7 +23,7 @@
     box-sizing: border-box;
     transform: translateZ(0);
     &--with-preview {
-        margin-bottom: 192px + 59px;
+        margin-bottom: 192px + 58px;
         @media screen and (max-height: 749px + 59px) {
             margin-bottom: 0;
         }
