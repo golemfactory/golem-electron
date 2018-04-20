@@ -120,6 +120,11 @@ const messages = {
             post: 'Registered',
             exception: 'Problem with password'
         },
+        'sync': {
+            pre: 'Syncing Golem',
+            post: 'Golem synced',
+            exception: 'Error syncing Golem'
+        },
         'start': {
             pre: 'Starting Golem',
             post: 'Connecting to network',
