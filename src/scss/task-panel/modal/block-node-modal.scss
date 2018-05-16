@@ -1,0 +1,17 @@
+.container__block-node-modal{
+    z-index: 99999 !important;
+    .content__modal {
+        height: 250px;
+        width: 300px;
+        text-align: center;
+        padding: 20px;
+        .icon-blocked {
+            display: inline-block;
+            color: $color-text4;
+            background: #f33333;
+            font-size: 7em;
+            text-align: center;
+            border-radius: 50%;
+        }
+    }
+}

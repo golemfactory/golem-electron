@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactTooltip from 'rc-tooltip'
 
+import BlockNodeModal from './../modal/BlockNodeModal'
+
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
 const {ipcRenderer, clipboard} = window.electron;
@@ -25,12 +27,12 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
  *  @see https://jsfiddle.net/mk8jx9wb/
  */
 function convertToSVGPoints(arr, offset) {
-    console.log("offset", offset);
+    // console.log("offset", offset);
     if(offset)
         arr = arr.map(item => {
-            console.log("item", item);
+            // console.log("item", item);
             item[offset.index] = item[offset.index] + (offset.value + 1)
-            console.log("item", item);
+            // console.log("item", item);
             return item
         })
     arr.push(arr[0])
@@ -109,7 +111,7 @@ const statusDict = Object.freeze({
     STARTING: 'Starting',
     DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
-    FAILURE: 'Aborted',
+    FAILURE: 'Failure',
     TIMEOUT: 'Timeout',
     RESTARTED: 'Restart'
 })
@@ -127,7 +129,9 @@ export default class SubTask extends React.Component {
         super(props);
         this.state = {
             subtaskIdCopied: {},
-            isTaskSubmitted: {}
+            isTaskSubmitted: {},
+            blockNodeModal: false,
+            subtask2block: null
         }
     }
 
@@ -155,7 +159,6 @@ export default class SubTask extends React.Component {
     }
 
     _handleOpenFile(path){
-        
         ipcRenderer.send('open-file', path)
     }
 
@@ -170,6 +173,25 @@ export default class SubTask extends React.Component {
                     })
                 }, 5000)
             })
+    }
+
+    _blockNode() {
+        console.log('st_bn:' + this.state.subtask2block.node_id + ' Blocked!')
+        this._closeBlockNodeModal()
+    }
+
+    _showBlockNodeModal(subtask){
+        console.log("st_bnm: " + subtask.node_name + ", " + subtask.node_id)
+        this.setState({
+            blockNodeModal: true,
+            subtask2block: subtask,
+        })
+    }
+    _closeBlockNodeModal() {
+        this.setState({
+            blockNodeModal: false,
+            subtask2block: null,
+        })
     }
 
     /**
@@ -255,14 +277,18 @@ export default class SubTask extends React.Component {
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
-                        <button 
-                            className="submit__button" 
-                            type="button" 
-                            onClick={this._handleResubmit.bind(this, subtask.subtask_id, (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                            disabled={taskDetails.status === statusDict.RESTARTED 
-                                      || this.state.isTaskSubmitted[subtask.subtask_id]}>
-                                {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
-                        </button>
+                        <div className="resubmit__tooltip">
+                            <button
+                                type="button"
+                                onClick={this._handleResubmit.bind(this, subtask.subtask_id,
+                                    (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
+                                disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
+                                >
+                                    {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
+                            </button>
+                            <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}
+                                disabled={![statusDict.TIMEOUT, statusDict.FAILURE].includes(subtask.status)}>Block node</button>
+                        </div>
                     </div>}
                 align={{
                     offset: tooltipOffset(item.value, isDirectionTop),
@@ -274,6 +300,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
+        const {blockNodeModal, subtask2block} = this.state
         const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
@@ -292,6 +319,10 @@ export default class SubTask extends React.Component {
         <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
             {this.drawLine(isDeveloperMode, customStyle)}
         </svg>
+        {blockNodeModal && <BlockNodeModal
+            cancelAction={::this._closeBlockNodeModal}
+            blockAction={::this._blockNode}
+            node2block={subtask2block.node_name}/>}
       </div>
         );
     }

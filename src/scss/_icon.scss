@@ -372,6 +372,11 @@ $color_4: rgb(245, 166, 35);
         content: "\e937";
     }
 }
+.icon-blocked {
+    &:before {
+        content: "\e927";
+    }
+}
 .icon-settings {
     &:before {
         content: "\e938";
