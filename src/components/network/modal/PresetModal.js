@@ -45,16 +45,16 @@ export default class PresetModal extends React.Component {
             memory: memoryKiB,
             disk: diskKiB
         })
-        this.props.closeModal()
     }
 
     render() {
-        const {cpu_cores, memory, disk} = this.props
+        const {cpu_cores, memory, disk, isNameExist} = this.props
         return (
             <div className="container__modal network-preset-modal ">
                 <form className="content__modal" onSubmit={::this._handleSave}>
                     <section className="section__naming">
                         <h4>Name your Preset</h4>
+                        {isNameExist && <hint>Name is already exist</hint>}
                         <input type="text" onChange={::this._handleNameInput} autoFocus required/>
                     </section>
                     <section className="section__info">

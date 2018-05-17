@@ -63,20 +63,23 @@ export function* deletePreset(session, {payload}) {
     yield action && put(action)
 }
 
-function createFunc(session, payload) {
-    return new Promise((resolve, reject) => {
-        function on_create_preset(args) {
-            var created_preset = args[0];
-            //console.log(config.PRESET_CREATE_RPC, created_preset)
-            resolve(created_preset)
-        }
+function createFunc(session, payload, _resolve, _reject) {
+    function on_create_preset(args) {
+        var created_preset = args[0];
+        //console.log(config.PRESET_CREATE_RPC, created_preset)
+        _resolve(created_preset)
+    }
 
-        _handleRPC(on_create_preset, session, config.PRESET_CREATE_RPC, [payload])
-    })
+    function _eb(args) {
+        //console.log(config.PRESET_CREATE_RPC, created_preset)
+        _resolve(args)
+    }
+
+    _handleRPC(on_create_preset, session, config.PRESET_CREATE_RPC, [payload], _eb)
 }
 
-export function* createPreset(session, {payload}) {
-    yield call(createFunc, session, payload)
+export function* createPreset(session, {payload, _resolve, _reject}) {
+    yield call(createFunc, session, payload, _resolve, _reject)
     const action = yield call(subscribeAdvanced, session);
     //console.log("ADVANCED_ACTION", action)
     yield action && put(action)

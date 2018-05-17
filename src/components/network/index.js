@@ -17,6 +17,7 @@ import Wallet from '../wallet'
 import Resources from './tabs/Resources'
 import History from './tabs/History'
 import Advanced from './tabs/Advanced'
+import FooterMain from '../FooterMain'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 /*if (!("require" in window)) {
@@ -34,19 +35,13 @@ const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     golemStatus: state.realTime.golemStatus,
     chosenPreset: state.advanced.chosenPreset,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    stats: state.stats.stats
 })
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
-
-/*############# HELPER FUNCTIONS ############# */
-
-function isGolemReady(status) {
-    return status === "Ready"
-}
-
 
 /**
  * { Class for main fragment component. Aka. Homepage }
@@ -62,21 +57,10 @@ export class MainFragment extends React.Component {
             presetModal: false,
             managePresetModal: false,
             modalData: null,
-            engineLoading: false
+            engineLoading: false,
+            isPresetNameExist: false
         }
     //props.actions.setOnboard(true)
-    }
-
-    _golemize() {
-        const {actions, isEngineOn, chosenPreset} = this.props
-        if (isEngineOn) {
-            actions.stopGolem()
-        } else {
-            actions.startGolem(chosenPreset)
-        }
-        this.setState({
-            engineLoading: true
-        })
     }
 
     /**
@@ -107,7 +91,8 @@ export class MainFragment extends React.Component {
         this.setState({
             presetModal: false,
             managePresetModal: false,
-            modalData: null
+            modalData: null,
+            isPresetNameExist: false
         })
     }
 
@@ -116,7 +101,20 @@ export class MainFragment extends React.Component {
      * @param  {Object}     data    [Custom hardware preset object]
      */
     _handleSavePreset(data) {
-        this.props.actions.createAdvancedPreset(data)
+        this._savePresetAsync(data).then( result => {
+                this.setState({
+                    isPresetNameExist: result === "wamp.error.runtime_error"
+                })
+
+                if(result !== "wamp.error.runtime_error")
+                    this._closeModal()
+            })
+    }
+
+    _savePresetAsync(data){
+        return new Promise((_resolve, _reject) => {
+            this.props.actions.createAdvancedPreset(data, _resolve, _reject)
+        })
     }
 
     componentDidMount() {
@@ -127,14 +125,6 @@ export class MainFragment extends React.Component {
 
         actions.startLoading("MAIN_LOADER", "I am loading!")
         setTimeout(endLoading, 8000)
-    }
-
-    componentWillUpdate(nextProps, nextState) {
-        if (nextProps.isEngineOn !== this.props.isEngineOn) {
-            this.setState({
-                engineLoading: false
-            })
-        }
     }
 
     /**
@@ -162,20 +152,10 @@ export class MainFragment extends React.Component {
         })
     }
 
-    //TODO re-write it cleaner
-    golemDotClass(_golemStatus, _connectionProblem){
-        if(isGolemReady(_golemStatus.status)){
-            return (_connectionProblem && _connectionProblem.status) ? "yellow" : "green"
-        }
-        else if(_golemStatus.status !== "Exception"){
-            return "yellow"
-        }
-        return "red"
-    }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, balance, currency} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
+        const {activeTab, presetModal, managePresetModal, modalData, engineLoading, isPresetNameExist} = this.state
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
@@ -191,17 +171,9 @@ export class MainFragment extends React.Component {
                     {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal} manageHandler={::this._handleManagePresetModal} />}
                 </div>
             </div>
-            {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handleSavePreset} {...modalData}/>}
+            {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
-            <div className="section__actions">
-                <div className="section__actions-status">
-                    <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
-                    <span>{`${golemStatus.message}`} {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://chat.golem.network"><span className="icon-new-window"/></a></span> : ""}</span>
-                </div>
-                <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
-            </div>
-            <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
-            </div>
+            <FooterMain {...this.props}/>
         </div>
         );
     }
