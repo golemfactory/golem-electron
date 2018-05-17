@@ -131,7 +131,8 @@ export default class SubTask extends React.Component {
             subtaskIdCopied: {},
             isTaskSubmitted: {},
             blockNodeModal: false,
-            subtask2block: null
+            nodeBlocked: false,
+            subtask2block: null,
         }
     }
 
@@ -175,23 +176,27 @@ export default class SubTask extends React.Component {
             })
     }
 
-    _blockNode() {
-        console.log('st_bn:' + this.state.subtask2block.node_id + ' Blocked!')
-        this._closeBlockNodeModal()
-    }
-
     _showBlockNodeModal(subtask){
         console.log("st_bnm: " + subtask.node_name + ", " + subtask.node_id)
         this.setState({
             blockNodeModal: true,
+            nodeBlocked: false,
             subtask2block: subtask,
         })
     }
+
+    _blockNode() {
+        console.log('st_bn:' + this.state.subtask2block.node_id + ' Blocked!')
+        this.setState({nodeBlocked: true})
+    }
+
+    _blockAcknowledged() {
+        console.log('st_ba:' + this.state.subtask2block.node_id + ' ack!')
+        this._closeBlockNodeModal()
+    }
+
     _closeBlockNodeModal() {
-        this.setState({
-            blockNodeModal: false,
-            subtask2block: null,
-        })
+        this.setState({blockNodeModal: false})
     }
 
     /**
@@ -300,7 +305,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
-        const {blockNodeModal, subtask2block} = this.state
+        const {blockNodeModal, nodeBlocked, subtask2block} = this.state
         const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
@@ -316,14 +321,16 @@ export default class SubTask extends React.Component {
         }
         return (
             <div id="frameSVG">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine(isDeveloperMode, customStyle)}
-        </svg>
-        {blockNodeModal && <BlockNodeModal
-            cancelAction={::this._closeBlockNodeModal}
-            blockAction={::this._blockNode}
-            node2block={subtask2block.node_name}/>}
-      </div>
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    {this.drawLine(isDeveloperMode, customStyle)}
+                </svg>
+                {blockNodeModal && <BlockNodeModal
+                    cancelAction={::this._closeBlockNodeModal}
+                    blockAction={::this._blockNode}
+                    blockAcknowledged={::this._blockAcknowledged}
+                    nodeBlocked={nodeBlocked}
+                    subtask2block={subtask2block}/>}
+            </div>
         );
     }
 }

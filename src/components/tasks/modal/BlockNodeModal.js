@@ -7,19 +7,41 @@ export default class BlockNodeModal extends React.Component {
         super(props);
     }
 
+    _nodeName(subtask) {
+        return subtask.node_name ? subtask.node_name : "Anonymous"
+    }
+
+    _nodeId(subtask) {
+        return subtask.node_id.substr(0, 24) + "…"
+    }
+
     render() {
-        const {cancelAction, blockAction, node2block} = this.props
+        const {cancelAction, blockAction, blockAcknowledged, nodeBlocked, subtask2block} = this.props
         return (
             <div className="container__modal container__block-node-modal">
                 <div className="content__modal">
                     <div>
-                        <span className="icon-blocked"/>
+                        <span className={`${nodeBlocked ? "icon-checkmark" : "icon-blocked"}`}/>
                     </div>
-                    <span>Are you sure you want to block "<b>{node2block}</b>" node?</span>
-                    <div className="action__modal">
-                        <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
-                        <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
-                    </div>
+                    {!nodeBlocked && <React.Fragment>
+                        <span>Are you sure you want to block the "
+                            <b>{this._nodeName(subtask2block)}</b>"
+                            node?
+                            <span className="node_id_span"> (node id: {this._nodeId(subtask2block)})</span>
+                        </span>
+                        <div className="action__modal">
+                            <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
+                            <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
+                        </div>
+                    </React.Fragment>}
+                    {nodeBlocked && <React.Fragment>
+                        <span>The "<b>{this._nodeName(subtask2block)}</b>"
+                            node was added to the blacklist.
+                        </span>
+                        <div className="action__modal">
+                            <button type="button" className="btn--primary" onClick={blockAcknowledged} autoFocus>OK!</button>
+                        </div>
+                    </React.Fragment>}
                 </div>
             </div>
         );
