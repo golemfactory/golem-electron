@@ -31,6 +31,7 @@ export let dict = Object.freeze({
     RESTART_FRAME: 'RESTART_FRAME',
     RESTART_SUBTASK: 'RESTART_SUBTASK',
     RUN_TEST_TASK: 'RUN_TEST_TASK',
+    ABORT_TEST_TASK: 'ABORT_TEST_TASK',
     SET_TASK_TEST_STATUS: 'SET_TASK_TEST_STATUS',
     GET_ESTIMATED_COST: 'GET_ESTIMATED_COST',
     SET_ESTIMATED_COST: 'SET_ESTIMATED_COST',
@@ -138,6 +139,7 @@ const {
     RESTART_FRAME, 
     RESTART_SUBTASK, 
     RUN_TEST_TASK, 
+    ABORT_TEST_TASK,
     SET_TASK_TEST_STATUS, 
     GET_ESTIMATED_COST, 
     SET_ESTIMATED_COST, 
@@ -556,6 +558,11 @@ export const restartSubtask = (payload) => ({
 
 export const runTestTask = (payload) => ({
     type: RUN_TEST_TASK,
+    payload
+})
+
+export const abortTestTask = (payload) => ({
+    type: ABORT_TEST_TASK,
     payload
 })
 

@@ -29,6 +29,7 @@ export class NewTask extends React.Component {
             name: props.taskName || "Golem Task",
             type: radioTypes[this.props.params.type] || null
         }
+        props.actions.clearTaskPlain() //clear previous test status
     }
 
     componentWillUpdate(nextProps, nextState) {

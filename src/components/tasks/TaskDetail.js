@@ -220,6 +220,11 @@ export class TaskDetail extends React.Component {
         this.liveSubList && clearInterval(this.liveSubList);
         this.copyTimeout && clearTimeout(this.copyTimeout);
         this.interactedInputObject = {}
+
+        if(this.props.testStatus && this.props.testStatus.status === testStatusDict.STARTED){
+            console.log(this.props.testStatus.status, testStatusDict.STARTED)
+            this.props.actions.abortTestTask()
+        }
     }
 
     componentWillReceiveProps(nextProps) {
