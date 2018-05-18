@@ -285,11 +285,11 @@ export class SubTask extends React.Component {
                                 {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
                             </div>
                         </div>
-                        {isDevMode && <div className="logs__tooltip">
+                        {isDevMode && <div className="logs_errors_btns__tooltip">
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
-                        <div className="resubmit__tooltip">
+                        <div className="resubmit_block_btns__tooltip">
                             <button type="button"
                                 onClick={this._handleResubmit.bind(this, subtask.subtask_id,
                                     (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
@@ -297,7 +297,7 @@ export class SubTask extends React.Component {
                                 >
                                     {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
                             </button>
-                            <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>
+                            {isDevMode && <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>}
                         </div>
                     </div>}
                 align={{
