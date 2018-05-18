@@ -337,9 +337,11 @@ export const setAdvancedManually = (payload) => ({
     payload
 })
 
-export const blockNode = (payload) => ({
+export const blockNode = (payload, _resolve, _reject) => ({
     type: BLOCK_NODE,
-    payload
+    payload,
+    _resolve,
+    _reject
 })
 
 

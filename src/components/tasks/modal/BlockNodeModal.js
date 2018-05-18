@@ -16,30 +16,38 @@ export default class BlockNodeModal extends React.Component {
     }
 
     render() {
-        const {cancelAction, blockAction, blockAcknowledged, nodeBlocked, subtask2block} = this.props
+        const {cancelAction, blockAction, nodeBlocked, errMsg, subtask2block} = this.props
         return (
             <div className="container__modal container__block-node-modal">
                 <div className="content__modal">
                     <div>
                         <span className={`${nodeBlocked ? "icon-checkmark" : "icon-blocked"}`}/>
                     </div>
-                    {!nodeBlocked && <React.Fragment>
-                        <span>Are you sure you want to block the "
-                            <b>{this._nodeName(subtask2block)}</b>"
-                            node?
-                            <span className="node_id_span"> (node id: {this._nodeId(subtask2block)})</span>
-                        </span>
-                        <div className="action__modal">
-                            <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
-                            <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
-                        </div>
-                    </React.Fragment>}
-                    {nodeBlocked && <React.Fragment>
+                    {!nodeBlocked ? <React.Fragment>
+                        { !errMsg ? <React.Fragment>
+                            <span>Are you sure you want to block the "
+                                <b>{this._nodeName(subtask2block)}</b>"
+                                node?
+                                <span className="node_id_span"> (node id: {this._nodeId(subtask2block)})</span>
+                            </span>
+                            <div className="action__modal">
+                                <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
+                                <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
+                            </div>
+                        </React.Fragment> : <React.Fragment>
+                            <span>
+                                {errMsg}
+                            </span>
+                            <div className="action__modal">
+                                <button className="btn--warning" onClick={cancelAction}>Cancel</button>
+                            </div>
+                        </React.Fragment>}
+                    </React.Fragment> : <React.Fragment>
                         <span>The "<b>{this._nodeName(subtask2block)}</b>"
                             node was added to the blacklist.
                         </span>
                         <div className="action__modal">
-                            <button type="button" className="btn--primary" onClick={blockAcknowledged} autoFocus>OK!</button>
+                            <button type="button" className="btn--primary" onClick={cancelAction} autoFocus>OK!</button>
                         </div>
                     </React.Fragment>}
                 </div>
