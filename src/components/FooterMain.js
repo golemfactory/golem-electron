@@ -60,9 +60,9 @@ export default class FooterMain extends Component {
                         
                         <div>
                             <span>
-                            <span className="status-message">{`${golemStatus.message}`}</span>
-                            {golemStatus.message.length > 10 && <br/>}
-                            {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://chat.golem.network"><span className="icon-new-window"/></a></span> : ""}
+                                <span className="status-message">{`${golemStatus.message}`}</span>
+                                {(golemStatus.message && golemStatus.message.length > 10) && <br/>}
+                                {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://chat.golem.network"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">
                                 <span>Provider state: {stats && stats.host_state}</span>
