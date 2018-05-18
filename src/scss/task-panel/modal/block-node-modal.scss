@@ -6,6 +6,9 @@
         text-align: center;
         padding: 20px;
         .icon-blocked {
+            &:before {
+                content: "\e927";
+            }
             display: inline-block;
             color: $color-text4;
             background: #f33333;

@@ -35,12 +35,9 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
  *  @see https://jsfiddle.net/mk8jx9wb/
  */
 function convertToSVGPoints(arr, offset) {
-    // console.log("offset", offset);
     if(offset)
         arr = arr.map(item => {
-            // console.log("item", item);
             item[offset.index] = item[offset.index] + (offset.value + 1)
-            // console.log("item", item);
             return item
         })
     arr.push(arr[0])
@@ -199,11 +196,10 @@ export class SubTask extends React.Component {
         new Promise((resolve, reject) => {
             this.props.actions.blockNode(node_id, resolve, reject)
         }).then(([result, msg]) => {
-            if (result) {
-                this.setState({nodeBlocked: true})
-            } else {
-                this.setState({errMsg: msg})
-            }
+            this.setState({
+                nodeBlocked: result,
+                errMsg: msg
+            })
         })
     }
 
@@ -264,7 +260,6 @@ export class SubTask extends React.Component {
             .map((item, index) => {
                 
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0];
-                // console.log("taskDetails.status", taskDetails.status);
                 const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
@@ -295,8 +290,7 @@ export class SubTask extends React.Component {
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
                         <div className="resubmit__tooltip">
-                            <button
-                                type="button"
+                            <button type="button"
                                 onClick={this._handleResubmit.bind(this, subtask.subtask_id,
                                     (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
                                 disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}

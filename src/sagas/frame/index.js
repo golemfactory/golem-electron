@@ -8,23 +8,11 @@ import { config, _handleRPC } from './../handler'
 const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK, BLOCK_NODE} = dict
 
 /**
- * [restartSubtask func. restarts related subtask]
- * @param  {Object} session [Websocket connection session]
- * @param  {Object} payload [Subtask Id]
- * @return {Object}         [Promise]
+ * [blockNode func. blocks given node id]
+ * @param  {Object} payload [Node Id]
  */
 export function blockNode(session, {payload, _resolve, _reject}) {
-
-    function on_block_node(args) {
-        var blocked_node = args[0];
-        _resolve(blocked_node)
-    }
-
-    function on_error(args) {
-        _reject(args)
-    }
-
-    _handleRPC(on_block_node, session, config.BLOCK_NODE_RPC, [payload], on_error)
+    _handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject)
 }
 
 export function* blockNodeBase(session, payload) {
