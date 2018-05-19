@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO} = dict
+const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO, GET_PERFORMANCE_CHARTS} = dict
 
 
 /**
@@ -24,14 +24,19 @@ export function fireEngine(session) {
     })
 }
 
-export function activatePreset(session, payload) {
+export function activatePreset(session, {chosenPreset, runBenchmarks}) {
+    console.log('activatePreset: ' + chosenPreset + ', ' + runBenchmarks)
     return new Promise((resolve, reject) => {
         function on_preset(args) {
             let presetStatus = args[0];
-            resolve(presetStatus)
+            // resolve(presetStatus)
+            resolve({
+                type: GET_PERFORMANCE_CHARTS,
+                payload: null
+            })
         }
 
-        _handleRPC(on_preset, session, config.PRESET_ACTIVATE_RPC, [payload])
+        _handleRPC(on_preset, session, config.PRESET_ACTIVATE_RPC, [chosenPreset, runBenchmarks])
     })
 }
 
@@ -41,15 +46,20 @@ export function activatePreset(session, payload) {
  * @param {Object} options.payload [Name of chosen preset]
  */
 export function* golemizeBase(session, {payload}) {
-    const presetStatus = yield call(activatePreset, session, payload);
+    console.log('golemizeBase: payl')
+    console.log(payload)
+    const action = yield call(activatePreset, session, payload);
     //console.log("presetStatus", presetStatus);
     const engineStatus = yield call(fireEngine, session);
     //console.log(engineStatus)
+    console.log('golemizeBase: fireEngine: ' + engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_PAUSE_STATUS,
             payload: true
         })
+    } else {
+        yield action && put(action)
     }
 
 }

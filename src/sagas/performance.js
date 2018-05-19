@@ -5,7 +5,7 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK} = dict
+const {GET_PERFORMANCE_CHARTS, SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK} = dict
 
 const products = Object.freeze({
         BLENDER: 'estimated_blender_performance',
@@ -15,6 +15,7 @@ const products = Object.freeze({
 
 
 export function callBenchmarkOnStartup(session){
+    console.log('callBenchmarkOnStartup')
     return new Promise((resolve, reject) => {
         function on_update_benchmark(args) {
             let updateBenchmark = args[0];
@@ -88,5 +89,6 @@ export function* fireBase(session) {
  */
 export function* performanceFlow(session) {
     yield fork(benchmarkBase, session)
+    yield takeEvery(GET_PERFORMANCE_CHARTS, benchmarkBase, session)
     yield takeEvery(RECOUNT_BENCHMARK, fireBase, session)
 }

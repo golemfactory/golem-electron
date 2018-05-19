@@ -72,7 +72,11 @@ export class MainFragment extends React.Component {
         if (isEngineOn) {
             actions.stopGolem()
         } else {
-            actions.startGolem(chosenPreset)
+            console.log("chosenPreset: " + chosenPreset)
+            actions.startGolem({
+                chosenPreset: chosenPreset,
+                runBenchmarks: true
+            })
         }
         this.setState({
             engineLoading: true
