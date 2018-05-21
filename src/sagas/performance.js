@@ -77,6 +77,7 @@ export function* fireBase(session) {
     let environments = yield call(fetchEnvironments, session)
     environments.push("DEFAULT") // -> Hardcoded to call cpu benchmark
     for (let i = 0; i < environments.length; i++) {
+        console.log('running env: ' + environments[i])
         const action = yield call(callBenchmark, environments[i], session)
         yield action && put(action)
     }

@@ -28,6 +28,7 @@ export function activatePreset(session, {chosenPreset, runBenchmarks}) {
     console.log('activatePreset: ' + chosenPreset + ', ' + runBenchmarks)
     return new Promise((resolve, reject) => {
         function on_preset(args) {
+            console.log('on_preset' + args)
             let presetStatus = args[0];
             // resolve(presetStatus)
             resolve({
@@ -49,6 +50,9 @@ export function* golemizeBase(session, {payload}) {
     console.log('golemizeBase: payl')
     console.log(payload)
     const action = yield call(activatePreset, session, payload);
+    console.log('yielding aqction:' + action)
+    yield action && put(action)
+    console.log('action yielded:' + action)
     //console.log("presetStatus", presetStatus);
     const engineStatus = yield call(fireEngine, session);
     //console.log(engineStatus)
@@ -58,8 +62,6 @@ export function* golemizeBase(session, {payload}) {
             type: SET_GOLEM_PAUSE_STATUS,
             payload: true
         })
-    } else {
-        yield action && put(action)
     }
 
 }
