@@ -31,6 +31,26 @@ export class Performance extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            minPerf: 0
+        }
+    }
+
+    componentDidMount() {
+        this._setMinPerf(this.props.chart["estimated_blender_performance"])
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(!!nextProps.chart && (nextProps.chart["estimated_blender_performance"] !== this.props.chart['estimated_blender_performance'])){
+            this._setMinPerf(nextProps.chart["estimated_blender_performance"])
+        }
+    }
+
+    _setMinPerf(value){
+        this.setState({
+                minPerf: Math.trunc(value)
+            }, () => this.refs.minPerf.value = this.state.minPerf)
     }
 
     /**
@@ -41,12 +61,27 @@ export class Performance extends React.Component {
     }
 
     /**
+     * [_applyMinPerformance func. sets minimum score of expected providers]
+     */
+    _applyMinPerformance(){
+
+    }
+
+
+    _handleMinPerfChange(e){
+        this.setState({
+            minPerf: e.target.value
+        })
+    }
+
+    /**
      * [loadList func. populates performance items]
      * @param  {Array}      data        [List of performance items.]
      * @param  {Object}     chart       [Chart values of the performance items]
      * @return {DOM}                    [Performance item elements]
      */
     loadList(data, chart) {
+        console.log("chart", chart);
         return data.map(({icon, title}, index) => <div className="list-item__performance" key={index.toString()}>
             <span className={'icon__list-item__acount ' + icon}>
                 <span className="path1"></span>
@@ -61,16 +96,31 @@ export class Performance extends React.Component {
 
     render() {
         const {chart, loadingIndicator} = this.props
+        const {minPerf} = this.state
         return (
             <div className="content__performance">
                 <div className="list__performance">
                     {this.loadList(mockList, chart)}
                 </div>
-                <button className={`btn--outline ${loadingIndicator && 'btn--loading'}`} onClick={::this._handleRecount} disabled={loadingIndicator}> {loadingIndicator ? 'Calculating' : 'Calculate' }{loadingIndicator && <span className="jumping-dots">
-  <span className="dot-1">.</span>
-  <span className="dot-2">.</span>
-  <span className="dot-3">.</span>
-</span> }</button>
+                <button className={`btn--outline btn--calculate ${loadingIndicator && 'btn--loading'}`} onClick={::this._handleRecount} disabled={loadingIndicator}> {loadingIndicator ? 'Calculating' : 'Calculate' }{loadingIndicator && <span className="jumping-dots">
+                      <span className="dot-1">.</span>
+                      <span className="dot-2">.</span>
+                      <span className="dot-3">.</span>
+                    </span> }
+                </button>
+                <div className="content__min-score">
+                    <span className="desc__min-score">To improve time of your task engage with nodes that have no less</span>
+                    <div className="action__min-score">
+                        <span className="icon-blender-grey">
+                            <span className="path1"></span>
+                            <span className="path2"></span>
+                            <span className="path3"></span>
+                        </span>
+                        <span>Blender score than:</span>
+                        <input ref="minPerf" type="number" max="10000" defaultValue={minPerf} onChange={::this._handleMinPerfChange} disabled={chart['estimated_blender_performance'] === 0}/>
+                        <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0}>Apply</button>
+                    </div>
+                </div>
             </div>
         );
     }

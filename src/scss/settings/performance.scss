@@ -5,11 +5,13 @@
 }
 
 .content__performance {
-    height: 231px;
-    button {
+    height: 321px;
+
+    .btn--calculate {
         float: right;
         width: 130px;
         transition: .5s all;
+        margin-bottom: 20px;
     }
     .btn--loading {
         width: 160px;
@@ -48,20 +50,22 @@
 }
 
 .list__performance {
-    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .list-item__performance {
     @include flex;
     padding: 10px 0;
     .icon__list-item__acount {
-        font-size: 20pt;
+        font-size: 16pt;
         width: 30px;
         color: $color-text2;
     }
     .title__list-item__acount {
         font-size: 10pt;
         flex: 0 0 70px;
+        color: $color-text;
+        font-weight: 400;
     }
     progress::-webkit-progress-bar {
         background-color: $color-accent3 !important;
@@ -86,5 +90,33 @@
         text-align: right;
         font-weight: bold;
         font-size: 10pt;
+    }
+}
+
+.content__min-score,
+.action__min-score{
+    width: 100%;
+    @include flex;
+    font-size: 9pt;
+    line-height: 3em;
+    font-weight: 400;
+}
+
+.content__min-score{
+    margin-top: 30px;
+    flex-direction: column;
+
+    input[type=number]{
+        width: 136px !important;
+    }
+
+    .desc__min-score{
+        align-self: left;
+    }
+
+    .icon-blender-grey{
+        font-size: 16pt;
+        width: 30px;
+        color: $color-text2;
     }
 }
