@@ -3,13 +3,14 @@ import { fork, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
+import { onPerformanceFetch } from './performance'
 
 
 const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO, GET_PERFORMANCE_CHARTS} = dict
 
 
 /**
- * [callTrust func. fetchs payment history of user, with interval]
+ * [callTrust func. fetches payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
@@ -25,19 +26,8 @@ export function fireEngine(session) {
 }
 
 export function activatePreset(session, {chosenPreset, runBenchmarks}) {
-    console.log('activatePreset: ' + chosenPreset + ', ' + runBenchmarks)
     return new Promise((resolve, reject) => {
-        function on_preset(args) {
-            console.log('on_preset' + args)
-            let presetStatus = args[0];
-            // resolve(presetStatus)
-            resolve({
-                type: GET_PERFORMANCE_CHARTS,
-                payload: null
-            })
-        }
-
-        _handleRPC(on_preset, session, config.PRESET_ACTIVATE_RPC, [chosenPreset, runBenchmarks])
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, [chosenPreset, runBenchmarks])
     })
 }
 
@@ -47,16 +37,9 @@ export function activatePreset(session, {chosenPreset, runBenchmarks}) {
  * @param {Object} options.payload [Name of chosen preset]
  */
 export function* golemizeBase(session, {payload}) {
-    console.log('golemizeBase: payl')
-    console.log(payload)
     const action = yield call(activatePreset, session, payload);
-    console.log('yielding aqction:' + action)
-    yield action && put(action)
-    console.log('action yielded:' + action)
-    //console.log("presetStatus", presetStatus);
+    yield put(action)
     const engineStatus = yield call(fireEngine, session);
-    //console.log(engineStatus)
-    console.log('golemizeBase: fireEngine: ' + engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_PAUSE_STATUS,

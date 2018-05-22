@@ -75,7 +75,7 @@ export class MainFragment extends React.Component {
             console.log("chosenPreset: " + chosenPreset)
             actions.startGolem({
                 chosenPreset: chosenPreset,
-                runBenchmarks: true
+                runBenchmarks: false
             })
         }
         this.setState({
