@@ -65,14 +65,13 @@ export class Advanced extends React.Component {
 
     /**
      * [_handleOptionChange func. will update adnvanced chart if there's any change on dropdown]
-     * @param  {Array}          list        [List of dropdown]
-     * @param  {String}         name        [Name of selected option]
-     * @param  {String}         id          [Id of selected option]
-     * @param  {String}         init        [Initial loading: true, personal choose: false]
+     * @param  {Array}          list          [List of dropdown]
+     * @param  {String}         selectedIndex [0-originated number of selected option]
+     * @param  {String}         init          [Initial loading: true, personal choose: false]
      */
-    _handleOptionChange(list, name, id, init = false) {
+    _handleOptionChange(list, selectedIndex, init = false) {
         const {actions, chartValues} = this.props
-        let value = list[id]
+        let value = list[selectedIndex]
         if (value) {
             actions.setChosenPreset(name, init)
             actions.setAdvancedChart({
