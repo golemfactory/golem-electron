@@ -73,7 +73,7 @@ export class Advanced extends React.Component {
         const {actions, chartValues} = this.props
         let value = list[selectedIndex]
         if (value) {
-            actions.setChosenPreset(name, init)
+            actions.setChosenPreset(value.name, init)
             actions.setAdvancedChart({
                 ...value
             });
