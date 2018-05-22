@@ -25,9 +25,9 @@ export function fireEngine(session) {
     })
 }
 
-export function activatePreset(session, {chosenPreset, runBenchmarks}) {
+export function activatePreset(session, chosenPreset) {
     return new Promise((resolve, reject) => {
-        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, [chosenPreset, runBenchmarks])
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset)
     })
 }
 
