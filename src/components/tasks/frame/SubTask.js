@@ -1,6 +1,12 @@
 import React from 'react';
 import ReactTooltip from 'rc-tooltip'
 
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import * as Actions from '../../../actions'
+
+import BlockNodeModal from './../modal/BlockNodeModal'
+
 import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
 
 const {ipcRenderer, clipboard} = window.electron;
@@ -9,10 +15,14 @@ const UNDONE = 0
 const PROGRESS = 1
 const DONE = 2
 
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
 /*################### HELPER FUNCTIONS #######################*/
 
 /**
- * Function fetchs selected nth items(columns) of 2D Array
+ * Function fetches selected nth items(columns) of 2D Array
  * @param  {Array}      arr     [2D Array]
  * @param  {Number}     n       [(n)th column number]
  * @return {Array}              [Array of (n)th column]
@@ -25,12 +35,9 @@ const arrayColumn = (arr, n) => arr.map(x => x[n]);
  *  @see https://jsfiddle.net/mk8jx9wb/
  */
 function convertToSVGPoints(arr, offset) {
-    console.log("offset", offset);
     if(offset)
         arr = arr.map(item => {
-            console.log("item", item);
             item[offset.index] = item[offset.index] + (offset.value + 1)
-            console.log("item", item);
             return item
         })
     arr.push(arr[0])
@@ -109,7 +116,7 @@ const statusDict = Object.freeze({
     STARTING: 'Starting',
     DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
-    FAILURE: 'Aborted',
+    FAILURE: 'Failure',
     TIMEOUT: 'Timeout',
     RESTARTED: 'Restart'
 })
@@ -121,13 +128,17 @@ let statusClassDict = {
     'Aborted': 'frame--error'
 }
 
-export default class SubTask extends React.Component {
+export class SubTask extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
             subtaskIdCopied: {},
-            isTaskSubmitted: {}
+            isTaskSubmitted: {},
+            blockNodeModal: false,
+            nodeBlocked: false,
+            errMsg: null,
+            subtask2block: null,
         }
     }
 
@@ -155,7 +166,6 @@ export default class SubTask extends React.Component {
     }
 
     _handleOpenFile(path){
-        
         ipcRenderer.send('open-file', path)
     }
 
@@ -170,6 +180,31 @@ export default class SubTask extends React.Component {
                     })
                 }, 5000)
             })
+    }
+
+    _showBlockNodeModal(subtask){
+        this.setState({
+            blockNodeModal: true,
+            nodeBlocked: false,
+            errMsg: null,
+            subtask2block: subtask,
+        })
+    }
+
+    _blockNode() {
+        let node_id = this.state.subtask2block.node_id
+        new Promise((resolve, reject) => {
+            this.props.actions.blockNode(node_id, resolve, reject)
+        }).then(([result, msg]) => {
+            this.setState({
+                nodeBlocked: result,
+                errMsg: msg
+            })
+        })
+    }
+
+    _closeBlockNodeModal() {
+        this.setState({blockNodeModal: false})
     }
 
     /**
@@ -225,7 +260,6 @@ export default class SubTask extends React.Component {
             .map((item, index) => {
                 
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0];
-                console.log("taskDetails.status", taskDetails.status);
                 const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
                 key={index.toString()}
@@ -251,18 +285,20 @@ export default class SubTask extends React.Component {
                                 {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
                             </div>
                         </div>
-                        {isDevMode && <div className="logs__tooltip">
+                        {isDevMode && <div className="logs_errors_btns__tooltip">
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
                             <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
                         </div>}
-                        <button 
-                            className="submit__button" 
-                            type="button" 
-                            onClick={this._handleResubmit.bind(this, subtask.subtask_id, (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                            disabled={taskDetails.status === statusDict.RESTARTED 
-                                      || this.state.isTaskSubmitted[subtask.subtask_id]}>
-                                {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
-                        </button>
+                        <div className="resubmit_block_btns__tooltip">
+                            <button type="button"
+                                onClick={this._handleResubmit.bind(this, subtask.subtask_id,
+                                    (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
+                                disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
+                                >
+                                    {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
+                            </button>
+                            {isDevMode && <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>}
+                        </div>
                     </div>}
                 align={{
                     offset: tooltipOffset(item.value, isDirectionTop),
@@ -274,6 +310,7 @@ export default class SubTask extends React.Component {
     }
 
     render() {
+        const {blockNodeModal, nodeBlocked, errMsg, subtask2block} = this.state
         const {offset, isDeveloperMode} = this.props
         let customStyle = {}
         if (offset.direction === 'y') {
@@ -289,10 +326,18 @@ export default class SubTask extends React.Component {
         }
         return (
             <div id="frameSVG">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-            {this.drawLine(isDeveloperMode, customStyle)}
-        </svg>
-      </div>
+                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    {this.drawLine(isDeveloperMode, customStyle)}
+                </svg>
+                {blockNodeModal && <BlockNodeModal
+                    cancelAction={::this._closeBlockNodeModal}
+                    blockAction={::this._blockNode}
+                    nodeBlocked={nodeBlocked}
+                    errMsg={errMsg}
+                    subtask2block={subtask2block}/>}
+            </div>
         );
     }
 }
+
+export default connect(null, mapDispatchToProps)(SubTask)

@@ -5,7 +5,21 @@ import { dict } from '../../actions'
 import { config, _handleRPC } from './../handler'
 
 
-const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK} = dict
+const {SET_TASK_DETAILS, SET_SUBTASKS_BORDER, SET_PREVIEW_LIST, SET_SUBTASKS_LIST, FETCH_SUBTASKS_LIST, SET_SUBTASKS_VISIBILITY, SET_ALL_FRAMES, RESTART_FRAME, RESTART_SUBTASK, BLOCK_NODE} = dict
+
+/**
+ * [blockNode func. blocks given node id]
+ * @param  {Object} payload [Node Id]
+ */
+export function blockNode(session, {payload, _resolve, _reject}) {
+    _handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject)
+}
+
+export function* blockNodeBase(session, payload) {
+    if (payload) {
+        yield call(blockNode, session, payload);
+    }
+}
 
 /**
  * [restartSubtask func. restarts related subtask]
@@ -203,4 +217,5 @@ export function* frameBase(session, id) {
     yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id)
     yield takeLatest(RESTART_FRAME, restartFrameBase, session, id)
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session)
+    yield takeLatest(BLOCK_NODE, blockNodeBase, session)
 }

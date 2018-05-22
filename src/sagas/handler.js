@@ -26,6 +26,7 @@ export let config = Object.freeze({
     GET_NODE_KEY_RPC: 'net.ident.key',
     GET_KNOWN_PEERS_RPC: 'net.peers.known',
     GET_CONNECTED_PEERS_RPC: 'net.peers.connected',
+    BLOCK_NODE_RPC: 'net.peer.block',
     CONNECTION_CH: 'evt.net.connection',
     GET_P2P_PORT_RPC: 'net.p2p.port',
     GET_TASK_SERVER_PORT_RPC: 'net.tasks.port',
