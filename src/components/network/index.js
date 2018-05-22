@@ -19,13 +19,6 @@ import History from './tabs/History'
 import Advanced from './tabs/Advanced'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
-/*if (!("require" in window)) {
-    console.info("This browser does not support electron features.");
-} else {
-    const electron = window.require('electron')
-}*/
-
-//a11y(React)
 
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
@@ -72,7 +65,6 @@ export class MainFragment extends React.Component {
         if (isEngineOn) {
             actions.stopGolem()
         } else {
-            console.log("chosenPreset: " + chosenPreset)
             actions.startGolem({
                 chosenPreset: chosenPreset,
                 runBenchmarks: false
@@ -88,7 +80,6 @@ export class MainFragment extends React.Component {
      * @param  {Object}      data       [Custom hardware preset object]
      */
     _handlePresetModal(data) {
-        //console.log(data)
         this.setState({
             presetModal: true,
             modalData: data

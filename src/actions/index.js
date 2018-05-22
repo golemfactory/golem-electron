@@ -46,7 +46,6 @@ export let dict = Object.freeze({
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_LOCAL_GETH: 'SET_LOCAL_GETH',
     SET_PERFORMANCE_CHARTS: 'SET_PERFORMANCE_CHARTS',
-    GET_PERFORMANCE_CHARTS: 'GET_PERFORMANCE_CHARTS',
     RECOUNT_BENCHMARK: 'RECOUNT_BENCHMARK',
     SET_PROV_MIN_PRICE: 'SET_PROV_MIN_PRICE',
     SET_REQ_MAX_PRICE: 'SET_REQ_MAX_PRICE',
@@ -156,7 +155,6 @@ const {
     SET_FILE_LOCATION, 
     SET_LOCAL_GETH,
     SET_PERFORMANCE_CHARTS, 
-    GET_PERFORMANCE_CHARTS,
     RECOUNT_BENCHMARK,
     SET_PROV_MIN_PRICE, 
     SET_REQ_MAX_PRICE, 
@@ -376,11 +374,6 @@ export const setLocalGeth = (payload) => ({
 
 export const setPerformanceCharts = (payload) => ({
     type: SET_PERFORMANCE_CHARTS,
-    payload
-})
-
-export const getPerformanceCharts = (payload) => ({
-    type: GET_PERFORMANCE_CHARTS,
     payload
 })
 

@@ -6,7 +6,7 @@ import { config, _handleRPC } from './handler'
 import { onPerformanceFetch } from './performance'
 
 
-const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO, GET_PERFORMANCE_CHARTS} = dict
+const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO} = dict
 
 
 /**
@@ -66,7 +66,6 @@ export function stopEngine(session) {
  */
 export function* stopGolemBase(session) {
     const engineStatus = yield call(stopEngine, session);
-    //console.info("engineStatus", engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_PAUSE_STATUS,
