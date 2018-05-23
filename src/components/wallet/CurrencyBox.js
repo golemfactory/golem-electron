@@ -81,11 +81,11 @@ export default class CurrencyBox extends Component {
             <div className="container">
             <div id="cube" className={expandedAmount ? (expandedAmount === suffix ? "show-top" : "show-front") : "show-top"}>
                 <div className={`side1 ${suffix}`}>
-                    <span>Locked: <b>{lockedBalance[0].toNumber()}</b></span>
-                    { expandedAmount === "GNT" && <span>Waiting: <b>{lockedBalance[1].toNumber()}</b></span>}
+                    <span>Locked: <b>{lockedBalance[0]}</b></span>
+                    { expandedAmount === "GNT" && <span>Waiting: <b>{lockedBalance[1]}</b></span>}
                 </div>
                 <div className="side2">
-                    <div ref={"currencyBox" + this.props.suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
+                    <div ref={"currencyBox" + suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
                 <div>
                     <span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
