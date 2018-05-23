@@ -1042,7 +1042,7 @@ export class TaskDetail extends React.Component {
                         { (isDetailPage && isDeveloperMode) &&
                         <div className="section-node-list__task-detail">
                             <h4 className="experiment">Dev mode</h4>
-                        { subtasksList.length > 0 ?
+                        { subtasksList && subtasksList.length > 0 ?
                             <table>
                                 <thead>
                                     <tr>
