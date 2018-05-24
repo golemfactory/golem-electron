@@ -29,14 +29,24 @@ export default class CurrencyBox extends Component {
         }
     }
 
+    componentDidMount() {
+            var item = this.refs["currencyBox" + this.props.suffix];
+            item && item.addEventListener("animationend", this._removeItem.bind(this, item));
+    }
+
     componentWillReceiveProps(nextProps) {
         if(nextProps.expandedAmount !== this.props.expandedAmount){
             this.setState({
-                amountPrecision: nextProps.expandedAmount ? 13 : 4
+                amountPrecision: nextProps.expandedAmount ? 8 : 4
             })
         }
     }
 
+    _removeItem(item){
+        const {expandedAmount, suffix} = this.props
+        if(expandedAmount !== suffix && expandedAmount !== null){
+        }
+    }
 
     _formatAmount(_balance ,_suffix, currency = 1) {
         if (this.props.balance.toNumber() === (new BigNumber(_balance.toString())
@@ -56,6 +66,7 @@ export default class CurrencyBox extends Component {
     render() {
         const {
             balance, 
+            lockedBalance,
             currency, 
             suffix, 
             description, 
@@ -67,9 +78,16 @@ export default class CurrencyBox extends Component {
         } = this.props
 
         return (
-            <div className={`content__currency-box ${expandedAmount ? (expandedAmount === suffix ? "expand" : "shrink") : ""}`}>
+            <div className="container">
+            <div id="cube" className={expandedAmount ? (expandedAmount === suffix ? "show-top" : "show-front") : "show-top"}>
+                <div className={`side1 ${suffix}`}>
+                    <span>Locked: <b>{lockedBalance[0]}</b></span>
+                    { expandedAmount === "GNT" && <span>Waiting: <b>{lockedBalance[1]}</b></span>}
+                </div>
+                <div className="side2">
+                    <div ref={"currencyBox" + suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
                 <div>
-                	<span className={`icon-${currencyIcons[suffix]}`}/>
+                    <span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
                 <div>
                     <Motion defaultStyle={{
@@ -80,8 +98,8 @@ export default class CurrencyBox extends Component {
                     damping: 50
                 })
             }}>
-                    {({balanceAnimated}) => <span className="amount" onClick={expandAmount.bind(this, suffix)}>
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}...
+                    {({balanceAnimated}) => <span className="amount">
+                        {::this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                 </Motion>
@@ -99,10 +117,13 @@ export default class CurrencyBox extends Component {
                 <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{
                 offset: [10, 8],
             }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
-                	<span className="icon-question-mark"/>
+                    <span className="icon-question-mark"/>
                 </ReactTooltip>
                 <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={(!isMainNet || !isGolemReady(golemStatus.status))}>Withdraw</button>
             </div>
+                </div>
+            </div>
+        </div>
         );
     }
 }
