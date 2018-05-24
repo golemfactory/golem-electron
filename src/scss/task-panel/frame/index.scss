@@ -126,7 +126,25 @@
         overflow-x: none;
     }
 
-    .logs__tooltip {
+    .resubmit_block_btns__tooltip {
+        position: absolute;
+        left: 0;
+        display: flex;
+        justify-content: space-between;
+        bottom: 42;
+        width: 100%;
+        color: $color-text2;
+
+        button:first {
+            margin-right: .25em;
+        }
+
+        button + button {
+            margin-left: .25em;
+        }
+    }
+
+    .logs_errors_btns__tooltip {
         position: absolute;
         left: 0;
         display: flex;
@@ -146,12 +164,7 @@
 
     button {
         position: relative;
-    }
-
-    .submit__button {
-        position: absolute;
-        left: 0;
-        bottom: 42px;
+        border-radius: 5px;
     }
 }
 
