@@ -596,9 +596,13 @@ export class TaskDetail extends React.Component {
             delete preset.value.resolution
         }
 
-        formatRef.value = format
+        // If  file format from preset list is not available on mockFormatList, use first element as default
+        const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
+        const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
+        console.log("formatIndex", formatIndex, pickFormatIndex);
+
+        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
         outputPath.value = output_path
-        let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
 
         if (this.props.task.type === taskType.BLENDER) {
 
@@ -661,12 +665,16 @@ export class TaskDetail extends React.Component {
     _applyDefaultPreset(){
         const {resolution, file_format} = this.props.testStatus.more.after_test_data
         const {resolutionW, resolutionH, formatRef} = this.refs
-        let format = file_format.replace(".", "").toUpperCase()
-        let formatIndex = mockFormatList.map(item => item.name).indexOf(format)
+        const format = file_format.replace(".", "").toUpperCase()
+
+        // If taken file format from input file is not available on mockFormatList, use first element as default
+        const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
+        const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
+        console.log("formatIndex", formatIndex, pickFormatIndex);
 
         resolutionW.value = resolution[0]
         resolutionH.value = resolution[1]
-        formatRef.value = format
+        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
 
         this.setState({
             resolution,
