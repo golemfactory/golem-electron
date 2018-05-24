@@ -99,7 +99,7 @@ export default class CurrencyBox extends Component {
                 })
             }}>
                     {({balanceAnimated}) => <span className="amount">
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}...
+                        {::this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                 </Motion>
