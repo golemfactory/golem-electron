@@ -25,10 +25,10 @@ const statusDict = Object.freeze({
 })
 
 const statusClassDict = Object.freeze({
-    'Not started': 'frame--undone',
-    'Computing': 'frame--progress',
-    'Finished': 'frame--done',
-    'Aborted': 'frame--error'
+    'notStarted': 'frame--undone',
+    'computing': 'frame--progress',
+    'finished': 'frame--done',
+    'aborted': 'frame--error'
 })
 
 /*################### HELPER FUNCTIONS #################*/
@@ -101,6 +101,7 @@ export class All extends React.Component {
      */
     getStyles() {
         const {show, frameList} = this.props
+        console.log("frameList", frameList);
         return frameList.filter((item, index) => {
             return show == routesDict.COMPLETE ? item[1][0] === statusDict.FINISHED : true
         })
