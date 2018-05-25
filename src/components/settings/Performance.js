@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
 
+import Slider from './../Slider'
+
 const mapStateToProps = state => ({
     chart: state.performance.charts,
     loadingIndicator: state.performance.loadingIndicator
@@ -38,12 +40,11 @@ export class Performance extends React.Component {
     }
 
     componentDidMount() {
-        this._setMinPerf(this.props.chart["estimated_blender_performance"])
     }
 
     componentWillReceiveProps(nextProps) {
         if(!!nextProps.chart && (nextProps.chart["estimated_blender_performance"] !== this.props.chart['estimated_blender_performance'])){
-            this._setMinPerf(nextProps.chart["estimated_blender_performance"])
+            //this._setMinPerf(nextProps.chart["estimated_blender_performance"])
         }
     }
 
@@ -68,10 +69,8 @@ export class Performance extends React.Component {
     }
 
 
-    _handleMinPerfChange(e){
-        this.setState({
-            minPerf: e.target.value
-        })
+    _handleMinPerfSlider(e){
+        
     }
 
     /**
@@ -109,17 +108,10 @@ export class Performance extends React.Component {
                     </span> }
                 </button>
                 <div className="content__min-score">
-                    <span className="desc__min-score">To improve time of your task engage with nodes that have no less</span>
-                    <div className="action__min-score">
-                        <span className="icon-blender-grey">
-                            <span className="path1"></span>
-                            <span className="path2"></span>
-                            <span className="path3"></span>
-                        </span>
-                        <span>Blender score than:</span>
-                        <input ref="minPerf" type="number" max="10000" defaultValue={minPerf} onChange={::this._handleMinPerfChange} disabled={chart['estimated_blender_performance'] === 0}/>
-                        <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0}>Apply</button>
-                    </div>
+                    <span className="desc__min-score">After benchmark calculation you can improve time of your task by setting how powerful nodes you are connecting with:</span>
+                    <Slider inputId="performance_slider" value={50} max={10} mainColor={"#1c76e7"} aria-label="Performance slider" callback={::this._handleMinPerfSlider} warn={false}/>
+                    <span className="hint__min-score">Setting the slider to "0" will turn this option off. Range from 1-10 represents power of nodes that are in the network.</span>
+                    <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0}>Apply</button>
                 </div>
             </div>
         );

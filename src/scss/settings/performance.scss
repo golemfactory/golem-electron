@@ -5,7 +5,7 @@
 }
 
 .content__performance {
-    height: 321px;
+    height: 430px;
 
     .btn--calculate {
         float: right;
@@ -93,12 +93,12 @@
     }
 }
 
-.content__min-score,
-.action__min-score{
+.content__min-score{
     width: 100%;
+    height: 200px;
     @include flex;
+    align-items: stretch;
     font-size: 9pt;
-    line-height: 3em;
     font-weight: 400;
 }
 
@@ -106,17 +106,18 @@
     margin-top: 30px;
     flex-direction: column;
 
-    input[type=number]{
-        width: 136px !important;
-    }
-
     .desc__min-score{
         align-self: left;
+        margin-bottom: 20px;
     }
 
-    .icon-blender-grey{
-        font-size: 16pt;
-        width: 30px;
-        color: $color-text2;
+    .hint__min-score{
+        text-align: center;
+        color: $color-text3;
+        margin: 25px 0;
+    }
+
+    .btn--outline{
+        align-self: flex-end;
     }
 }
