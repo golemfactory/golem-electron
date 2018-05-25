@@ -90,7 +90,7 @@ export class Wallet extends Component {
 	                <div className="panel_box">
 	                	<CurrencyBox
                             balance={balance[0]}
-                            lockedBalance={[balance[4], balance[5]]}
+                            lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             suffix="GNT"
                             description={ isMainNet ? 
@@ -117,7 +117,7 @@ export class Wallet extends Component {
                             clickHandler={::this._handleWithdrawModal}/>
 	                	<CurrencyBox
                             balance={balance[1]}
-                            lockedBalance={[balance[4], balance[5]]}
+                            lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             suffix="ETH"
                             description={ isMainNet ?

@@ -19,7 +19,8 @@ const initialState = {
         null,
         null,
         new BigNumber(0).toString(), 
-        new BigNumber(0).toString() 
+        new BigNumber(0).toString(),
+        new BigNumber(0).toString()
     ],
     taskList: [],
     connectedPeers: 0,

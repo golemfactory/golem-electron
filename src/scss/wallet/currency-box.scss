@@ -102,9 +102,10 @@
 }
 
 .container {
-    position: relative;
-    -webkit-perspective: 300px;
-    perspective: 300px;
+	outline: 1px solid transparent;
+	will-change: transform;
+	perspective: 100000px;
+	backface-visibility: hidden;
 }
 
 #cube {
