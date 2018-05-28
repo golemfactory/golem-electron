@@ -75,9 +75,9 @@ export function subscribeBalance(session) {
                         eth.dividedBy(ETH_DENOM), 
                         balance[BALANCE_DICT.LAST_GNT_UPDATE], 
                         balance[BALANCE_DICT.LAST_ETH_UPDATE],
-                        gntLock.dividedBy(ETH_DENOM).toString(),
-                        ethLock.dividedBy(ETH_DENOM).toString(),
-                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).toString()
+                        gntLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        ethLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).precision(8).toString()
                     ]
                 })
             }
