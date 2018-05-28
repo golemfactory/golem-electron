@@ -87,7 +87,7 @@ export default class CurrencyBox extends Component {
                         Locked: 
                         <span>
                             <b>{lockedBalance[expandedAmount === "GNT"? 0 : 1]}</b>
-                            <ReactTooltip overlayClassName="black" overlay={descriptionLock} placement="bottomRight" trigger={['hover']} align={{
+                            <ReactTooltip overlayClassName="black" overlay={descriptionLock || "No information"} placement="bottomRight" trigger={['hover']} align={{
                                 offset: [10, 8],
                                 }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                                 <span className="icon-question-mark"/>
@@ -99,7 +99,7 @@ export default class CurrencyBox extends Component {
                             Waiting: 
                             <span>
                                 <b>{lockedBalance[2]}</b>
-                                <ReactTooltip overlayClassName="black" overlay={descriptionWaiting} placement="bottomRight" trigger={['hover']} align={{
+                                <ReactTooltip overlayClassName="black" overlay={descriptionWaiting || "No information"} placement="bottomRight" trigger={['hover']} align={{
                                     offset: [10, 8],
                                     }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
                                     <span className="icon-question-mark"/>
