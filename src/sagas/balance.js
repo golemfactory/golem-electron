@@ -9,6 +9,15 @@ import { config, _handleSUBPUB, _handleUNSUBPUB, _handleRPC } from './handler'
 
 const {SET_BALANCE} = dict
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const BALANCE_DICT = Object.freeze({
+    GNT: 'gnt',
+    AVG_GNT: 'av_gnt',
+    ETH: 'eth',
+    GNT_LOCK: 'gnt_lock',
+    ETH_LOCK: 'eth_lock',
+    LAST_GNT_UPDATE: 'last_gnt_update',
+    LAST_ETH_UPDATE: 'last_eth_update'
+})
 
 
 /**
@@ -45,8 +54,11 @@ export function subscribeBalance(session) {
             function on_balance(args) {
                 const balance = args[0];
 
-                let gnt = new BigNumber(balance[1] === null ? 0 : balance[1])
-                let eth = new BigNumber(balance[2] === null ? 0 : balance[2])
+                let gntTotal = new BigNumber(balance[BALANCE_DICT.GNT] === null ? 0 : balance[BALANCE_DICT.GNT])
+                let gnt = new BigNumber(balance[BALANCE_DICT.AVG_GNT] === null ? 0 : balance[BALANCE_DICT.AVG_GNT])
+                let eth = new BigNumber(balance[BALANCE_DICT.ETH] === null ? 0 : balance[BALANCE_DICT.ETH])
+                let gntLock = new BigNumber(balance[BALANCE_DICT.GNT_LOCK] === null ? 0 : balance[BALANCE_DICT.GNT_LOCK])
+                let ethLock = new BigNumber(balance[BALANCE_DICT.ETH_LOCK] === null ? 0 : balance[BALANCE_DICT.ETH_LOCK])
 
                 if(gnt.isNaN()){
                     gnt  = 0
@@ -58,7 +70,15 @@ export function subscribeBalance(session) {
 
                 emit({
                     type: SET_BALANCE,
-                    payload: [gnt.dividedBy(ETH_DENOM), eth.dividedBy(ETH_DENOM), balance[3], balance[4]]
+                    payload: [
+                        gnt.dividedBy(ETH_DENOM), 
+                        eth.dividedBy(ETH_DENOM), 
+                        balance[BALANCE_DICT.LAST_GNT_UPDATE], 
+                        balance[BALANCE_DICT.LAST_ETH_UPDATE],
+                        gntLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        ethLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).precision(8).toString()
+                    ]
                 })
             }
 

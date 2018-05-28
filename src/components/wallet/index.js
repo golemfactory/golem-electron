@@ -90,6 +90,7 @@ export class Wallet extends Component {
 	                <div className="panel_box">
 	                	<CurrencyBox
                             balance={balance[0]}
+                            lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             suffix="GNT"
                             description={ isMainNet ? 
@@ -109,6 +110,17 @@ export class Wallet extends Component {
                                         <br/>computations.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
+                            descriptionLock={
+                                <p className="tooltip__wallet">
+                                    Locked: reserved
+                                    <br/>estimated pessimistic
+                                    <br/>amount that may be
+                                    <br/>needed to pay for
+                                    <br/>tasks that have been
+                                    <br/>commissioned.
+                                    <br/>May be overestimated.
+                                </p>
+                            }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
@@ -116,6 +128,7 @@ export class Wallet extends Component {
                             clickHandler={::this._handleWithdrawModal}/>
 	                	<CurrencyBox
                             balance={balance[1]}
+                            lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             suffix="ETH"
                             description={ isMainNet ?
@@ -131,6 +144,27 @@ export class Wallet extends Component {
                                         <br/>transaction fees.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
+                            descriptionLock={
+                                <p className="tooltip__wallet">
+                                    Locked: reserved
+                                    <br/>estimated pessimistic
+                                    <br/>amount that may be
+                                    <br/>needed to pay for
+                                    <br/>tasks that have been
+                                    <br/>commissioned.
+                                    <br/>May be overestimated.
+                                </p>
+                            }
+
+                            descriptionWaiting={
+                                <p className="tooltip__wallet">
+                                    Waiting: blocked
+                                    <br/>specific and exact 
+                                    <br/>amount to pay for 
+                                    <br/>already counted
+                                    <br/>and verified tasks.
+                                </p>
+                            }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
