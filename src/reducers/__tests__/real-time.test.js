@@ -11,6 +11,7 @@ describe('realTime reducer', () => {
                 null,
                 null,
                 new BigNumber(0).toString(), 
+                new BigNumber(0).toString(),
                 new BigNumber(0).toString()
             ],
             connectedPeers: 0,
