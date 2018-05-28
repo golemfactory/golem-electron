@@ -70,6 +70,8 @@ export default class CurrencyBox extends Component {
             currency, 
             suffix, 
             description, 
+            descriptionLock,
+            descriptionWaiting,
             clickHandler, 
             expandAmount, 
             expandedAmount, 
@@ -81,8 +83,29 @@ export default class CurrencyBox extends Component {
             <div className="container">
             <div id="cube" className={expandedAmount ? (expandedAmount === suffix ? "show-top" : "show-front") : "show-top"}>
                 <div className={`side1 ${suffix}`}>
-                    <span>Locked: <b>{lockedBalance[expandedAmount === "GNT"? 0 : 1]}</b></span>
-                    { expandedAmount === "GNT" && <span>Waiting: <b>{lockedBalance[2]}</b></span>}
+                    <span className="lock__container">
+                        Locked: 
+                        <span>
+                            <b>{lockedBalance[expandedAmount === "GNT"? 0 : 1]}</b>
+                            <ReactTooltip overlayClassName="black" overlay={descriptionLock} placement="bottomRight" trigger={['hover']} align={{
+                                offset: [10, 8],
+                                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                                <span className="icon-question-mark"/>
+                            </ReactTooltip>
+                        </span>
+                    </span>
+                    { expandedAmount === "GNT" && 
+                        <span className="lock__container">
+                            Waiting: 
+                            <span>
+                                <b>{lockedBalance[2]}</b>
+                                <ReactTooltip overlayClassName="black" overlay={descriptionWaiting} placement="bottomRight" trigger={['hover']} align={{
+                                    offset: [10, 8],
+                                    }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                                    <span className="icon-question-mark"/>
+                                </ReactTooltip>
+                            </span>
+                        </span>}
                 </div>
                 <div className="side2">
                     <div ref={"currencyBox" + suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
@@ -91,28 +114,28 @@ export default class CurrencyBox extends Component {
                 </div>
                 <div>
                     <Motion defaultStyle={{
-                balanceAnimated: motionBalanceStart[suffix]
-            }} style={{
-                balanceAnimated: spring(Number(balance), {
-                    stiffness: 500,
-                    damping: 50
-                })
-            }}>
+                        balanceAnimated: motionBalanceStart[suffix]
+                        }} style={{
+                            balanceAnimated: spring(Number(balance), {
+                                stiffness: 500,
+                                damping: 50
+                            })
+                        }}>
                     {({balanceAnimated}) => <span className="amount">
                         {::this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
-                </Motion>
-                <Motion defaultStyle={{
-                balanceAnimated: motionBalanceStart[`${suffix}-USD`]
-            }} style={{
-                balanceAnimated: spring(Number(balance.multipliedBy(currency[suffix])), {
-                    stiffness: 500,
-                    damping: 50
-                })
-            }}>
-                    {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
-                </Motion>
+                    </Motion>
+                    <Motion defaultStyle={{
+                        balanceAnimated: motionBalanceStart[`${suffix}-USD`]
+                        }} style={{
+                            balanceAnimated: spring(Number(balance.multipliedBy(currency[suffix])), {
+                                stiffness: 500,
+                                damping: 50
+                            })
+                        }}>
+                        {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
+                    </Motion>
                 </div>
                 <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{
                 offset: [10, 8],

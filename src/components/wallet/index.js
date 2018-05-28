@@ -110,6 +110,17 @@ export class Wallet extends Component {
                                         <br/>computations.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
+                            descriptionLock={
+                                <p className="tooltip__wallet">
+                                    Locked: reserved
+                                    <br/>estimated pessimistic
+                                    <br/>amount that may be
+                                    <br/>needed to pay for
+                                    <br/>tasks that have been
+                                    <br/>commissioned.
+                                    <br/>May be overestimated.
+                                </p>
+                            }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
@@ -133,6 +144,27 @@ export class Wallet extends Component {
                                         <br/>transaction fees.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
+                            descriptionLock={
+                                <p className="tooltip__wallet">
+                                    Locked: reserved
+                                    <br/>estimated pessimistic
+                                    <br/>amount that may be
+                                    <br/>needed to pay for
+                                    <br/>tasks that have been
+                                    <br/>commissioned.
+                                    <br/>May be overestimated.
+                                </p>
+                            }
+
+                            descriptionWaiting={
+                                <p className="tooltip__wallet">
+                                    Waiting: blocked
+                                    <br/>specific and exact 
+                                    <br/>amount to pay for 
+                                    <br/>already counted
+                                    <br/>and verified tasks.
+                                </p>
+                            }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
