@@ -107,7 +107,6 @@
     }
 
     .loading-indicator {
-        position: absolute;
         z-index: 9 !important;
         position: absolute;
         bottom: 40px;
@@ -127,16 +126,32 @@
             transition: width 2s, height 2s, opacity .1s linear 0s;
         }
 
-        .loading-icon {
-            transform: translate(-50%, -80%);
+        // .loading-icon {
+        //     position: absolute;
+        //     z-index: 10 !important;
+        //     width: 120px;
+        //     height: 120px;
+        //     left: -280px;
+        //     right: 0;
+        //     top: 80px;
+        //     bottom: 800px;
+        //     margin: auto;
+        // }
+    }
+
+    .loading-icon {
             position: absolute;
-            z-index: 10 !important;
-            width: 64px;
-            height: 64px;
+            display: none;
             left: 0;
             right: 0;
-            top: 80px;
+            top: 0;
+            bottom: 0;
             margin: auto;
+            width: 120px;
+            z-index: 11;
+
+            &.active{
+                display: block;
+            }
         }
-    }
 }

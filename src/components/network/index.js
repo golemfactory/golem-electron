@@ -11,6 +11,7 @@ import * as Actions from '../../actions'
 
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
+import golem_loading from './../../assets/img/golem-loading.svg'
 
 import Indicator from './Indicator'
 import Wallet from '../wallet'
@@ -189,7 +190,9 @@ export class MainFragment extends React.Component {
                 </div>
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
-            <div className={`loading-indicator ${isEngineLoading ? 'active' : ''}`}>
+            <div>
+                <div className={`loading-indicator ${isEngineLoading ? 'active' : ''}`}></div>
+                <object className={`loading-icon ${isEngineLoading ? 'active' : ''}`} type="image/svg+xml" data={golem_loading}></object>
             </div>
         </div>
         );
