@@ -41,13 +41,21 @@ export class Performance extends React.Component {
         }
     }
 
+    componentDidMount() {
+        const blenderPerf = this.props.chart['estimated_blender_performance']
+        const indicatorOffset = (388/10) * (blenderPerf/(3000/10));
+        this.refs.scoreIndicator.style.left = indicatorOffset + "px"
+    }
+
     componentWillUnmount() {
         this.minPerfTimeout && clearTimeout(this.minPerfTimeout)
     }
 
     componentWillReceiveProps(nextProps) {
         if(!!nextProps.chart && (nextProps.chart["estimated_blender_performance"] !== this.props.chart['estimated_blender_performance'])){
-            //this._setMinPerf(nextProps.chart["estimated_blender_performance"])
+            const blenderPerf = nextProps.chart['estimated_blender_performance']
+            const indicatorOffset = (388/10) * (blenderPerf/(3000/10));
+            this.refs.scoreIndicator.style.left = indicatorOffset + "px"
         }
     }
 
@@ -125,6 +133,7 @@ export class Performance extends React.Component {
                 </button>
                 <div className="content__min-score">
                     <span className="desc__min-score">After benchmark calculation you can improve time of your task by setting how powerful nodes you are connecting with:</span>
+                    <span ref="scoreIndicator" className="score__indicator">Your Score</span>
                     <Slider inputId="performance_slider" value={multiplier} max={10} mainColor={"#1c76e7"} aria-label="Performance slider" callback={::this._handleMinPerfSlider} warn={false}/>
                     <span className="hint__min-score">Setting the slider to "0" will turn this option off. Range from 1-10 represents power of nodes that are in the network.</span>
                     <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0} disabled={isMinPerfApplied}>{!isMinPerfApplied ? "Apply" : "Applied"}</button>

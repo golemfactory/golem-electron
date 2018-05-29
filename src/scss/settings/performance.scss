@@ -111,6 +111,20 @@
         margin-bottom: 20px;
     }
 
+    .score__indicator{
+        position: relative;
+        font-size: 5pt;
+        font-variant: small-caps;
+        z-index: -1;
+
+        &:before{
+            position: absolute;
+            content: '|';
+            bottom: -10px;
+            left: 15px;
+        }
+    }
+
     .hint__min-score{
         text-align: center;
         color: $color-text3;
