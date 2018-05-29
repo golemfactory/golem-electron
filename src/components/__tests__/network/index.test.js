@@ -55,7 +55,15 @@ describe('<MainFragment />', () => {
             currency: {
                 GNT: 0, 
                 ETH: 0
-            }
+            },
+            stats: {
+                stats: {
+                    host_state: "",
+                    subtasks_computed: [],
+                    subtasks_with_timeout: [],
+                    subtasks_with_errors: []
+                }
+            },
         }
 
         sinon.spy(MainFragment.prototype, 'componentDidMount');

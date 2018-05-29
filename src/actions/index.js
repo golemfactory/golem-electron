@@ -316,9 +316,11 @@ export const setAdvancedPreset = (payload) => ({
     payload
 })
 
-export const createAdvancedPreset = (payload) => ({
+export const createAdvancedPreset = (payload, _resolve, _reject) => ({
     type: CREATE_ADVANCED_PRESET,
-    payload
+    payload,
+    _resolve,
+    _reject
 })
 
 export const deleteAdvancedPreset = (payload) => ({
