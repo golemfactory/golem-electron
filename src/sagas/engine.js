@@ -6,7 +6,8 @@ import { config, _handleRPC } from './handler'
 import { onPerformanceFetch } from './performance'
 
 
-const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO} = dict
+const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS,
+       SET_GOLEM_LOADING_STATUS, SET_FOOTER_INFO} = dict
 
 
 /**
@@ -37,6 +38,10 @@ export function activatePreset(session, chosenPreset) {
  * @param {Object} options.payload [Name of chosen preset]
  */
 export function* golemizeBase(session, {payload}) {
+    yield put({
+        type: SET_GOLEM_LOADING_STATUS,
+        payload: true
+    })
     const action = yield call(activatePreset, session, payload);
     yield put(action)
     const engineStatus = yield call(fireEngine, session);
@@ -46,7 +51,10 @@ export function* golemizeBase(session, {payload}) {
             payload: true
         })
     }
-
+    yield put({
+        type: SET_GOLEM_LOADING_STATUS,
+        payload: false
+    })
 }
 
 export function stopEngine(session) {

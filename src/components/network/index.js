@@ -34,7 +34,8 @@ const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     golemStatus: state.realTime.golemStatus,
     chosenPreset: state.advanced.chosenPreset,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    isEngineLoading: state.info.isEngineLoading,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -61,22 +62,18 @@ export class MainFragment extends React.Component {
             activeTab: 0,
             presetModal: false,
             managePresetModal: false,
-            modalData: null,
-            engineLoading: false
+            modalData: null
         }
     //props.actions.setOnboard(true)
     }
 
     _golemize() {
-        const {actions, isEngineOn, chosenPreset} = this.props
+        const {actions, isEngineOn, isEngineLoading, chosenPreset} = this.props
         if (isEngineOn) {
             actions.stopGolem()
-        } else {
+        } else if (!isEngineLoading) {
             actions.startGolem(chosenPreset)
         }
-        this.setState({
-            engineLoading: true
-        })
     }
 
     /**
@@ -129,14 +126,6 @@ export class MainFragment extends React.Component {
         setTimeout(endLoading, 8000)
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        if (nextProps.isEngineOn !== this.props.isEngineOn) {
-            this.setState({
-                engineLoading: false
-            })
-        }
-    }
-
     /**
      * [_handleAutoLaunchSwitch onChange function for switch input]
      */
@@ -174,8 +163,8 @@ export class MainFragment extends React.Component {
     }
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, balance, currency} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData, engineLoading} = this.state
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, isEngineLoading, balance, currency} = this.props
+        const {activeTab, presetModal, managePresetModal, modalData} = this.state
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
@@ -200,7 +189,7 @@ export class MainFragment extends React.Component {
                 </div>
                 <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
             </div>
-            <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}>
+            <div className={`loading-indicator ${isEngineLoading ? 'active' : ''}`}>
             </div>
         </div>
         );
