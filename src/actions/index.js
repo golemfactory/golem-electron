@@ -58,6 +58,8 @@ export let dict = Object.freeze({
     SET_PROVIDING: 'SET_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
+    SET_MULTIPLIER: 'SET_MULTIPLIER',
+    UPDATE_MULTIPLIER: 'UPDATE_MULTIPLIER',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -166,6 +168,7 @@ const {
     SET_NET_REQ_TRUST, 
     SET_PROVIDING,
     SET_TASK_STATS,
+    UPDATE_MULTIPLIER,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -428,6 +431,11 @@ export const setNetworkRequestorTrust = (payload) => ({
 
 export const setTaskStats = (payload) => ({
     type: SET_TASK_STATS,
+    payload
+})
+
+export const updateMultiplier = (payload) => ({
+    type: UPDATE_MULTIPLIER,
     payload
 })
 

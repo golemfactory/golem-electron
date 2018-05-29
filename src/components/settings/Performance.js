@@ -7,7 +7,8 @@ import Slider from './../Slider'
 
 const mapStateToProps = state => ({
     chart: state.performance.charts,
-    loadingIndicator: state.performance.loadingIndicator
+    loadingIndicator: state.performance.loadingIndicator,
+    multiplier: state.performance.multiplier
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -35,11 +36,13 @@ export class Performance extends React.Component {
         super(props);
 
         this.state = {
-            minPerf: 0
+            minPerf: 0,
+            isMinPerfApplied: false
         }
     }
 
-    componentDidMount() {
+    componentWillUnmount() {
+        this.minPerfTimeout && clearTimeout(this.minPerfTimeout)
     }
 
     componentWillReceiveProps(nextProps) {
@@ -65,12 +68,25 @@ export class Performance extends React.Component {
      * [_applyMinPerformance func. sets minimum score of expected providers]
      */
     _applyMinPerformance(){
+        
+        this.minPerfTimeout = setTimeout(() => this.setState({
+            isMinPerfApplied: false
+        }), 2000)
+
+        this.props.actions.updateMultiplier(this.state.minPerf)
+        this.setState({
+            isMinPerfApplied: true
+        }, () => this.minPerfTimeout )
+
 
     }
 
 
-    _handleMinPerfSlider(e){
-        
+    _handleMinPerfSlider(value){
+        console.log(value)
+        this.setState({
+            minPerf: value
+        })
     }
 
     /**
@@ -94,8 +110,8 @@ export class Performance extends React.Component {
     }
 
     render() {
-        const {chart, loadingIndicator} = this.props
-        const {minPerf} = this.state
+        const {chart, loadingIndicator, multiplier} = this.props
+        const {minPerf, isMinPerfApplied} = this.state
         return (
             <div className="content__performance">
                 <div className="list__performance">
@@ -109,9 +125,9 @@ export class Performance extends React.Component {
                 </button>
                 <div className="content__min-score">
                     <span className="desc__min-score">After benchmark calculation you can improve time of your task by setting how powerful nodes you are connecting with:</span>
-                    <Slider inputId="performance_slider" value={50} max={10} mainColor={"#1c76e7"} aria-label="Performance slider" callback={::this._handleMinPerfSlider} warn={false}/>
+                    <Slider inputId="performance_slider" value={multiplier} max={10} mainColor={"#1c76e7"} aria-label="Performance slider" callback={::this._handleMinPerfSlider} warn={false}/>
                     <span className="hint__min-score">Setting the slider to "0" will turn this option off. Range from 1-10 represents power of nodes that are in the network.</span>
-                    <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0}>Apply</button>
+                    <button className="btn--outline" onClick={::this._applyMinPerformance} disabled={chart['estimated_blender_performance'] === 0} disabled={isMinPerfApplied}>{!isMinPerfApplied ? "Apply" : "Applied"}</button>
                 </div>
             </div>
         );

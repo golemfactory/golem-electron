@@ -1,17 +1,50 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
+import { fork, takeEvery, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK} = dict
+const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK, SET_MULTIPLIER, UPDATE_MULTIPLIER} = dict
 
 const products = Object.freeze({
         BLENDER: 'estimated_blender_performance',
         LUXRENDER: 'estimated_lux_performance',
         DEFAULT: 'estimated_performance'
     })
+
+export function updateMultiplier(session, payload){
+    return new Promise((resolve, reject) => {
+        function on_update_multiplier(args) {
+            let result = args[0];
+            resolve(getMultiplier(session))
+        }
+        _handleRPC(on_update_multiplier, session, config.SET_PERF_MULTIPLIER_RPC, [payload])
+    })
+}
+
+export function* updateMultiplierBase(session, {payload}){
+    const action = yield call(updateMultiplier, session, payload);
+    yield put(action)
+}
+
+export function getMultiplier(session){
+    return new Promise((resolve, reject) => {
+        function on_update_multiplier(args) {
+            let result = args[0];
+            resolve({
+                type: SET_MULTIPLIER,
+                payload: result
+            })
+        }
+        _handleRPC(on_update_multiplier, session, config.GET_PERF_MULTIPLIER_RPC)
+    })
+}
+
+export function* multiplierBase(session){
+    const action = yield call(getMultiplier, session);
+    yield put(action)
+}
 
 
 export function callBenchmarkOnStartup(session){
@@ -88,5 +121,7 @@ export function* fireBase(session) {
  */
 export function* performanceFlow(session) {
     yield fork(benchmarkBase, session)
+    yield fork(multiplierBase, session)
     yield takeEvery(RECOUNT_BENCHMARK, fireBase, session)
+    yield takeLatest(UPDATE_MULTIPLIER, updateMultiplierBase, session)
 }

@@ -28,8 +28,8 @@ export default class Slider extends React.Component {
     /**
      * [_handleFillLower handling colorful part of the input range while thumb dragged]
      */
-    _handleFillLower(isDisabled, customColor) {
-        let primaryColor = customColor || TRUST
+    _handleFillLower(isDisabled) {
+        let primaryColor = this.props.mainColor || TRUST
         let slider = document.getElementById(this.props.inputId)
         let indicator = document.getElementById(`${this.props.inputId}__indicator`)
         if(slider && indicator){       
@@ -91,7 +91,7 @@ export default class Slider extends React.Component {
             <div>
         <div className="slider">
                     <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled, mainColor)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <input type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
                     <span className={iconRight}/>
         </div>
