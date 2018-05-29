@@ -126,6 +126,8 @@ class OnboardIndex extends React.Component {
             loadingIndicator: false,
             isAcceptLocked: true,
             isTermsDeclined: false,
+            isSentryAccepted: false,
+            isMonitorAccepted: true,
             isPrinted: false,
             isSkippingPrint: false,
             printInfo: "",
@@ -179,6 +181,18 @@ class OnboardIndex extends React.Component {
         })
     }
 
+    _handleSentryRadio(e){
+        this.setState({
+            isSentryAccepted: !this.state.isSentryAccepted
+        })
+    }
+
+    _handleMonitorRadio(){
+        this.setState({
+            isMonitorAccepted: !this.state.isMonitorAccepted
+        })
+    }
+
     _handlePasswordValidation(_result){
         if(this.state.isPasswordValid !== _result)
             this.setState({
@@ -199,7 +213,17 @@ class OnboardIndex extends React.Component {
      */
     shownStep(id) {
         const {terms, passwordModal, isMainNet, actions} = this.props
-        const { isTermsDeclined, isPrinted, isSkippingPrint, nodeName, loadingIndicator, isPasswordValid} = this.state
+        const { 
+            isTermsDeclined,
+            isMonitorAccepted,
+            isSentryAccepted,
+            isPrinted,
+            isSkippingPrint,
+            nodeName,
+            loadingIndicator,
+            isPasswordValid
+        } = this.state
+
         let step;
         let key = Symbol(id).toString();
         switch (id) {
@@ -210,7 +234,14 @@ class OnboardIndex extends React.Component {
             step = <ChainInfo isMainNet={isMainNet}/>
             break;
         case steps.TERMS:
-            step = isTermsDeclined ? <Decline/> : <Terms key={key} terms={terms} handleLock={::this._handleLock}/> 
+            step = isTermsDeclined ? <Decline/> : <Terms 
+                                                    key={key} 
+                                                    terms={terms} 
+                                                    handleLock={::this._handleLock} 
+                                                    isMonitorAccepted={isMonitorAccepted} 
+                                                    isSentryAccepted={isSentryAccepted}
+                                                    handleMonitorRadio={::this._handleMonitorRadio}
+                                                    handleSentryRadio={::this._handleSentryRadio}/> 
             break;
         case steps.TYPE:
             step = <Type key={key}/>
@@ -316,8 +347,13 @@ class OnboardIndex extends React.Component {
     }
 
     termsPromise(){
+        const {isMonitorAccepted, isSentryAccepted} = this.state;
         return new Promise((resolve, reject) => {
-            this.props.actions.acceptTerms(resolve, reject)
+            this.props.actions.acceptTerms(
+                                isMonitorAccepted, 
+                                isSentryAccepted, 
+                                resolve, 
+                                reject)
         });
     }
 
