@@ -54,6 +54,7 @@ export function subscribeBalance(session) {
             function on_balance(args) {
                 const balance = args[0];
 
+                let gntTotal = new BigNumber(balance[BALANCE_DICT.GNT] === null ? 0 : balance[BALANCE_DICT.GNT])
                 let gnt = new BigNumber(balance[BALANCE_DICT.AVG_GNT] === null ? 0 : balance[BALANCE_DICT.AVG_GNT])
                 let eth = new BigNumber(balance[BALANCE_DICT.ETH] === null ? 0 : balance[BALANCE_DICT.ETH])
                 let gntLock = new BigNumber(balance[BALANCE_DICT.GNT_LOCK] === null ? 0 : balance[BALANCE_DICT.GNT_LOCK])
@@ -74,8 +75,9 @@ export function subscribeBalance(session) {
                         eth.dividedBy(ETH_DENOM), 
                         balance[BALANCE_DICT.LAST_GNT_UPDATE], 
                         balance[BALANCE_DICT.LAST_ETH_UPDATE],
-                        gntLock.dividedBy(ETH_DENOM).toString(),
-                        ethLock.dividedBy(ETH_DENOM).toString() 
+                        gntLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        ethLock.dividedBy(ETH_DENOM).precision(8).toString(),
+                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).precision(8).toString()
                     ]
                 })
             }

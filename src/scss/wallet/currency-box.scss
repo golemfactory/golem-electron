@@ -13,7 +13,7 @@
 	transition: all 300ms linear;
 
 	span{
-		margin: 0 3px;
+		margin: 0 2px;
 		display: block;
 		font-size: 9pt;
 		line-height: 1.5;
@@ -50,7 +50,7 @@
 
 	.icon-question-mark{
 		cursor: pointer;
-		margin-top: 14px;
+		margin-top: 15px;
 		font-size: 8pt !important;
 		align-self: flex-start;
 		color: $color-text3;
@@ -102,9 +102,10 @@
 }
 
 .container {
-    position: relative;
-    -webkit-perspective: 300px;
-    perspective: 300px;
+	outline: 1px solid transparent;
+	will-change: transform;
+	perspective: 100000px;
+	backface-visibility: hidden;
 }
 
 #cube {
@@ -147,10 +148,18 @@
     	margin-left: 10px;
     }
 
-    span{
+    .lock__container{
 		display: flex;
 	  	justify-content: space-between;
 	  	width: 100%;
+
+	  	.icon-question-mark{
+			cursor: pointer;
+		    font-size: 8pt !important;
+		    align-self: flex-start;
+		    color: $color-text3;
+		    margin-left: 8px;
+		}
     }
 
     &.GNT{

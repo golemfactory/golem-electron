@@ -21,14 +21,21 @@ const statusDict = Object.freeze({
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
     ABORTED: 'Aborted',
-    WAITING: 'Waiting'
+    WAITING: 'Waiting',
+    SENDING: 'Sending',
+    TIMEOUT: 'Timeout',
+    RESTARTED: 'Restarted'
 })
 
 const statusClassDict = Object.freeze({
-    'Not started': 'frame--undone',
-    'Computing': 'frame--progress',
-    'Finished': 'frame--done',
-    'Aborted': 'frame--error'
+    'notStarted': 'frame--undone',
+    'computing': 'frame--progress',
+    'finished': 'frame--done',
+    'aborted': 'frame--error',
+    'sending': 'frame--progress',
+    'waiting': 'frame--progress',
+    'timeout': 'frame--error',
+    'restarted': 'frame--undone'
 })
 
 /*################### HELPER FUNCTIONS #################*/
@@ -100,7 +107,7 @@ export class All extends React.Component {
      * @return {Array} [style list of the animated item]
      */
     getStyles() {
-        const {show, frameList} = this.props
+        const {show, frameList} = this.props;
         return frameList.filter((item, index) => {
             return show == routesDict.COMPLETE ? item[1][0] === statusDict.FINISHED : true
         })
