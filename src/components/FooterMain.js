@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import golem_loading from './../assets/img/golem-loading.svg'
+
 const {remote} = window.electron;
 const versionGUI = remote.app.getVersion();
 
@@ -27,15 +29,12 @@ export default class FooterMain extends Component {
     }
 
     _golemize() {
-        const {actions, isEngineOn, chosenPreset} = this.props
+        const {actions, isEngineOn, isEngineLoading, chosenPreset} = this.props
         if (isEngineOn) {
             actions.stopGolem()
-        } else {
+        } else if (!isEngineLoading) {
             actions.startGolem(chosenPreset)
         }
-        this.setState({
-            engineLoading: true
-        })
     }
 
     //TODO re-write it cleaner
@@ -50,8 +49,7 @@ export default class FooterMain extends Component {
     }
 
     render() {
-        const {golemStatus, connectionProblem, isEngineOn, stats} = this.props
-        const {engineLoading} = this.state
+        const {golemStatus, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading} = this.props
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
@@ -84,7 +82,10 @@ export default class FooterMain extends Component {
                         <u>golem chat</u>
                     </a>
                 </div>
-                <div className={`loading-indicator ${engineLoading ? 'active' : ''}`}/>
+                <div>
+                    <div className={`loading-indicator ${isEngineLoading ? 'active' : ''}`}></div>
+                    <object className={`loading-icon ${isEngineLoading ? 'active' : ''}`} type="image/svg+xml" data={golem_loading}></object>
+                </div>
             </div>
         );
     }

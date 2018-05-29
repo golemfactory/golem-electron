@@ -3,13 +3,15 @@ import { fork, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
+import { onPerformanceFetch } from './performance'
 
 
-const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS, SET_FOOTER_INFO} = dict
+const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS,
+       SET_GOLEM_LOADING_STATUS, SET_FOOTER_INFO} = dict
 
 
 /**
- * [callTrust func. fetchs payment history of user, with interval]
+ * [callTrust func. fetches payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
@@ -24,14 +26,9 @@ export function fireEngine(session) {
     })
 }
 
-export function activatePreset(session, payload) {
+export function activatePreset(session, chosenPreset) {
     return new Promise((resolve, reject) => {
-        function on_preset(args) {
-            let presetStatus = args[0];
-            resolve(presetStatus)
-        }
-
-        _handleRPC(on_preset, session, config.PRESET_ACTIVATE_RPC, [payload])
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset)
     })
 }
 
@@ -41,17 +38,23 @@ export function activatePreset(session, payload) {
  * @param {Object} options.payload [Name of chosen preset]
  */
 export function* golemizeBase(session, {payload}) {
-    const presetStatus = yield call(activatePreset, session, payload);
-    //console.log("presetStatus", presetStatus);
+    yield put({
+        type: SET_GOLEM_LOADING_STATUS,
+        payload: true
+    })
+    const action = yield call(activatePreset, session, payload);
+    yield put(action)
     const engineStatus = yield call(fireEngine, session);
-    //console.log(engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_PAUSE_STATUS,
             payload: true
         })
     }
-
+    yield put({
+        type: SET_GOLEM_LOADING_STATUS,
+        payload: false
+    })
 }
 
 export function stopEngine(session) {
@@ -71,7 +74,6 @@ export function stopEngine(session) {
  */
 export function* stopGolemBase(session) {
     const engineStatus = yield call(stopEngine, session);
-    //console.info("engineStatus", engineStatus)
     if (!engineStatus) {
         yield put({
             type: SET_GOLEM_PAUSE_STATUS,

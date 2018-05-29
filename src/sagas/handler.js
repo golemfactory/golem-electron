@@ -69,7 +69,7 @@ export let config = Object.freeze({
     ENABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     DISABLE_ENVIRONMENT_RPC: 'comp.environment.enable',
     RUN_BENCHMARK_RPC: 'comp.environment.benchmark',
-    GET_BENCHMARK_RESULT_RPC: 'comp.environment.performance',
+    GET_PERFORMANCE_RPC: 'comp.environment.performance',
     GET_PERF_MULTIPLIER_RPC: 'performance.multiplier',
     SET_PERF_MULTIPLIER_RPC: 'performance.multiplier.update',
     //Payment

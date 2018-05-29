@@ -3,6 +3,7 @@
     flex-direction: column;
     justify-content: center;
     flex: 0 0 130px;
+
 	.section__actions {
         text-align: left;
         width: 100%;
@@ -98,16 +99,21 @@
             transition: width 2s, height 2s, opacity .1s linear 0s;
         }
 
-        .loading-icon {
-            transform: translate(-50%, -80%);
+    }
+
+    .loading-icon {
             position: absolute;
-            z-index: 10 !important;
-            width: 64px;
-            height: 64px;
+            display: none;
             left: 0;
             right: 0;
-            top: 80px;
+            top: 0;
+            bottom: 0;
             margin: auto;
+            width: 120px;
+            z-index: 11;
+
+            &.active{
+                display: block;
+            }
         }
-    }
 }

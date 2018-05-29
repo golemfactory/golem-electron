@@ -11,7 +11,6 @@ import * as Actions from '../../actions'
 
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
-
 import Indicator from './Indicator'
 import Wallet from '../wallet'
 import Resources from './tabs/Resources'
@@ -36,7 +35,8 @@ const mapStateToProps = state => ({
     golemStatus: state.realTime.golemStatus,
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
-    stats: state.stats.stats
+    stats: state.stats.stats,
+    isEngineLoading: state.info.isEngineLoading
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -62,7 +62,6 @@ export class MainFragment extends React.Component {
         }
     //props.actions.setOnboard(true)
     }
-
     /**
      * [_handlePresetModal func. will trigger presetModal state to make preset modal visible]
      * @param  {Object}      data       [Custom hardware preset object]
@@ -154,8 +153,9 @@ export class MainFragment extends React.Component {
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, balance, currency} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData, engineLoading, isPresetNameExist} = this.state
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, isEngineLoading, balance, currency} = this.props
+        const {activeTab, presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
+
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>

@@ -14,6 +14,7 @@ const {
     SET_CONNECTION,
     SET_CONNECTION_PROBLEM, 
     SET_GOLEM_PAUSE_STATUS,
+    SET_GOLEM_LOADING_STATUS,
     SET_TERMS_STATUS,
     SET_TERMS,
     SET_CHAIN_INFO
@@ -45,6 +46,7 @@ const initialState = {
     },
     isConnected: false,
     isEngineOn: (getConfig(GOLEM_STARTER) === null || getConfig(GOLEM_STARTER) === undefined) ? true : getConfig(GOLEM_STARTER),
+    isEngineLoading: false,
     terms: "",
     isTermsAccepted: false,
     isNodeProvider: true
@@ -103,7 +105,13 @@ const setInfo = (state = initialState, action) => {
     case SET_GOLEM_PAUSE_STATUS:
         setConfig(GOLEM_STARTER, action.payload)
         return Object.assign({}, state, {
-            isEngineOn: action.payload
+            isEngineOn: action.payload,
+            isEngineLoading: false
+        });
+
+    case SET_GOLEM_LOADING_STATUS:
+        return Object.assign({}, state, {
+            isEngineLoading: action.payload
         });
 
     case UPDATE_SEEN:
