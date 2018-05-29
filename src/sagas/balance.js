@@ -45,8 +45,8 @@ export function subscribeBalance(session) {
             function on_balance(args) {
                 const balance = args[0];
 
-                let gnt = new BigNumber(balance[1] === null ? 0 : balance[1])
-                let eth = new BigNumber(balance[2] === null ? 0 : balance[2])
+                let eth = new BigNumber(balance['eth'] === null ? 0 : balance['eth'])
+                let gnt = new BigNumber(balance['gnt'] === null ? 0 : balance['gnt'])
 
                 if(gnt.isNaN()){
                     gnt  = 0
