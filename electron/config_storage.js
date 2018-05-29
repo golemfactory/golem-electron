@@ -3,7 +3,7 @@ const Store = require('electron-store')
 const store = new Store();
 
 const MAINNET = process.argv.includes('--mainnet')
-
+const TERMS_VERSION = 3;
 /**
  * CONFIG STORE KEYS
  */
@@ -11,7 +11,7 @@ const MAINNET = process.argv.includes('--mainnet')
 //store.delete('DEFAULT_GETH') // <-- Rollback geth
 //store.delete('HIDE_ONBOARD_FLOW') // <-- Rollback onboard
 const dictConfig = MAINNET ? {
-    HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW:MAIN',
+    HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW:MAIN_V'+ TERMS_VERSION,
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH:MAIN',
     PREVIEW_SWITCH: 'PREVIEW_SWITCH:MAIN',
     RESOURCE_SLIDER: 'RESOURCE_SLIDER:MAIN',
@@ -23,7 +23,7 @@ const dictConfig = MAINNET ? {
     INDICATOR_ID: 'INDICATOR_ID:MAIN'
 } :
 {
-    HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW:TEST',
+    HIDE_ONBOARD: 'HIDE_ONBOARD_FLOW:TEST_V'+ TERMS_VERSION,
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH:TEST',
     PREVIEW_SWITCH: 'PREVIEW_SWITCH:TEST',
     RESOURCE_SLIDER: 'RESOURCE_SLIDER:TEST',

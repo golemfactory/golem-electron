@@ -668,8 +668,10 @@ export const checkTermsAccepted = () => ({
     type: CHECK_TERMS_ACCEPTED
 })
 
-export const acceptTerms = (_resolve, _reject) => ({
+export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     type: ACCEPT_TERMS,
+    monitor,
+    sentry,
     _resolve,
     _reject
 })
