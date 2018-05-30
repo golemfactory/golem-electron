@@ -1,12 +1,12 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
+import { take, call, put, select } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
 const {SET_CONNECTED_PEERS} = dict
-
+const delay = (ms) => new Promise(res => setTimeout(res, ms))
 
 /**
  * [subscribeConnectedPeers func. fetchs connedted peers data with interval]
@@ -14,7 +14,7 @@ const {SET_CONNECTED_PEERS} = dict
  * @return {Object}             [Action object]
  */
 export function subscribeConnectedPeers(session) {
-    const interval = 20000
+    const interval = 19000
     return eventChannel(emit => {
         const iv = setInterval(function fetchConnectedPeers() {
             function on_connected_peers(args) {
@@ -47,8 +47,13 @@ export function* connectedPeersFlow(session) {
 
     try {
         while (true) {
-            let action = yield take(channel)
-            yield put(action)
+            yield delay(1000)
+            const getStatus = (state) => state.info.isEngineOn
+            const status = yield select(getStatus)
+            if(!!status){
+                let action = yield take(channel)
+                yield put(action)
+            }
         }
     } finally {
         console.info('yield cancelled!')

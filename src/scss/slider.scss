@@ -53,6 +53,16 @@
         transition: .5s color;
         pointer-events: none; // to click underlying element 
     }
+
+    .slider-icon {
+        display: none;
+        width: 25px;
+    }
+
+    [class^="icon-"],
+    [class*=" icon-"] {
+        display: block;
+    }
 }
 
 .slider>span {

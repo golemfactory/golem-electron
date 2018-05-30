@@ -29,14 +29,14 @@ export default class Slider extends React.Component {
      * [_handleFillLower handling colorful part of the input range while thumb dragged]
      */
     _handleFillLower(isDisabled) {
-        let primaryColor = this.props.mainColor || TRUST
-        let slider = document.getElementById(this.props.inputId)
-        let indicator = document.getElementById(`${this.props.inputId}__indicator`)
+        const primaryColor = this.props.mainColor || TRUST
+        const slider = document.getElementById(this.props.inputId);
+        const indicator = document.getElementById(`${this.props.inputId}__indicator`);
         if(slider && indicator){       
-                let val = slider.value
-                let min = slider.getAttribute('min')
-                let max = slider.getAttribute('max')
-                var value = (val - min) / (max - min);
+                const val = slider.value
+                const min = slider.getAttribute('min')
+                const max = slider.getAttribute('max')
+                const value = (val - min) / (max - min);
         
                 let color;
                 if (!isDisabled) {
@@ -61,13 +61,12 @@ export default class Slider extends React.Component {
                     ')'
                 ].join('');
         
-                let appWidth = window.innerWidth
+                const appWidth = window.innerWidth
                 || document.documentElement.clientWidth
                 || document.body.clientWidth;
 
-                let sliderWidth = slider.innerWidth
+                const sliderWidth = slider.innerWidth
                 || slider.clientWidth;
-
                 indicator.innerHTML = val;
                 indicator.style.color = color;
                 indicator.style.left = (val * ((sliderWidth - 32 )/(max)) + ((((appWidth - sliderWidth)/ 2) + 6))) + 'px';
@@ -79,8 +78,8 @@ export default class Slider extends React.Component {
      * @return {[type]} [description]
      */
     _handleCallback() {
-        let slider = document.getElementById(this.props.inputId)
-        let val = slider.value
+        const slider = document.getElementById(this.props.inputId)
+        const val = slider.value
         this.props.callback(val)
     }
 
@@ -90,10 +89,10 @@ export default class Slider extends React.Component {
         return (
             <div>
         <div className="slider">
-                    <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <span className={`slider-icon ${iconLeft}`}/>
+                    <input ref={this.props.inputId} type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
-                    <span className={iconRight}/>
+                    <span className={`slider-icon ${iconRight}`}/>
         </div>
       </div>
         );

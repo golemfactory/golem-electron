@@ -7,7 +7,7 @@ import { onPerformanceFetch } from './performance'
 
 
 const {START_GOLEM, STOP_GOLEM, SET_GOLEM_PAUSE_STATUS,
-       SET_GOLEM_LOADING_STATUS, SET_FOOTER_INFO} = dict
+       SET_GOLEM_LOADING_STATUS, SET_FOOTER_INFO, SET_GOLEM_STATUS} = dict
 
 
 /**
@@ -27,8 +27,21 @@ export function fireEngine(session) {
 }
 
 export function activatePreset(session, chosenPreset) {
+
     return new Promise((resolve, reject) => {
-        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset)
+
+        function on_error(error) {
+            console.log("error", error);
+            resolve({
+                type: SET_GOLEM_STATUS,
+                payload: {
+                    status: "Exception",
+                    message: "Resource allocation error"
+                }
+            })
+        }
+
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset, on_error)
     })
 }
 
@@ -44,13 +57,17 @@ export function* golemizeBase(session, {payload}) {
     })
     const action = yield call(activatePreset, session, payload);
     yield put(action)
-    const engineStatus = yield call(fireEngine, session);
-    if (!engineStatus) {
-        yield put({
-            type: SET_GOLEM_PAUSE_STATUS,
-            payload: true
-        })
+
+    if(action.type !== SET_GOLEM_STATUS){
+        const engineStatus = yield call(fireEngine, session);
+        if (!engineStatus) {
+            yield put({
+                type: SET_GOLEM_PAUSE_STATUS,
+                payload: true
+            })
+        }
     }
+
     yield put({
         type: SET_GOLEM_LOADING_STATUS,
         payload: false
