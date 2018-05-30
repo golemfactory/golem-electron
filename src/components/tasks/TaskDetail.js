@@ -551,6 +551,7 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
+        console.log("list", list);
 
         const result = list.filter((item, index) => item.name == name)[0]
         const preset = {...result, value: {...result.value}} // immutable
@@ -624,7 +625,7 @@ export class TaskDetail extends React.Component {
     _handleFormatOptionChange(list, formatName, index) {
         let result = list.filter((item, index) => item.name === formatName)[0];
         (result && result.name) && this.setState({
-            format: name,
+            format: result.name,
             formatIndex: index
         })
     }
