@@ -58,6 +58,8 @@ export let dict = Object.freeze({
     SET_PROVIDING: 'SET_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
+    SET_MULTIPLIER: 'SET_MULTIPLIER',
+    UPDATE_MULTIPLIER: 'UPDATE_MULTIPLIER',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -83,6 +85,7 @@ export let dict = Object.freeze({
     CONTINUE_WITH_PROBLEM: 'CONTINUE_WITH_PROBLEM',
     SET_GOLEM_STATUS: 'SET_GOLEM_STATUS',
     SET_GOLEM_PAUSE_STATUS: 'SET_GOLEM_PAUSE_STATUS',
+    SET_GOLEM_LOADING_STATUS: 'SET_GOLEM_LOADING_STATUS',
     START_LOADING: 'START_LOADING',
     END_LOADING: 'END_LOADING',
     LOGIN: 'LOGIN',
@@ -166,6 +169,7 @@ const {
     SET_NET_REQ_TRUST, 
     SET_PROVIDING,
     SET_TASK_STATS,
+    UPDATE_MULTIPLIER,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -187,7 +191,8 @@ const {
     STOP_GOLEM, 
     CONTINUE_WITH_PROBLEM, 
     SET_GOLEM_STATUS, 
-    SET_GOLEM_PAUSE_STATUS, 
+    SET_GOLEM_PAUSE_STATUS,
+    SET_GOLEM_LOADING_STATUS,
     START_LOADING, 
     END_LOADING, 
     LOGIN, 
@@ -313,9 +318,11 @@ export const setAdvancedPreset = (payload) => ({
     payload
 })
 
-export const createAdvancedPreset = (payload) => ({
+export const createAdvancedPreset = (payload, _resolve, _reject) => ({
     type: CREATE_ADVANCED_PRESET,
-    payload
+    payload,
+    _resolve,
+    _reject
 })
 
 export const deleteAdvancedPreset = (payload) => ({
@@ -428,6 +435,11 @@ export const setNetworkRequestorTrust = (payload) => ({
 
 export const setTaskStats = (payload) => ({
     type: SET_TASK_STATS,
+    payload
+})
+
+export const updateMultiplier = (payload) => ({
+    type: UPDATE_MULTIPLIER,
     payload
 })
 
@@ -668,8 +680,10 @@ export const checkTermsAccepted = () => ({
     type: CHECK_TERMS_ACCEPTED
 })
 
-export const acceptTerms = (_resolve, _reject) => ({
+export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     type: ACCEPT_TERMS,
+    monitor,
+    sentry,
     _resolve,
     _reject
 })

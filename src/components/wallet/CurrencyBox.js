@@ -49,9 +49,16 @@ export default class CurrencyBox extends Component {
     }
 
     _formatAmount(_balance ,_suffix, currency = 1) {
-        if (this.props.balance.toNumber() === (new BigNumber(_balance.toString())
+        const totalBalance = this.props.balance
+            .precision(this.state.amountPrecision)
+            .toString();
+
+        const animatedBalance = new BigNumber(_balance.toString())
             .dividedBy(currency)
-            .toNumber()) && 
+            .precision(this.state.amountPrecision)
+            .toString();
+
+        if (totalBalance === animatedBalance && 
             motionBalanceStart[_suffix] !== _balance) {
                 motionBalanceStart[_suffix] = _balance
         }

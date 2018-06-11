@@ -85,6 +85,9 @@ global.window.electron = {
             dialog: {
                 showOpenDialog: function () {}
             },
+            app: {
+                getVersion: function () {}
+            },
             BrowserWindow: function () {}
         },
         ipcRenderer: {

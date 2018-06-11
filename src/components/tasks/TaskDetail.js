@@ -551,6 +551,7 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
+        console.log("list", list);
 
         const result = list.filter((item, index) => item.name == name)[0]
         const preset = {...result, value: {...result.value}} // immutable
@@ -599,7 +600,6 @@ export class TaskDetail extends React.Component {
         // If  file format from preset list is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
-        console.log("formatIndex", formatIndex, pickFormatIndex);
 
         formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
         outputPath.value = output_path
@@ -623,9 +623,9 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected format]
      */
     _handleFormatOptionChange(list, formatName, index) {
-        let {name} = list.filter((item, index) => item.name === formatName)[0];
-        name && this.setState({
-            format: name,
+        let result = list.filter((item, index) => item.name === formatName)[0];
+        (result && result.name) && this.setState({
+            format: result.name,
             formatIndex: index
         })
     }

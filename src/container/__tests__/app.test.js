@@ -62,6 +62,7 @@ describe('<App />', () => {
                         status: false,
                         issue: null
                     },
+                    isEngineOn: true
                 },
                 realTime:{
                     connectedPeers: [],
@@ -80,6 +81,17 @@ describe('<App />', () => {
                 },
                 onboard:{
                     showOnboard: false
+                },
+                advanced: {
+                    chosenPreset: ""
+                },
+                stats: {
+                    stats: {
+                        host_state: "",
+                        subtasks_computed: [],
+                        subtasks_with_timeout: [],
+                        subtasks_with_errors: []
+                    }
                 },
                 actions: jest.fn()
             })}>

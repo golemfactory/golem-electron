@@ -1,11 +1,11 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeEvery, take, call, put } from 'redux-saga/effects'
+import { fork, takeEvery, takeLatest, take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
 
 
-const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK} = dict
+const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK, SET_MULTIPLIER, UPDATE_MULTIPLIER} = dict
 
 const products = Object.freeze({
         BLENDER: 'estimated_blender_performance',
@@ -13,28 +13,62 @@ const products = Object.freeze({
         DEFAULT: 'estimated_performance'
     })
 
-
-export function callBenchmarkOnStartup(session){
+export function updateMultiplier(session, payload){
     return new Promise((resolve, reject) => {
-        function on_update_benchmark(args) {
-            let updateBenchmark = args[0];
-            let bencmarks = {};
-            Object.keys(updateBenchmark).forEach( item => {
-                let product = products[item]
-                if(product)
-                    bencmarks[product] = updateBenchmark[item]
-            })
-            resolve({
-                type: SET_PERFORMANCE_CHARTS,
-                payload: bencmarks
-            })
+        function on_update_multiplier(args) {
+            let result = args[0];
+            resolve(getMultiplier(session))
         }
-        _handleRPC(on_update_benchmark, session, config.GET_BENCHMARK_RESULT_RPC)
+        _handleRPC(on_update_multiplier, session, config.SET_PERF_MULTIPLIER_RPC, [payload])
     })
 }
 
-export function* benchmarkBase(session){
-    const action = yield call(callBenchmarkOnStartup, session);
+export function* updateMultiplierBase(session, {payload}){
+    const action = yield call(updateMultiplier, session, payload);
+    yield put(action)
+}
+
+export function getMultiplier(session){
+    return new Promise((resolve, reject) => {
+        function on_update_multiplier(args) {
+            let result = args[0];
+            resolve({
+                type: SET_MULTIPLIER,
+                payload: result
+            })
+        }
+        _handleRPC(on_update_multiplier, session, config.GET_PERF_MULTIPLIER_RPC)
+    })
+}
+
+export function* multiplierBase(session){
+    const action = yield call(getMultiplier, session);
+    yield put(action)
+}
+
+
+export function onPerformanceFetch(resolve, args) {
+    let updateBenchmark = args[0];
+    let benchmarks = {};
+    Object.keys(updateBenchmark).forEach( item => {
+        let product = products[item]
+        if(product)
+            benchmarks[product] = updateBenchmark[item]
+    })
+    resolve({
+        type: SET_PERFORMANCE_CHARTS,
+        payload: benchmarks
+    })
+}
+
+export function fetchPerformance(session){
+    return new Promise((resolve, reject) => {
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.GET_PERFORMANCE_RPC)
+    })
+}
+
+export function* fetchPerformanceBase(session){
+    const action = yield call(fetchPerformance, session);
     //console.log("SETTINGS_ACTION", actionList)
     yield put(action)
 }
@@ -87,6 +121,8 @@ export function* fireBase(session) {
  * @yield   {Object}            [Action object]
  */
 export function* performanceFlow(session) {
-    yield fork(benchmarkBase, session)
+    yield fork(fetchPerformanceBase, session)
+    yield fork(multiplierBase, session)
     yield takeEvery(RECOUNT_BENCHMARK, fireBase, session)
+    yield takeLatest(UPDATE_MULTIPLIER, updateMultiplierBase, session)
 }

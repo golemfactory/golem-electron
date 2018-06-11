@@ -20,13 +20,13 @@ export function checkTermsAccepted(session) {
     })
 }
 
-export function acceptTerms(session, {_resolve, _reject}) {
+export function acceptTerms(session, {monitor, sentry, _resolve, _reject}) {
     function on_info(args) {
         let info = args[0];
         _resolve(info)
     }
 
-    _handleRPC(on_info, session, config.ACCEPT_TERMS_RPC)
+    _handleRPC(on_info, session, config.ACCEPT_TERMS_RPC, [monitor, sentry])
 }
 
 export function* checkTermsBase(session){

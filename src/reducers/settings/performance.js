@@ -1,6 +1,6 @@
 import { dict } from './../../actions'
 
-const {RECOUNT_BENCHMARK, SET_PERFORMANCE_CHARTS} = dict
+const {RECOUNT_BENCHMARK, SET_PERFORMANCE_CHARTS, SET_MULTIPLIER} = dict
 
 const initialState = {
     charts: {
@@ -8,7 +8,8 @@ const initialState = {
         estimated_lux_performance: 0,
         estimated_blender_performance: 0
     },
-    loadingIndicator: false
+    loadingIndicator: false,
+    multiplier: 0
 }
 const setPerformance = (state = initialState, action) => {
     switch (action.type) {
@@ -26,6 +27,11 @@ const setPerformance = (state = initialState, action) => {
     case RECOUNT_BENCHMARK:
         return Object.assign({}, state, {
             loadingIndicator: true
+        });
+
+    case SET_MULTIPLIER:
+        return Object.assign({}, state, {
+            multiplier: action.payload
         });
 
     default:

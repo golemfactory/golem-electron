@@ -1,0 +1,119 @@
+.content__footer-main{
+	@include flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 0 130px;
+
+	.section__actions {
+        text-align: left;
+        width: 100%;
+
+        @include flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        z-index: 2;
+        background: $color-text4;
+        flex: 0 0 100px;
+
+        &-status {
+            @include flex;
+
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: flex-start;
+            font-size: 11pt;
+            font-weight: 400;
+            width: 275px;
+
+            .icon-status-dot {
+                margin-right: 8px;
+                font-size: 10pt;
+
+                &--active {
+                    color: #37C481;
+                }
+
+                &--deactive {
+                    color: #F9FCFC;
+                }
+
+                &--warning {
+                    color: $color-accent2;
+                }
+                &--error {
+                    color: #F65A23;
+                }
+            }
+        }
+
+        .status-message{
+            margin-right: 10px;
+            line-height: 1.5em;
+        }
+
+        .info__ports{
+            font-size: 9pt;
+            color: $color-text3;
+        }
+
+        .status-node{
+            margin-top: 5px;
+            font-size: 8pt;
+            color: $color-text2;
+        }
+    }
+
+    .content__footer-social{
+        @include flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 0 25px;
+        height: 30px;
+        font-size: 8pt;
+        border-top: 1px solid $color-border;
+        box-sizing: border-box;
+        a{
+            color: $color-text2;
+        }
+    }
+
+    .loading-indicator {
+        position: absolute;
+        z-index: 9 !important;
+        position: absolute;
+        bottom: 40px;
+        right: 90px;
+        width: 0;
+        height: 0;
+        background: rgba($color-text4, 0.7);
+        border-radius: 50%;
+        transition: width 2s, height 2s, opacity .1s linear 2s;
+        transform: translate(50%, 50%);
+        opacity: 0;
+
+        &.active {
+            opacity: 1;
+            width: 300vh;
+            height: 300vh;
+            transition: width 2s, height 2s, opacity .1s linear 0s;
+        }
+
+    }
+
+    .loading-icon {
+            position: absolute;
+            display: none;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            margin: auto;
+            width: 120px;
+            z-index: 11;
+
+            &.active{
+                display: block;
+            }
+        }
+}

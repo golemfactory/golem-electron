@@ -29,20 +29,21 @@ export default class Slider extends React.Component {
      * [_handleFillLower handling colorful part of the input range while thumb dragged]
      */
     _handleFillLower(isDisabled) {
-        let slider = document.getElementById(this.props.inputId)
-        let indicator = document.getElementById(`${this.props.inputId}__indicator`)
+        const primaryColor = this.props.mainColor || TRUST
+        const slider = document.getElementById(this.props.inputId);
+        const indicator = document.getElementById(`${this.props.inputId}__indicator`);
         if(slider && indicator){       
-                let val = slider.value
-                let min = slider.getAttribute('min')
-                let max = slider.getAttribute('max')
-                var value = (val - min) / (max - min);
+                const val = slider.value
+                const min = slider.getAttribute('min')
+                const max = slider.getAttribute('max')
+                const value = (val - min) / (max - min);
         
                 let color;
                 if (!isDisabled) {
                     if (this.props.warn)
-                        color = (val < 75 && val > 0) ? TRUST : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
+                        color = (val < 75 && val > 0) ? primaryColor : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
                     else
-                        color = TRUST;
+                        color = primaryColor;
                         slider.style.cursor = "pointer";
                 } else {
                     color = DISABLED;
@@ -60,12 +61,15 @@ export default class Slider extends React.Component {
                     ')'
                 ].join('');
         
-                let appWidth = window.innerWidth
+                const appWidth = window.innerWidth
                 || document.documentElement.clientWidth
                 || document.body.clientWidth;
+
+                const sliderWidth = slider.innerWidth
+                || slider.clientWidth;
                 indicator.innerHTML = val;
                 indicator.style.color = color;
-                indicator.style.left = ((parseInt(val) + 20.5) * 3.12) + 'px'; //<-- HARDCODED}
+                indicator.style.left = (val * ((sliderWidth - 32 )/(max)) + ((((appWidth - sliderWidth)/ 2) + 6))) + 'px';
         } 
     }
 
@@ -74,21 +78,21 @@ export default class Slider extends React.Component {
      * @return {[type]} [description]
      */
     _handleCallback() {
-        let slider = document.getElementById(this.props.inputId)
-        let val = slider.value
+        const slider = document.getElementById(this.props.inputId)
+        const val = slider.value
         this.props.callback(val)
     }
 
     render() {
-        const {iconLeft, iconRight, disabled} = this.props
+        const {iconLeft, iconRight, mainColor, min, max, step, disabled} = this.props
         const {defaultValue} = this.state
         return (
             <div>
         <div className="slider">
-                    <span className={iconLeft}></span>
-                    <input type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min="0" max="100" step="1" list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <span className={`slider-icon ${iconLeft}`}/>
+                    <input ref={this.props.inputId} type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
-                    <span className={iconRight}/>
+                    <span className={`slider-icon ${iconRight}`}/>
         </div>
       </div>
         );

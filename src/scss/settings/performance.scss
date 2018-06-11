@@ -5,11 +5,13 @@
 }
 
 .content__performance {
-    height: 231px;
-    button {
+    height: 430px;
+
+    .btn--calculate {
         float: right;
         width: 130px;
         transition: .5s all;
+        margin-bottom: 20px;
     }
     .btn--loading {
         width: 160px;
@@ -48,20 +50,22 @@
 }
 
 .list__performance {
-    padding-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .list-item__performance {
     @include flex;
     padding: 10px 0;
     .icon__list-item__acount {
-        font-size: 20pt;
+        font-size: 16pt;
         width: 30px;
         color: $color-text2;
     }
     .title__list-item__acount {
         font-size: 10pt;
         flex: 0 0 70px;
+        color: $color-text;
+        font-weight: 400;
     }
     progress::-webkit-progress-bar {
         background-color: $color-accent3 !important;
@@ -86,5 +90,50 @@
         text-align: right;
         font-weight: bold;
         font-size: 10pt;
+    }
+}
+
+.content__min-score{
+    width: 100%;
+    height: 200px;
+    @include flex;
+    align-items: stretch;
+    font-size: 9pt;
+    font-weight: 400;
+}
+
+.content__min-score{
+    margin-top: 30px;
+    flex-direction: column;
+
+    .desc__min-score{
+        align-self: left;
+        margin-bottom: 20px;
+    }
+
+    .score__indicator{
+        position: relative;
+        width: max-content;
+        font-size: 5pt;
+        font-variant: small-caps;
+        z-index: -1;
+
+        &:before{
+            position: absolute;
+            content: '|';
+            bottom: -10px;
+            left: 15px;
+        }
+    }
+
+    .hint__min-score{
+        text-align: center;
+        color: $color-text3;
+        margin: 25px 0;
+    }
+
+    .btn--outline{
+        align-self: flex-end;
+        transition: .5s all;
     }
 }
