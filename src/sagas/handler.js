@@ -42,7 +42,6 @@ export let config = Object.freeze({
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
     REMOVE_TASK_HEADER_RPC: 'comp.tasks.known.delete',
     GET_TASK_RPC: 'comp.task',
-    GET_TASK_COST_RPC: 'comp.task.cost',
     QUERY_TASK_STATE_RPC: 'comp.task.state',
     CREATE_TASK_RPC: 'comp.task.create',
     DELETE_TASK_RPC: 'comp.task.delete',
