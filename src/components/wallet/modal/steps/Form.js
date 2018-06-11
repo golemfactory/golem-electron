@@ -95,15 +95,15 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
-        this._getGasCostAsync(amount.toNumber(), this.props.suffix)
+        this._getGasCostAsync(amount.toNumber(), sendTo, this.props.suffix)
         .then(result => {
             if(result)
                 this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
         })
     }
 
-    _getGasCostAsync(amount, type){
-        return new Promise((resolve, reject) => this.props.actions.getGasCost({amount, type}, resolve, reject))
+    _getGasCostAsync(amount, sendTo, type){
+        return new Promise((resolve, reject) => this.props.actions.getGasCost({amount, sendTo, type}, resolve, reject))
     }
 
     /**
@@ -168,8 +168,8 @@ export default class WithdrawForm extends React.Component {
     }
 
     _preventTypeAfterLimit(e){
-        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {            
-           e.preventDefault();                
+        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {
+           e.preventDefault();
         }
     }
 
@@ -190,9 +190,9 @@ export default class WithdrawForm extends React.Component {
                     </div>
                     <div className="form-field">
                     	<label>Amount</label>
-                    	<input 
-                            ref="amountInput" 
-                            className="input__amount" 
+                    	<input
+                            ref="amountInput"
+                            className="input__amount"
                             type="number"
                             min={0}
                             max={balance.toNumber()}
@@ -209,8 +209,8 @@ export default class WithdrawForm extends React.Component {
                     	<input
                             id="sendToInput"
                             ref="sendToInput"
-                            className="input__address" 
-                            type="text" 
+                            className="input__address"
+                            type="text"
                             placeholder={`Type in ${suffix} address`}
                             onKeyPress={::this._preventSpace}
                             onChange={::this._handleSendToChange}
