@@ -51,7 +51,7 @@ You'll find debug logs in;
 <br/>
 <br/>
 
-|OS|Path|General Log File|Error Log File|
+|OS|Path|General Log|Error Log|
 |---|---|---|---|
 |Windows|`%LOCALAPPDATA%\golem\golem\default\{CURRENT_CHAIN}\logs\`|`gui.log`|`gui-error.log`|
 |Mac|`~/Library/Application\ Support/golem/default/{CURRENT_CHAIN}/logs/`|`gui.log`|`gui-error.log`|
