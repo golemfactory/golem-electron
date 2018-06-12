@@ -2,7 +2,7 @@
 ![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.12.0-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
 <br/>
-![Image of Golem](https://pbs.twimg.com/profile_images/659017061704822784/nRM6iJCS_400x400.png)
+![Image of Golem](https://pbs.twimg.com/profile_images/983446440654630912/Byzk9eIL_400x400.jpg)
 
 The desktop application using Electron, React and Redux.
 
@@ -44,17 +44,19 @@ Linux: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <br/>
 Debug mode will be activated. 
 <br/>
-Now you can close and reopen the application to catch all critical informations from beginning.
+Now you can restart the application to catch all critical informations from beginning.
 <br/>
 <br/>
 You'll find debug logs in;
 <br/>
 <br/>
-Windows &nbsp;&nbsp;`%LOCALAPPDATA%\golem\golem\default\logs\gui.log` & `gui-error.log`
-<br/>
-Mac &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/Library/Application\ Support/golem/default/logs/gui.log` & `gui-error.log`
-<br/>
-Linux &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;`~/.local/share/golem/default/logs/gui.log` & `gui-error.log`
+| OS | Path | General Log File | Error Log File |
+| --- | --- | --- | --- |
+| Windows | `%LOCALAPPDATA%\golem\golem\default\{CURRENT_CHAIN}\logs\` | `gui.log` |  `gui-error.log` |
+| Mac | `~/Library/Application\ Support/golem/default/{CURRENT_CHAIN}/logs/` | `gui.log` |  `gui-error.log` |
+| Linux | `~/.local/share/golem/default/{CURRENT_CHAIN}/logs/gui.log/` | `gui.log` |  `gui-error.log` |
+<br/><br/>
+Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.
 <br/>
 
 ### :control_knobs: Developer mode
