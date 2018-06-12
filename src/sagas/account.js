@@ -47,14 +47,14 @@ export function* withdrawBase(session, {payload, _response, _reject}) {
     yield action && put(action)
 }
 
-export function gasCost(session, {amount, type}, _response, _reject) {
+export function gasCost(session, {amount, sendTo, type}, _response, _reject) {
     return new Promise((response, reject) => {
         function on_info(args) {
             let info = args[0];
             _response(info)
         }
 
-        _handleRPC(on_info, session, config.GAS_COST_RPC, [amount, type])
+        _handleRPC(on_info, session, config.GAS_COST_RPC, [amount, sendTo, type])
     })
 }
 
