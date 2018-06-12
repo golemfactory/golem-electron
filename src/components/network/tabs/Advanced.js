@@ -81,7 +81,7 @@ export class Advanced extends React.Component {
      */
     _handleOptionChange(list, selectedIndex, init = false) {
         const {actions, chartValues} = this.props
-        let value = list[selectedIndex]
+        const value = list.find(item => item.name === selectedIndex);
         if (value) {
             actions.setChosenPreset(value.name, init)
             actions.setAdvancedChart({
