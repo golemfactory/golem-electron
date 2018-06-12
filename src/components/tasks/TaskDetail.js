@@ -1071,11 +1071,11 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if you<br/>have any questions<br/>just hover over<br/>specific label to<br/>find some help</p>}/>
+                                <InfoLabel type="h4" label="File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if you<br/>have any questions<br/>just hover over<br/>specific label to<br/>find some help</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">
-                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
+                            <InfoLabel type="h4" label="Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
                             <div className="item-settings">
                                 <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
