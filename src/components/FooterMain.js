@@ -50,6 +50,7 @@ export default class FooterMain extends Component {
 
     render() {
         const {golemStatus, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
+        const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
@@ -77,7 +78,7 @@ export default class FooterMain extends Component {
                     <a href="https://www.github.com/golemfactory">
                         <u>github page</u>
                     </a>
-                    <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
+                    <span>{versionTemplate}</span>
                     <a href="https://chat.golem.network">
                         <u>golem chat</u>
                     </a>
