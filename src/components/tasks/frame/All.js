@@ -17,14 +17,14 @@ const routesDict = Object.freeze({
 })
 
 const statusDict = Object.freeze({
-    NOTSTARTED: 'Not started',
-    COMPUTING: 'Computing',
-    FINISHED: 'Finished',
+    NOTSTARTED: 'notStarted',
+    COMPUTING: 'computing',
+    FINISHED: 'finished',
     ABORTED: 'Aborted',
-    WAITING: 'Waiting',
+    WAITING: 'waiting',
     SENDING: 'Sending',
-    TIMEOUT: 'Timeout',
-    RESTARTED: 'Restarted'
+    TIMEOUT: 'timeout',
+    RESTARTED: 'restarted'
 })
 
 const statusClassDict = Object.freeze({
