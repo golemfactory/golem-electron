@@ -181,7 +181,7 @@ export default class WithdrawForm extends React.Component {
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid} = this.state
+        const {amountCopied, amount, isValid, isSubmitted} = this.state
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
                     <div>
