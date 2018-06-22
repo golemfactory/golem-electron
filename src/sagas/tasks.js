@@ -243,17 +243,13 @@ export function subscribeTestStatus(session) {
             function on_tasks(args) {
                 let result = args[0];
                 if(result){
-                    const {status, more, error} = JSON.parse(result)
+                    result = JSON.parse(result)
                     emit({
                         type: SET_TASK_TEST_STATUS,
-                        payload: {
-                            status,
-                            error,
-                            more
-                        }
+                        payload: result
                     })
 
-                    if(status !== "Started"){
+                    if(result && result.status !== "Started"){
                         clearInterval(channelInterval); //Wait until eventual result and kill the interval
                     }
                 }

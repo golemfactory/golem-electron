@@ -748,7 +748,7 @@ export class TaskDetail extends React.Component {
 
     _createTaskAsync(){
         const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
-        const {task} = this.props
+        const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
@@ -757,6 +757,7 @@ export class TaskDetail extends React.Component {
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
                 bid,
+                estimated_memory : (testStatus && testStatus.estimated_memory),
                 options: {
                     resolution,
                     frames,
