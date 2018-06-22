@@ -16,7 +16,8 @@ export default class WithdrawForm extends React.Component {
             amountCopied: false,
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
             sendTo: "",
-            isValid: false
+            isValid: false,
+            isSubmitted: false
         }
     }
 
@@ -95,6 +96,11 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
+
+        this.setState({
+            isSubmitted: true
+        })
+
         this._getGasCostAsync(amount.toString(), sendTo, this.props.suffix)
         .then(result => {
             if(result)
@@ -218,7 +224,7 @@ export default class WithdrawForm extends React.Component {
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="submit" className="btn--primary" autoFocus disabled={!isValid}>Apply</button>
+                        <button type="submit" className="btn--primary" autoFocus disabled={!isValid || isSubmitted}>Apply</button>
                     </div>
                 </form>
         );
