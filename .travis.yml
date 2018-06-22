@@ -1,0 +1,24 @@
+language: node_js
+node_js:
+- '8'
+matrix:
+  include:
+  - os: linux
+    dist: trusty
+    sudo: required
+  - os: osx
+cache:
+  yarn: false
+notifications:
+  email: false
+install:
+- yarn
+script:
+- yarn compile && yarn dist
+deploy:
+  provider: releases
+  api_key: "$GH_TOKEN"
+  skip_cleanup: true
+  draft: true
+  on:
+    tags: true
