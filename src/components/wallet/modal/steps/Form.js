@@ -95,7 +95,7 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
-        this._getGasCostAsync(amount.toNumber(), sendTo, this.props.suffix)
+        this._getGasCostAsync(amount.toString(), sendTo, this.props.suffix)
         .then(result => {
             if(result)
                 this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))

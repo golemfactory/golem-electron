@@ -88,7 +88,6 @@ export class WithdrawModal extends React.Component {
         else {
             this.props.closeModal(modals.WITHDRAWMODAL)
         }
-        //this.props.closeModal(modals.WITHDRAWMODAL)
     }
 
     _withdrawAsync(_formData){
