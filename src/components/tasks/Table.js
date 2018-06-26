@@ -233,6 +233,7 @@ export class Table extends React.Component {
      *     @param {float}   precision   (optional)
      */
     listTasks(data) {
+        const { toggleWalletTray } = this.props
         const listItems = data
         .map((item, index) => <TaskItem
             key={index.toString()}
@@ -240,7 +241,8 @@ export class Table extends React.Component {
             index={index}
             _handleRowClick={this._handleRowClick.bind(this)}
             _handleRestart={this._handleRestart.bind(this, item.id)}
-            _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}/>
+            _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
+            _toggleWalletTray={toggleWalletTray}/>
         );
 
         return (

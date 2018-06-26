@@ -47,11 +47,11 @@ export class TaskItem extends React.Component {
     }
 
     _togglePreview({id}){
-
         const prevList = this.state.toggledPreviewList
         const prevToggle = this.state.toggledPreviewList[id];
 
         prevList[id] = !prevToggle
+        this.props._toggleWalletTray(!prevToggle)
 
         this.setState({
             toggledPreviewList: prevList

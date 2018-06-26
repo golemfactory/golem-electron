@@ -9,10 +9,13 @@ import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
+import Wallet from '../wallet'
 import DeleteModal from './modal/DeleteModal'
 import FooterMain from './../FooterMain'
 
 const mapStateToProps = state => ({
+    balance: state.realTime.balance,
+    currency: state.currency,
     preview: state.input.preview,
     expandedPreview: state.input.expandedPreview,
     golemStatus: state.realTime.golemStatus,
@@ -39,7 +42,8 @@ export class TaskPanel extends React.Component {
             deleteModal: false,
             deleteCallback: null,
             previewId: null,
-            previewSrc: null
+            previewSrc: null,
+            isWalletTray: false
         }
     }
 
@@ -102,21 +106,33 @@ export class TaskPanel extends React.Component {
         })
     }
 
+
+_toggleWalletTray(toggle){
+    this.setState({
+        isWalletTray: toggle
+    })
+}
+
 // {preview && <div className="section__preview">
 //                         <Preview id={previewId} src={previewSrc}/> 
 //                     </div>}
 //                    <Footer {...this.props}  setPreviewExpanded={actions.setPreviewExpanded}/>
                      
     render() {
-        const {deleteModal, deleteProps, previewId, previewSrc, frameCount, psEnabled} = this.state
-        const {actions, preview, expandedPreview} = this.props
+        const {deleteModal, deleteProps, previewId, previewSrc, frameCount, psEnabled, isWalletTray} = this.state
+        const {actions, preview, expandedPreview, balance, currency} = this.props
 
         return (
             <div className="content__task-panel">
+                    { !isWalletTray && <Wallet balance={balance} currency={currency}/> }
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                         <DropZone>
                             <div className="section__table">
-                                <Table deleteModalHandler={::this._handleDeleteModal} previewHandler={::this._setPreview} previewId={previewId}/>
+                                <Table 
+                                    deleteModalHandler={::this._handleDeleteModal} 
+                                    previewHandler={::this._setPreview} 
+                                    previewId={previewId} 
+                                    toggleWalletTray={::this._toggleWalletTray}/>
                             </div>
                         </DropZone>
                     </div>
