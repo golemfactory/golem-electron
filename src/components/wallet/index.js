@@ -147,12 +147,10 @@ export class Wallet extends Component {
                             descriptionLock={
                                 <p className="tooltip__wallet">
                                     Locked: reserved
-                                    <br/>estimated pessimistic
-                                    <br/>amount that may be
-                                    <br/>needed to pay for
-                                    <br/>tasks that have been
+                                    <br/>amount that will be 
+                                    <br/>used to pay for tasks 
+                                    <br/>that have been 
                                     <br/>commissioned.
-                                    <br/>May be overestimated.
                                 </p>
                             }
 
