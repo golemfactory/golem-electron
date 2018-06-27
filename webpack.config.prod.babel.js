@@ -66,7 +66,7 @@ module.exports = {
             threshold: 10240,
             minRatio: 0.8
         }),
-        new BundleAnalyzerPlugin() // <--- Cool stuff to see package size of the modules
+        //new BundleAnalyzerPlugin() // <--- Cool stuff to see package size of the modules
     ],
     module: {
         rules: [{
