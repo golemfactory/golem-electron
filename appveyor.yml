@@ -1,0 +1,31 @@
+os: unstable
+cache:
+  - node_modules
+matrix:
+    - nodejs_version: 6
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - set CI=true
+  - npm install -g npm@latest
+  - set PATH=%APPDATA%\npm;%PATH%
+  - npm install
+matrix:
+  fast_finish: true
+build: off
+version: '{build}'
+shallow_clone: true
+clone_depth: 1
+test_script:
+  - npm run compile && npm run dist
+deploy:
+  release: '{build}'
+  description: 'Golem-electron beta {build}'
+  provider: GitHub
+  auth_token:
+    secure: j3eFPGGheNASQofg3bqxYWczwNJZGJYQ8G6dyBVuLBsMX8e5DaSyfOHBOpR6vJVW
+
+  draft: true
+  prerelease: true
+  on:
+    branch: dev                    # release from dev branch only
+    appveyor_repo_tag: true        # deploy on tag push only
