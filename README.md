@@ -1,6 +1,7 @@
 # Golem Electron Application
 ![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.12.0-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
+[![Build status](https://ci.appveyor.com/api/projects/status/j7c8q08tf07vqhfp/branch/dev?svg=true)](https://ci.appveyor.com/project/golemfactory/golem-electron/branch/dev)
 <br/>
 ![Image of Golem](https://pbs.twimg.com/profile_images/983446440654630912/Byzk9eIL_400x400.jpg)
 
