@@ -227,6 +227,7 @@ export class SubTask extends React.Component {
         });
 
         function _taskStatus(status){
+            console.log("status", status);
             
             switch(status){
                 case statusDict.FINISHED:
@@ -258,7 +259,6 @@ export class SubTask extends React.Component {
                 return verticalPointA - verticalPointB
             })
             .map((item, index) => {
-                
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0];
                 const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
                 return !!subtask ? <ReactTooltip
@@ -293,7 +293,10 @@ export class SubTask extends React.Component {
                             <button type="button"
                                 onClick={this._handleResubmit.bind(this, subtask.subtask_id,
                                     (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                                disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
+                                disabled={
+                                    taskDetails.status === statusDict.RESTARTED || 
+                                    taskDetails.status === statusDict.FAILURE || 
+                                    this.state.isTaskSubmitted[subtask.subtask_id]}
                                 >
                                     {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
                             </button>

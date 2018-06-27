@@ -17,7 +17,7 @@ const routesDict = Object.freeze({
 })
 
 const statusDict = Object.freeze({
-    NOTSTARTED: 'Not started',
+    NOTSTARTED: 'notStarted',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
     ABORTED: 'Aborted',
@@ -186,7 +186,7 @@ export class All extends React.Component {
                     overlay={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, data.id)}>Resubmit</button>
+                            <button onClick={this._handleResubmit.bind(this, data, data.id)} disabled={(data.status === statusDict.NOTSTARTED)}>Resubmit</button>
                         </div>}
                     align={{
                         offset: [0, 10],
