@@ -26,7 +26,8 @@ const status = Object.freeze({
 })
 
 const mapStateToProps = state => ({
-    psId: state.preview.ps.id
+    psId: state.preview.ps.id,
+    subtasksList: state.single.subtasksList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -44,6 +45,19 @@ export class TaskItem extends React.Component {
         this.state = {
             toggledPreviewList: []
         }
+    }
+
+    componentDidMount() {
+        const {actions, item} = this.props
+        let interval = ()=> {
+                actions.fetchSubtasksList(item.id)
+                return interval
+            }
+            this.liveSubList = setInterval(interval(), 5000)
+    }
+
+    componentWillUnmount() {
+        this.liveSubList && clearInterval(this.liveSubList)
     }
 
     _togglePreview({id}){
@@ -65,6 +79,7 @@ export class TaskItem extends React.Component {
      */
     _fetchStatus(item) {
     	const {options} = item
+        const {subtasksList} = this.props
 
         switch (item.status) {
         case status.TIMEOUT:
@@ -102,7 +117,7 @@ export class TaskItem extends React.Component {
                 <span> | </span>
                 <span className="duration--finished">Computing... </span>
                 <span> | </span>
-                <span>x Nodes</span>
+                <span>{subtasksList && subtasksList.length} Nodes</span>
             </div>
 
         default:
