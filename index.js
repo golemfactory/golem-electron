@@ -74,7 +74,7 @@ function installDevExtensions() {
     console.log()
 
     return new Promise((resolve, reject) => {
-        installExtension(REACT_DEVELOPER_TOOLS)
+        installExtension(REACT_DEVELOPER_TOOLS.id)
             .then((name) => {
                 console.log(`${chalk.green(`✓`)} ${name}`)
                 console.log()
@@ -86,7 +86,7 @@ function installDevExtensions() {
                 console.log()
                 reject()
             })
-        installExtension(REDUX_DEVTOOLS)
+        installExtension(REDUX_DEVTOOLS.id)
             .then((name) => {
                 console.log(`${chalk.green(`✓`)} ${name}`)
                 console.log()
@@ -110,7 +110,7 @@ function createWindow() {
         title: APP_NAME,
         width: APP_WIDTH,
         height: APP_HEIGHT,
-        titleBarStyle: 'hidden-inset',
+        titleBarStyle: 'hiddenInset',
         frame: true,
         resizable: true,
         minWidth: APP_WIDTH,
@@ -228,7 +228,7 @@ function createPreviewWindow(id, frameCount) {
             title: APP_NAME,
             width: PREVIEW_APP_WIDTH,
             height: PREVIEW_APP_HEIGHT,
-            titleBarStyle: 'hidden-inset',
+            titleBarStyle: 'hiddenInset',
             //frame: false,
             resizable: false,
             center: true,
