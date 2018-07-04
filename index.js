@@ -18,6 +18,7 @@ const menuHandler = require('./electron/menu_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')
 const gethValidator = require('./electron/geth_validator.js')
+const ethChecksum = require('./electron/eth_checksum.js')
 
 function isDevelopment() {
     return process.env.NODE_ENV === 'development'
@@ -433,3 +434,4 @@ exports.checkUpdate = function(_old, _new){
 }
 
 exports.validateGeth = gethValidator;
+exports.toChecksumAddress = ethChecksum;

@@ -4,7 +4,8 @@ import yup from 'yup'
 
 import {modals, currencyIcons} from './../../../../constants'
 
-const {clipboard } = window.electron
+const {clipboard, remote } = window.electron;
+const mainProcess = remote.require('./index');
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 export default class WithdrawForm extends React.Component {
@@ -101,11 +102,14 @@ export default class WithdrawForm extends React.Component {
             isSubmitted: true
         })
 
-        this._getGasCostAsync(amount.toString(), sendTo, this.props.suffix)
-        .then(result => {
-            if(result)
-                this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
-        })
+        mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
+        .then(sendToChecksum => {
+            this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
+            .then(result => {
+                if(result)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
+            })
+        });
     }
 
     _getGasCostAsync(amount, sendTo, type){
