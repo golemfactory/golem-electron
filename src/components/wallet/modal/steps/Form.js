@@ -109,7 +109,9 @@ export default class WithdrawForm extends React.Component {
                 if(result)
                     this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
             })
-        });
+            .catch(error => console.error);
+        })
+        .catch(error => console.error);
     }
 
     _getGasCostAsync(amount, sendTo, type){
