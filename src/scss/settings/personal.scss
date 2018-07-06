@@ -18,8 +18,8 @@
     }
 
     .user-name__form{
-        & input + .toggle__edit-mode,
-        &:hover > .toggle__edit-mode {
+        & input + div .toggle__edit-mode,
+        &:hover > div .toggle__edit-mode {
             display: inline;
         }
     }

@@ -1,10 +1,8 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom'
-import { Link } from 'react-router'
-/**
- * @see http://react-component.github.io/tooltip/
- */
-import ReactTooltip from 'rc-tooltip'
+import { Link } from 'react-router-dom'
+
+import {Tooltip} from 'react-tippy';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -262,7 +260,7 @@ export class Table extends React.Component {
      */
     listTasks(data) {
         const listItems = data
-        .map((item, index) => <Motion key={index.toString()} defaultStyle={{
+        .map((item, index) => Motion && <Motion key={index.toString()} defaultStyle={{
                 progress: 0
             }} style={{
                 progress: spring(item.progress, {
@@ -288,17 +286,18 @@ export class Table extends React.Component {
                     </div>
                 </div>
                 <div>
-                    {item.status == status.TIMEOUT &&
-                <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Restart</p>} mouseEnterDelay={1} align={{
-                    offset: [0, 10],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    {item.status == status.TIMEOUT && <Tooltip
+                      html={<p>Restart</p>}
+                      position="bottom"
+                      trigger="mouseenter">
                         <span className="icon-reload" tabIndex="0" aria-label="Restart Task" onClick={this._handleRestart.bind(this, item.id)}></span>
-                    </ReactTooltip> }
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Delete</p>} mouseEnterDelay={1} align={{
-                    offset: [0, 10],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    </Tooltip>}
+                    <Tooltip
+                      html={<p>Delete</p>}
+                      position="bottom"
+                      trigger="mouseenter">
                         <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={this._handleDeleteModal.bind(this, item.id)}></span>
-                    </ReactTooltip>
+                </Tooltip>
                     <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>
                 </div>
             </div></div>}

@@ -4,6 +4,7 @@
 	.icon-question-mark,
 	.info-title{
 		margin: 30px 0;
+		
         &.experiment {
             display: inline-block;
             padding: 5px;
@@ -17,6 +18,10 @@
 		margin-left: 5px;
 		color: $color-text3;
 		cursor: pointer;
+	}
+
+	.tip{
+		margin: 30px 0;
 	}
 }
 

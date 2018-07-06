@@ -2,7 +2,6 @@ import React from 'react';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { hashHistory } from 'react-router'
 
 import * as Actions from './../actions'
 const {remote} = window.electron;
@@ -195,7 +194,7 @@ export class DropZone extends React.Component {
                     let masterFiles = mergedList.filter(({master}) => (master));
                     let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
                     //console.log("masterFiles", masterFiles);
-                    (masterFiles.length > 0 || unknownFiles.length > 0) && hashHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
+                    (masterFiles.length > 0 || unknownFiles.length > 0) && window.routerHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
                     if (unknownFiles.length > 0) {
                         this.props.actions.setFileCheck({
                             status: true,

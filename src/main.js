@@ -1,4 +1,5 @@
 import 'react-hot-loader/patch'
+import 'react-tippy/dist/tippy.css';
 require('css-browser-selector')
 import React from 'react'
 import { AppContainer } from 'react-hot-loader';
@@ -6,8 +7,8 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
-import { hashHistory } from 'react-router'
+import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { createBrowserHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
 
@@ -20,16 +21,19 @@ import './scss/main.scss'
 const {remote, ipcRenderer} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
-const routingMiddleware = routerMiddleware(hashHistory)
-const sagaMiddleware = createSagaMiddleware()
+const history = window.routerHistory = createBrowserHistory()
+const routingMiddleware = routerMiddleware(history)
+const sagaMiddleware = createSagaMiddleware.default()
 const enhancer = compose(
     // Middleware you want to use in development:
     applyMiddleware(sagaMiddleware, routingMiddleware),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
-let history = syncHistoryWithStore(hashHistory, store)
+let store = createStore(
+        connectRouter(history)(reducer), 
+        [], 
+        applyMiddleware(sagaMiddleware, routingMiddleware));
 
 const RPC_QUIT_STATES = {
     INITIAL: 0,

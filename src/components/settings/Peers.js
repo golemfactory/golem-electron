@@ -2,10 +2,8 @@ import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 const {clipboard} = window.electron;
-/**
- * @see http://react-component.github.io/tooltip/
- */
-import ReactTooltip from 'rc-tooltip'
+
+import {Tooltip} from 'react-tippy';
 
 import * as Actions from './../../actions'
 
@@ -46,25 +44,29 @@ export class Peers extends React.Component {
         const {isDataCopied} = this.state
         return peerInfo.map(({address, port, node_name}, index) => <tr key={index.toString()}>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy <Adress:Port>'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy <Adress:Port>'}</p>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, `${address}:${port}`)}>
                             <span>{address}</span>
                         </div>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
                 <td>
                     <span>{port}</span>
                 </td>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, node_name)}>
                             <span>{node_name || "Anonymous node"}</span>
                         </div>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
             </tr>)
     }
