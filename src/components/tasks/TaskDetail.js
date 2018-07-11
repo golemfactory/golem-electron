@@ -391,11 +391,8 @@ export class TaskDetail extends React.Component {
         this.refs.subtaskCount.value = subtaskValue
     }
 
-    _convertPriceAsHR(price, suffix, fixTo = 2, font_size) {
+    _convertPriceAsHR(price = 0, suffix, fixTo = 2, font_size) {
         let priceLength = parseInt(price).toString().length
-        if(!price){
-            price = 0;
-        }
         let fontSize = price.toFixed(fixTo).toString().length > 4 ? (font_size/1.7)+'pt' : font_size+'pt';
 
         if (priceLength < 5) {
