@@ -87,7 +87,7 @@ export class TaskItem extends React.Component {
             	<span>Task time: 1d 4h 22m</span>
             	<span> | </span>
             	<span className="duration--timeout">Timed out: </span>
-            	<span>Date mockup</span>
+            	<span>{timeStampToHR(item.last_updated)}</span>
             </div>
 
         case status.NOTREADY:
@@ -125,7 +125,7 @@ export class TaskItem extends React.Component {
                 <span>Task time: 1d 4h 22m</span>
                 <span> | </span>
                 <span className="duration--finished">Finished: </span>
-                <span>Date mockup</span>
+                <span>{timeStampToHR(item.last_updated)}</span>
             </div>
         }
     }
@@ -166,7 +166,7 @@ export class TaskItem extends React.Component {
                                         <span> | </span>
                                         <span> Resolution: {(options && options.resolution.join("x")) || 0}</span>
                                         <span> | </span>
-                                        <span>Locked: 30 GNT/0.0002 ETH</span>
+                                        <span>Cost: {item.cost} GNT/{item.fee} ETH</span>
                                     </div>
                                     <div>
                                         <span>Subtasks: {item.subtasks || 0}</span>

@@ -386,6 +386,7 @@ export function subscribeTaskList(session) {
             
             function on_tasks(args) {
                 var taskList = args[0];
+                console.log("taskList", taskList);
                 emit({
                     type: SET_TASKLIST,
                     payload: taskList.reverse()
