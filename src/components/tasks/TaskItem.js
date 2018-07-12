@@ -25,6 +25,8 @@ const status = Object.freeze({
     RESTART: 'Restart'
 })
 
+const ETH_DENOM = 10 ** 18;
+
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
     subtasksList: state.single.subtasksList
@@ -130,6 +132,14 @@ export class TaskItem extends React.Component {
         }
     }
 
+    _fetchCost(item){
+        const fixedTo = 4;
+        return <span>{(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) || 
+                      (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)} GNT/
+                     {item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo) || 
+                      (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)} ETH</span>
+    }
+
     render() {
     	const {item, index, _handleRowClick, _handleRestart, _handleDeleteModal, psId} = this.props
         const {toggledPreviewList} = this.state
@@ -166,7 +176,8 @@ export class TaskItem extends React.Component {
                                         <span> | </span>
                                         <span> Resolution: {(options && options.resolution.join("x")) || 0}</span>
                                         <span> | </span>
-                                        <span>Cost: {item.cost} GNT/{item.fee} ETH</span>
+                                        <span>Cost: {this._fetchCost(item)}
+                                        </span>
                                     </div>
                                     <div>
                                         <span>Subtasks: {item.subtasks || 0}</span>
