@@ -1113,7 +1113,7 @@ export class TaskDetail extends React.Component {
                                     <span>{isMainNet ? "" : "t"} GNT/h</span>
                                 </div>
                                 <div className="estimated_usd">
-                                    <span>est. {this._convertPriceAsHR(bid * currency["GNT"], "USD", null, 12)} $</span>
+                                    <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
                                 </div>
                             </div>
                             <div className="estimated-price__panel">
@@ -1124,7 +1124,7 @@ export class TaskDetail extends React.Component {
                                         <span>{isMainNet ? "" : "t"} GNT</span>
                                     </div>
                                     <div className="estimated_usd">
-                                        <span>est. {this._convertPriceAsHR(estimated_cost.GNT * currency["GNT"], "USD", 4, 12)} $</span>
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
                                     </div>
                                 </div>
                                 <div className="item-price">
@@ -1134,7 +1134,7 @@ export class TaskDetail extends React.Component {
                                         <span>{isMainNet ? "" : "t"} ETH</span>
                                     </div>
                                     <div className="estimated_usd">
-                                        <span>est. {this._convertPriceAsHR(estimated_cost.ETH * currency["ETH"], "USD", 4, 12)} $</span>
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
                                     </div>
                                 </div>
                             </div>
