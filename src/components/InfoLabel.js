@@ -8,33 +8,27 @@ import {Tooltip} from 'react-tippy';
  */
 export default class InfoLabel extends Component {
 
-	_initLabel(_type, _label){
-		const title = React.createElement(_type, { className: 'info-title', key:"1"}, _label);
+	_initLabel(_type, _label, _infoHidden){
+		let labelContent = [_label]
+
+		if(!_infoHidden)
+			labelContent.push(<span key={3} className="icon-question-mark"/>);
+
+		const title = React.createElement(_type, { className: 'info-title', key:"1"}, labelContent);
 		return title
 	}
 
     render() {
-    	const {info, type, label, cls, infoHidden} = this.props
+    	const {info, type, label, cls, infoHidden, distance} = this.props
         return (
             <div className={`info-label__container ${cls}`}>
-        	{infoHidden ? 
-        			<Tooltip
-                      html={info}
-                      position="bottom"
-                      trigger="mouseenter">
-	            		{this._initLabel(type, label)}
-		            </Tooltip>
-	        	:
-	            	[this._initLabel(type, label),
-	            	<Tooltip
-	            	  key="2"
-                      html={info}
-                      position="bottom"
-                      trigger="mouseenter"
-                      className="tip">
-		                <span className="icon-question-mark"/>
-		            </Tooltip>]
-	        }
+    			<Tooltip
+                  html={info}
+                  position="bottom"
+                  trigger="mouseenter"
+                  distance={distance}>
+            		{this._initLabel(type, label, infoHidden)}
+	            </Tooltip>
             </div>
         );
     }

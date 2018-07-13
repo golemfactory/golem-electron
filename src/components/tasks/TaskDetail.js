@@ -130,16 +130,17 @@ function isObjectEmpty(obj) {
 }
 
 const mapStateToProps = state => ({
+    currency: state.currency,
+    estimated_cost: state.details.estimated_cost,
+    isDeveloperMode: state.input.developerMode,
+    isMainNet: state.info.isMainNet,
+    location: state.fileLocation.location,
+    presets: state.details.presets,
+    requestorMaxPrice: state.price.requestorMaxPrice,
+    subtasksList: state.single.subtasksList,
     task: state.create.task,
     taskInfo: state.details.detail,
-    presets: state.details.presets,
-    testStatus: state.details.test_status,
-    estimated_cost: state.details.estimated_cost,
-    location: state.fileLocation.location,
-    subtasksList: state.single.subtasksList,
-    isDeveloperMode: state.input.developerMode,
-    requestorMaxPrice: state.price.requestorMaxPrice,
-    isMainNet: state.info.isMainNet
+    testStatus: state.details.test_status
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -388,14 +389,27 @@ export class TaskDetail extends React.Component {
         this.refs.subtaskCount.value = subtaskValue
     }
 
-    _convertPriceAsHR(price) {
+    _convertPriceAsHR(price = 0, suffix, fixTo = 2, font_size) {
         let priceLength = parseInt(price).toString().length
+        let fontSize = price.toFixed(fixTo).toString().length > 4 ? (font_size/1.7)+'pt' : font_size+'pt';
+
         if (priceLength < 5) {
-            return <span className="estimated-price">{price.toFixed(2)}</span>
+            return <span 
+                className={`estimated-price ${suffix}`} 
+                style={{'fontSize': fontSize}}>
+                    {price.toFixed(fixTo)}
+                </span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
+        return <span 
+                className={`estimated-price ${suffix}`}
+                style={{'fontSize': fontSize}}>
+                {firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}
+                <small>x</small>
+                10
+                <sup>{priceLength - 1}</sup>
+            </span>
     }
 
     _setTimeStamp() {
@@ -1010,25 +1024,26 @@ export class TaskDetail extends React.Component {
     render() {
 
         const {
-            modalData, 
-            isDetailPage, 
-            presetModal, 
             bid, 
-            managePresetModal, 
             defaultSettingsModal, 
             insufficientAmountModal, 
-            resolutionChangeModal, 
-            resolutionChangeInfo,
+            isDetailPage, 
+            loadingTaskIndicator,
+            managePresetModal, 
             maxSubtasks,
-            loadingTaskIndicator
+            modalData, 
+            presetModal, 
+            resolutionChangeInfo,
+            resolutionChangeModal
         } = this.state
 
         const {
-            testStatus, 
+            currency,
             estimated_cost, 
-            subtasksList, 
             isDeveloperMode,
-            isMainNet
+            isMainNet,
+            subtasksList, 
+            testStatus
         } = this.props;
         
         let testStyle = this._handleTestStatus(testStatus)
@@ -1075,11 +1090,11 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file >settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>}/>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file >settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">
-                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>}/>
+                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
                             <div className="item-settings">
                                 <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
@@ -1094,16 +1109,38 @@ export class TaskDetail extends React.Component {
                             </div>
                         </div>
                         <div className="section-price__task-detail">
-                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail"/>
+                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                             <div className="item-price">
                                 <InfoLabel type="span" label="Your bid" info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,<br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} cls="title" infoHidden={true}/>
-                                <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span>{isMainNet ? "" : "t"}GNT/h</span>
+                                <div className="input__price-set">
+                                    <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                    <span>{isMainNet ? "" : "t"} GNT/h</span>
+                                </div>
+                                <div className="estimated_usd">
+                                    <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
+                                </div>
                             </div>
-                            <div className="item-price estimated-price__panel">
-                                <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                {this._convertPriceAsHR(estimated_cost)}
-                                <span>{isMainNet ? "" : "t"}GNT</span>
+                            <div className="estimated-price__panel">
+                                <div className="item-price">
+                                    <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                    <div className="estimated_cost">
+                                        {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
+                                        <span>{isMainNet ? "" : "t"} GNT</span>
+                                    </div>
+                                    <div className="estimated_usd">
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
+                                    </div>
+                                </div>
+                                <div className="item-price">
+                                    <InfoLabel type="span" label="Tx Fee Lock" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                    <div className="estimated_cost">
+                                        {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
+                                        <span>{isMainNet ? "" : "t"} ETH</span>
+                                    </div>
+                                    <div className="estimated_usd">
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
+                                    </div>
+                                </div>
                             </div>
                             <span className="item-price tips__price">
                                 You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.

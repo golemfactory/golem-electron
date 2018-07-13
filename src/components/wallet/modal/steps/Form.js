@@ -197,7 +197,7 @@ export default class WithdrawForm extends React.Component {
                         	<br/>
                         	<strong>{balance.toFixed(4)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                        	<span className="label-estimation">est. $ {balance.multipliedBy(currency[suffix]).toFixed(2)}...</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -214,7 +214,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>

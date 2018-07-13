@@ -147,7 +147,7 @@ export default class CurrencyBox extends Component {
                                 damping: 50
                             })
                         }}>
-                        {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
+                        {({balanceAnimated}) => <span className="amount">est. {!isMainNet ? "t" : ""}$ {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}...</span>}
                     </Motion>
                 </div>
                 <Tooltip
