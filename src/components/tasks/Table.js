@@ -13,6 +13,7 @@ import blender_logo from './../../assets/img/blender_logo.png'
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 
 import InsufficientAmountModal from './modal/InsufficientAmountModal'
+import TaskItem from './TaskItem'
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
@@ -59,7 +60,6 @@ export class Table extends React.Component {
         }
 
         this._handleDeleteTask = ::this._handleDeleteTask
-        this._fetchStatus = ::this._fetchStatus
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -176,34 +176,6 @@ export class Table extends React.Component {
     }
 
     /**
-     * [_fetchStatus func. populate status of the task]
-     * @param  {Object}     item    [Task item]
-     * @return {DOM}                [Element of the status]
-     */
-    _fetchStatus(item) {
-
-        switch (item.status) {
-        case status.TIMEOUT:
-            return <span className="duration duration--done">Timeout</span>
-
-        case status.NOTREADY:
-            return <span className="duration duration--active">Preparing...</span>
-
-        case status.WAITING:
-            return <span className="duration duration--active">Waiting...</span>
-
-        case status.RESTART:
-            return <span className="duration duration--done">Restarted</span>
-
-        case status.COMPUTING:
-            return <span className="duration duration--active">{convertSecsToHMS(item.duration)} Duration</span>
-
-        default:
-            return <span className="duration duration--done">{timeStampToHR(item.time_started)} | {item.status}</span>
-        }
-    }
-
-    /**
      * [updateFooterInfoBar func. updates information about the task status on footer info bar]
      * @param  {Array}    data    [JSON array of task list]
      */
@@ -259,49 +231,16 @@ export class Table extends React.Component {
      *     @param {float}   precision   (optional)
      */
     listTasks(data) {
+        const { toggleWalletTray } = this.props
         const listItems = data
-        .map((item, index) => Motion && <Motion key={index.toString()} defaultStyle={{
-                progress: 0
-            }} style={{
-                progress: spring(item.progress, {
-                    stiffness: 50,
-                    damping: 7
-                })
-            }} role="listItem" tabIndex="-1">
-            {value => <div className="wrapper-task-item"><div className="task-item" style={{
-                    background: item.progress < 1 ? `linear-gradient(90deg, #E3F3FF ${value.progress * 100}%, transparent ${value.progress * 100}%)` : 'transparent'
-                }} onClick = { e => this._handleRowClick(e, item, index)} >
-                <div className="info__task-item" tabIndex="0" aria-label="Task Preview">
-                    <div>
-                        <span className={`task-icon icon-${item.type.toLowerCase()}`}>
-                            <span className="path1"></span>
-                            <span className="path2"></span>
-                            <span className="path3"></span>
-                            <span className="path4"></span>
-                        </span>
-                    </div>
-                    <div>
-                        <h4>{item.name}</h4>
-                        {this._fetchStatus(item)}
-                    </div>
-                </div>
-                <div>
-                    {item.status == status.TIMEOUT && <Tooltip
-                      html={<p>Restart</p>}
-                      position="bottom"
-                      trigger="mouseenter">
-                        <span className="icon-reload" tabIndex="0" aria-label="Restart Task" onClick={this._handleRestart.bind(this, item.id)}></span>
-                    </Tooltip>}
-                    <Tooltip
-                      html={<p>Delete</p>}
-                      position="bottom"
-                      trigger="mouseenter">
-                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={this._handleDeleteModal.bind(this, item.id)}></span>
-                </Tooltip>
-                    <Link to={`/task/${item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-arrow-right"></span></Link>
-                </div>
-            </div></div>}
-            </Motion>
+        .map((item, index) => <TaskItem
+            key={index.toString()}
+            item={item}
+            index={index}
+            _handleRowClick={this._handleRowClick.bind(this)}
+            _handleRestart={this._handleRestart.bind(this, item.id)}
+            _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
+            _toggleWalletTray={toggleWalletTray}/>
         );
 
         return (

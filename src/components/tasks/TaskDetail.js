@@ -1030,7 +1030,7 @@ export class TaskDetail extends React.Component {
             isDeveloperMode,
             isMainNet
         } = this.props;
-
+        
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
