@@ -228,6 +228,7 @@ export class SubTask extends React.Component {
         });
 
         function _taskStatus(status){
+            console.log("status", status);
             
             switch(status){
                 case statusDict.FINISHED:
@@ -290,13 +291,16 @@ export class SubTask extends React.Component {
                                 <button type="button"
                                     onClick={this._handleResubmit.bind(this, subtask.subtask_id,
                                         (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                                    disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
+                                    disabled={
+                                    taskDetails.status === statusDict.RESTARTED || 
+                                    taskDetails.status === statusDict.FAILURE || 
+                                    this.state.isTaskSubmitted[subtask.subtask_id]}
                                     >
                                         {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
                                 </button>
                                 {isDevMode && <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>}
                             </div>
-                                              </div>
+                        </div>
                       </div>}
                       position="bottom"
                       trigger="mouseenter"
