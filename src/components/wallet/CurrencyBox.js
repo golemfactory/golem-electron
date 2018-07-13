@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Motion, spring } from 'react-motion'
-import ReactTooltip from 'rc-tooltip'
+import {Tooltip} from 'react-tippy'
 import {BigNumber} from 'bignumber.js';
 
 import { timeStampToHR } from './../../utils/secsToHMS'
@@ -94,11 +94,14 @@ export default class CurrencyBox extends Component {
                         Locked: 
                         <span>
                             <b>{lockedBalance[expandedAmount === "GNT"? 0 : 1]}</b>
-                            <ReactTooltip overlayClassName="black" overlay={descriptionLock || "No information"} placement="bottomRight" trigger={['hover']} align={{
-                                offset: [10, 8],
-                                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                            <Tooltip
+                              html={descriptionLock || "No information"}
+                              position="bottom"
+                              trigger="mouseenter"
+                              interactive={true}
+                              arrow={true}>
                                 <span className="icon-question-mark"/>
-                            </ReactTooltip>
+                            </Tooltip>
                         </span>
                     </span>
                     { expandedAmount === "GNT" && 
@@ -106,11 +109,14 @@ export default class CurrencyBox extends Component {
                             Waiting: 
                             <span>
                                 <b>{lockedBalance[2]}</b>
-                                <ReactTooltip overlayClassName="black" overlay={descriptionWaiting || "No information"} placement="bottomRight" trigger={['hover']} align={{
-                                    offset: [10, 8],
-                                    }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                                <Tooltip
+                                  html={descriptionWaiting || "No information"}
+                                  position="bottom"
+                                  trigger="mouseenter"
+                                  interactive={true}
+                                  arrow={true}>
                                     <span className="icon-question-mark"/>
-                                </ReactTooltip>
+                                </Tooltip>
                             </span>
                         </span>}
                 </div>
@@ -144,11 +150,15 @@ export default class CurrencyBox extends Component {
                         {({balanceAnimated}) => <span className="amount">est. {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}... {!isMainNet ? "t" : ""}$</span>}
                     </Motion>
                 </div>
-                <ReactTooltip overlayClassName="black" overlay={description} placement="bottomRight" trigger={['hover']} align={{
-                offset: [10, 8],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                  html={description}
+                  position="bottom"
+                  trigger="mouseenter"
+                  interactive={true}
+                  arrow={true}
+                  className="tip">
                     <span className="icon-question-mark"/>
-                </ReactTooltip>
+                </Tooltip>
                 <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={(!isMainNet || !isGolemReady(golemStatus.status))}>Withdraw</button>
             </div>
                 </div>

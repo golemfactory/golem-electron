@@ -1,11 +1,9 @@
 import React from 'react';
-import { Link, hashHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
 const {clipboard, remote} = window.electron;
-/**
- * @see http://react-component.github.io/tooltip/
- */
-import ReactTooltip from 'rc-tooltip'
+
+import {Tooltip} from 'react-tippy';
 import yup from 'yup'
 
 import PresetModal from './modal/PresetModal'
@@ -155,7 +153,7 @@ export class TaskDetail extends React.Component {
         this.state = {
             isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.params.id !== "settings", //<-- HARDCODED
+            isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -184,11 +182,11 @@ export class TaskDetail extends React.Component {
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
+        const {match, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
 
         actions.setEstimatedCost(0)
-        if (params.id !== editMode) {
-            actions.getTaskDetails(params.id)
+        if (match.params.id !== editMode) {
+            actions.getTaskDetails(match.params.id)
         } else {
             actions.getTaskPresets(task.type)
             this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM
@@ -209,7 +207,7 @@ export class TaskDetail extends React.Component {
         var ariaKeys = Array.from(elements).map(elm => elm.getAttribute("aria-label"));
         this.interactedInputObject = zipObject(ariaKeys, new Array(ariaKeys.length).fill(false));
 
-        if(params.id === editMode)
+        if(match.params.id === editMode)
             document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
                 Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
             })
@@ -228,7 +226,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id !== editMode) {
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.match.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
                 this._setTimeStamp()
             }
@@ -308,7 +306,7 @@ export class TaskDetail extends React.Component {
         if(nextProps.isDeveloperMode && !this.liveSubList && isDetailPage){
 
             let interval = ()=> {
-                actions.fetchSubtasksList(nextProps.params.id)
+                actions.fetchSubtasksList(nextProps.match.params.id)
                 return interval
             }
             this.liveSubList = setInterval(interval(), 1000)
@@ -725,7 +723,7 @@ export class TaskDetail extends React.Component {
         })
         this._createTaskAsync().then(result => {
             if(result && result[0]){
-                hashHistory.push('/tasks');
+                window.routerHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
@@ -884,33 +882,38 @@ export class TaskDetail extends React.Component {
 
         return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
                 <td>
-                <ReactTooltip overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
                             <span>{subtask_id}</span>
                         </div>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{status}</p>}
+                      position="bottom"
+                      trigger="mouseenter">
                         <span className={`icon-status-dot ${statusDot(status)}`}/>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
             </tr>)
     }
 
     isPresetFieldsFilled(nextState) {
-        if(this.props.params.id === editMode){
+        if(this.props.match.params.id === editMode){
             const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
             return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
         }
@@ -1072,11 +1075,11 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if you<br/>have any questions<br/>just hover over<br/>specific label to<br/>find some help</p>}/>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file >settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>}/>
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">
-                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
+                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>}/>
                             <div className="item-settings">
                                 <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>

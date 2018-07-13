@@ -30,9 +30,10 @@ export class Frame extends React.Component {
     }
 
     componentDidMount() {
-        const {actions, params} = this.props;
+        const {actions, match} = this.props;
+        console.log("match", match);
         //console.dir(this.props)
-        actions.loginFrame(params.id)
+        actions.loginFrame(match.params.id)
         const endLoading = () => {
             actions.endLoading("FRAME_LOADER")
         // To replay animation
@@ -54,7 +55,7 @@ export class Frame extends React.Component {
      */
 
     render() {
-        const {type, id, frameIndex} = this.props.params;
+        const {type, id, frameIndex} = this.props.match.params;
         //console.log("type", type);
         return (
             <div className="container__frame">

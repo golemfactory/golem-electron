@@ -50,7 +50,7 @@
 
 	.icon-question-mark{
 		cursor: pointer;
-		margin-top: 15px;
+		margin-top: -15px;
 		font-size: 8pt !important;
 		align-self: flex-start;
 		color: $color-text3;
@@ -89,10 +89,10 @@
 	}
 	
 
-	.icon-question-mark{
+	.tip{
 		position: absolute;
 		right: 5px;
-		top: 5px;
+		top: 20px;
 		margin: 0;
 	}
 

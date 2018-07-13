@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, hashHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -27,19 +27,19 @@ export class NewTask extends React.Component {
         super(props);
         this.state = {
             name: props.taskName || "Golem Task",
-            type: radioTypes[this.props.params.type] || null
+            type: radioTypes[this.props.match.params.type] || null
         }
         props.actions.clearTaskPlain() //clear previous test status
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextProps.params.type !== this.props.params.type)
+        if (nextProps.match.params.type !== this.props.match.params.type)
             this.setState({
-                type: radioTypes[nextProps.params.type] || null
+                type: radioTypes[nextProps.match.params.type] || null
             })
 
         if(nextProps.taskName !== this.props.taskName){
-            let taskName = nextProps.taskName && nextProps.taskName.split("."+ nextProps.params.type)[0];
+            let taskName = nextProps.taskName && nextProps.taskName.split("."+ nextProps.match.params.type)[0];
             taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, "");
              this.setState({
                 name: (taskName && taskName.substring(0,24)) || "Golem Task"
@@ -111,7 +111,7 @@ export class NewTask extends React.Component {
             name,
             type
         })
-        hashHistory.push('/task/settings')
+        window.routerHistory.push('/task/settings')
     }
 
     render() {

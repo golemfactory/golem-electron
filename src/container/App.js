@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Router, Route } from 'react-router'
+import { Route, Switch } from 'react-router-dom' // react-router v4
+import { ConnectedRouter } from 'connected-react-router'
 
 import constants from '../constants'
 
@@ -31,17 +32,17 @@ Array.prototype.last = function() {
  * @return     {Route}
  */
 const routes = (
-<Route component={ App } >
-    <Route path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
-    <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
-    <Route path="/task" component={ TaskDetail } >
+<div>
+    <Switch>
+        <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
+        <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
+        <Route path="/settings" component={ Settings } />
         <Route path="/task/:id" component={ TaskDetail } />
-    </Route>
-    <Route path="/add-task/type(/:type)" component={ NewTask } />
-    <Route path="/add-task/settings" component={ TaskDetail } />
-    <Route path="/settings" component={ Settings } />
-    <Route path="*" component={ NotFound } status={404} />
-</Route>
+        <Route path="/add-task/type/:type?" component={ NewTask } />
+        <Route path="/add-task/settings" component={ TaskDetail } />
+        <Route component={ NotFound } status={404} />
+    </Switch>
+</div>
 );
 
 function isGolemReady(status) {
@@ -112,9 +113,9 @@ export class App extends Component {
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
-                <Router history={ history } >
+                <ConnectedRouter history={history}>
                     { routes }
-                </Router>
+                </ConnectedRouter>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
                  { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}

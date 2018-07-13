@@ -4,6 +4,7 @@ var HtmlWebpackPlugin = require('html-webpack-plugin');
 var HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 module.exports = {
+    mode: 'none',
     devtool: 'cheap-module-eval-source-map',
     entry: {
         main: [
@@ -94,7 +95,7 @@ module.exports = {
                 use: ["file-loader"]
             },
             {
-                test: /\.jpe?g$|\.gif$|\.png$|\.svg$|\.json$/,
+                test: /\.jpe?g$|\.gif$|\.png$|\.svg$/,
                 use: ["file-loader"]
             }]
     }

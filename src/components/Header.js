@@ -9,10 +9,10 @@ import * as Actions from '../actions'
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg'
 import testNetLogo from './../assets/img/testnet-logo-small.svg'
 
+import {Tooltip} from 'react-tippy';
 /**
  * @see http://react-component.github.io/tooltip/
  */
-import ReactTooltip from 'rc-tooltip'
 const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
@@ -29,9 +29,9 @@ const mapDispatchToProps = dispatch => ({
 
 const DOCLINK = "https://docs.golem.network/"
 const HASHLIST = {
-    '#/' : 0,
-    '#/tasks': 1,
-    '#/settings': 4
+    '/' : 0,
+    '/tasks': 1,
+    '/settings': 4
 }
 
 /**
@@ -46,10 +46,11 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = HASHLIST[location.hash]
+        const index = HASHLIST[window.routerHistory.location.pathname]
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
+        console.log("allNav", allNav);
         (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
 
         /*EXPRIMENTAL*/
@@ -57,12 +58,12 @@ export class Header extends Component {
         //     this._navigateTo(message, null)
         // })
     
-        window.addEventListener("hashchange", (e) => { 
+        window.routerHistory.listen((location, action) => { 
             [].map.call(allNav, (item) => {
                 item.classList.remove('active')
             });
 
-            const index = HASHLIST[location.hash];
+            const index = HASHLIST[location.pathname];
             (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
         });
     }
@@ -73,7 +74,7 @@ export class Header extends Component {
      * @param  {Object}     _       [Element in target]
      */
     _navigateTo(to, _) {
-        hashHistory.push(to);
+        window.routerHistory.push(to);
     }
 
 
@@ -108,7 +109,7 @@ export class Header extends Component {
                 menuItems[i].classList.remove('active')
             }
             elm.currentTarget.classList.add('active')
-            hashHistory.push(`/preview/${to}`);
+            window.routerHistory.push(`/preview/${to}`);
         }
     }
 
@@ -209,24 +210,30 @@ export class Header extends Component {
                 }
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={this._taskHints(isEngineOn, connectedPeers)} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={this._taskHints(isEngineOn, connectedPeers)}
+                      position="bottom"
+                      trigger="mouseenter"
+                    >
                         <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
-                    </ReactTooltip>
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>Docs</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    </Tooltip>
+                    <Tooltip
+                      html={(<p>Docs</p>)}
+                      position="bottom"
+                      trigger="mouseenter"
+                    >
                         <li className="menu__item"><a href={DOCLINK}>
                             <span className="icon-doc" role="menuitem" tabIndex="0" aria-label="Documentation"/>
                             </a>
                         </li>
-                    </ReactTooltip>
-                    <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>Settings</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    </Tooltip>
+                    <Tooltip
+                      html={(<p>Settings</p>)}
+                      position="bottom"
+                      trigger="mouseenter"
+                    >
                         <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings')} role="menuitem" tabIndex="0" aria-label="Settings"><span className="icon-settings"/></li>
-                    </ReactTooltip>
+                    </Tooltip>
                 </ul>
             }
             {activeHeader === 'secondary' &&

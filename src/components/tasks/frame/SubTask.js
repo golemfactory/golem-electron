@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactTooltip from 'rc-tooltip'
+import {Tooltip} from 'react-tippy';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -214,6 +214,7 @@ export class SubTask extends React.Component {
      * @return {corner points of the drawings [Array]}
      */
     drawLine(isDevMode, _offset) {
+        console.log("isDevMode, _offset", isDevMode, _offset);
         const {data, ratio, subtaskList, taskDetails} = this.props
         var path = Object.keys(data).map(function(anchestorKey) {
             return {
@@ -258,54 +259,58 @@ export class SubTask extends React.Component {
                 return verticalPointA - verticalPointB
             })
             .map((item, index) => {
-                
                 const subtask = subtaskList.filter(sub => sub.subtask_id === item.key)[0];
                 const isDirectionTop = index + 1 > taskDetails.subtaskAmount / 2;
-                return !!subtask ? <ReactTooltip
-                key={index.toString()}
-                overlayClassName={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}
-                placement={isDirectionTop ? 'top' : 'bottom' }
-                trigger={['hover']}
-                mouseEnterDelay={1}
-                overlay={<div className="content__tooltip">
-                        <div className="developer_view__tooltip">
-                            <div className="dev-tag__tooltip">
-                                {_taskStatus(subtask.status)}
-                                <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
-                                {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
-                                {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
-                                {isDevMode && <p
-                                    className="subtask-id__tooltip" 
-                                    style={{color: this.state.subtaskIdCopied[subtask.subtask_id] ? "#37c481" : "#9b9b9b"}} 
-                                    onClick={this._copySubtask.bind(this, subtask.subtask_id)}>
-                                    <b>{this.state.subtaskIdCopied[subtask.subtask_id] ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
-                                </p>}
+                return !!subtask ? <Tooltip
+                      key={index.toString()}
+                      html={<div className={`tooltip-frame ${isDevMode ? 'tooltip-dev': ''}`}>
+                          <div className="content__tooltip">
+                            <div className="developer_view__tooltip">
+                                <div className="dev-tag__tooltip">
+                                    {_taskStatus(subtask.status)}
+                                    <p className={`time__tooltip ${subtask.status === statusDict.FINISHED ? 'time__tooltip--done' : ''}`}>{timeStampToHR(subtask.time_started)}</p>
+                                    {isDevMode && <p className="ip-info__tooltip">{subtask.node_ip_address}</p>}
+                                    {isDevMode && <p className="node-name__tooltip">{subtask.node_name || "Anonymous"}</p>}
+                                    {isDevMode && <p
+                                        className="subtask-id__tooltip" 
+                                        style={{color: this.state.subtaskIdCopied[subtask.subtask_id] ? "#37c481" : "#9b9b9b"}} 
+                                        onClick={this._copySubtask.bind(this, subtask.subtask_id)}>
+                                        <b>{this.state.subtaskIdCopied[subtask.subtask_id] ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
+                                    </p>}
+                                </div>
+                                <div>
+                                    {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                                </div>
                             </div>
-                            <div>
-                                {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
+                            {isDevMode && <div className="logs_errors_btns__tooltip">
+                                <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
+                                <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
+                            </div>}
+                            <div className="resubmit_block_btns__tooltip">
+                                <button type="button"
+                                    onClick={this._handleResubmit.bind(this, subtask.subtask_id,
+                                        (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
+                                    disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
+                                    >
+                                        {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
+                                </button>
+                                {isDevMode && <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>}
                             </div>
-                        </div>
-                        {isDevMode && <div className="logs_errors_btns__tooltip">
-                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
-                            <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stderr)} disabled={!subtask.stderr}>Errors</button>
-                        </div>}
-                        <div className="resubmit_block_btns__tooltip">
-                            <button type="button"
-                                onClick={this._handleResubmit.bind(this, subtask.subtask_id,
-                                    (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                                disabled={taskDetails.status === statusDict.RESTARTED || this.state.isTaskSubmitted[subtask.subtask_id]}
-                                >
-                                    {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
-                            </button>
-                            {isDevMode && <button type="button" onClick={this._showBlockNodeModal.bind(this, subtask)}>Block node</button>}
-                        </div>
-                    </div>}
-                align={{
-                    offset: tooltipOffset(item.value, isDirectionTop),
-                }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                                              </div>
+                      </div>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      interactive={true}
+                      hideOnClick={false}
+                      unmountHTMLWhenHide={true}
+                      customTag="g"
+                      interactiveBorder="15"
+                      hideDelay="2000"
+                      distance="-15"
+                      arrow={true}>
                 <polyline key={index.toString()} fill="transparent" stroke="black"
                 points={convertToSVGPoints(item.value, _offset)}/>
-            </ReactTooltip> : ''
+            </Tooltip> : ''
             })
     }
 

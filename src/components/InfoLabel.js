@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ReactTooltip from 'rc-tooltip'
+import {Tooltip} from 'react-tippy';
 
 /**
  * { Class for not found(404) component. }
@@ -18,18 +18,22 @@ export default class InfoLabel extends Component {
         return (
             <div className={`info-label__container ${cls}`}>
         	{infoHidden ? 
-		            <ReactTooltip overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={info} mouseEnterDelay={0.5} align={{
-		                offset: [0, 10],
-		            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+        			<Tooltip
+                      html={info}
+                      position="bottom"
+                      trigger="mouseenter">
 	            		{this._initLabel(type, label)}
-		            </ReactTooltip>
+		            </Tooltip>
 	        	:
 	            	[this._initLabel(type, label),
-		            <ReactTooltip key="2" overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={info} mouseEnterDelay={0.5} align={{
-		                offset: [0, 10],
-		            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+	            	<Tooltip
+	            	  key="2"
+                      html={info}
+                      position="bottom"
+                      trigger="mouseenter"
+                      className="tip">
 		                <span className="icon-question-mark"/>
-		            </ReactTooltip>]
+		            </Tooltip>]
 	        }
             </div>
         );
