@@ -175,6 +175,7 @@
         "timepoint-selection": "git+https://github.com/mdtanrikulu/timepoint-selection.git#maximum_date_normalization",
         "uuid": "^3.0.1",
         "wampy": "^4.1.0",
+        "web3": "^1.0.0-beta.34",
         "websocket": "^1.0.24",
         "winston-uber": "^1.0.1",
         "yup": "^0.23.0"

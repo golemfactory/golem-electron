@@ -17,6 +17,8 @@ const log = require('./electron/debug_handler.js')
 const menuHandler = require('./electron/menu_handler.js')
 const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')
+const gethValidator = require('./electron/geth_validator.js')
+const ethChecksum = require('./electron/eth_checksum.js')
 
 function isDevelopment() {
     return process.env.NODE_ENV === 'development'
@@ -431,3 +433,6 @@ exports.getDefaultLocation = function() {
 exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
+
+exports.validateGeth = gethValidator;
+exports.toChecksumAddress = ethChecksum;
