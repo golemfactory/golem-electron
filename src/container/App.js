@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Route, Switch } from 'react-router-dom' // react-router v4
 import { ConnectedRouter } from 'connected-react-router'
+import { hot } from 'react-hot-loader'
 
 import constants from '../constants'
 
@@ -124,4 +125,4 @@ export class App extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(App))

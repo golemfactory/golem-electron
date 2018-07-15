@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, connectRouter } from 'connected-react-router'
-import { createBrowserHistory } from 'history'
+import { createHashHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
 
@@ -21,9 +21,11 @@ import './scss/main.scss'
 const {remote, ipcRenderer} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
-const history = window.routerHistory = createBrowserHistory()
+const history = window.routerHistory = createHashHistory()
 const routingMiddleware = routerMiddleware(history)
-const sagaMiddleware = createSagaMiddleware.default()
+const appEnv = remote.getGlobal('process').env.NODE_ENV;
+
+const sagaMiddleware = ( appEnv === "development" ? createSagaMiddleware.default() : createSagaMiddleware())
 const enhancer = compose(
     // Middleware you want to use in development:
     applyMiddleware(sagaMiddleware, routingMiddleware),
@@ -95,30 +97,11 @@ if(remote.getGlobal('process').platform === "win32"){
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    renderWithHotReload(App)
-
-    // Hot Module Replacement API
-    if (module.hot) {
-        module.hot.accept('./container/App', () => {
-            const App = require('./container/App').default;
-            renderWithHotReload(App);
-        })
-    }
-
-    /**
-     * @param  {Class} React Component  { Main Application Component }
-     * @return {[DOM]}
-     */
-    function renderWithHotReload(App) {
-        window.applicationSurface = document.getElementById('mount')
-        render(
-            <AppContainer warnings={false}>
-              <Provider store={ store }>
-                <App history={ history } />
-              </Provider>
-            </AppContainer>,
-            window.applicationSurface
-        )
-    }
+    window.applicationSurface = document.getElementById('mount')
+    render(
+          <Provider store={ store }>
+            <App history={ history } />
+          </Provider>,
+        window.applicationSurface
+    )
 })
