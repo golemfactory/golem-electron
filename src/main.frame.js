@@ -8,7 +8,7 @@ import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, connectRouter } from 'connected-react-router'
-import { createBrowserHistory } from 'history'
+import { createHashHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
 
@@ -22,9 +22,11 @@ import './scss/main.scss'
 const {remote} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
-const history = window.routerHistory = createBrowserHistory()
+const history = window.routerHistory = createHashHistory()
 const routingMiddleware = routerMiddleware(history)
-const sagaMiddleware = createSagaMiddleware.default()
+const appEnv = remote.getGlobal('process').env.NODE_ENV;
+
+const sagaMiddleware = ( appEnv === "development" ? createSagaMiddleware.default() : createSagaMiddleware())
 const enhancer = compose(
     // Middleware you want to use in development:
     applyMiddleware(sagaMiddleware, routingMiddleware),

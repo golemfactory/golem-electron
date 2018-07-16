@@ -270,7 +270,7 @@ function createPreviewWindow(id, frameCount) {
         })
 
         if (isDevelopment()) {
-            let previewURL = `http://localhost:${process.env.PORT || 3003}/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+            let previewURL = `http://localhost:${process.env.PORT || 3002}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
             console.log("previewURL", previewURL);
             previewWindow.loadURL(previewURL)
         } else {

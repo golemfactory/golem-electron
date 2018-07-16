@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, takeLatest, take, call, put, select } from 'redux-saga/effects'
+import { fork, takeLatest, take, call, put, select, all } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -132,9 +132,7 @@ export function callSettings(session) {
 
 export function* fireBase(session) {
     const actionList = yield call(callSettings, session);
-    yield actionList && actionList.map((item) => {
-        return put(item)
-    })
+    yield actionList && all(actionList.map( item => put(item)))
 }
 
 export function* settingsFlow(session) {
