@@ -141,8 +141,8 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join(): arr)
         }
     }
     _session.unsubscribe(_channel, cb)
