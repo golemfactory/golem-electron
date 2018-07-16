@@ -36,8 +36,8 @@ export class DropZone extends React.Component {
         super(props);
         this.state = {
             className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW,
-            unlockDnD: false
         }
+
         this._onDragEnter = ::this._onDragEnter
         this._onDragLeave = ::this._onDragLeave
         this._onDragOver = ::this._onDragOver
@@ -52,18 +52,13 @@ export class DropZone extends React.Component {
                 className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             })
 
-        if(nextProps.connectedPeers && nextProps.isEngineOn){
-            if(!this.state.unlockDnD)
-                ::this._toggleDnD(true)
-            
-        } else if (this.state.unlockDnD) {
-            ::this._toggleDnD(false)
-        }
+        ::this._verifyDnD(nextProps.connectedPeers, nextProps.isEngineOn, this.state.unlockDnD);
     }
 
     componentDidMount() {
         const {dropzone, dragbox} = this.refs
         const {unlockDnD} = this.state
+        const {connectedPeers, isEngineOn} = this.props
 
         dropzone.addEventListener('mouseup', this._onDragLeave);
         dropzone.addEventListener('dragenter', this._onDragEnter);
@@ -71,6 +66,9 @@ export class DropZone extends React.Component {
 
         dragbox.addEventListener('dragleave', this._onDragLeave);
         dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
+
+
+        ::this._verifyDnD(connectedPeers, isEngineOn, unlockDnD)
     }
 
     componentWillUnmount() {
@@ -83,6 +81,16 @@ export class DropZone extends React.Component {
         dropzone.removeEventListener('drop', this._onDrop);
         dragbox.removeEventListener('dragleave', this._onDragLeave);
         
+    }
+
+    _verifyDnD(peers, engine, unlockDnD){
+        if(peers && engine){
+            if(!unlockDnD)
+                ::this._toggleDnD(true)
+            
+        } else if (unlockDnD) {
+            ::this._toggleDnD(false)
+        }
     }
 
     _toggleDnD(_state){
