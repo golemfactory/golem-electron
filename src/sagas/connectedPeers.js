@@ -14,9 +14,10 @@ const delay = (ms) => new Promise(res => setTimeout(res, ms))
  * @return {Object}             [Action object]
  */
 export function subscribeConnectedPeers(session) {
-    const interval = 19000
+    const interval = 6000
     return eventChannel(emit => {
-        const iv = setInterval(function fetchConnectedPeers() {
+
+        function fetchConnectedPeers() {
             function on_connected_peers(args) {
                 let connected_peers = args[0];
                 emit({
@@ -27,12 +28,20 @@ export function subscribeConnectedPeers(session) {
 
             _handleRPC(on_connected_peers, session, config.GET_CONNECTED_PEERS_RPC)
             return fetchConnectedPeers
-        }(), interval)
+        }
+
+        const fetchOnStartup = () => {
+                fetchConnectedPeers()
+
+            return fetchOnStartup
+        }
+
+        const peerInterval = setInterval(fetchOnStartup(), interval)
 
 
         return () => {
             console.log('negative')
-            clearInterval(iv)
+            clearInterval(peerInterval)
         }
     })
 }
@@ -43,20 +52,20 @@ export function subscribeConnectedPeers(session) {
  * @yield   {Object}            [Action object]
  */
 export function* connectedPeersFlow(session) {
-    const channel = yield call(subscribeConnectedPeers, session)
+    const getStatus = (state) => state.info.isEngineOn
+    const status = yield select(getStatus)
+    if(!!status){
+        const channel = yield call(subscribeConnectedPeers, session)
 
-    try {
-        while (true) {
-            yield delay(1000)
-            const getStatus = (state) => state.info.isEngineOn
-            const status = yield select(getStatus)
-            if(!!status){
-                let action = yield take(channel)
-                yield put(action)
+        try {
+            while (true) {
+                    let action = yield take(channel)
+                    yield put(action)
             }
+        } finally {
+            console.info('yield cancelled!')
+            channel.close()
         }
-    } finally {
-        console.info('yield cancelled!')
-        channel.close()
+
     }
 }
