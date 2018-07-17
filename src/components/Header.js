@@ -46,11 +46,10 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index = HASHLIST[window.routerHistory.location.pathname]
+        const index = HASHLIST[window.routerHistory && window.routerHistory.location.pathname]
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
-        console.log("allNav", allNav);
         (Number.isInteger(index) && allNav && allNav.length > 0) && allNav[index].classList.add('active');
 
         /*EXPRIMENTAL*/
@@ -58,7 +57,7 @@ export class Header extends Component {
         //     this._navigateTo(message, null)
         // })
     
-        window.routerHistory.listen((location, action) => { 
+        window.routerHistory && window.routerHistory.listen((location, action) => { 
             [].map.call(allNav, (item) => {
                 item.classList.remove('active')
             });
