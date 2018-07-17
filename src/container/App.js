@@ -98,7 +98,6 @@ export class App extends Component {
             typeof nextProps.resource !== 'number' && 
             nextProps.chartValues.name !== null){
                 const value = this.calculateResourceValue(nextProps.chartValues, nextProps.systemInfo)
-                console.log("value", value, nextProps.chartValues, nextProps.systemInfo);
                 this.props.actions.setResources(value)
         }
     }

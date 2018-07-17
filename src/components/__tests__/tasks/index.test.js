@@ -7,13 +7,13 @@ import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
 import ConnectedTaskPanel, { TaskPanel } from '../../tasks'
 import Table from '../../tasks/Table'
-import Footer from './../../Footer'
+import FooterMain from './../../FooterMain'
 import sinon from 'sinon'
 
 
 const mockStore = configureStore()
 
-it('should render a blender component', () => {
+it('should render a task panel component', () => {
     const wrapper = shallow(
         <Provider store={ mockStore({})}>
             <ConnectedTaskPanel/>
@@ -22,7 +22,7 @@ it('should render a blender component', () => {
     expect(wrapper).toMatchSnapshot()
 })
 
-describe('<Blender />', () => {
+describe('<Table />', () => {
 
 
     const actions = {
@@ -40,16 +40,12 @@ describe('<Blender />', () => {
         expect(wrapper.find('.section__table').length).toBe(1)
     });
 
-    it('renders one section__preview div', () => {
-        expect(wrapper.find('.section__preview').length).toBe(1)
-    });
-
     it('renders one <Table /> components', () => {
         expect(wrapper.find(Table).length).toBe(1)
     });
 
-    it('renders four <Footer /> components', () => {
-        expect(wrapper.find(Footer).length).toBe(1)
+    it('renders for <FooterMain /> components', () => {
+        expect(wrapper.find(FooterMain).length).toBe(1)
     });
 
     /*it('should call componentDidMount', () => {
