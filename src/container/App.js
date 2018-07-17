@@ -58,7 +58,11 @@ const mapStateToProps = state => ({
     withdrawModal: state.account.withdrawModal,
     passwordModal: state.realTime.passwordModal,
     showOnboard: state.onboard.showOnboard,
-    taskQueue: state.queue.next
+    taskQueue: state.queue.next,
+    //To fill initial resource
+    resource: state.resources.resource,
+    systemInfo: state.advanced.systemInfo,
+    chartValues: state.advanced.chartValues
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -89,6 +93,28 @@ export class App extends Component {
                 nextProps.actions.removeQueuedTask()
             }
         }
+
+        if(Object.keys(nextProps.systemInfo).length > 0 && 
+            typeof nextProps.resource !== 'number' && 
+            nextProps.chartValues.name !== null){
+                const value = this.calculateResourceValue(nextProps.chartValues, nextProps.systemInfo)
+                console.log("value", value, nextProps.chartValues, nextProps.systemInfo);
+                this.props.actions.setResources(value)
+        }
+    }
+
+    /**
+     * [calculateResourceValue func.]
+     * @param  {Int}        options.cpu_cores       [Selected cpu core amount]
+     * @param  {Int}        options.memory          [Selected memory amount]
+     * @param  {Int}        options.disk            [Selected disk space amount]
+     * @return {Int}                                [Mean of their percentage]
+     */
+    calculateResourceValue({cpu_cores, memory, disk}, systemInfo) {
+        let cpuRatio = cpu_cores / systemInfo.cpu_cores
+        let ramRatio = memory / systemInfo.memory
+        let diskRatio = disk / systemInfo.disk
+        return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100)
     }
 
     _closeModal(_modalType) {

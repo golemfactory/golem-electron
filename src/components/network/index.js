@@ -63,6 +63,7 @@ export class MainFragment extends React.Component {
         }
     //props.actions.setOnboard(true)
     }
+
     /**
      * [_handlePresetModal func. will trigger presetModal state to make preset modal visible]
      * @param  {Object}      data       [Custom hardware preset object]
