@@ -154,7 +154,8 @@ export class Header extends Component {
                         } else if (masterFiles.length > 0) {
                             this.props.actions.createTask({
                                 resources: mergedList.map(item => item.path),
-                                taskName: masterFiles[0].name
+                                taskName: masterFiles[0].name,
+                                relativePath: data[0]
                             })
                         } else {
                             alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
@@ -212,15 +213,13 @@ export class Header extends Component {
                     <Tooltip
                       html={this._taskHints(isEngineOn, connectedPeers)}
                       position="bottom"
-                      trigger="mouseenter"
-                    >
+                      trigger="mouseenter">
                         <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </Tooltip>
                     <Tooltip
                       html={(<p>Docs</p>)}
                       position="bottom"
-                      trigger="mouseenter"
-                    >
+                      trigger="mouseenter">
                         <li className="menu__item"><a href={DOCLINK}>
                             <span className="icon-doc" role="menuitem" tabIndex="0" aria-label="Documentation"/>
                             </a>
@@ -229,8 +228,7 @@ export class Header extends Component {
                     <Tooltip
                       html={(<p>Settings</p>)}
                       position="bottom"
-                      trigger="mouseenter"
-                    >
+                      trigger="mouseenter">
                         <li className="menu__item" onClick={this._navigateTo.bind(this, '/settings')} role="menuitem" tabIndex="0" aria-label="Settings"><span className="icon-settings"/></li>
                     </Tooltip>
                 </ul>

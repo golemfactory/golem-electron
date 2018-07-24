@@ -19,13 +19,14 @@ export default class InfoLabel extends Component {
 	}
 
     render() {
-    	const {info, type, label, cls, infoHidden, distance} = this.props
+    	const {info, type, label, cls, infoHidden, distance, interactive} = this.props
         return (
             <div className={`info-label__container ${cls}`}>
     			<Tooltip
                   html={info}
                   position="bottom"
                   trigger="mouseenter"
+                  interactive={!!interactive}
                   distance={distance}>
             		{this._initLabel(type, label, infoHidden)}
 	            </Tooltip>

@@ -143,7 +143,7 @@ export class Personal extends React.Component {
                         hideOnClick={false}>
                         <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied ? 'icon-confirmed-empty' : undefined}/></span>
                     </Tooltip>
-                    <span className="backup-info__personal"><a href="https://github.com/golemfactory/golem/wiki/FAQ#backing-up-your-golem-app">
+                    <span className="backup-info__personal"><a href="https://golem.network/documentation/11-backing-up-your-golem-app/">
                         <u>Learn more how to <strong>backup Golem</strong></u></a></span>
                 </div>
             </div>

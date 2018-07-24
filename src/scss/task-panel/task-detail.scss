@@ -175,6 +175,11 @@
         justify-content: flex-end;
     }
 
+    .source-path{
+        font-size: 9pt;
+        margin-bottom: 10px;
+    }
+
     .switch-box {
         margin: 0;
 
@@ -287,6 +292,7 @@
         width: 100%;
         margin-bottom: 30px;
         border-collapse: collapse; 
+        font-size: 9pt;
     }
 
     tr{
@@ -310,8 +316,8 @@
                 transform: translate(0, 0);
                 transition: .5s linear;
                 &:hover{
-                    transform: translate(-60%, 0);
-                    transition: 3s ease-in-out;
+                    transform: translate(-40%, 0);
+                    transition: 2s ease-in-out;
                     transition-delay: .5s;
                     animation-fill-mode: forwards;
                 }
@@ -320,6 +326,11 @@
 
     td:nth-child(2){
         width: 25%;
+        text-align: center;
+    }
+
+    td:nth-child(3){
+        width: 35%;
         text-align: center;
     }
 

@@ -22,7 +22,8 @@ const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
-    isEngineLoading: state.info.isEngineLoading
+    isEngineLoading: state.info.isEngineLoading,
+    version: state.info.version
 })
 
 const mapDispatchToProps = dispatch => ({

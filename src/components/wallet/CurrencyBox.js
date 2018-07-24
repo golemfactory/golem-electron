@@ -98,8 +98,7 @@ export default class CurrencyBox extends Component {
                               html={descriptionLock || "No information"}
                               position="bottom"
                               trigger="mouseenter"
-                              interactive={true}
-                              arrow={true}>
+                              interactive={true}>
                                 <span className="icon-question-mark"/>
                             </Tooltip>
                         </span>
@@ -113,8 +112,7 @@ export default class CurrencyBox extends Component {
                                   html={descriptionWaiting || "No information"}
                                   position="bottom"
                                   trigger="mouseenter"
-                                  interactive={true}
-                                  arrow={true}>
+                                  interactive={true}>
                                     <span className="icon-question-mark"/>
                                 </Tooltip>
                             </span>
@@ -155,7 +153,6 @@ export default class CurrencyBox extends Component {
                   position="bottom"
                   trigger="mouseenter"
                   interactive={true}
-                  arrow={true}
                   className="tip">
                     <span className="icon-question-mark"/>
                 </Tooltip>

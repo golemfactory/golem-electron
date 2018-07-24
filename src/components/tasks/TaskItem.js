@@ -60,7 +60,8 @@ export class TaskItem extends React.Component {
         this.liveSubList && clearInterval(this.liveSubList)
     }
 
-    _togglePreview({id}){
+    _togglePreview({id}, evt){
+        evt.target.classList.toggle('icon--active');
         const prevList = this.state.toggledPreviewList
         const prevToggle = this.state.toggledPreviewList[id];
 
@@ -84,8 +85,8 @@ export class TaskItem extends React.Component {
         switch (item.status) {
         case status.TIMEOUT:
             return <div>
-            	<span>Task time: 1d 4h 22m</span>
-            	<span> | </span>
+            	<span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
+            	<span className="bumper"> | </span>
             	<span className="duration--timeout">Timed out: </span>
             	<span>{timeStampToHR(item.last_updated)}</span>
             </div>
@@ -93,37 +94,37 @@ export class TaskItem extends React.Component {
         case status.NOTREADY:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span> | </span>
+                <span className="bumper"> | </span>
                 <span className="duration--preparing">Preparing for computation... </span>
             </div>
 
         case status.WAITING:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span> | </span>
+                <span className="bumper"> | </span>
                 <span className="duration--preparing">Waiting for nodes... </span>
             </div>
 
         case status.RESTART:
             return <div>
-                <span>Task time: 1d 4h 22m</span>
-                <span> | </span>
+                <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
+                <span className="bumper"> | </span>
                 <span className="duration--restarted">Restarted </span>
             </div>
 
         case status.COMPUTING:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span> | </span>
+                <span className="bumper"> | </span>
                 <span className="duration--finished">Computing... </span>
-                <span> | </span>
+                <span className="bumper"> | </span>
                 <span>{subtasksList && subtasksList.length} Nodes</span>
             </div>
 
         default:
             return <div>
-                <span>Task time: 1d 4h 22m</span>
-                <span> | </span>
+                <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
+                <span className="bumper"> | </span>
                 <span className="duration--finished">Finished: </span>
                 <span>{timeStampToHR(item.last_updated)}</span>
             </div>
@@ -170,17 +171,17 @@ export class TaskItem extends React.Component {
                                 <div className="info__task">
                                     <div>
                                         <span>Frames: {(options && options.frames) || 0}</span>
-                                        <span> | </span>
+                                        <span className="bumper"> | </span>
                                         <span> Resolution: {(options && options.resolution.join("x")) || 0}</span>
-                                        <span> | </span>
+                                        <span className="bumper"> | </span>
                                         <span>Cost: {this._fetchCost(item)}
                                         </span>
                                     </div>
                                     <div>
                                         <span>Subtasks: {item.subtasks || 0}</span>
-                                        <span> | </span>
+                                        <span className="bumper"> | </span>
                                         <span> Task timeout: {item.timeout}</span>
-                                        <span> | </span>
+                                        <span className="bumper"> | </span>
                                         <span> Subtask timeout: {item.subtask_timeout}</span>
                                     </div>
                                 </div>
@@ -192,19 +193,35 @@ export class TaskItem extends React.Component {
                           html={<p>Preview</p>}
                           position="right"
                           trigger="mouseenter">
-                            <span className="icon-eye" tabIndex="0" aria-label="Preview" onClick={this._togglePreview.bind(this, item)}></span>
+                            <span 
+                                className="icon-eye" 
+                                tabIndex="0" 
+                                aria-label="Preview" 
+                                onClick={this._togglePreview.bind(this, item)}></span>
                         </Tooltip>
                         <Tooltip
                           html={<p>Task Details</p>}
                           position="right"
-                          trigger="mouseenter">
-                            <Link to={`/task/${item && item.id}`} tabIndex="0" aria-label="Task Details"><span className="icon-info-small"></span></Link>
+                          trigger="mouseenter"
+                          className="task-details-icon">
+                            <Link 
+                                to={`/task/${item && item.id}`} 
+                                tabIndex="0" 
+                                aria-label="Task Details">
+                                <span className="icon-info-small"></span>
+                            </Link>
                         </Tooltip>
                         <Tooltip
                           html={<p>Restart</p>}
                           position="right"
-                          trigger="mouseenter">
-                            <span className="icon-reload" tabIndex="0" aria-label="Restart Task" onClick={_handleRestart}></span>
+                          trigger="mouseenter"
+                          disabled={item.status !== status.TIMEOUT}>
+                            <span 
+                                className="icon-reload" 
+                                tabIndex="0" 
+                                aria-label="Restart Task" 
+                                onClick={item.status == status.TIMEOUT ? _handleRestart : undefined} 
+                                disabled={item.status !== status.TIMEOUT}></span>
                         </Tooltip>
                         <Tooltip
                           html={<p>Delete</p>}
@@ -214,7 +231,7 @@ export class TaskItem extends React.Component {
                         </Tooltip>
                     </div>
                 </div>
-                { (item.id === psId && toggledPreviewList[psId]) && <Preview id={item.id} src={item.preview}/>}
+                { (item.id === psId && toggledPreviewList[psId]) && <Preview id={item.id} src={item.preview} progress={item.progress}/>}
             </div>}
             </Motion>
         );

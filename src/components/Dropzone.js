@@ -36,6 +36,7 @@ export class DropZone extends React.Component {
         super(props);
         this.state = {
             className: (props.taskList && props.taskList.length) > 0 ? classDict.HIDE : classDict.SHOW,
+            unlockDnD: false
         }
 
         this._onDragEnter = ::this._onDragEnter
@@ -52,12 +53,11 @@ export class DropZone extends React.Component {
                 className: nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             })
 
-        ::this._verifyDnD(nextProps.connectedPeers, nextProps.isEngineOn, this.state.unlockDnD);
+        this._verifyDnD.call(this, nextProps.connectedPeers, nextProps.isEngineOn);
     }
 
     componentDidMount() {
         const {dropzone, dragbox} = this.refs
-        const {unlockDnD} = this.state
         const {connectedPeers, isEngineOn} = this.props
 
         dropzone.addEventListener('mouseup', this._onDragLeave);
@@ -68,12 +68,11 @@ export class DropZone extends React.Component {
         dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
 
 
-        ::this._verifyDnD(connectedPeers, isEngineOn, unlockDnD)
+        this._verifyDnD.call(this, connectedPeers, isEngineOn)
     }
 
     componentWillUnmount() {
         const {dropzone, dragbox} = this.refs
-        const {unlockDnD} = this.state
 
         dropzone.removeEventListener('mouseup', this._onDragLeave);
         dropzone.removeEventListener('dragenter', this._onDragEnter);
@@ -83,12 +82,12 @@ export class DropZone extends React.Component {
         
     }
 
-    _verifyDnD(peers, engine, unlockDnD){
+    _verifyDnD(peers, engine){
         if(peers && engine){
-            if(!unlockDnD)
+            if(!this.state.unlockDnD)
                 ::this._toggleDnD(true)
             
-        } else if (unlockDnD) {
+        } else if (this.state.unlockDnD) {
             ::this._toggleDnD(false)
         }
     }
@@ -194,6 +193,7 @@ export class DropZone extends React.Component {
         // Upload files
         // actions.uploadFile(files)
         if (files) {
+            console.log("files", [].map.call(files, item => item.path));
 
             mainProcess.selectDirectory([].map.call(files, item => item.path), this.props.isMainNet)
                 .then(item => {
@@ -211,7 +211,8 @@ export class DropZone extends React.Component {
                     } else if (masterFiles.length > 0) {
                         this.props.actions.createTask({
                             resources: mergedList.map(item => item.path),
-                            taskName: masterFiles[0].name
+                            taskName: masterFiles[0].name,
+                            relativePath: [].map.call(files, item => item.path)[0]
                         })
                     } else {
                         alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
