@@ -6,12 +6,12 @@
     align-content: space-between;
     box-sizing: border-box;
     background: $color-bg2;
-    label {
+
+    .label{
         display: block;
-        margin: 30px 0 !important;
-        font-size: 12pt;
-        font-weight: 400;
+        margin: 0 24px;
     }
+
     input[type=text] {
         width: 100%;
         height: 159px;
@@ -22,12 +22,32 @@
             outline: 0;
         }
     }
+
+    .source-path{
+        margin: 10px 24px 40px 24px;
+        font-size: 9pt;
+    }
+
     [class^="icon-"],
     [class*=" icon-"] {
-        font-size: 28px;
+        font-size: 24px;
+        margin-right: 5px;
     }
     .icon-luxrender:before {
         color: #f4ca1b !important;
+    }
+
+    .radio-label-right{
+        font-size: 12pt;
+        font-weight: 400;
+    }
+
+    .hint__blender{
+        font-size: 9pt;
+        color: $color-text2;
+        text-align: center;
+        margin: 30px 24px;
+        line-height: 1.5em;
     }
 }
 
@@ -50,6 +70,7 @@
     height: 400px;
     overflow-y: overlay;
     box-sizing: border-box;
+    border-top: 1px solid $color-border;
 }
 
 .container-action__new-task {

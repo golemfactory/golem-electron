@@ -100,6 +100,13 @@
                 &:hover {
                     color: $color-text;
                 }
+
+                &[disabled] {
+                    cursor: not-allowed;
+                    &:hover { 
+                        color: $color-text3; 
+                    }
+                }
             }
 
             &:hover .icon-eye,
@@ -115,15 +122,28 @@
             }
 
             .icon-eye{
-                font-size: 10pt;
+                font-size: 11pt;
             }
 
             .icon-info-small{
                 font-size: 14pt;
             }
 
+            .icon--active{
+                color: $color-text;
+            }
+
             &.active {
                 border-left: 5px solid $button-static-color;
+            }
+
+            .bumper{
+                margin: 0 3px;
+            }
+
+            .task-details-icon{
+                height: 16px;
+                margin-top: -5px;
             }
         }
     }

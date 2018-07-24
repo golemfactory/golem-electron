@@ -1,6 +1,6 @@
 .section__preview-black {
         position: relative;
-        background: #000;
+        background: #243048;
         height: 250px;
 
     .preview__img {
@@ -10,7 +10,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        transition: .5s transform;
+        transition: .5s all;
     }
 
     .details__preview{
@@ -37,6 +37,7 @@
 
             ~ .preview__img{
                 transform: scale(0.9);
+                -webkit-filter: blur(1.5px);
             }
         }
 
@@ -46,6 +47,7 @@
 
             &--details{
                 border-color: $color-text4;
+                background: rgba(203, 203, 203, 0.6);
                 font-size: 10pt;
                 padding: 0 15px;
             }

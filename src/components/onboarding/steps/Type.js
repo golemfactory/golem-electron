@@ -21,7 +21,7 @@ export default class Type extends React.Component {
                     <br/>
                     otherwise there will be <strong>no option</strong>
                     <br/>
-                    to recover it. <a href="https://github.com/golemfactory/golem/wiki/FAQ#setting-and-saving-your-password">Learn more</a></span>
+                    to recover it. <a href="https://golem.network/documentation/02-risks/">Learn more</a></span>
                     
                     <span className="info__print">After creating your password you will
                     <br/>

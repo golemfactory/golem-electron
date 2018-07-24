@@ -25,23 +25,47 @@ function isDateToday(date) {
     return (today.toDateString() == givenDay.toDateString());
 }
 
-function timeStampToHR(timestamp) {
+function dayDiff(timeDiff){
+    const oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds
+    const oneHour = 60*60*1000; // minutes*seconds*milliseconds
+    const oneMin = 60*1000; // seconds*milliseconds
+    const oneSec = 1000; // seconds*milliseconds
+
+    const flatDay = Math.floor(Math.abs((timeDiff)/(oneDay)));
+    const flatHour = (Math.floor(Math.abs((timeDiff)/(oneHour))) % 24);
+    const flatMin = (Math.floor(Math.abs((timeDiff)/(oneMin))) % 60);
+    const flatSec = (Math.floor(Math.abs((timeDiff)/(oneSec))) % 60);
+
+    return  (flatDay ? flatDay + "d " : "") + 
+            (flatHour ? flatHour + "h " : "") + 
+            (flatMin ? flatMin + "m " : "") + 
+            ((!flatDay && !flatHour && !flatMin) ? flatSec + "s " : "");
+}
+
+function timeStampToHR(timestamp, isFlatDate = false) {
     // Create a new JavaScript Date object based on the timestamp
     var date = new Date(parseInt(timestamp * (10 ** 3)));
-    var days = "0" + date.getDate();
-    var month = "0" + (date.getMonth() + 1); //January is 0!
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var seconds = date.getSeconds();
+    var days = date.getDate();
+    var month = (date.getMonth() + 1); //January is 0!
     var year = date.getFullYear();
 
-    var formattedDate = days.substr(-2) + '/' + month.substr(-2) + '/' + year;
-    // Hours part from the timestamp
-    var hours = "0" + date.getHours();
-    // Minutes part from the timestamp
-    var minutes = "0" + date.getMinutes();
-    // Seconds part from the timestamp
-    var seconds = "0" + date.getSeconds();
+    var ss = seconds.toString().padStart(2, "0");
+    var mm = minutes.toString().padStart(2, "0");
+    var hh = hours.toString().padStart(2, "0");
+    var dd = days.toString().padStart(2, "0");
+    var M = month.toString().padStart(2, "0");
 
+    var formattedDate = dd + '/' + M + '/' + year;
     // Will display time in 10:30:23 format
-    var formattedTime = hours.substr(-2) + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
+    var formattedTime = hh + ':' + mm + ':' + ss;
+
+    if(isFlatDate){
+        return dayDiff(date)
+    }
+
     return `${isDateToday(formattedDate) ? '' : formattedDate + ' -'} ${formattedTime}`
 }
 

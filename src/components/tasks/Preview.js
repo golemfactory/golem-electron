@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 
-import golemIcon from '../../assets/img/golem-white.svg'
+import golemIcon from '../../assets/img/preview-thumb.svg'
 
 
 const mapStateToProps = state => ({
@@ -36,7 +36,7 @@ export class Preview extends React.Component {
     }
 
     render() {
-        const {id, frameCount, src, taskList} = this.props
+        const {id, frameCount, src, taskList, progress} = this.props
         let task = !!id && taskList.filter((item) => item.id === id)[0]
         let preview = !!task && task.preview
         const {previewSRC} = this.state
@@ -44,7 +44,14 @@ export class Preview extends React.Component {
         return (
             <div className="section__preview-black">
                 <div className="details__preview">
-                    <button className="btn btn--details" onClick={this._handleExpand.bind(this, id, frameCount)}>Detail view</button>
+                    <button 
+                        className="btn btn--details" 
+                        onClick={progress > 0 
+                            ? this._handleExpand.bind(this, id, frameCount) 
+                            : undefined}
+                            disabled={progress == 0}>
+                                Detail view
+                            </button>
                 </div>
                 <img className="preview__img" src={src ? `file://${preview}?${new Date().getTime()}` : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
             (e) => {

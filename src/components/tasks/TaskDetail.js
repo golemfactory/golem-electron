@@ -917,7 +917,7 @@ export class TaskDetail extends React.Component {
                 <td>
                     <Tooltip
                       html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>}
-                      position="bottom"
+                      position="bottom-end"
                       trigger="mouseenter"
                       hideOnClick={false}>
                         <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
@@ -984,7 +984,7 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://github.com/golemfactory/golem/wiki/FAQ#render-settings">Learn more</a></p>} cls="title" infoHidden={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -1043,6 +1043,7 @@ export class TaskDetail extends React.Component {
             isDeveloperMode,
             isMainNet,
             subtasksList, 
+            task,
             testStatus
         } = this.props;
         
@@ -1090,17 +1091,18 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file >settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
+                                {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">
                             <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                                 <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
                             <div className="item-settings">
@@ -1122,7 +1124,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="estimated-price__panel">
                                 <div className="item-price">
-                                    <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                    <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                                     <div className="estimated_cost">
                                         {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
                                         <span>{isMainNet ? "" : "t"} GNT</span>
@@ -1132,7 +1134,7 @@ export class TaskDetail extends React.Component {
                                     </div>
                                 </div>
                                 <div className="item-price">
-                                    <InfoLabel type="span" label="Tx Fee Lock" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                    <InfoLabel type="span" label="Tx Fee Lock" info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. <br/>It may vary from what you will actually pay for this transaction <br/>as usually the final cost is much lower.</p>} cls="title" infoHidden={true}/>
                                     <div className="estimated_cost">
                                         {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
                                         <span>{isMainNet ? "" : "t"} ETH</span>
