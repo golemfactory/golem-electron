@@ -175,6 +175,11 @@
         justify-content: flex-end;
     }
 
+    .source-path{
+        font-size: 9pt;
+        margin-bottom: 10px;
+    }
+
     .switch-box {
         margin: 0;
 
@@ -187,31 +192,63 @@
 .section-price__task-detail {
     .item-price {
         display: flex;
-        justify-content: flex-start;
-        align-items: center;
+        justify-content: space-between;
+        align-items: flex-end;
         width: 100%;
         box-sizing: border-box;
-        margin-bottom: 20px;
+        margin: 20px 0;
         font-size: 10pt;
 
-        input {
-            flex: 0 0 130px;
+        .input__price-set{
+            width: 310px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+            margin-right: 10px;
+
+            input {
+                flex: 0 0 130px;
+                margin-right: 10px;
+            }
         }
 
-        span:last-child {
-            margin-left: 10px;
+        .title{
+            align-self: center;
+            flex: 0 0 100px;
+        }
+
+        .info-title{
+            margin: 0 !important;
+        }
+
+
+        .estimated-price {
+            text-align: center;
+            line-height: .8;
+            transition: .5s font-size;
+            margin-right: 10px;
+        }
+
+        .estimated_cost{
+            margin-left: auto;
+            margin-right: 5px;
+            width: 300px;
+            text-align: right;
+        }
+
+        .estimated_usd{
+            align-self: flex-end;
+            width: 190px;
+            text-align: right;
+            transition: .5s font-size;
         }
     }
 
     .estimated-price__panel {
-        padding-top: 22px !important;
-        padding-bottom: 22px !important;
+        padding-top: 12px !important;
+        padding-bottom: 12px !important;
         background: $color-bg2;
 
-        .estimated-price {
-            font-size: 36pt;
-            text-align: center;
-        }
 
         span:last-child {
             margin-top: 22px;
@@ -255,6 +292,7 @@
         width: 100%;
         margin-bottom: 30px;
         border-collapse: collapse; 
+        font-size: 9pt;
     }
 
     tr{
@@ -278,8 +316,8 @@
                 transform: translate(0, 0);
                 transition: .5s linear;
                 &:hover{
-                    transform: translate(-60%, 0);
-                    transition: 3s ease-in-out;
+                    transform: translate(-40%, 0);
+                    transition: 2s ease-in-out;
                     transition-delay: .5s;
                     animation-fill-mode: forwards;
                 }
@@ -288,6 +326,11 @@
 
     td:nth-child(2){
         width: 25%;
+        text-align: center;
+    }
+
+    td:nth-child(3){
+        width: 35%;
         text-align: center;
     }
 

@@ -1,11 +1,9 @@
 import React from 'react';
-import { Link, hashHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
 const {clipboard, remote} = window.electron;
-/**
- * @see http://react-component.github.io/tooltip/
- */
-import ReactTooltip from 'rc-tooltip'
+
+import {Tooltip} from 'react-tippy';
 import yup from 'yup'
 
 import PresetModal from './modal/PresetModal'
@@ -132,16 +130,17 @@ function isObjectEmpty(obj) {
 }
 
 const mapStateToProps = state => ({
+    currency: state.currency,
+    estimated_cost: state.details.estimated_cost,
+    isDeveloperMode: state.input.developerMode,
+    isMainNet: state.info.isMainNet,
+    location: state.fileLocation.location,
+    presets: state.details.presets,
+    requestorMaxPrice: state.price.requestorMaxPrice,
+    subtasksList: state.single.subtasksList,
     task: state.create.task,
     taskInfo: state.details.detail,
-    presets: state.details.presets,
-    testStatus: state.details.test_status,
-    estimated_cost: state.details.estimated_cost,
-    location: state.fileLocation.location,
-    subtasksList: state.single.subtasksList,
-    isDeveloperMode: state.input.developerMode,
-    requestorMaxPrice: state.price.requestorMaxPrice,
-    isMainNet: state.info.isMainNet
+    testStatus: state.details.test_status
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -155,7 +154,7 @@ export class TaskDetail extends React.Component {
         this.state = {
             isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.params.id !== "settings", //<-- HARDCODED
+            isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -184,11 +183,11 @@ export class TaskDetail extends React.Component {
     }
 
     componentDidMount() {
-        const {params, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
+        const {match, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
 
         actions.setEstimatedCost(0)
-        if (params.id !== editMode) {
-            actions.getTaskDetails(params.id)
+        if (match.params.id !== editMode) {
+            actions.getTaskDetails(match.params.id)
         } else {
             actions.getTaskPresets(task.type)
             this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM
@@ -209,7 +208,7 @@ export class TaskDetail extends React.Component {
         var ariaKeys = Array.from(elements).map(elm => elm.getAttribute("aria-label"));
         this.interactedInputObject = zipObject(ariaKeys, new Array(ariaKeys.length).fill(false));
 
-        if(params.id === editMode)
+        if(match.params.id === editMode)
             document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
                 Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
             })
@@ -228,7 +227,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.params.id !== editMode) {
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.match.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
                 this._setTimeStamp()
             }
@@ -308,7 +307,7 @@ export class TaskDetail extends React.Component {
         if(nextProps.isDeveloperMode && !this.liveSubList && isDetailPage){
 
             let interval = ()=> {
-                actions.fetchSubtasksList(nextProps.params.id)
+                actions.fetchSubtasksList(nextProps.match.params.id)
                 return interval
             }
             this.liveSubList = setInterval(interval(), 1000)
@@ -390,14 +389,27 @@ export class TaskDetail extends React.Component {
         this.refs.subtaskCount.value = subtaskValue
     }
 
-    _convertPriceAsHR(price) {
+    _convertPriceAsHR(price = 0, suffix, fixTo = 2, font_size) {
         let priceLength = parseInt(price).toString().length
+        let fontSize = price.toFixed(fixTo).toString().length > 4 ? (font_size/1.7)+'pt' : font_size+'pt';
+
         if (priceLength < 5) {
-            return <span className="estimated-price">{price.toFixed(2)}</span>
+            return <span 
+                className={`estimated-price ${suffix}`} 
+                style={{'fontSize': fontSize}}>
+                    {price.toFixed(fixTo)}
+                </span>
         }
         let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
         let firstDigitLength = firstDigit.toString().length
-        return <span className="estimated-price">{firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}<small>x</small>10<sup>{priceLength - 1}</sup></span>
+        return <span 
+                className={`estimated-price ${suffix}`}
+                style={{'fontSize': fontSize}}>
+                {firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}
+                <small>x</small>
+                10
+                <sup>{priceLength - 1}</sup>
+            </span>
     }
 
     _setTimeStamp() {
@@ -725,7 +737,7 @@ export class TaskDetail extends React.Component {
         })
         this._createTaskAsync().then(result => {
             if(result && result[0]){
-                hashHistory.push('/tasks');
+                window.routerHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
@@ -884,33 +896,38 @@ export class TaskDetail extends React.Component {
 
         return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
                 <td>
-                <ReactTooltip overlayClassName="black" placement="bottomLeft" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
                             <span>{subtask_id}</span>
                         </div>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>{status}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{status}</p>}
+                      position="bottom"
+                      trigger="mouseenter">
                         <span className={`icon-status-dot ${statusDot(status)}`}/>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
                 <td>
-                    <ReactTooltip overlayClassName="black" placement="bottomRight" trigger={['hover']} overlay={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>}
+                      position="bottom-end"
+                      trigger="mouseenter"
+                      hideOnClick={false}>
                         <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
-                    </ReactTooltip>
+                    </Tooltip>
                 </td>
             </tr>)
     }
 
     isPresetFieldsFilled(nextState) {
-        if(this.props.params.id === editMode){
+        if(this.props.match.params.id === editMode){
             const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
             return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
         }
@@ -967,7 +984,7 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://github.com/golemfactory/golem/wiki/FAQ#render-settings">Learn more</a></p>} cls="title" infoHidden={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -1007,27 +1024,29 @@ export class TaskDetail extends React.Component {
     render() {
 
         const {
-            modalData, 
-            isDetailPage, 
-            presetModal, 
             bid, 
-            managePresetModal, 
             defaultSettingsModal, 
             insufficientAmountModal, 
-            resolutionChangeModal, 
-            resolutionChangeInfo,
+            isDetailPage, 
+            loadingTaskIndicator,
+            managePresetModal, 
             maxSubtasks,
-            loadingTaskIndicator
+            modalData, 
+            presetModal, 
+            resolutionChangeInfo,
+            resolutionChangeModal
         } = this.state
 
         const {
-            testStatus, 
+            currency,
             estimated_cost, 
-            subtasksList, 
             isDeveloperMode,
-            isMainNet
+            isMainNet,
+            subtasksList, 
+            task,
+            testStatus
         } = this.props;
-
+        
         let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>       
@@ -1072,17 +1091,18 @@ export class TaskDetail extends React.Component {
                         </div>
                         }
                         <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file<br/>settings, and if you<br/>have any questions<br/>just hover over<br/>specific label to<br/>find some help</p>}/>
+                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
+                                {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
                                 {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                         </div>
                         <div className="section-task__task-detail">
-                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on<br/>your settings<br/>related to price<br/>and trust,<br/>it may take a while for<br/>your task to be<br/>accepted by the network.</p>}/>
+                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://github.com/golemfactory/golem/wiki/FAQ#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                                 <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
                             <div className="item-settings">
@@ -1091,16 +1111,38 @@ export class TaskDetail extends React.Component {
                             </div>
                         </div>
                         <div className="section-price__task-detail">
-                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail"/>
+                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                             <div className="item-price">
                                 <InfoLabel type="span" label="Your bid" info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,<br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} cls="title" infoHidden={true}/>
-                                <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span>{isMainNet ? "" : "t"}GNT/h</span>
+                                <div className="input__price-set">
+                                    <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                    <span>{isMainNet ? "" : "t"} GNT/h</span>
+                                </div>
+                                <div className="estimated_usd">
+                                    <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
+                                </div>
                             </div>
-                            <div className="item-price estimated-price__panel">
-                                <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://github.com/golemfactory/golem/wiki/FAQ#pricing-best-practices">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                {this._convertPriceAsHR(estimated_cost)}
-                                <span>{isMainNet ? "" : "t"}GNT</span>
+                            <div className="estimated-price__panel">
+                                <div className="item-price">
+                                    <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                                    <div className="estimated_cost">
+                                        {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
+                                        <span>{isMainNet ? "" : "t"} GNT</span>
+                                    </div>
+                                    <div className="estimated_usd">
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
+                                    </div>
+                                </div>
+                                <div className="item-price">
+                                    <InfoLabel type="span" label="Tx Fee Lock" info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. <br/>It may vary from what you will actually pay for this transaction <br/>as usually the final cost is much lower.</p>} cls="title" infoHidden={true}/>
+                                    <div className="estimated_cost">
+                                        {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
+                                        <span>{isMainNet ? "" : "t"} ETH</span>
+                                    </div>
+                                    <div className="estimated_usd">
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
+                                    </div>
+                                </div>
                             </div>
                             <span className="item-price tips__price">
                                 You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.

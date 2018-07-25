@@ -1,6 +1,5 @@
 import React from 'react';
-import ReactTooltip from 'rc-tooltip'
-import { hashHistory } from 'react-router'
+import {Tooltip} from 'react-tippy';
 import { TransitionMotion, spring, presets } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -20,9 +19,9 @@ const statusDict = Object.freeze({
     NOTSTARTED: 'notStarted',
     COMPUTING: 'computing',
     FINISHED: 'finished',
-    ABORTED: 'Aborted',
+    ABORTED: 'aborted',
     WAITING: 'waiting',
-    SENDING: 'Sending',
+    SENDING: 'sending',
     TIMEOUT: 'timeout',
     RESTARTED: 'restarted'
 })
@@ -71,7 +70,7 @@ export class All extends React.Component {
         if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
             setFrameId(item.id)
             setFrameIndex(index)
-            hashHistory.push(`/preview/${routesDict.SINGLE}/`)
+            window.routerHistory.push(`/preview/${routesDict.SINGLE}/`)
         }
     }
 
@@ -178,23 +177,22 @@ export class All extends React.Component {
             willEnter={::this.willEnter}>
             {styles => <div className="container__all-frame">
                     {styles.map(({key, data, style}, index) => <div className="item__all-frame" key={index.toString()} style={style}>
-                <ReactTooltip
-                    overlayClassName="tooltip-frame"
-                    placement={`${index % 10 === 0 ? 'bottomLeft' : ((index % 10 === 9) ? 'bottomRight' : 'bottom')}`}
-                    trigger={['hover']}
-                    mouseEnterDelay={1}
-                    overlay={<div className="content__tooltip">
+                <Tooltip
+                      html={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
                             <button onClick={this._handleResubmit.bind(this, data, data.id)} disabled={(data.status === statusDict.NOTSTARTED)}>Resubmit</button>
                         </div>}
-                    align={{
-                        offset: [0, 10],
-                    }}  arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                      position="bottom"
+                      trigger="mouseenter"
+                      interactive={true}
+                      arrow={true}
+                      width="500"
+                      size="regular">
                     <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} onKeyDown={(event) => {
                         event.keyCode === 13 && (this._handleClick.call(this, data, index))
                     }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
-                </ReactTooltip>
+                </Tooltip>
             </div>
                 )}
                 </div>

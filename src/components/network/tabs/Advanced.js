@@ -36,16 +36,6 @@ export class Advanced extends React.Component {
         super(props);
     }
 
-    componentDidMount() {
-      const {actions, presetList, chosenPreset} = this.props
-      const value = presetList.find(item => item.name === chosenPreset);
-      if (value) {
-          actions.setAdvancedChart({
-              ...value
-          });
-      }
-    }
-
     /**
      * [_handleInputChange func. If there's any change on input, the func. will update state]
      * @param  {Any}        key         [State key]
@@ -76,17 +66,15 @@ export class Advanced extends React.Component {
     /**
      * [_handleOptionChange func. will update adnvanced chart if there's any change on dropdown]
      * @param  {Array}          list          [List of dropdown]
-     * @param  {String}         selectedIndex [0-originated number of selected option]
+     * @param  {String}         selectedItem  [selected option]
+     * @param  {Number}         index         [0-originated number of selected option]
      * @param  {String}         init          [Initial loading: true, personal choose: false]
      */
-    _handleOptionChange(list, selectedIndex, init = false) {
+    _handleOptionChange(list, selectedItem, index, init = false) {
         const {actions, chartValues} = this.props
-        const value = list.find(item => item.name === selectedIndex);
+        const value = list.find(item => item.name === selectedItem);
         if (value) {
             actions.setChosenPreset(value.name, init)
-            actions.setAdvancedChart({
-                ...value
-            });
             !init && actions.setResources(this.calculateResourceValue(value))
         }
     }
@@ -147,6 +135,7 @@ export class Advanced extends React.Component {
                 disk
             })} disabled={isEngineOn}>Save as Preset</button>
             </div>
+            {Object.keys(systemInfo).length > 0 ? 
             <div className="section__radial-options">
                 <RadialProgress pct={cpu_cores} title="CPU" unit="Cores" max={max.cpu_cores} warn={true} disabled={isEngineOn}
                                 onChange={this._handleInputChange.bind(this, 'cpu_cores')}/>
@@ -155,6 +144,10 @@ export class Advanced extends React.Component {
                 <RadialProgress pct={disk} title="Disk" unit="GiB" max={max.disk} warn={true} disabled={isEngineOn}
                                 onChange={this._handleInputChange.bind(this, 'disk')}/>
             </div>
+            :
+            <div className="loading__advanced">
+              <span>Golem reading your system information...</span>
+            </div>}
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
               <br/>

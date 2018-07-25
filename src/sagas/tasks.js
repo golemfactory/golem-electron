@@ -57,7 +57,6 @@ export function getEstimatedCost(session, payload) {
     return new Promise((resolve, reject) => {
         function on_estimated_cost(args) {
             var estimated_cost = args[0];
-            //console.log(config.GET_ESTIMATED_COST_RPC, estimated_cost)
             resolve({
                 type: SET_ESTIMATED_COST,
                 payload: estimated_cost
@@ -79,7 +78,7 @@ export function abortTestTask(session) {
 
     function on_test_task(args) {
         var test_task = args[0];
-        console.log("test_task", test_task);
+        console.info("test_task", test_task);
     }
 
     _handleRPC(on_test_task, session, config.ABORT_TEST_TASK_RPC)
@@ -310,7 +309,7 @@ export function callCreateTask(session, payload, _resolve, _reject) {
     function on_create_task(args) {
         var create_task = args[0];
         _resolve(create_task)
-        console.log(config.CREATE_TASK_RPC, create_task)
+        console.info(config.CREATE_TASK_RPC, create_task)
     }
 
     _handleRPC(on_create_task, session, config.CREATE_TASK_RPC, [payload])

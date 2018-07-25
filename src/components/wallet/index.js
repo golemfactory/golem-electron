@@ -42,8 +42,7 @@ export class Wallet extends Component {
     	const element = document.getElementById("sectionWallet");
     	const expandButton = document.getElementById("expandWalletButton");
    		element.classList.toggle("expand__wallet");
-   		expandButton.classList.toggle("icon-arrow-down");
-   		expandButton.classList.toggle("icon-arrow-up");
+   		expandButton.classList.toggle("arrow-expand");
         this.setState({
             isWalletExpanded: !this.state.isWalletExpanded,
             expandedAmount: null
@@ -95,16 +94,14 @@ export class Wallet extends Component {
                             suffix="GNT"
                             description={ isMainNet ? 
                                         <p className="tooltip__wallet">
-                                        Golem Network
-                                        <br/>token is earned 
-                                        <br/>and/or paid for
-                                        <br/>computations.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        Golem Network token 
+                                        <br/>is earned and/or paid 
+                                        <br/>for computations.
+                                        <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
                                         tGNT is testnet
-                                        <br/>Golem Network 
-                                        <br/>token.
+                                        <br/>Golem Network token.
                                         <br/>It is earned
                                         <br/>and/or paid for
                                         <br/>computations.
@@ -112,12 +109,10 @@ export class Wallet extends Component {
                                     }
                             descriptionLock={
                                 <p className="tooltip__wallet">
-                                    Locked: reserved
-                                    <br/>estimated pessimistic
-                                    <br/>amount that may be
-                                    <br/>needed to pay for
-                                    <br/>tasks that have been
-                                    <br/>commissioned.
+                                    Locked: reserved estimated 
+                                    <br/>pessimistic amount that may be 
+                                    <br/>needed to pay for tasks that 
+                                    <br/>have been commissioned.
                                     <br/>May be overestimated.
                                 </p>
                             }
@@ -135,7 +130,7 @@ export class Wallet extends Component {
                                         <p className="tooltip__wallet">
                                         ETH is used for 
                                         <br/>transaction fees.
-                                        <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#why-do-i-need-gnt-and-eth">Learn more</a></p>
+                                        <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
                                         tETH is testnet 
@@ -146,22 +141,18 @@ export class Wallet extends Component {
                                     }
                             descriptionLock={
                                 <p className="tooltip__wallet">
-                                    Locked: reserved
-                                    <br/>estimated pessimistic
-                                    <br/>amount that may be
-                                    <br/>needed to pay for
-                                    <br/>tasks that have been
+                                    Locked: reserved amount 
+                                    <br/>that will be used to pay 
+                                    <br/>for tasks that have been 
                                     <br/>commissioned.
-                                    <br/>May be overestimated.
                                 </p>
                             }
 
                             descriptionWaiting={
                                 <p className="tooltip__wallet">
-                                    Waiting: blocked
-                                    <br/>specific and exact 
-                                    <br/>amount to pay for 
-                                    <br/>already counted
+                                    Waiting: blocked specific
+                                    <br/>and exact amount to pay 
+                                    <br/>for already counted 
                                     <br/>and verified tasks.
                                 </p>
                             }

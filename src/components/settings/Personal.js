@@ -2,10 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-/**
- * @see http://react-component.github.io/tooltip/
- */
-import ReactTooltip from 'rc-tooltip'
+import {Tooltip} from 'react-tippy';
 
 import * as Actions from '../../actions'
 
@@ -131,19 +128,22 @@ export class Personal extends React.Component {
                         :
                         <span className="user-name__personal">{nodeName ? nodeName : 'Anonymous Golem'}</span>
                         }
-                        <ReactTooltip overlayClassName="black" className="tooltip__edit-mode" placement="top" trigger={['hover']} overlay={<p>Edit</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -5],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                        <Tooltip
+                          html={<p>Edit</p>}
+                          position="bottom"
+                          trigger="mouseenter">
                             <span className={`toggle__edit-mode ${editMode ? "icon-checkmark" : "icon-pencil"}`} onClick={() => this.form.dispatchEvent(new Event("submit"))}/>
-                        </ReactTooltip>
+                        </Tooltip>
                         <p/>
                     </form>
-                    <ReactTooltip overlayClassName="black" placement="bottom" trigger={['hover']} overlay={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>} mouseEnterDelay={1} align={{
-                offset: [0, 10],
-            }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                    <Tooltip
+                        html={<p>{nodeIdCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
+                        position="bottom"
+                        trigger="mouseenter"
+                        hideOnClick={false}>
                         <span className="user-id__personal" onClick={this._handleCopyToClipboard.bind(this, nodeId)}>{ nodeId ? nodeId.replace(new RegExp("^(.{0,4}).*(.{4})$", "im"), "$1...$2") : ' will be here'}<span className={nodeIdCopied ? 'icon-confirmed-empty' : undefined}/></span>
-                    </ReactTooltip>
-                    <span className="backup-info__personal"><a href="https://github.com/golemfactory/golem/wiki/FAQ#backing-up-your-golem-app">
+                    </Tooltip>
+                    <span className="backup-info__personal"><a href="https://golem.network/documentation/11-backing-up-your-golem-app/">
                         <u>Learn more how to <strong>backup Golem</strong></u></a></span>
                 </div>
             </div>
