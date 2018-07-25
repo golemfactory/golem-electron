@@ -1,0 +1,157 @@
+.section__table {
+    .task-list {
+        .task-item {
+            position: relative;
+            height: 65px;
+            padding: 15px 20px;
+            border-bottom: 1px solid $color-border;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: .5s all;
+            .info__task-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .task-icon {
+                margin-right: 25px;
+                background: #f5f5f5;
+                padding: 8px;
+                border-radius: 50px;
+                font-size: 18pt;
+            }
+            .icon-blender {
+                font-size: 16pt;
+                padding: 11px 9px;
+            }
+            .icon-luxrender {
+                color: #f4ca1b;
+                padding: 9px 10px;
+            }
+            h4 {
+                font-weight: 400;
+                margin: 0;
+                font-size: 11pt !important;
+                line-height: 1.5em;
+            }
+            .duration {
+                font-size: 8.5pt;
+                margin-top: 1px;
+                &--active {
+                    color: $button-static-color;
+                    font-weight: 400;
+                }
+                &--done {
+                    color: $color-text3;
+                    font-weight: 400;
+                }
+                &--finished {
+                    color: $color-accent1;
+                    font-weight: 400;
+                }
+                &--preparing {
+                    color: $color-accent2;
+                    font-weight: 400;
+                }
+                &--timeout {
+                    color: $color-error;
+                    font-weight: 400;
+                }
+
+                .info__task{
+                    margin-top: 10px;
+                    font-size: 7pt;
+                }
+            }
+            /*.badge {
+                float: right;
+                background: #ccc;
+                border-radius: 5px;
+                color: #444;
+                padding: 5px;
+                font-size: 8pt;
+                margin-top: -12px;
+                margin-right: 50px;
+                box-sizing: border-box;
+            }*/
+
+            .control-panel__task{
+                height: 100%;
+                display:flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+
+            }
+            
+            .icon-eye,
+            .icon-reload,
+            .icon-trash,
+            .icon-info-small {
+                box-sizing: border-box;
+                font-size: 9pt;
+                color: $color-text3;
+                cursor: pointer;
+                visibility: hidden;
+                transition: .5s color;
+
+                &:hover {
+                    color: $color-text;
+                }
+
+                &[disabled] {
+                    cursor: not-allowed;
+                    &:hover { 
+                        color: $color-text3; 
+                    }
+                }
+            }
+
+            &:hover .icon-eye,
+            &:hover .icon-trash,
+            &:hover .icon-reload,
+            &:hover .icon-info-small {
+                visibility: visible;
+            }
+
+            .icon-reload{
+                font-size: 8pt;
+                margin: 0 0 2px 0;
+            }
+
+            .icon-eye{
+                font-size: 11pt;
+            }
+
+            .icon-info-small{
+                font-size: 14pt;
+            }
+
+            .icon--active{
+                color: $color-text;
+            }
+
+            &.active {
+                border-left: 5px solid $button-static-color;
+            }
+
+            .bumper{
+                margin: 0 3px;
+            }
+
+            .task-details-icon{
+                height: 16px;
+                margin-top: -5px;
+            }
+        }
+    }
+}
+
+.wrapper-task-item {
+    background: $color-text4;
+    &:hover {
+        background: $color-bg2;
+    }
+}

@@ -1,5 +1,4 @@
 import React from 'react';
-import { hashHistory } from 'react-router'
 
 export default class InsufficientAmountModal extends React.Component {
 
@@ -16,7 +15,7 @@ export default class InsufficientAmountModal extends React.Component {
     }
 
     _handleTopUp() {
-        hashHistory.push('/');
+        window.routerHistory.push('/');
     }
 
     render() {

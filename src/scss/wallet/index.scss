@@ -13,16 +13,20 @@
     flex: 0 0 70px;
     transition: .8s all;
 	
-	.icon-arrow-up,
 	.icon-arrow-down{
+		position: absolute;
+		right: 24px;
+		bottom: 24px;
 		cursor: pointer;
+		transition: .5s transform;
+		transition-delay: .8s;
 	}
 }
 .expand__wallet{
 	flex: 0 0 320px;
 
 	.panel_box{
-		width: 100%  !important;
+		width: 100% !important;
 	}
 
 	.address-box__wallet{
@@ -65,10 +69,8 @@
 	}
 
 
-	.icon-arrow-up{
-		position: absolute;
-		bottom: 24px;
-		right: 24px;
+	.arrow-expand{
+		transform: rotate(180deg);
 	}
 
 	.content__wallet{

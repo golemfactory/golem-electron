@@ -143,6 +143,7 @@
 
     .menu__item {
         color: $color-text3;
+        margin-left: 10px;
 
         [class^="icon-"],
         [class*=" icon-"] {
@@ -421,19 +422,37 @@
     }
 }
 
-.linux .header {
-    height: $header-height-linux;
-    padding-top: 0;
+.linux{ 
+    .header {
+        height: $header-height-linux;
+        padding-top: 0;
 
-    @include header($padding-mac, 0, 88px);
+        @include header($padding-mac, 0, 88px);
 
-    .nav {
-        height: 50%;
+        .nav {
+            height: 50%;
+        }
+
+        .draggable--other {
+            display: initial;
+            height: 51px;
+        }
     }
 
-    .draggable--other {
-        display: initial;
-        height: 51px;
+    .frame__screen{
+        height: 50px !important;
+
+        .header__frame{
+            height: 50px !important;
+            line-height: 48px !important;
+        }
+
+        .nav{
+            height: 50px !important;
+        }
+        .draggable{
+            height: 50px !important;
+        }
     }
 }
 

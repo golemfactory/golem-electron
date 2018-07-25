@@ -12,7 +12,8 @@ const preset = Object.freeze({
 const mapStateToProps = state => ({
     resource: state.resources.resource,
     systemInfo: state.advanced.systemInfo,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    chartValues: state.advanced.chartValues
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -23,6 +24,17 @@ export class Resources extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            resource: props.resource
+        }
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.resource !== this.props.resource){
+            this.setState({
+                resource: nextProps.resource
+            })
+        }
     }
 
     /**
@@ -58,10 +70,11 @@ export class Resources extends React.Component {
     }
 
     render() {
-        const {resource, isEngineOn} = this.props
+        const {isEngineOn} = this.props
+        const {resource} = this.state
         return (
             <div className="content__resources">
-                <Slider inputId="resource_slider" value={resource} iconLeft="icon-single-server" iconRight="icon-multi-server" callback={::this._setResource} warn={true} disabled={isEngineOn}/>
+                <Slider key={resource ? resource.toString() : 'empty'} inputId="resource_slider" value={resource} iconLeft="icon-single-server" iconRight="icon-multi-server" callback={::this._setResource} warn={true} disabled={isEngineOn}/>
                 <div className="slider__tips">
                         Use the slider to choose how much of your machine’s resources 
                     (CPU, RAM and disk space) Golem can use. More power means 

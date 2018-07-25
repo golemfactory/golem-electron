@@ -431,7 +431,7 @@ class OnboardIndex extends React.Component {
                         <div className="content-information">
                             <span className="icon-warning"/>
                             {_connectionProblem.issue === "PORT" ? 
-                                <span>It looks like you don't have ports forwarded. Follow <a href="https://github.com/golemfactory/golem/wiki/FAQ#installing-golem">these steps.</a></span>
+                                <span>It looks like you don't have ports forwarded. Follow <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">these steps.</a></span>
                                 :
                                 <span>Interface coomunication problem with Golem. Please restart.</span>
                             }

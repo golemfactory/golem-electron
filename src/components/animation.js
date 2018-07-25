@@ -1,5 +1,5 @@
 import createjs from 'createjs-browserify'
-import data_json_url from '../assets/data.json'
+import data_json from '../assets/data.json'
 
 var ajax = {};
 ajax.x = function() {
@@ -171,10 +171,8 @@ window.Tangents = window.Tangents || {}, function() {
     };
     tangent.prototype.getStartData = function(dataAndEvents, $sanitize) {
         var err = this;
-        ajax.get(data_json_url, {}, function(resp) {
-            err.data = resp;
-            $sanitize();
-        });
+        err.data = data_json;
+        $sanitize();
     };
     tangent.prototype.clearStage = function(num) {
         if (this.stage) {
@@ -188,9 +186,10 @@ window.Tangents = window.Tangents || {}, function() {
         }
     };
     tangent.prototype.addCircles = function() {
+
         if (this.data) {
             var that = this;
-            $.each(JSON.parse(this.data), function(item) {
+            $.each(this.data, function(item) {
                 var shape = new createjs.Shape;
                 shape.name = "Circle";
                 shape.x = shape._x = item.x * that.ratioX;

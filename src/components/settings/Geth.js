@@ -4,9 +4,13 @@ import { connect } from 'react-redux'
 
 import * as Actions from './../../actions'
 
+const {remote} = window.electron;
+const mainProcess = remote.require('./index')
+
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    localGeth: state.geth.localGeth
+    localGeth: state.geth.localGeth,
+    isMainnet: state.info.isMainnet
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -105,15 +109,34 @@ export class Geth extends React.Component {
 
     _handleSave(e){
         const {isLocalGeth, gethPort, gethAddress} = this.state
-        this.props.actions.setLocalGeth({
-            isLocalGeth, 
-            gethPort, 
-            gethAddress
-        })
+        const {isMainnet} = this.props
+
+        if(gethAddress || isLocalGeth){
+            //TODO check geth
+            const deferred = mainProcess.validateGeth(isLocalGeth, gethAddress, gethPort, isMainnet)
+            deferred.then(result => {
+                if(result && !!result.status){
+                    this.props.actions.setLocalGeth({
+                        isLocalGeth, 
+                        gethPort, 
+                        gethAddress
+                    })
+
+                    this.setState({
+                        gethError: result.error
+                    })
+
+                } else if(result && !result.status){
+                    this.setState({
+                        gethError: result.error
+                    })
+                }
+            });
+        }
     }
 
     render() {
-        const {isStartLocked, isLocalGeth} = this.state
+        const {isStartLocked, isLocalGeth, gethError} = this.state
         const {isEngineOn, localGeth} = this.props
         const { gethPort, gethAddress} = localGeth
         return (
@@ -145,6 +168,7 @@ export class Geth extends React.Component {
                 <button type="submit" className="btn btn--outline" disabled={isStartLocked}>Save</button>
                 <div className="section__tips">
                     <span className="tips__geth">Enabling custom geth option will require restart of the application</span>
+                    {gethError && <span className="error_geth">{gethError}</span>}
                 </div>
             </form>
         );

@@ -56,6 +56,7 @@ export let config = Object.freeze({
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
+    GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',
@@ -140,8 +141,8 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
             console.log(`un/subscribed to ${_channel} topic`);
         },
         onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join(): arr)
         }
     }
     _session.unsubscribe(_channel, cb)

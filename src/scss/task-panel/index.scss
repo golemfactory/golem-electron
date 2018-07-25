@@ -6,6 +6,7 @@
 @import 'modal/block-node-modal';
 @import 'modal/resolution-change-modal';
 @import "table";
+@import "task-item";
 @import "preview";
 @import "task-detail";
 @import "new-task";
@@ -23,34 +24,4 @@
     overflow-y: overlay;
     box-sizing: border-box;
     transform: translateZ(0);
-    &--with-preview {
-        margin-bottom: 192px + 58px;
-        @media screen and (max-height: 749px + 59px) {
-            margin-bottom: 0;
-        }
-    }
-}
-
-.win .container__task-panel {
-    &--with-preview {
-        @media screen and (max-height: 749px + 59px) {
-            height: 378px
-        }
-    }
-}
-
-.mac .container__task-panel {
-    &--with-preview {
-        @media screen and (max-height: 749px + 59px) {
-            height: 361px
-        }
-    }
-}
-
-.linux .container__task-panel {
-    &--with-preview {
-        @media screen and (max-height: 749px + 59px) {
-            height: 396px
-        }
-    }
 }

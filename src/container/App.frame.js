@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Router, Route } from 'react-router'
+import { Route, Switch } from 'react-router-dom' // react-router v4
+import { ConnectedRouter } from 'connected-react-router'
+
 import Header from '../components/Header'
 import Frame from '../components/tasks/frame'
 import NotFound from '../components/NotFound'
@@ -17,12 +19,10 @@ import * as Actions from '../actions'
  * @return     {Route}
  */
 const routes = (
-<Route component={ App } >
-    <Route path="/preview/:type" component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}>
-        <Route path="/preview/:type/:id"  component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}/>
-    </Route>
-    <Route path="*" component={ NotFound } status={404} />
-</Route>
+<Switch>
+    <Route path="/preview/:type/:id?"  component={ LoadingComponent(Frame, ['FRAME_LOADER'])[0]}/>
+    <Route component={ NotFound } status={404} />
+</Switch>
 );
 
 
@@ -48,14 +48,13 @@ export class App extends Component {
     }
 
     render() {
-
         const {actions, status, search, history, details} = this.props
         return (
             <div>
                 <Header actions={ actions }  activeHeader={'secondary'} taskDetails={details}/>
-                <Router history={ history } >
+                <ConnectedRouter history={history}>
                     { routes }
-                </Router>
+                </ConnectedRouter>
             </div>
         );
     }
