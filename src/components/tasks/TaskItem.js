@@ -102,15 +102,14 @@ export class TaskItem extends React.Component {
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
-                <span className="duration--preparing">Waiting for nodes... </span>
+                <span className="duration--preparing">Waiting for computation... </span>
             </div>
 
         case status.RESTART:
             return <div>
-                <span>Task time: N/A </span>
+                <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
                 <span className="bumper"> | </span>
-                <span className="duration--restarted">Restarted: </span>
-                <span>{timeStampToHR(item.last_updated)}</span>
+                <span className="duration--restarted">Restarted</span>
             </div>
 
         case status.COMPUTING:
