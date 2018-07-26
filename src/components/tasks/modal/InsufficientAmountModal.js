@@ -18,17 +18,26 @@ export default class InsufficientAmountModal extends React.Component {
         window.routerHistory.push('/');
     }
 
+    _handleRetry() {
+        window.routerHistory.push('/tasks');
+    }
+
     render() {
+        const {message} = this.props
         return (
-            <div className="container__modal container__delete-modal">
+            <div className="container__modal container__task-error-modal">
                 <div className="content__modal">
                     <div>
                         <span className="icon-warning"/>
                     </div>
-                    <span>You don't have enough funds<br/>to send this task to the network.</span>
+                    <span className="info">You <strong>cannot</strong> send this task to the network.</span>
+                    <pre className="message-from-server">{message}</pre>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="button" className="btn--primary" onClick={::this._handleTopUp} autoFocus>Top up</button>
+                        {message.includes("Not enough")
+                        ? <button type="button" className="btn--primary" onClick={::this._handleTopUp} autoFocus>Top up</button>
+                        : <button type="button" className="btn--primary" onClick={::this._handleRetry} autoFocus>Retry</button>}
+                        
                     </div>
                 </div>
             </div>

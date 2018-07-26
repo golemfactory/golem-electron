@@ -156,7 +156,7 @@ export class NewTask extends React.Component {
                             }
                         </div>
                         <div className="hint__blender">
-                        Supported render engines are: Blender Render, Cycles Render and Blender Game. Those are sellected automaticaly by Golem from your Blender file settings, so if you want to render with different engine please change settings inside your .blend file before uploading to Golem.
+                        Supported render engines are: Blender Render and Cycles Render. Those are sellected automaticaly by Golem from your Blender file settings, so if you want to render with different engine please change settings inside your .blend file before uploading to Golem.
                         </div>
                     </div>
                     <div className="container-action__new-task">

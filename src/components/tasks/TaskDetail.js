@@ -174,7 +174,10 @@ export class TaskDetail extends React.Component {
             presetModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
-            insufficientAmountModal: false,
+            insufficientAmountModal: {
+                result: false,
+                message: null
+            },
             resolutionChangeModal: false,
             resolutionChangeInfo: [],
             loadingTaskIndicator: false
@@ -741,7 +744,10 @@ export class TaskDetail extends React.Component {
             } else {
                 console.log("Task creation failed!")
                 this.setState({
-                    insufficientAmountModal: true,
+                    insufficientAmountModal: {
+                        result: !result[0],
+                        message: result[1]
+                    },
                     loadingTaskIndicator: false
                 })
             }
@@ -1161,7 +1167,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
-                {insufficientAmountModal && <InsufficientAmountModal closeModal={::this._closeModal}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
             </div>
         );
     }

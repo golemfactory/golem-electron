@@ -86,7 +86,7 @@ export default class FooterMain extends Component {
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${golemStatus.message}`}</span>
+                                <span className="status-message">{`${golemStatus.message} `}</span>
                                 {::this._loadErrorUrl(golemStatus.message)}
                                 {(golemStatus.message && golemStatus.message.length > 10) && <br/>}
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}

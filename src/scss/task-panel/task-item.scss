@@ -43,6 +43,10 @@
                     color: $button-static-color;
                     font-weight: 400;
                 }
+                &--computing {
+                    color: $button-static-color;
+                    font-weight: 400;
+                }
                 &--done {
                     color: $color-text3;
                     font-weight: 400;
@@ -53,6 +57,10 @@
                 }
                 &--preparing {
                     color: $color-accent2;
+                    font-weight: 400;
+                }
+                &--restarted {
+                    color: $color-text3;
                     font-weight: 400;
                 }
                 &--timeout {

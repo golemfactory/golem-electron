@@ -102,21 +102,21 @@ export class TaskItem extends React.Component {
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
-                <span className="duration--preparing">Waiting for nodes... </span>
+                <span className="duration--preparing">Waiting for computation... </span>
             </div>
 
         case status.RESTART:
             return <div>
                 <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
                 <span className="bumper"> | </span>
-                <span className="duration--restarted">Restarted </span>
+                <span className="duration--restarted">Restarted</span>
             </div>
 
         case status.COMPUTING:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
-                <span className="duration--finished">Computing... </span>
+                <span className="duration--computing">Computing... </span>
                 <span className="bumper"> | </span>
                 <span>{subtasksList && subtasksList.length} Nodes</span>
             </div>
@@ -220,8 +220,12 @@ export class TaskItem extends React.Component {
                                 className="icon-reload" 
                                 tabIndex="0" 
                                 aria-label="Restart Task" 
-                                onClick={item.status == status.TIMEOUT ? _handleRestart : undefined} 
-                                disabled={item.status !== status.TIMEOUT}></span>
+                                onClick={(item.status == status.TIMEOUT 
+                                         || item.status == status.FINISHED) 
+                                            ? _handleRestart 
+                                            : undefined} 
+                                disabled={!(item.status === status.TIMEOUT
+                                          || item.status === status.FINISHED)}></span>
                         </Tooltip>
                         <Tooltip
                           html={<p>Delete</p>}
