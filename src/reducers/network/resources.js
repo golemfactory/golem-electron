@@ -6,7 +6,7 @@ const {SET_RESOURCES} = dict
 const {RESOURCE_SLIDER} = dictConfig
 
 const initialState = {
-    resource: getConfig(RESOURCE_SLIDER) || 0,
+    resource: getConfig(RESOURCE_SLIDER),
 }
 const setResources = (state = initialState, action) => {
     switch (action.type) {

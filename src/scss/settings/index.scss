@@ -15,6 +15,15 @@ $item__accordion-height: 78.7px;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+    
+    .icon-arrow-down{
+        transition: .5s transform;
+        transition-delay: .5s;
+    }
+
+    .arrow-expand{
+        transform: rotate(180deg);
+    }
 }
 
 .section__personal {
@@ -116,18 +125,18 @@ $item__accordion-height: 78.7px;
 
 .win {
     .item__accordion > div > span {
-        padding: 0 $padding-windows;
+        margin: 0 $padding-windows;
     }
 }
 
 .mac {
     .item__accordion > div > span {
-        padding: 0 $padding-mac;
+        margin: 0 $padding-mac;
     }
 }
 
 .linux {
     .item__accordion > div > span {
-        padding: 0 $padding-linux;
+        margin: 0 $padding-linux;
     }
 }

@@ -1,9 +1,11 @@
 .info-label__container{
 	display: flex;
+	position: relative;
 	
 	.icon-question-mark,
 	.info-title{
-		margin: 30px 0;
+		margin: 30px 0 20px 0;
+		
         &.experiment {
             display: inline-block;
             padding: 5px;
@@ -13,10 +15,16 @@
 	}
 
 	.icon-question-mark{
-		font-size: 9pt;
+		position: absolute;
+		font-size: 7pt;
 		margin-left: 5px;
+		top: 0;
 		color: $color-text3;
 		cursor: pointer;
+	}
+
+	.tip{
+		margin: 30px 0;
 	}
 }
 

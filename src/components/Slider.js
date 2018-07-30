@@ -90,7 +90,7 @@ export default class Slider extends React.Component {
             <div>
         <div className="slider">
                     <span className={`slider-icon ${iconLeft}`}/>
-                    <input ref={this.props.inputId} type="range" className="slider__resources" id={this.props.inputId} defaultValue={defaultValue} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <input ref={this.props.inputId} type="range" className="slider__resources" id={this.props.inputId} defaultValue={typeof defaultValue === 'number' ? defaultValue : 0} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
                     <span className={`slider-icon ${iconRight}`}/>
         </div>

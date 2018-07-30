@@ -8,6 +8,7 @@
     padding: 15px 16px 15px 16px;
     box-sizing: border-box;
     overflow-y: overlay;
+    overflow-x: hidden;
 }
 
 .item__all-frame {
@@ -47,5 +48,11 @@
         &--error {
             background: $color-error;
         }
+    }
+}
+
+.win {
+    .container__all-frame{
+        padding: 15px 14px 15px 14px !important;
     }
 }

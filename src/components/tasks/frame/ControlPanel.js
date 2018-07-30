@@ -3,7 +3,7 @@ import { viewer, imageInfo } from './ImageZoom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import ReactTooltip from 'rc-tooltip'
+import {Tooltip} from 'react-tippy';
 
 import * as Actions from '../../../actions'
 
@@ -40,38 +40,40 @@ export class ControlPanel extends React.Component {
         }
         return (
             <div className="container__control-panel">
-                <ReactTooltip overlayClassName="black" placement="top" trigger={['hover']} overlay={<p>Previous Frame</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -3],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                    html={<p>Previous Frame</p>}
+                    position="bottom"
+                    trigger="mouseenter">
                         <span className="icon-arrow-left-white" role="button" aria-label="Previous Frame" tabIndex="0" onClick={previousFrame}/>
-                </ReactTooltip>
+                </Tooltip>
                 
                 <span className="preview-count__control-panel">{parseInt(index)} of {details.options && details.options.frame_count}</span>
-                <ReactTooltip overlayClassName="black" placement="top" trigger={['hover']} overlay={<p>Next Frame</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -3],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                    html={<p>Next Frame</p>}
+                    position="bottom"
+                    trigger="mouseenter">
                         <span className="icon-arrow-right-white" role="button" aria-label="Next Frame" tabIndex="0" onClick={nextFrame}/>
-                </ReactTooltip>
-                <ReactTooltip overlayClassName="black" placement="top" trigger={['hover']} overlay={<p>Zoom Out</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -10],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                </Tooltip>
+                <Tooltip
+                    html={<p>Zoom Out</p>}
+                    position="bottom"
+                    trigger="mouseenter">
                         <span className="icon-zoom-out" id="zoom-out" role="button" aria-label="Zoom out" tabIndex="0"/>
-                </ReactTooltip>
+                </Tooltip>
                 
                 <span className="zoom-home-button" id="reset">{zoomRatio && zoomRatio.toFixed(2)}%</span>
-
-                <ReactTooltip overlayClassName="black" placement="top" trigger={['hover']} overlay={<p>Zoom In</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -10],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                <Tooltip
+                    html={<p>Zoom In</p>}
+                    position="bottom"
+                    trigger="mouseenter">
                         <span className="icon-zoom-in" id="zoom-in" role="button" aria-label="Zoom In" tabIndex="0"/>
-                </ReactTooltip>
-                <ReactTooltip overlayClassName="black" placement="top" trigger={['hover']} overlay={<p>Show Subtasks</p>} mouseEnterDelay={1} align={{
-                    offset: [0, -10],
-                }} arrowContent={<div className="rc-tooltip-arrow-inner"></div>}>
+                </Tooltip>
+                <Tooltip
+                    html={<p>Show Subtasks</p>}
+                    position="bottom"
+                    trigger="mouseenter">
                         <span className="icon-show-subtasks" onClick={showSubtask} role="button" aria-label="Show SubTask" tabIndex="0"/>
-                </ReactTooltip>
-                
-                
+                </Tooltip>
             </div>
         );
     }

@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
-import { Router, Route } from 'react-router'
+import { Route, Switch } from 'react-router-dom' // react-router v4
+import { ConnectedRouter } from 'connected-react-router'
+import { hot } from 'react-hot-loader'
 
 import constants from '../constants'
 
@@ -31,17 +33,17 @@ Array.prototype.last = function() {
  * @return     {Route}
  */
 const routes = (
-<Route component={ App } >
-    <Route path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
-    <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
-    <Route path="/task" component={ TaskDetail } >
+<div>
+    <Switch>
+        <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
+        <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
+        <Route path="/settings" component={ Settings } />
         <Route path="/task/:id" component={ TaskDetail } />
-    </Route>
-    <Route path="/add-task/type(/:type)" component={ NewTask } />
-    <Route path="/add-task/settings" component={ TaskDetail } />
-    <Route path="/settings" component={ Settings } />
-    <Route path="*" component={ NotFound } status={404} />
-</Route>
+        <Route path="/add-task/type/:type?" component={ NewTask } />
+        <Route path="/add-task/settings" component={ TaskDetail } />
+        <Route component={ NotFound } status={404} />
+    </Switch>
+</div>
 );
 
 function isGolemReady(status) {
@@ -56,7 +58,11 @@ const mapStateToProps = state => ({
     withdrawModal: state.account.withdrawModal,
     passwordModal: state.realTime.passwordModal,
     showOnboard: state.onboard.showOnboard,
-    taskQueue: state.queue.next
+    taskQueue: state.queue.next,
+    //To fill initial resource
+    resource: state.resources.resource,
+    systemInfo: state.advanced.systemInfo,
+    chartValues: state.advanced.chartValues
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -87,6 +93,27 @@ export class App extends Component {
                 nextProps.actions.removeQueuedTask()
             }
         }
+
+        if(Object.keys(nextProps.systemInfo).length > 0 && 
+            typeof nextProps.resource !== 'number' && 
+            nextProps.chartValues.name !== null){
+                const value = this.calculateResourceValue(nextProps.chartValues, nextProps.systemInfo)
+                this.props.actions.setResources(value)
+        }
+    }
+
+    /**
+     * [calculateResourceValue func.]
+     * @param  {Int}        options.cpu_cores       [Selected cpu core amount]
+     * @param  {Int}        options.memory          [Selected memory amount]
+     * @param  {Int}        options.disk            [Selected disk space amount]
+     * @return {Int}                                [Mean of their percentage]
+     */
+    calculateResourceValue({cpu_cores, memory, disk}, systemInfo) {
+        let cpuRatio = cpu_cores / systemInfo.cpu_cores
+        let ramRatio = memory / systemInfo.memory
+        let diskRatio = disk / systemInfo.disk
+        return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100)
     }
 
     _closeModal(_modalType) {
@@ -112,9 +139,9 @@ export class App extends Component {
         return (
             <div>
                 <Header actions={ actions } activeHeader={'main'}/>
-                <Router history={ history } >
+                <ConnectedRouter history={history}>
                     { routes }
-                </Router>
+                </ConnectedRouter>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
                  { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
@@ -123,4 +150,4 @@ export class App extends Component {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default hot(module)(connect(mapStateToProps, mapDispatchToProps)(App))

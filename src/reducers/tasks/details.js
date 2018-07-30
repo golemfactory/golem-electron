@@ -5,7 +5,10 @@ const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STA
 const initialState = {
     detail: {},
     presets: {},
-    estimated_cost: 0,
+    estimated_cost: {
+        GNT: 0,
+        ETH: 0
+    },
     test_status: {}
 }
 const setTaskDetails = (state = initialState, action) => {

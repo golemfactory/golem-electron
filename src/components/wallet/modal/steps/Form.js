@@ -4,7 +4,8 @@ import yup from 'yup'
 
 import {modals, currencyIcons} from './../../../../constants'
 
-const {clipboard } = window.electron
+const {clipboard, remote } = window.electron;
+const mainProcess = remote.require('./index');
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 export default class WithdrawForm extends React.Component {
@@ -16,7 +17,8 @@ export default class WithdrawForm extends React.Component {
             amountCopied: false,
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
             sendTo: "",
-            isValid: false
+            isValid: false,
+            isSubmitted: false
         }
     }
 
@@ -95,11 +97,21 @@ export default class WithdrawForm extends React.Component {
     _handleApply(e) {
         e.preventDefault();
         const { amount, sendTo } = this.state
-        this._getGasCostAsync(amount.toNumber(), sendTo, this.props.suffix)
-        .then(result => {
-            if(result)
-                this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
+
+        this.setState({
+            isSubmitted: true
         })
+
+        mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
+        .then(sendToChecksum => {
+            this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
+            .then(result => {
+                if(result)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
+            })
+            .catch(error => console.error);
+        })
+        .catch(error => console.error);
     }
 
     _getGasCostAsync(amount, sendTo, type){
@@ -175,7 +187,7 @@ export default class WithdrawForm extends React.Component {
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid} = this.state
+        const {amountCopied, amount, isValid, isSubmitted} = this.state
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
                     <div>
@@ -185,7 +197,7 @@ export default class WithdrawForm extends React.Component {
                         	<br/>
                         	<strong>{balance.toFixed(4)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                        	<span className="label-estimation">est. $ {balance.multipliedBy(currency[suffix]).toFixed(2)}...</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -202,7 +214,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
@@ -218,7 +230,7 @@ export default class WithdrawForm extends React.Component {
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
-                        <button type="submit" className="btn--primary" autoFocus disabled={!isValid}>Apply</button>
+                        <button type="submit" className="btn--primary" autoFocus disabled={!isValid || isSubmitted}>Apply</button>
                     </div>
                 </form>
         );
