@@ -30,7 +30,6 @@ import currency from './currency'
 import realTime from './realTime'
 import info from './info'
 import queue from './queue'
-import { routerReducer } from 'react-router-redux'
 
 const reducer = combineReducers({
     //FRAME
@@ -63,8 +62,7 @@ const reducer = combineReducers({
     currency,
     realTime,
     info,
-    queue,
-    routing: routerReducer
+    queue
 })
 
 export default reducer

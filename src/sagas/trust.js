@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put, takeEvery } from 'redux-saga/effects'
+import { take, call, put, takeEvery, all } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -44,8 +44,7 @@ export function callTrust(session, payload) {
 
 export function* fireBase(session, {type, payload}) {
     const actionList = yield call(callTrust, session, payload);
-    //console.log("actionList", actionList);
-    yield actionList && actionList.map(item => put(item))
+    yield actionList && all(actionList.map( item => put(item)))
 }
 
 /**

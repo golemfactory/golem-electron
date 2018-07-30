@@ -1,4 +1,3 @@
-import raf from './polyfills'
 import Enzyme, { shallow, render, mount } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import toJson from 'enzyme-to-json';
@@ -25,7 +24,8 @@ global.window.require = function () {
       }
     },
     webFrame: {
-        setZoomLevelLimits: function () {}
+        setZoomLevelLimits: function () {},
+        setVisualZoomLevelLimits: function () {}
     },
     remote: {
         require: function () {
@@ -43,6 +43,9 @@ global.window.require = function () {
                 dictConfig: function () {},
                 configStore: {
                     onDidChange: function () {}
+                },
+                env:{
+                    NODE_ENV: function () {}
                 }
             }
         },
@@ -99,7 +102,9 @@ global.window.electron = {
             writeText: function () {}
         },
         webFrame: {
-            setZoomLevelLimits: function () {}
+            setZoomLevelLimits: function () {},
+            setVisualZoomLevelLimits: function () {}
+
         }
 }
 // Skip createElement warnings but fail tests on any other warning

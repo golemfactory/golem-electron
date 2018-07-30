@@ -23,7 +23,7 @@ export default class Welcome extends React.Component {
                     <br/>
                     <span className="desc__port"><mark><strong>Attention:</strong> Please make sure that your computer has a public IP
                     <br/>or forwarded ports <strong>40102, 40103, 3282</strong>. Otherwise
-                    <br/>you may not be able to run Golem properly! <a href="https://github.com/golemfactory/golem/wiki/FAQ#installing-golem">Learn more</a>
+                    <br/>you may not be able to run Golem properly! <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">Learn more</a>
                     <br/>
                     <br/><b>Virtualization VT-X/AMD-v needs to be enabled</b> in BIOS
                     <br/>as it is mandatory for Golem. <a href="">Learn more</a>

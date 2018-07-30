@@ -71,11 +71,25 @@
 
 /*MEDIA*/
 
-@media screen and (max-height: 720px)
+@media screen and (max-height: 760px)
 {   
-    .container__terms{
-        height: 190px;
-        margin-bottom: 15px;
+    .win{
+        .container__terms{
+            height: 150px;
+            margin-bottom: 20px;
+        }
     }
 
+    .mac, .linux{
+        .container__terms{
+            height: 180px;
+        }
+    }
+    
+
+    .desc_onboarding{
+        .radio-item{
+            margin: 0;
+        }
+    }
 }

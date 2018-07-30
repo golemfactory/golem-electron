@@ -36,8 +36,13 @@ const setAdvanced = (state = initialState, action) => {
         });
 
     case SET_CHOSEN_HARDWARE_PRESET:
+        const values = state.presetList.find(item => item.name === action.payload);
         return Object.assign({}, state, {
-            chosenPreset: action.payload
+            chosenPreset: action.payload,
+            chartValues: {
+                ...state.chartValues,
+                ...values
+            }
         });
 
     case SET_ADVANCED_MANUALLY:

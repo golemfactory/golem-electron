@@ -36,7 +36,8 @@ const mapStateToProps = state => ({
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
-    isEngineLoading: state.info.isEngineLoading
+    isEngineLoading: state.info.isEngineLoading,
+    version: state.info.version
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -62,6 +63,7 @@ export class MainFragment extends React.Component {
         }
     //props.actions.setOnboard(true)
     }
+
     /**
      * [_handlePresetModal func. will trigger presetModal state to make preset modal visible]
      * @param  {Object}      data       [Custom hardware preset object]
@@ -153,7 +155,7 @@ export class MainFragment extends React.Component {
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, isEngineLoading, balance, currency} = this.props
+        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, isEngineLoading, balance, currency, version} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
 
         return (

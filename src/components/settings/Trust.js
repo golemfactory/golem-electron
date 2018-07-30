@@ -65,7 +65,7 @@ export class Trust extends React.Component {
                 <span className="title__slider">As a provider</span>
                 <Slider inputId="provider_slider" value={providerTrust} iconLeft="icon-negative" iconRight="icon-positive"  aria-label="Trust slider" callback={::this._handleProviderTrustSlider} warn={false} disabled={isEngineOn || !isNodeProvider}/>
                 <div className="switch__trust">
-                    <div className={`switch-box ${isNodeProvider ? "switch-box--green" : ""}`}>
+                    <div className={`switch-box ${!isNodeProvider ? "switch-box--green" : ""}`}>
                         <label className="switch">
                             <input type="checkbox" onChange={::this._handleProviderSwitch} defaultChecked={isNodeProvider}  aria-label="Trust switch providing/requesting" tabIndex="0" disabled={isEngineOn}/>
                             <div className="switch-slider round"></div>
@@ -73,7 +73,7 @@ export class Trust extends React.Component {
                     </div>
                     <span style={{
                 color: isNodeProvider ? '#4e4e4e' : '#9b9b9b'
-            }}>Turn this switch off if you do not want to be Provider anymore.</span>
+            }}>I want to act only as a Requestor. Don't send any tasks to my node.</span>
                 </div>
                 <div className="tips__trust">
                     <span>Remeber! To activate the settings please stop Golem first.</span>

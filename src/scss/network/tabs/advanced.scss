@@ -28,6 +28,7 @@
 }
 
 .section__radial-options {
+    height: 200px;
     @include flex;
     justify-content: space-around; // <-- space-between is unexpectedly buggy in here
     transition: margin .5s;
@@ -35,6 +36,14 @@
     @media screen and (min-width: 610px) {
         margin: 0 90px;
     }
+}
+
+.loading__advanced{
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
 }
 
 .advanced__tips {

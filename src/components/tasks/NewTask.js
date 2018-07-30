@@ -1,14 +1,16 @@
 import React from 'react'
-import { Link, hashHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 import FileCheckModal from './modal/FileCheckModal'
+import InfoLabel from './../InfoLabel'
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal,
     taskName: state.create.task.taskName,
+    relativePath: state.create.task.relativePath,
     isMainNet: state.info.isMainNet
 })
 
@@ -27,19 +29,19 @@ export class NewTask extends React.Component {
         super(props);
         this.state = {
             name: props.taskName || "Golem Task",
-            type: radioTypes[this.props.params.type] || null
+            type: radioTypes[this.props.match.params.type] || null
         }
         props.actions.clearTaskPlain() //clear previous test status
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextProps.params.type !== this.props.params.type)
+        if (nextProps.match.params.type !== this.props.match.params.type)
             this.setState({
-                type: radioTypes[nextProps.params.type] || null
+                type: radioTypes[nextProps.match.params.type] || null
             })
 
         if(nextProps.taskName !== this.props.taskName){
-            let taskName = nextProps.taskName && nextProps.taskName.split("."+ nextProps.params.type)[0];
+            let taskName = nextProps.taskName && nextProps.taskName.split("."+ nextProps.match.params.type)[0];
             taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, "");
              this.setState({
                 name: (taskName && taskName.substring(0,24)) || "Golem Task"
@@ -111,22 +113,27 @@ export class NewTask extends React.Component {
             name,
             type
         })
-        hashHistory.push('/task/settings')
+        window.routerHistory.push('/task/settings')
     }
 
     render() {
-        const {fileCheckModal, isMainNet} = this.props
+        const {fileCheckModal, isMainNet, relativePath} = this.props
         const {name, type} = this.state
         return (
             <div>
                 <form className="content__new-task" onSubmit={::this._handleNextButton}>
                     <div className="container-name__new-task">
-                        <label>Task Name</label>
+                        <div className="label">
+                            <InfoLabel type="h4" label="Name your task" info={<p className="tooltip_task">You can change your default file name</p>} distance={-20}/>
+                        </div>
                         <span ref="taskNameHint" className="hint__task-name">{name.length < 4 ? "Task name should consists of at least 4 characters." : "Task name can contain; letter, number, space between characters, dot, dash and underscore."}</span>
                         <input type="text" value={name} pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$" minLength={4} maxLength={24} autoFocus onChange={::this._handleNameInput} required/>
                     </div>
+                    <span className="source-path">{relativePath}</span>
                     <div className="container-type__new-task">
-                        <label>Task Type</label>
+                        <div className="label">
+                            <InfoLabel type="h4" label="Task Type" info={<p className="tooltip_task"><a href="">Learn more</a> how to prepare files for Golem</p>} distance={-20} interactive={true}/>
+                        </div>
                         <div ref="radioCloud" className="container-radio__new-task" onChange={::this._handleTypeRadio}>
                             <div className="radio-item">
                                 <span className="icon-blender">
@@ -147,6 +154,9 @@ export class NewTask extends React.Component {
                                     <label htmlFor="taskTypeRadio2" className="radio-label-right">LuxRender</label>
                                 </div>
                             }
+                        </div>
+                        <div className="hint__blender">
+                        Supported render engines are: Blender Render and Cycles Render. Those are sellected automaticaly by Golem from your Blender file settings, so if you want to render with different engine please change settings inside your .blend file before uploading to Golem.
                         </div>
                     </div>
                     <div className="container-action__new-task">

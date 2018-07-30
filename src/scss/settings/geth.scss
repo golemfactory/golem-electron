@@ -34,12 +34,18 @@
 	.section__tips{
 		@include flex;
 		justify-content: space-around;
+		flex-direction: column;
+		align-items: center;
 	    width: 100%;
 
 		.tips__geth{
 			margin: 20px 0 0 0;
 		    font-size: 9pt;
 		    color: $color-text2;
+		}
+
+		.error_geth{
+			color: $color-error;
 		}
 	}
 

@@ -108,13 +108,11 @@ export class Settings extends React.Component {
         for (var i = 0; i < accordionItems.length; i++) {
             if (i !== parseInt(index)) {
                 accordionItems[i].classList.remove('active')
-                accordionItems[i].children[0].children[1].classList.remove('icon-arrow-up')
-                accordionItems[i].children[0].children[1].classList.add('icon-arrow-down')
+                accordionItems[i].children[0].children[1].classList.remove('arrow-expand')
             }
         }
         targetRoot.classList.toggle('active')
-        target.children[1].classList.toggle('icon-arrow-down')
-        target.children[1].classList.toggle('icon-arrow-up')
+        target.children[1].classList.toggle('arrow-expand')
         this.setState({
             activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
         },() => {
