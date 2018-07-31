@@ -19,7 +19,7 @@ clone_depth: 1
 build_script:
   - npm run compile && npm run dist
 after_build:
-  - 7z a C:\projects\golem-electron\dist\win-unpacked.zip C:\projects\golem-electron\dist\dist\win-unpacked\
+  - 7z a C:\projects\golem-electron\dist\win-unpacked.zip C:\projects\golem-electron\dist\win-unpacked\
 deploy:
   release: '{build}'
   description: 'Golem-electron beta {build}'
@@ -32,5 +32,5 @@ deploy:
   on:
     appveyor_repo_tag: true        # deploy on tag push only
 artifacts:
-  - path: C:\projects\golem-electron\dist\dist\win-unpacked.zip
+  - path: C:\projects\golem-electron\dist\win-unpacked.zip
     name: Golem Electron Windows {build}
