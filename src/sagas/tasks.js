@@ -241,8 +241,8 @@ export function subscribeTestStatus(session) {
             
             function on_tasks(args) {
                 let result = args[0];
+                console.log("result", result);
                 if(result){
-                    result = JSON.parse(result)
                     emit({
                         type: SET_TASK_TEST_STATUS,
                         payload: result

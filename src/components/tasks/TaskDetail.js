@@ -739,13 +739,13 @@ export class TaskDetail extends React.Component {
             loadingTaskIndicator: true
         })
         this._createTaskAsync().then(result => {
-            if(result && result[0]){
+            if(result && !result[1]){
                 window.routerHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
                     insufficientAmountModal: {
-                        result: !result[0],
+                        result: !!result[1],
                         message: result[1]
                     },
                     loadingTaskIndicator: false
@@ -756,8 +756,9 @@ export class TaskDetail extends React.Component {
 
     _handleLocalRender() {
         const {actions, task} = this.props;
-        const {resources, type} = task
+        const {resources, type, name} = task
         actions.runTestTask({
+            name,
             resources,
             type,
             subtasks: 1 // <--- HARDCODED

@@ -119,9 +119,9 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
-        onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
+        onError: function(err, details, arr) {
+            console.warn(`failed to un/subscribe ${_channel} topic`, err, details, Array.isArray(arr) ? arr.join() : arr)
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err, details, Array.isArray(arr) ? arr.join(): arr)
         }
     }
     _session.subscribe(_channel, cb)
@@ -140,7 +140,7 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
-        onError: function(err) {
+        onError: function(err, details, arr) {
             console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
             log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join(): arr)
         }
@@ -160,8 +160,8 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
-            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
             _eb && _eb(err, details, arr)
         }
     })
