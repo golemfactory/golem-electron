@@ -433,7 +433,7 @@ class OnboardIndex extends React.Component {
                             {_connectionProblem.issue === "PORT" ? 
                                 <span>It looks like you don't have ports forwarded. Follow <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">these steps.</a></span>
                                 :
-                                <span>Interface coomunication problem with Golem. Please restart.</span>
+                                <span>Interface communication problem with Golem. Please restart.</span>
                             }
                         </div>
                         <span className="icon-close" onClick={::this._closeInfo}/>
