@@ -427,15 +427,16 @@ exports.selectDirectory = function(directory, _isMainNet) {
 
 exports.copyFiles = function(files, missingFiles, _taskPath) {
     const promises = missingFiles.map( missingFile => {
-        const result = files.find( file => file.name === missingFile.baseName )
-        if(result) {
+        const matchedFile = files.find( file => file.name === missingFile.baseName )
+        if(matchedFile) {
             const destination = path.join(
                     _taskPath, 
                     missingFile.dirName.replace("/golem/resources/", ""))
 
-            return _copyAsync(result, destination)
+            return _copyAsync(matchedFile, destination)
         }
     })
+    .filter(item => item !== undefined);
 
     function _copyAsync(file, destDir){
         return new Promise((resolve, reject) => {
@@ -450,9 +451,7 @@ exports.copyFiles = function(files, missingFiles, _taskPath) {
 
                 let readStream = fs.createReadStream(src);
                 readStream.once('error', (err) => console.error);
-                readStream.once('end', () => {
-                    resolve(true)
-                });
+                readStream.once('end', () => resolve(dest));
                 readStream.pipe(fs.createWriteStream(dest));
             }
         })

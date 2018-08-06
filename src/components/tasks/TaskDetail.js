@@ -227,7 +227,6 @@ export class TaskDetail extends React.Component {
         this.interactedInputObject = {}
 
         if(this.props.testStatus && this.props.testStatus.status === testStatusDict.STARTED){
-            console.log(this.props.testStatus.status, testStatusDict.STARTED)
             this.props.actions.abortTestTask()
         }
     }
@@ -293,6 +292,9 @@ export class TaskDetail extends React.Component {
             })
         }
 
+        if(nextProps.task.resources !== this.props.task.resources){
+            setTimeout(() => ::this._handleLocalRender(), 2000);
+        }
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -894,7 +896,9 @@ export class TaskDetail extends React.Component {
                         } else {
                             mainProcess
                                 .copyFiles(mergedList, _missingFiles, this.props.task.relativePath)
-                                    .then(result => { ::this._handleLocalRender() })
+                                    .then(result => { 
+                                        this.props.actions.addMissingFiles(result);
+                                    })
                                     .catch(error => console.error)
                         }
                     })
@@ -952,8 +956,10 @@ export class TaskDetail extends React.Component {
                             test passed! Your good to go.
                             </div>;
             case "error":
-                warningInfo = testStatus.error[0]
-                break;
+                return <div 
+                            className={`local-render__info info-${status}`}>
+                        {testStatus.error[0]}
+                        </div>;
             case "success":
                 return <span 
                             className={`local-render__info info-${status}`}>
@@ -1145,7 +1151,7 @@ export class TaskDetail extends React.Component {
         return (
             <div>       
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    { !ignoreTestWarning &&
+                    { true &&
                         <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
                             { isDetailPage && <div className="panel-preview__task-detail">
                                 <Link to="/tasks" aria-label="Back button to task list">
@@ -1153,7 +1159,14 @@ export class TaskDetail extends React.Component {
                                     <span>Back</span>
                                 </Link>
                             </div>}
-                            {!isDetailPage && testStatus.status !== null  ? this._getPanelInfo(testStatus) : <span className="local-render__info">testing local render...</span>}
+                            {
+                                !isDetailPage 
+                                && testStatus.status !== null  
+                                ? this._getPanelInfo(testStatus) 
+                                : (!isDetailPage 
+                                    ? <span className="local-render__info">testing local render...</span>
+                                    : <span className="local-render__info"></span>)
+                            }
                         </section>
                     }
                     <section className="container__task-detail">
@@ -1188,11 +1201,31 @@ export class TaskDetail extends React.Component {
                         <div className="section-task__task-detail">
                             <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Task Timeout" info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to<br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                                <InfoLabel 
+                                    type="span" 
+                                    label="Task Timeout" 
+                                    info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to
+                                        <br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                        Learn more
+                                        </a></p>} 
+                                    cls="title" 
+                                    infoHidden={true} 
+                                    interactive={true}/>
                                 <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Subtask Amount" info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering<br/>a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                                <InfoLabel 
+                                    type="span" 
+                                    label="Subtask Amount" 
+                                    info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering
+                                            <br/>a number of frames you should set subtasks to the same number. 
+                                            <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                            Learn more
+                                            </a>
+                                            </p>} 
+                                        cls="title" 
+                                        infoHidden={true} 
+                                        interactive={true}/>
                                 <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                             </div>
                             <div className="item-settings">
@@ -1203,7 +1236,13 @@ export class TaskDetail extends React.Component {
                         <div className="section-price__task-detail">
                             <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                             <div className="item-price">
-                                <InfoLabel type="span" label="Your bid" info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,<br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} cls="title" infoHidden={true}/>
+                                <InfoLabel 
+                                    type="span" 
+                                    label="Your bid" 
+                                    info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
+                                        <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                    cls="title" 
+                                    infoHidden={true}/>
                                 <div className="input__price-set">
                                     <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
                                     <span>{isMainNet ? "" : "t"} GNT/h</span>
@@ -1214,7 +1253,19 @@ export class TaskDetail extends React.Component {
                             </div>
                             <div className="estimated-price__panel">
                                 <div className="item-price">
-                                    <InfoLabel type="span" label="Total" info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,<br/>subtask amount and timeout settings. Fiat value may change during computation<br/>as well as gas price <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                                    <InfoLabel 
+                                        type="span" 
+                                        label="Total" 
+                                        info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,
+                                            <br/>subtask amount and timeout settings. Fiat value may change during computation
+                                            <br/>as well as gas price 
+                                            <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
+                                            Learn more
+                                            </a>
+                                            </p>} 
+                                        cls="title" 
+                                        infoHidden={true} 
+                                        interactive={true}/>
                                     <div className="estimated_cost">
                                         {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
                                         <span>{isMainNet ? "" : "t"} GNT</span>
@@ -1224,7 +1275,14 @@ export class TaskDetail extends React.Component {
                                     </div>
                                 </div>
                                 <div className="item-price">
-                                    <InfoLabel type="span" label="Tx Fee Lock" info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. <br/>It may vary from what you will actually pay for this transaction <br/>as usually the final cost is much lower.</p>} cls="title" infoHidden={true}/>
+                                    <InfoLabel 
+                                        type="span" 
+                                        label="Tx Fee Lock" 
+                                        info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. 
+                                            <br/>It may vary from what you will actually pay for this transaction 
+                                            <br/>as usually the final cost is much lower.</p>} 
+                                            cls="title" 
+                                            infoHidden={true}/>
                                     <div className="estimated_cost">
                                         {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
                                         <span>{isMainNet ? "" : "t"} ETH</span>
