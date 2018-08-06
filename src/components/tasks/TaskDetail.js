@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
 const {clipboard, remote} = window.electron;
+const mainProcess = remote.require('./index')
 
 import {Tooltip} from 'react-tippy';
 import yup from 'yup'
@@ -23,6 +24,7 @@ const {dialog} = remote
 import * as Actions from './../../actions'
 import {once} from './../../utils/once'
 import zipObject from './../../utils/zipObject'
+import checkNested from './../../utils/checkNested'
 
 const ETH_DENOM = 10 ** 18;
 const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
@@ -171,6 +173,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             isDataCopied: false,
+            ignoreTestWarning: false,
             presetModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
@@ -849,6 +852,8 @@ export class TaskDetail extends React.Component {
         if(!isObjectEmpty(more)){
             if(more.after_test_data.hasOwnProperty("warnings")){
                 status = "warning"
+            } else {
+                status = "success"
             }
         }
 
@@ -859,6 +864,50 @@ export class TaskDetail extends React.Component {
         }
 
         return status
+    }
+
+    _ignoreTestWarning(){
+        this.setState({
+            ignoreTestWarning: true
+        })
+    }
+
+    /**
+     * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all triggers test again]
+     */
+    _onFileDialog(_missingFiles) {
+
+        const onFileHandler = (data) => {
+            //console.log(data)
+            if (data) {
+
+                mainProcess.selectDirectory(data, this.props.isMainNet)
+                    .then(item => {
+                        let mergedList = [].concat.apply([], item)
+                        let unknownFiles = mergedList.filter(({malicious}) => (malicious))
+
+                        if (unknownFiles.length > 0) {
+                            this.props.actions.setFileCheck({
+                                status: true,
+                                files: unknownFiles
+                            })
+                        } else {
+                            mainProcess
+                                .copyFiles(mergedList, _missingFiles, this.props.task.relativePath)
+                                    .then(result => { ::this._handleLocalRender() })
+                                    .catch(error => console.error)
+                        }
+                    })
+            }
+        }
+        /**
+         * We're not able to let people to choose directory and file at the same time.
+         * @see https://electron.atom.io/docs/api/dialog/#dialogshowopendialogbrowserwindow-options-callback
+         */
+        dialog.showOpenDialog({
+            properties: ['openFile', 'multiSelections']
+        }, onFileHandler)
+
     }
 
     _getPanelClass(testStatus){
@@ -872,14 +921,52 @@ export class TaskDetail extends React.Component {
 
         switch(status){
             case "warning":
-                warningInfo = more['after_test_data']['warnings']
-                break;
+                if(checkNested(more, 'after_test_data', 'warnings', 'missing_files')){
+                    function fillFiles(files){
+                        return files
+                            .map( (file, index) => <li key={index.toString()}>{`${file.baseName} should be in ${file.dirName.replace('/golem/resources', '{project_folder}')}/`}</li>)
+                    }
+                    return <div 
+                                className={`local-render__info info-${status}`}>
+                                <h4>test passed, but...</h4>
+                                <span>It looks like some data is missing;</span>
+                                <ul>{fillFiles(more
+                                                .after_test_data
+                                                .warnings
+                                                .missing_files)}</ul>
+                                <span>You can try to add missing files, like textures with the button below. You can also try to add missing scripts to your .blend file and resubmit the task. Or you can simply ignore this warning if the scripts or textures are not needed.</span>
+                                <div className="local-render__action">
+                                    <span onClick={::this._ignoreTestWarning}>Ignore</span>
+                                    <button 
+                                        className="btn--primary" 
+                                        onClick={this._onFileDialog
+                                            .bind(this, more
+                                                        .after_test_data
+                                                        .warnings
+                                                        .missing_files)}>Add files</button>
+                                </div>
+                            </div>;
+                } else
+                    return <div 
+                                className={`local-render__info info-${status}`}>
+                            test passed! Your good to go.
+                            </div>;
             case "error":
                 warningInfo = testStatus.error[0]
                 break;
+            case "success":
+                return <span 
+                            className={`local-render__info info-${status}`}>
+                        test passed! Your good to go.
+                        </span>;
+            default:
+                return <span 
+                            className="local-render__info">
+                        checking...
+                        </span>;
         }
         
-        return <span className="warning__render-test">{warningInfo}</span>
+        
     }
 
     _fillNodeInfo(data){
@@ -1037,6 +1124,7 @@ export class TaskDetail extends React.Component {
             loadingTaskIndicator,
             managePresetModal, 
             maxSubtasks,
+            ignoreTestWarning,
             modalData, 
             presetModal, 
             resolutionChangeInfo,
@@ -1057,21 +1145,17 @@ export class TaskDetail extends React.Component {
         return (
             <div>       
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
-                        { isDetailPage && <div className="panel-preview__task-detail">
-                            <Link to="/tasks" aria-label="Back button to task list">
-                                <span className="icon-arrow-left-white"/>
-                                <span>Back</span>
-                            </Link>
-                        </div>}
-                        {!isDetailPage && this._getPanelInfo(testStatus)}
-                        {!isDetailPage && <button type="button" className={`btn--outline ${testStyle.class}`}>{testStyle.text} {testStatus.status === testStatusDict.STARTED && <span className="jumping-dots">
-                            <span className="dot-1">.</span>
-                            <span className="dot-2">.</span>
-                            <span className="dot-3">.</span>
-                        </span>}</button>}
-                    </section>
-
+                    { !ignoreTestWarning &&
+                        <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
+                            { isDetailPage && <div className="panel-preview__task-detail">
+                                <Link to="/tasks" aria-label="Back button to task list">
+                                    <span className="icon-arrow-left-white"/>
+                                    <span>Back</span>
+                                </Link>
+                            </div>}
+                            {!isDetailPage && testStatus.status !== null  ? this._getPanelInfo(testStatus) : <span className="local-render__info">testing local render...</span>}
+                        </section>
+                    }
                     <section className="container__task-detail">
                         { (isDetailPage && isDeveloperMode) &&
                         <div className="section-node-list__task-detail">
