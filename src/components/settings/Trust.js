@@ -76,7 +76,7 @@ export class Trust extends React.Component {
             }}>I want to act only as a Requestor. Don't send any tasks to my node.</span>
                 </div>
                 <div className="tips__trust">
-                    <span>Remeber! To activate the settings please stop Golem first.</span>
+                    <span>Remember! To activate the settings please stop Golem first.</span>
                 </div>
             </div>
         );
