@@ -85,8 +85,8 @@
             font-weight: 400;
         }
 
-        &-warning{
-            background: $color-accent2;
+        &-warning,
+        &-error {
             color: $color-text4;
             width: 100%;
             display: flex;
@@ -96,6 +96,12 @@
             font-weight: 400;
             text-align: left;
 
+            a{
+                text-decoration: underline;
+                text-decoration-color: $color-text4;
+                color: $color-text4;
+            }
+
             h4{
                 align-self: center;
                 margin: 10px 0;
@@ -103,10 +109,16 @@
             }
         }
 
+        &-warning {
+            background: $color-accent2;
+        }
+
         &-error{
             background: $color-error;
-            color: $color-text4;
-            width: 100%;
+
+            .error__hint{
+                margin: 10px 0;
+            }
         }
     }
 }

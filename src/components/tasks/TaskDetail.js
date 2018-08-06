@@ -926,10 +926,12 @@ export class TaskDetail extends React.Component {
         switch(status){
             case "warning":
                 if(checkNested(more, 'after_test_data', 'warnings', 'missing_files')){
+
                     function fillFiles(files){
                         return files
                             .map( (file, index) => <li key={index.toString()}>{`${file.baseName} should be in ${file.dirName.replace('/golem/resources', '{project_folder}')}/`}</li>)
                     }
+
                     return <div 
                                 className={`local-render__info info-${status}`}>
                                 <h4>test passed, but...</h4>
@@ -956,9 +958,19 @@ export class TaskDetail extends React.Component {
                             test passed! Your good to go.
                             </div>;
             case "error":
+
+                function fillError(errors){
+                    return errors
+                        .map( (error, index) => <li key={index.toString()}>{error}</li>)
+                }
+
                 return <div 
                             className={`local-render__info info-${status}`}>
-                        {testStatus.error[0]}
+                            <h4>Whoops!</h4>
+                            <ul>
+                                {fillError(testStatus.error)}
+                            </ul>
+                            <span className="error__hint">You can try to find solution for this error in <a href="https://golem.network/documentation/06-preparing-your-blend-file/">here</a>, or talk with our tech support on <a href="https://chat.golem.network">Rocket Chat</a>.</span>
                         </div>;
             case "success":
                 return <span 
