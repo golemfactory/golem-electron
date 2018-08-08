@@ -26,6 +26,8 @@ import {once} from './../../utils/once'
 import zipObject from './../../utils/zipObject'
 import checkNested from './../../utils/checkNested'
 
+import whoaImg from './../../assets/img/whoa.png'
+
 const ETH_DENOM = 10 ** 18;
 const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
 
@@ -157,6 +159,7 @@ export class TaskDetail extends React.Component {
             isDefaultResolutionApplied: false,
             modalData: null,
             isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
+            isInPatient: false,
             //INPUTS
             compositing: false,
             resolution: [NaN,NaN],
@@ -848,6 +851,12 @@ export class TaskDetail extends React.Component {
         }
     }
 
+    _toggleLoadingHint(){
+        this.setState({
+            isInPatient: true
+        })
+    }
+
     _checkTestStatus(_testStatus){
         const {more, error} = _testStatus
         let status;
@@ -983,8 +992,6 @@ export class TaskDetail extends React.Component {
                         checking...
                         </span>;
         }
-        
-        
     }
 
     _fillNodeInfo(data){
@@ -1139,6 +1146,7 @@ export class TaskDetail extends React.Component {
             defaultSettingsModal, 
             insufficientAmountModal, 
             isDetailPage, 
+            isInPatient,
             loadingTaskIndicator,
             managePresetModal, 
             maxSubtasks,
@@ -1161,9 +1169,9 @@ export class TaskDetail extends React.Component {
         
         let testStyle = this._handleTestStatus(testStatus)
         return (
-            <div>       
+            <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    { true &&
+                    { !ignoreTestWarning &&
                         <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
                             { isDetailPage && <div className="panel-preview__task-detail">
                                 <Link to="/tasks" aria-label="Back button to task list">
@@ -1181,135 +1189,149 @@ export class TaskDetail extends React.Component {
                             }
                         </section>
                     }
-                    <section className="container__task-detail">
-                        { (isDetailPage && isDeveloperMode) &&
-                        <div className="section-node-list__task-detail">
-                            <h4 className="experiment">Dev mode</h4>
-                        { subtasksList && subtasksList.length > 0 ?
-                            <table>
-                                <thead>
-                                    <tr>
-                                      <th>Subtask</th>
-                                      <th>State</th>
-                                      <th>Node</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {::this._fillNodeInfo(subtasksList)}
-                                </tbody>
-                            </table>
-                            :
-                            <div className="no-node__task">
-                                <span>There's no active node.</span>
+                    <section className="section-details__task-detail">
+                        <div className="container__task-detail">
+                            { (isDetailPage && isDeveloperMode) &&
+                            <div className="section-node-list__task-detail">
+                                <h4 className="experiment">Dev mode</h4>
+                            { subtasksList && subtasksList.length > 0 ?
+                                <table>
+                                    <thead>
+                                        <tr>
+                                          <th>Subtask</th>
+                                          <th>State</th>
+                                          <th>Node</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {::this._fillNodeInfo(subtasksList)}
+                                    </tbody>
+                                </table>
+                                :
+                                <div className="no-node__task">
+                                    <span>There's no active node.</span>
+                                </div>
+                            }
                             </div>
-                        }
-                        </div>
-                        }
-                        <div className="section-settings__task-detail">
-                                <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
-                                {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
-                                {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
-                        </div>
-                        <div className="section-task__task-detail">
-                            <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
-                            <div className="item-settings">
-                                <InfoLabel 
-                                    type="span" 
-                                    label="Task Timeout" 
-                                    info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to
-                                        <br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
-                                        Learn more
-                                        </a></p>} 
-                                    cls="title" 
-                                    infoHidden={true} 
-                                    interactive={true}/>
-                                <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            }
+                            <div className="section-settings__task-detail">
+                                    <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
+                                    {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
+                                    {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                             </div>
-                            <div className="item-settings">
-                                <InfoLabel 
-                                    type="span" 
-                                    label="Subtask Amount" 
-                                    info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering
-                                            <br/>a number of frames you should set subtasks to the same number. 
-                                            <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                            <div className="section-task__task-detail">
+                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
+                                <div className="item-settings">
+                                    <InfoLabel 
+                                        type="span" 
+                                        label="Task Timeout" 
+                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to
+                                            <br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
                                             Learn more
-                                            </a>
-                                            </p>} 
+                                            </a></p>} 
                                         cls="title" 
                                         infoHidden={true} 
                                         interactive={true}/>
-                                <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
-                            </div>
-                            <div className="item-settings">
-                                <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
-                                <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
-                        </div>
-                        <div className="section-price__task-detail">
-                            <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
-                            <div className="item-price">
-                                <InfoLabel 
-                                    type="span" 
-                                    label="Your bid" 
-                                    info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
-                                        <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
-                                    cls="title" 
-                                    infoHidden={true}/>
-                                <div className="input__price-set">
-                                    <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                    <span>{isMainNet ? "" : "t"} GNT/h</span>
+                                    <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                                 </div>
-                                <div className="estimated_usd">
-                                    <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
-                                </div>
-                            </div>
-                            <div className="estimated-price__panel">
-                                <div className="item-price">
+                                <div className="item-settings">
                                     <InfoLabel 
                                         type="span" 
-                                        label="Total" 
-                                        info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,
-                                            <br/>subtask amount and timeout settings. Fiat value may change during computation
-                                            <br/>as well as gas price 
-                                            <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
-                                            Learn more
-                                            </a>
-                                            </p>} 
-                                        cls="title" 
-                                        infoHidden={true} 
-                                        interactive={true}/>
-                                    <div className="estimated_cost">
-                                        {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
-                                        <span>{isMainNet ? "" : "t"} GNT</span>
-                                    </div>
-                                    <div className="estimated_usd">
-                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
-                                    </div>
-                                </div>
-                                <div className="item-price">
-                                    <InfoLabel 
-                                        type="span" 
-                                        label="Tx Fee Lock" 
-                                        info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. 
-                                            <br/>It may vary from what you will actually pay for this transaction 
-                                            <br/>as usually the final cost is much lower.</p>} 
+                                        label="Subtask Amount" 
+                                        info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering
+                                                <br/>a number of frames you should set subtasks to the same number. 
+                                                <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                                Learn more
+                                                </a>
+                                                </p>} 
                                             cls="title" 
-                                            infoHidden={true}/>
-                                    <div className="estimated_cost">
-                                        {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
-                                        <span>{isMainNet ? "" : "t"} ETH</span>
-                                    </div>
-                                    <div className="estimated_usd">
-                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
-                                    </div>
+                                            infoHidden={true} 
+                                            interactive={true}/>
+                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                                </div>
+                                <div className="item-settings">
+                                    <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
+                                    <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                                 </div>
                             </div>
-                            <span className="item-price tips__price">
-                                You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
-                            </span>  
+                            <div className="section-price__task-detail">
+                                <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
+                                <div className="item-price">
+                                    <InfoLabel 
+                                        type="span" 
+                                        label="Your bid" 
+                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
+                                            <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                        cls="title" 
+                                        infoHidden={true}/>
+                                    <div className="input__price-set">
+                                        <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
+                                        <span>{isMainNet ? "" : "t"} GNT/h</span>
+                                    </div>
+                                    <div className="estimated_usd">
+                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
+                                    </div>
+                                </div>
+                                <div className="estimated-price__panel">
+                                    <div className="item-price">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Total" 
+                                            info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,
+                                                <br/>subtask amount and timeout settings. Fiat value may change during computation
+                                                <br/>as well as gas price 
+                                                <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
+                                                Learn more
+                                                </a>
+                                                </p>} 
+                                            cls="title" 
+                                            infoHidden={true} 
+                                            interactive={true}/>
+                                        <div className="estimated_cost">
+                                            {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
+                                            <span>{isMainNet ? "" : "t"} GNT</span>
+                                        </div>
+                                        <div className="estimated_usd">
+                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="item-price">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Tx Fee Lock" 
+                                            info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. 
+                                                <br/>It may vary from what you will actually pay for this transaction 
+                                                <br/>as usually the final cost is much lower.</p>} 
+                                                cls="title" 
+                                                infoHidden={true}/>
+                                        <div className="estimated_cost">
+                                            {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
+                                            <span>{isMainNet ? "" : "t"} ETH</span>
+                                        </div>
+                                        <div className="estimated_usd">
+                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span className="item-price tips__price">
+                                    You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
+                                </span>  
+                            </div>
                         </div>
+                        { (testStatus 
+                            && !(testStatus.status === testStatusDict.SUCCESS 
+                                || testStatus.status === testStatusDict.ERROR)) 
+                        &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
+                                { isInPatient 
+                                    && <div className="loading--patient">
+                                    <img src={whoaImg} alt="Please be patient"/>
+                                    <span>
+                                    Hey don't be so impatient!<br/>
+                                    Local render test may require some time to finish. <br/>
+                                    </span>
+                                </div>}
+                            </div>}
                     </section>
-
                     {!isDetailPage && <section className="section-action__task-detail">
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>

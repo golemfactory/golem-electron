@@ -146,6 +146,11 @@
     }
 }
 
+.section-details__task-detail {
+    height: calc(100% - 150px);
+    position: relative;
+}
+
 .container__task-detail {
     height: 100%;
     position: relative;
@@ -376,5 +381,32 @@
         margin-right: 20px;
         font-size: 10pt;
         font-weight: 400;
+    }
+}
+
+.test_status__loading{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100%;
+    margin: auto;
+    
+    .loading--patient{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 14pt;
+        font-weight: 400;
+        text-align: center;
+        line-height: 1.5em;
+        margin-top: 6vh;
+
+        img{
+            margin-bottom: 40px;
+        }
     }
 }

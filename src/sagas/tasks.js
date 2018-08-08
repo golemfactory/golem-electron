@@ -248,7 +248,7 @@ export function subscribeTestStatus(session) {
                         type: SET_TASK_TEST_STATUS,
                         payload: result
                     })
-                    console.log(result)
+                    
                     if(result 
                         && result.status !== "Started" 
                         && !checkNested(result, 'more', 'after_test_data', 'warnings')){
