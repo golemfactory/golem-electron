@@ -162,6 +162,7 @@ export class TaskDetail extends React.Component {
             format: '',
             formatIndex: 0,
             output_path: props.location,
+            render_on: 'cpu',
             sample_per_pixel: 0,
             timeout: '',
             subtasks: 1,
@@ -645,6 +646,12 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _handleRenderOnOptionChange(e){
+        this.setState({
+            render_on: e.target.value
+        })
+    }
+
     /**
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
@@ -756,21 +763,24 @@ export class TaskDetail extends React.Component {
 
     _handleLocalRender() {
         const {actions, task} = this.props;
+        const {render_on} = this.state;
         const {resources, type} = task
         actions.runTestTask({
             resources,
+            render_on,
             type,
             subtasks: 1 // <--- HARDCODED
         })
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, render_on, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
+                render_on,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
@@ -1114,6 +1124,25 @@ export class TaskDetail extends React.Component {
                             <div className="item-settings">
                                 <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
                                 <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                            </div>
+                            <div className="item-settings">
+                                <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
+                                <div className="render-on__radio-group" onChange={::this._handleRenderOnOptionChange}>
+                                    <div>
+                                        <input type="radio" id="cpu" value="cpu" name="render_on" defaultChecked />
+                                        <label htmlFor="cpu">
+                                            <span className="overlay"/>
+                                            CPU
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="gpu" value="gpu" name="render_on"/>
+                                        <label htmlFor="gpu">
+                                            <span className="overlay"/>
+                                            GPU
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="section-price__task-detail">

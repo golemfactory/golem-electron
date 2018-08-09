@@ -137,6 +137,7 @@
     overflow-x: hidden;
     transform: translateZ(0);
 }
+
 .section-task__task-detail,
 .section-settings__task-detail {
     box-sizing: border-box;
@@ -149,11 +150,11 @@
     }
 
     .select,
-    input {
+    input[type=text] {
         width: 100%;
     }
 
-    input {
+    input[type=text] {
         padding: 0 10px;
         box-sizing: border-box;
     }
@@ -185,6 +186,50 @@
 
         span {
             margin-right: 10px;
+        }
+    }
+}
+
+.section-task__task-detail {
+    .render-on__radio-group{
+        width: 100%;
+        display: flex;
+        justify-content: flex-start;
+        margin-left: 8px;
+
+        input[type=radio] {
+            display: none;
+            padding: 0 20px;
+            box-sizing: border-box;
+        }
+
+        /* changed style when checked */
+        input[type=radio]:checked + label > .overlay {
+          background-color: $color-primary;
+        }
+
+        label{
+            font-size: 9pt;
+            margin-left:5px;
+            margin-right:50px;
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        /* default radio button style: unchecked */
+        .overlay {
+          display: inline-block;
+          position: relative;
+          top: .25em;
+          left: -1em; /* or whatever length you need here */
+          height: .5em;
+          width: .5em;
+          border-radius: 50%;
+          border: 1px solid $color-primary;
+          background-clip: border-box;
+          padding: 4px;
+          background-clip: content-box;
+          cursor: pointer;
         }
     }
 }
