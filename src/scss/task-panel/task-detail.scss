@@ -147,12 +147,11 @@
 }
 
 .section-details__task-detail {
-    height: calc(100% - 150px);
+    display: flex;
     position: relative;
 }
 
 .container__task-detail {
-    height: 100%;
     position: relative;
     overflow-y: overlay !important;
     overflow-x: hidden;
