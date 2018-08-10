@@ -3,6 +3,13 @@
     z-index: 1;
     width: 100%;
     box-sizing: border-box;
+
+    .tab--sticky{
+        position: sticky;
+        top: 0;
+        background: $color-text4;
+        z-index: 4;
+    }
 }
 
 .item__history {
@@ -55,6 +62,23 @@
         font-weight: 400;
         font-size: 11pt !important;
         transition: .1s margin-right;
+
+        .finance__indicator {
+            &.indicator{
+                &--down,
+                &--up{
+                    font-weight: 400;
+                    font-size: 14pt;
+                }
+
+                &--down{
+                    color: $color-error;
+                }
+                &--up{
+                    color: $color-accent1;
+                }
+            }
+        }
     }
     .icon-new-window {
         visibility: hidden;
