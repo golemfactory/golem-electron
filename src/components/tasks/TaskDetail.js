@@ -1126,7 +1126,7 @@ export class TaskDetail extends React.Component {
                                 <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                             </div>
                             <div className="item-settings">
-                                <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
                                 <div className="render-on__radio-group" onChange={::this._handleRenderOnOptionChange}>
                                     <div>
                                         <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
