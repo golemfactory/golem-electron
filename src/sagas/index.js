@@ -145,8 +145,7 @@ export function subscribe(session) {
         // SUBSCRIBE to a topic and receive events
 
         function on_connection(args) {
-            var connection = args[0];
-            console.log("connection", connection);
+            const connection = args[0];
 
             if (
                 connection.startsWith("Connected") ||
