@@ -140,7 +140,7 @@ export class TaskItem extends React.Component {
     }
 
     render() {
-    	const {item, index, _handleRowClick, _handleRestart, _handleDeleteModal, psId} = this.props
+    	const {item, index, _handleRowClick, _handleRestartModal, _handleDeleteModal, psId} = this.props
         const {toggledPreviewList} = this.state
         const {options} = item
         return (<Motion defaultStyle={{
@@ -217,12 +217,12 @@ export class TaskItem extends React.Component {
                           trigger="mouseenter"
                           disabled={item.status !== status.TIMEOUT}>
                             <span 
-                                className="icon-reload" 
+                                className="icon-progress-clockwise" 
                                 tabIndex="0" 
                                 aria-label="Restart Task" 
                                 onClick={(item.status == status.TIMEOUT 
                                          || item.status == status.FINISHED) 
-                                            ? _handleRestart 
+                                            ? _handleRestartModal 
                                             : undefined} 
                                 disabled={!(item.status === status.TIMEOUT
                                           || item.status === status.FINISHED)}></span>
