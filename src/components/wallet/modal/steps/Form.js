@@ -35,7 +35,7 @@ export default class WithdrawForm extends React.Component {
 
             sendTo: yup.object().shape({
                 sendTo: yup.string()
-                    .matches(/0x[a-fA-F0-9]{40}/)
+                    .matches(/^0x[a-fA-F0-9]{40}$/)
                     .required()
             })
         }
@@ -46,7 +46,7 @@ export default class WithdrawForm extends React.Component {
                 .max(this.props.balance.toNumber())
                 .required(),
             sendTo: yup.string()
-                .matches(/0x[a-fA-F0-9]{40}/)
+                .matches(/^0x[a-fA-F0-9]{40}$/)
                 .required()
         });
 
