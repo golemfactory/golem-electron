@@ -2,6 +2,7 @@ import React from 'react';
 import {BigNumber} from 'bignumber.js';
 import yup from 'yup'
 
+import Slider from './../../../Slider.js'
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard, remote } = window.electron;
@@ -24,6 +25,8 @@ export default class WithdrawForm extends React.Component {
 
     componentDidMount() {
         const { formData } = this.props
+
+        mainProcess.getEstimatedGasPrice().then(console.log);
 
         this.inputSchema = {
             amount: yup.object().shape({
@@ -183,6 +186,10 @@ export default class WithdrawForm extends React.Component {
         if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {
            e.preventDefault();
         }
+    }
+
+    _setGasPrice(val){
+        console.log(val)
     }
 
     render() {
