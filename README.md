@@ -5,8 +5,9 @@
 <p align="center"> 
 <img src="https://raw.githubusercontent.com/golemfactory/golem-electron/dev/src/assets/img/golem.svg?sanitize=true" width="300" height="200">
 </p>
-
+<p align="center"> 
 The desktop application using Electron, React and Redux.
+</p>
 
 ## Development
 ### :wrench: Installation
@@ -64,9 +65,9 @@ You'll find debug logs in;
 |Mac|`~/Library/Application\ Support/golem/default/{CURRENT_CHAIN}/logs/`|`gui.log`|`gui-error.log`|
 |Linux|`~/.local/share/golem/default/{CURRENT_CHAIN}/logs/gui.log/`|`gui.log`|`gui-error.log`|
 
-<br/><br/>
-Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.
 <br/>
+Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.
+<br/><br/>
 
 ### :control_knobs: Developer mode
 While using application, you can choose `Developer mode` from the `View` menu or press;
