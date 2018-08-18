@@ -1319,6 +1319,7 @@ export class TaskDetail extends React.Component {
                             </div>
                         </div>
                         { (testStatus 
+                            && !isDetailPage
                             && !(testStatus.status === testStatusDict.SUCCESS 
                                 || testStatus.status === testStatusDict.ERROR)) 
                         &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
