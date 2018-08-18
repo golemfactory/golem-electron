@@ -1,8 +1,8 @@
 # Golem Electron Application
-![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.12.0-brightgreen.svg)
+![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.14.0-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
 <br/>
-![Image of Golem](https://pbs.twimg.com/profile_images/983446440654630912/Byzk9eIL_400x400.jpg)
+![Image of Golem](https://raw.githubusercontent.com/golemfactory/golem-electron/dev/src/assets/img/golem.svg)
 
 The desktop application using Electron, React and Redux.
 
@@ -25,9 +25,14 @@ Start dev server
 npm run start:app
 ```
 
-Start electron application (development mode)
+Start electron application on testnet (development mode)
 ```
 npm run start
+```
+
+Start electron application on mainnet (development mode)
+```
+npm run start:mainnet
 ```
 ### :bug: Debug mode
 While using application, you can choose `Debug mode` from the `View` menu or press;
