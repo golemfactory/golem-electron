@@ -2,7 +2,9 @@
 ![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.14.0-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
 <br/>
-![Image of Golem](https://raw.githubusercontent.com/golemfactory/golem-electron/dev/src/assets/img/golem.svg?sanitize=true =300x200)
+<p align="center"> 
+<img src="https://raw.githubusercontent.com/golemfactory/golem-electron/dev/src/assets/img/golem.svg?sanitize=true" width="300" height="200">
+</p>
 
 The desktop application using Electron, React and Redux.
 
