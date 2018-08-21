@@ -193,6 +193,7 @@ export class History extends React.Component {
     render() {
         const {historyList, isEngineOn} = this.props
         const {activeTab} = this.state
+        const filteredList = this.loadHistory(historyList, activeTab)
         return (
             <div className="content__history">
                 <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
@@ -201,10 +202,10 @@ export class History extends React.Component {
                     <div className="tab__title" value="payment" onClick={::this._handleTab} role="tab" tabIndex="0">Outgoing</div>
                 </div>
                 <div>
-                    {historyList.length > 0 
-                        ? this.loadHistory(historyList, activeTab) 
+                    {(historyList.length > 0 && filteredList.props.styles.length > 0)
+                        ? filteredList
                         : <div className="empty-list__history">
-                            <span>You don’t have any earnings or payment yet.
+                            <span>You don’t have any {activeTab ? activeTab : "earnings or payment"} yet.
                             <br/>
                             {isEngineOn ? "" : "Start Golem below to generate some."}</span>
                         </div>}
