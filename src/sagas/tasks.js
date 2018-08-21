@@ -290,20 +290,21 @@ export function* testTaskFlow(session) {
     }
 }
 
-export function callRestartTask(session, payload, _resolve, _reject) {
+export function callRestartTask(session, payload, isTimedOutOnly, _resolve, _reject) {
 
     function on_restart_task(args) {
         var restart_task = args[0];
         _resolve(restart_task)
-    //console.log(config.RESTART_TASK_RPC, restart_task)
     }
-
-    _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [payload])
+    if(isTimedOutOnly)
+        _handleRPC(on_restart_task, session, config.RESTART_TIMEDOUT_SUBTASKS_RPC, [payload, []])
+    else
+        _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [payload])
 }
 
-export function* restartTaskBase(session, {type, payload, _resolve, _reject}) {
+export function* restartTaskBase(session, {type, payload, isTimedOutOnly, _resolve, _reject}) {
     if (payload) {
-        yield call(callRestartTask, session, payload, _resolve, _reject)
+        yield call(callRestartTask, session, payload, isTimedOutOnly, _resolve, _reject)
     }
 }
 
