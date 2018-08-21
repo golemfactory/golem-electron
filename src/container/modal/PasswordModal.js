@@ -126,7 +126,7 @@ export class PasswordModal extends React.Component {
                     <div>
                         <strong>Enter password</strong>
                         <br/>
-                        <hint>to unlock your Golem</hint>
+                        <span className="notice">to unlock your Golem</span>
                     </div>
                     <form onSubmit={::this._setPassword}>
                      {(passwordModal && passwordModal.register) ?

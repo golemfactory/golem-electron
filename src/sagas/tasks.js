@@ -1,6 +1,7 @@
 import { eventChannel, buffers } from 'redux-saga'
 import { takeLatest, take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
+import checkNested from './../utils/checkNested'
 
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
@@ -247,9 +248,11 @@ export function subscribeTestStatus(session) {
                         type: SET_TASK_TEST_STATUS,
                         payload: result
                     })
-
-                    if(result && result.status !== "Started"){
-                        clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                    
+                    if(result 
+                        && result.status !== "Started" 
+                        && !checkNested(result, 'more', 'after_test_data', 'warnings')){
+                            clearInterval(channelInterval); //Wait until eventual result and kill the interval
                     }
                 }
             }

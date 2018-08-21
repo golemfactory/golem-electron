@@ -28,6 +28,7 @@ export let dict = Object.freeze({
     UPDATE_PREVIEW_LOCK: 'UPDATE_PREVIEW_LOCK',
     DELETE_TASK: 'DELETE_TASK',
     CREATE_TASK: 'CREATE_TASK',
+    ADD_MISSING_TASK_FILES: 'ADD_MISSING_TASK_FILES',
     RESTART_TASK: 'RESTART_TASK',
     RESTART_FRAME: 'RESTART_FRAME',
     RESTART_SUBTASK: 'RESTART_SUBTASK',
@@ -140,6 +141,7 @@ const {
     UPDATE_PREVIEW_LOCK,
     DELETE_TASK, 
     CREATE_TASK, 
+    ADD_MISSING_TASK_FILES,
     RESTART_TASK, 
     RESTART_FRAME, 
     RESTART_SUBTASK, 
@@ -559,6 +561,11 @@ export const createTask = (payload, _resolve, _reject) => ({
     payload,
     _resolve,
     _reject
+})
+
+export const addMissingFiles = (payload) => ({
+    type: ADD_MISSING_TASK_FILES,
+    payload
 })
 
 export const restartTask = (payload, isTimedOutOnly, _resolve, _reject) => ({

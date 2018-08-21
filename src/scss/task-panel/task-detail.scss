@@ -40,70 +40,86 @@
 
 .section-preview__task-detail {
     position: relative;
-    padding: 20px;
-    display: flex;
-    justify-content: flex-end;
-    align-items: flex-end;
-    flex: 0 0 230px;
+    max-height: max-content;
     color: $color-text4;
     background: $color-bg2;
     box-sizing: border-box;
-    transition: .5s background;
+    text-align: center;
+    transition: .5s all;
 
-    //box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.75);
-    button {
-        position: relative;
-        width: 180px;
-        transition: .5s all;
-    }
-
-    .btn--loading {
-        width: 140px;
-    }
-
-    .btn--success {
-        width: 140px;
-        background: $color-accent1;
-        color: $color-text4;
-        border: 1px solid $color-accent1;
-
-        &:hover {
-            color: $color-text4;
-            border: 1px solid $color-accent1;
-        }
-    }
-
-    .btn--error {
-        width: 140px;
-        background: $color-error;
-        color: $color-text4;
-        border: 1px solid $color-error;
-
-        &:hover {
-            color: $color-text4;
-            border: 1px solid $color-error;
-        }
-    }
-
-    .warning__render-test {
-        width: 100%;
-        height: 100%;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        margin: auto;
-        padding: 24pt;
-        position: absolute;
-        font-size: 3.4vmin;
-        font-weight: 500;
+    .local-render__info{
+        display: inline-block;
+        color: $color-primary;
+        padding: 20px;
         box-sizing: border-box;
-        overflow-y: overlay;
+
+        .local-render__action{
+            margin: 20px 0 10px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            font-size: 10pt;
+            text-align: center;
+
+            button,
+            span{
+                width: 90px;
+                cursor: pointer;
+            }
+
+            button{
+                padding: 0 10px;
+            }
+
+            span{
+                color: $color-text;
+                font-weight: 400;
+            }
+        }
     }
 
-    &.warning,
-    &.error {
-        background: $color-accent2 !important;
+    .info{
+        &-success{
+            color: $color-accent1;
+            font-weight: 400;
+        }
+
+        &-warning,
+        &-error {
+            color: $color-text4;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-size: 9pt;
+            font-weight: 400;
+            text-align: left;
+
+            a{
+                text-decoration: underline;
+                text-decoration-color: $color-text4;
+                color: $color-text4;
+            }
+
+            h4{
+                align-self: center;
+                margin: 10px 0;
+                font-size: 12pt;
+            }
+        }
+
+        &-warning {
+            background: $color-accent2;
+        }
+
+        &-error{
+            background: $color-error;
+
+            .error__hint{
+                margin: 10px 0;
+            }
+        }
     }
 }
 
@@ -130,8 +146,12 @@
     }
 }
 
+.section-details__task-detail {
+    display: flex;
+    position: relative;
+}
+
 .container__task-detail {
-    height: 100%;
     position: relative;
     overflow-y: overlay !important;
     overflow-x: hidden;
@@ -360,5 +380,32 @@
         margin-right: 20px;
         font-size: 10pt;
         font-weight: 400;
+    }
+}
+
+.test_status__loading{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    min-height: 100%;
+    margin: auto;
+    
+    .loading--patient{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-size: 14pt;
+        font-weight: 400;
+        text-align: center;
+        line-height: 1.5em;
+        margin-top: 6vh;
+
+        img{
+            margin-bottom: 40px;
+        }
     }
 }
