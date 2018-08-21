@@ -38,6 +38,7 @@
             ~ .preview__img{
                 transform: scale(0.9);
                 -webkit-filter: blur(1.5px);
+                will-change: transform;
             }
         }
 
