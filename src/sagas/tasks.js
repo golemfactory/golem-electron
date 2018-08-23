@@ -5,8 +5,8 @@ import checkNested from './../utils/checkNested'
 
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
-
 const {
+        BLOCK_NODE,
         SET_TASKLIST, 
         DELETE_TASK, 
         CREATE_TASK, 
@@ -25,6 +25,22 @@ const {
         SET_SUBTASKS_LIST, 
         FETCH_SUBTASKS_LIST
     } = dict
+
+let channelTestInterval
+
+/**
+ * [blockNode func. blocks given node id]
+ * @param  {Object} payload [Node Id]
+ */
+export function blockNode(session, {payload, _resolve, _reject}) {
+    _handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject)
+}
+
+export function* blockNodeBase(session, payload) {
+    if (payload) {
+        yield call(blockNode, session, payload);
+    }
+}
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
@@ -79,7 +95,7 @@ export function abortTestTask(session) {
 
     function on_test_task(args) {
         var test_task = args[0];
-        console.info("test_task", test_task);
+        channelTestInterval && clearInterval(channelTestInterval)
     }
 
     _handleRPC(on_test_task, session, config.ABORT_TEST_TASK_RPC)
@@ -91,16 +107,23 @@ export function* abortTestTaskBase(session) {
 
 export function runTestTask(session, payload) {
 
-    function on_test_task(args) {
-        var test_task = args[0];
-    }
+    return new Promise((resolve, reject) => {
 
-    _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
+        function on_test_task(args) {
+            let test_task = args[0];
+            resolve(test_task)
+        }
+
+        _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
+    })
 }
 
 export function* testTaskBase(session, {payload}) {
     if (payload) {
-        yield call(runTestTask, session, payload)
+        const result = yield call(runTestTask, session, payload)
+        if(result){
+            let testCH = yield fork(testTaskFlow, session);
+        }
     }
 }
 
@@ -252,7 +275,7 @@ export function subscribeTestStatus(session) {
                     if(result 
                         && result.status !== "Started" 
                         && !checkNested(result, 'more', 'after_test_data', 'warnings')){
-                            clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                            clearInterval(channelTestInterval); //Wait until eventual result and kill the interval
                     }
                 }
             }
@@ -266,11 +289,11 @@ export function subscribeTestStatus(session) {
             return fetchOnStartup
         }
 
-        const channelInterval = setInterval(fetchOnStartup(), interval)
+        channelTestInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            clearInterval(channelInterval);
+            clearInterval(channelTestInterval);
         }
     })
 }
@@ -320,18 +343,9 @@ export function callCreateTask(session, payload, _resolve, _reject) {
 }
 
 export function* createTaskBase(session, {type, payload, _resolve, _reject}) {
-    let testCH = null
     if (payload.options) {
         //console.info('TASK_CREATING')
-        if (testCH) {
-            yield cancel(task)
-        }
         yield call(callCreateTask, session, payload, _resolve, _reject)
-    } else {
-        //console.info('TASK_NOT_CREATING')
-        if (payload.type) {
-            testCH = yield fork(testTaskFlow, session);
-        }
     }
 }
 
@@ -439,4 +453,5 @@ export function* tasksFlow(session) {
     yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
+    yield takeLatest(BLOCK_NODE, blockNodeBase, session)
 }
