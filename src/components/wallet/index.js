@@ -100,11 +100,8 @@ export class Wallet extends Component {
                                         <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
-                                        tGNT is testnet
-                                        <br/>Golem Network token.
-                                        <br/>It is earned
-                                        <br/>and/or paid for
-                                        <br/>computations.
+                                        tGNT is testnet Golem Network token.
+                                        <br/>It is earned and/or paid for computations.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             descriptionLock={
@@ -133,10 +130,8 @@ export class Wallet extends Component {
                                         <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
-                                        tETH is testnet 
-                                        <br/>ETH.
-                                        <br/>It is used for
-                                        <br/>transaction fees.
+                                        tETH is testnet ETH.
+                                        <br/>It is used for transaction fees.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             descriptionLock={

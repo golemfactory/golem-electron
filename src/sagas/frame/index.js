@@ -44,8 +44,6 @@ export function restartSubtask(session, {id, taskId, isTimedOut}) {
 export function* restartSubtaskBase(session, {payload}) {
     if (payload) {
         let action = yield call(restartSubtask, session, payload);
-    //console.log("action", action);
-    //yield put(action)
     }
 }
 

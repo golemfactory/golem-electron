@@ -56,7 +56,10 @@ export class Table extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            insufficientAmountModal: false
+            insufficientAmountModal: {
+                result: false,
+                message: null
+            },
         }
 
         this._handleDeleteTask = ::this._handleDeleteTask
@@ -148,30 +151,45 @@ export class Table extends React.Component {
     }
 
     /**
+     * [_handleRestartModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestartModal(id) {
+        this.props.restartModalHandler(id, ::this._handleRestart)
+    }
+
+    /**
      * [_handleDeleteModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestart(id) {
-        this._restartAsync(id)
+    _handleRestart(id, isTimedOutOnly) {
+        this._restartAsync(id, isTimedOutOnly)
             .then((_result) => {
                 if(_result && !_result[0] && _result[1].includes("Not enough")){
                     console.warn("Task restart failed!")
+
                     this.setState({
-                        insufficientAmountModal: true
+                        insufficientAmountModal: {
+                            result: !_result[0],
+                            message: _result[1]
+                        }
                     })
                 }
             })
     }
 
-    _restartAsync(id){
+    _restartAsync(id, isTimedOutOnly){
         return new Promise((resolve, reject)=> {
-            this.props.actions.restartTask(id, resolve, reject)
+            this.props.actions.restartTask(id, isTimedOutOnly, resolve, reject)
         })
     }
 
     _closeModal(){
         this.setState({
-            insufficientAmountModal: false
+            insufficientAmountModal: {
+                result: false,
+                message: null
+            }
         })
     }
 
@@ -238,7 +256,7 @@ export class Table extends React.Component {
             item={item}
             index={index}
             _handleRowClick={this._handleRowClick.bind(this)}
-            _handleRestart={this._handleRestart.bind(this, item.id)}
+            _handleRestartModal={this._handleRestartModal.bind(this, item.id)}
             _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
             _toggleWalletTray={toggleWalletTray}/>
         );
@@ -254,7 +272,7 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal && <InsufficientAmountModal closeModal={::this._closeModal}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
             </div>
         );
     }
