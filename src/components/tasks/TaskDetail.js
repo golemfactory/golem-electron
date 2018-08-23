@@ -1,12 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
-const {clipboard, remote} = window.electron;
+const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
 import {Tooltip} from 'react-tippy';
 import yup from 'yup'
 
+import TestResult from './TestResult'
+import NodeList from './NodeList'
 import PresetModal from './modal/PresetModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
@@ -24,8 +26,10 @@ const {dialog} = remote
 import * as Actions from './../../actions'
 import {once} from './../../utils/once'
 import zipObject from './../../utils/zipObject'
-import checkNested from './../../utils/checkNested'
-
+import isObjectEmpty from './../../utils/isObjectEmpty'
+import {testStatusDict} from './../../constants/statusDicts'
+import calculateFrameAmount from './../../utils/calculateFrameAmount'
+    
 import whoaImg from './../../assets/img/whoa.png'
 
 const ETH_DENOM = 10 ** 18;
@@ -35,12 +39,6 @@ const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
     LUXRENDER: 'LuxRender'
-})
-
-const testStatusDict = Object.freeze({
-    STARTED: 'Started',
-    SUCCESS: 'Success',
-    ERROR: 'Error'
 })
 
 const mockFormatList = [
@@ -99,40 +97,6 @@ function floatToString(timeFloat) {
     return hours +':'+ date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
 }
 
-function calcFrameAmount(_frame){
-    const notationArry = _frame.match(/(\d+)(-)?(\d+)?(;\d)?/g)
-    const calculateNotation = item => {
-
-        if (!isNaN(item))
-            return 1
-        
-        if (item.includes(";")) {
-            [item, diff] = item.split(";");
-        }
-      
-        const splitItem = item.split("-")
-        return Math.floor((Math.max(...splitItem) - Math.min(...splitItem)) / diff) + 1
-    }
-
-    let diff = 1;
-
-    return notationArry
-        .map(calculateNotation)
-        .reduce((total, amount) => total += amount)
-}
-
-function isObjectEmpty(obj) {
-    if(obj !== null && typeof obj === 'object'){
-        for(var prop in obj) {
-            if(obj.hasOwnProperty(prop))
-                return false;
-        }
-
-        return JSON.stringify(obj) === JSON.stringify({});
-    }
-    return true
-}
-
 const mapStateToProps = state => ({
     currency: state.currency,
     estimated_cost: state.details.estimated_cost,
@@ -173,10 +137,10 @@ export class TaskDetail extends React.Component {
             maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
+            //CUSTOM
+            testLock: false,
             presetList: [],
             savePresetLock: true,
-            isDataCopied: false,
-            ignoreTestWarning: false,
             presetModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
@@ -226,10 +190,9 @@ export class TaskDetail extends React.Component {
     componentWillUnmount() {
         this.props.actions.clearTaskPlain()
         this.liveSubList && clearInterval(this.liveSubList);
-        this.copyTimeout && clearTimeout(this.copyTimeout);
         this.interactedInputObject = {}
 
-        if(this.props.testStatus && this.props.testStatus.status === testStatusDict.STARTED){
+        if(this.props.testStatus){
             this.props.actions.abortTestTask()
         }
     }
@@ -321,7 +284,7 @@ export class TaskDetail extends React.Component {
                 actions.fetchSubtasksList(nextProps.match.params.id)
                 return interval
             }
-            this.liveSubList = setInterval(interval(), 1000)
+            this.liveSubList = setInterval(interval(), 2000)
 
         } else if(!nextProps.isDeveloperMode && this.liveSubList && isDetailPage) {
 
@@ -383,7 +346,7 @@ export class TaskDetail extends React.Component {
             if(!frames)
                 return; 
 
-            const frameAmount = calcFrameAmount(frames);
+            const frameAmount = calculateFrameAmount(frames);
             maxSubtasks = Math.floor(y / Math.max((y / 100) * 3, 8 + ((y / 100) * 2))) * frameAmount;
             
         } else {
@@ -804,244 +767,20 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleTestStatus({status, error, more}) {
-        switch (status) {
-        case testStatusDict.STARTED:
-            return {
-                class: 'btn--loading',
-                text: 'Checking',
-                locked: true
-            }
-
-        case testStatusDict.SUCCESS:
-            return {
-                class: 'btn--success',
-                text: 'Test passed!',
-                locked: false
-            }
-
-        case testStatusDict.ERROR:
-            return {
-                class: 'btn--error',
-                text: 'Error',
-                locked: true
-            }
-
-        default:
-            return {
-                class: '',
-                text: 'Render Local Test',
-                locked: true
-            }
-        }
-    }
-
-    _handleCopyToClipboard(data, evt) {
-        if (data) {
-            clipboard.writeText(data)
-            this.setState({
-                isDataCopied: true
-            }, () => {
-                this.copyTimeout = setTimeout(() => {
-                    this.setState({
-                        isDataCopied: false
-                    })
-                }, 3000)
-            })
-        }
-    }
-
     _toggleLoadingHint(){
         this.setState({
             isInPatient: true
         })
     }
 
-    _checkTestStatus(_testStatus){
-        const {more, error} = _testStatus
-        let status;
-        if(!isObjectEmpty(more)){
-            if(more.after_test_data.hasOwnProperty("warnings")){
-                status = "warning"
-            } else {
-                status = "success"
-            }
-        }
-
-        if(!isObjectEmpty(error)){
-            if(error.length > 0 && typeof error[0] === 'string'){
-                status = "error"
-            }
-        }
-
-        return status
-    }
-
-    _ignoreTestWarning(){
+    _toggleTestLock(result){
         this.setState({
-            ignoreTestWarning: true
+            testLock: result
         })
-    }
-
-    /**
-     * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all triggers test again]
-     */
-    _onFileDialog(_missingFiles) {
-
-        const onFileHandler = (data) => {
-            //console.log(data)
-            if (data) {
-
-                mainProcess.selectDirectory(data, this.props.isMainNet)
-                    .then(item => {
-                        let mergedList = [].concat.apply([], item)
-                        let unknownFiles = mergedList.filter(({malicious}) => (malicious))
-
-                        if (unknownFiles.length > 0) {
-                            this.props.actions.setFileCheck({
-                                status: true,
-                                files: unknownFiles
-                            })
-                        } else {
-                            mainProcess
-                                .copyFiles(mergedList, _missingFiles, this.props.task.relativePath)
-                                    .then(result => { 
-                                        this.props.actions.addMissingFiles(result);
-                                    })
-                                    .catch(error => console.error)
-                        }
-                    })
-            }
-        }
-        /**
-         * We're not able to let people to choose directory and file at the same time.
-         * @see https://electron.atom.io/docs/api/dialog/#dialogshowopendialogbrowserwindow-options-callback
-         */
-        dialog.showOpenDialog({
-            properties: ['openFile', 'multiSelections']
-        }, onFileHandler)
-
     }
 
     _getPanelClass(testStatus){
         return this._checkTestStatus(testStatus)
-    }
-
-    _getPanelInfo(testStatus){
-        const {more, error} = testStatus
-        const status = this._checkTestStatus(testStatus)
-        let warningInfo; 
-
-        switch(status){
-            case "warning":
-                if(checkNested(more, 'after_test_data', 'warnings', 'missing_files')){
-
-                    function fillFiles(files){
-                        return files
-                            .map( (file, index) => <li key={index.toString()}>{`${file.baseName} should be in ${file.dirName.replace('/golem/resources', '{project_folder}')}/`}</li>)
-                    }
-
-                    return <div 
-                                className={`local-render__info info-${status}`}>
-                                <h4>test passed, but...</h4>
-                                <span>It looks like some data is missing;</span>
-                                <ul>{fillFiles(more
-                                                .after_test_data
-                                                .warnings
-                                                .missing_files)}</ul>
-                                <span>You can try to add missing files, like textures with the button below. You can also try to add missing scripts to your .blend file and resubmit the task. Or you can simply ignore this warning if the scripts or textures are not needed.</span>
-                                <div className="local-render__action">
-                                    <span onClick={::this._ignoreTestWarning}>Ignore</span>
-                                    <button 
-                                        className="btn--primary" 
-                                        onClick={this._onFileDialog
-                                            .bind(this, more
-                                                        .after_test_data
-                                                        .warnings
-                                                        .missing_files)}>Add files</button>
-                                </div>
-                            </div>;
-                } else
-                    return <div 
-                                className={`local-render__info info-${status}`}>
-                            test passed! Your good to go.
-                            </div>;
-            case "error":
-
-                function fillError(errors){
-                    return errors
-                        .map( (error, index) => <li key={index.toString()}>{error}</li>)
-                }
-
-                return <div 
-                            className={`local-render__info info-${status}`}>
-                            <h4>Whoops!</h4>
-                            <ul>
-                                {fillError(testStatus.error)}
-                            </ul>
-                            <span className="error__hint">You can try to find solution for this error in <a href="https://golem.network/documentation/06-preparing-your-blend-file/">here</a>, or talk with our tech support on <a href="https://chat.golem.network">Rocket Chat</a>.</span>
-                        </div>;
-            case "success":
-                return <span 
-                            className={`local-render__info info-${status}`}>
-                        test passed! Your good to go.
-                        </span>;
-            default:
-                return <span 
-                            className="local-render__info">
-                        checking...
-                        </span>;
-        }
-    }
-
-    _fillNodeInfo(data){
-        const {isDataCopied} = this.state
-        function statusDot(status){
-            switch(status){
-                case 'Starting':
-                return 'icon-status-dot--progress'
-
-                case 'Finished':
-                return 'icon-status-dot--done'
-
-                case 'Downloading':
-                return 'icon-status-dot--download'
-
-                case 'Failure':
-                return 'icon-status-dot--warning'
-            }
-        }
-
-        return data.map(({subtask_id, status, node_name, node_ip_address}, index) => <tr key={index.toString()}>
-                <td>
-                <Tooltip
-                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
-                      position="bottom"
-                      trigger="mouseenter"
-                      hideOnClick={false}>
-                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, subtask_id)}>
-                            <span>{subtask_id}</span>
-                        </div>
-                    </Tooltip>
-                </td>
-                <td>
-                    <Tooltip
-                      html={<p>{status}</p>}
-                      position="bottom"
-                      trigger="mouseenter">
-                        <span className={`icon-status-dot ${statusDot(status)}`}/>
-                    </Tooltip>
-                </td>
-                <td>
-                    <Tooltip
-                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy IP Address'}</p>}
-                      position="bottom-end"
-                      trigger="mouseenter"
-                      hideOnClick={false}>
-                        <span onClick={this._handleCopyToClipboard.bind(this, node_ip_address)}>{node_name || 'Anonymous node'}</span>
-                    </Tooltip>
-                </td>
-            </tr>)
     }
 
     isPresetFieldsFilled(nextState) {
@@ -1150,14 +889,15 @@ export class TaskDetail extends React.Component {
             loadingTaskIndicator,
             managePresetModal, 
             maxSubtasks,
-            ignoreTestWarning,
             modalData, 
             presetModal, 
             resolutionChangeInfo,
-            resolutionChangeModal
+            resolutionChangeModal,
+            testLock
         } = this.state
 
         const {
+            actions,
             currency,
             estimated_cost, 
             isDeveloperMode,
@@ -1166,54 +906,19 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
-        
-        let testStyle = this._handleTestStatus(testStatus)
         return (
             <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
-                    { !ignoreTestWarning &&
-                        <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
-                            { isDetailPage && <div className="panel-preview__task-detail">
-                                <Link to="/tasks" aria-label="Back button to task list">
-                                    <span className="icon-arrow-left-white"/>
-                                    <span>Back</span>
-                                </Link>
-                            </div>}
-                            {
-                                !isDetailPage 
-                                && testStatus.status !== null  
-                                ? this._getPanelInfo(testStatus) 
-                                : (!isDetailPage 
-                                    ? <span className="local-render__info">testing local render...</span>
-                                    : <span className="local-render__info"></span>)
-                            }
-                        </section>
-                    }
+                    <TestResult 
+                        testStatus={testStatus} 
+                        isDetailPage={isDetailPage}
+                        task={task}
+                        actions={actions}
+                        toggleTestLock={::this._toggleTestLock}
+                        />
                     <section className="section-details__task-detail">
-                        <div className="container__task-detail">
-                            { (isDetailPage && isDeveloperMode) &&
-                            <div className="section-node-list__task-detail">
-                                <h4 className="experiment">Dev mode</h4>
-                            { subtasksList && subtasksList.length > 0 ?
-                                <table>
-                                    <thead>
-                                        <tr>
-                                          <th>Subtask</th>
-                                          <th>State</th>
-                                          <th>Node</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {::this._fillNodeInfo(subtasksList)}
-                                    </tbody>
-                                </table>
-                                :
-                                <div className="no-node__task">
-                                    <span>There's no active node.</span>
-                                </div>
-                            }
-                            </div>
-                            }
+                        <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
+                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} overflowRef={this.overflowTaskDetail} actions={actions}/>}
                             <div className="section-settings__task-detail">
                                     <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
                                     {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
@@ -1337,7 +1042,7 @@ export class TaskDetail extends React.Component {
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                             <span >Cancel</span>
                         </Link>
-                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testStyle.locked || loadingTaskIndicator}>Start Task</button>
+                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testLock || loadingTaskIndicator}>Start Task</button>
                     </section>}
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}

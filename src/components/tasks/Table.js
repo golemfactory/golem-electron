@@ -56,7 +56,10 @@ export class Table extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            insufficientAmountModal: false
+            insufficientAmountModal: {
+                result: false,
+                message: null
+            },
         }
 
         this._handleDeleteTask = ::this._handleDeleteTask
@@ -164,8 +167,12 @@ export class Table extends React.Component {
             .then((_result) => {
                 if(_result && !_result[0] && _result[1].includes("Not enough")){
                     console.warn("Task restart failed!")
+
                     this.setState({
-                        insufficientAmountModal: true
+                        insufficientAmountModal: {
+                            result: !_result[0],
+                            message: _result[1]
+                        }
                     })
                 }
             })
@@ -179,7 +186,10 @@ export class Table extends React.Component {
 
     _closeModal(){
         this.setState({
-            insufficientAmountModal: false
+            insufficientAmountModal: {
+                result: false,
+                message: null
+            }
         })
     }
 
@@ -262,7 +272,7 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal && <InsufficientAmountModal closeModal={::this._closeModal}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
             </div>
         );
     }

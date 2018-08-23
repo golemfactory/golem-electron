@@ -287,26 +287,32 @@
 .section-node-list__task-detail{
     box-sizing: border-box;
     border-bottom: 1px solid $color-border;
+
+    .indicator__node-count{
+        margin-right: 15px;
+        line-height: 2.5em;
+    }
+
     .icon-status-dot {
-                margin-right: 8px;
-                font-size: 10pt;
+        margin-right: 8px;
+        font-size: 10pt;
 
-                &--done {
-                    color: $color-accent1;
-                }
+        &--done {
+            color: $color-accent1;
+        }
 
-                &--download {
-                    color: $color-primary;
-                }
+        &--download {
+            color: $color-primary;
+        }
 
-                &--progress {
-                    color: $color-accent2;
-                }
+        &--progress {
+            color: $color-accent2;
+        }
 
-                &--warning {
-                    color: $color-error;
-                }
-            }
+        &--warning {
+            color: $color-error;
+        }
+    }
 
     table{
         width: 100%;
@@ -318,6 +324,13 @@
     tr{
         line-height: 30px;
         border-bottom: 1px solid $color-border;
+        &:hover{
+            & > td:nth-child(4){
+                .btn {
+                    opacity: 1;
+                }
+            }
+        }
     }
 
     td{
@@ -330,7 +343,6 @@
             white-space: nowrap;
             overflow: hidden;
             box-sizing: border-box;
-            display: block;
             span{
                 display: inline-block;
                 transform: translate(0, 0);
@@ -342,16 +354,33 @@
                     animation-fill-mode: forwards;
                 }
             }
+
+            .clipboard-subtask-id{
+                width: 150px;
+                margin: 0;
+                white-space: nowrap;
+                overflow: hidden;
+            }
     }
 
     td:nth-child(2){
-        width: 25%;
+        width: 15%;
         text-align: center;
     }
 
     td:nth-child(3){
         width: 35%;
         text-align: center;
+        word-break: break-all;
+        padding: 0 10px;
+    }
+
+    td:nth-child(4){
+        min-width: 50px;
+        .btn{
+            opacity: .2;
+            margin: 0;
+        }
     }
 
     @keyframes slide-in {

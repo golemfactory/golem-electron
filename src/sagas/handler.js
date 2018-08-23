@@ -161,8 +161,8 @@ export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _
     _session.call(_rpc_address, _parameter, {
         onSuccess: _callback,
         onError: function(err, details, arr) {
-            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
-            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, Array.isArray(arr) ? arr.join() : arr)
             _eb && _eb(err, details, arr)
         }
     })
