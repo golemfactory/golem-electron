@@ -211,12 +211,10 @@ export class TaskItem extends React.Component {
                                 className="icon-progress-clockwise" 
                                 tabIndex="0" 
                                 aria-label="Restart Task" 
-                                onClick={(item.status == taskStatus.TIMEOUT 
-                                         || item.status == taskStatus.FINISHED) 
+                                onClick={(item.status !== taskStatus.RESTART) 
                                             ? _handleRestartModal 
                                             : undefined} 
-                                disabled={!(item.status === taskStatus.TIMEOUT
-                                          || item.status === taskStatus.FINISHED)}></span>
+                                disabled={!(item.status !== taskStatus.RESTART)}></span>
                         </Tooltip>
                         <Tooltip
                           html={<p>Delete</p>}

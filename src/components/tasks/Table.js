@@ -154,8 +154,8 @@ export class Table extends React.Component {
      * [_handleRestartModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestartModal(id) {
-        this.props.restartModalHandler(id, ::this._handleRestart)
+    _handleRestartModal(id, status) {
+        this.props.restartModalHandler(id, status, ::this._handleRestart)
     }
 
     /**
@@ -256,7 +256,7 @@ export class Table extends React.Component {
             item={item}
             index={index}
             _handleRowClick={this._handleRowClick.bind(this)}
-            _handleRestartModal={this._handleRestartModal.bind(this, item.id)}
+            _handleRestartModal={this._handleRestartModal.bind(this, item.id, item.status)}
             _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
             _toggleWalletTray={toggleWalletTray}/>
         );
