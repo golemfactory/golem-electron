@@ -1,4 +1,5 @@
 import React from 'react';
+import {taskStatus} from './../../../constants/statusDicts'
 
 export default class RestartModal extends React.Component {
 
@@ -34,7 +35,7 @@ export default class RestartModal extends React.Component {
     }
 
     render() {
-        const {type} = this.props
+        const {status} = this.props
         return (
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
@@ -51,7 +52,7 @@ export default class RestartModal extends React.Component {
                             </label>
                         </div>
                         <div>
-                            <input type="radio" id="pickTask" value="pick" name="restart"/>
+                            <input type="radio" id="pickTask" value="pick" name="restart" disabled={status === taskStatus.FINISHED}/>
                             <label htmlFor="pickTask">
                                 <span className="overlay"/>
                                 Restart all timed out subtasks
