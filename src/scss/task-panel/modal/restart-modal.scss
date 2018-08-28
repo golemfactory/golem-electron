@@ -42,10 +42,20 @@
                 display: none;
                 padding: 0 20px;
                 box-sizing: border-box;
-            }
-             /* changed style when checked */
-            input[type=radio]:checked + label > .overlay {
-              background-color: $color-primary;
+
+                /* changed style when checked */
+                &:checked + label > .overlay {
+                    background-color: $color-primary;
+                }
+
+                &:disabled + label{
+                    color: $color-text3;
+                }
+                
+                &:disabled + label > .overlay{
+                    border: 1px solid $color-text3;
+                }
+
             }
              label{
                 font-size: 9pt;
