@@ -1,469 +1,368 @@
-$color_1: #cbcbcb;
-$color_2: rgb(245, 245, 245);
-$color_3: rgb(64, 93, 175);
-$color_4: rgb(245, 166, 35);
+.icon-cpu:before {
+  content: "\e900";
+}
 
-.icon-no-connection2 {
-    &:before {
-        content: "\e900";
-        color: $color_1;
-    }
+.icon-gpu:before {
+  content: "\e901";
 }
-.icon-clipboard2 {
-    &:before {
-        content: "\e94b";
-    }
+
+.icon-golem-logo:before {
+  content: "\e902";
 }
-.icon-copy {
-    &:before {
-        content: "\e94c";
-    }
+
+.icon-notification:before {
+  content: "\e903";
 }
-.icon-ethereum-logo {
-    &:before {
-        content: "\e94d";
-    }
+
+.icon-blender-black:before {
+  content: "\e904";
 }
-.icon-file-menu {
-    &:before {
-        content: "\e94e";
-    }
-}
-.icon-folder-menu {
-    &:before {
-        content: "\e94f";
-    }
-}
-.icon-golem-logo {
-    &:before {
-        content: "\e950";
-    }
-}
-.icon-info-small {
-    &:before {
-        content: "\e951";
-    }
-}
-.icon-locked {
-    &:before {
-        content: "\e952";
-    }
-}
-.icon-pencil2 {
-    &:before {
-        content: "\e953";
-    }
-}
-.icon-unlocked {
-    &:before {
-        content: "\e954";
-    }
-}
-.icon-wallet {
-    &:before {
-        content: "\e955";
-    }
-}
-.icon-warning-small {
-    &:before {
-        content: "\e956";
-    }
-}
-.icon-add {
-    &:before {
-        content: "\e901";
-    }
-}
-.icon-alarm {
-    &:before {
-        content: "\e902";
-    }
-}
-.icon-android {
-    &:before {
-        content: "\e903";
-    }
-}
-.icon-appleinc {
-    &:before {
-        content: "\e904";
-    }
-}
-.icon-arrow-down {
-    &:before {
-        content: "\e905";
-    }
-}
-.icon-arrow-left-white {
-    &:before {
-        content: "\e906";
-    }
-}
-.icon-arrow-right-white {
-    &:before {
-        content: "\e907";
-    }
-}
-.icon-arrow-right {
-    &:before {
-        content: "\e908";
-    }
-}
-.icon-arrow-up {
-    &:before {
-        content: "\e909";
-    }
-}
+
 .icon-blender {
-    .path1 {
-        &:before {
-            content: "\e90a";
-            color: $color_2;
-        }
-    }
-    .path2 {
-        &:before {
-            content: "\e90b";
-            margin-left: -1.2080078125em;
-            color: $color_3;
-        }
-    }
-    .path3 {
-        &:before {
-            content: "\e90c";
-            margin-left: -1.2080078125em;
-            color: $color_4;
-        }
-    }
+  .path1:before {
+    content: "\e905";
+    color: rgb(255, 255, 255);
+  }
+  .path2:before {
+    content: "\e906";
+    margin-left: -1.25em;
+    color: rgb(64, 93, 175);
+  }
+  .path3:before {
+    content: "\e907";
+    margin-left: -1.25em;
+    color: rgb(245, 166, 35);
+  }
 }
-.icon-blender-grey {
-    .path1 {
-        &:before {
-            content: "\e90a";
-            color: rgb(245, 245, 245);
-        }
-    }
-    .path2 {
-        &:before {
-            content: "\e90b";
-            margin-left: -1.2080078125em;
-        }
-    }
-    .path3 {
-        &:before {
-            content: "\e90c";
-            margin-left: -1.2080078125em;
-        }
-    }
+
+.icon-no-connection2:before {
+  content: "\e908";
 }
-.icon-book {
-    &:before {
-        content: "\e90d";
-    }
+
+.icon-add:before {
+  content: "\e909";
 }
-.icon-camera {
-    &:before {
-        content: "\e90e";
-    }
+
+.icon-alarm:before {
+  content: "\e90a";
 }
-.icon-checkmark {
-    &:before {
-        content: "\e90f";
-    }
+
+.icon-android:before {
+  content: "\e90b";
 }
-.icon-checkmark2 {
-    &:before {
-        content: "\e910";
-    }
+
+.icon-appleinc:before {
+  content: "\e90c";
 }
-.icon-clipboard {
-    &:before {
-        content: "\e911";
-    }
+
+.icon-arrow-down:before {
+  content: "\e90d";
 }
-.icon-clock {
-    &:before {
-        content: "\e912";
-    }
+
+.icon-arrow-left-small:before {
+  content: "\e90e";
 }
-.icon-clock2 {
-    &:before {
-        content: "\e913";
-    }
+
+.icon-arrow-right-small:before {
+  content: "\e90f";
 }
-.icon-close {
-    &:before {
-        content: "\e914";
-    }
+
+.icon-arrow-right:before {
+  content: "\e910";
 }
-.icon-compass {
-    &:before {
-        content: "\e915";
-    }
+
+.icon-arrow-up:before {
+  content: "\e911";
 }
-.icon-confirmation {
-    &:before {
-        content: "\e916";
-    }
+
+.icon-book:before {
+  content: "\e912";
 }
-.icon-confirmed-empty {
-    &:before {
-        content: "\e917";
-    }
+
+.icon-camera:before {
+  content: "\e913";
 }
-.icon-connection {
-    &:before {
-        content: "\e918";
-    }
+
+.icon-checkmark:before {
+  content: "\e914";
 }
-.icon-doc {
-    &:before {
-        content: "\e919";
-    }
+
+.icon-checkmark2:before {
+  content: "\e915";
 }
-.icon-download {
-    &:before {
-        content: "\e91a";
-    }
+
+.icon-clipboard:before {
+  content: "\e916";
 }
-.icon-eye {
-    &:before {
-        content: "\e91b";
-    }
+
+.icon-clock:before {
+  content: "\e917";
 }
-.icon-facebook {
-    &:before {
-        content: "\e91c";
-    }
+
+.icon-clock2:before {
+  content: "\e918";
 }
-.icon-finder {
-    &:before {
-        content: "\e91d";
-    }
+
+.icon-close:before {
+  content: "\e919";
 }
-.icon-floppy-disk {
-    &:before {
-        content: "\e91e";
-    }
+
+.icon-compass:before {
+  content: "\e91a";
 }
-.icon-github {
-    &:before {
-        content: "\e91f";
-    }
+
+.icon-confirmation:before {
+  content: "\e91b";
 }
-.icon-google-plus {
-    &:before {
-        content: "\e920";
-    }
+
+.icon-confirmed-empty:before {
+  content: "\e91c";
 }
-.icon-location {
-    &:before {
-        content: "\e921";
-    }
+
+.icon-connection:before {
+  content: "\e91d";
 }
-.icon-lock {
-    &:before {
-        content: "\e922";
-    }
+
+.icon-doc:before {
+  content: "\e91e";
 }
-.icon-luxrender {
-    &:before {
-        content: "\e923";
-    }
+
+.icon-download:before {
+  content: "\e91f";
 }
-.icon-macbook {
-    &:before {
-        content: "\e924";
-    }
+
+.icon-eye:before {
+  content: "\e920";
 }
-.icon-maximize {
-    &:before {
-        content: "\e925";
-    }
+
+.icon-facebook:before {
+  content: "\e921";
 }
-.icon-mic {
-    &:before {
-        content: "\e926";
-    }
+
+.icon-finder:before {
+  content: "\e922";
 }
-.icon-minimize {
-    &:before {
-        content: "\e927";
-    }
+
+.icon-floppy-disk:before {
+  content: "\e923";
 }
-.icon-multi-frame {
-    &:before {
-        content: "\e928";
-    }
+
+.icon-github:before {
+  content: "\e924";
 }
-.icon-multi-server {
-    &:before {
-        content: "\e929";
-    }
+
+.icon-google-plus:before {
+  content: "\e925";
 }
-.icon-negative {
-    &:before {
-        content: "\e92a";
-    }
+
+.icon-location:before {
+  content: "\e926";
 }
-.icon-new-window {
-    &:before {
-        content: "\e92b";
-    }
+
+.icon-lock:before {
+  content: "\e927";
 }
-.icon-no-connection {
-    &:before {
-        content: "\e92c";
-        color: $color_1;
-    }
+
+.icon-luxrender:before {
+  content: "\e928";
 }
-.icon-not-confirmed {
-    &:before {
-        content: "\e92d";
-    }
+
+.icon-macbook:before {
+  content: "\e929";
 }
-.icon-paste {
-    &:before {
-        content: "\e92e";
-    }
+
+.icon-maximize:before {
+  content: "\e92a";
 }
-.icon-pencil {
-    &:before {
-        content: "\e92f";
-    }
+
+.icon-mic:before {
+  content: "\e92b";
 }
-.icon-positive {
-    &:before {
-        content: "\e930";
-    }
+
+.icon-minimize:before {
+  content: "\e92c";
 }
-.icon-progress-clockwise {
-    &:before {
-        content: "\e931";
-    }
+
+.icon-multi-frame:before {
+  content: "\e92d";
 }
-.icon-progress {
-    &:before {
-        content: "\e932";
-    }
+
+.icon-multi-server:before {
+  content: "\e92e";
 }
-.icon-qrcode {
-    &:before {
-        content: "\e933";
-    }
+
+.icon-negative:before {
+  content: "\e92f";
 }
-.icon-question-mark {
-    &:before {
-        content: "\e934";
-    }
+
+.icon-new-window:before {
+  content: "\e930";
 }
-.icon-reddit {
-    &:before {
-        content: "\e935";
-    }
+
+.icon-no-connection:before {
+  content: "\e931";
 }
-.icon-reload-warning {
-    &:before {
-        content: "\e936";
-    }
+
+.icon-not-confirmed:before {
+  content: "\e932";
 }
-.icon-reload {
-    &:before {
-        content: "\e937";
-    }
+
+.icon-paste:before {
+  content: "\e933";
 }
-.icon-settings {
-    &:before {
-        content: "\e938";
-    }
+
+.icon-pencil:before {
+  content: "\e934";
 }
-.icon-show-subtasks {
-    &:before {
-        content: "\e939";
-    }
+
+.icon-positive:before {
+  content: "\e935";
 }
-.icon-single-frame {
-    &:before {
-        content: "\e93a";
-    }
+
+.icon-progress-clockwise:before {
+  content: "\e936";
 }
-.icon-single-server {
-    &:before {
-        content: "\e93b";
-    }
+
+.icon-progress:before {
+  content: "\e937";
 }
-.icon-status-dot {
-    &:before {
-        content: "\e93c";
-    }
+
+.icon-qrcode:before {
+  content: "\e938";
 }
-.icon-switch {
-    &:before {
-        content: "\e93d";
-    }
+
+.icon-question-mark:before {
+  content: "\e939";
 }
-.icon-trash {
-    &:before {
-        content: "\e93e";
-    }
+
+.icon-reddit:before {
+  content: "\e93a";
 }
-.icon-tux {
-    &:before {
-        content: "\e93f";
-    }
+
+.icon-reload-warning:before {
+  content: "\e93b";
 }
-.icon-twitter {
-    &:before {
-        content: "\e940";
-    }
+
+.icon-reload:before {
+  content: "\e93c";
 }
-.icon-check {
-    &:before {
-        content: "\e941";
-    }
+
+.icon-settings:before {
+  content: "\e93d";
 }
-.icon-upload {
-    &:before {
-        content: "\e942";
-    }
+
+.icon-show-subtasks:before {
+  content: "\e93e";
 }
-.icon-upload2 {
-    &:before {
-        content: "\e943";
-    }
+
+.icon-single-frame:before {
+  content: "\e93f";
 }
-.icon-warning {
-    &:before {
-        content: "\e944";
-    }
+
+.icon-single-server:before {
+  content: "\e940";
 }
-.icon-windows {
-    &:before {
-        content: "\e945";
-    }
+
+.icon-status-dot:before {
+  content: "\e941";
 }
-.icon-windows8 {
-    &:before {
-        content: "\e946";
-    }
+
+.icon-switch:before {
+  content: "\e942";
 }
-.icon-youtube2 {
-    &:before {
-        content: "\e947";
-    }
+
+.icon-trash:before {
+  content: "\e943";
 }
-.icon-zoom-in {
-    &:before {
-        content: "\e948";
-    }
+
+.icon-linux:before {
+  content: "\e944";
 }
-.icon-zoom-out {
-    &:before {
-        content: "\e949";
-    }
+
+.icon-twitter:before {
+  content: "\e945";
 }
-.icon-zoom {
-    &:before {
-        content: "\e94a";
-    }
+
+.icon-check:before {
+  content: "\e946";
+}
+
+.icon-upload:before {
+  content: "\e947";
+}
+
+.icon-upload2:before {
+  content: "\e948";
+}
+
+.icon-warning:before {
+  content: "\e949";
+}
+
+.icon-windows:before {
+  content: "\e94a";
+}
+
+.icon-windows8:before {
+  content: "\e94b";
+}
+
+.icon-youtube:before {
+  content: "\e94c";
+}
+
+.icon-zoom-in:before {
+  content: "\e94d";
+}
+
+.icon-zoom-out:before {
+  content: "\e94e";
+}
+
+.icon-zoom:before {
+  content: "\e94f";
+}
+
+.icon-clipboard2:before {
+  content: "\e950";
+}
+
+.icon-copy:before {
+  content: "\e951";
+}
+
+.icon-ethereum-logo:before {
+  content: "\e952";
+}
+
+.icon-file-menu:before {
+  content: "\e953";
+}
+
+.icon-folder-menu:before {
+  content: "\e954";
+}
+
+.icon-info-small:before {
+  content: "\e955";
+}
+
+.icon-locked:before {
+  content: "\e956";
+}
+
+.icon-pencil2:before {
+  content: "\e957";
+}
+
+.icon-unlocked:before {
+  content: "\e958";
+}
+
+.icon-wallet:before {
+  content: "\e959";
+}
+
+.icon-warning-small:before {
+  content: "\e95a";
 }
