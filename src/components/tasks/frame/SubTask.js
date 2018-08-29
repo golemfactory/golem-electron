@@ -291,10 +291,7 @@ export class SubTask extends React.Component {
                                 <button type="button"
                                     onClick={this._handleResubmit.bind(this, subtask.subtask_id,
                                         (taskDetails.status === statusDict.TIMEOUT || subtask.status === statusDict.FINISHED))}
-                                    disabled={
-                                    taskDetails.status === statusDict.RESTARTED || 
-                                    taskDetails.status === statusDict.FAILURE || 
-                                    this.state.isTaskSubmitted[subtask.subtask_id]}
+                                    disabled={true}
                                     >
                                         {this.state.isTaskSubmitted[subtask.subtask_id] ? "Resubmitted!" : "Resubmit"}
                                 </button>
