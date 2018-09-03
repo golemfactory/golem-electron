@@ -204,7 +204,7 @@ class TestResult extends Component {
 	                <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
 	                    { isDetailPage && <div className="panel-preview__task-detail">
 	                        <Link to="/tasks" aria-label="Back button to task list">
-	                            <span className="icon-arrow-left-white"/>
+	                            <span className="icon-arrow-left-small"/>
 	                            <span>Back</span>
 	                        </Link>
 	                    </div>}
