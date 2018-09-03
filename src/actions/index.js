@@ -23,6 +23,8 @@ export let dict = Object.freeze({
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
     GET_TASK_DETAILS: 'GET_TASK_DETAILS',
+    FETCH_HEALTHY_NODE_NUMBER: 'FETCH_HEALTHY_NODE_NUMBER',
+    SET_HEALTHY_NODE_NUMBER: 'SET_HEALTHY_NODE_NUMBER',
     SET_TASK_INFO: 'SET_TASK_INFO',
     SET_PREVIEW: 'SET_PREVIEW',
     UPDATE_PREVIEW_LOCK: 'UPDATE_PREVIEW_LOCK',
@@ -136,6 +138,7 @@ const {
     SET_TASKLIST, 
     SET_TASK_DETAILS, 
     GET_TASK_DETAILS, 
+    FETCH_HEALTHY_NODE_NUMBER, 
     SET_TASK_INFO, 
     SET_PREVIEW,
     UPDATE_PREVIEW_LOCK,
@@ -452,6 +455,11 @@ export const setTaskDetails = (payload) => ({
 
 export const getTaskDetails = (payload) => ({
     type: GET_TASK_DETAILS,
+    payload
+})
+
+export const fetchHealthyNodeNumber = (payload) => ({
+    type: FETCH_HEALTHY_NODE_NUMBER,
     payload
 })
 

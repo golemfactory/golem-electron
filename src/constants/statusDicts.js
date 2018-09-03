@@ -12,7 +12,8 @@ const taskStatus = Object.freeze({
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
     TIMEOUT: 'Timeout',
-    RESTART: 'Restart'
+    RESTART: 'Restart',
+    FAILURE: 'Failure'
 })
 
 module.exports = {

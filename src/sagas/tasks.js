@@ -2,6 +2,7 @@ import { eventChannel, buffers } from 'redux-saga'
 import { takeLatest, take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
 import checkNested from './../utils/checkNested'
+import {taskStatus} from './../constants/statusDicts'
 
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
@@ -23,10 +24,48 @@ const {
         SAVE_TASK_PRESET, 
         DELETE_TASK_PRESET, 
         SET_SUBTASKS_LIST, 
-        FETCH_SUBTASKS_LIST
+        FETCH_SUBTASKS_LIST,
+        FETCH_HEALTHY_NODE_NUMBER,
+        SET_HEALTHY_NODE_NUMBER
     } = dict
 
 let channelTestInterval
+
+/**
+ * [subscribeHistory func. fetchs subtasklist of the given task, with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function fetchNodeNumber(session, {payload}) {
+
+    return new Promise((resolve, reject) => {
+
+        function on_subtask_list(args) {
+
+            const subtask_list = args[0];
+            const healtySubtasks = subtask_list.filter( item => 
+                !(item.status === taskStatus.FAILURE 
+                || 
+                item.status === taskStatus.TIMEOUT));
+
+            resolve({
+                type: SET_HEALTHY_NODE_NUMBER,
+                payload: {
+                    [payload]: Array.isArray(healtySubtasks) && healtySubtasks.length
+                }
+            })
+        }
+
+        _handleRPC(on_subtask_list, session, config.GET_SUBTASKS_RPC, [payload])
+    })
+}
+
+export function* nodeNumberBase(session, payload) {
+    if (payload) {
+        let action = yield call(fetchNodeNumber, session, payload)
+        yield put(action)
+    }
+}
 
 /**
  * [blockNode func. blocks given node id]
@@ -43,7 +82,7 @@ export function* blockNodeBase(session, payload) {
 }
 
 /**
- * [subscribeHistory func. fetchs payment history of user, with interval]
+ * [subscribeHistory func. fetchs subtasklist of the given task, with interval]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
@@ -453,5 +492,6 @@ export function* tasksFlow(session) {
     yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
+    yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session)
     yield takeLatest(BLOCK_NODE, blockNodeBase, session)
 }

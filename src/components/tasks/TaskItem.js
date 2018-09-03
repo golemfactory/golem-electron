@@ -17,7 +17,7 @@ const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
-    subtasksList: state.single.subtasksList
+    nodeNumbers: state.details.nodeNumber
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -40,11 +40,11 @@ export class TaskItem extends React.Component {
     componentDidMount() {
         const {actions, item} = this.props
         let interval = ()=> {
-                actions.fetchSubtasksList(item.id)
+                actions.fetchHealthyNodeNumber(item.id)
                 return interval
             }
-        if(item.status === taskStatus.COMPUTING)
-            this.liveSubList = setInterval(interval(), 5000)
+
+        this.liveSubList = setInterval(interval(), 5000)
     }
 
     componentWillUnmount() {
@@ -71,7 +71,7 @@ export class TaskItem extends React.Component {
      */
     _fetchStatus(item) {
     	const {options} = item
-        const {subtasksList} = this.props
+        const {nodeNumbers} = this.props
 
         switch (item.status) {
         case taskStatus.TIMEOUT:
@@ -109,7 +109,7 @@ export class TaskItem extends React.Component {
                 <span className="bumper"> | </span>
                 <span className="duration--computing">Computing... </span>
                 <span className="bumper"> | </span>
-                <span>{subtasksList && subtasksList.length} Nodes</span>
+                <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
             </div>
 
         default:
