@@ -13,6 +13,7 @@ const {clipboard } = window.electron
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
+    isDeveloperMode: state.input.developerMode,
     isMainNet: state.info.isMainNet,
     golemStatus: state.realTime.golemStatus
 })
@@ -81,7 +82,7 @@ export class Wallet extends Component {
 
 
     render() {
-        const { publicKey, balance, currency, isMainNet, golemStatus} = this.props
+        const { publicKey, balance, currency, isDeveloperMode, isMainNet, golemStatus} = this.props
         const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
@@ -166,7 +167,14 @@ export class Wallet extends Component {
 		            </div>
 		            <div>
 		            	<input className="input__public-key" type="text" value={isMainNet ? publicKey : "You cannot top up your TestNet account"} readOnly/>
-	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, (isMainNet ? publicKey : "You cannot top up your TestNet account"))}/>
+	                	<span 
+                            className={`icon-${addressCopied ? "checkmark" : "copy"}`} 
+                            onClick={this._handleCopyToClipboard.bind(this, 
+                                (isMainNet 
+                                    ? publicKey 
+                                    : (isDeveloperMode 
+                                        ? publicKey
+                                        : "You cannot top up your TestNet account")))}/>
                         {addressCopied && <span className="status-copy_address">address copied</span>}
 		            </div>
 	            </div>
