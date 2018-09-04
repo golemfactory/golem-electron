@@ -81,8 +81,10 @@
 
     .info{
         &-success{
-            color: $color-accent1;
+            color: $color-text4;
+            background: $color-accent1;
             font-weight: 400;
+            width: 100%;
         }
 
         &-warning,
