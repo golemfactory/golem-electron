@@ -81,8 +81,10 @@
 
     .info{
         &-success{
-            color: $color-accent1;
+            color: $color-text4;
+            background: $color-accent1;
             font-weight: 400;
+            width: 100%;
         }
 
         &-warning,
@@ -141,8 +143,9 @@
         font-size: 10pt;
     }
 
-    .icon-arrow-left-white {
+    .icon-arrow-left-small {
         font-size: 28pt;
+        margin-left: -13px;
     }
 }
 

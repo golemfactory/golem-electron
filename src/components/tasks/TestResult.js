@@ -16,7 +16,7 @@ class TestResult extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            	ignoreTestWarning: false
+                ignoreTestWarning: false
             }
     }
 
@@ -99,7 +99,7 @@ class TestResult extends Component {
 
                     return <div 
                                 className={`local-render__info info-${status}`}>
-                                <h4>test passed, but...</h4>
+                                <h4>Test passed, but...</h4>
                                 <span>It looks like some data is missing;</span>
                                 <ul>{fillFiles(more
                                                 .after_test_data
@@ -120,7 +120,7 @@ class TestResult extends Component {
                 } else
                     return <div 
                                 className={`local-render__info info-${status}`}>
-                            test passed! Your good to go.
+                            Test passed! You are good to go.
                             </div>;
             case "error":
 
@@ -140,12 +140,16 @@ class TestResult extends Component {
             case "success":
                 return <span 
                             className={`local-render__info info-${status}`}>
-                        test passed! Your good to go.
+                        Test passed! You are good to go.
                         </span>;
             default:
                 return <span 
                             className="local-render__info">
-                        checking...
+                        checking<span className="jumping-dots">
+                                    <span className="dot-1">.</span>
+                                    <span className="dot-2">.</span>
+                                    <span className="dot-3">.</span>
+                                </span>
                         </span>;
         }
     }
@@ -197,26 +201,26 @@ class TestResult extends Component {
     }
 
     render() {
-    	const {ignoreTestWarning} = this.state
-    	const {testStatus, isDetailPage} = this.props
+        const {ignoreTestWarning} = this.state
+        const {testStatus, isDetailPage} = this.props
 
         return !ignoreTestWarning ?
-	                <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
-	                    { isDetailPage && <div className="panel-preview__task-detail">
-	                        <Link to="/tasks" aria-label="Back button to task list">
-	                            <span className="icon-arrow-left-white"/>
-	                            <span>Back</span>
-	                        </Link>
-	                    </div>}
-	                    {
-	                        !isDetailPage 
-	                        && testStatus.status !== null  
-	                        ? this._getPanelInfo(testStatus) 
-	                        : (!isDetailPage 
-	                            ? <span className="local-render__info">testing local render...</span>
-	                            : <span className="local-render__info"></span>)
-	                    }
-	                </section> : <div/>
+                    <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
+                        { isDetailPage && <div className="panel-preview__task-detail">
+                            <Link to="/tasks" aria-label="Back button to task list">
+                                <span className="icon-arrow-left-small"/>
+                                <span>Back</span>
+                            </Link>
+                        </div>}
+                        {
+                            !isDetailPage 
+                            && testStatus.status !== null  
+                            ? this._getPanelInfo(testStatus) 
+                            : (!isDetailPage 
+                                ? <span className="local-render__info">testing local render...</span>
+                                : <span className="local-render__info"></span>)
+                        }
+                    </section> : <div/>
     }
 }
 
