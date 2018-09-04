@@ -1023,20 +1023,6 @@ export class TaskDetail extends React.Component {
                                 </span>  
                             </div>
                         </div>
-                        { (testStatus 
-                            && !isDetailPage
-                            && !(testStatus.status === testStatusDict.SUCCESS 
-                                || testStatus.status === testStatusDict.ERROR)) 
-                        &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
-                                { isInPatient 
-                                    && <div className="loading--patient">
-                                    <img src={whoaImg} alt="Please be patient"/>
-                                    <span>
-                                    Hey don't be so impatient!<br/>
-                                    Local render test may require some time to finish. <br/>
-                                    </span>
-                                </div>}
-                            </div>}
                     </section>
                     {!isDetailPage && <section className="section-action__task-detail">
                         <Link to="/tasks" aria-label="Cancel" tabIndex="0">
@@ -1054,5 +1040,21 @@ export class TaskDetail extends React.Component {
         );
     }
 }
+
+// LOADING SCREEN IN ADVANCE
+// { (testStatus 
+//     && !isDetailPage
+//     && !(testStatus.status === testStatusDict.SUCCESS 
+//         || testStatus.status === testStatusDict.ERROR)) 
+// &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
+//         { isInPatient 
+//             && <div className="loading--patient">
+//             <img src={whoaImg} alt="Please be patient"/>
+//             <span>
+//             Hey don't be so impatient!<br/>
+//             Local render test may require some time to finish. <br/>
+//             </span>
+//         </div>}
+//     </div>}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TaskDetail)
