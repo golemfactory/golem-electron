@@ -145,7 +145,11 @@ class TestResult extends Component {
             default:
                 return <span 
                             className="local-render__info">
-                        checking...
+                        checking<span className="jumping-dots">
+                                    <span className="dot-1">.</span>
+                                    <span className="dot-2">.</span>
+                                    <span className="dot-3">.</span>
+                                </span>
                         </span>;
         }
     }
@@ -204,7 +208,7 @@ class TestResult extends Component {
 	                <section className={`section-preview__task-detail ${this._getPanelClass(testStatus)}`}>
 	                    { isDetailPage && <div className="panel-preview__task-detail">
 	                        <Link to="/tasks" aria-label="Back button to task list">
-	                            <span className="icon-arrow-left-white"/>
+	                            <span className="icon-arrow-left-small"/>
 	                            <span>Back</span>
 	                        </Link>
 	                    </div>}
