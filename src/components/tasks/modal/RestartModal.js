@@ -52,7 +52,7 @@ export default class RestartModal extends React.Component {
                             </label>
                         </div>
                         <div>
-                            <input type="radio" id="pickTask" value="pick" name="restart" disabled={true}/>
+                            <input type="radio" id="pickTask" value="pick" name="restart" disabled={status === taskStatus.FINISHED}/>
                             <label htmlFor="pickTask">
                                 <span className="overlay"/>
                                 Restart all timed out subtasks
