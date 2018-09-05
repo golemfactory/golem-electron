@@ -158,7 +158,6 @@ export class All extends React.Component {
     // show == 'complete' && 
     render() {
         const {show, details} = this.props
-        console.log("details", details);
         return (
             <div>
                 <TransitionMotion
