@@ -117,6 +117,7 @@ const statusDict = Object.freeze({
     DOWNLOADING: 'Downloading',
     FINISHED: 'Finished',
     FAILURE: 'Failure',
+    RESENT: 'Failed - Resent',
     TIMEOUT: 'Timeout',
     RESTARTED: 'Restart'
 })
@@ -297,6 +298,8 @@ export class SubTask extends React.Component {
                                         taskDetails.status === statusDict.RESTARTED 
                                         || 
                                         taskDetails.status === statusDict.FAILURE 
+                                        || 
+                                        subtask.status === statusDict.TIMEOUT
                                         || 
                                         this.state.isTaskSubmitted[subtask.subtask_id]
                                     }
