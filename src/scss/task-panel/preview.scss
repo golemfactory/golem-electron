@@ -3,6 +3,13 @@
         background: #243048;
         height: 250px;
 
+        &:hover{
+            & .preview__img{
+                transform: scale(0.9);
+                -webkit-filter: blur(0.5px);
+            }
+        }
+
     .preview__img {
         object-fit: contain;
         width: 100%;
@@ -36,9 +43,7 @@
             }
 
             ~ .preview__img{
-                transform: scale(0.9);
-                -webkit-filter: blur(1.5px);
-                will-change: transform;
+                will-change: transform, -webkit-filter;
             }
         }
 
