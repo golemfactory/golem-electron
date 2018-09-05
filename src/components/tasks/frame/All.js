@@ -181,7 +181,7 @@ export class All extends React.Component {
                       html={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, data.id)} disabled={(data.status === statusDict.NOTSTARTED)}>Resubmit</button>
+                            <button className="btn btn--primary" onClick={this._handleResubmit.bind(this, data, data.id)} disabled={(data.status === statusDict.NOTSTARTED)}>Resubmit</button>
                         </div>}
                       position="bottom"
                       trigger="mouseenter"

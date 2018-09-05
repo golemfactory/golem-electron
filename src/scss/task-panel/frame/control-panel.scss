@@ -29,18 +29,19 @@
         text-align: center;
     }
     .icon-show-subtasks {
+        display: block;
         margin-bottom: 2px;
     }
     .icon {
         &-arrow {
-            &-left-white,
-            &-right-white {
+            &-left-small,
+            &-right-small {
                 font-size: 22pt;
             }
-            &-left-white {
+            &-left-small {
                 margin-right: -15px;
             }
-            &-right-white {
+            &-right-small {
                 margin-left: -15px;
             }
         }
