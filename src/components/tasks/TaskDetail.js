@@ -925,13 +925,13 @@ export class TaskDetail extends React.Component {
                                     {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                             </div>
                             <div className="section-task__task-detail">
-                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings<br/>related to price and trust,<br/>it may take a while for your task to be<br/>accepted by the network.</p>} distance={-20}/>
+                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings related to price and trust,<br/>it may take a while for your task to be accepted by the network.</p>} distance={-20}/>
                                 <div className="item-settings">
                                     <InfoLabel 
                                         type="span" 
                                         label="Task Timeout" 
-                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait for a task to
-                                            <br/>be accepted by the<br/>network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait <br/>for a task to
+                                            be accepted by the network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
                                             Learn more
                                             </a></p>} 
                                         cls="title" 
@@ -944,8 +944,7 @@ export class TaskDetail extends React.Component {
                                         type="span" 
                                         label="Subtask Amount" 
                                         info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering
-                                                <br/>a number of frames you should set subtasks to the same number. 
-                                                <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                                <br/>a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
                                                 Learn more
                                                 </a>
                                                 </p>} 
