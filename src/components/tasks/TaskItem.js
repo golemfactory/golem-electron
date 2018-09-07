@@ -205,8 +205,7 @@ export class TaskItem extends React.Component {
                         <Tooltip
                           html={<p>Restart</p>}
                           position="right"
-                          trigger="mouseenter"
-                          disabled={item.status !== taskStatus.TIMEOUT}>
+                          trigger="mouseenter">
                             <span 
                                 className="icon-progress-clockwise" 
                                 tabIndex="0" 
