@@ -231,15 +231,15 @@ export class TaskDetail extends React.Component {
                         haltspp.value = options.haltspp
                     }
 
-                    this.props.actions.getEstimatedCost({
-                        type: nextProps.taskInfo.type,
-                        options: {
-                            price: Number(bid),
-                            num_subtasks: Number(subtasks),
-                            subtask_time: getTimeAsFloat(subtask_timeout)
-                        }
-                    })
-
+                    if(!nextProps.estimated_cost)
+                        this.props.actions.getEstimatedCost({
+                            type: nextProps.taskInfo.type,
+                            options: {
+                                price: Number(bid),
+                                num_subtasks: Number(subtasks),
+                                subtask_time: getTimeAsFloat(subtask_timeout)
+                            }
+                        })
                 }
 
             })
