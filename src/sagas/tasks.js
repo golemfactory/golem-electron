@@ -43,17 +43,19 @@ export function fetchNodeNumber(session, {payload}) {
         function on_subtask_list(args) {
 
             const subtask_list = args[0];
-            const healtySubtasks = subtask_list.filter( item => 
-                !(item.status === taskStatus.FAILURE 
-                || 
-                item.status === taskStatus.TIMEOUT));
+            if(subtask_list){
+                const healtySubtasks = subtask_list.filter( item => 
+                    !(item.status === taskStatus.FAILURE 
+                    || 
+                    item.status === taskStatus.TIMEOUT));
 
-            resolve({
-                type: SET_HEALTHY_NODE_NUMBER,
-                payload: {
-                    [payload]: Array.isArray(healtySubtasks) && healtySubtasks.length
-                }
-            })
+                resolve({
+                    type: SET_HEALTHY_NODE_NUMBER,
+                    payload: {
+                        [payload]: Array.isArray(healtySubtasks) && healtySubtasks.length
+                    }
+                })
+            }
         }
 
         _handleRPC(on_subtask_list, session, config.GET_SUBTASKS_RPC, [payload])
