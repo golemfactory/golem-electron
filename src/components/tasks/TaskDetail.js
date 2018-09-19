@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
+import isEqual from 'lodash.isequal';
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
@@ -249,7 +250,7 @@ export class TaskDetail extends React.Component {
             this.parsePresets(nextProps.presets)
         }
 
-        if(nextProps.testStatus !== this.props.testStatus && 
+        if(!isEqual(nextProps.testStatus, this.props.testStatus) && 
                 !isObjectEmpty(nextProps.testStatus.more) && 
                 !this.state.defaultSettingsModal)
         {
