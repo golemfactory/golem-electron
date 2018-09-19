@@ -47,7 +47,7 @@ export default class Terms extends React.Component {
                     </div>
                     <div className="radio-item" onChange={this.props.handleMonitorRadio}>
                         <input id="optIn2" type="checkbox" name="optIn2" checked={isMonitorAccepted} readOnly required/>
-                        <label htmlFor="optIn2" className="radio-label-left">I want to help Golem by sending my statisctics.</label>
+                        <label htmlFor="optIn2" className="radio-label-left">I want to help Golem by sending my statistics.</label>
                     </div>
                 </div>
             </div>

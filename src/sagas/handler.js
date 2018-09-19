@@ -32,6 +32,7 @@ export let config = Object.freeze({
     GET_TASK_SERVER_PORT_RPC: 'net.tasks.port',
     GET_COMPUTING_TRUST_RPC: 'rep.comp',
     GET_REQUESTING_TRUST_RPC: 'rep.requesting',
+    GET_PROVIDER_STATUS: 'provider.status',
     //Tasks
     GET_TASKS_RPC: 'comp.tasks',
     GET_TASKS_CH: 'evt.comp.task.list',
