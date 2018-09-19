@@ -194,7 +194,6 @@ export function subscribeGolemStatus(session) {
                 on_status(result[0]);
         }
 
-        _handleRPC(on_status_rpc, session, config.GOLEM_STATUS_RPC);
         _handleSUBPUB(on_status, session, config.GOLEM_STATUS_CH);
 
         return () => _handleUNSUBPUB(on_status, session, config.GOLEM_STATUS_CH);
