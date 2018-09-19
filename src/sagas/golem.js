@@ -188,12 +188,7 @@ export function subscribeGolemStatus(session) {
                     });
                 }
         }
-
-        function on_status_rpc(result) {
-            if (result && result.length)
-                on_status(result[0]);
-        }
-
+        
         _handleSUBPUB(on_status, session, config.GOLEM_STATUS_CH);
 
         return () => _handleUNSUBPUB(on_status, session, config.GOLEM_STATUS_CH);
