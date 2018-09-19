@@ -5,7 +5,7 @@ import single from './frame/single'
 import task from './frame/task'
 /*Network*/
 import advanced from './network/advanced'
-import history from './network/history'
+import history, * as fromHistory from './network/history'
 import resources from './network/resources'
 /*Settings*/
 import fileLocation from './settings/fileLocation'
@@ -66,3 +66,6 @@ const reducer = combineReducers({
 })
 
 export default reducer
+
+
+export const getFilteredPaymentHistory = (state, filter, isDefault) => fromHistory.getFilteredPaymentSelector(state.history, filter, isDefault)

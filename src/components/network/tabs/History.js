@@ -6,6 +6,7 @@ import {Tooltip} from 'react-tippy';
 import { TransitionMotion, spring, presets } from 'react-motion'
 
 import * as Actions from '../../../actions'
+import {getFilteredPaymentHistory} from '../../../reducers'
 import { timeStampToHR } from '../../../utils/secsToHMS'
 
 const mainEtherscan = "https://etherscan.io/tx/0x"
@@ -17,20 +18,10 @@ const filter = {
     INCOME: 'income'
 }
 
-/*############# HELPER FUNCTIONS ############# */
-
-function newestToOldest(a, b) {
-    if (a.created < b.created)
-        return 1;
-    if (a.created > b.created)
-        return -1;
-    return 0;
-}
-
 const mapStateToProps = state => ({
-    historyList: state.history.historyList,
     isMainNet: state.info.isMainNet,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    paymentHistory: getFilteredPaymentHistory.bind(null, state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -64,55 +55,11 @@ export class History extends React.Component {
     }
 
     /**
-     * [getDefaultStyles func. actual animation-related logic]
-     * @return  {Array}    [default style list of the animated item]
-     */
-    getDefaultStyles(_list, _filter) {
-        return _list
-            .sort(newestToOldest)
-            .map((item, index) => {
-                return {
-                    key: item.created.toString(),
-                    data: item,
-                    style: {
-                        height: 0,
-                        opacity: 0,
-                        borderWidth: 0
-                    }
-                }
-            })
-    }
-
-    /**
      * [getStyles func. updated style list]
      * @return {Array} [style list of the animated item]
      */
     getStyles(_list, _filter) {
-        return _list
-                .filter(item => _filter 
-                        ? item.type === _filter
-                        : item)
-                .sort(newestToOldest)
-                .map((item, index) => {
-                    return {
-                        key: item.created.toString(),
-                        data: item,
-                         style: {
-                            height: spring(76, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                            opacity: spring(1, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                            borderWidth: spring(1, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                        }
-                    }
-                })
+        return _list(_filter)
     }
 
     /**
@@ -154,7 +101,7 @@ export class History extends React.Component {
     loadHistory(_list, _filter = null) {
         const { isMainNet} = this.props
         return <TransitionMotion
-            defaultStyles={::this.getDefaultStyles(_list, _filter)}
+            defaultStyles={_list(null, true)}
             styles={::this.getStyles(_list, _filter)}
             willLeave={::this.willLeave}
             willEnter={::this.willEnter}>
@@ -191,9 +138,9 @@ export class History extends React.Component {
     }
 
     render() {
-        const {historyList, isEngineOn} = this.props
+        const {isEngineOn, paymentHistory} = this.props
         const {activeTab} = this.state
-        const filteredList = this.loadHistory(historyList, activeTab)
+        const filteredList = this.loadHistory(paymentHistory, activeTab)
         return (
             <div className="content__history">
                 <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
@@ -202,7 +149,7 @@ export class History extends React.Component {
                     <div className="tab__title" value="payment" onClick={::this._handleTab} role="tab" tabIndex="0">Outgoing</div>
                 </div>
                 <div>
-                    {(historyList.length > 0 && filteredList.props.styles.length > 0)
+                    {(paymentHistory && filteredList.props.styles.length > 0)
                         ? filteredList
                         : <div className="empty-list__history">
                             <span>You don’t have any {activeTab ? activeTab : "earnings or payment"} yet.
