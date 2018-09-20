@@ -27,7 +27,7 @@ import account from './account'
 import input from './input'
 import loader from './loader'
 import currency from './currency'
-import realTime from './realTime'
+import realTime, * as fromRealTime from './realTime'
 import info from './info'
 import queue from './queue'
 
@@ -69,3 +69,5 @@ export default reducer
 
 
 export const getFilteredPaymentHistory = (state, filter, isDefault) => fromHistory.getFilteredPaymentSelector(state.history, filter, isDefault)
+export const getStatus = (state, key) => fromRealTime.getStatusSelector(state.realTime, key)
+export const getPasswordModalStatus = (state, key) => fromRealTime.passwordModalSelector(state.realTime, key)

@@ -18,6 +18,7 @@ import { OnBoardingComponent } from '../components/hoc/Onboarding'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../actions'
+import {getStatus, getPasswordModalStatus} from '../reducers'
 import IssueModal from './modal/IssueModal'
 import WithdrawModal from './../components/wallet/modal/WithdrawModal'
 import PasswordModal from './modal/PasswordModal'
@@ -51,12 +52,12 @@ function isGolemReady(status) {
 }
 
 const mapStateToProps = state => ({
-    golemStatus: state.realTime.golemStatus,
+    golemStatus: getStatus(state, 'golemStatus'),
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
     taskQueue: state.queue.next,
     withdrawModal: state.account.withdrawModal,
-    passwordModal: state.realTime.passwordModal,
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     showOnboard: state.onboard.showOnboard,
     taskQueue: state.queue.next,
     //To fill initial resource

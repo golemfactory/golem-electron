@@ -128,7 +128,7 @@ export class PasswordModal extends React.Component {
                         <br/>
                         <span className="notice">to unlock your Golem</span>
                     </div>
-                    <form onSubmit={::this._setPassword}>
+                    <form id="loginForm" onSubmit={::this._setPassword}>
                      {(passwordModal && passwordModal.register) ?
                         [<div key="1" className="container__field">
                             <label>Password</label>
@@ -179,7 +179,16 @@ export class PasswordModal extends React.Component {
                             <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
-                        <button type="submit" className={`btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
+                        <button 
+                            type="submit" 
+                            className={`btn--primary ${loadingIndicator && 'btn--loading'}`} 
+                            disabled={loadingIndicator}> {loadingIndicator 
+                                                            ? 'Signing in' 
+                                                            : ((passwordModal && passwordModal.register) 
+                                                                ? "Register"
+                                                                : "Login") }
+                            {loadingIndicator 
+                        && <span className="jumping-dots">
                           <span className="dot-1">.</span>
                           <span className="dot-2">.</span>
                           <span className="dot-3">.</span>

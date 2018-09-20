@@ -76,19 +76,19 @@ export default class FooterMain extends Component {
     }
 
     render() {
-        const {golemStatus, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
+        const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
                     <div className="section__actions-status">
-                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
+                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status, connectionProblem)}`}/>
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${golemStatus.message} `}</span>
-                                {::this._loadErrorUrl(golemStatus.message)}
-                                {(golemStatus.message && golemStatus.message.length > 10) && <br/>}
+                                <span className="status-message">{`${status.message} `}</span>
+                                {::this._loadErrorUrl(status.message)}
+                                {(status.message && status.message.length > 10) && <br/>}
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">

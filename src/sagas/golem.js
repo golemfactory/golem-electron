@@ -184,7 +184,7 @@ export function subscribeGolemStatus(session) {
             if (args && args.length){
                     emit({
                         type: SET_GOLEM_STATUS,
-                        payload: getGolemStatus.apply(null, args)
+                        payload: args
                     });
                 }
         }
