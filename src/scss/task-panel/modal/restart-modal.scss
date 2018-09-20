@@ -1,0 +1,84 @@
+.container__restart-modal {
+    .content__modal {
+        height: 240px;
+        text-align: center;
+        padding: 20px;
+        .icon-progress-clockwise {
+            display: inline-block;
+            color: $color-text;
+            background: $color-bg;
+            font-size: 2.6em;
+            width: 1em;
+            height: 1em;
+            line-height: 1.1em;
+            padding: 0.3em;
+            text-align: center;
+            border-radius: 50%;
+            // color: $color-accent2;
+            // font-size: 28pt;
+            // background: $color-bg2;
+            // border-radius: 50px;
+            // padding: 18px;
+        }
+
+        .title__restart-modal{
+            margin-top: 20px;
+            font-weight: 400;
+            font-size: 10pt;
+        }
+
+        .restart-task__radio-group{
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0 20px 33%;
+
+            div{
+                margin: 2px 0;
+            }
+
+             input[type=radio] {
+                display: none;
+                padding: 0 20px;
+                box-sizing: border-box;
+
+                /* changed style when checked */
+                &:checked + label > .overlay {
+                    background-color: $color-primary;
+                }
+
+                &:disabled + label{
+                    color: $color-text3;
+                }
+                
+                &:disabled + label > .overlay{
+                    border: 1px solid $color-text3;
+                }
+
+            }
+             label{
+                font-size: 9pt;
+                margin-left:5px;
+                margin-right:50px;
+                font-weight: 400;
+                cursor: pointer;
+            }
+             /* default radio button style: unchecked */
+            .overlay {
+              display: inline-block;
+              position: relative;
+              top: .25em;
+              left: -1em; /* or whatever length you need here */
+              height: .5em;
+              width: .5em;
+              border-radius: 50%;
+              border: 1px solid $color-primary;
+              background-clip: border-box;
+              padding: 4px;
+              background-clip: content-box;
+              cursor: pointer;
+            }
+        }
+    }
+}

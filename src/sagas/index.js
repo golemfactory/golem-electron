@@ -153,6 +153,16 @@ export function subscribe(session) {
             ) {
                 emit(true);
             } else if (connection.startsWith("Port")) {
+
+                if(!skipError){
+                    const skipErrorInterval = setInterval(() => {
+                        if(skipError){
+                            emit(skipError) 
+                            clearInterval(skipErrorInterval)
+                        } 
+                    }, 500);
+                }
+
                 emit(skipError);
             }
         }

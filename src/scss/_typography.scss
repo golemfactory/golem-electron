@@ -426,19 +426,19 @@
 /*###########  ICON FONT ###########*/
 
 @font-face {
-  font-family: 'golemcon';
-  src:  url('../assets/fonts/Golemcon/golemcon.eot?wpkt3k');
-  src:  url('../assets/fonts/Golemcon/golemcon.eot?wpkt3k#iefix') format('embedded-opentype'),
-    url('../assets/fonts/Golemcon/golemcon.ttf?wpkt3k') format('truetype'),
-    url('../assets/fonts/Golemcon/golemcon.woff?wpkt3k') format('woff'),
-    url('../assets/fonts/Golemcon/golemcon.svg?wpkt3k#golemcon') format('svg');
+  font-family: 'gcon';
+  src:  url('../assets/fonts/Gcon/gcon.eot?wpkt3k');
+  src:  url('../assets/fonts/Gcon/gcon.eot?wpkt3k#iefix') format('embedded-opentype'),
+    url('../assets/fonts/Gcon/gcon.ttf?wpkt3k') format('truetype'),
+    url('../assets/fonts/Gcon/gcon.woff?wpkt3k') format('woff'),
+    url('../assets/fonts/Gcon/gcon.svg?wpkt3k#gcon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'golemcon' !important;
+  font-family: 'gcon' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;

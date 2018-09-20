@@ -7,27 +7,17 @@ import {Tooltip} from 'react-tippy';
 
 import { Motion, spring } from 'react-motion';
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
+import {taskStatus} from './../../constants/statusDicts'
 
 import * as Actions from '../../actions'
 
 import Preview from './Preview'
 
-const status = Object.freeze({
-    WAITINGFORPEER: 'Waiting for peer',
-    NOTREADY: 'Not started',
-    READY: 'Ready',
-    WAITING: 'Waiting',
-    COMPUTING: 'Computing',
-    FINISHED: 'Finished',
-    TIMEOUT: 'Timeout',
-    RESTART: 'Restart'
-})
-
 const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
-    subtasksList: state.single.subtasksList
+    nodeNumbers: state.details.nodeNumber
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -50,10 +40,11 @@ export class TaskItem extends React.Component {
     componentDidMount() {
         const {actions, item} = this.props
         let interval = ()=> {
-                actions.fetchSubtasksList(item.id)
+                actions.fetchHealthyNodeNumber(item.id)
                 return interval
             }
-            this.liveSubList = setInterval(interval(), 5000)
+
+        this.liveSubList = setInterval(interval(), 5000)
     }
 
     componentWillUnmount() {
@@ -80,10 +71,10 @@ export class TaskItem extends React.Component {
      */
     _fetchStatus(item) {
     	const {options} = item
-        const {subtasksList} = this.props
+        const {nodeNumbers} = this.props
 
         switch (item.status) {
-        case status.TIMEOUT:
+        case taskStatus.TIMEOUT:
             return <div>
             	<span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
             	<span className="bumper"> | </span>
@@ -91,34 +82,34 @@ export class TaskItem extends React.Component {
             	<span>{timeStampToHR(item.last_updated)}</span>
             </div>
 
-        case status.NOTREADY:
+        case taskStatus.NOTREADY:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
                 <span className="duration--preparing">Preparing for computation... </span>
             </div>
 
-        case status.WAITING:
+        case taskStatus.WAITING:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
                 <span className="duration--preparing">Waiting for computation... </span>
             </div>
 
-        case status.RESTART:
+        case taskStatus.RESTART:
             return <div>
                 <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
                 <span className="bumper"> | </span>
                 <span className="duration--restarted">Restarted</span>
             </div>
 
-        case status.COMPUTING:
+        case taskStatus.COMPUTING:
             return <div>
                 <span>Duration: {convertSecsToHMS(item.duration)}</span>
                 <span className="bumper"> | </span>
                 <span className="duration--computing">Computing... </span>
                 <span className="bumper"> | </span>
-                <span>{subtasksList && subtasksList.length} Nodes</span>
+                <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
             </div>
 
         default:
@@ -140,7 +131,7 @@ export class TaskItem extends React.Component {
     }
 
     render() {
-    	const {item, index, _handleRowClick, _handleRestart, _handleDeleteModal, psId} = this.props
+    	const {item, index, _handleRowClick, _handleRestartModal, _handleDeleteModal, psId} = this.props
         const {toggledPreviewList} = this.state
         const {options} = item
         return (<Motion defaultStyle={{
@@ -170,7 +161,7 @@ export class TaskItem extends React.Component {
                                 {this._fetchStatus(item)}
                                 <div className="info__task">
                                     <div>
-                                        <span>Frames: {(options && options.frames) || 0}</span>
+                                        <span>Frames: {(options && options.frame_count) || 0}</span>
                                         <span className="bumper"> | </span>
                                         <span> Resolution: {(options && options.resolution.join("x")) || 0}</span>
                                         <span className="bumper"> | </span>
@@ -214,18 +205,15 @@ export class TaskItem extends React.Component {
                         <Tooltip
                           html={<p>Restart</p>}
                           position="right"
-                          trigger="mouseenter"
-                          disabled={item.status !== status.TIMEOUT}>
+                          trigger="mouseenter">
                             <span 
-                                className="icon-reload" 
+                                className="icon-progress-clockwise" 
                                 tabIndex="0" 
                                 aria-label="Restart Task" 
-                                onClick={(item.status == status.TIMEOUT 
-                                         || item.status == status.FINISHED) 
-                                            ? _handleRestart 
+                                onClick={(item.status !== taskStatus.RESTART) 
+                                            ? _handleRestartModal 
                                             : undefined} 
-                                disabled={!(item.status === status.TIMEOUT
-                                          || item.status === status.FINISHED)}></span>
+                                disabled={!(item.status !== taskStatus.RESTART)}></span>
                         </Tooltip>
                         <Tooltip
                           html={<p>Delete</p>}
