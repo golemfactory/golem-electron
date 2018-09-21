@@ -25,7 +25,7 @@ const initialState = {
         new BigNumber(0).toString()
     ],
     taskList: [],
-    connectedPeers: 0,
+    connectedPeers: null,
     peerInfo: [],
     golemStatus: {
         status: 'Not Ready',
@@ -34,9 +34,9 @@ const initialState = {
     footerInfo: null,
     passwordModal: { 
         status: false, 
-        register: false
-    },
-    lockStatus: false
+        register: false,
+        error: false
+    }
 }
 
 const password = {
@@ -77,11 +77,6 @@ const realTime = (state = initialState, action) => {
             peerInfo: action.payload,
             connectedPeers: action.payload.length
         });
-
-    case SET_PASSWORD:
-        return Object.assign({}, state, {
-            lockStatus: true
-        })
 
     case SET_GOLEM_STATUS:
         _isPasswordModalPopped = false
@@ -277,15 +272,14 @@ function getGolemStatus(component, method, stage, data) {
 
 export const getStatusSelector = createCachedSelector(
         (state) => state.golemStatus,
-        (state) => state.lockStatus,
         (state) => state.connectedPeers,
         (state) => state.passwordModal,
         (state, key) => key,
-        (golemStatus, lockStatus, connectedPeers, passwordModal, key) => {
+        (golemStatus, connectedPeers, passwordModal, key) => {
 
             let status = getGolemStatus.apply(null, golemStatus)
-
-            if(connectedPeers){
+            
+            if(Number.isInteger(connectedPeers)){
                 status = {
                     status: 'Ready',
                     message: nodesString(connectedPeers),
@@ -301,18 +295,16 @@ export const getStatusSelector = createCachedSelector(
 export const passwordModalSelector = createCachedSelector(
     (state) => state,
     (state) => state.passwordModal,
-    (state) => state.lockStatus,
     (state, key) => key,
-    (state, passwordModal, lockStatus) => {
+    (state, passwordModal) => {
         const currentStatus = getStatusSelector(state, 'golemStatus')
-
-        if(!lockStatus && currentStatus){
+        if(currentStatus){
             if(currentStatus.message === password.REGISTER && !_isPasswordModalPopped){
-                passwordModal = { status: true, register: true }
+                passwordModal = {...passwordModal,  status: true, register: true}
                 _isPasswordModalPopped = true
-            } 
+            }
             else if(currentStatus.message === password.LOGIN && !_isPasswordModalPopped){
-                passwordModal = { status: true, register: false }
+                passwordModal = {...passwordModal, status: true, register: false}
                 _isPasswordModalPopped = true
             }
         }

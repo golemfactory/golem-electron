@@ -94,7 +94,8 @@ export class PasswordModal extends React.Component {
         }
     }
 
-    _setPassword(){
+    _setPassword(event){
+        event.preventDefault();
         this.props.actions.setPassword(this.state.password)
         this.setState({
             loadingIndicator: true
@@ -188,11 +189,12 @@ export class PasswordModal extends React.Component {
                                                                 ? "Register"
                                                                 : "Login") }
                             {loadingIndicator 
-                        && <span className="jumping-dots">
-                          <span className="dot-1">.</span>
-                          <span className="dot-2">.</span>
-                          <span className="dot-3">.</span>
-                        </span> }</button>
+                            &&  <span className="jumping-dots">
+                                    <span className="dot-1">.</span>
+                                    <span className="dot-2">.</span>
+                                    <span className="dot-3">.</span>
+                                </span> }
+                        </button>
                     </form>
                 </div>
             </div>
