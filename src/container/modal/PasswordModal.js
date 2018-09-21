@@ -32,23 +32,6 @@ export class PasswordModal extends React.Component {
         this._handleCancel = ::this._handleCancel
     }
 
-    clickOutside(parent, event) {
-            var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
-            if (!isClickInside) {
-                this._handleCancel()
-            }
-    }
-
-    componentDidMount() {
-        this._specifiedElement = this.refs.modalContent
-        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
-        window.applicationSurface.addEventListener('click', this._clickOutside)
-    }
-
-    componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this._clickOutside)
-    }
-
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error && this.state.loadingIndicator){
             const container = document.getElementById("passwordModalContainer")
