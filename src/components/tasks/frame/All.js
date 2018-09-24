@@ -8,22 +8,12 @@ import * as Actions from '../../../actions'
 
 import SingleFrame from './Single'
 import { timeStampToHR } from './../../../utils/secsToHMS'
+import {taskStatus as statusDict} from './../../../constants/statusDicts'
 
 const routesDict = Object.freeze({
     COMPLETE: 'complete',
     ALL: 'all',
     SINGLE: 'single'
-})
-
-const statusDict = Object.freeze({
-    NOTSTARTED: 'notStarted',
-    COMPUTING: 'computing',
-    FINISHED: 'finished',
-    ABORTED: 'aborted',
-    WAITING: 'waiting',
-    SENDING: 'sending',
-    TIMEOUT: 'timeout',
-    RESTARTED: 'restarted'
 })
 
 const statusClassDict = Object.freeze({
@@ -67,7 +57,7 @@ export class All extends React.Component {
      */
     _handleClick(item, index) {
         const {setFrameId, setFrameIndex} = this.props.actions
-        if (item.status !== statusDict.NOTSTARTED && this.props.details.status !== statusDict.WAITING) {
+        if (item.status !== statusDict.NOTREADY && this.props.details.status !== statusDict.WAITING) {
             setFrameId(item.id)
             setFrameIndex(index)
             window.routerHistory.push(`/preview/${routesDict.SINGLE}/`)
@@ -167,7 +157,7 @@ export class All extends React.Component {
     }
     // show == 'complete' && 
     render() {
-        const {show} = this.props
+        const {show, details} = this.props
         return (
             <div>
                 <TransitionMotion
@@ -181,7 +171,16 @@ export class All extends React.Component {
                       html={<div className="content__tooltip">
                             {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
                             <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
-                            <button onClick={this._handleResubmit.bind(this, data, data.id)} disabled={(data.status === statusDict.NOTSTARTED)}>Resubmit</button>
+                            <button 
+                                className="btn btn--primary" 
+                                onClick={this._handleResubmit.bind(this, data, data.id)} 
+                                disabled={
+                                    (data.status === statusDict.NOTREADY
+                                    ||
+                                    data.status === statusDict.RESTART
+                                    ||
+                                    details.status === statusDict.RESTART)
+                                }>Resubmit</button>
                         </div>}
                       position="bottom"
                       trigger="mouseenter"

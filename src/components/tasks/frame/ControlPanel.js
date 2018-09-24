@@ -44,7 +44,7 @@ export class ControlPanel extends React.Component {
                     html={<p>Previous Frame</p>}
                     position="bottom"
                     trigger="mouseenter">
-                        <span className="icon-arrow-left-white" role="button" aria-label="Previous Frame" tabIndex="0" onClick={previousFrame}/>
+                        <span className="icon-arrow-left-small" role="button" aria-label="Previous Frame" tabIndex="0" onClick={previousFrame}/>
                 </Tooltip>
                 
                 <span className="preview-count__control-panel">{parseInt(index)} of {details.options && details.options.frame_count}</span>
@@ -52,7 +52,7 @@ export class ControlPanel extends React.Component {
                     html={<p>Next Frame</p>}
                     position="bottom"
                     trigger="mouseenter">
-                        <span className="icon-arrow-right-white" role="button" aria-label="Next Frame" tabIndex="0" onClick={nextFrame}/>
+                        <span className="icon-arrow-right-small" role="button" aria-label="Next Frame" tabIndex="0" onClick={nextFrame}/>
                 </Tooltip>
                 <Tooltip
                     html={<p>Zoom Out</p>}

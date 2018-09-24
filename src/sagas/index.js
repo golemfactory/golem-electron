@@ -2,8 +2,11 @@ import { eventChannel, buffers } from "redux-saga";
 import { fork, takeLatest, take, call, put, cancel } from "redux-saga/effects";
 import { login, setMessage, logout, dict } from "../actions";
 
-import Wampy from "wampy";
-import MsgpackSerializer from "./../utils/MsgpackSerializer";
+import { Wampy } from 'wampy';
+import wampyCra from 'wampy-cra';
+import {w3cwebsocket} from 'websocket';
+
+import {MsgpackSerializer} from 'wampy/dist/serializers/MsgpackSerializer';
 import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
 
 import { accountFlow } from './account';
@@ -27,7 +30,6 @@ import { tasksFlow } from "./tasks";
 import { termsFlow } from './terms';
 import { versionFlow } from "./version";
 
-const { ipcRenderer } = window.electron;
 const {
     SET_CONNECTION_PROBLEM,
     SET_GOLEM_STATUS,
@@ -62,13 +64,16 @@ export function connect() {
          * @param  {[Object]}       Options
          * @return {[Object]}       connection          ['Connection with session']
          */
-        function connect() {
+        function connect(secret) {
             let connection = new Wampy(config.WS_URL, {
+                ws: w3cwebsocket,
                 realm: config.REALM,
                 autoReconnect: true,
-                transportEncoding: "msgpack",
-                msgpackCoder: new MsgpackSerializer(),
+                serializer: new MsgpackSerializer(),
                 maxRetries: 100000,
+                authid: config.AUTHID,
+                authmethods: ['wampcra'],
+                onChallenge: ((method, info) => wampyCra.sign(secret, info.challenge)),
                 onConnect: () => {
                     console.log("WS: connected");
                     emit({
@@ -92,14 +97,14 @@ export function connect() {
                     app.golem.connected = false;
                     console.log("WS: connection closed");
                 },
-                onError: (err, details) => {
+                onError: ({error, details}) => {
                     connection.disconnect()
-                    console.info("WS: connection error:", err, details);
+                    console.info("WS: connection error:", error, details);
 
                     if (reconnection) {
                         emit({
                             connection: null,
-                            error: err
+                            error: error
                         });
                     }
 
@@ -115,7 +120,9 @@ export function connect() {
         }
 
         console.log("WS: connecting");
-        connect();
+        app.golem.getSecretKey(config.AUTHID)
+        .then((secret => connect(secret)))
+        
 
         return () => {
             console.log("negative");
@@ -138,7 +145,7 @@ export function subscribe(session) {
         // SUBSCRIBE to a topic and receive events
 
         function on_connection(args) {
-            var connection = args[0];
+            const connection = args[0];
 
             if (
                 connection.startsWith("Connected") ||
@@ -146,6 +153,16 @@ export function subscribe(session) {
             ) {
                 emit(true);
             } else if (connection.startsWith("Port")) {
+
+                if(!skipError){
+                    const skipErrorInterval = setInterval(() => {
+                        if(skipError){
+                            emit(skipError) 
+                            clearInterval(skipErrorInterval)
+                        } 
+                    }, 500);
+                }
+
                 emit(skipError);
             }
         }

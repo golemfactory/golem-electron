@@ -4,6 +4,7 @@
 .draggable {
     position: absolute;
     top: 0;
+    left: 0;
     z-index: 100;
     width: 100%;
     height: $header-height-mac;
@@ -293,7 +294,7 @@
     height: 84px !important;
 
     .header__frame{
-        height: 84px !important;
+        height: 50px !important;
         line-height: 48px !important;
     }
 

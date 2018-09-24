@@ -119,7 +119,7 @@ export default class CurrencyBox extends Component {
                         </span>}
                 </div>
                 <div className="side2">
-                    <div ref={"currencyBox" + suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
+                    <div ref={"currencyBox" + suffix} className="content__currency-box" onClick={expandAmount.bind(this, suffix)}>
                 <div>
                     <span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>

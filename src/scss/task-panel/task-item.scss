@@ -95,7 +95,7 @@
             }
             
             .icon-eye,
-            .icon-reload,
+            .icon-progress-clockwise,
             .icon-trash,
             .icon-info-small {
                 box-sizing: border-box;
@@ -119,13 +119,13 @@
 
             &:hover .icon-eye,
             &:hover .icon-trash,
-            &:hover .icon-reload,
+            &:hover .icon-progress-clockwise,
             &:hover .icon-info-small {
                 visibility: visible;
             }
 
-            .icon-reload{
-                font-size: 8pt;
+            .icon-progress-clockwise{
+                font-size: 9pt;
                 margin: 0 0 2px 0;
             }
 
@@ -151,7 +151,7 @@
 
             .task-details-icon{
                 height: 16px;
-                margin-top: -5px;
+                margin-top: -4px;
             }
         }
     }
