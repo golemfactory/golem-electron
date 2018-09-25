@@ -731,7 +731,8 @@ export class TaskDetail extends React.Component {
         actions.runTestTask({
             resources,
             type,
-            subtasks: 1 // <--- HARDCODED
+            subtasks: 1, // <--- HARDCODED
+            concent_enabled: false
         })
     }
 
@@ -742,6 +743,7 @@ export class TaskDetail extends React.Component {
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
+                concent_enabled: false
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
