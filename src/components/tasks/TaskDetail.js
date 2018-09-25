@@ -739,6 +739,7 @@ export class TaskDetail extends React.Component {
         actions.runTestTask({
             resources,
             compute_on,
+            concent_enabled: false,
             type,
             subtasks: 1 // <--- HARDCODED
         })
@@ -752,6 +753,7 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
+                concent_enabled: false,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
@@ -974,14 +976,21 @@ export class TaskDetail extends React.Component {
                                         <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
                                         <label htmlFor="cpu">
                                             <span className="overlay"/>
-                                            CPU
+                                            <span className="icon-cpu"/>CPU
                                         </label>
                                     </div>
                                     <div>
                                         <input type="radio" id="gpu" value="gpu" name="compute_on"/>
                                         <label htmlFor="gpu">
                                             <span className="overlay"/>
-                                            GPU
+                                            <span className="icon-gpu"/>GPU
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="sgx" value="sgx" name="compute_on"/>
+                                        <label htmlFor="sgx">
+                                            <span className="overlay"/>
+                                            <span className="icon-sgx"/>SGX
                                         </label>
                                     </div>
                                 </div>
