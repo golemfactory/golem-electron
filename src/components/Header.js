@@ -17,6 +17,25 @@ const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
 
+/**
+ * Helper function
+ */
+
+const getSiblings = function (elem) {
+    var siblings = [];
+    var sibling = elem.parentNode.firstChild;
+    for (; sibling; sibling = sibling.nextSibling) {
+        if (sibling.nodeType !== 1 || sibling === elem) continue;
+        siblings.push(sibling);
+    }
+    return siblings;
+};
+
+/**
+ * Helper function
+ */
+
+
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     connectedPeers: state.realTime.connectedPeers,
@@ -43,6 +62,9 @@ export class Header extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            disableUploadTooltip: false
+        }
     }
 
     componentDidMount() {
@@ -183,6 +205,25 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
+    _toggleUploadMenu(elm){
+        const uploadIcon = elm.currentTarget
+        const siblings = getSiblings(uploadIcon.parentNode)
+        const listener = () => {
+            uploadIcon.classList.remove("upload-menu-active")
+            listener && uploadIcon.removeEventListener("mouseenter", listener)
+            this.setState({
+                disableUploadTooltip: false
+            })
+        }
+
+        uploadIcon.classList.toggle("upload-menu-active")
+        siblings.map( item => item.addEventListener("mouseenter", listener))
+
+        this.setState({
+            disableUploadTooltip: !this.state.disableUploadTooltip
+        })
+    }
+
     // <div className="top-titlebar">
     //     <div style={styling} className="draggable draggable--win"></div>
     //     <div>
@@ -195,6 +236,7 @@ export class Header extends Component {
     // </div>
 
     render() {
+        const {disableUploadTooltip} = this.state
         const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
@@ -213,8 +255,14 @@ export class Header extends Component {
                     <Tooltip
                       html={this._taskHints(isEngineOn, connectedPeers)}
                       position="bottom"
-                      trigger="mouseenter">
-                        <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                      trigger="mouseenter"
+                      disabled={disableUploadTooltip}
+                      hideOnClick={connectedPeers}>
+                        <li className="menu__item upload-menu" onClick={connectedPeers ? ::this._toggleUploadMenu : undefined}>
+                            <span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/>
+                            <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}/>
+                            <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}/>
+                        </li>
                     </Tooltip>
                     <Tooltip
                       html={(<p>Docs</p>)}

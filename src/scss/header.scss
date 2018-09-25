@@ -142,6 +142,41 @@
         }
     }
 
+    .upload-menu{
+          position: relative;
+          top: -19px;
+          right: 20px;
+          
+            .icon-add{
+              position: absolute !important;
+              background: white;
+              border-radius: 50%;
+              z-index: 3;
+            }
+            .icon-file-menu{
+              position: absolute !important;
+              z-index: 2;
+              transition: top 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              top: 0;
+              transition-delay: .5s; 
+            }
+            .icon-folder-menu{
+              position: absolute !important;
+              z-index: 1;
+              transition: top 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              transition-delay: .2s;
+              top: 0;
+            }
+
+            &.upload-menu-active > .icon-file-menu{
+                top: 30px;
+                transition-delay: 0s;
+            }
+            &.upload-menu-active > .icon-folder-menu{
+                  top: 60px;
+            }
+        }
+
     .menu__item {
         color: $color-text3;
         margin-left: 10px;
