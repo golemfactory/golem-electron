@@ -32,7 +32,9 @@ $color_3: rgb(245, 166, 35);
     content: "\e904";
   }
 }
-.icon-blender {
+.icon-blender,
+.icon-blender_nvgpu,
+.icon-blender_sgx {
   .path1 {
     &:before {
       content: "\e905";
@@ -53,6 +55,26 @@ $color_3: rgb(245, 166, 35);
       color: $color_3;
     }
   }
+}
+.icon-blender_nvgpu,
+.icon-blender_sgx {
+  position: relative;
+   &:after {
+    position: absolute;
+    font-size: 10pt;
+    bottom: 0;
+    right: 0;
+   }
+}
+.icon-blender_nvgpu{
+   &:after {
+    content: '\e901'
+   }
+}
+.icon-blender_sgx{
+   &:after {
+    content: '\e95b'
+   }
 }
 .icon-no-connection2 {
   &:before {
