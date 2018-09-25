@@ -617,7 +617,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleRenderOnOptionChange(e){
+    _handleComputeOnOptionChange(e){
         this.setState({
             compute_on: e.target.value
         })
@@ -971,7 +971,7 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                 <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group" onChange={::this._handleRenderOnOptionChange}>
+                                <div className="render-on__radio-group" onChange={::this._handleComputeOnOptionChange}>
                                     <div>
                                         <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
                                         <label htmlFor="cpu">
