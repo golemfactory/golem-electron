@@ -743,7 +743,7 @@ export class TaskDetail extends React.Component {
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
-                concent_enabled: false
+                concent_enabled: false,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
