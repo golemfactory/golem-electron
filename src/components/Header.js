@@ -214,7 +214,7 @@ export class Header extends Component {
                       html={this._taskHints(isEngineOn, connectedPeers)}
                       position="bottom"
                       trigger="mouseenter">
-                        <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                        <li className="menu__item" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
                     </Tooltip>
                     <Tooltip
                       html={(<p>Docs</p>)}

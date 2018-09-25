@@ -218,7 +218,14 @@
         width: 100%;
         display: flex;
         justify-content: flex-start;
-        margin-left: 8px;
+        color: grey;
+
+        [class^="icon-"], [class*=" icon-"] {
+            margin-right: 5px;
+            font-size: 10pt;
+            position: relative;
+            top:.5px;
+        }
 
         input[type=radio] {
             display: none;
@@ -227,8 +234,12 @@
         }
 
         /* changed style when checked */
-        input[type=radio]:checked + label > .overlay {
-          background-color: $color-primary;
+        input[type=radio]:checked + label {
+            color: #000;
+            
+            & > .overlay {
+              background-color: $color-primary;
+            }
         }
 
         label{
@@ -244,7 +255,7 @@
           display: inline-block;
           position: relative;
           top: .25em;
-          left: -1em; /* or whatever length you need here */
+          left: -.5em; /* or whatever length you need here */
           height: .5em;
           width: .5em;
           border-radius: 50%;
