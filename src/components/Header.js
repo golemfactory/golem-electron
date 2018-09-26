@@ -64,7 +64,7 @@ export class Header extends Component {
         super(props)
         this.state = {
             disableUploadTooltip: false,
-            isMac: !mainProcess.isMac()
+            isMac: mainProcess.isMac()
         }
     }
 
