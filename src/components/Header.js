@@ -63,7 +63,8 @@ export class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            disableUploadTooltip: false
+            disableUploadTooltip: false,
+            isMac: !mainProcess.isMac()
         }
     }
 
@@ -137,7 +138,7 @@ export class Header extends Component {
     /**
      * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
      */
-    _onFileDialog() {
+    _onFileDialog(dialogRules = []) {
 
         const checkDominantType = function(files) {
             const isBiggerThanOther = function(element, index, array) {
@@ -190,7 +191,7 @@ export class Header extends Component {
          * @see https://electron.atom.io/docs/api/dialog/#dialogshowopendialogbrowserwindow-options-callback
          */
         dialog.showOpenDialog({
-            properties: ['openFile', 'openDirectory', 'multiSelections']
+            properties: [...dialogRules, 'multiSelections']
         }, onFileHandler)
 
     }
@@ -236,8 +237,8 @@ export class Header extends Component {
     // </div>
 
     render() {
-        const {disableUploadTooltip} = this.state
-        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers, isMainNet} = this.props
+        const {disableUploadTooltip, isMac} = this.state
+        const {activeHeader, connectedPeers, taskDetails, detail, isEngineOn, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
@@ -258,10 +259,10 @@ export class Header extends Component {
                       trigger="mouseenter"
                       disabled={disableUploadTooltip}
                       hideOnClick={connectedPeers}>
-                        <li className="menu__item upload-menu" onClick={connectedPeers ? ::this._toggleUploadMenu : undefined}>
+                        <li className="menu__item upload-menu" onClick={(isEngineOn && connectedPeers) ? (isMac ? this._onFileDialog.bind(this, ["openFile", "openDirectory"]) : ::this._toggleUploadMenu) : undefined}>
                             <span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/>
-                            <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}/>
-                            <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={(isEngineOn) ? ::this._onFileDialog : undefined}/>
+                            <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
+                            <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
                         </li>
                     </Tooltip>
                     <Tooltip
