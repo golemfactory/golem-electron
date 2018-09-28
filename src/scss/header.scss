@@ -144,36 +144,50 @@
 
     .upload-menu{
           position: relative;
-          top: -19px;
+          top: -20px;
           right: 20px;
+          box-sizing:border-box;
           
             .icon-add{
               position: absolute !important;
               background: white;
               border-radius: 50%;
               z-index: 3;
+              transition: transform 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              transition-delay: .5s;
+              font-size: 16pt !important;
             }
             .icon-file-menu{
               position: absolute !important;
               z-index: 2;
-              transition: top 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
-              top: 0;
+              transition: right 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              right: -21px;
               transition-delay: .5s; 
+              font-size: 16pt !important;
             }
             .icon-folder-menu{
               position: absolute !important;
               z-index: 1;
-              transition: top 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              transition: right 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
               transition-delay: .2s;
-              top: 0;
+              right: -21px;
+              font-size: 16pt !important;
             }
 
-            &.upload-menu-active > .icon-file-menu{
-                top: 30px;
-                transition-delay: 0s;
-            }
-            &.upload-menu-active > .icon-folder-menu{
-                  top: 60px;
+            &.upload-menu-active{
+
+                & > .icon-add{
+                    transform: rotate(45deg);
+                }
+
+                & > .icon-file-menu{
+                    right: 3px;
+                    transition-delay: 0s;
+                }
+
+                & > .icon-folder-menu{
+                  right: 28px;
+                }
             }
         }
 
