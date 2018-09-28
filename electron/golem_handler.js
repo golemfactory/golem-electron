@@ -70,7 +70,7 @@ class GolemProcess {
     }
 
     loadCertificate() {
-        let certPath = path.join(DATADIR, 'crossbar', 'rpc_cert.pem');
+        const certPath = path.join(DATADIR, 'crossbar', 'rpc_cert.pem');
         let readCert = () => this._readCertificate(certPath).then(
             this.prepared.resolve,
             this.prepared.reject
@@ -117,6 +117,23 @@ class GolemProcess {
                 let buffer = fs.readFileSync(certPath);
                 this.certificate = buffer.toString('ascii');
                 resolve();
+            } catch (err) {
+                reject(err);
+            }
+        });
+    }
+
+    getSecretKey(user){
+        return new Promise((resolve, reject) => this._readSecretKey(user).then(result => resolve(result)))
+    }
+
+    _readSecretKey(user) {
+        const tokenPath = path.join(DATADIR, 'crossbar', 'secrets');
+        return new Promise((resolve, reject) => {
+            try {
+                const buffer = fs.readFileSync(path.join(tokenPath, `${user}.tck`));
+                const token = buffer.toString('ascii');
+                resolve(token);
             } catch (err) {
                 reject(err);
             }

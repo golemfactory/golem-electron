@@ -131,6 +131,7 @@ export class TaskDetail extends React.Component {
             format: '',
             formatIndex: 0,
             output_path: props.location,
+            compute_on: 'cpu',
             sample_per_pixel: 0,
             timeout: '',
             subtasks: 1,
@@ -231,15 +232,15 @@ export class TaskDetail extends React.Component {
                         haltspp.value = options.haltspp
                     }
 
-                    this.props.actions.getEstimatedCost({
-                        type: nextProps.taskInfo.type,
-                        options: {
-                            price: Number(bid),
-                            num_subtasks: Number(subtasks),
-                            subtask_time: getTimeAsFloat(subtask_timeout)
-                        }
-                    })
-
+                    if(!nextProps.estimated_cost)
+                        this.props.actions.getEstimatedCost({
+                            type: nextProps.taskInfo.type,
+                            options: {
+                                price: Number(bid),
+                                num_subtasks: Number(subtasks),
+                                subtask_time: getTimeAsFloat(subtask_timeout)
+                            }
+                        })
                 }
 
             })
@@ -616,6 +617,12 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _handleComputeOnOptionChange(e){
+        this.setState({
+            compute_on: e.target.value
+        })
+    }
+
     /**
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
@@ -727,21 +734,26 @@ export class TaskDetail extends React.Component {
 
     _handleLocalRender() {
         const {actions, task} = this.props;
+        const {compute_on} = this.state;
         const {resources, type} = task
         actions.runTestTask({
             resources,
+            compute_on,
+            concent_enabled: false,
             type,
             subtasks: 1 // <--- HARDCODED
         })
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, compute_on, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
+                compute_on,
+                concent_enabled: false,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
@@ -957,6 +969,25 @@ export class TaskDetail extends React.Component {
                                     <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
                                     <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
                                 </div>
+                                <div className="item-settings">
+                                <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
+                                <div className="render-on__radio-group" onChange={::this._handleComputeOnOptionChange}>
+                                    <div>
+                                        <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
+                                        <label htmlFor="cpu">
+                                            <span className="overlay"/>
+                                            <span className="icon-cpu"/>CPU
+                                        </label>
+                                    </div>
+                                    <div>
+                                        <input type="radio" id="gpu" value="gpu" name="compute_on"/>
+                                        <label htmlFor="gpu">
+                                            <span className="overlay"/>
+                                            <span className="icon-gpu"/>GPU
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                             <div className="section-price__task-detail">
                                 <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
@@ -1039,6 +1070,14 @@ export class TaskDetail extends React.Component {
         );
     }
 }
+
+// {<div>
+//     <input type="radio" id="sgx" value="sgx" name="compute_on"/>
+//     <label htmlFor="sgx">
+//         <span className="overlay"/>
+//         <span className="icon-sgx"/>SGX
+//     </label>
+// </div>}
 
 // LOADING SCREEN IN ADVANCE
 // { (testStatus 
