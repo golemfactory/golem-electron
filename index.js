@@ -126,6 +126,18 @@ function createWindow() {
         }
     })
 
+    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {   
+      // Someone tried to run a second instance, we should focus our primary window.    
+      if (win) {    
+        if (win.isMinimized()) win.restore();   
+        win.focus();    
+      } 
+    }); 
+     if (shouldQuit) {  
+      app.quit();   
+      return;   
+    }
+
     /*
         win.webContents.on('did-finish-load', function() {
             setTimeout(function() {

@@ -38,9 +38,9 @@ Start electron application on mainnet (development mode)
 npm run start:mainnet
 ```
 
-### :computer: Multiple Instances :computer: :computer:
+### :triangular_flag_on_post: Custom flags 
 
-To run golem electron for your additional instances pass the same flags and parameters as you do with golem.  i.e.;
+To run golem electron with custom datadir and/or rpc address, pass the same flags and parameters as you do with golem.  i.e.;
 
 ```
 golemapp --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:60003
