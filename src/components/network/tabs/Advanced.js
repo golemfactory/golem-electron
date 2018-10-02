@@ -8,12 +8,6 @@ import Dropdown from './../../Dropdown'
 
 const MEBI = 1 << 20
 
-const mockSystemInfo = {
-    num_cores: 3,
-    max_memory_size: 3 * MEBI,    // in KiB
-    max_resource_size: 10 * MEBI  // in KiB
-}
-
 const preset = Object.freeze({
     CUSTOM: 'custom'
 })

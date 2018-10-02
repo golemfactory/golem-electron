@@ -1,8 +1,30 @@
 .content__resources {
     width: 100%;
     box-sizing: border-box;
+
+    .advanced-toggler{
+        @include flex;
+        flex-direction: row;
+        justify-content: flex-end;
+        align-items: center;
+        text-align: right;
+        font-size: 11pt;
+        font-weight: 500;
+        margin-top: 30px;
+        color: $color-text2;
+        transition: color .5s;
+        cursor: pointer;
+
+        [class^="icon-"], [class*=" icon-"] {
+            margin-right: 15px;
+        }
+
+        &:hover {
+            color: $color-text;
+        }
+    }
     .slider {
-        margin: 45px 0 30px 0;
+        margin: 30px 0 20px 0;
     }
     .icon-single-server {
         font-size: 16pt;
@@ -10,6 +32,7 @@
 }
 
 .slider__tips {
+    margin-top: 50px;
     font-size: 9pt;
     padding: 0 26px;
     line-height: 1.6em;

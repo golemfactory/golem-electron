@@ -166,12 +166,10 @@ export class MainFragment extends React.Component {
                 <div id="networkTab" className="tab-panel" role="tablist">
                     <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
                     <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
-                    <div className="tab__title" value='2' onClick={::this._handleTab} role="tab" tabIndex="0">Advanced</div>
                 </div>
                 <div className="tab__content">
                     {activeTab == 0 && <Resources role="tabpanel"/>}
                     {activeTab == 1 && <History role="tabpanel"/>}
-                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal} manageHandler={::this._handleManagePresetModal} />}
                 </div>
             </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
