@@ -739,7 +739,6 @@ export class TaskDetail extends React.Component {
         actions.runTestTask({
             resources,
             compute_on,
-            concent_enabled: false,
             type,
             subtasks: 1 // <--- HARDCODED
         })
@@ -753,7 +752,6 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                concent_enabled: false,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),
