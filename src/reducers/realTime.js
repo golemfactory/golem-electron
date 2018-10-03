@@ -27,10 +27,7 @@ const initialState = {
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
-    golemStatus: {
-        status: 'Not Ready',
-        message: 'Not connected'
-    },
+    golemStatus: ["client", "start", "pre"],
     footerInfo: null,
     passwordModal: { 
         status: false, 
@@ -162,6 +159,9 @@ const messages = {
             pre: 'Building Docker images',
             post: 'Docker images built',
             exception: 'Error building Docker images'
+        },
+        'allocation': {
+            exception: 'Resource allocation error'
         }
     },
     hypervisor: {
@@ -262,7 +262,7 @@ function getGolemStatus(component, method, stage, data) {
     if (stage == 'exception') {
         result.status = 'Exception';
     } else try {
-        result.status = dig(statuses, component, method, stage);
+        result.status = 'Not Ready';
     } catch ( e ) { 
         log.warn('SAGA > GOLEM', e)
     }
@@ -276,17 +276,18 @@ export const getStatusSelector = createCachedSelector(
         (state) => state.passwordModal,
         (state, key) => key,
         (golemStatus, connectedPeers, passwordModal, key) => {
-
-            let status = getGolemStatus.apply(null, golemStatus)
+            let statusObj = getGolemStatus.apply(null, golemStatus)
             
-            if(Number.isInteger(connectedPeers)){
-                status = {
-                    status: 'Ready',
-                    message: nodesString(connectedPeers),
+            if(statusObj.status !== "Exception"){
+                if(Number.isInteger(connectedPeers)){
+                    statusObj = {
+                        status: 'Ready',
+                        message: nodesString(connectedPeers),
+                    }
                 }
             }
 
-            return status
+            return statusObj
         }
     )(
         (state, key) => key, // Cache selectors by type name
