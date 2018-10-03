@@ -39,9 +39,9 @@ export default class Print extends React.Component {
                         <br/>
                         Are you sure that you don't want
                         <br/>
-                        to print your password. We hope
+                        to print your password? We hope
                         <br/>
-                        that you have written it down in save
+                        that you have written it down in a safe
                         <br/>
                         and secure place.
                         </span>
