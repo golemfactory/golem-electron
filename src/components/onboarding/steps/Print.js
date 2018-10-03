@@ -16,9 +16,9 @@ export default class Print extends React.Component {
                         <br/>
                         So just to be sure that you actually
                         <br/>
-                        have your password saved, plase save
+                        have your password saved, please save
                         <br/>
-                        it as pdf file or just print it out.
+                        it as a PDF file or just print it out.
                         </span>
             }
 
