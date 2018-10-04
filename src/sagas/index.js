@@ -145,14 +145,14 @@ export function subscribe(session) {
         // SUBSCRIBE to a topic and receive events
 
         function on_connection(args) {
-            const connection = args[0];
-
+            var connection = args[0];
+            const {listening, port_statuses, connected} = connection
             if (
-                connection.startsWith("Connected") ||
-                connection.startsWith("Not connected")
+                connected ||
+                (!connected && Object.keys(port_statuses).length === 0)
             ) {
                 emit(true);
-            } else if (connection.startsWith("Port")) {
+            } else if (Object.keys(port_statuses).length > 0) {
 
                 if(!skipError){
                     const skipErrorInterval = setInterval(() => {
@@ -162,8 +162,8 @@ export function subscribe(session) {
                         } 
                     }, 500);
                 }
-
-                emit(skipError);
+                
+                 emit(skipError);
             }
         }
 
