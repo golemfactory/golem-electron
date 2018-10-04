@@ -4,17 +4,12 @@ import { connect } from 'react-redux'
 import {Tooltip} from 'react-tippy';
 
 import * as Actions from '../../../actions'
+import {getGPUEnvironment} from '../../../reducers'
 
 import RadialProgress from './../../RadialProgress'
 import Dropdown from './../../Dropdown'
 
 const MEBI = 1 << 20
-
-const mockSystemInfo = {
-    num_cores: 3,
-    max_memory_size: 3 * MEBI,    // in KiB
-    max_resource_size: 10 * MEBI  // in KiB
-}
 
 const preset = Object.freeze({
     CUSTOM: 'custom'
@@ -26,7 +21,7 @@ const mapStateToProps = state => ({
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
     isEngineOn: state.info.isEngineOn,
-    environments: state.performance.environments
+    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv')
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -136,13 +131,8 @@ export class Advanced extends React.Component {
           actions.disableEnvironment(gpuENV);
     }
 
-    getGPUEnvironment(env){
-      return env && env.filter(item => item.id == 'BLENDER_NVGPU')[0]
-    }
-
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, environments} = this.props
-        const gpuEnvironment = this.getGPUEnvironment(environments)
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment} = this.props
         const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
         const max = this.toGibibytes(systemInfo)
 

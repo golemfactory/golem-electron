@@ -1,3 +1,4 @@
+import createCachedSelector from 're-reselect';
 import { dict } from './../../actions'
 
 const {RECOUNT_BENCHMARK, SET_PERFORMANCE_CHARTS, SET_MULTIPLIER, SET_ENVIRONMENTS} = dict
@@ -47,3 +48,14 @@ const setPerformance = (state = initialState, action) => {
 }
 
 export default setPerformance
+
+function getGPUEnvironment(env){
+      return env && env.filter(item => item.id == 'BLENDER_NVGPU')[0]
+}
+
+export const getGPUEnvironmentSelector = createCachedSelector(
+        (state) => state.environments,
+        (environments) => getGPUEnvironment(environments)
+    )(
+        (state, key) => key 
+    )
