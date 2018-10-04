@@ -1,9 +1,10 @@
 const {remote} = window.electron;
 const log = remote.require('./electron/debug_handler.js')
+const {CUSTOM_RPC} = remote.require('./electron/golem_config.js');
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
-    WS_URL: 'wss://localhost:61000/ws',
+    WS_URL: `wss://${CUSTOM_RPC || 'localhost:61000'}/ws`,
     //REALM: 'realm1',
     REALM: 'golem',
     AUTHID: 'electron',
@@ -121,6 +122,7 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
+
         onError: function({error}) {
             console.warn(`failed to un/subscribe ${_channel} topic`, error);
             log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, error)

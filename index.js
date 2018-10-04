@@ -4,7 +4,7 @@ const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
 var mkdirp = require('mkdirp');
-const semver = require('semver')
+const semver = require('semver');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -126,20 +126,16 @@ function createWindow() {
         }
     })
 
-
-
-
-    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-      // Someone tried to run a second instance, we should focus our primary window.
-      if (win) {
-        if (win.isMinimized()) win.restore();
-        win.focus();
-      }
-    });
-
-    if (shouldQuit) {
-      app.quit();
-      return;
+    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {   
+      // Someone tried to run a second instance, we should focus our primary window.    
+      if (win) {    
+        if (win.isMinimized()) win.restore();   
+        win.focus();    
+      } 
+    }); 
+     if (shouldQuit) {  
+      app.quit();   
+      return;   
     }
 
     /*
@@ -293,6 +289,10 @@ function createPreviewWindow(id, frameCount) {
 
 function isWin(){
     return process.platform === "win32"
+}
+
+function isMac(){
+    return process.platform === "darwin"
 }
 
 
@@ -479,5 +479,7 @@ exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
 
+exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
+

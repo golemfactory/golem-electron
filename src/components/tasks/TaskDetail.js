@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
+import isEqual from 'lodash.isequal';
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
@@ -250,7 +251,7 @@ export class TaskDetail extends React.Component {
             this.parsePresets(nextProps.presets)
         }
 
-        if(nextProps.testStatus !== this.props.testStatus && 
+        if(!isEqual(nextProps.testStatus, this.props.testStatus) && 
                 !isObjectEmpty(nextProps.testStatus.more) && 
                 !this.state.defaultSettingsModal)
         {
@@ -717,13 +718,13 @@ export class TaskDetail extends React.Component {
             loadingTaskIndicator: true
         })
         this._createTaskAsync().then(result => {
-            if(result && result[0]){
+            if(result && !result[1]){
                 window.routerHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
                     insufficientAmountModal: {
-                        result: !result[0],
+                        result: !!result[1],
                         message: result[1]
                     },
                     loadingTaskIndicator: false
@@ -735,11 +736,11 @@ export class TaskDetail extends React.Component {
     _handleLocalRender() {
         const {actions, task} = this.props;
         const {compute_on} = this.state;
-        const {resources, type} = task
+        const {resources, type, name} = task
         actions.runTestTask({
+            name,
             resources,
             compute_on,
-            concent_enabled: false,
             type,
             subtasks: 1 // <--- HARDCODED
         })
@@ -753,7 +754,6 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                concent_enabled: false,
                 timeout: floatToString(timeout),
                 subtasks,
                 subtask_timeout: floatToString(subtask_timeout),

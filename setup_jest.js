@@ -35,7 +35,8 @@ global.window.require = function () {
                             return new Promise((res, rej) => {})
                         },
                         checkUpdate: function (_old, _new) {},
-                        warn: function () {}
+                        warn: function () {},
+                        isMac: function () {}
                     }
         },
         getGlobal: function () {
@@ -81,7 +82,8 @@ global.window.electron = {
                             return new Promise((res, rej) => {})
                         },
                         checkUpdate: function (_old, _new) {},
-                        warn: function () {}
+                        warn: function () {},
+                        isMac: function () {}
                     }
             },
             getGlobal: function () {
