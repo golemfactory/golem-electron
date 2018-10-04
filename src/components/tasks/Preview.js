@@ -5,11 +5,12 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 
-import golemIcon from '../../assets/img/golem-white.svg'
+import golemIcon from '../../assets/img/preview-thumb.svg'
 
 
 const mapStateToProps = state => ({
-    taskList: state.realTime.taskList
+    taskList: state.realTime.taskList,
+    frameCount: state.preview.ps.frameCount
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -26,15 +27,33 @@ export class Preview extends React.Component {
         }
     }
 
+    _handleExpand(id, frameCount) {
+        (id) && this.props.actions.setPreviewExpanded({
+            isScreenOpen: true,
+            id,
+            frameCount
+        })
+    }
+
     render() {
-        const {id, src, taskList} = this.props
+        const {id, frameCount, src, taskList, progress} = this.props
         let task = !!id && taskList.filter((item) => item.id === id)[0]
         let preview = !!task && task.preview
         const {previewSRC} = this.state
 
         return (
             <div className="section__preview-black">
-                <img src={src ? `file://${preview}?${new Date().getTime()}` : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
+                <div className="details__preview">
+                    <button 
+                        className="btn btn--details" 
+                        onClick={progress > 0 
+                            ? this._handleExpand.bind(this, id, frameCount) 
+                            : undefined}
+                            disabled={progress == 0}>
+                                Detail view
+                            </button>
+                </div>
+                <img className="preview__img" src={src ? `file://${preview}?${new Date().getTime()}` : 'error'} alt="Task Preview" ref={img => this.img = img} onError={
             (e) => {
                 e.preventDefault(); return this.img.src = golemIcon
             }}/>

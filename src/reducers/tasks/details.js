@@ -1,12 +1,16 @@
 import { dict } from './../../actions'
 
-const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STATUS, CLEAR_TASK_PLAIN} = dict
+const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STATUS, CLEAR_TASK_PLAIN, SET_HEALTHY_NODE_NUMBER} = dict
 
 const initialState = {
     detail: {},
     presets: {},
-    estimated_cost: 0,
-    test_status: {}
+    estimated_cost: {
+        GNT: 0,
+        ETH: 0
+    },
+    test_status: {},
+    nodeNumber: {}
 }
 const setTaskDetails = (state = initialState, action) => {
     switch (action.type) {
@@ -36,6 +40,14 @@ const setTaskDetails = (state = initialState, action) => {
                 status: null 
             },
             detail: {}
+        });
+
+    case SET_HEALTHY_NODE_NUMBER:
+        return Object.assign({}, state, {
+            nodeNumber: {
+                ...state.nodeNumber,
+                ...action.payload
+            }
         });
 
 

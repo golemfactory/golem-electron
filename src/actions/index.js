@@ -23,11 +23,14 @@ export let dict = Object.freeze({
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
     GET_TASK_DETAILS: 'GET_TASK_DETAILS',
+    FETCH_HEALTHY_NODE_NUMBER: 'FETCH_HEALTHY_NODE_NUMBER',
+    SET_HEALTHY_NODE_NUMBER: 'SET_HEALTHY_NODE_NUMBER',
     SET_TASK_INFO: 'SET_TASK_INFO',
     SET_PREVIEW: 'SET_PREVIEW',
     UPDATE_PREVIEW_LOCK: 'UPDATE_PREVIEW_LOCK',
     DELETE_TASK: 'DELETE_TASK',
     CREATE_TASK: 'CREATE_TASK',
+    ADD_MISSING_TASK_FILES: 'ADD_MISSING_TASK_FILES',
     RESTART_TASK: 'RESTART_TASK',
     RESTART_FRAME: 'RESTART_FRAME',
     RESTART_SUBTASK: 'RESTART_SUBTASK',
@@ -135,11 +138,13 @@ const {
     SET_TASKLIST, 
     SET_TASK_DETAILS, 
     GET_TASK_DETAILS, 
+    FETCH_HEALTHY_NODE_NUMBER, 
     SET_TASK_INFO, 
     SET_PREVIEW,
     UPDATE_PREVIEW_LOCK,
     DELETE_TASK, 
     CREATE_TASK, 
+    ADD_MISSING_TASK_FILES,
     RESTART_TASK, 
     RESTART_FRAME, 
     RESTART_SUBTASK, 
@@ -453,6 +458,11 @@ export const getTaskDetails = (payload) => ({
     payload
 })
 
+export const fetchHealthyNodeNumber = (payload) => ({
+    type: FETCH_HEALTHY_NODE_NUMBER,
+    payload
+})
+
 export const setPreview = (payload) => ({
     type: SET_PREVIEW,
     payload
@@ -561,9 +571,15 @@ export const createTask = (payload, _resolve, _reject) => ({
     _reject
 })
 
-export const restartTask = (payload, _resolve, _reject) => ({
+export const addMissingFiles = (payload) => ({
+    type: ADD_MISSING_TASK_FILES,
+    payload
+})
+
+export const restartTask = (payload, isTimedOutOnly, _resolve, _reject) => ({
     type: RESTART_TASK,
     payload,
+    isTimedOutOnly,
     _resolve,
     _reject
 })

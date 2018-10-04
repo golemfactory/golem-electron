@@ -25,7 +25,7 @@ const mockList = [
         title: 'Luxrender'
     },
     {
-        icon: 'icon-blender-grey',
+        icon: 'icon-blender-bw',
         title: 'Blender'
     }
 ]
@@ -91,7 +91,6 @@ export class Performance extends React.Component {
 
 
     _handleMinPerfSlider(value){
-        console.log(value)
         this.setState({
             minPerf: value
         })
@@ -104,7 +103,6 @@ export class Performance extends React.Component {
      * @return {DOM}                    [Performance item elements]
      */
     loadList(data, chart) {
-        console.log("chart", chart);
         return data.map(({icon, title}, index) => <div className="list-item__performance" key={index.toString()}>
             <span className={'icon__list-item__acount ' + icon}>
                 <span className="path1"></span>

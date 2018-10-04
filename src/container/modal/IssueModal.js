@@ -74,7 +74,7 @@ export class IssueModal extends React.Component {
                             <div className="container-icon">
                                 <span className="icon-warning critical"/>
                             </div>
-                            <span>Golem is having trouble connecting. <br/>You may need to restart the applicaton. <br/>Please check the <a href={DOCLINK}>docs</a> for help.</span>
+                            <span>Golem is having trouble connecting. <br/>You may need to restart the application. <br/>Please check the <a href={DOCLINK}>docs</a> for help.</span>
                         </div>)
             case knownIssues.UPDATE:
                 return (<div className="content__modal">

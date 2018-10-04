@@ -4,7 +4,8 @@ import yup from 'yup'
 
 import {modals, currencyIcons} from './../../../../constants'
 
-const {clipboard } = window.electron
+const {clipboard, remote } = window.electron;
+const mainProcess = remote.require('./index');
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 
 export default class WithdrawForm extends React.Component {
@@ -34,7 +35,7 @@ export default class WithdrawForm extends React.Component {
 
             sendTo: yup.object().shape({
                 sendTo: yup.string()
-                    .matches(/0x[a-fA-F0-9]{40}/)
+                    .matches(/^0x[a-fA-F0-9]{40}$/)
                     .required()
             })
         }
@@ -45,7 +46,7 @@ export default class WithdrawForm extends React.Component {
                 .max(this.props.balance.toNumber())
                 .required(),
             sendTo: yup.string()
-                .matches(/0x[a-fA-F0-9]{40}/)
+                .matches(/^0x[a-fA-F0-9]{40}$/)
                 .required()
         });
 
@@ -101,11 +102,16 @@ export default class WithdrawForm extends React.Component {
             isSubmitted: true
         })
 
-        this._getGasCostAsync(amount.toString(), sendTo, this.props.suffix)
-        .then(result => {
-            if(result)
-                this.props.applyHandler(amount, sendTo, this.props.suffix, new BigNumber(result))
+        mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
+        .then(sendToChecksum => {
+            this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
+            .then(result => {
+                if(result)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
+            })
+            .catch(error => console.error);
         })
+        .catch(error => console.error);
     }
 
     _getGasCostAsync(amount, sendTo, type){
@@ -191,7 +197,7 @@ export default class WithdrawForm extends React.Component {
                         	<br/>
                         	<strong>{balance.toFixed(4)}...</strong>
                         	<br/>
-                        	<span className="label-estimation">est. {balance.multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                        	<span className="label-estimation">est. $ {balance.multipliedBy(currency[suffix]).toFixed(2)}...</span>
                         </div>
                     </div>
                     <div className="form-field">
@@ -208,7 +214,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}... $</span>
+                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>

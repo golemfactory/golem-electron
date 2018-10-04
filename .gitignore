@@ -28,4 +28,6 @@ HyperG.db
 index.html
 index.frame.html
 index.documentation.html
-index.yedek.html
+
+#web3
+.node-xmlhttprequest-sync-*

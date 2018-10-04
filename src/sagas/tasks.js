@@ -1,11 +1,13 @@
 import { eventChannel, buffers } from 'redux-saga'
 import { takeLatest, take, call, put, fork, takeEvery } from 'redux-saga/effects'
 import { dict } from '../actions'
+import checkNested from './../utils/checkNested'
+import {taskStatus} from './../constants/statusDicts'
 
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 
-
 const {
+        BLOCK_NODE,
         SET_TASKLIST, 
         DELETE_TASK, 
         CREATE_TASK, 
@@ -22,11 +24,67 @@ const {
         SAVE_TASK_PRESET, 
         DELETE_TASK_PRESET, 
         SET_SUBTASKS_LIST, 
-        FETCH_SUBTASKS_LIST
+        FETCH_SUBTASKS_LIST,
+        FETCH_HEALTHY_NODE_NUMBER,
+        SET_HEALTHY_NODE_NUMBER
     } = dict
 
+let channelTestInterval
+
 /**
- * [subscribeHistory func. fetchs payment history of user, with interval]
+ * [subscribeHistory func. fetchs subtasklist of the given task, with interval]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function fetchNodeNumber(session, {payload}) {
+
+    return new Promise((resolve, reject) => {
+
+        function on_subtask_list(args) {
+
+            const subtask_list = args[0];
+            if(subtask_list){
+                const healtySubtasks = subtask_list.filter( item => 
+                    !(item.status === taskStatus.FAILURE 
+                    || 
+                    item.status === taskStatus.TIMEOUT));
+
+                resolve({
+                    type: SET_HEALTHY_NODE_NUMBER,
+                    payload: {
+                        [payload]: Array.isArray(healtySubtasks) && healtySubtasks.length
+                    }
+                })
+            }
+        }
+
+        _handleRPC(on_subtask_list, session, config.GET_SUBTASKS_RPC, [payload])
+    })
+}
+
+export function* nodeNumberBase(session, payload) {
+    if (payload) {
+        let action = yield call(fetchNodeNumber, session, payload)
+        yield put(action)
+    }
+}
+
+/**
+ * [blockNode func. blocks given node id]
+ * @param  {Object} payload [Node Id]
+ */
+export function blockNode(session, {payload, _resolve, _reject}) {
+    _handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject)
+}
+
+export function* blockNodeBase(session, payload) {
+    if (payload) {
+        yield call(blockNode, session, payload);
+    }
+}
+
+/**
+ * [subscribeHistory func. fetchs subtasklist of the given task, with interval]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
@@ -57,7 +115,6 @@ export function getEstimatedCost(session, payload) {
     return new Promise((resolve, reject) => {
         function on_estimated_cost(args) {
             var estimated_cost = args[0];
-            //console.log(config.GET_ESTIMATED_COST_RPC, estimated_cost)
             resolve({
                 type: SET_ESTIMATED_COST,
                 payload: estimated_cost
@@ -79,7 +136,7 @@ export function abortTestTask(session) {
 
     function on_test_task(args) {
         var test_task = args[0];
-        console.log("test_task", test_task);
+        channelTestInterval && clearInterval(channelTestInterval)
     }
 
     _handleRPC(on_test_task, session, config.ABORT_TEST_TASK_RPC)
@@ -91,16 +148,23 @@ export function* abortTestTaskBase(session) {
 
 export function runTestTask(session, payload) {
 
-    function on_test_task(args) {
-        var test_task = args[0];
-    }
+    return new Promise((resolve, reject) => {
 
-    _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
+        function on_test_task(args) {
+            let test_task = args[0];
+            resolve(test_task)
+        }
+
+        _handleRPC(on_test_task, session, config.RUN_TEST_TASK_RPC, [payload])
+    })
 }
 
 export function* testTaskBase(session, {payload}) {
     if (payload) {
-        yield call(runTestTask, session, payload)
+        const result = yield call(runTestTask, session, payload)
+        if(result){
+            let testCH = yield fork(testTaskFlow, session);
+        }
     }
 }
 
@@ -248,9 +312,11 @@ export function subscribeTestStatus(session) {
                         type: SET_TASK_TEST_STATUS,
                         payload: result
                     })
-
-                    if(result && result.status !== "Started"){
-                        clearInterval(channelInterval); //Wait until eventual result and kill the interval
+                    
+                    if(result 
+                        && result.status !== "Started" 
+                        && !checkNested(result, 'more', 'after_test_data', 'warnings')){
+                            clearInterval(channelTestInterval); //Wait until eventual result and kill the interval
                     }
                 }
             }
@@ -264,11 +330,11 @@ export function subscribeTestStatus(session) {
             return fetchOnStartup
         }
 
-        const channelInterval = setInterval(fetchOnStartup(), interval)
+        channelTestInterval = setInterval(fetchOnStartup(), interval)
 
         return () => {
             console.log('negative')
-            clearInterval(channelInterval);
+            clearInterval(channelTestInterval);
         }
     })
 }
@@ -288,20 +354,21 @@ export function* testTaskFlow(session) {
     }
 }
 
-export function callRestartTask(session, payload, _resolve, _reject) {
+export function callRestartTask(session, payload, isTimedOutOnly, _resolve, _reject) {
 
     function on_restart_task(args) {
         var restart_task = args[0];
         _resolve(restart_task)
-    //console.log(config.RESTART_TASK_RPC, restart_task)
     }
-
-    _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [payload])
+    if(isTimedOutOnly)
+        _handleRPC(on_restart_task, session, config.RESTART_TIMEDOUT_SUBTASKS_RPC, [payload, []])
+    else
+        _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [payload])
 }
 
-export function* restartTaskBase(session, {type, payload, _resolve, _reject}) {
+export function* restartTaskBase(session, {type, payload, isTimedOutOnly, _resolve, _reject}) {
     if (payload) {
-        yield call(callRestartTask, session, payload, _resolve, _reject)
+        yield call(callRestartTask, session, payload, isTimedOutOnly, _resolve, _reject)
     }
 }
 
@@ -310,25 +377,16 @@ export function callCreateTask(session, payload, _resolve, _reject) {
     function on_create_task(args) {
         var create_task = args[0];
         _resolve(create_task)
-        console.log(config.CREATE_TASK_RPC, create_task)
+        console.info(config.CREATE_TASK_RPC, create_task)
     }
 
     _handleRPC(on_create_task, session, config.CREATE_TASK_RPC, [payload])
 }
 
 export function* createTaskBase(session, {type, payload, _resolve, _reject}) {
-    let testCH = null
     if (payload.options) {
         //console.info('TASK_CREATING')
-        if (testCH) {
-            yield cancel(task)
-        }
         yield call(callCreateTask, session, payload, _resolve, _reject)
-    } else {
-        //console.info('TASK_NOT_CREATING')
-        if (payload.type) {
-            testCH = yield fork(testTaskFlow, session);
-        }
     }
 }
 
@@ -436,4 +494,6 @@ export function* tasksFlow(session) {
     yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
+    yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session)
+    yield takeLatest(BLOCK_NODE, blockNodeBase, session)
 }

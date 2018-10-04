@@ -6,6 +6,7 @@ export let config = Object.freeze({
     WS_URL: 'wss://localhost:61000/ws',
     //REALM: 'realm1',
     REALM: 'golem',
+    AUTHID: 'electron',
     COUNTER_CH: 'com.golem.oncounter',
     BLENDER_CH: 'com.golem.blender',
     PREVIEW_CH: 'com.golem.preview',
@@ -32,6 +33,7 @@ export let config = Object.freeze({
     GET_TASK_SERVER_PORT_RPC: 'net.tasks.port',
     GET_COMPUTING_TRUST_RPC: 'rep.comp',
     GET_REQUESTING_TRUST_RPC: 'rep.requesting',
+    GET_PROVIDER_STATUS: 'provider.status',
     //Tasks
     GET_TASKS_RPC: 'comp.tasks',
     GET_TASKS_CH: 'evt.comp.task.list',
@@ -56,6 +58,7 @@ export let config = Object.freeze({
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
+    GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',
@@ -114,13 +117,13 @@ export let config = Object.freeze({
  */
 export let _handleSUBPUB = (_callback, _session, _channel) => {
     let cb = {
-        onEvent: _callback,
+        onEvent: (({argsList}) => _callback(argsList)),
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
-        onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
+        onError: function({error}) {
+            console.warn(`failed to un/subscribe ${_channel} topic`, error);
+            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, error)
         }
     }
     _session.subscribe(_channel, cb)
@@ -135,13 +138,13 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
  */
 export let _handleUNSUBPUB = (_callback, _session, _channel) => {
     let cb = {
-        onEvent: _callback,
+        onEvent: (({argsList}) => _callback(argsList)),
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
-        onError: function(err) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, err);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, err)
+        onError: function({error, details, argsList}) {
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, Array.isArray(argsList) ? argsList.join() : argsList)
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, Array.isArray(argsList) ? argsList.join(): argsList)
         }
     }
     _session.unsubscribe(_channel, cb)
@@ -157,11 +160,11 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
  */
 export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _eb) => {
     _session.call(_rpc_address, _parameter, {
-        onSuccess: _callback,
-        onError: function(err, details, arr) {
-            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
-            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, err, details, arr.join())
-            _eb && _eb(err, details, arr)
+        onSuccess: (({argsList}) => _callback(argsList)),
+        onError: function({error, details, argsList}) {
+            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, argsList.join())
+            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, argsList.join())
+            _eb && _eb(error, details, argsList)
         }
     })
 }

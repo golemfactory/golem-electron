@@ -1,5 +1,4 @@
 import React from 'react';
-import { hashHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -88,6 +87,7 @@ export class Single extends React.Component {
      * @return  nothing
      */
     _showSubtask(id) {
+        console.log("id", id);
         this.props.actions.setSubtasksVisibility(id)
     }
 
@@ -96,7 +96,7 @@ export class Single extends React.Component {
      * @return nothing
      */
     _handleClose() {
-        hashHistory.push(CLOSE_BTN_PATH)
+        window.routerHistory.push(CLOSE_BTN_PATH)
     }
     /**
      * [_handleRestartSubtask func. triggers restart subtask event]

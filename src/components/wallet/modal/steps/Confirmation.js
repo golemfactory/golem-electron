@@ -47,7 +47,7 @@ export default class Confirmation extends React.Component {
                         	<br/>
                         	<strong className="info-price">{amount.dividedBy(ETH_DENOM).toFixed(4)}...</strong><span>{suffix}</span>
                         	<br/>
-                        	<span className="info-estimation">est. {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(4)} $</span>
+                        	<span className="info-estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(4)}</span>
                         </div>
                     </div>
                     <div>
@@ -60,7 +60,7 @@ export default class Confirmation extends React.Component {
                         <br/>
                         <strong className="info-price">{gasCost.dividedBy(ETH_DENOM).toFixed(5)}...</strong><span>ETH</span>
                         <br/>
-                        <span className="info-estimation">est. {gasCost.dividedBy(ETH_DENOM).multipliedBy(currency["ETH"]).toFixed(2)} $</span>
+                        <span className="info-estimation">est. $ {gasCost.dividedBy(ETH_DENOM).multipliedBy(currency["ETH"]).toFixed(2)}</span>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleBack}>Back</span>

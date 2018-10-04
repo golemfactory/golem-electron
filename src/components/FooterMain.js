@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import golem_loading from './../assets/img/golem-loading.svg'
 
 const {remote} = window.electron;
+const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
 
@@ -48,6 +49,32 @@ export default class FooterMain extends Component {
         return "red"
     }
 
+    _loadErrorUrl(msg){
+        switch (msg) {
+            case "Error creating Docker VM":    //docker
+                return  <a href={currentPlatform === "win32" 
+                            ? "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-on-windows-10/" 
+                            : "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-mac/"}>
+                            <span className="icon-new-window"/>
+                        </a>
+            case "Outdated hyperg version":     //hyperg
+                return  <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#outdated-hyperg-version">
+                            <span className="icon-new-window"/>
+                        </a>
+            case "Chain sync error":            //sync
+                return  <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#sync">
+                            <span className="icon-new-window"/>
+                        </a>
+                break;
+            case "Error connecting geth":       //geth
+                return  <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#geth">
+                            <span className="icon-new-window"/>
+                        </a>
+            default:
+                break;
+        }
+    }
+
     render() {
         const {golemStatus, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
@@ -59,9 +86,10 @@ export default class FooterMain extends Component {
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${golemStatus.message}`}</span>
+                                <span className="status-message">{`${golemStatus.message} `}</span>
+                                {::this._loadErrorUrl(golemStatus.message)}
                                 {(golemStatus.message && golemStatus.message.length > 10) && <br/>}
-                                {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://chat.golem.network"><span className="icon-new-window"/></a></span> : ""}
+                                {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">
                                 <span>Provider state: {stats && stats.host_state}</span>

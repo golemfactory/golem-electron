@@ -1,13 +1,14 @@
 import 'react-hot-loader/patch'
+import 'react-tippy/dist/tippy.css';
 require('css-browser-selector')
 import React from 'react'
 import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, compose } from 'redux'
+import { createStore, applyMiddleware, compose, __DO_NOT_USE__ActionTypes } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
-import { hashHistory } from 'react-router'
+import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { createHashHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
 
@@ -17,19 +18,33 @@ import reducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
+/**
+ * Redux dev tools workaround to avoid "state undefined" error
+ * @see https://github.com/reduxjs/redux-devtools/issues/391
+ * @see https://github.com/reduxjs/redux-devtools/issues/391#issuecomment-361059004
+ */
+if(window.__REDUX_DEVTOOLS_EXTENSION__){
+    __DO_NOT_USE__ActionTypes.INIT = '@@redux/INIT';
+    __DO_NOT_USE__ActionTypes.REPLACE = '@@redux/REPLACE';
+}
+
 const {remote, ipcRenderer} = window.electron
 const { configStore, dictConfig } = remote.getGlobal('configStorage')
 
-const routingMiddleware = routerMiddleware(hashHistory)
-const sagaMiddleware = createSagaMiddleware()
+const history = window.routerHistory = createHashHistory()
+const routingMiddleware = routerMiddleware(history)
+const appEnv = remote.getGlobal('process').env.NODE_ENV;
+const sagaMiddleware = ( appEnv === "development" ? createSagaMiddleware.default() : createSagaMiddleware())
 const enhancer = compose(
     // Middleware you want to use in development:
     applyMiddleware(sagaMiddleware, routingMiddleware),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
-let history = syncHistoryWithStore(hashHistory, store)
+let store = createStore(
+        connectRouter(history)(reducer), 
+        [], 
+        window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
 const RPC_QUIT_STATES = {
     INITIAL: 0,
@@ -91,30 +106,11 @@ if(remote.getGlobal('process').platform === "win32"){
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-
-    renderWithHotReload(App)
-
-    // Hot Module Replacement API
-    if (module.hot) {
-        module.hot.accept('./container/App', () => {
-            const App = require('./container/App').default;
-            renderWithHotReload(App);
-        })
-    }
-
-    /**
-     * @param  {Class} React Component  { Main Application Component }
-     * @return {[DOM]}
-     */
-    function renderWithHotReload(App) {
-        window.applicationSurface = document.getElementById('mount')
-        render(
-            <AppContainer warnings={false}>
-              <Provider store={ store }>
-                <App history={ history } />
-              </Provider>
-            </AppContainer>,
-            window.applicationSurface
-        )
-    }
+    window.applicationSurface = document.getElementById('mount')
+    render(
+          <Provider store={ store }>
+            <App history={ history } />
+          </Provider>,
+        window.applicationSurface
+    )
 })
