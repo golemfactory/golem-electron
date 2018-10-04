@@ -23,7 +23,8 @@ const mapStateToProps = state => ({
     presetList: state.advanced.presetList,
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    environments: state.performance.environments
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -120,10 +121,28 @@ export class Advanced extends React.Component {
         return ret
     }
 
+    /**
+     * [_handleGPUProviderSwitch onChange function]
+     * @return  {Boolean}   true
+     */
+    _handleGPUProviderSwitch(evt) {
+        const {actions} = this.props;
+        const gpuENV = 'BLENDER_NVGPU'
+        if(evt.target.checked)
+          actions.enableEnvironment(gpuENV);
+        else
+          actions.disableEnvironment(gpuENV);
+    }
+
+    getGPUEnvironment(env){
+      return env && env.filter(item => item.id == 'BLENDER_NVGPU')[0]
+    }
+
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn} = this.props
-        let {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
-        let max = this.toGibibytes(systemInfo)
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, environments} = this.props
+        const gpuEnvironment = this.getGPUEnvironment(environments)
+        const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
+        const max = this.toGibibytes(systemInfo)
 
         return (
             <div className="content__advanced">
@@ -148,6 +167,17 @@ export class Advanced extends React.Component {
             <div className="loading__advanced">
               <span>Golem reading your system information...</span>
             </div>}
+            <div className="switch__gpu">
+                    <div className={`switch-box`}>
+                        <label className="switch">
+                            <input type="checkbox" onChange={::this._handleGPUProviderSwitch} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !gpuEnvironment.supported}/>
+                            <div className="switch-slider round"></div>
+                        </label>
+                    </div>
+                    <span style={{
+                color: gpuEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
+            }}>Use my GPU as a resource. For Linux users with Nvidia card.</span>
+                </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
               <br/>
