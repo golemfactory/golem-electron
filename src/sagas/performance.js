@@ -142,7 +142,6 @@ export function fetchEnvironments(session) {
 
 export function* fetchEnvironmentsBase(session) {
     const action = yield call(fetchEnvironments, session)
-    console.log("action", action);
     yield put(action)
 }
 

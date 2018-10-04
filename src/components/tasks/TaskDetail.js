@@ -4,7 +4,6 @@ import TimeSelection from 'timepoint-selection'
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
-import {Tooltip} from 'react-tippy';
 import yup from 'yup'
 
 import TestResult from './TestResult'
@@ -207,7 +206,7 @@ export class TaskDetail extends React.Component {
                 type: nextProps.taskInfo.type
             }, () => {
 
-                const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
+                const {type, timeout, subtasks, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks || 0
@@ -220,6 +219,7 @@ export class TaskDetail extends React.Component {
                     let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                     this.setState({
                         formatIndex,
+                        compute_on
                     })
 
                     if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
@@ -619,7 +619,7 @@ export class TaskDetail extends React.Component {
 
     _handleComputeOnOptionChange(e){
         this.setState({
-            compute_on: e.target.value
+            compute_on: e.target.value,
         })
     }
 
@@ -892,6 +892,7 @@ export class TaskDetail extends React.Component {
 
         const {
             bid, 
+            compute_on,
             defaultSettingsModal, 
             insufficientAmountModal, 
             isDetailPage, 
@@ -916,6 +917,15 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
+
+        let computeOnRadioOptions = {};
+
+        if(isDetailPage) {
+            computeOnRadioOptions['readOnly'] = true;
+        } else {
+            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
+        }
+
         return (
             <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -969,16 +979,16 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                 <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group" onChange={::this._handleComputeOnOptionChange}>
+                                <div className="render-on__radio-group" {...computeOnRadioOptions}>
                                     <div>
-                                        <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
+                                        <input type="radio" id="cpu" value="cpu" name="compute_on" checked={compute_on === "cpu"}/>
                                         <label htmlFor="cpu">
                                             <span className="overlay"/>
                                             <span className="icon-cpu"/>CPU
                                         </label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="gpu" value="gpu" name="compute_on"/>
+                                        <input type="radio" id="gpu" value="gpu" name="compute_on" checked={compute_on === "gpu"}/>
                                         <label htmlFor="gpu">
                                             <span className="overlay"/>
                                             <span className="icon-gpu"/>GPU

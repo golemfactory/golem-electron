@@ -1,6 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import {Tooltip} from 'react-tippy';
+
 import * as Actions from '../../../actions'
 
 import RadialProgress from './../../RadialProgress'
@@ -176,7 +178,16 @@ export class Advanced extends React.Component {
                     </div>
                     <span style={{
                 color: gpuEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
-            }}>Use my GPU as a resource. For Linux users with Nvidia card.</span>
+            }}>
+                Use my GPU as a resource. For Linux users with Nvidia card.
+                <Tooltip
+                        html={<p className='info-gpu'>For now there is no option to set the amount of shared resources <br/> with GPU.So Golem will take up to 100% of your graphic card<br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">Learn more.</a></p>}
+                        position="top"
+                        trigger="mouseenter"
+                        interactive={true}>
+                  <span className="icon-question-mark"/>
+              </Tooltip>
+            </span>
                 </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
