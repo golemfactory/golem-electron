@@ -33,7 +33,8 @@ global.window.require = function () {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        isMac: function () {}
                     }
         },
         getGlobal: function () {
@@ -72,7 +73,8 @@ global.window.electron = {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        isMac: function () {}
                     }
             },
             getGlobal: function () {

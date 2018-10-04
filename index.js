@@ -291,6 +291,10 @@ function isWin(){
     return process.platform === "win32"
 }
 
+function isMac(){
+    return process.platform === "darwin"
+}
+
 
 exports.selectDirectory = function(directory, _isMainNet) {
     console.log("directory", directory);
@@ -475,5 +479,7 @@ exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
 
+exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
+
