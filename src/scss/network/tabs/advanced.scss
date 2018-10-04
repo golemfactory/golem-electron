@@ -46,10 +46,36 @@
     text-align: center;
 }
 
+.switch__gpu {
+    @include flex;
+
+    position: relative;
+    justify-content: center;
+    padding: 40px 0 0 0;
+    font-size: 9pt;
+    .switch-box {
+        padding: 0 20px 0 0;
+        margin: 0 0 3px 0;
+    }
+
+    .icon-question-mark{
+        position: absolute;
+        font-size: 7pt;
+        margin-left: 2px;
+        top: 40px;
+        color: $color-text3;
+        cursor: pointer;
+    }
+}
+
 .advanced__tips {
     padding: 36px 25px 15px 25px;
     font-size: 9pt;
     font-weight: 300;
     line-height: 1.5;
     color: $color-text2;
+}
+
+.info-gpu{
+    font-size: 9pt;
 }
