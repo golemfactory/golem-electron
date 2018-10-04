@@ -7,7 +7,7 @@ const {exec, execSync, spawn} = require('child_process');
 const {app} = electron;
 
 const log = require('./debug_handler.js');
-const {DATADIR, IS_MAINNET, GETH_DEFAULT} = require('./golem_config.js');
+const {DATADIR, IS_MAINNET, CUSTOM_DATADIR, CUSTOM_RPC, GETH_DEFAULT} = require('./golem_config.js');
 
 const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
 
@@ -38,18 +38,22 @@ class GolemProcess {
         this.certificate = null;
         this.connected = false;
 
+        this.processGeth = '--start-geth';
+        this.processPort = '--start-geth-port';
+        this.processAddr = '--geth-address';
+
         let defaultArgs = ['-r', 'localhost:61000'];
         if (IS_MAINNET) defaultArgs.push('--mainnet');
-        console.log("DEFAULT_GETH", GETH_DEFAULT);
+
+        if (CUSTOM_DATADIR) 
+            defaultArgs = defaultArgs.concat(['--datadir', CUSTOM_DATADIR]);
+
+        if (CUSTOM_RPC) defaultArgs[1] = CUSTOM_RPC
         if (GETH_DEFAULT) this._addGethArgs(defaultArgs);
 
         this.processName = processName || 'golemapp';
         this.processArgs = processArgs || defaultArgs;
         this.processOpts = environment();
-
-        this.processGeth = '--start-geth';
-        this.processPort = '--start-geth-port';
-        this.processAddr = '--geth-address';
 
         this.prepared = new Deferred();
         this.prepared.promise.catch(this.fatalError);
@@ -138,7 +142,7 @@ class GolemProcess {
 
     _addGethArgs(args) {
         const customGeth = GETH_DEFAULT;
-        var gethFlag;
+        let gethFlag;
 
         if (customGeth && customGeth.isLocalGeth){
 
@@ -146,10 +150,10 @@ class GolemProcess {
             gethFlag = `${this.processPort} ${customGeth.gethPort || 8545}`
 
         } else if (customGeth.gethAddress){
-            gethFlag = `${this.processAddr} ${customGeth.gethAddress}`
+            gethFlag = [this.processAddr, customGeth.gethAddress]
         }
 
-        gethFlag && args.push(gethFlag)
+        if(gethFlag) args = args.concat(gethFlag)
 
         console.warn('💻 Golem will run on your local geth!');
     }

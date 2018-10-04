@@ -37,6 +37,21 @@ Start electron application on mainnet (development mode)
 ```
 npm run start:mainnet
 ```
+
+### :triangular_flag_on_post: Custom flags 
+
+To run golem electron with custom datadir and/or rpc address, pass the same flags and parameters as you do with golem.  i.e.;
+
+```
+golemapp --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:60003
+```
+```
+npm run start -- --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:60003
+```
+
+*Note: Don't forget to add `--` to `npm run start` before adding your flags.*
+
+
 ### :bug: Debug mode
 While using application, you can choose `Debug mode` from the `View` menu or press;
 
