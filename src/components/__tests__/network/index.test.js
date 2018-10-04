@@ -22,7 +22,7 @@ it('should render a MainFragment component', () => {
 })
 
 describe('<MainFragment />', () => {
-    const golemStatus = {status: true}
+    const golemStatus = []
 
     const actions = {
         startLoading: (a, b) => true,
@@ -34,7 +34,7 @@ describe('<MainFragment />', () => {
         const states = {
             realTime: {
                 balance:[new BigNumber(0), new BigNumber(0)],
-                golemStatus: {status: true}
+                golemStatus: ['client', 'start', 'pre']
             },
             input: {
                 autoLaunch: false
@@ -79,10 +79,7 @@ describe('<MainFragment />', () => {
         const states = {
             realTime: {
                 balance:[new BigNumber(0), new BigNumber(0)],
-                golemStatus: {status: true}
-            },
-            input: {
-                autoLaunch: false
+                golemStatus: ['client', 'start', 'pre']
             },
             info: {
                 connectionProblem: false,
@@ -100,13 +97,15 @@ describe('<MainFragment />', () => {
             currency: {
                 GNT: 0, 
                 ETH: 0
-            }
+            },
+            input: {
+                developerMode: false
+            },
         }
 
         const props = {
                 balance:[new BigNumber(0), new BigNumber(0)],
-                golemStatus: { status: true },
-                autoLaunch: false,
+                status: { message: 'Starting Golem', status: 'Not Ready' },
                 connectionProblem: false,
                 isEngineOn: true,
                 chosenPreset: 'custom',

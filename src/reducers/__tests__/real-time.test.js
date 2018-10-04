@@ -1,5 +1,5 @@
 import {BigNumber} from 'bignumber.js';
-import realTime from '../realTime'
+import realTime, {getStatusSelector} from '../realTime'
 
 describe('realTime reducer', () => {
     it('should return initial state', () => {
@@ -14,17 +14,14 @@ describe('realTime reducer', () => {
                 new BigNumber(0).toString(),
                 new BigNumber(0).toString()
             ],
-            connectedPeers: 0,
+            connectedPeers: null,
             peerInfo: [],
-            golemStatus: {
-                status: 'Not Ready',
-                message: 'Not connected'
-            },
+            golemStatus: ['client', 'start', 'pre'],
             passwordModal: {
+                error: false,
                 register: false, 
                 status: false
             },
-            lockStatus: false,
             footerInfo: null
         })
     })
@@ -36,11 +33,7 @@ describe('realTime reducer', () => {
         })
         ).toEqual({
             peerInfo: [],
-            connectedPeers: 0,
-            golemStatus: {
-                status: 'Ready',
-                message: 'No Nodes Connected'
-            }
+            connectedPeers: 0
         })
     })
 
@@ -49,7 +42,7 @@ describe('realTime reducer', () => {
         expect(realTime(
         {
             golemStatus:{
-                 status: ""
+                 status: "",
             }
         }, {
             type: 'SET_GOLEM_STATUS',
@@ -67,19 +60,12 @@ describe('realTime reducer', () => {
     })
 
     it('should handle exception on SET_GOLEM_STATUS', () => {
-        expect(realTime(
+        expect(getStatusSelector(
         {
-            golemStatus:{
-                 status: "Exception"
-            }
-        }, {
-            type: 'SET_GOLEM_STATUS',
-            payload: {
-                status: "Ready",
-                message: "3 Nodes"
-            }
-        })
-        ).toEqual({"golemStatus": {"status": "Exception"}})
+            golemStatus: ['client', 'start', 'exception'],
+            connectedPeers: 5
+        }, "golemStatus")
+        ).toEqual({"message": "Error starting Golem", "status": "Exception"})
     })
 
 })

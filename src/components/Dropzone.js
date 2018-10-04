@@ -193,7 +193,6 @@ export class DropZone extends React.Component {
         // Upload files
         // actions.uploadFile(files)
         if (files) {
-            
             mainProcess.selectDirectory([].map.call(files, item => item.path), this.props.isMainNet)
                 .then(item => {
                     let mergedList = [].concat.apply([], item);
