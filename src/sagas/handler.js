@@ -121,6 +121,7 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
         onSuccess: function() {
             console.log(`un/subscribed to ${_channel} topic`);
         },
+
         onError: function({error}) {
             console.warn(`failed to un/subscribe ${_channel} topic`, error);
             log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, error)
