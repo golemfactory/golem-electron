@@ -259,7 +259,7 @@ export class Header extends Component {
                       trigger="mouseenter"
                       disabled={disableUploadTooltip}
                       hideOnClick={connectedPeers}>
-                        <li className="menu__item upload-menu" onClick={(isEngineOn && connectedPeers) ? (isMac ? this._onFileDialog.bind(this, ["openFile", "openDirectory"]) : ::this._toggleUploadMenu) : undefined}>
+                        <li className="menu__item upload-menu" onClick={(isEngineOn && !connectedPeers) ? (isMac ? this._onFileDialog.bind(this, ["openFile", "openDirectory"]) : ::this._toggleUploadMenu) : undefined}>
                             <span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/>
                             <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
                             <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>

@@ -996,6 +996,13 @@ export class TaskDetail extends React.Component {
                                             <span className="icon-gpu"/>GPU
                                         </label>
                                     </div>
+                                    <div>
+                                        <input type="radio" id="sgx" value="sgx" name="compute_on" checked={compute_on === "sgx"}/>
+                                        <label htmlFor="sgx">
+                                            <span className="overlay"/>
+                                            <span className="icon-sgx"/>SGX
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                             </div>
@@ -1080,14 +1087,6 @@ export class TaskDetail extends React.Component {
         );
     }
 }
-
-// {<div>
-//     <input type="radio" id="sgx" value="sgx" name="compute_on"/>
-//     <label htmlFor="sgx">
-//         <span className="overlay"/>
-//         <span className="icon-sgx"/>SGX
-//     </label>
-// </div>}
 
 // LOADING SCREEN IN ADVANCE
 // { (testStatus 

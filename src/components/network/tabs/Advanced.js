@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import {Tooltip} from 'react-tippy';
 
 import * as Actions from '../../../actions'
-import {getGPUEnvironment} from '../../../reducers'
+import {getEnvironment} from '../../../reducers'
 
 import RadialProgress from './../../RadialProgress'
 import Dropdown from './../../Dropdown'
@@ -21,7 +21,8 @@ const mapStateToProps = state => ({
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
     isEngineOn: state.info.isEngineOn,
-    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv')
+    gpuEnvironment: getEnvironment(state, 'BLENDER_NVGPU'),
+    sgxEnvironment: getEnvironment(state, 'BLENDER_SGX')
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -122,17 +123,16 @@ export class Advanced extends React.Component {
      * [_handleGPUProviderSwitch onChange function]
      * @return  {Boolean}   true
      */
-    _handleGPUProviderSwitch(evt) {
+    _handleProviderSwitch(evt, envName) {
         const {actions} = this.props;
-        const gpuENV = 'BLENDER_NVGPU'
         if(evt.target.checked)
-          actions.enableEnvironment(gpuENV);
+          actions.enableEnvironment(envName);
         else
-          actions.disableEnvironment(gpuENV);
+          actions.disableEnvironment(envName);
     }
 
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment} = this.props
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment, sgxEnvironment} = this.props
         const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
         const max = this.toGibibytes(systemInfo)
 
@@ -160,25 +160,45 @@ export class Advanced extends React.Component {
               <span>Golem reading your system information...</span>
             </div>}
             <div className="switch__gpu">
-                    <div className={`switch-box`}>
-                        <label className="switch">
-                            <input type="checkbox" onChange={::this._handleGPUProviderSwitch} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !gpuEnvironment.supported}/>
-                            <div className="switch-slider round"></div>
-                        </label>
-                    </div>
-                    <span style={{
+              <div className={`switch-box`}>
+                  <label className="switch">
+                      <input type="checkbox" onChange={this._handleProviderSwitch.bind(this, "BLENDER_NVGPU")} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !gpuEnvironment.supported}/>
+                      <div className="switch-slider round"></div>
+                  </label>
+              </div>
+              <span style={{
                 color: gpuEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
             }}>
                 Use my GPU as a resource. For Linux users with Nvidia card.
-                <Tooltip
-                        html={<p className='info-gpu'>For now there is no option to set the amount of shared resources <br/> with GPU.So Golem will take up to 100% of your graphic card<br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">Learn more.</a></p>}
-                        position="top"
-                        trigger="mouseenter"
-                        interactive={true}>
-                  <span className="icon-question-mark"/>
-              </Tooltip>
-            </span>
-                </div>
+                  <Tooltip
+                          html={<p className='info-gpu'>For now there is no option to set the amount of shared resources <br/> with GPU.So Golem will take up to 100% of your graphic card<br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">Learn more.</a></p>}
+                          position="top"
+                          trigger="mouseenter"
+                          interactive={true}>
+                    <span className="icon-question-mark"/>
+                </Tooltip>
+              </span>
+            </div>
+            <div className="switch__sgx">
+              <div className={`switch-box`}>
+                  <label className="switch">
+                      <input type="checkbox" onChange={this._handleProviderSwitch.bind(this, "BLENDER_SGX")} defaultChecked={sgxEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !sgxEnvironment.supported}/>
+                      <div className="switch-slider round"></div>
+                  </label>
+              </div>
+              <span style={{
+                color: sgxEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
+            }}>
+                Use SGX. For Linux users with Intel processors supporting SGX.
+                  <Tooltip
+                          html={<p className='info-gpu'>Intel SGX provides confidental computations on requestors side. <a href="">Learn more.</a></p>}
+                          position="top"
+                          trigger="mouseenter"
+                          interactive={true}>
+                    <span className="icon-question-mark"/>
+                </Tooltip>
+              </span>
+            </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
               <br/>

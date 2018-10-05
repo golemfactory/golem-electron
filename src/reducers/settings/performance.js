@@ -49,13 +49,15 @@ const setPerformance = (state = initialState, action) => {
 
 export default setPerformance
 
-function getGPUEnvironment(env){
-      return env && env.filter(item => item.id == 'BLENDER_NVGPU')[0]
+function getEnvironment(env, name){
+    console.log("env, name", env, name);
+      return env && env.filter(item => item.id == name)[0]
 }
 
-export const getGPUEnvironmentSelector = createCachedSelector(
+export const getEnvironmentSelector = createCachedSelector(
         (state) => state.environments,
-        (environments) => getGPUEnvironment(environments)
+        (state, name) => name,
+        (environments, name) => getEnvironment(environments, name)
     )(
-        (state, key) => key 
+        (state, name) => name 
     )
