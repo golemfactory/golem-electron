@@ -523,8 +523,8 @@ export class TaskDetail extends React.Component {
                 [state]: e.target.value
             })
         } else if(!this.state.savePresetLock && 
-                    (state === "frames" || state === "sample_per_pixel") && 
-                    !this.checkInputValidity(e)){
+                    (state === "frames" || state === "sample_per_pixel") 
+                    && !this.checkInputValidity(e)){
             this.setState({
                 [state]: null,
                 savePresetLock: true
@@ -591,7 +591,7 @@ export class TaskDetail extends React.Component {
         if(pickFormatIndex > -1){
             formatRef.value = format
         } else {
-            preset.value = formatRef.value = mockFormatList[0].name
+            preset.value.format = formatRef.value = mockFormatList[0].name
         }
 
         outputPath.value = output_path
@@ -668,7 +668,6 @@ export class TaskDetail extends React.Component {
         // If taken file format from input file is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
-        console.log("formatIndex", formatIndex, pickFormatIndex);
 
         resolutionW.value = resolution[0]
         resolutionH.value = resolution[1]
