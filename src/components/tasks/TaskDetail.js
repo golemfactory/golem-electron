@@ -758,7 +758,7 @@ export class TaskDetail extends React.Component {
                 ...task,
                 compute_on,
                 timeout: floatToString(timeout),
-                subtasks,
+                subtasks: Number(subtasks),
                 subtask_timeout: floatToString(subtask_timeout),
                 bid,
                 estimated_memory : (testStatus && testStatus.estimated_memory),
