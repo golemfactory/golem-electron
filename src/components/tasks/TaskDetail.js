@@ -523,8 +523,8 @@ export class TaskDetail extends React.Component {
                 [state]: e.target.value
             })
         } else if(!this.state.savePresetLock && 
-                    (state === "frames" || state === "sample_per_pixel") && 
-                    !this.checkInputValidity(e)){
+                    (state === "frames" || state === "sample_per_pixel") 
+                    && !this.checkInputValidity(e)){
             this.setState({
                 [state]: null,
                 savePresetLock: true
@@ -539,7 +539,6 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
-        console.log("list", list);
 
         const result = list.filter((item, index) => item.name == name)[0]
         const preset = {...result, value: {...result.value}} // immutable
@@ -589,7 +588,12 @@ export class TaskDetail extends React.Component {
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
 
-        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
+        if(pickFormatIndex > -1){
+            formatRef.value = format
+        } else {
+            preset.value.format = formatRef.value = mockFormatList[0].name
+        }
+
         outputPath.value = output_path
 
         if (this.props.task.type === taskType.BLENDER) {
@@ -664,7 +668,6 @@ export class TaskDetail extends React.Component {
         // If taken file format from input file is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
-        console.log("formatIndex", formatIndex, pickFormatIndex);
 
         resolutionW.value = resolution[0]
         resolutionH.value = resolution[1]
@@ -755,7 +758,7 @@ export class TaskDetail extends React.Component {
                 ...task,
                 compute_on,
                 timeout: floatToString(timeout),
-                subtasks,
+                subtasks: Number(subtasks),
                 subtask_timeout: floatToString(subtask_timeout),
                 bid,
                 estimated_memory : (testStatus && testStatus.estimated_memory),
