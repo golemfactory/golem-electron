@@ -539,7 +539,6 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
-        console.log("list", list);
 
         const result = list.filter((item, index) => item.name == name)[0]
         const preset = {...result, value: {...result.value}} // immutable
@@ -589,7 +588,12 @@ export class TaskDetail extends React.Component {
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
 
-        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
+        if(pickFormatIndex > -1){
+            formatRef.value = format
+        } else {
+            preset.value = formatRef.value = mockFormatList[0].name
+        }
+
         outputPath.value = output_path
 
         if (this.props.task.type === taskType.BLENDER) {
