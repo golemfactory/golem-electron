@@ -20,7 +20,7 @@ clone_depth: 1
 build_script:
   - npm run compile && npm run dist
 after_build:
-  - 7z a dist\win-unpacked.zip .
+  - 7z a dist\win-unpacked.zip .\dist\win-ia32-unpacked\*
 deploy:
   release: '{build}'
   description: 'Golem-electron beta {build}'
