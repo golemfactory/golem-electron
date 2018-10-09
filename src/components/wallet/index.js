@@ -3,6 +3,7 @@ import { Motion, spring } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
+import {BigNumber} from 'bignumber.js'
 
 import * as Actions from './../../actions'
 import { timeStampToHR } from './../../utils/secsToHMS'
@@ -10,6 +11,8 @@ import { timeStampToHR } from './../../utils/secsToHMS'
 import CurrencyBox from './CurrencyBox'
 
 const {clipboard } = window.electron
+
+const zero = new BigNumber(0);
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
@@ -80,6 +83,15 @@ export class Wallet extends Component {
             })
     }
 
+    _checkIfEnoughToWithdraw(_balance, isERC = false){
+
+        if(isERC){
+            return _balance[0].isEqualTo(zero) || _balance[1].isEqualTo(zero)
+        } 
+
+        return _balance[1].isEqualTo(zero)
+    }
+
 
     render() {
         const { publicKey, balance, currency, isDeveloperMode, isMainNet, golemStatus} = this.props
@@ -118,7 +130,8 @@ export class Wallet extends Component {
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
                             isMainNet={isMainNet}
-                            clickHandler={::this._handleWithdrawModal}/>
+                            clickHandler={::this._handleWithdrawModal}
+                            lockWithdraw={::this._checkIfEnoughToWithdraw(balance, true)}/>
 	                	<CurrencyBox
                             balance={balance[1]}
                             lockedBalance={[balance[4], balance[5], balance[6]]}
@@ -156,7 +169,8 @@ export class Wallet extends Component {
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
                             isMainNet={isMainNet}
-                            clickHandler={::this._handleWithdrawModal}/>
+                            clickHandler={::this._handleWithdrawModal}
+                            lockWithdraw={::this._checkIfEnoughToWithdraw(balance)}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>
