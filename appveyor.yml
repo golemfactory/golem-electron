@@ -15,6 +15,7 @@ matrix:
 build: off
 version: '{build}'
 shallow_clone: true
+skip_branch_with_pr: true # Do not build feature branch with open Pull Requests
 clone_depth: 1
 build_script:
   - npm run compile && npm run dist
@@ -30,7 +31,7 @@ deploy:
   draft: true
   prerelease: true
   on:
-    appveyor_repo_tag: true        # deploy on tag push only
+    appveyor_repo_tag: true # deploy on tag push only
 artifacts:
   - path: dist\win-unpacked.zip
     name: Golem Electron Windows {build}
