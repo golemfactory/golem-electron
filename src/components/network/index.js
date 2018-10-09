@@ -8,6 +8,7 @@ import a11y from 'react-a11y'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
+import {getStatus} from '../../reducers'
 
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
@@ -32,7 +33,7 @@ const mapStateToProps = state => ({
     currency: state.currency,
     autoLaunch: state.input.autoLaunch,
     connectionProblem: state.info.connectionProblem,
-    golemStatus: state.realTime.golemStatus,
+    status: getStatus(state, 'golemStatus'),
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
@@ -143,7 +144,8 @@ export class MainFragment extends React.Component {
      * @param   {Object}     elm     [target element]
      */
     _handleTab(elm) {
-        let tabTitles = document.getElementsByClassName('tab__title')
+        const tabPanel = document.getElementById('networkTab');
+        const tabTitles = tabPanel.childNodes;
         for (var i = 0; i < tabTitles.length; i++) {
             tabTitles[i].classList.remove('active')
         }
@@ -155,18 +157,18 @@ export class MainFragment extends React.Component {
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, golemStatus, isEngineOn, isEngineLoading, balance, currency, version} = this.props
+        const {message, actions, autoLaunch, connectionProblem, status, isEngineOn, isEngineLoading, balance, currency, version} = this.props
         const {activeTab, presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
 
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
             <div className="section__quick-settings">
-            <div className="tab-panel" role="tablist">
-                <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
-                <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
-                <div className="tab__title" value='2' onClick={::this._handleTab} role="tab" tabIndex="0">Advanced</div>
-            </div>
+                <div id="networkTab" className="tab-panel" role="tablist">
+                    <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
+                    <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
+                    <div className="tab__title" value='2' onClick={::this._handleTab} role="tab" tabIndex="0">Advanced</div>
+                </div>
                 <div className="tab__content">
                     {activeTab == 0 && <Resources role="tabpanel"/>}
                     {activeTab == 1 && <History role="tabpanel"/>}

@@ -3,6 +3,7 @@ import { Motion, spring } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
+import {BigNumber} from 'bignumber.js'
 
 import * as Actions from './../../actions'
 import { timeStampToHR } from './../../utils/secsToHMS'
@@ -11,8 +12,11 @@ import CurrencyBox from './CurrencyBox'
 
 const {clipboard } = window.electron
 
+const zero = new BigNumber(0);
+
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
+    isDeveloperMode: state.input.developerMode,
     isMainNet: state.info.isMainNet,
     golemStatus: state.realTime.golemStatus
 })
@@ -79,9 +83,18 @@ export class Wallet extends Component {
             })
     }
 
+    _checkIfEnoughToWithdraw(_balance, isERC = false){
+
+        if(isERC){
+            return _balance[0].isEqualTo(zero) || _balance[1].isEqualTo(zero)
+        } 
+
+        return _balance[1].isEqualTo(zero)
+    }
+
 
     render() {
-        const { publicKey, balance, currency, isMainNet, golemStatus} = this.props
+        const { publicKey, balance, currency, isDeveloperMode, isMainNet, golemStatus} = this.props
         const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
@@ -100,11 +113,8 @@ export class Wallet extends Component {
                                         <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
-                                        tGNT is testnet
-                                        <br/>Golem Network token.
-                                        <br/>It is earned
-                                        <br/>and/or paid for
-                                        <br/>computations.
+                                        tGNT is testnet Golem Network token.
+                                        <br/>It is earned and/or paid for computations.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             descriptionLock={
@@ -120,7 +130,8 @@ export class Wallet extends Component {
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
                             isMainNet={isMainNet}
-                            clickHandler={::this._handleWithdrawModal}/>
+                            clickHandler={::this._handleWithdrawModal}
+                            lockWithdraw={::this._checkIfEnoughToWithdraw(balance, true)}/>
 	                	<CurrencyBox
                             balance={balance[1]}
                             lockedBalance={[balance[4], balance[5], balance[6]]}
@@ -133,10 +144,8 @@ export class Wallet extends Component {
                                         <br/><a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">Learn more</a></p>
                                         :
                                         <p className="tooltip__wallet">
-                                        tETH is testnet 
-                                        <br/>ETH.
-                                        <br/>It is used for
-                                        <br/>transaction fees.
+                                        tETH is testnet ETH.
+                                        <br/>It is used for transaction fees.
                                         <br/><a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">Learn more</a></p>
                                     }
                             descriptionLock={
@@ -160,7 +169,8 @@ export class Wallet extends Component {
                             expandedAmount={expandedAmount}
                             golemStatus={golemStatus}
                             isMainNet={isMainNet}
-                            clickHandler={::this._handleWithdrawModal}/>
+                            clickHandler={::this._handleWithdrawModal}
+                            lockWithdraw={::this._checkIfEnoughToWithdraw(balance)}/>
 	                </div>
 	                <span id="expandWalletButton" className="icon-arrow-down" onClick={::this._handleExpandWallet}/>
 	            </div>
@@ -171,7 +181,14 @@ export class Wallet extends Component {
 		            </div>
 		            <div>
 		            	<input className="input__public-key" type="text" value={isMainNet ? publicKey : "You cannot top up your TestNet account"} readOnly/>
-	                	<span className={`icon-${addressCopied ? "checkmark" : "copy"}`} onClick={this._handleCopyToClipboard.bind(this, (isMainNet ? publicKey : "You cannot top up your TestNet account"))}/>
+	                	<span 
+                            className={`icon-${addressCopied ? "checkmark" : "copy"}`} 
+                            onClick={this._handleCopyToClipboard.bind(this, 
+                                (isMainNet 
+                                    ? publicKey 
+                                    : (isDeveloperMode 
+                                        ? publicKey
+                                        : "You cannot top up your TestNet account")))}/>
                         {addressCopied && <span className="status-copy_address">address copied</span>}
 		            </div>
 	            </div>

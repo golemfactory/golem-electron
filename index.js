@@ -4,7 +4,7 @@ const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
 var mkdirp = require('mkdirp');
-const semver = require('semver')
+const semver = require('semver');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -126,20 +126,16 @@ function createWindow() {
         }
     })
 
-
-
-
-    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-      // Someone tried to run a second instance, we should focus our primary window.
-      if (win) {
-        if (win.isMinimized()) win.restore();
-        win.focus();
-      }
-    });
-
-    if (shouldQuit) {
-      app.quit();
-      return;
+    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {   
+      // Someone tried to run a second instance, we should focus our primary window.    
+      if (win) {    
+        if (win.isMinimized()) win.restore();   
+        win.focus();    
+      } 
+    }); 
+     if (shouldQuit) {  
+      app.quit();   
+      return;   
     }
 
     /*
@@ -151,7 +147,9 @@ function createWindow() {
     */
     win.webContents.on('will-navigate', (event, url) => {
         event.preventDefault()
-        if (url.includes('http') && (url.includes('etherscan') || url.includes('golem')))
+        if (url.includes('http') 
+            && (url.includes('etherscan') 
+                || url.includes('golem')))
             electron.shell.openExternal(url);
     })
 
@@ -270,11 +268,18 @@ function createPreviewWindow(id, frameCount) {
         })
 
         if (isDevelopment()) {
-            let previewURL = `http://localhost:${process.env.PORT || 3002}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+            let previewURL = `http://localhost:${process.env.PORT 
+                || 3002}/index.frame.html#/preview/${frameCount > 1 
+                ? 'all' 
+                : 'single' }/${id}`
+
             console.log("previewURL", previewURL);
             previewWindow.loadURL(previewURL)
         } else {
-            let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 ? 'all' : 'single' }/${id}`
+            let previewURL = `file://${__dirname}/index.frame.html#/preview/${frameCount > 1 
+                ? 'all' 
+                : 'single' }/${id}`
+
             previewWindow.loadURL(previewURL)
         //win.loadURL(`file://${__dirname}/index.html`)
         }
@@ -284,6 +289,10 @@ function createPreviewWindow(id, frameCount) {
 
 function isWin(){
     return process.platform === "win32"
+}
+
+function isMac(){
+    return process.platform === "darwin"
 }
 
 
@@ -416,6 +425,40 @@ exports.selectDirectory = function(directory, _isMainNet) {
     return Promise.all(promises)
 }
 
+exports.copyFiles = function(files, missingFiles, _taskPath) {
+    const promises = missingFiles.map( missingFile => {
+        const matchedFile = files.find( file => file.name === missingFile.baseName )
+        if(matchedFile) {
+            const destination = path.join(
+                    _taskPath, 
+                    missingFile.dirName.replace("/golem/resources/", ""))
+
+            return _copyAsync(matchedFile, destination)
+        }
+    })
+    .filter(item => item !== undefined);
+
+    function _copyAsync(file, destDir){
+        return new Promise((resolve, reject) => {
+            fs.access(destDir, (err) => {
+                if(err)
+                    fs.mkdirSync(destDir);
+
+                _copyFile(file.path, path.join(destDir, file.name));
+            });
+
+            function _copyFile(src, dest) {
+
+                let readStream = fs.createReadStream(src);
+                readStream.once('error', (err) => console.error);
+                readStream.once('end', () => resolve(dest));
+                readStream.pipe(fs.createWriteStream(dest));
+            }
+        })
+    }
+
+    return Promise.all(promises)
+}
 
 function createLocationPath(_dir){
     return mkdirp.sync(_dir)
@@ -423,7 +466,9 @@ function createLocationPath(_dir){
 
 exports.getDefaultLocation = function() {
 
-    const _location = isWin() ? `${process.env.USERPROFILE}\\Documents` : `${process.env.HOME}/Documents`;
+    const _location = isWin() 
+        ? `${process.env.USERPROFILE}\\Documents` 
+        : `${process.env.HOME}/Documents`;
 
     if (!fs.existsSync(_location))
         return createLocationPath(_location)
@@ -434,5 +479,7 @@ exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
 
+exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
+

@@ -1,6 +1,6 @@
 import { dict } from './../../actions'
 
-const {CREATE_TASK, CLEAR_TASK_PLAIN} = dict
+const {CREATE_TASK, CLEAR_TASK_PLAIN, ADD_MISSING_TASK_FILES} = dict
 
 const initialState = {
     task: {}
@@ -17,6 +17,17 @@ const createTask = (state = initialState, action) => {
     case CLEAR_TASK_PLAIN:
         return Object.assign({}, state, {
             task: {}
+        });
+
+    case ADD_MISSING_TASK_FILES:
+        return Object.assign({}, state, {
+            task: {
+                ...state.task,
+                resources: [
+                    ...state.task.resources,
+                    ...action.payload
+                ]
+            }
         });
 
     default:

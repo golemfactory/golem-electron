@@ -45,9 +45,7 @@ describe('handleIO', () => {
         },
         start_message: {
             type: 'SET_GOLEM_STATUS',
-            payload: {
-                message: 'Starting Golem'
-            }
+            payload: [ 'client', 'start', 'pre' ]
         },
         logout: {
             type: 'LOGOUT'

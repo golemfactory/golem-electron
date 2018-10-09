@@ -243,6 +243,13 @@ select {
        
         }
     }
+
+    &--small{
+        width: 50px;
+        height: 30px;
+        padding: 0 2px;
+        font-size: 8pt;
+    }
 }
 
 input[type=text],
@@ -284,7 +291,7 @@ input[type=number]::-webkit-inner-spin-button {
     &:hover {}
 }
 
-hint{
+.notice{
     font-size: 9pt;
     color: $color-text2;
 }
@@ -402,7 +409,7 @@ hint{
 
         + .radio-label-left{
             &:before {
-                content: '\e917';
+                content: "\E91C";
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
@@ -413,7 +420,7 @@ hint{
                 cursor: pointer;
                 text-align: center;
                 transition: all 250ms ease;
-                font-family: 'golemcon' !important;
+                font-family: 'gcon' !important;
                 speak: none;
                 font-style: normal;
                 font-weight: normal;
@@ -431,7 +438,7 @@ hint{
         + .radio-label-right{
 
             &:after {
-                content: '\e917';
+                content: "\E91C";
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
@@ -442,7 +449,7 @@ hint{
                 cursor: pointer;
                 text-align: center;
                 transition: all 250ms ease;
-                font-family: 'golemcon' !important;
+                font-family: 'gcon' !important;
                 speak: none;
                 font-style: normal;
                 font-weight: normal;

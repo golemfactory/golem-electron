@@ -83,7 +83,8 @@ export default class CurrencyBox extends Component {
             expandAmount, 
             expandedAmount, 
             isMainNet,
-            golemStatus
+            golemStatus,
+            lockWithdraw
         } = this.props
 
         return (
@@ -119,7 +120,7 @@ export default class CurrencyBox extends Component {
                         </span>}
                 </div>
                 <div className="side2">
-                    <div ref={"currencyBox" + suffix} className={`content__currency-box`} onClick={expandAmount.bind(this, suffix)}>
+                    <div ref={"currencyBox" + suffix} className="content__currency-box" onClick={expandAmount.bind(this, suffix)}>
                 <div>
                     <span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
@@ -156,7 +157,7 @@ export default class CurrencyBox extends Component {
                   className="tip">
                     <span className="icon-question-mark"/>
                 </Tooltip>
-                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={(!isMainNet || !isGolemReady(golemStatus.status))}>Withdraw</button>
+                <button className="btn--outline wallet__btn-withdraw" onClick={() => clickHandler(suffix, currency, balance)} disabled={(!isMainNet || !isGolemReady(golemStatus.status) || lockWithdraw)}>Withdraw</button>
             </div>
                 </div>
             </div>
