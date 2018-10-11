@@ -200,6 +200,11 @@ function createWindow() {
     });
 }
 
+// Hardware acceleration is disabled for Linux machines as work around, electron apps hangs mostly on Linux 18.04
+if(isLinux()){
+    app.disableHardwareAcceleration()
+}
+
 app.on('ready', onReady)
 
 app.on('window-all-closed', () => {
@@ -293,6 +298,10 @@ function isWin(){
 
 function isMac(){
     return process.platform === "darwin"
+}
+
+function isLinux(){
+    return process.platform === "linux"
 }
 
 
