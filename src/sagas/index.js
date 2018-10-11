@@ -119,10 +119,23 @@ export function connect() {
             });
         }
 
-        console.log("WS: connecting");
-        app.golem.getSecretKey(config.AUTHID)
-        .then((secret => connect(secret)))
-        
+         /**
+         * [reAskSecretKey function  will ask about secret key until it gets the proper answer from golem]
+         */
+        function reAskSecretKey() {
+            let sleeper = null
+            app.golem.getSecretKey(config.AUTHID)
+            .then((secret => {
+                if(sleeper) clearTimeout(sleeper)
+                connect(secret)
+            }))
+            .catch((rejection => {
+                app.golem.startProcess();
+                sleeper = setTimeout(reAskSecretKey, 500)
+            }))
+        }
+
+        reAskSecretKey();
 
         return () => {
             console.log("negative");

@@ -124,7 +124,9 @@ class GolemProcess {
     }
 
     getSecretKey(user){
-        return new Promise((resolve, reject) => this._readSecretKey(user).then(result => resolve(result)))
+        return new Promise((resolve, reject) => this._readSecretKey(user)
+            .then(result => resolve(result))
+            .catch(rejection => reject(rejection)))
     }
 
     _readSecretKey(user) {
