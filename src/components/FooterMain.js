@@ -112,7 +112,7 @@ export default class FooterMain extends Component {
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">
-                                <span>Provider state: {this._fetchState(stats.provider_state)}</span>
+                                <span>Provider state: {stats ? this._fetchState(stats.provider_state) : ""}</span>
                                 <br/>
                                 <span>Attempted: {(stats && stats.subtasks_computed) && (stats.subtasks_computed[1] + stats.subtasks_with_timeout[1] + stats.subtasks_with_errors[1])}</span>
                                 <br/>
