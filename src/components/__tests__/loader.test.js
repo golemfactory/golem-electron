@@ -70,13 +70,6 @@ describe('Loader', () => {
         const {wrapper} = setup()
     });
 
-    it('should call componentWillMount', () => {
-        sinon.spy(Loader.prototype, 'componentWillMount');
-        expect(Loader.prototype.componentWillMount.calledOnce).toBe(false)
-        const wrapper = mount(<Loader />);
-        expect(Loader.prototype.componentWillMount.calledOnce).toBe(true)
-    })
-
     it('should call actions.startLoading', () => {
         const mockLoader = TestUtils.renderIntoDocument(<Loader actions={actions}/>);
         const loadingId = [123]
@@ -90,6 +83,13 @@ describe('Loader', () => {
         mockLoader._handleEndLoading(loadingId)
         expect(actions.endLoading).toBeCalled()
     });
+    
+    it('should call componentWillMount', () => {
+        sinon.spy(Loader.prototype, 'componentWillMount');
+        expect(Loader.prototype.componentWillMount.calledOnce).toBe(false)
+        const wrapper = mount(<Loader />);
+        expect(Loader.prototype.componentWillMount.calledOnce).toBe(true)
+    })
 })
 
 describe('Loading', () => {
@@ -126,25 +126,6 @@ describe('Loading', () => {
         let mockLoading = TestUtils.renderIntoDocument(<Loading />);
         expect(mockLoading.runAnim(50, 0.6).toString()).toBe(style.toString())
     });
-
-    it('should call componentWillMount', () => {
-        sinon.spy(Loading.prototype, 'componentWillMount');
-        expect(Loading.prototype.componentWillMount.calledOnce).toBe(false)
-        const wrapper = mount(<Loading />);
-        expect(Loading.prototype.componentWillMount.calledOnce).toBe(true)
-    })
-
-
-    it('action state should change 600ms after init', function() {
-        //let clock = jest.useFakeTimers();
-        jest.useFakeTimers()
-        const mockLoader = TestUtils.renderIntoDocument(<Loading actions={actions} />);
-        //mockLoader.componentWillMount()
-        expect(mockLoader.state.anim).toBe(false);
-        jest.runAllTimers()
-        expect(mockLoader.state.anim).toBe(true);
-    });
-
 
     it('should call componentDidMount', () => {
         sinon.spy(Loading.prototype, 'componentDidMount');
