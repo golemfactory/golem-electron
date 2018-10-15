@@ -48,7 +48,7 @@ export default class CurrencyBox extends Component {
         }
     }
 
-    _formatAmount(_balance ,_suffix, currency = 1) {
+    _formatAmount = (_balance ,_suffix, currency = 1) => {
         const totalBalance = this.props.balance
             .precision(this.state.amountPrecision)
             .toString();
@@ -134,7 +134,7 @@ export default class CurrencyBox extends Component {
                             })
                         }}>
                     {({balanceAnimated}) => <span className="amount">
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
+                        {this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
                     </Motion>
@@ -146,7 +146,7 @@ export default class CurrencyBox extends Component {
                                 damping: 50
                             })
                         }}>
-                        {({balanceAnimated}) => <span className="amount">est. {!isMainNet ? "t" : ""}$ {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}...</span>}
+                        {({balanceAnimated}) => <span className="amount">est. {!isMainNet ? "t" : ""}$ {this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}...</span>}
                     </Motion>
                 </div>
                 <Tooltip
