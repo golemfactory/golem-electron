@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'

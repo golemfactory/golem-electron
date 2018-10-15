@@ -2,7 +2,6 @@ import React from 'react';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Motion, spring } from 'react-motion'
 
 import * as Actions from '../../actions'
 import Onboarding from './../onboarding';

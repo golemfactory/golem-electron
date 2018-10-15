@@ -1,6 +1,5 @@
 import { dict } from './../../actions'
 import createCachedSelector from 're-reselect';
-import { spring } from 'react-motion'
 
 const {SET_HISTORY} = dict
 
@@ -37,27 +36,7 @@ const extractData = (historyList, filter, isDefault) => historyList
                 .map((item, index) => {
                     return {
                         key: item.created.toString(),
-                        data: item,
-                        style: isDefault
-                        ? 	{
-		                        height: 0,
-		                        opacity: 0,
-		                        borderWidth: 0
-	                    	}
-                        : 	{
-	                            height: spring(76, {
-	                                stiffness: 150,
-	                                damping: 22
-	                            }),
-	                            opacity: spring(1, {
-	                                stiffness: 150,
-	                                damping: 22
-	                            }),
-	                            borderWidth: spring(1, {
-	                                stiffness: 150,
-	                                damping: 22
-                            	}),
-                        	}
+                        data: item
                     }
                 })
 

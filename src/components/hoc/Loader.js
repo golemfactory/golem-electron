@@ -2,7 +2,7 @@ import React from 'react'
 import uuid from 'uuid/v4'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Motion, spring } from 'react-motion'
+import { Spring } from 'react-spring'
 
 import * as Actions from '../../actions'
 import golem_logo from './../../assets/img/golem-black.svg'
@@ -14,24 +14,12 @@ import golem_logo from './../../assets/img/golem-black.svg'
  */
 export class Loading extends React.Component {
 
-    state = {
-        anim: false
-    }
-
-    componentWillMount() {
-        setTimeout(() => (
-        this.setState({
-            anim: true
-        })
-        ), 1000)
-    }
-
     componentDidMount() {
         require('../animation')
     }
 
     /**
-     * { runAnim function updates style of div with React-Motion }
+     * { runAnim function updates style of div with React-Spring }
      *
      * @param      {number}     rotate  Transform attribute 
      * @param      {number}     alpha   Opacity attribute
@@ -45,25 +33,13 @@ export class Loading extends React.Component {
     }
 
     render() {
-        let {anim} = this.state
-        let mainButtonRotation = anim ? {
-            rotate: spring(-24, {
-                stiffness: 80,
-                damping: 50
-            }),
-            alpha: spring(1, {
-                stiffness: 80,
-                damping: 80
-            })
-        } : {
-            rotate: spring(0, {
-                stiffness: 80,
-                damping: 60
-            }),
-            alpha: spring(0, {
-                stiffness: 80,
-                damping: 80
-            })
+        let mainButtonRotation = {
+            rotate: -24,
+            alpha: 1,
+        };
+        let defaultMainButtonRotation = {
+            rotate: 0,
+            alpha: 0
         }
 
         return (
@@ -71,7 +47,11 @@ export class Loading extends React.Component {
             <canvas id="stage" className="canvas" width="1534" height="841" style={{
                 backgroundColor: 'rgba(0, 0, 0, 0)'
             }}></canvas>
-            <Motion style={mainButtonRotation}>
+            <Spring 
+                from={defaultMainButtonRotation} 
+                to={mainButtonRotation} 
+                delay={1000}
+                config={{ tension: 10, friction: 50 }}>
                     {({rotate, alpha}) => <div className="title" style={this.runAnim(rotate, alpha)}>
                                 <img src={golem_logo} />
                                 <div className="text"> worldwide
@@ -85,7 +65,7 @@ export class Loading extends React.Component {
                                 </div>
                             </div>
             }
-                </Motion>
+                </Spring>
             </div>
         )
     }
