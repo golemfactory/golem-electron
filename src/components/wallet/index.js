@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { hashHistory } from 'react-router'
@@ -8,6 +7,7 @@ import {BigNumber} from 'bignumber.js'
 import * as Actions from './../../actions'
 import { timeStampToHR } from './../../utils/secsToHMS'
 
+import {getStatus} from '../../reducers'
 import CurrencyBox from './CurrencyBox'
 
 const {clipboard } = window.electron
@@ -18,7 +18,7 @@ const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
     isDeveloperMode: state.input.developerMode,
     isMainNet: state.info.isMainNet,
-    golemStatus: state.realTime.golemStatus
+    status: getStatus(state, 'golemStatus'),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -94,7 +94,7 @@ export class Wallet extends Component {
 
 
     render() {
-        const { publicKey, balance, currency, isDeveloperMode, isMainNet, golemStatus} = this.props
+        const { publicKey, balance, currency, isDeveloperMode, isMainNet, status} = this.props
         const { addressCopied, isWalletExpanded, expandedAmount} = this.state
         return (
         	<div id="sectionWallet" className="section__wallet">
@@ -128,7 +128,7 @@ export class Wallet extends Component {
                             }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
-                            golemStatus={golemStatus}
+                            golemStatus={status}
                             isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}
                             lockWithdraw={::this._checkIfEnoughToWithdraw(balance, true)}/>
@@ -167,7 +167,7 @@ export class Wallet extends Component {
                             }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
-                            golemStatus={golemStatus}
+                            golemStatus={status}
                             isMainNet={isMainNet}
                             clickHandler={::this._handleWithdrawModal}
                             lockWithdraw={::this._checkIfEnoughToWithdraw(balance)}/>

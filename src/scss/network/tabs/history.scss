@@ -18,13 +18,13 @@
     align-items: center;
     text-align: left;
     box-sizing: border-box;
+    height: 76px;
     & + .item__history {
         border-top: 1px solid $color-border;
     }
     &:last-child {
         border-bottom: 1px solid $color-border;
     }
-    height: 80px;
     h5 {
         padding: 0;
         margin: 0 0 2px 0;

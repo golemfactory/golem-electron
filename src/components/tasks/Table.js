@@ -6,7 +6,6 @@ import {Tooltip} from 'react-tippy';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Motion, spring } from 'react-motion';
 
 import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
@@ -239,14 +238,9 @@ export class Table extends React.Component {
      * @param  {Array}    data    [JSON array of task list]
      * @return {Object}           [DOM of task list]
      *
-     * @description [React-Motion]  https://github.com/chenglou/react-motion
-     * React motion provides animation ability to elements.
-     * Variable which will change with a rule, defining as a default style prop.
-     * Result we want to get is defining as style prop with spring helper
-     * {spring}
-     *     @param {int}     stiffness   (optional)
-     *     @param {int}     damping     (optional)
-     *     @param {float}   precision   (optional)
+     * @description [React-Spring]  https://github.com/drcmda/react-spring
+     * React spring provides animation ability to elements.
+     * 
      */
     listTasks(data) {
         const { toggleWalletTray } = this.props

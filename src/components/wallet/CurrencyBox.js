@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Motion, spring } from 'react-motion'
+import { Spring } from 'react-spring'
 import {Tooltip} from 'react-tippy'
 import {BigNumber} from 'bignumber.js';
 
@@ -48,7 +48,7 @@ export default class CurrencyBox extends Component {
         }
     }
 
-    _formatAmount(_balance ,_suffix, currency = 1) {
+    _formatAmount = (_balance ,_suffix, currency = 1) => {
         const totalBalance = this.props.balance
             .precision(this.state.amountPrecision)
             .toString();
@@ -125,29 +125,19 @@ export default class CurrencyBox extends Component {
                     <span className={`icon-${currencyIcons[suffix]}`}/>
                 </div>
                 <div>
-                    <Motion defaultStyle={{
-                        balanceAnimated: motionBalanceStart[suffix]
-                        }} style={{
-                            balanceAnimated: spring(Number(balance), {
-                                stiffness: 500,
-                                damping: 50
-                            })
-                        }}>
+                    <Spring 
+                        from={{ balanceAnimated: motionBalanceStart[suffix] }} 
+                        to={{ balanceAnimated: Number(balance) }}>
                     {({balanceAnimated}) => <span className="amount">
-                        {::this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
+                        {this._formatAmount(Number(balanceAnimated), suffix)}{!expandedAmount && "..."}
                         <span className="currency-suffix">{!isMainNet ? "t" : ""}{suffix}</span>
                     </span>}
-                    </Motion>
-                    <Motion defaultStyle={{
-                        balanceAnimated: motionBalanceStart[`${suffix}-USD`]
-                        }} style={{
-                            balanceAnimated: spring(Number(balance.multipliedBy(currency[suffix])), {
-                                stiffness: 500,
-                                damping: 50
-                            })
-                        }}>
-                        {({balanceAnimated}) => <span className="amount">est. {!isMainNet ? "t" : ""}$ {::this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}...</span>}
-                    </Motion>
+                    </Spring>
+                    <Spring 
+                        from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }} 
+                        to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                        {({balanceAnimated}) => <span className="amount">est. {!isMainNet ? "t" : ""}$ {this._formatAmount(Number(balanceAnimated), `${suffix}-USD`, currency[suffix])}...</span>}
+                    </Spring>
                 </div>
                 <Tooltip
                   html={description}
