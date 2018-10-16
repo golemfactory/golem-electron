@@ -14,6 +14,7 @@ import { timeStampToHR } from '../../../utils/secsToHMS'
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 const isWin = mainProcess.isWin();
+const isMac = mainProcess.isMac();
 
 const mainEtherscan = "https://etherscan.io/tx/0x"
 const testEtherscan = "https://rinkeby.etherscan.io/tx/0x"
@@ -207,7 +208,7 @@ export class History extends React.Component {
                             return (
                             <List
                                 width={width}
-                                height={winHeight - (isWin ? 414 : 436)} //offset of height
+                                height={winHeight - (isWin ? 414 : (isMac ? 436 : 401))} //offset of height
                                 cellRangeRenderer={this.cellRangeRenderer}
                                 rowCount={filteredList.length}
                                 rowHeight={76}
