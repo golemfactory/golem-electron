@@ -55,7 +55,7 @@
             width: 100%;
             min-height: 0;
             flex: 1 1 calc(100% - 830px);
-            overflow-y: overlay;
+            overflow: hidden;
             transform: translateZ(0);
         }
     }
