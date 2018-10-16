@@ -4,10 +4,18 @@ import { connect } from 'react-redux'
 
 import {Tooltip} from 'react-tippy';
 import { Transition, animated, config } from 'react-spring'
+import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+const posed = require('react-pose');
+const {PoseGroup} = posed
 
 import * as Actions from '../../../actions'
 import {getFilteredPaymentHistory} from '../../../reducers'
 import { timeStampToHR } from '../../../utils/secsToHMS'
+
+const {remote} = window.electron;
+const mainProcess = remote.require('./index')
+const isWin = mainProcess.isWin();
+const isMac = mainProcess.isMac();
 
 const mainEtherscan = "https://etherscan.io/tx/0x"
 const testEtherscan = "https://rinkeby.etherscan.io/tx/0x"
@@ -17,6 +25,11 @@ const filter = {
     PAYMENT: 'payment',
     INCOME: 'income'
 }
+
+const Item = posed.default.div({
+  enter: { opacity: 1 },
+  exit: { opacity: 0 }
+});
 
 const mapStateToProps = state => ({
     isMainNet: state.info.isMainNet,
@@ -33,8 +46,19 @@ export class History extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0
+            activeTab: 0,
+            winWidth: 0,
+            winHeight: 0
         }
+    }
+
+    componentDidMount() {
+        this.updateDimensions()
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", ::this.updateDimensions.bind(this));
     }
 
     /**
@@ -42,7 +66,7 @@ export class History extends React.Component {
      *
      * @param   {Object}     elm     [target element]
      */
-    _handleTab(elm) {
+    _handleTab = (elm) => {
         const tabPanel = document.getElementById('historyTab')
         const tabTitles = tabPanel.childNodes;
         for (var i = 0; i < tabTitles.length; i++) {
@@ -94,64 +118,108 @@ export class History extends React.Component {
         };
     }
 
-    /**
-     * [loadHistory loading payment history as DOM]
-     */
-    loadHistory(_list, _filter = null) {
-        const filteredList = ::this.getStyles(_list, _filter)
-        const { isMainNet} = this.props
-        return <Transition
-                  native
-                  keys={filteredList.map(item => item.key.toString())}
-                  from={this.defaultStyle}
-                  enter={this.willEnter}
-                  leave={this.willLeave}
-                  config={config.stiff} >
-                  {filteredList
-                    .map(({data}) => styles => {
-                        const {payee, payer, created, status, value, type, transaction} = data;
-                        return <animated.div style={styles} className="item__history">
-                            <div className="info__history">
-                                <h5>{(payee || payer).substr(0, 24)}...</h5>
-                                <span>{timeStampToHR(created)}</span>
-                                <span className="status__history">{status}</span>
-                            </div>
-                            <div className="action__history">
-                                <span className="amount__history">
-                                    <span className={`finance__indicator ${type === filter.INCOME 
-                                        ? 'indicator--up' 
-                                        : 'indicator--down'}`}>
-                                            {type === filter.INCOME ? '+ ' : '- '}
-                                            </span>{(value / ETH_DENOM).toFixed(4)} GNT
-                                </span>
-                                {transaction && <Tooltip
-                                  html={(<p>See on Etherscan</p>)}
-                                  position="bottom"
-                                  trigger="mouseenter"
-                                >
-                                    <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}><span className="icon-new-window"/></a>
-                                </Tooltip>}
-                             </div>
-                        </animated.div>}
-                    )}
-                </Transition>
+    cellRangeRenderer(props) {
+        const children = defaultCellRangeRenderer(props);
+        const animatedChildren = <PoseGroup key="list">
+          {children.map(item => <Item key={item.key}>{item}</Item>)}
+        </PoseGroup>
+
+        return [animatedChildren];
+    }
+
+    rowRenderer = ({
+      key,         // Unique key within array of rows
+      index,       // Index of row within collection
+      isScrolling, // The List is currently being scrolled
+      isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+      style        // Style object to be applied to row (to position it)
+    }) => {
+      const {paymentHistory} = this.props
+      const {activeTab} = this.state
+      const { isMainNet} = this.props
+      const filteredList = paymentHistory(activeTab)
+      const tx = filteredList[index]
+      const {payee, payer, created, status, value, type, transaction}  = tx.data
+
+      const content = <div className="item__history">
+          <div className="info__history">
+              <h5>{(payee || payer).substr(0, 24)}...</h5>
+              <span>{timeStampToHR(created)}</span>
+              <span className="status__history">{status}</span>
+          </div>
+          <div className="action__history">
+              <span className="amount__history">
+                  <span className={`finance__indicator ${type === filter.INCOME 
+                      ? 'indicator--up' 
+                      : 'indicator--down'}`}>
+                          {type === filter.INCOME ? '+ ' : '- '}
+                          </span>{(value / ETH_DENOM).toFixed(4)} GNT
+              </span>
+              {transaction && <Tooltip
+                html={(<p>See on Etherscan</p>)}
+                position="bottom"
+                trigger="mouseenter"
+              >
+                  <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}><span className="icon-new-window"/></a>
+              </Tooltip>}
+           </div>
+        </div>
+
+      return (
+        <div
+          key={key}
+          style={style}
+        >
+          {content}
+        </div>
+      )
+    }
+
+    updateDimensions() {
+      const w = window,
+        d = document,
+        documentElement = d.documentElement,
+        body = d.getElementsByTagName('body')[0],
+        width = w.innerWidth || documentElement.clientWidth || body.clientWidth,
+        height = w.innerHeight|| documentElement.clientHeight|| body.clientHeight;
+
+         this.setState({
+            winWidth: width,
+            winHeight: height
+        })
     }
 
     render() {
         const {isEngineOn, paymentHistory} = this.props
-        const {activeTab} = this.state
-        const filteredList = this.loadHistory(paymentHistory, activeTab)
+        const {activeTab, winHeight} = this.state
+        const filteredList = paymentHistory(activeTab)
         return (
             <div className="content__history">
                 <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
-                    <div className="tab__title active" value={null} onClick={::this._handleTab} role="tab" tabIndex="0">All</div>
-                    <div className="tab__title" value="income" onClick={::this._handleTab} role="tab" tabIndex="0">Incoming</div>
-                    <div className="tab__title" value="payment" onClick={::this._handleTab} role="tab" tabIndex="0">Outgoing</div>
+                    <div className="tab__title active" value={null} onClick={this._handleTab} role="tab" tabIndex="0">All</div>
+                    <div className="tab__title" value="income" onClick={this._handleTab} role="tab" tabIndex="0">Incoming</div>
+                    <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">Outgoing</div>
                 </div>
                 <div>
-                    {(paymentHistory && filteredList.props.keys.length > 0)
-                        ? filteredList
-                        : <div className="empty-list__history">
+                  {(paymentHistory && filteredList.length > 0)
+                    ? <div style={{ display: 'flex' }}>
+                      <div style={{ flex: '1 1 auto', height: '100%' }}>
+                        <AutoSizer>
+                          {({ width }) => {
+                            return (
+                            <List
+                                width={width}
+                                height={winHeight - (isWin ? 414 : (isMac ? 436 : 401))} //offset of height
+                                cellRangeRenderer={this.cellRangeRenderer}
+                                rowCount={filteredList.length}
+                                rowHeight={76}
+                                rowRenderer={this.rowRenderer}
+                              />)
+                          }}
+                        </AutoSizer>
+                      </div>
+                    </div>
+                    : <div className="empty-list__history">
                             <span>You don’t have any {activeTab ? activeTab : "earnings or payment"} yet.
                             <br/>
                             {isEngineOn ? "" : "Start Golem below to generate some."}</span>
