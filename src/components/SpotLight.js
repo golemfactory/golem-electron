@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Motion, spring } from 'react-motion'
+import { Spring } from 'react-spring'
 
 /**
  * { Class for creating tutorials with pointing objects. }
@@ -11,24 +11,18 @@ export default class SpotLight extends Component {
     render() {
     	const {posX, posY, r} = this.props
         return (
-        	<Motion defaultStyle={{
+            <Spring
+              from={{
                 spotX: posX[0],
                 spotY: posY[0],
                 spotR: r[0]
-            }} style={{
-                spotX: spring(posX[1], {
-                    stiffness: 100,
-                    damping: 25
-                }),
-                spotY: spring(posY[1], {
-                    stiffness: 100,
-                    damping: 25
-                }),
-                spotR: spring(r[1], {
-                    stiffness: 30,
-                    damping: 6
-                })
-            }}>
+            }}
+              to={{
+                spotX: posX[1],
+                spotY: posY[1],
+                spotR: r[1]
+            }}
+            config={{ tension: 10, friction: 10, restDisplacementThreshold: 0.1 }}>
             {({spotX, spotY, spotR}) => 
 	            <svg className="spot-light" viewBox="0 0 100 100" width="100%">
 				  <defs>
@@ -40,7 +34,7 @@ export default class SpotLight extends Component {
 				  <rect x="0" y="0" width="100" height="62" mask="url(#mask)" fillOpacity="0.7"/>    
 				</svg>
 			}
-			</Motion>
+			</Spring>
         );
     }
 }

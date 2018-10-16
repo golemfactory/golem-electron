@@ -36,7 +36,8 @@ global.window.require = function () {
                         },
                         checkUpdate: function (_old, _new) {},
                         warn: function () {},
-                        isMac: function () {}
+                        isMac: function () {},
+                        isWin: function () {}
                     }
         },
         getGlobal: function () {
@@ -83,7 +84,8 @@ global.window.electron = {
                         },
                         checkUpdate: function (_old, _new) {},
                         warn: function () {},
-                        isMac: function () {}
+                        isMac: function () {},
+                        isWin: function () {}
                     }
             },
             getGlobal: function () {
