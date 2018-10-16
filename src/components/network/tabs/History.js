@@ -11,6 +11,10 @@ import * as Actions from '../../../actions'
 import {getFilteredPaymentHistory} from '../../../reducers'
 import { timeStampToHR } from '../../../utils/secsToHMS'
 
+const {remote} = window.electron;
+const mainProcess = remote.require('./index')
+const isWin = mainProcess.isWin();
+
 const mainEtherscan = "https://etherscan.io/tx/0x"
 const testEtherscan = "https://rinkeby.etherscan.io/tx/0x"
 const ETH_DENOM = 10 ** 18;
@@ -203,7 +207,7 @@ export class History extends React.Component {
                             return (
                             <List
                                 width={width}
-                                height={winHeight - 436} //offset of height
+                                height={winHeight - (isWin ? 414 : 436)} //offset of height
                                 cellRangeRenderer={this.cellRangeRenderer}
                                 rowCount={filteredList.length}
                                 rowHeight={76}

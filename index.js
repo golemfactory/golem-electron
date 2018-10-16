@@ -488,6 +488,7 @@ exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
 
+exports.isWin = isWin;
 exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
