@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import {Tooltip} from 'react-tippy';
 import { Transition, animated, config } from 'react-spring'
 import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
-import posed, {PoseGroup} from 'react-pose';
+const posed = require('react-pose');
+const {PoseGroup} = posed
 
 import * as Actions from '../../../actions'
 import {getFilteredPaymentHistory} from '../../../reducers'
