@@ -29,7 +29,7 @@ export class WithdrawModal extends React.Component {
         this.state = {
         	index: 0,
             formData: {
-                amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
+                amount: new BigNumber(0).multipliedBy(ETH_DENOM),
                 sendFrom: props.publicKey,
                 sendTo: "",
                 isSuccess: false,
