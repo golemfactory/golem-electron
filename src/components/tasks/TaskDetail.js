@@ -675,7 +675,7 @@ export class TaskDetail extends React.Component {
 
         this.setState({
             resolution,
-            format,
+            format: formatRef.value,
             formatIndex,
             isDefaultResolutionApplied: true
         })
