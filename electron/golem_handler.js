@@ -13,20 +13,17 @@ const WHITESPACE_REGEXP = /\s*[\s,]\s*/;
 
 
 function Deferred() {
-    var self = this;
 
-    self.called = false;
-    self.promise = new Promise((resolve, reject) => {
+    this.promise = new Promise((resolve, reject) => {
 
-        function build(resultFunc) {
+        const build = (resultFunc) => {
             return data => {
-                self.called = true;
                 resultFunc(data);
             };
         }
 
-        self.resolve = build(resolve);
-        self.reject = build(reject);
+        this.resolve = build(resolve);
+        this.reject = build(reject);
     });
 }
 
@@ -71,50 +68,28 @@ class GolemProcess {
 
     loadCertificate() {
         const certPath = path.join(DATADIR, 'crossbar', 'rpc_cert.pem');
+        let createCertificateTimeout = null
+
         let readCert = () => this._readCertificate(certPath).then(
             this.prepared.resolve,
             this.prepared.reject
         );
 
-        if (fs.existsSync(certPath))
+        if (fs.existsSync(certPath)){
+            if(createCertificateTimeout)
+                clearTimeout(createCertificateTimeout);
             readCert();
-        else
-            this._createCertificate().then(
-                readCert,
-                this.prepared.reject
-            );
-    }
-
-    _createCertificate() {
-        /* Uses core to generate certificates */
-        let deferred = new Deferred();
-
-        try {
-
-            let process = spawn(
-                this.processName,
-                this.processArgs.concat(['--generate-rpc-cert']),
-                this.processOpts,
-            );
-
-            process.on('uncaughtException', deferred.reject);
-            process.on('error', deferred.reject);
-            process.on('close', code => code == 0
-                ? deferred.resolve()
-                : deferred.reject(code)
-            )
-
-        } catch (err) {
-            deferred.reject(err);
-        }
-
-        return deferred.promise;
+        } else
+            createCertificateTimeout = setTimeout(() => {
+                this.startProcess()
+                this.loadCertificate()
+            }, 1000)
     }
 
     _readCertificate(certPath) {
         return new Promise((resolve, reject) => {
             try {
-                let buffer = fs.readFileSync(certPath);
+                const buffer = fs.readFileSync(certPath);
                 this.certificate = buffer.toString('ascii');
                 resolve();
             } catch (err) {
@@ -161,8 +136,8 @@ class GolemProcess {
     }
 
     startProcess() {
-        /* Return if already running or certs haven't been loaded yet */
-        if (this.process || !this.prepared.called)
+        /* Return if already running*/
+        if (this.process)
             return;
 
         console.log('💻 Starting Golem...');
@@ -209,7 +184,7 @@ class GolemProcess {
     }
 
     windowsKillProcess(pid, ignorePid) {
-        let subPids = this.windowsSubProcesses(pid);
+        const subPids = this.windowsSubProcesses(pid);
         for ( let subPid of subPids )
             this.windowsKillProcess(subPid);
 
@@ -276,8 +251,8 @@ function golemHandler(app) {
 
     app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
 
-        let certificateError = err => log.error('Certificate error:', err);
-        let checkCertificate = () => {
+        const certificateError = err => log.error('Certificate error:', err);
+        const checkCertificate = () => {
             event.preventDefault();
             callback(certificate.data == app.golem.certificate);
         };
