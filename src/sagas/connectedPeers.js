@@ -1,5 +1,5 @@
-import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put, select } from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
+import { take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
