@@ -1,5 +1,5 @@
-import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put, select } from 'redux-saga/effects'
+import { eventChannel } from 'redux-saga'
+import { take, call, put } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -52,9 +52,6 @@ export function subscribeConnectedPeers(session) {
  * @yield   {Object}            [Action object]
  */
 export function* connectedPeersFlow(session) {
-    const getStatus = (state) => state.info.isEngineOn
-    const status = yield select(getStatus)
-    if(!!status){
         const channel = yield call(subscribeConnectedPeers, session)
 
         try {
@@ -66,6 +63,4 @@ export function* connectedPeersFlow(session) {
             console.info('yield cancelled!')
             channel.close()
         }
-
-    }
 }
