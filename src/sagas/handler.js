@@ -58,8 +58,8 @@ export let config = Object.freeze({
     RESTART_TIMEDOUT_SUBTASKS_RPC: 'comp.task.restart_subtasks',
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
+    GET_OPTIMAL_SUBTASK_COUNT_RPC: 'comp.task.subtasks_count',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
-    GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',

@@ -37,6 +37,7 @@ export let dict = Object.freeze({
     RUN_TEST_TASK: 'RUN_TEST_TASK',
     ABORT_TEST_TASK: 'ABORT_TEST_TASK',
     SET_TASK_TEST_STATUS: 'SET_TASK_TEST_STATUS',
+    GET_OPTIMAL_SUBTASK_COUNT: 'GET_OPTIMAL_SUBTASK_COUNT',
     GET_ESTIMATED_COST: 'GET_ESTIMATED_COST',
     SET_ESTIMATED_COST: 'SET_ESTIMATED_COST',
     CLEAR_TASK_PLAIN: 'CLEAR_TASK_PLAIN',
@@ -155,6 +156,7 @@ const {
     RUN_TEST_TASK, 
     ABORT_TEST_TASK,
     SET_TASK_TEST_STATUS, 
+    GET_OPTIMAL_SUBTASK_COUNT,
     GET_ESTIMATED_COST, 
     SET_ESTIMATED_COST, 
     CLEAR_TASK_PLAIN, 
@@ -629,6 +631,13 @@ export const abortTestTask = (payload) => ({
 export const setTaskTestStatus = (payload) => ({
     type: SET_TASK_TEST_STATUS,
     payload
+})
+
+export const getOptimalSubtaskCount = (payload, _resolve, _reject) => ({
+    type: GET_OPTIMAL_SUBTASK_COUNT,
+    payload,
+    _resolve,
+    _reject
 })
 
 export const getEstimatedCost = (payload) => ({

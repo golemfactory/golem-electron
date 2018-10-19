@@ -134,7 +134,7 @@ export class TaskDetail extends React.Component {
             compute_on: 'cpu',
             sample_per_pixel: 0,
             timeout: '',
-            subtasks: 1,
+            subtasks: null,
             maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
@@ -300,10 +300,10 @@ export class TaskDetail extends React.Component {
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks !== subtasks){
-            const result = Math.min(nextState.maxSubtasks, nextState.subtasks);
-            this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
-        }
+        // if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks !== subtasks){
+        //     const result = Math.min(nextState.maxSubtasks, nextState.subtasks);
+        //     this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
+        // }
 
         if(nextState.frames !== frames || nextState.sample_per_pixel !== sample_per_pixel){
             this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
@@ -359,10 +359,29 @@ export class TaskDetail extends React.Component {
 
         this.setState({
                 maxSubtasks,
-                subtasks: subtaskValue
+                // subtasks: subtaskValue
             })
 
-        this.refs.subtaskCount.value = subtaskValue
+        this._getAsyncOptimalSubtaskCount(
+            [
+                this.state.maxSubtasks, //total_subtasks
+                true,                   //optimize_total
+                true,                   //use_frames
+                frames                  //frames
+            ]
+            ).then((data) => 
+                this.refs.subtaskCount.setAttribute('placeholder', `Optimal subtask number is ${data}`))
+
+        // this.refs.subtaskCount.value = subtaskValue
+    }
+
+    _getAsyncOptimalSubtaskCount(payload){
+        return new Promise((resolve, reject) => {
+            this.props.actions.getOptimalSubtaskCount(
+                payload, 
+                resolve,
+                reject)
+        })
     }
 
     _convertPriceAsHR(price = 0, suffix, fixTo = 2, font_size) {

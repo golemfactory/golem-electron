@@ -10,7 +10,8 @@ const initialState = {
         ETH: 0
     },
     test_status: {},
-    nodeNumber: {}
+    nodeNumber: {},
+    optimalSubtaskCount: 0
 }
 const setTaskDetails = (state = initialState, action) => {
     switch (action.type) {
@@ -23,7 +24,7 @@ const setTaskDetails = (state = initialState, action) => {
         return Object.assign({}, state, {
             presets: action.payload
         });
-
+        
     case SET_ESTIMATED_COST:
         return Object.assign({}, state, {
             estimated_cost: action.payload

@@ -15,6 +15,7 @@ const {
         RUN_TEST_TASK,
         ABORT_TEST_TASK,
         SET_TASK_TEST_STATUS, 
+        GET_OPTIMAL_SUBTASK_COUNT,
         GET_ESTIMATED_COST, 
         SET_ESTIMATED_COST, 
         GET_TASK_DETAILS, 
@@ -107,6 +108,22 @@ export function* subtaskList(session, payload) {
     if (payload) {
         let action = yield call(fetchSubtaskList, session, payload)
         yield put(action)
+    }
+}
+
+export function getOptimalSubtaskCount(session, payload, _resolve, _reject) {
+
+        function on_optimal_subtask_count(args) {
+            var optimal_subtask_count = args[0];
+            _resolve(optimal_subtask_count)
+        }
+
+        _handleRPC(on_optimal_subtask_count, session, config.GET_OPTIMAL_SUBTASK_COUNT_RPC, [...payload])
+}
+
+export function* optimalSubtaskCountBase(session, {payload, _resolve, _reject}) {
+    if (payload) {
+        yield call(getOptimalSubtaskCount, session, payload, _resolve, _reject)
     }
 }
 
@@ -492,6 +509,7 @@ export function* tasksFlow(session) {
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session)
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session)
     yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session)
+    yield takeLatest(GET_OPTIMAL_SUBTASK_COUNT, optimalSubtaskCountBase, session)
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session)
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
     yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session)
