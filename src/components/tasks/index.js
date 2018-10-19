@@ -22,6 +22,7 @@ const mapStateToProps = state => ({
     expandedPreview: state.input.expandedPreview,
     status: getStatus(state, 'golemStatus'),
     connectionProblem: state.info.connectionProblem,
+    chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
     isEngineLoading: state.info.isEngineLoading,
