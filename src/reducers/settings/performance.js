@@ -50,7 +50,6 @@ const setPerformance = (state = initialState, action) => {
 export default setPerformance
 
 function getEnvironment(env, name){
-    console.log("env, name", env, name);
       return env && env.filter(item => item.id == name)[0]
 }
 

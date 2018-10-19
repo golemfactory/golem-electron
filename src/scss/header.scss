@@ -150,7 +150,6 @@
           
             .icon-add{
               position: absolute !important;
-              background: white;
               border-radius: 50%;
               z-index: 3;
               transition: transform 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
@@ -160,18 +159,20 @@
             .icon-file-menu{
               position: absolute !important;
               z-index: 2;
-              transition: right 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              transition: all 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
               right: -21px;
               transition-delay: .5s; 
               font-size: 16pt !important;
+              opacity: 0;
             }
             .icon-folder-menu{
               position: absolute !important;
               z-index: 1;
-              transition: right 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
+              transition: all 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55); 
               transition-delay: .2s;
               right: -21px;
               font-size: 16pt !important;
+              opacity: 0;
             }
 
             &.upload-menu-active{
@@ -183,10 +184,12 @@
                 & > .icon-file-menu{
                     right: 3px;
                     transition-delay: 0s;
+                    opacity: 1;
                 }
 
                 & > .icon-folder-menu{
                   right: 28px;
+                  opacity: 1;
                 }
             }
         }

@@ -1,13 +1,20 @@
 const os = require('os');
 const path = require('path');
-const argv = require('minimist')(process.argv.slice(2));
+const yargs = require('yargs')
+
+const args =
+  yargs(process.argv)
+    .alias('m', 'mainnet')
+    .alias('d', 'datadir')
+    .alias('r', 'rpc-address')
+    .argv
 
 const {getConfig, dictConfig} = require('./config_storage.js')
 const {DEFAULT_GETH} = dictConfig
 
-const MAINNET = argv['mainnet']
-const CUSTOM_DATADIR = argv['datadir']
-const CUSTOM_RPC = argv['rpc-address']
+const MAINNET = args['mainnet']
+const CUSTOM_DATADIR = args['datadir']
+const CUSTOM_RPC = args['rpc-address']
 
 const CHAIN = MAINNET ? 'mainnet' : 'rinkeby';
 const GETH_DEFAULT = getConfig(DEFAULT_GETH)
