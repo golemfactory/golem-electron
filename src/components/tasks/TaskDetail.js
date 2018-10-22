@@ -134,7 +134,7 @@ export class TaskDetail extends React.Component {
             compute_on: 'cpu',
             sample_per_pixel: 0,
             timeout: '',
-            subtasks: 1,
+            subtasks_count: 1,
             maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
@@ -207,10 +207,10 @@ export class TaskDetail extends React.Component {
                 type: nextProps.taskInfo.type
             }, () => {
 
-                const {type, timeout, subtasks, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
+                const {type, timeout, subtasks_count, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
-                subtaskCount.value = subtasks || 0
+                subtaskCount.value = subtasks_count || 0
                 this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
                 bidRef.value = bid || 0
                 if (options) {
@@ -238,7 +238,7 @@ export class TaskDetail extends React.Component {
                             type: nextProps.taskInfo.type,
                             options: {
                                 price: Number(bid),
-                                num_subtasks: Number(subtasks),
+                                num_subtasks: Number(subtasks_count),
                                 subtask_time: getTimeAsFloat(subtask_timeout)
                             }
                         })
@@ -266,15 +266,15 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
+        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
         const {actions, task} = this.props
 
-        if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
+        if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
                     price: Number(nextState.bid),
-                    num_subtasks: Number(nextState.subtasks),
+                    num_subtasks: Number(nextState.subtasks_count),
                     subtask_time: nextState.subtask_timeout
                 }
             })
@@ -300,8 +300,8 @@ export class TaskDetail extends React.Component {
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks !== subtasks){
-            const result = Math.min(nextState.maxSubtasks, nextState.subtasks);
+        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks_count !== subtasks_count){
+            const result = Math.min(nextState.maxSubtasks, nextState.subtasks_count);
             this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
         }
 
@@ -355,11 +355,11 @@ export class TaskDetail extends React.Component {
             maxSubtasks = 100 
         }
 
-        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks)
+        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks_count)
 
         this.setState({
                 maxSubtasks,
-                subtasks: subtaskValue
+                subtasks_count: subtaskValue
             })
 
         this.refs.subtaskCount.value = subtaskValue
@@ -745,12 +745,12 @@ export class TaskDetail extends React.Component {
             resources,
             compute_on,
             type,
-            subtasks: 1 // <--- HARDCODED
+            subtasks_count: 1 // <--- HARDCODED
         })
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, compute_on, timeout, subtasks_count, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
@@ -758,7 +758,7 @@ export class TaskDetail extends React.Component {
                 ...task,
                 compute_on,
                 timeout: floatToString(timeout),
-                subtasks: Number(subtasks),
+                subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
                 bid,
                 estimated_memory : (testStatus && testStatus.estimated_memory),
@@ -807,7 +807,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleFormByType(type, isDetail) {
-        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
+        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props;
         let formTemplate = [
             {
@@ -976,7 +976,7 @@ export class TaskDetail extends React.Component {
                                             cls="title" 
                                             infoHidden={true} 
                                             interactive={true}/>
-                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks_count')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                                 </div>
                                 <div className="item-settings">
                                     <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>

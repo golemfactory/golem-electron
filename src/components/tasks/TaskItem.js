@@ -172,7 +172,7 @@ export class TaskItem extends React.Component {
                                         </span>
                                     </div>
                                     <div>
-                                        <span>Subtasks: {item.subtasks || 0}</span>
+                                        <span>Subtasks: {item.subtasks_count || 0}</span>
                                         <span className="bumper"> | </span>
                                         <span> Task timeout: {item.timeout}</span>
                                         <span className="bumper"> | </span>
