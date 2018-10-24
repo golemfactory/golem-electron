@@ -8,9 +8,6 @@ export let config = Object.freeze({
     //REALM: 'realm1',
     REALM: 'golem',
     AUTHID: 'electron',
-    COUNTER_CH: 'com.golem.oncounter',
-    BLENDER_CH: 'com.golem.blender',
-    PREVIEW_CH: 'com.golem.preview',
     UPDATE_CH: 'net.new_version',
     //Settings
     GET_SETTINGS_RPC: 'env.opts',
@@ -84,6 +81,7 @@ export let config = Object.freeze({
     //General
     VERSION_RPC: 'golem.version',
     CHAIN_INFO_RPC: 'golem.mainnet',
+    RPC_READY_RPC: 'golem.rpc_ready',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
@@ -109,6 +107,13 @@ export let config = Object.freeze({
 })
 
 
+function errorCallback(topic, _eb, {error, details, argsList}) {
+            console.warn('SAGA > HANDLER', `Fetch ${topic} failed!`, error, details, Array.isArray(argsList) ? argsList.join() : argsList)
+            log.warn('SAGA > HANDLER', `Fetch ${topic} failed!`, error, details, Array.isArray(argsList) ? argsList.join(): argsList)
+            _eb && _eb(error, details, argsList)
+        }
+
+
 /**
  * [_handleSUBPUB func. subscribe constructor for wamp ]
  * @param  {function}   _callback   [Callback function for changes]
@@ -116,19 +121,16 @@ export let config = Object.freeze({
  * @param  {String}     _channel    [Subscription address]
  * @return nothing
  */
-export let _handleSUBPUB = (_callback, _session, _channel) => {
+export let _handleSUBPUB = (_callback, _session, _channel, _eb) => {
     let cb = {
         onEvent: (({argsList}) => _callback(argsList)),
         onSuccess: function() {
-            console.log(`un/subscribed to ${_channel} topic`);
+            console.log(`subscribed to ${_channel} topic`);
         },
 
-        onError: function({error}) {
-            console.warn(`failed to un/subscribe ${_channel} topic`, error);
-            log.warn('SAGA > HANDLER', `Failed to un/subscribe ${_channel} topic`, error)
-        }
+        onError: errorCallback.bind(null, _channel)
     }
-    _session.subscribe(_channel, cb)
+    _session.subscribe(_channel, cb, _eb)
 }
 
 /**
@@ -138,18 +140,15 @@ export let _handleSUBPUB = (_callback, _session, _channel) => {
  * @param  {String}     _channel    [Subscription address]
  * @return nothing
  */
-export let _handleUNSUBPUB = (_callback, _session, _channel) => {
+export let _handleUNSUBPUB = (_callback, _session, _channel, _eb) => {
     let cb = {
         onEvent: (({argsList}) => _callback(argsList)),
         onSuccess: function() {
-            console.log(`un/subscribed to ${_channel} topic`);
+            console.log(`unsubscribed to ${_channel} topic`);
         },
-        onError: function({error, details, argsList}) {
-            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, Array.isArray(argsList) ? argsList.join() : argsList)
-            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, Array.isArray(argsList) ? argsList.join(): argsList)
-        }
+        onError: errorCallback.bind(null, _channel)
     }
-    _session.unsubscribe(_channel, cb)
+    _session.unsubscribe(_channel, cb, _eb)
 }
 
 /**
@@ -163,10 +162,6 @@ export let _handleUNSUBPUB = (_callback, _session, _channel) => {
 export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _eb) => {
     _session.call(_rpc_address, _parameter, {
         onSuccess: (({argsList}) => _callback(argsList)),
-        onError: function({error, details, argsList}) {
-            console.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, argsList.join())
-            log.warn('SAGA > HANDLER', `Fetch ${_rpc_address} failed!`, error, details, argsList.join())
-            _eb && _eb(error, details, argsList)
-        }
+        onError: errorCallback.bind(null, _rpc_address, _eb)
     })
 }
