@@ -195,14 +195,49 @@ export function subscribe(session) {
     });
 }
 
-/*function* write(socket) {
-  while (true) {
-    const { payload } = yield take(`${sendMessage}`);
-    socket.emit('message', payload);
-  }
-}*/
+/**
+ * [testRPC function will test given procedure if it's registered on Golem 
+ * within 5 seconds timeout, if not it will fail and will cancel all other
+ * forked connections.]
+ * @param  {[Object]}   session [The connection and session of ws]
+ * @return {[Object]}           [Promise]
+ */
+export function testRPC(session) {
+
+    let paymentTimeout = null;
+    let timeoutCount = 0
+
+    return new Promise((response, reject) => {
+
+        function on_info(args) {
+            if(paymentTimeout)
+                clearTimeout(paymentTimeout)
+            response(true)
+        }
+
+        function on_error(args){
+            if(timeoutCount < 5){
+                runTimeout()
+                timeoutCount++;
+            } else {
+                reject(args)
+            }
+        }
+
+        function runWithTimeout(){
+            _handleRPC(on_info, session, config.PAYMENT_ADDRESS_RPC, [], on_error)
+        }
+
+        function runTimeout(){
+            paymentTimeout = setTimeout(runWithTimeout, 1000)
+        }
+
+        runWithTimeout();
+    })
+}
 
 export function* apiFlow(connection) {
+    yield call(testRPC, connection); //will block flow and wait for registered rpc procedures
     yield fork(accountFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
@@ -335,6 +370,13 @@ export function* connectionFlow() {
         }
     } finally {
         console.info("yield cancelled!");
+        yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                });
         yield cancel(task);
     }
     return task;
