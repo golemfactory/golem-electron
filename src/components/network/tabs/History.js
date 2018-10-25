@@ -194,7 +194,7 @@ export class History extends React.Component {
         const {activeTab, winHeight} = this.state
         const filteredList = paymentHistory(activeTab)
         return (
-            <div className="content__history">
+            <div className="content__history" style={{height: winHeight - (isWin ? 414 : (isMac ? 436 : 401)) + "px"}}>
                 <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
                     <div className="tab__title active" value={null} onClick={this._handleTab} role="tab" tabIndex="0">All</div>
                     <div className="tab__title" value="income" onClick={this._handleTab} role="tab" tabIndex="0">Incoming</div>
@@ -205,11 +205,11 @@ export class History extends React.Component {
                     ? <div style={{ display: 'flex' }}>
                       <div style={{ flex: '1 1 auto', height: '100%' }}>
                         <AutoSizer>
-                          {({ width }) => {
+                          {({ width, height }) => {
                             return (
                             <List
-                                width={width}
-                                height={winHeight - (isWin ? 414 : (isMac ? 436 : 401))} //offset of height
+                                width={width}//
+                                height={height} //offset of height
                                 cellRangeRenderer={this.cellRangeRenderer}
                                 rowCount={filteredList.length}
                                 rowHeight={76}

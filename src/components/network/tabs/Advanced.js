@@ -21,7 +21,8 @@ const mapStateToProps = state => ({
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
     isEngineOn: state.info.isEngineOn,
-    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv')
+    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv'),
+    isNodeProvider: state.info.isNodeProvider
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -131,8 +132,17 @@ export class Advanced extends React.Component {
           actions.disableEnvironment(gpuENV);
     }
 
+    /**
+     * [_handleProviderSwitch onChange function]
+     * @return  {Boolean}   true
+     */
+    _handleProviderSwitch(evt) {
+        const {actions} = this.props;
+        actions.setProviding(!evt.target.checked);
+    }
+
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment} = this.props
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment, isNodeProvider} = this.props
         const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
         const max = this.toGibibytes(systemInfo)
 
@@ -161,10 +171,20 @@ export class Advanced extends React.Component {
             </div>}
             <div className="switch__gpu">
                     <div className={`switch-box`}>
-                        <label className="switch">
-                            <input type="checkbox" onChange={::this._handleGPUProviderSwitch} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !gpuEnvironment.supported}/>
-                            <div className="switch-slider round"></div>
-                        </label>
+                    <Tooltip
+                        html={<p>{gpuEnvironment.supported 
+                          ? "To change switch first stop Golem" 
+                          : "This feature only for Linux at the moment."}</p>}
+                        position="top-end"
+                        trigger="mouseenter"
+                        interactive={false}
+                        size="small"
+                        disabled={!isEngineOn}>
+                          <label className="switch">
+                              <input type="checkbox" onChange={::this._handleGPUProviderSwitch} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={!gpuEnvironment.supported}/>
+                              <div className="switch-slider round"></div>
+                          </label>
+                        </Tooltip>
                     </div>
                     <span style={{
                 color: gpuEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
@@ -178,7 +198,34 @@ export class Advanced extends React.Component {
                   <span className="icon-question-mark"/>
               </Tooltip>
             </span>
-                </div>
+            </div>
+            <div className="switch__trust">
+                    <div className={`switch-box ${!isNodeProvider ? "switch-box--green" : ""}`}>
+                      <Tooltip
+                        html={<p>To change switch first stop Golem</p>}
+                        position="top-end"
+                        trigger="mouseenter"
+                        interactive={false}
+                        size="small"
+                        disabled={!isEngineOn}>
+                        <label className="switch">
+                            <input type="checkbox" onChange={::this._handleProviderSwitch} defaultChecked={!isNodeProvider}  aria-label="Trust switch providing/requesting" tabIndex="0" disabled={isEngineOn}/>
+                            <div className="switch-slider round"></div>
+                        </label>
+                      </Tooltip>
+                    </div>
+                    <span style={{
+                color: !isNodeProvider ? '#4e4e4e' : '#9b9b9b'
+            }}>I want to act only as a Requestor. Don't send tasks to my node.
+              <Tooltip
+                        html={<p className='info-gpu'>For now there is no option to set the amount of shared resources <br/> with GPU.So Golem will take up to 100% of your graphic card<br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">Learn more.</a></p>}
+                        position="top"
+                        trigger="mouseenter"
+                        interactive={true}>
+                  <span className="icon-question-mark"/>
+              </Tooltip>
+            </span>
+            </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
               <br/>

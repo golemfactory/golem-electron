@@ -51,11 +51,10 @@
         }
 
         .tab__content {
-            top: 47.5px;
             width: 100%;
             min-height: 0;
-            flex: 1 1 calc(100% - 830px);
-            overflow: hidden;
+            flex: 1 1;
+            overflow: overlay;
             transform: translateZ(0);
         }
     }
