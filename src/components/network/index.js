@@ -13,6 +13,7 @@ import {getStatus} from '../../reducers'
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
 import Indicator from './Indicator'
+import TransactionTube from '../transaction'
 import Wallet from '../wallet'
 import Resources from './tabs/Resources'
 import History from './tabs/History'
@@ -55,7 +56,6 @@ export class MainFragment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0,
             presetModal: false,
             managePresetModal: false,
             modalData: null,
@@ -138,40 +138,17 @@ export class MainFragment extends React.Component {
         actions.setAutoLaunch(autoLaunchSwitch.checked)
     }
 
-    /**
-     * [_handleTab to change active class of selected tab title]
-     *
-     * @param   {Object}     elm     [target element]
-     */
-    _handleTab(elm) {
-        const tabPanel = document.getElementById('networkTab');
-        const tabTitles = tabPanel.childNodes;
-        for (var i = 0; i < tabTitles.length; i++) {
-            tabTitles[i].classList.remove('active')
-        }
-        elm.currentTarget.classList.add('active')
-        this.setState({
-            activeTab: elm.target.getAttribute('value')
-        })
-    }
-
     // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectionProblem, status, isEngineOn, isEngineLoading, balance, currency, version} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
+        const {presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
 
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
+            <TransactionTube/>
             <div className="section__quick-settings">
-                <div id="networkTab" className="tab-panel" role="tablist">
-                    <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
-                    <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
-                </div>
-                <div className="tab__content">
-                    {activeTab == 0 && <Resources role="tabpanel"/>}
-                    {activeTab == 1 && <History role="tabpanel"/>}
-                </div>
+                <Resources/>
             </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}

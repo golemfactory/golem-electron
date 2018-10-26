@@ -10,6 +10,7 @@ import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
+import TransactionTube from '../transaction'
 import Wallet from '../wallet'
 import DeleteModal from './modal/DeleteModal'
 import RestartModal from './modal/RestartModal'
@@ -151,6 +152,7 @@ _toggleWalletTray(toggle){
         return (
             <div className="content__task-panel">
                     { !isWalletTray && <Wallet balance={balance} currency={currency}/> }
+                    <TransactionTube/>
                     <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
                         <DropZone>
                             <div className="section__table">
