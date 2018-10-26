@@ -60,7 +60,8 @@ export class MainFragment extends React.Component {
             managePresetModal: false,
             modalData: null,
             engineLoading: false,
-            isPresetNameExist: false
+            isPresetNameExist: false,
+            toggleHistory: false
         }
     //props.actions.setOnboard(true)
     }
@@ -138,17 +139,28 @@ export class MainFragment extends React.Component {
         actions.setAutoLaunch(autoLaunchSwitch.checked)
     }
 
+    _toggleTransactionHistory = () => {
+        this.setState({
+            toggleHistory: !this.state.toggleHistory
+        })
+    }
+
     // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectionProblem, status, isEngineOn, isEngineLoading, balance, currency, version} = this.props
-        const {presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
+        const {presetModal, managePresetModal, modalData, isPresetNameExist, toggleHistory} = this.state
 
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
-            <TransactionTube/>
+            {!toggleHistory 
+                && <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory}/>
+            }
             <div className="section__quick-settings">
-                <Resources/>
+                {toggleHistory 
+                    ? <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
+                    : <Resources/>
+                }
             </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}

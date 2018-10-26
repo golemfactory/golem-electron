@@ -8,7 +8,7 @@ class TransactionTube extends Component {
     }
 
     _toggleHistory = () => {
-        console.log("Toggled!")
+        this.props.toggleTransactionHistory();
     }
 
     render() {
@@ -17,7 +17,7 @@ class TransactionTube extends Component {
             	<span>LATEST TRANSACTION:</span>
                 <span><span>+ </span><b>0.0142 GNT</b></span>
                 <span>07/05/2018 - 13:56:53</span>
-                <span onClick={this._toggleHistory}><span/><b>Transaction History</b></span>
+                <span className="btn__transaction-history" onClick={this._toggleHistory}><span/><b>Transaction History</b></span>
             </div>
         );
     }

@@ -190,7 +190,7 @@ export class History extends React.Component {
     }
 
     render() {
-        const {isEngineOn, paymentHistory} = this.props
+        const {isEngineOn, paymentHistory, toggleTransactionHistory} = this.props
         const {activeTab, winHeight} = this.state
         const filteredList = paymentHistory(activeTab)
         return (
@@ -199,6 +199,7 @@ export class History extends React.Component {
                     <div className="tab__title active" value={null} onClick={this._handleTab} role="tab" tabIndex="0">All</div>
                     <div className="tab__title" value="income" onClick={this._handleTab} role="tab" tabIndex="0">Incoming</div>
                     <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">Outgoing</div>
+                    <div className="tab__back"><span onClick={toggleTransactionHistory}>Back</span></div>
                 </div>
                 <div>
                   {(paymentHistory && filteredList.length > 0)

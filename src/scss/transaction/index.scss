@@ -2,10 +2,14 @@
 	@include flex;
 	justify-content: space-evenly;
 	flex: 0 0 28px;
-	
+
 	border: 1px solid $color-border;
 	border-radius: 50px;
 	box-sizing: border-box;
 	margin: 0 20px;
 	font-size: 7pt;
+
+	.btn__transaction-history{
+		cursor: pointer;
+	}
 }

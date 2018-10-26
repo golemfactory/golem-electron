@@ -9,6 +9,20 @@
         top: 0;
         background: $color-text4;
         z-index: 4;
+        text-align: left;
+    }
+
+    .tab__title:nth-child(2){
+        margin-right: 40px;
+    }
+
+    .tab__back{
+        flex: 0 1 150px;
+        text-align: right;
+        font-size: 7pt;
+        font-weight: 500;
+        color: $color-primary;
+        cursor: pointer;
     }
 }
 
