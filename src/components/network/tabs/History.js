@@ -3,10 +3,19 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import {Tooltip} from 'react-tippy';
-import { TransitionMotion, spring, presets } from 'react-motion'
+import { Transition, animated, config } from 'react-spring'
+import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+const posed = require('react-pose');
+const {PoseGroup} = posed
 
 import * as Actions from '../../../actions'
+import {getFilteredPaymentHistory} from '../../../reducers'
 import { timeStampToHR } from '../../../utils/secsToHMS'
+
+const {remote} = window.electron;
+const mainProcess = remote.require('./index')
+const isWin = mainProcess.isWin();
+const isMac = mainProcess.isMac();
 
 const mainEtherscan = "https://etherscan.io/tx/0x"
 const testEtherscan = "https://rinkeby.etherscan.io/tx/0x"
@@ -17,20 +26,15 @@ const filter = {
     INCOME: 'income'
 }
 
-/*############# HELPER FUNCTIONS ############# */
-
-function newestToOldest(a, b) {
-    if (a.created < b.created)
-        return 1;
-    if (a.created > b.created)
-        return -1;
-    return 0;
-}
+const Item = posed.default.div({
+  enter: { opacity: 1 },
+  exit: { opacity: 0 }
+});
 
 const mapStateToProps = state => ({
-    historyList: state.history.historyList,
     isMainNet: state.info.isMainNet,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    paymentHistory: getFilteredPaymentHistory.bind(null, state),
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -42,8 +46,19 @@ export class History extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0
+            activeTab: 0,
+            winWidth: 0,
+            winHeight: 0
         }
+    }
+
+    componentDidMount() {
+        this.updateDimensions()
+        window.addEventListener("resize", this.updateDimensions.bind(this));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener("resize", ::this.updateDimensions.bind(this));
     }
 
     /**
@@ -51,7 +66,7 @@ export class History extends React.Component {
      *
      * @param   {Object}     elm     [target element]
      */
-    _handleTab(elm) {
+    _handleTab = (elm) => {
         const tabPanel = document.getElementById('historyTab')
         const tabTitles = tabPanel.childNodes;
         for (var i = 0; i < tabTitles.length; i++) {
@@ -64,147 +79,147 @@ export class History extends React.Component {
     }
 
     /**
-     * [getDefaultStyles func. actual animation-related logic]
-     * @return  {Array}    [default style list of the animated item]
-     */
-    getDefaultStyles(_list, _filter) {
-        return _list
-            .sort(newestToOldest)
-            .map((item, index) => {
-                return {
-                    key: item.created.toString(),
-                    data: item,
-                    style: {
-                        height: 0,
-                        opacity: 0,
-                        borderWidth: 0
-                    }
-                }
-            })
-    }
-
-    /**
      * [getStyles func. updated style list]
      * @return {Array} [style list of the animated item]
      */
-    getStyles(_list, _filter) {
-        return _list
-                .filter(item => _filter 
-                        ? item.type === _filter
-                        : item)
-                .sort(newestToOldest)
-                .map((item, index) => {
-                    return {
-                        key: item.created.toString(),
-                        data: item,
-                         style: {
-                            height: spring(76, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                            opacity: spring(1, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                            borderWidth: spring(1, {
-                                stiffness: 150,
-                                damping: 22
-                            }),
-                        }
-                    }
-                })
+    getStyles = (_list, _filter) => {
+        return _list(_filter)
+    }
+
+    defaultStyle = () => {
+        return {
+            height: 0,
+            opacity: 0,
+            borderWidth: 0,
+        };
     }
 
     /**
      * [willEnter func. DOM elements enter animation]
      * @return {Object} [Style object]
      */
-    willEnter() {
+    willEnter = () => {
         return {
-            height: 0,
-            opacity: 0,
-            borderWidth: 0
-        };
+                height: 76,
+                opacity: 1,
+                borderWidth: 1,
+            };
     }
 
     /**
      * [willLeave DOM elements leave animation]
      * @return {Object} [Style object]
      */
-    willLeave() {
+    willLeave = () => {
         return {
-            height: spring(0, {
-                stiffness: 150,
-                damping: 22
-            }),
-            opacity: spring(0, {
-                stiffness: 150,
-                damping: 22
-            }),
-            borderWidth: spring(0, {
-                stiffness: 150,
-                damping: 22
-            }),
+            height: 0,
+            opacity: 0,
+            borderWidth: 0,
         };
     }
 
-    /**
-     * [loadHistory loading payment history as DOM]
-     */
-    loadHistory(_list, _filter = null) {
-        const { isMainNet} = this.props
-        return <TransitionMotion
-            defaultStyles={::this.getDefaultStyles(_list, _filter)}
-            styles={::this.getStyles(_list, _filter)}
-            willLeave={::this.willLeave}
-            willEnter={::this.willEnter}>
-            {styles => <div>
-                {styles
-                .map(({key, data, style}) => {
-                    const {payee, payer, created, status, value, type, transaction} = data;
-                    return <div key={key} style={style} className="item__history">
-                        <div className="info__history">
-                            <h5>{(payee || payer).substr(0, 24)}...</h5>
-                            <span>{timeStampToHR(created)}</span>
-                            <span className="status__history">{status}</span>
-                        </div>
-                        <div className="action__history">
-                            <span className="amount__history">
-                                <span className={`finance__indicator ${type === filter.INCOME 
-                                    ? 'indicator--up' 
-                                    : 'indicator--down'}`}>
-                                        {type === filter.INCOME ? '+ ' : '- '}
-                                        </span>{(value / ETH_DENOM).toFixed(4)} GNT
-                            </span>
-                            {transaction && <Tooltip
-                              html={(<p>See on Etherscan</p>)}
-                              position="bottom"
-                              trigger="mouseenter"
-                            >
-                                <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}><span className="icon-new-window"/></a>
-                            </Tooltip>}
-                         </div>
-                    </div>}
-            )}
-           </div>}
-          </TransitionMotion>
+    cellRangeRenderer(props) {
+        const children = defaultCellRangeRenderer(props);
+        const animatedChildren = <PoseGroup key="list">
+          {children.map(item => <Item key={item.key}>{item}</Item>)}
+        </PoseGroup>
+
+        return [animatedChildren];
+    }
+
+    rowRenderer = ({
+      key,         // Unique key within array of rows
+      index,       // Index of row within collection
+      isScrolling, // The List is currently being scrolled
+      isVisible,   // This row is visible within the List (eg it is not an overscanned row)
+      style        // Style object to be applied to row (to position it)
+    }) => {
+      const {paymentHistory} = this.props
+      const {activeTab} = this.state
+      const { isMainNet} = this.props
+      const filteredList = paymentHistory(activeTab)
+      const tx = filteredList[index]
+      const {payee, payer, created, status, value, type, transaction}  = tx.data
+
+      const content = <div className="item__history">
+          <div className="info__history">
+              <h5>{(payee || payer).substr(0, 24)}...</h5>
+              <span>{timeStampToHR(created)}</span>
+              <span className="status__history">{status}</span>
+          </div>
+          <div className="action__history">
+              <span className="amount__history">
+                  <span className={`finance__indicator ${type === filter.INCOME 
+                      ? 'indicator--up' 
+                      : 'indicator--down'}`}>
+                          {type === filter.INCOME ? '+ ' : '- '}
+                          </span>{(value / ETH_DENOM).toFixed(4)} GNT
+              </span>
+              {transaction && <Tooltip
+                html={(<p>See on Etherscan</p>)}
+                position="bottom"
+                trigger="mouseenter"
+              >
+                  <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}><span className="icon-new-window"/></a>
+              </Tooltip>}
+           </div>
+        </div>
+
+      return (
+        <div
+          key={key}
+          style={style}
+        >
+          {content}
+        </div>
+      )
+    }
+
+    updateDimensions() {
+      const w = window,
+        d = document,
+        documentElement = d.documentElement,
+        body = d.getElementsByTagName('body')[0],
+        width = w.innerWidth || documentElement.clientWidth || body.clientWidth,
+        height = w.innerHeight|| documentElement.clientHeight|| body.clientHeight;
+
+         this.setState({
+            winWidth: width,
+            winHeight: height
+        })
     }
 
     render() {
-        const {historyList, isEngineOn} = this.props
-        const {activeTab} = this.state
-        const filteredList = this.loadHistory(historyList, activeTab)
+        const {isEngineOn, paymentHistory} = this.props
+        const {activeTab, winHeight} = this.state
+        const filteredList = paymentHistory(activeTab)
         return (
             <div className="content__history">
                 <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
-                    <div className="tab__title active" value={null} onClick={::this._handleTab} role="tab" tabIndex="0">All</div>
-                    <div className="tab__title" value="income" onClick={::this._handleTab} role="tab" tabIndex="0">Incoming</div>
-                    <div className="tab__title" value="payment" onClick={::this._handleTab} role="tab" tabIndex="0">Outgoing</div>
+                    <div className="tab__title active" value={null} onClick={this._handleTab} role="tab" tabIndex="0">All</div>
+                    <div className="tab__title" value="income" onClick={this._handleTab} role="tab" tabIndex="0">Incoming</div>
+                    <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">Outgoing</div>
                 </div>
                 <div>
-                    {(historyList.length > 0 && filteredList.props.styles.length > 0)
-                        ? filteredList
-                        : <div className="empty-list__history">
+                  {(paymentHistory && filteredList.length > 0)
+                    ? <div style={{ display: 'flex' }}>
+                      <div style={{ flex: '1 1 auto', height: '100%' }}>
+                        <AutoSizer>
+                          {({ width }) => {
+                            return (
+                            <List
+                                width={width}
+                                height={winHeight - (isWin ? 414 : (isMac ? 436 : 401))} //offset of height
+                                cellRangeRenderer={this.cellRangeRenderer}
+                                rowCount={filteredList.length}
+                                rowHeight={76}
+                                rowRenderer={this.rowRenderer}
+                              />)
+                          }}
+                        </AutoSizer>
+                      </div>
+                    </div>
+                    : <div className="empty-list__history">
                             <span>You don’t have any {activeTab ? activeTab : "earnings or payment"} yet.
                             <br/>
                             {isEngineOn ? "" : "Start Golem below to generate some."}</span>

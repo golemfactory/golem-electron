@@ -1,6 +1,6 @@
 import React from 'react';
 import {Tooltip} from 'react-tippy';
-import { TransitionMotion, spring, presets } from 'react-motion'
+import { Transition, animated, config } from 'react-spring'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -8,7 +8,18 @@ import * as Actions from '../../../actions'
 
 import SingleFrame from './Single'
 import { timeStampToHR } from './../../../utils/secsToHMS'
-import {taskStatus as statusDict} from './../../../constants/statusDicts'
+
+const statusDict = Object.freeze({
+    WAITINGFORPEER: 'waiting for peer',
+    NOTREADY: 'not started',
+    READY: 'ready',
+    WAITING: 'waiting',
+    COMPUTING: 'computing',
+    FINISHED: 'finished',
+    TIMEOUT: 'timeout',
+    RESTART: 'restart',
+    FAILURE: 'failure'
+})
 
 const routesDict = Object.freeze({
     COMPLETE: 'complete',
@@ -73,22 +84,10 @@ export class All extends React.Component {
      * @return  {Array}    [default style list of the animated item]
      */
     getDefaultStyles() {
-        const {frameList} = this.props
-        return frameList.map((item, index) => {
-            return {
-                key: item[0].toString(),
-                data: {
-                    id: item[0],
-                    status: item[1][0],
-                    created: item[1][1]
-                },
-                style: {
-                    width: 0,
-                    opacity: 1
-                }
-            }
-        })
-            .sort(sortById);
+        return {
+            width: 0,
+            opacity: 0,
+        };
     }
 
     /**
@@ -107,16 +106,6 @@ export class All extends React.Component {
                         id: item[0],
                         status: item[1][0],
                         created: item[1][1]
-                    },
-                    style: {
-                        width: spring(71.6, {
-                            stiffness: 300,
-                            damping: 32
-                        }),
-                        opacity: spring(1, {
-                            stiffness: 300,
-                            damping: 32
-                        }),
                     }
                 };
             })
@@ -129,9 +118,9 @@ export class All extends React.Component {
      */
     willEnter() {
         return {
-            width: 0,
-            opacity: 1,
-        };
+                width: 71.6,
+                opacity: 1,
+            }
     }
 
     /**
@@ -140,14 +129,8 @@ export class All extends React.Component {
      */
     willLeave() {
         return {
-            width: spring(0, {
-                stiffness: 300,
-                damping: 32
-            }),
-            opacity: spring(0, {
-                stiffness: 300,
-                damping: 32
-            }),
+            width: 0,
+            opacity: 0,
         };
     }
 
@@ -158,46 +141,56 @@ export class All extends React.Component {
     // show == 'complete' && 
     render() {
         const {show, details} = this.props
+        const animatedList = this.getStyles()
         return (
             <div>
-                <TransitionMotion
-            defaultStyles={::this.getDefaultStyles()}
-            styles={::this.getStyles()}
-            willLeave={::this.willLeave}
-            willEnter={::this.willEnter}>
-            {styles => <div className="container__all-frame">
-                    {styles.map(({key, data, style}, index) => <div className="item__all-frame" key={index.toString()} style={style}>
-                <Tooltip
-                      html={<div className="content__tooltip">
-                            {data.status === statusDict.FINISHED && <p className="status__tooltip">Completed</p>}
-                            <p className={`time__tooltip ${data.status === statusDict.FINISHED && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) : 'Not started'}</p>
-                            <button 
-                                className="btn btn--primary" 
-                                onClick={this._handleResubmit.bind(this, data, data.id)} 
-                                disabled={
-                                    (data.status === statusDict.NOTREADY
-                                    ||
-                                    data.status === statusDict.RESTART
-                                    ||
-                                    details.status === statusDict.RESTART)
-                                }>Resubmit</button>
-                        </div>}
-                      position="bottom"
-                      trigger="mouseenter"
-                      interactive={true}
-                      arrow={true}
-                      width="500"
-                      size="regular">
-                    <div className={`${statusClassDict[data.status]}`} onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} onKeyDown={(event) => {
-                        event.keyCode === 13 && (this._handleClick.call(this, data, index))
-                    }} role="button" tabIndex="0" aria-label="Preview of Frame"></div>
-                </Tooltip>
+                <div className="container__all-frame">
+                <Transition
+                  native
+                  keys={animatedList.map(item => item.key.toString())}
+                  from={this.getDefaultStyles}
+                  enter={this.willEnter}
+                  leave={this.willLeave}>
+                    {animatedList.map(({key, data}, index) => style => <animated.div className="item__all-frame" key={index.toString()} style={style}>
+                            <Tooltip
+                                  html={<div className="content__tooltip">
+                                        {data.status === statusDict.FINISHED 
+                                            && <p className="status__tooltip">Completed</p>}
+                                        <p className={`time__tooltip ${data.status === statusDict.FINISHED 
+                                                                            && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) 
+                                                                            : 'Not started'}</p>
+                                        <button 
+                                            className="btn btn--primary" 
+                                            onClick={this._handleResubmit.bind(this, data, data.id)} 
+                                            disabled={
+                                                (data.status === statusDict.NOTREADY
+                                                ||
+                                                data.status === statusDict.RESTART
+                                                ||
+                                                details.status === statusDict.RESTART)
+                                            }>Resubmit</button>
+                                    </div>}
+                                  position="bottom"
+                                  trigger="mouseenter"
+                                  interactive={true}
+                                  arrow={true}
+                                  width="500"
+                                  size="regular">
+                                <div 
+                                    className={`${statusClassDict[data.status]}`} 
+                                    onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} 
+                                    onKeyDown={(event) => {event.keyCode === 13 
+                                                            && (this._handleClick.call(this, data, index))}} 
+                                    role="button" 
+                                    tabIndex="0" 
+                                    aria-label="Preview of Frame"></div>
+                            </Tooltip>
+                        </animated.div>
+                    )
+                }
+             </Transition>
             </div>
-                )}
-                </div>
-            }
-          </TransitionMotion>
-            </div>
+        </div>
         );
     }
 }

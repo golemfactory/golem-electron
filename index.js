@@ -1,10 +1,10 @@
 const electron = require('electron')
-const {app, BrowserWindow, Menu, ipcMain} = electron
+const {app, BrowserWindow, Menu, ipcMain, shell} = electron
 const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
 var mkdirp = require('mkdirp');
-const semver = require('semver')
+const semver = require('semver');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -126,20 +126,16 @@ function createWindow() {
         }
     })
 
-
-
-
-    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
-      // Someone tried to run a second instance, we should focus our primary window.
-      if (win) {
-        if (win.isMinimized()) win.restore();
-        win.focus();
-      }
-    });
-
-    if (shouldQuit) {
-      app.quit();
-      return;
+    var shouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {   
+      // Someone tried to run a second instance, we should focus our primary window.    
+      if (win) {    
+        if (win.isMinimized()) win.restore();   
+        win.focus();    
+      } 
+    }); 
+     if (shouldQuit) {  
+      app.quit();   
+      return;   
     }
 
     /*
@@ -154,7 +150,7 @@ function createWindow() {
         if (url.includes('http') 
             && (url.includes('etherscan') 
                 || url.includes('golem')))
-            electron.shell.openExternal(url);
+            shell.openExternal(url);
     })
 
 
@@ -202,6 +198,11 @@ function createWindow() {
         win = null;
         ipcHandler.ipcRemover()
     });
+}
+
+// Hardware acceleration is disabled for Linux machines as work around, electron apps hangs mostly on Linux 18.04
+if(isLinux()){
+    app.disableHardwareAcceleration()
 }
 
 app.on('ready', onReady)
@@ -293,6 +294,14 @@ function createPreviewWindow(id, frameCount) {
 
 function isWin(){
     return process.platform === "win32"
+}
+
+function isMac(){
+    return process.platform === "darwin"
+}
+
+function isLinux(){
+    return process.platform === "linux"
 }
 
 
@@ -479,5 +488,8 @@ exports.checkUpdate = function(_old, _new){
     return semver.diff(_new, _old)
 }
 
+exports.isWin = isWin;
+exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
+

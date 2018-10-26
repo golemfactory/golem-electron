@@ -119,10 +119,23 @@ export function connect() {
             });
         }
 
-        console.log("WS: connecting");
-        app.golem.getSecretKey(config.AUTHID)
-        .then((secret => connect(secret)))
-        
+         /**
+         * [reAskSecretKey function  will ask about secret key until it gets the proper answer from golem]
+         */
+        function reAskSecretKey() {
+            let sleeper = null
+            app.golem.getSecretKey(config.AUTHID)
+            .then((secret => {
+                if(sleeper) clearTimeout(sleeper)
+                connect(secret)
+            }))
+            .catch((rejection => {
+                app.golem.startProcess();
+                sleeper = setTimeout(reAskSecretKey, 500)
+            }))
+        }
+
+        reAskSecretKey();
 
         return () => {
             console.log("negative");
@@ -145,14 +158,14 @@ export function subscribe(session) {
         // SUBSCRIBE to a topic and receive events
 
         function on_connection(args) {
-            const connection = args[0];
-
+            var connection = args[0];
+            const {listening, port_statuses, connected} = connection
             if (
-                connection.startsWith("Connected") ||
-                connection.startsWith("Not connected")
+                connected ||
+                (!connected && Object.keys(port_statuses).length === 0)
             ) {
                 emit(true);
-            } else if (connection.startsWith("Port")) {
+            } else if (Object.keys(port_statuses).length > 0) {
 
                 if(!skipError){
                     const skipErrorInterval = setInterval(() => {
@@ -162,8 +175,8 @@ export function subscribe(session) {
                         } 
                     }, 500);
                 }
-
-                emit(skipError);
+                
+                 emit(skipError);
             }
         }
 
@@ -182,14 +195,49 @@ export function subscribe(session) {
     });
 }
 
-/*function* write(socket) {
-  while (true) {
-    const { payload } = yield take(`${sendMessage}`);
-    socket.emit('message', payload);
-  }
-}*/
+/**
+ * [testRPC function will test given procedure if it's registered on Golem 
+ * within 5 seconds timeout, if not it will fail and will cancel all other
+ * forked connections.]
+ * @param  {[Object]}   session [The connection and session of ws]
+ * @return {[Object]}           [Promise]
+ */
+export function testRPC(session) {
+
+    let paymentTimeout = null;
+    let timeoutCount = 0
+
+    return new Promise((response, reject) => {
+
+        function on_info(args) {
+            if(paymentTimeout)
+                clearTimeout(paymentTimeout)
+            response(true)
+        }
+
+        function on_error(args){
+            if(timeoutCount < 5){
+                runTimeout()
+                timeoutCount++;
+            } else {
+                reject(args)
+            }
+        }
+
+        function runWithTimeout(){
+            _handleRPC(on_info, session, config.PAYMENT_ADDRESS_RPC, [], on_error)
+        }
+
+        function runTimeout(){
+            paymentTimeout = setTimeout(runWithTimeout, 1000)
+        }
+
+        runWithTimeout();
+    })
+}
 
 export function* apiFlow(connection) {
+    yield call(testRPC, connection); //will block flow and wait for registered rpc procedures
     yield fork(accountFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
@@ -322,6 +370,13 @@ export function* connectionFlow() {
         }
     } finally {
         console.info("yield cancelled!");
+        yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                });
         yield cancel(task);
     }
     return task;
@@ -337,9 +392,7 @@ export function* flow() {
         yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
-            payload: {
-                message: "Starting Golem"
-            }
+            payload: ['client', 'start', 'pre']
         });
         const { task } = yield call(connectionFlow);
         let action = yield take(LOGOUT);

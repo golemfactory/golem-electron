@@ -33,7 +33,11 @@ global.window.require = function () {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        checkUpdate: function (_old, _new) {},
+                        warn: function () {},
+                        isMac: function () {},
+                        isWin: function () {}
                     }
         },
         getGlobal: function () {
@@ -67,12 +71,21 @@ global.window.require = function () {
 
 global.window.electron = {
         remote: {
+            process:{
+                argv: {
+                    includes: function(){}
+                }
+            },
             require: function () {
                 return {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        checkUpdate: function (_old, _new) {},
+                        warn: function () {},
+                        isMac: function () {},
+                        isWin: function () {}
                     }
             },
             getGlobal: function () {

@@ -59,10 +59,14 @@ export let dict = Object.freeze({
     SET_NET_PROV_TRUST: 'SET_NET_PROV_TRUST',
     SET_NET_REQ_TRUST: 'SET_NET_REQ_TRUST',
     SET_PROVIDING: 'SET_PROVIDING',
+    SET_GPU_PROVIDING: 'SET_GPU_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
     SET_MULTIPLIER: 'SET_MULTIPLIER',
     UPDATE_MULTIPLIER: 'UPDATE_MULTIPLIER',
+    SET_ENVIRONMENTS: 'SET_ENVIRONMENTS',
+    ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
+    DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -173,8 +177,11 @@ const {
     SET_NET_PROV_TRUST, 
     SET_NET_REQ_TRUST, 
     SET_PROVIDING,
+    SET_GPU_PROVIDING,
     SET_TASK_STATS,
     UPDATE_MULTIPLIER,
+    ENABLE_ENVIRONMENT,
+    DISABLE_ENVIRONMENT,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -422,6 +429,11 @@ export const setProviding = (payload) => ({
     payload
 })
 
+export const setGPUProviding = (payload) => ({
+    type: SET_GPU_PROVIDING,
+    payload
+})
+
 export const setRequestorTrust = (payload, init) => ({
     type: SET_REQ_TRUST,
     payload: (payload / 100),
@@ -445,6 +457,16 @@ export const setTaskStats = (payload) => ({
 
 export const updateMultiplier = (payload) => ({
     type: UPDATE_MULTIPLIER,
+    payload
+})
+
+export const enableEnvironment = (payload) => ({
+    type: ENABLE_ENVIRONMENT,
+    payload
+})
+
+export const disableEnvironment = (payload) => ({
+    type: DISABLE_ENVIRONMENT,
     payload
 })
 

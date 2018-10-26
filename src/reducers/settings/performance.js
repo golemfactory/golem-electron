@@ -1,6 +1,7 @@
+import createCachedSelector from 're-reselect';
 import { dict } from './../../actions'
 
-const {RECOUNT_BENCHMARK, SET_PERFORMANCE_CHARTS, SET_MULTIPLIER} = dict
+const {RECOUNT_BENCHMARK, SET_PERFORMANCE_CHARTS, SET_MULTIPLIER, SET_ENVIRONMENTS} = dict
 
 const initialState = {
     charts: {
@@ -9,7 +10,8 @@ const initialState = {
         estimated_blender_performance: 0
     },
     loadingIndicator: false,
-    multiplier: 0
+    multiplier: 0,
+    environments: {}
 }
 const setPerformance = (state = initialState, action) => {
     switch (action.type) {
@@ -34,9 +36,26 @@ const setPerformance = (state = initialState, action) => {
             multiplier: action.payload
         });
 
+    case SET_ENVIRONMENTS:
+        return Object.assign({}, state, {
+            environments: action.payload
+        });
+
+
     default:
         return state;
     }
 }
 
 export default setPerformance
+
+function getGPUEnvironment(env){
+      return Array.isArray(env) && env.filter(item => item.id == 'BLENDER_NVGPU')[0]
+}
+
+export const getGPUEnvironmentSelector = createCachedSelector(
+        (state) => state.environments,
+        (environments) => getGPUEnvironment(environments)
+    )(
+        (state, key) => key 
+    )

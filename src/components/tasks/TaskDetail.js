@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
+import isEqual from 'lodash.isequal';
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
-import {Tooltip} from 'react-tippy';
 import yup from 'yup'
 
 import TestResult from './TestResult'
@@ -134,7 +134,7 @@ export class TaskDetail extends React.Component {
             compute_on: 'cpu',
             sample_per_pixel: 0,
             timeout: '',
-            subtasks: 1,
+            subtasks_count: 1,
             maxSubtasks: 0,
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
@@ -207,10 +207,10 @@ export class TaskDetail extends React.Component {
                 type: nextProps.taskInfo.type
             }, () => {
 
-                const {type, timeout, subtasks, subtask_timeout, options, bid} = nextProps.taskInfo
+                const {type, timeout, subtasks_count, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
                 const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
-                subtaskCount.value = subtasks || 0
+                subtaskCount.value = subtasks_count || 0
                 this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
                 bidRef.value = bid || 0
                 if (options) {
@@ -220,6 +220,7 @@ export class TaskDetail extends React.Component {
                     let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
                     this.setState({
                         formatIndex,
+                        compute_on
                     })
 
                     if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
@@ -237,7 +238,7 @@ export class TaskDetail extends React.Component {
                             type: nextProps.taskInfo.type,
                             options: {
                                 price: Number(bid),
-                                num_subtasks: Number(subtasks),
+                                num_subtasks: Number(subtasks_count),
                                 subtask_time: getTimeAsFloat(subtask_timeout)
                             }
                         })
@@ -250,7 +251,7 @@ export class TaskDetail extends React.Component {
             this.parsePresets(nextProps.presets)
         }
 
-        if(nextProps.testStatus !== this.props.testStatus && 
+        if(!isEqual(nextProps.testStatus, this.props.testStatus) && 
                 !isObjectEmpty(nextProps.testStatus.more) && 
                 !this.state.defaultSettingsModal)
         {
@@ -265,15 +266,15 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
+        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
         const {actions, task} = this.props
 
-        if ((!!nextState.subtasks && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks !== subtasks || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
+        if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
                     price: Number(nextState.bid),
-                    num_subtasks: Number(nextState.subtasks),
+                    num_subtasks: Number(nextState.subtasks_count),
                     subtask_time: nextState.subtask_timeout
                 }
             })
@@ -299,8 +300,8 @@ export class TaskDetail extends React.Component {
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks !== subtasks){
-            const result = Math.min(nextState.maxSubtasks, nextState.subtasks);
+        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks_count !== subtasks_count){
+            const result = Math.min(nextState.maxSubtasks, nextState.subtasks_count);
             this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
         }
 
@@ -354,11 +355,11 @@ export class TaskDetail extends React.Component {
             maxSubtasks = 100 
         }
 
-        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks)
+        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks_count)
 
         this.setState({
                 maxSubtasks,
-                subtasks: subtaskValue
+                subtasks_count: subtaskValue
             })
 
         this.refs.subtaskCount.value = subtaskValue
@@ -522,8 +523,8 @@ export class TaskDetail extends React.Component {
                 [state]: e.target.value
             })
         } else if(!this.state.savePresetLock && 
-                    (state === "frames" || state === "sample_per_pixel") && 
-                    !this.checkInputValidity(e)){
+                    (state === "frames" || state === "sample_per_pixel") 
+                    && !this.checkInputValidity(e)){
             this.setState({
                 [state]: null,
                 savePresetLock: true
@@ -538,7 +539,6 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
-        console.log("list", list);
 
         const result = list.filter((item, index) => item.name == name)[0]
         const preset = {...result, value: {...result.value}} // immutable
@@ -588,7 +588,12 @@ export class TaskDetail extends React.Component {
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
 
-        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
+        if(pickFormatIndex > -1){
+            formatRef.value = format
+        } else {
+            preset.value.format = formatRef.value = mockFormatList[0].name
+        }
+
         outputPath.value = output_path
 
         if (this.props.task.type === taskType.BLENDER) {
@@ -619,7 +624,7 @@ export class TaskDetail extends React.Component {
 
     _handleComputeOnOptionChange(e){
         this.setState({
-            compute_on: e.target.value
+            compute_on: e.target.value,
         })
     }
 
@@ -663,7 +668,6 @@ export class TaskDetail extends React.Component {
         // If taken file format from input file is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
-        console.log("formatIndex", formatIndex, pickFormatIndex);
 
         resolutionW.value = resolution[0]
         resolutionH.value = resolution[1]
@@ -671,7 +675,7 @@ export class TaskDetail extends React.Component {
 
         this.setState({
             resolution,
-            format,
+            format: formatRef.value,
             formatIndex,
             isDefaultResolutionApplied: true
         })
@@ -717,13 +721,13 @@ export class TaskDetail extends React.Component {
             loadingTaskIndicator: true
         })
         this._createTaskAsync().then(result => {
-            if(result && result[0]){
+            if(result && !result[1]){
                 window.routerHistory.push('/tasks');
             } else {
                 console.log("Task creation failed!")
                 this.setState({
                     insufficientAmountModal: {
-                        result: !result[0],
+                        result: !!result[1],
                         message: result[1]
                     },
                     loadingTaskIndicator: false
@@ -735,27 +739,26 @@ export class TaskDetail extends React.Component {
     _handleLocalRender() {
         const {actions, task} = this.props;
         const {compute_on} = this.state;
-        const {resources, type} = task
+        const {resources, type, name} = task
         actions.runTestTask({
+            name,
             resources,
             compute_on,
-            concent_enabled: false,
             type,
-            subtasks: 1 // <--- HARDCODED
+            subtasks_count: 1 // <--- HARDCODED
         })
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, subtasks, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, compute_on, timeout, subtasks_count, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                concent_enabled: false,
                 timeout: floatToString(timeout),
-                subtasks,
+                subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
                 bid,
                 estimated_memory : (testStatus && testStatus.estimated_memory),
@@ -804,7 +807,7 @@ export class TaskDetail extends React.Component {
     }
 
     _handleFormByType(type, isDetail) {
-        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
+        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props;
         let formTemplate = [
             {
@@ -894,6 +897,7 @@ export class TaskDetail extends React.Component {
 
         const {
             bid, 
+            compute_on,
             defaultSettingsModal, 
             insufficientAmountModal, 
             isDetailPage, 
@@ -918,6 +922,15 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
+
+        let computeOnRadioOptions = {};
+
+        if(isDetailPage) {
+            computeOnRadioOptions['readOnly'] = true;
+        } else {
+            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
+        }
+
         return (
             <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -963,7 +976,7 @@ export class TaskDetail extends React.Component {
                                             cls="title" 
                                             infoHidden={true} 
                                             interactive={true}/>
-                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks_count')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
                                 </div>
                                 <div className="item-settings">
                                     <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
@@ -971,16 +984,16 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                 <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group" onChange={::this._handleComputeOnOptionChange}>
+                                <div className="render-on__radio-group" {...computeOnRadioOptions}>
                                     <div>
-                                        <input type="radio" id="cpu" value="cpu" name="compute_on" defaultChecked />
+                                        <input type="radio" id="cpu" value="cpu" name="compute_on" checked={compute_on === "cpu"}/>
                                         <label htmlFor="cpu">
                                             <span className="overlay"/>
                                             <span className="icon-cpu"/>CPU
                                         </label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="gpu" value="gpu" name="compute_on"/>
+                                        <input type="radio" id="gpu" value="gpu" name="compute_on" checked={compute_on === "gpu"}/>
                                         <label htmlFor="gpu">
                                             <span className="overlay"/>
                                             <span className="icon-gpu"/>GPU

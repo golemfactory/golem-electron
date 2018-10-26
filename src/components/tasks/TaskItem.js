@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 
 import {Tooltip} from 'react-tippy';
 
-import { Motion, spring } from 'react-motion';
+import { Spring, config} from 'react-spring'
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
 import {taskStatus} from './../../constants/statusDicts'
 
@@ -134,17 +134,20 @@ export class TaskItem extends React.Component {
     	const {item, index, _handleRowClick, _handleRestartModal, _handleDeleteModal, psId} = this.props
         const {toggledPreviewList} = this.state
         const {options} = item
-        return (<Motion defaultStyle={{
-                progress: 0
-            }} style={{
-                progress: spring(item.progress, {
-                    stiffness: 50,
-                    damping: 7
-                })
-            }} role="listItem" tabIndex="-1">
+        return (<Spring 
+                from={{
+                    progress: 0
+                }} 
+                to={{
+                    progress: item.progress
+                }} 
+                config={{ tension: 0, friction: 2, restDisplacementThreshold: 0.1 }}
+                role="listItem" tabIndex="-1">
             {value => <div className="wrapper-task-item">
                 <div className="task-item" style={{
-                    background: item.progress < 1 ? `linear-gradient(90deg, #E3F3FF ${value.progress * 100}%, transparent ${value.progress * 100}%)` : 'transparent'
+                    background: item.progress < 1 
+                        ? `linear-gradient(90deg, #E3F3FF ${value.progress * 100}%, transparent ${value.progress * 100}%)` 
+                        : 'transparent'
                 }} onClick = { e => _handleRowClick(e, item, index)} >
                     <div className="info__task-item" tabIndex="0" aria-label="Task Preview">
                         <div>
@@ -169,7 +172,7 @@ export class TaskItem extends React.Component {
                                         </span>
                                     </div>
                                     <div>
-                                        <span>Subtasks: {item.subtasks || 0}</span>
+                                        <span>Subtasks: {item.subtasks_count || 0}</span>
                                         <span className="bumper"> | </span>
                                         <span> Task timeout: {item.timeout}</span>
                                         <span className="bumper"> | </span>
@@ -225,7 +228,7 @@ export class TaskItem extends React.Component {
                 </div>
                 { (item.id === psId && toggledPreviewList[psId]) && <Preview id={item.id} src={item.preview} progress={item.progress}/>}
             </div>}
-            </Motion>
+            </Spring>
         );
     }
 }

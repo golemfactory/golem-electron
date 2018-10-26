@@ -1,7 +1,10 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
+import {Tooltip} from 'react-tippy';
+
 import * as Actions from '../../../actions'
+import {getGPUEnvironment} from '../../../reducers'
 
 import RadialProgress from './../../RadialProgress'
 import Dropdown from './../../Dropdown'
@@ -17,7 +20,8 @@ const mapStateToProps = state => ({
     presetList: state.advanced.presetList,
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv')
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -114,10 +118,23 @@ export class Advanced extends React.Component {
         return ret
     }
 
+    /**
+     * [_handleGPUProviderSwitch onChange function]
+     * @return  {Boolean}   true
+     */
+    _handleGPUProviderSwitch(evt) {
+        const {actions} = this.props;
+        const gpuENV = 'BLENDER_NVGPU'
+        if(evt.target.checked)
+          actions.enableEnvironment(gpuENV);
+        else
+          actions.disableEnvironment(gpuENV);
+    }
+
     render() {
-        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn} = this.props
-        let {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
-        let max = this.toGibibytes(systemInfo)
+        const {presetList, chosenPreset, manageHandler, systemInfo, chartValues, isEngineOn, gpuEnvironment} = this.props
+        const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
+        const max = this.toGibibytes(systemInfo)
 
         return (
             <div className="content__advanced">
@@ -142,6 +159,26 @@ export class Advanced extends React.Component {
             <div className="loading__advanced">
               <span>Golem reading your system information...</span>
             </div>}
+            <div className="switch__gpu">
+                    <div className={`switch-box`}>
+                        <label className="switch">
+                            <input type="checkbox" onChange={::this._handleGPUProviderSwitch} defaultChecked={gpuEnvironment.accepted}  aria-label="GPU switch for provider" tabIndex="0" disabled={isEngineOn || !gpuEnvironment.supported}/>
+                            <div className="switch-slider round"></div>
+                        </label>
+                    </div>
+                    <span style={{
+                color: gpuEnvironment.accepted ? '#4e4e4e' : '#9b9b9b'
+            }}>
+                Use my GPU as a resource. For Linux users with Nvidia card.
+                <Tooltip
+                        html={<p className='info-gpu'>For now there is no option to set the amount of shared resources <br/> with GPU.So Golem will take up to 100% of your graphic card<br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">Learn more.</a></p>}
+                        position="top"
+                        trigger="mouseenter"
+                        interactive={true}>
+                  <span className="icon-question-mark"/>
+              </Tooltip>
+            </span>
+                </div>
             <div className="advanced__tips">
               <span>Allocate your machine’s resources exactly as you like. Remember that if you give Golem all of your processing power you will not be able to use it at the same time.
               <br/>
