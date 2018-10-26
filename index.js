@@ -1,5 +1,5 @@
 const electron = require('electron')
-const {app, BrowserWindow, Menu, ipcMain} = electron
+const {app, BrowserWindow, Menu, ipcMain, shell} = electron
 const chalk = require('chalk')
 const fs = require("fs")
 var path = require('path')
@@ -150,7 +150,7 @@ function createWindow() {
         if (url.includes('http') 
             && (url.includes('etherscan') 
                 || url.includes('golem')))
-            electron.shell.openExternal(url);
+            shell.openExternal(url);
     })
 
 

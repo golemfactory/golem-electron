@@ -27,19 +27,24 @@
 	
 	span[class^="icon"][class$="logo"]{
 		display: inline;
-		font-size:26pt;
+		font-size: 28pt;
 		color: $color-text4;
 		border-radius: 50%;
+		padding: 1px;
 		transition: .8s all;
 		margin-right: 5px;
 	}
 
 	.icon-golem-logo{
-		background: #001D57;
+		background: $color-text4;
+		border: 0.5px solid $color-border;
+		box-sizing: border-box;
 	}
 
 	.icon-ethereum-logo{
-		background: #3C3C3D;
+		background: $color-text4;
+		border: 0.5px solid $color-border;
+		box-sizing: border-box;
 	}
 
 
