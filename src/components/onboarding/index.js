@@ -8,6 +8,7 @@ import qrcode from 'qrcode-generator';
 import html2pdf from 'html2pdf.js';
 
 import * as Actions from '../../actions'
+import {getPasswordModalStatus} from '../../reducers'
 import Onboarding from './../onboarding';
 
 import Welcome from './steps/Welcome'
@@ -102,7 +103,7 @@ const someAsyncFunction = function(callback) {
 
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
-    passwordModal: state.realTime.passwordModal,
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
     isMainNet: state.info.isMainNet,
@@ -124,6 +125,7 @@ class OnboardIndex extends React.Component {
             password: "",
             isPasswordValid: false,
             loadingIndicator: false,
+            isRegisterRequired: false,
             isAcceptLocked: true,
             isTermsDeclined: false,
             isSentryAccepted: false,
@@ -304,7 +306,7 @@ class OnboardIndex extends React.Component {
      */
     _handleNext() {
         const { actions, passwordModal, isTermsAccepted } = this.props
-        const {currentStep, nodeName} = this.state 
+        const { currentStep, nodeName, isRegisterRequired } = this.state 
         if (currentStep === steps.STEP2) {
             const queuedTask = {
                 action: "updateNodeName",
@@ -312,12 +314,20 @@ class OnboardIndex extends React.Component {
             }
             actions.addQueue(queuedTask)
         }
+
         if (currentStep < steps.STEP4) {
             let nextStep = currentStep + 1;
-            if((!passwordModal.register && 
-                            currentStep === steps.REGISTER) ||
+
+            if(nextStep === steps.REGISTER){
+                this.setState({
+                    isRegisterRequired: passwordModal.register
+                })
+            }
+
+            if((!isRegisterRequired && 
+                            nextStep === steps.PRINT) ||
                 (isTermsAccepted && 
-                            currentStep === steps.CHAININFO)){
+                            nextStep === steps.TERMS)){
                 nextStep++;
             }
             this.setState({

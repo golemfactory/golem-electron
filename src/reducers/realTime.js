@@ -290,7 +290,7 @@ export const getStatusSelector = createCachedSelector(
             return statusObj
         }
     )(
-        (state, key) => key, // Cache selectors by type name
+        (state, key) => key // Cache selectors by type name
     )
 
 export const passwordModalSelector = createCachedSelector(
@@ -312,5 +312,5 @@ export const passwordModalSelector = createCachedSelector(
 
         return passwordModal
     })(
-        (state, key) => key, // Cache selectors by type name
+        (state, key) => key // Cache selectors by type name
     )
