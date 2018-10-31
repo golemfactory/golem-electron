@@ -18,7 +18,7 @@
 
     span[class^="icon"][class$="logo"]{
         display: inline;
-        font-size:26pt;
+        font-size:36pt;
         color: $color-text4;
         border-radius: 50%;
         transition: 1s all;
@@ -26,11 +26,15 @@
     }
 
     .icon-golem-logo{
-        background: #001D57;
+        background: $color-text4;
+        border: 0.5px solid $color-border;
+        box-sizing: border-box;
     }
 
     .icon-ethereum-logo{
-        background: #3C3C3D;
+        background: $color-text4;
+        border: 0.5px solid $color-border;
+        box-sizing: border-box;
     }
 
     .currency-tag{

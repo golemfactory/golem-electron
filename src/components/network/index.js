@@ -15,8 +15,8 @@ import golem_svg from './../../assets/img/golem.svg'
 import Indicator from './Indicator'
 import TransactionTube from '../transaction'
 import Wallet from '../wallet'
-import Resources from './tabs/Resources'
-import History from './tabs/History'
+import Resources from './Resources'
+import History from '../History'
 import Advanced from './tabs/Advanced'
 import FooterMain from '../FooterMain'
 import PresetModal from './modal/PresetModal'
@@ -32,7 +32,6 @@ import ManagePresetModal from './modal/ManagePresetModal'
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
-    autoLaunch: state.input.autoLaunch,
     connectionProblem: state.info.connectionProblem,
     status: getStatus(state, 'golemStatus'),
     chosenPreset: state.advanced.chosenPreset,
@@ -154,14 +153,12 @@ export class MainFragment extends React.Component {
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
             {!toggleHistory 
-                && <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory}/>
+                ? [
+                    <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory} key="transaction"/>,
+                    <Resources key="resources"/>
+                  ]
+                : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
             }
-            <div className="section__quick-settings">
-                {toggleHistory 
-                    ? <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
-                    : <Resources/>
-                }
-            </div>
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <FooterMain {...this.props}/>

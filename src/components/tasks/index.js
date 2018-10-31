@@ -11,6 +11,7 @@ import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
 import TransactionTube from '../transaction'
+import History from '../History'
 import Wallet from '../wallet'
 import DeleteModal from './modal/DeleteModal'
 import RestartModal from './modal/RestartModal'
@@ -52,7 +53,8 @@ export class TaskPanel extends React.Component {
             restartProps: null,
             previewId: null,
             previewSrc: null,
-            isWalletTray: false
+            isWalletTray: false,
+            toggleHistory: false
         }
     }
 
@@ -140,31 +142,40 @@ _toggleWalletTray(toggle){
     })
 }
 
+_toggleTransactionHistory = () => {
+    this.setState({
+        toggleHistory: !this.state.toggleHistory
+    })
+}
+
 // {preview && <div className="section__preview">
 //                         <Preview id={previewId} src={previewSrc}/> 
 //                     </div>}
 //                    <Footer {...this.props}  setPreviewExpanded={actions.setPreviewExpanded}/>
                      
     render() {
-        const {deleteModal, restartModal, deleteProps, restartProps, previewId, previewSrc, frameCount, psEnabled, isWalletTray} = this.state
+        const {deleteModal, restartModal, deleteProps, restartProps, previewId, previewSrc, frameCount, psEnabled, isWalletTray, toggleHistory} = this.state
         const {actions, preview, expandedPreview, balance, currency} = this.props
 
         return (
             <div className="content__task-panel">
                     { !isWalletTray && <Wallet balance={balance} currency={currency}/> }
-                    <TransactionTube/>
-                    <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
-                        <DropZone>
-                            <div className="section__table">
-                                <Table 
-                                    deleteModalHandler={::this._handleDeleteModal} 
-                                    restartModalHandler={::this._handleRestartModal} 
-                                    previewHandler={::this._setPreview} 
-                                    previewId={previewId} 
-                                    toggleWalletTray={::this._toggleWalletTray}/>
-                            </div>
-                        </DropZone>
-                    </div>
+                    <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory}/>
+                    {!toggleHistory
+                        ? <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
+                            <DropZone>
+                                <div className="section__table">
+                                    <Table 
+                                        deleteModalHandler={::this._handleDeleteModal} 
+                                        restartModalHandler={::this._handleRestartModal} 
+                                        previewHandler={::this._setPreview} 
+                                        previewId={previewId} 
+                                        toggleWalletTray={::this._toggleWalletTray}/>
+                                </div>
+                            </DropZone>
+                          </div>
+                        : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
+                    }
                     
                     {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     {restartModal && <RestartModal closeModal={::this._closeModal} {...restartProps}/>}

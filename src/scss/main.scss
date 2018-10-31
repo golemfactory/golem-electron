@@ -98,8 +98,8 @@ span {
 
 input,
 button,
-select{
-    &:disabled{
+select {
+    &:disabled {
         cursor: not-allowed !important;
     }
 }
@@ -172,7 +172,6 @@ select {
             background-color: $button-hover-color;
 
             //color: rgb(0, 177, 200);
-       
         }
 
         &:active {
@@ -189,10 +188,10 @@ select {
         background: $color-accent2;
         border: 1px solid $color-accent2;
         &:hover {
-            background: darken( $color-accent2, 10%);
+            background: darken($color-accent2, 10%);
         }
         &:active {
-            background: darken( $color-accent2, 15%);
+            background: darken($color-accent2, 15%);
         }
         &:disabled {
             cursor: not-allowed;
@@ -232,7 +231,6 @@ select {
             border: 1px solid $button-hover-color;
 
             //color: rgb(0, 177, 200);
-       
         }
 
         &:disabled {
@@ -241,26 +239,44 @@ select {
             border: 1px solid $button-disable-color;
 
             //color: rgb(0, 177, 200);
-       
         }
     }
 
-    &--small{
+    &--small {
         width: 50px;
         height: 30px;
         padding: 0 2px;
         font-size: 8pt;
     }
+
+    &--ghost {
+        @extend .btn--small;
+        width: 70px;
+        background-color: transparent;
+        color: $button-static-color;
+        border: 0;
+
+        &:hover {
+            color: $button-hover-color;
+            //color: rgb(0, 177, 200);
+        }
+
+        &:disabled {
+            cursor: not-allowed;
+            color: $button-disable-color;
+            //color: rgb(0, 177, 200);
+        }
+    }
 }
 
-input[type=text],
-input[type=number],
-input[type=password]{
+input[type="text"],
+input[type="number"],
+input[type="password"] {
     background: white;
     border: 1px solid $color-border;
     height: 32px;
 
-    &:disabled{
+    &:disabled {
         background: $color-input;
     }
 }
@@ -269,30 +285,31 @@ input.invalid {
     border-color: red !important;
 }
 
-input[type=number] {
+input[type="number"] {
     width: 100%;
     position: relative;
     border-box: none;
     text-align: center;
 }
 
-input[type=number]::-webkit-inner-spin-button {
+input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
     background: $color-bg2 url("../assets/img/number-adjust.svg") no-repeat center;
     background-size: auto;
     width: 1.2em;
     border-left: 1px solid $color-text3;
     box-sizing: border-box;
-    opacity: .9;
+    opacity: 0.9;
     position: absolute;
     top: 0;
     right: 0;
     bottom: 0;
 
-    &:hover {}
+    &:hover {
+    }
 }
 
-.notice{
+.notice {
     font-size: 9pt;
     color: $color-text2;
 }
@@ -326,8 +343,8 @@ input[type=number]::-webkit-inner-spin-button {
         right: 0;
         bottom: 0;
         background-color: #ccc;
-        -webkit-transition: .4s;
-        transition: .4s;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
     }
 
     .switch-slider:before {
@@ -338,16 +355,16 @@ input[type=number]::-webkit-inner-spin-button {
         margin-top: 1px;
         left: 1;
         background-color: white;
-        -webkit-transition: .4s;
-        transition: .4s;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
     }
 
     input:checked + .switch-slider {
-        background-color: #2196F3;
+        background-color: #2196f3;
     }
 
     input:focus + .switch-slider {
-        box-shadow: 0 0 1px #2196F3;
+        box-shadow: 0 0 1px #2196f3;
     }
 
     input:checked + .switch-slider:before {
@@ -397,9 +414,9 @@ input[type=number]::-webkit-inner-spin-button {
     input[type="radio"] {
         position: absolute;
         opacity: 0;
-        
+
         + .radio-label-left,
-        + .radio-label-right{
+        + .radio-label-right {
             position: relative;
             margin: 0 !important;
             padding: 0 10px !important;
@@ -407,21 +424,20 @@ input[type=number]::-webkit-inner-spin-button {
             line-height: 1.6em;
         }
 
-
-        + .radio-label-left{
+        + .radio-label-left {
             &:before {
                 content: "\E91C";
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
                 position: relative;
-                top: .2em;
+                top: 0.2em;
                 margin-right: 1em;
                 vertical-align: top;
                 cursor: pointer;
                 text-align: center;
                 transition: all 250ms ease;
-                font-family: 'gcon' !important;
+                font-family: "gcon" !important;
                 speak: none;
                 font-style: normal;
                 font-weight: normal;
@@ -436,21 +452,20 @@ input[type=number]::-webkit-inner-spin-button {
             }
         }
 
-        + .radio-label-right{
-
+        + .radio-label-right {
             &:after {
                 content: "\E91C";
                 background: $color-text4;
                 border-radius: 100%;
                 display: inline-block;
                 position: relative;
-                top: .2em;
+                top: 0.2em;
                 margin-left: 1em;
                 vertical-align: top;
                 cursor: pointer;
                 text-align: center;
                 transition: all 250ms ease;
-                font-family: 'gcon' !important;
+                font-family: "gcon" !important;
                 speak: none;
                 font-style: normal;
                 font-weight: normal;
@@ -515,7 +530,7 @@ input[type=number]::-webkit-inner-spin-button {
             }
         }
 
-        + .radio-label-left{
+        + .radio-label-left {
             &:empty {
                 &:before {
                     margin-right: 0;
@@ -534,43 +549,75 @@ input[type=number]::-webkit-inner-spin-button {
 }
 
 .indicator-status {
-        -webkit-mask: url('../assets/img/status.svg') no-repeat 100% 100%;
-        mask: url('../assets/img/status.svg') no-repeat 100% 100%;
-        -webkit-mask-size: cover;
-        mask-size: cover;
-        width: 20px;
-        height: 20px;
-        transition: background-color .5s;
-        &--red {
-            background-color: $color-error;
-        }
-        &--yellow {
-            background-color: $color-accent2;
-        }
-        &--green {
-            background-color: $color-accent1;
-            -webkit-mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
-            mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
-        }
-        &--blue {
-            background-color: $button-static-color;
-        }
+    -webkit-mask: url("../assets/img/status.svg") no-repeat 100% 100%;
+    mask: url("../assets/img/status.svg") no-repeat 100% 100%;
+    -webkit-mask-size: cover;
+    mask-size: cover;
+    width: 20px;
+    height: 20px;
+    transition: background-color 0.5s;
+    &--red {
+        background-color: $color-error;
     }
+    &--yellow {
+        background-color: $color-accent2;
+    }
+    &--green {
+        background-color: $color-accent1;
+        -webkit-mask: url("../assets/img/status-stop.svg") no-repeat 100% 100%;
+        mask: url("../assets/img/status-stop.svg") no-repeat 100% 100%;
+    }
+    &--blue {
+        background-color: $button-static-color;
+    }
+}
 
-.label_optional{
+.label_optional {
     color: $color-text3;
 }
 
 .progress-status {
-        display: inline-block;
-        font-size: 15pt;
-        font-weight: 500;
-        margin-right: 8px;
-        vertical-align: middle;
-        margin-bottom: 0.5px;
-    }
+    display: inline-block;
+    font-size: 15pt;
+    font-weight: 500;
+    margin-right: 8px;
+    vertical-align: middle;
+    margin-bottom: 0.5px;
+}
 
-.tippy-popper{
+.tab-panel {
+    @include flex;
+
+    justify-content: space-around;
+    align-self: stretch;
+    height: 47px;
+    border-bottom: 1px solid $color-border;
+
+    .tab__title {
+        flex: 0 0 18%;
+        font-weight: 500;
+        font-size: 11pt;
+        line-height: 1.3em;
+        color: $color-text3;
+        cursor: pointer;
+        transition: 0.5s all;
+
+        &.active {
+            color: $color-text;
+        }
+    }
+}
+
+.tab__content {
+    top: 47.5px;
+    width: 100%;
+    min-height: 0;
+    flex: 1 1 calc(100% - 830px);
+    overflow: hidden;
+    transform: translateZ(0);
+}
+
+.tippy-popper {
     max-width: 510px !important;
 }
 
@@ -659,7 +706,7 @@ input[type=number]::-webkit-inner-spin-button {
     .content__settings {
         padding-top: $header-height-windows;
     }
-    
+
     .section__wallet,
     .content__resources,
     .section__actions,

@@ -1,4 +1,4 @@
-.content__tube{
+.content__tube {
 	@include flex;
 	justify-content: space-evenly;
 	flex: 0 0 28px;
@@ -9,7 +9,19 @@
 	margin: 0 20px;
 	font-size: 7pt;
 
-	.btn__transaction-history{
+	.btn__transaction-history {
 		cursor: pointer;
+		height: 30px;
+		line-height: 32px;
+		z-index: 1;
+		position: relative;
+		padding: 10px;
+		color: $color-primary;
+
+		.icon-transaction-history {
+			position: relative;
+			font-size: 12pt;
+			bottom: -4px;
+		}
 	}
 }

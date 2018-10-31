@@ -522,6 +522,11 @@ $color_9: rgb(245, 166, 35);
     content: "\e952";
   }
 }
+.icon-withdraw{
+  &:before {
+    content: "\e964";
+  }
+}
 .icon-info-small {
   &:before {
     content: "\e955";
@@ -552,7 +557,21 @@ $color_9: rgb(245, 166, 35);
     content: "\e95a";
   }
 }
-
+.icon-back-up {
+  &:before {
+    content: "\e965";
+  }
+}
+.icon-settings-simplified {
+  &:before {
+    content: "\e966";
+  }
+}
+.icon-transaction-history {
+  &:before {
+    content: "\e967";
+  }
+}
 .icon-ethereum-logo {
   &:before {
     content: "\e952";

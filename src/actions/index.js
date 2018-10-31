@@ -211,7 +211,6 @@ const {
     LOGOUT, 
     LOGIN_FRAME, 
     LOGOUT_FRAME, 
-    SET_AUTOLAUNCH, 
     SET_CONNECTED_PEERS, 
     SET_PREVIEW_RADIO, 
     SET_PREVIEW_EXPANDED, 
@@ -568,11 +567,6 @@ export const logoutFrame = () => ({
 
 export const setBalance = (payload) => ({
     type: SET_BALANCE,
-    payload
-})
-
-export const setAutoLaunch = (payload) => ({
-    type: SET_AUTOLAUNCH,
     payload
 })
 

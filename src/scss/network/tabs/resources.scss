@@ -1,26 +1,32 @@
 .content__resources {
+    flex-direction: column;
+    position: relative;
+    flex: 1 1 100%;
+    overflow: overlay;
+    border-bottom: 1px solid $color-border;
     width: 100%;
     box-sizing: border-box;
 
-    .advanced-toggler{
+    .advanced-toggler {
         @include flex;
         flex-direction: row;
         justify-content: flex-end;
         align-items: center;
         text-align: right;
-        font-size: 11pt;
+        font-size: 8pt;
         font-weight: 500;
         margin-top: 30px;
-        color: $color-text2;
-        transition: color .5s;
+        color: $color-primary;
+        transition: color 0.5s;
         cursor: pointer;
 
-        [class^="icon-"], [class*=" icon-"] {
+        [class^="icon-"],
+        [class*=" icon-"] {
             margin-right: 15px;
         }
 
         &:hover {
-            color: $color-text;
+            color: $button-hover-color;
         }
     }
     .slider {

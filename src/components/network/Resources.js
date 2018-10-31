@@ -1,8 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import * as Actions from '../../../actions'
-import Slider from './../../Slider.js'
+import * as Actions from '../../actions'
+import Slider from './../Slider.js'
 
 const MEBI = 1 << 20
 
@@ -97,7 +97,7 @@ export class Resources extends React.Component {
             <div className="content__resources">
                 <div className="advanced-toggler" onClick={::this._toggleAdvanced}>
                         { toggleAdvanced
-                            ? <span><span className="icon-settings"/>Simplified</span>
+                            ? <span><span className="icon-settings-simplified"/>Simplified</span>
                             : <span><span className="icon-settings"/>Advanced</span>
                         }
                 </div>
