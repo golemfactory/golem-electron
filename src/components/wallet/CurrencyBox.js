@@ -179,6 +179,21 @@ export default class CurrencyBox extends Component {
                             </div>
                             <div className="back">
                                 <div>
+                                    <div className="available-amount">
+                                        <span>Available amount</span>
+                                        <Spring from={{ balanceAnimated: motionBalanceStart[suffix] }} to={{ balanceAnimated: Number(balance) }}>
+                                            {({ balanceAnimated }) => (
+                                                <span className="amount">
+                                                    {this._formatAmount(Number(balanceAnimated), suffix)}
+                                                    {!expandedAmount && "..."}
+                                                    <span className="currency-suffix">
+                                                        {!isMainNet ? "t" : ""}
+                                                        {suffix}
+                                                    </span>
+                                                </span>
+                                            )}
+                                        </Spring>
+                                    </div>
                                     <div className="locked-amount">
                                         <span>Locked:</span>
                                         <Spring
@@ -229,7 +244,7 @@ export default class CurrencyBox extends Component {
                                 </div>
                                 <div className="action-menu">
                                     <button className="btn--ghost wallet__btn-withdraw" onClick={() => this._toggleFlipper()}>
-                                        <span className="icon-info-small" />Back
+                                        <span className="icon-back-up" />Back
                                     </button>
                                 </div>
                             </div>

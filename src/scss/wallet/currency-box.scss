@@ -12,6 +12,7 @@
 		flex: 1 1 auto;
 		align-items: center;
 		justify-content: space-around;
+		margin-left: 30px;
 	}
 
 	.back {
@@ -74,7 +75,7 @@
 
 	.icon-question-mark {
 		cursor: pointer;
-		margin-top: -15px;
+		margin-top: -20px;
 		font-size: 8pt !important;
 		align-self: flex-start;
 		color: $color-text3;
@@ -121,11 +122,15 @@
 		margin: 0;
 	}
 
+	.icon-question-mark {
+		margin-top: -15px;
+	}
+
 	.amount-usd {
 		font-size: 7pt;
 		line-height: 0.8em;
 	}
-
+	
 	.locked-amount,
 	.unconverted-amount {
 		@include flex;
@@ -135,6 +140,19 @@
 			font-size: 7pt;
 			font-weight: 300;
 			line-height: 1em;
+		}
+
+		.amount {
+			font-weight: 500;
+			font-size: 11pt;
+			padding: 0 2px;
+		}
+	}
+
+	.available-amount {
+		span {
+			font-weight: 300;
+			font-size: 7pt;
 		}
 
 		.amount {
@@ -178,6 +196,11 @@
 			position: absolute;
 			z-index: 2;
 			transform: rotateY(0deg);
+			margin-left: 0;
+
+			.action-menu{
+				margin-right: 10px;
+			}
 		}
 		.back {
 			display: flex;
@@ -189,15 +212,21 @@
 			backface-visibility: hidden;
 			position: absolute;
 			transform: rotateY(180deg);
+			padding-top: 10px;
 
 			.locked-amount,
 			.unconverted-amount {
 				justify-content: space-between;
-				margin: 15px;
+				margin: 15px 0;
 			}
 
 			.action-menu {
-				margin-top: 50px;
+				margin-bottom: 10px;
+
+				.icon-back-up{
+					transform: rotate(-90deg);
+					margin-left: 10px;
+				}
 			}
 		}
 	}

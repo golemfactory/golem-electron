@@ -38,6 +38,10 @@
             bottom: -2px;
         }
     }
+
+    .ReactVirtualized__List{
+        overflow: overlay !important;
+    }
 }
 
 .item__history {
