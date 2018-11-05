@@ -129,15 +129,6 @@ export class MainFragment extends React.Component {
         setTimeout(endLoading, 8000)
     }
 
-    /**
-     * [_handleAutoLaunchSwitch onChange function for switch input]
-     */
-    _handleAutoLaunchSwitch() {
-        const {actions} = this.props
-        const {autoLaunchSwitch} = this.refs
-        actions.setAutoLaunch(autoLaunchSwitch.checked)
-    }
-
     _toggleTransactionHistory = () => {
         this.setState({
             toggleHistory: !this.state.toggleHistory

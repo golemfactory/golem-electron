@@ -56,7 +56,11 @@ class TransactionTube extends Component {
         const filteredList = paymentHistory(0);
         return (
             <div className="container__tube">
-                {filteredList.length > 0 ? this._fetchLastTransaction(filteredList) : <span className="content__tube">Loading...</span>}
+                {
+                    (paymentHistory && filteredList.length > 0) 
+                        ? this._fetchLastTransaction(filteredList) 
+                        : <span className="content__tube">Loading...</span>
+                }
             </div>
         );
     }

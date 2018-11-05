@@ -46,6 +46,9 @@ describe('<MainFragment />', () => {
             advanced: {
                 chosenPreset: 'custom'
             },
+            history: {
+                historyList: []
+            },
             resources: {
                 resource: 50
             },
@@ -87,6 +90,9 @@ describe('<MainFragment />', () => {
             },
             advanced: {
                 chosenPreset: 'custom'
+            },
+            history: {
+                historyList: []
             },
             resources: {
                 resource: 50
