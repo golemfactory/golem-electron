@@ -149,7 +149,7 @@ export class Resources extends React.Component {
                     native
                     from={{ opacity: 0, transform: 100 }}
                     enter={{ opacity: 1, transform: 0 }}
-                    leave={{ opacity: 0, transform: 00}}>
+                    leave={{ opacity: 0, transform: 100}}>
                     {item => ({opacity, transform}) =>
                         <animated.div className="horizontal-transition-container" 
                         style={{
