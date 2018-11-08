@@ -64,12 +64,10 @@ export default class Slider extends React.Component {
                 const appWidth = window.innerWidth
                 || document.documentElement.clientWidth
                 || document.body.clientWidth;
-
-                const sliderWidth = slider.innerWidth
-                || slider.clientWidth;
+                const sliderWidth = slider.getBoundingClientRect().width;
                 indicator.innerHTML = val;
                 indicator.style.color = color;
-                indicator.style.left = (val * ((sliderWidth - 32 )/(max)) + ((((appWidth - sliderWidth)/ 2) + 6))) + 'px';
+                indicator.style.left = (val * ((sliderWidth - 32 )/(max)) + ((((appWidth - sliderWidth)/ 2) + 6))) - (this.props.transform ? 24 : 0) + 'px';
         } 
     }
 
@@ -88,13 +86,27 @@ export default class Slider extends React.Component {
         const {defaultValue} = this.state
         return (
             <div>
-        <div className="slider">
+                <div className="slider">
                     <span className={`slider-icon ${iconLeft}`}/>
-                    <input ref={this.props.inputId} type="range" className="slider__resources" id={this.props.inputId} defaultValue={typeof defaultValue === 'number' ? defaultValue : 0} min={min || 0} max={max || 100} step={step || 1} list="steplist" onInput={this._handleFillLower.bind(this, disabled)} role="slider" aria-label="Machine's Resource" onMouseUp={::this._handleCallback} disabled={disabled}/>
+                    <input 
+                        ref={this.props.inputId} 
+                        type="range" 
+                        className="slider__resources" 
+                        id={this.props.inputId} 
+                        defaultValue={typeof defaultValue === 'number' ? defaultValue : 0} 
+                        min={min || 0} 
+                        max={max || 100} 
+                        step={step || 1} 
+                        list="steplist" 
+                        onInput={this._handleFillLower.bind(this, disabled)} 
+                        role="slider" 
+                        aria-label="Machine's Resource" 
+                        onMouseUp={::this._handleCallback} 
+                        disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
                     <span className={`slider-icon ${iconRight}`}/>
-        </div>
-      </div>
+                </div>
+            </div>
         );
     }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spring, Transition, Keyframes, animated, config } from "react-spring";
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
@@ -8,6 +9,12 @@ const MEBI = 1 << 20
 
 const preset = Object.freeze({
     CUSTOM: 'custom'
+})
+
+// Creates a keyframed trail
+const TrailEffect = Keyframes.Trail({
+  open: { x: 0, opacity: 1, delay: 100 },
+  close: { x: -100, opacity: 0 }
 })
 
 const mapStateToProps = state => ({
@@ -91,8 +98,16 @@ export class Resources extends React.Component {
     render() {
         const {isEngineOn, chartValues, systemInfo} = this.props
         const {resource, toggleAdvanced} = this.state
-        let {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
-        let max = this.toGibibytes(systemInfo)
+        const {cpu_cores, memory, disk} = this.toGibibytes(chartValues)
+        const max = this.toGibibytes(systemInfo)
+
+        const springFrom = toggleAdvanced
+                                ? { value: resource, max: 100 }
+                                : { value: cpu_cores, max: max.cpu_cores }
+
+        const springTo = toggleAdvanced
+                                ? { value: cpu_cores, max: max.cpu_cores }
+                                : { value: resource, max: 100 }
         return (
             <div className="content__resources">
                 <div className="advanced-toggler" onClick={::this._toggleAdvanced}>
@@ -101,51 +116,90 @@ export class Resources extends React.Component {
                             : <span><span className="icon-settings"/>Advanced</span>
                         }
                 </div>
-                 { toggleAdvanced
-                    ? <div>
+                <Transition
+                    items={
+                        !toggleAdvanced ? 
+                        [
                             <Slider 
-                                key={cpu_cores ? cpu_cores.toString() : 'empty'} 
+                                key={resource ? resource.toString() : 'resource_slider'} 
+                                inputId="resource_slider" 
+                                value={resource} 
+                                max={100}
+                                iconLeft="icon-single-server" 
+                                iconRight="icon-multi-server" 
+                                callback={::this._setResource} 
+                                warn={true} 
+                                transform={true}
+                                disabled={isEngineOn}/>
+                        ] : [
+                            <Slider 
+                                key={cpu_cores ? cpu_cores.toString() : 'cpu_slider'} 
                                 inputId="cpu_slider" 
                                 value={cpu_cores} 
-                                max={max.cpu_cores}
-                                iconLeft="icon-cpu" 
-                                iconRight="icon-multi-server" 
-                                callback={::this._setResource} 
-                                warn={true} 
-                                disabled={isEngineOn}/> 
-                            <Slider 
-                                key={memory ? memory.toString() : 'empty'} 
-                                inputId="ram_slider" 
-                                value={memory} 
-                                max={max.memory} 
+                                max={max.cpu_cores }
                                 iconLeft="icon-single-server" 
                                 iconRight="icon-multi-server" 
                                 callback={::this._setResource} 
                                 warn={true} 
-                                disabled={isEngineOn}/> 
-                            <Slider 
-                                key={disk ? disk.toString() : 'empty'} 
-                                inputId="disk_slider" 
-                                value={disk} 
-                                max={max.disk}
-                                iconLeft="icon-single-server" 
-                                iconRight="icon-multi-server" 
-                                callback={::this._setResource} 
-                                warn={true} 
-                                disabled={isEngineOn}/> 
-                        </div>
-                    : <Slider 
-                        key={resource ? resource.toString() : 'empty'} 
-                        inputId="resource_slider" 
-                        value={resource} 
-                        iconLeft="icon-single-server" 
-                        iconRight="icon-multi-server" 
-                        callback={::this._setResource} 
-                        warn={true} 
-                        disabled={isEngineOn}/> 
+                                transform={true}
+                                disabled={isEngineOn}/>
+                        ]
+                    } 
+                    keys={item => item.key}
+                    native
+                    from={{ opacity: 0, transform: 100 }}
+                    enter={{ opacity: 1, transform: 0 }}
+                    leave={{ opacity: 0, transform: 00}}>
+                    {item => ({opacity, transform}) =>
+                        <animated.div className="horizontal-transition-container" 
+                        style={{
+                            opacity: opacity.interpolate(x => x), 
+                            transform: transform.interpolate(x => `translate3d(${x}%,0,0)`)
+                        }}>{item}</animated.div>
                     }
-                
-                <div className="slider__tips">
+                </Transition>
+                <div style={{marginTop: "80px"}}>
+                    <TrailEffect 
+                        native 
+                        items={[
+                                <Slider 
+                                    key={memory ? memory.toString() : 'ram_slider'} 
+                                    inputId="ram_slider" 
+                                    value={memory} 
+                                    max={max.memory} 
+                                    iconLeft="icon-single-server" 
+                                    iconRight="icon-multi-server" 
+                                    callback={::this._setResource} 
+                                    warn={true} 
+                                    transform={true}
+                                    disabled={isEngineOn}/>,
+                                <Slider 
+                                    key={disk ? disk.toString() : 'disk_slider'} 
+                                    inputId="disk_slider" 
+                                    value={disk} 
+                                    max={max.disk}
+                                    iconLeft="icon-single-server" 
+                                    iconRight="icon-multi-server" 
+                                    callback={::this._setResource} 
+                                    warn={true} 
+                                    transform={true}
+                                    disabled={isEngineOn}/>,
+                        ]} 
+                        keys={[1,2,3]} 
+                        reverse={false} 
+                        state={toggleAdvanced ? "open" : "close"}>
+                    {(item, i) => ({ x, ...props }) => (
+                      <animated.div
+                        style={{
+                          transform: x.interpolate(x => `translate3d(${x}%,0,0)`),
+                          ...props
+                        }}>
+                        {item}
+                      </animated.div>
+                    )}
+                    </TrailEffect>
+                </div>
+                <div className={`slider__tips ${toggleAdvanced ? "expand" : ""}`}>
                         Use the slider to choose how much of your machine’s resources 
                     (CPU, RAM and disk space) Golem can use. More power means 
                     more potential income.
