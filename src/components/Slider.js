@@ -93,7 +93,7 @@ export default class Slider extends React.Component {
                         type="range" 
                         className="slider__resources" 
                         id={this.props.inputId} 
-                        defaultValue={typeof defaultValue === 'number' ? defaultValue : 0} 
+                        defaultValue={(typeof defaultValue === 'number' && defaultValue !== NaN) ? defaultValue : 0} 
                         min={min || 0} 
                         max={max || 100} 
                         step={step || 1} 
