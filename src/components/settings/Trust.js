@@ -9,7 +9,8 @@ import Slider from './../Slider'
 const mapStateToProps = state => ({
     providerTrust: state.trust.providerTrust,
     requestorTrust: state.trust.requestorTrust,
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    isNodeProvider: state.info.isNodeProvider
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -47,7 +48,7 @@ export class Trust extends React.Component {
     // </div>
 
     render() {
-        const {providerTrust, requestorTrust, isEngineOn} = this.props
+        const {providerTrust, requestorTrust, isEngineOn, isNodeProvider} = this.props
         return (
             <div className="content__trust">
                 <span className="title__slider">As a requestor</span>
