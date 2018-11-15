@@ -147,6 +147,7 @@ export class Resources extends React.Component {
                     } 
                     keys={item => item.key}
                     native
+                    initial={null}
                     from={{ opacity: 0, transform: 100 }}
                     enter={{ opacity: 1, transform: 0 }}
                     leave={{ opacity: 0, transform: 100}}>

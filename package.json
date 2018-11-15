@@ -152,7 +152,7 @@
         "cross-env": "^5.0.1",
         "css-browser-selector": "^0.6.5",
         "css-loader": "^0.26.1",
-        "electron": "^2.0.3",
+        "electron": "^2.0.13",
         "electron-builder": "20.21.1",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
@@ -208,7 +208,7 @@
         "webpack": "4.15.1",
         "webpack-bundle-analyzer": "^2.3.0",
         "webpack-cli": "^3.0.8",
-        "webpack-dev-server": "^3.1.4",
+        "webpack-dev-server": "^3.1.10",
         "websocket": "^1.0.24",
         "yup": "^0.23.0"
     },
