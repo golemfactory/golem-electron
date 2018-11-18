@@ -37,11 +37,17 @@ export default class Slider extends React.Component {
                 const min = slider.getAttribute('min')
                 const max = slider.getAttribute('max')
                 const value = (val - min) / (max - min);
+                const warnValue =  this.props.warnStep ? this.props.warnStep[0] : 75
+                const dangerValue = this.props.warnStep ? this.props.warnStep[1] : 90
         
                 let color;
                 if (!isDisabled) {
                     if (this.props.warn)
-                        color = (val < 75 && val > 0) ? primaryColor : (val >= 75 && val < 90) ? WARN : (val == 0 ? DEFAULT : DANGER);
+                        color = (val < warnValue && val > 0) 
+                                    ? primaryColor 
+                                    : (val >= warnValue && val < dangerValue) 
+                                        ? WARN 
+                                        : (val == 0 ? DEFAULT : DANGER);
                     else
                         color = primaryColor;
                         slider.style.cursor = "pointer";
@@ -82,12 +88,15 @@ export default class Slider extends React.Component {
     }
 
     render() {
-        const {iconLeft, iconRight, mainColor, min, max, step, disabled} = this.props
+        const {iconLeft, iconRight, textLeft, textRight, mainColor, min, max, step, disabled} = this.props
         const {defaultValue} = this.state
         return (
             <div>
                 <div className="slider">
-                    <span className={`slider-icon ${iconLeft}`}/>
+                    {iconLeft 
+                        ? <span className={`slider-icon ${iconLeft}`}/>
+                        : (textLeft ? <span className="slider-text--left">{textLeft}</span> : "")
+                    }
                     <input 
                         ref={this.props.inputId} 
                         type="range" 
@@ -104,7 +113,10 @@ export default class Slider extends React.Component {
                         onMouseUp={::this._handleCallback} 
                         disabled={disabled}/>
                     <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
-                    <span className={`slider-icon ${iconRight}`}/>
+                    {iconRight 
+                        ? <span className={`slider-icon ${iconRight}`}/>
+                        : (textRight ? <span className="slider-text--right">{textRight}</span> : "")
+                    }
                 </div>
             </div>
         );
