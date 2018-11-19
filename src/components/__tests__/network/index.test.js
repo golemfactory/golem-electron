@@ -52,6 +52,9 @@ describe('<MainFragment />', () => {
             resources: {
                 resource: 50
             },
+            performance: {
+                environments: {}
+            },
             account: {
                 publicKey: ""
             },
@@ -96,6 +99,9 @@ describe('<MainFragment />', () => {
             },
             resources: {
                 resource: 50
+            },
+            performance: {
+                environments: {}
             },
             account: {
                 publicKey: ""
