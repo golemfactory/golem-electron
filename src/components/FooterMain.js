@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import golem_loading from './../assets/img/golem-loading.svg'
 
-const {remote} = window.electron;
+const {remote, ipcRenderer} = window.electron;
 const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
@@ -75,20 +75,24 @@ export default class FooterMain extends Component {
         }
     }
 
+    _openLogs = () => {
+        ipcRenderer.send('open-logs')
+    }
+
     render() {
-        const {golemStatus, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
+        const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
                     <div className="section__actions-status">
-                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(golemStatus, connectionProblem)}`}/>
+                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status, connectionProblem)}`}/>
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${golemStatus.message} `}</span>
-                                {::this._loadErrorUrl(golemStatus.message)}
-                                {(golemStatus.message && golemStatus.message.length > 10) && <br/>}
+                                <span className="status-message">{`${status.message} `}</span>
+                                {::this._loadErrorUrl(status.message)}
+                                {(status.message && status.message.length > 10) && <br/>}
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">
@@ -103,11 +107,15 @@ export default class FooterMain extends Component {
                     <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
                 </div>
                 <div className="content__footer-social">
-                    <a href="https://www.github.com/golemfactory">
-                        <u>github page</u>
+                    <span className="element__footer" onClick={this._openLogs}>
+                        <span className="icon-logs"/>
+                        <u>open logs</u>
+                    </span>
+                    <a className="element__footer" href="https://www.github.com/golemfactory">
+                        <span className="icon-golem-logo"/>{versionTemplate}
                     </a>
-                    <span>{versionTemplate}</span>
-                    <a href="https://chat.golem.network">
+                    <a className="element__footer" href="https://chat.golem.network">
+                        <span className="icon-chat"/>
                         <u>golem chat</u>
                     </a>
                 </div>

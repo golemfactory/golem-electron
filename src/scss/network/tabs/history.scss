@@ -1,8 +1,47 @@
 .content__history {
+    flex-direction: column;
     position: relative;
+    flex: 1 1 auto;
+    border-bottom: 1px solid $color-border;
+
     z-index: 1;
     width: 100%;
+    height: calc(100% - 360px);
     box-sizing: border-box;
+    overflow: hidden;
+
+    .tab--sticky {
+        position: sticky;
+        top: 0;
+        background: $color-text4;
+        z-index: 4;
+        text-align: left;
+    }
+
+    .tab__title:nth-child(2) {
+        margin-right: 40px;
+    }
+
+    .tab__back {
+        flex: 0 1 150px;
+        text-align: right;
+        font-size: 7pt;
+        font-weight: 500;
+        color: $color-primary;
+        cursor: pointer;
+        line-height: 3.2em;
+        height: 30px;
+
+        .icon-back-up {
+            position: relative;
+            font-size: 10pt;
+            bottom: -2px;
+        }
+    }
+
+    .ReactVirtualized__List{
+        overflow: overlay !important;
+    }
 }
 
 .item__history {
@@ -11,13 +50,13 @@
     align-items: center;
     text-align: left;
     box-sizing: border-box;
+    height: 76px;
     & + .item__history {
         border-top: 1px solid $color-border;
     }
     &:last-child {
         border-bottom: 1px solid $color-border;
     }
-    height: 80px;
     h5 {
         padding: 0;
         margin: 0 0 2px 0;
@@ -32,7 +71,7 @@
             line-height: 1.4em;
             & + span {
                 &::before {
-                    content: '|';
+                    content: "|";
                     padding: 0 10px;
                     font-size: 11pt;
                     color: #979797;
@@ -47,14 +86,32 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        a{
+        a {
             padding-bottom: 3.2pt;
         }
     }
     .amount__history {
         font-weight: 400;
         font-size: 11pt !important;
-        transition: .1s margin-right;
+        transition: 0.1s margin-right;
+
+        .finance__indicator {
+            &.indicator {
+                &--down,
+                &--up {
+                    font-weight: 400;
+                    font-size: 10pt;
+                    margin-right: 5px;
+                }
+
+                &--down {
+                    color: $color-error;
+                }
+                &--up {
+                    color: $color-accent1;
+                }
+            }
+        }
     }
     .icon-new-window {
         visibility: hidden;

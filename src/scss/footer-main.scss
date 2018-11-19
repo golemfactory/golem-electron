@@ -69,11 +69,18 @@
         width: 100%;
         padding: 0 25px;
         height: 30px;
-        font-size: 8pt;
+        font-size: 7pt;
         border-top: 1px solid $color-border;
         box-sizing: border-box;
-        a{
+
+        .element__footer{
+            @include flex;
+            cursor: pointer;
             color: $color-text2;
+        }
+
+        [class^="icon-"], [class*=" icon-"] {
+            font-size: 14pt;
         }
     }
 

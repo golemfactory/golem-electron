@@ -1,0 +1,46 @@
+.container__tube {
+	border: 1px solid $color-border;
+	border-radius: 50px;
+	box-sizing: border-box;
+	margin: 0 20px;
+	font-size: 7pt;
+	flex: 0 0 28px;
+
+	.content__tube {
+		@include flex;
+		justify-content: space-evenly;
+		height: 26px;
+
+		.finance__indicator {
+			&.indicator {
+				&--down,
+				&--up {
+					font-weight: 400;
+					margin-right: 2px;
+				}
+
+				&--down {
+					color: $color-error;
+				}
+				&--up {
+					color: $color-accent1;
+				}
+			}
+		}
+	}
+
+	.btn__transaction-history {
+		cursor: pointer;
+		height: 26px;
+		line-height: 28px;
+		z-index: 1;
+		position: relative;
+		color: $color-primary;
+
+		.icon-transaction-history {
+			position: relative;
+			font-size: 12pt;
+			bottom: -4px;
+		}
+	}
+}

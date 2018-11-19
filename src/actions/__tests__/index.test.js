@@ -464,15 +464,6 @@ describe('actions', () => {
         expect(actions.setBalance(payload)).toEqual(expectedAction)
     })
 
-    it('should create an action to setAutoLaunch', () => {
-        const payload = false
-        const expectedAction = {
-            type: actions.dict.SET_AUTOLAUNCH,
-            payload
-        }
-        expect(actions.setAutoLaunch(payload)).toEqual(expectedAction)
-    })
-
     it('should create an action to setTaskList', () => {
         const payload = [{ id: 0 }]
         const expectedAction = {

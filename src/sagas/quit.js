@@ -28,6 +28,5 @@ export function* terminateGolemBase(session, {_cb}) {
  * @yield   {Object}            [Action object]
  */
 export function* quitFlow(session) {
-	console.log("session", session);
     yield takeLatest(APP_QUIT, terminateGolemBase, session)
 }

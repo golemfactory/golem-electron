@@ -32,23 +32,6 @@ export class PasswordModal extends React.Component {
         this._handleCancel = ::this._handleCancel
     }
 
-    clickOutside(parent, event) {
-            var isClickInside = (parent.contains(event.target) && !parent.isEqualNode(event.target));
-            if (!isClickInside) {
-                this._handleCancel()
-            }
-    }
-
-    componentDidMount() {
-        this._specifiedElement = this.refs.modalContent
-        this._clickOutside = this.clickOutside.bind(this, this._specifiedElement)
-        window.applicationSurface.addEventListener('click', this._clickOutside)
-    }
-
-    componentWillUnmount() {
-        window.applicationSurface.removeEventListener('click', this._clickOutside)
-    }
-
     componentWillReceiveProps(nextProps) {
         if(nextProps.passwordModal.error && this.state.loadingIndicator){
             const container = document.getElementById("passwordModalContainer")
@@ -94,7 +77,8 @@ export class PasswordModal extends React.Component {
         }
     }
 
-    _setPassword(){
+    _setPassword(event){
+        event.preventDefault();
         this.props.actions.setPassword(this.state.password)
         this.setState({
             loadingIndicator: true
@@ -126,9 +110,9 @@ export class PasswordModal extends React.Component {
                     <div>
                         <strong>Enter password</strong>
                         <br/>
-                        <hint>to unlock your Golem</hint>
+                        <span className="notice">to unlock your Golem</span>
                     </div>
-                    <form onSubmit={::this._setPassword}>
+                    <form id="loginForm" onSubmit={::this._setPassword}>
                      {(passwordModal && passwordModal.register) ?
                         [<div key="1" className="container__field">
                             <label>Password</label>
@@ -179,11 +163,21 @@ export class PasswordModal extends React.Component {
                             <span ref="errorInfo" className="error-info"/>
                         </div>
                         }
-                        <button type="submit" className={`btn--primary ${loadingIndicator && 'btn--loading'}`} disabled={loadingIndicator}> {loadingIndicator ? 'Signing in' : ((passwordModal && passwordModal.register) ? "Register": "Login") }{loadingIndicator && <span className="jumping-dots">
-                          <span className="dot-1">.</span>
-                          <span className="dot-2">.</span>
-                          <span className="dot-3">.</span>
-                        </span> }</button>
+                        <button 
+                            type="submit" 
+                            className={`btn--primary ${loadingIndicator && 'btn--loading'}`} 
+                            disabled={loadingIndicator}> {loadingIndicator 
+                                                            ? 'Signing in' 
+                                                            : ((passwordModal && passwordModal.register) 
+                                                                ? "Register"
+                                                                : "Login") }
+                            {loadingIndicator 
+                            &&  <span className="jumping-dots">
+                                    <span className="dot-1">.</span>
+                                    <span className="dot-2">.</span>
+                                    <span className="dot-3">.</span>
+                                </span> }
+                        </button>
                     </form>
                 </div>
             </div>

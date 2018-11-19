@@ -54,7 +54,7 @@ export default class PresetModal extends React.Component {
                 <form className="content__modal" onSubmit={::this._handleSave}>
                     <section className="section__naming">
                         <h4>Name your Preset</h4>
-                        {isNameExist && <hint>Name is already exist</hint>}
+                        {isNameExist && <span className="notice">Name is already exist</span>}
                         <input type="text" onChange={::this._handleNameInput} autoFocus required/>
                     </section>
                     <section className="section__info">

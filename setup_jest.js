@@ -11,10 +11,6 @@ global.render = render;
 global.mount = mount;
 global.toJson = toJson;
 
-// Fail tests on any warning
-console.error = message => {
-   throw new Error(message);
-};
 
 global.window.require = function () {
   return {
@@ -33,7 +29,11 @@ global.window.require = function () {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        checkUpdate: function (_old, _new) {},
+                        warn: function () {},
+                        isMac: function () {},
+                        isWin: function () {}
                     }
         },
         getGlobal: function () {
@@ -67,12 +67,21 @@ global.window.require = function () {
 
 global.window.electron = {
         remote: {
+            process:{
+                argv: {
+                    includes: function(){}
+                }
+            },
             require: function () {
                 return {
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
-                        }
+                        },
+                        checkUpdate: function (_old, _new) {},
+                        warn: function () {},
+                        isMac: function () {},
+                        isWin: function () {}
                     }
             },
             getGlobal: function () {

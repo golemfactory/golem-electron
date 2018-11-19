@@ -17,6 +17,25 @@ const {remote} = window.electron;
 const {BrowserWindow, dialog} = remote
 const mainProcess = remote.require('./index')
 
+/**
+ * Helper function
+ */
+
+const getSiblings = function (elem) {
+    var siblings = [];
+    var sibling = elem.parentNode.firstChild;
+    for (; sibling; sibling = sibling.nextSibling) {
+        if (sibling.nodeType !== 1 || sibling === elem) continue;
+        siblings.push(sibling);
+    }
+    return siblings;
+};
+
+/**
+ * Helper function
+ */
+
+
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     connectedPeers: state.realTime.connectedPeers,
@@ -43,6 +62,10 @@ export class Header extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            disableUploadTooltip: false,
+            isMac: mainProcess.isMac()
+        }
     }
 
     componentDidMount() {
@@ -115,7 +138,7 @@ export class Header extends Component {
     /**
      * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
      */
-    _onFileDialog() {
+    _onFileDialog(dialogRules = []) {
 
         const checkDominantType = function(files) {
             const isBiggerThanOther = function(element, index, array) {
@@ -168,7 +191,7 @@ export class Header extends Component {
          * @see https://electron.atom.io/docs/api/dialog/#dialogshowopendialogbrowserwindow-options-callback
          */
         dialog.showOpenDialog({
-            properties: ['openFile', 'openDirectory', 'multiSelections']
+            properties: [...dialogRules, 'multiSelections']
         }, onFileHandler)
 
     }
@@ -183,6 +206,25 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
+    _toggleUploadMenu(elm){
+        const uploadIcon = elm.currentTarget
+        const siblings = getSiblings(uploadIcon.parentNode)
+        const listener = () => {
+            uploadIcon.classList.remove("upload-menu-active")
+            listener && uploadIcon.removeEventListener("mouseenter", listener)
+            this.setState({
+                disableUploadTooltip: false
+            })
+        }
+
+        uploadIcon.classList.toggle("upload-menu-active")
+        siblings.map( item => item.addEventListener("mouseenter", listener))
+
+        this.setState({
+            disableUploadTooltip: !this.state.disableUploadTooltip
+        })
+    }
+
     // <div className="top-titlebar">
     //     <div style={styling} className="draggable draggable--win"></div>
     //     <div>
@@ -195,7 +237,8 @@ export class Header extends Component {
     // </div>
 
     render() {
-        const {activeHeader, taskDetails, detail, isEngineOn, connectedPeers, isMainNet} = this.props
+        const {disableUploadTooltip, isMac} = this.state
+        const {activeHeader, connectedPeers, taskDetails, detail, isEngineOn, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
         }
@@ -213,8 +256,14 @@ export class Header extends Component {
                     <Tooltip
                       html={this._taskHints(isEngineOn, connectedPeers)}
                       position="bottom"
-                      trigger="mouseenter">
-                        <li className="menu__item" onClick={(isEngineOn && connectedPeers) ? ::this._onFileDialog : undefined}><span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task"/></li>
+                      trigger="mouseenter"
+                      disabled={disableUploadTooltip}
+                      hideOnClick={connectedPeers}>
+                        <li className="menu__item upload-menu" onClick={(isEngineOn && connectedPeers) ? (isMac ? this._onFileDialog.bind(this, ["openFile", "openDirectory"]) : ::this._toggleUploadMenu) : undefined}>
+                            <span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task" title="Close"/>
+                            <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add File" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
+                            <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add Folder" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
+                        </li>
                     </Tooltip>
                     <Tooltip
                       html={(<p>Docs</p>)}

@@ -6,7 +6,6 @@ describe('input reducer', () => {
             preview: false
         })).toEqual(
         {
-            "autoLaunch": false, 
             "developerMode": false, 
             "expandedPreview": false, 
             "preview": false, 
@@ -34,16 +33,6 @@ describe('input reducer', () => {
             }
         })
         ).toEqual({"expandedPreview": true})
-    })
-
-    it('should handle SET_AUTOLAUNCH', () => {
-        expect(input({
-            autoLaunch: false
-        }, {
-            type: 'SET_AUTOLAUNCH',
-            payload: true
-        })
-        ).toEqual({"autoLaunch": true})
     })
 
     it('should handle SET_ZOOM_RATIO', () => {

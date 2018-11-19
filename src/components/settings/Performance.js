@@ -25,7 +25,7 @@ const mockList = [
         title: 'Luxrender'
     },
     {
-        icon: 'icon-blender-grey',
+        icon: 'icon-blender-bw',
         title: 'Blender'
     }
 ]

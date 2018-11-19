@@ -4,13 +4,17 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
+import {getStatus} from '../../reducers'
 
 import Table from './Table'
 import Preview from './Preview'
 import Frame from './frame'
 import DropZone from './../Dropzone'
+import TransactionTube from '../transaction'
+import History from '../History'
 import Wallet from '../wallet'
 import DeleteModal from './modal/DeleteModal'
+import RestartModal from './modal/RestartModal'
 import FooterMain from './../FooterMain'
 
 const mapStateToProps = state => ({
@@ -18,8 +22,9 @@ const mapStateToProps = state => ({
     currency: state.currency,
     preview: state.input.preview,
     expandedPreview: state.input.expandedPreview,
-    golemStatus: state.realTime.golemStatus,
+    status: getStatus(state, 'golemStatus'),
     connectionProblem: state.info.connectionProblem,
+    chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
     isEngineLoading: state.info.isEngineLoading,
@@ -42,9 +47,14 @@ export class TaskPanel extends React.Component {
         this.state = {
             deleteModal: false,
             deleteCallback: null,
+            deleteProps: null,
+            restartModal: false,
+            restartCallback: null,
+            restartProps: null,
             previewId: null,
             previewSrc: null,
-            isWalletTray: false
+            isWalletTray: false,
+            toggleHistory: false
         }
     }
 
@@ -99,11 +109,29 @@ export class TaskPanel extends React.Component {
     }
 
     /**
+     * [_handleRestartModal func. makes  restart modal visible]
+     * @param  {[type]} restartId       [Id of selected task]
+     * @param  {[type]} restartCallback
+     */
+    _handleRestartModal(restartId, status, restartCallback) {
+        this.setState({
+            restartModal: true,
+            restartProps: {
+                restartId,
+                status,
+                restartCallback
+            },
+
+        })
+    }
+
+    /**
      * [_closeModal funcs. closes modals.]
      */
     _closeModal() {
         this.setState({
             deleteModal: false,
+            restartModal: false
         })
     }
 
@@ -114,31 +142,43 @@ _toggleWalletTray(toggle){
     })
 }
 
+_toggleTransactionHistory = () => {
+    this.setState({
+        toggleHistory: !this.state.toggleHistory
+    })
+}
+
 // {preview && <div className="section__preview">
 //                         <Preview id={previewId} src={previewSrc}/> 
 //                     </div>}
 //                    <Footer {...this.props}  setPreviewExpanded={actions.setPreviewExpanded}/>
                      
     render() {
-        const {deleteModal, deleteProps, previewId, previewSrc, frameCount, psEnabled, isWalletTray} = this.state
+        const {deleteModal, restartModal, deleteProps, restartProps, previewId, previewSrc, frameCount, psEnabled, isWalletTray, toggleHistory} = this.state
         const {actions, preview, expandedPreview, balance, currency} = this.props
 
         return (
             <div className="content__task-panel">
                     { !isWalletTray && <Wallet balance={balance} currency={currency}/> }
-                    <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
-                        <DropZone>
-                            <div className="section__table">
-                                <Table 
-                                    deleteModalHandler={::this._handleDeleteModal} 
-                                    previewHandler={::this._setPreview} 
-                                    previewId={previewId} 
-                                    toggleWalletTray={::this._toggleWalletTray}/>
-                            </div>
-                        </DropZone>
-                    </div>
+                    <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory}/>
+                    {!toggleHistory
+                        ? <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
+                            <DropZone>
+                                <div className="section__table">
+                                    <Table 
+                                        deleteModalHandler={::this._handleDeleteModal} 
+                                        restartModalHandler={::this._handleRestartModal} 
+                                        previewHandler={::this._setPreview} 
+                                        previewId={previewId} 
+                                        toggleWalletTray={::this._toggleWalletTray}/>
+                                </div>
+                            </DropZone>
+                          </div>
+                        : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
+                    }
                     
                     {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
+                    {restartModal && <RestartModal closeModal={::this._closeModal} {...restartProps}/>}
                     <FooterMain {...this.props}/>
                 </div>
         )

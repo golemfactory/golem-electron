@@ -34,10 +34,7 @@ export function activatePreset(session, chosenPreset) {
             console.log("error", error);
             resolve({
                 type: SET_GOLEM_STATUS,
-                payload: {
-                    status: "Exception",
-                    message: "Resource allocation error"
-                }
+                payload: ['docker', 'allocation', 'exception']
             })
         }
 

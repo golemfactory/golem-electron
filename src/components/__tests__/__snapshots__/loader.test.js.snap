@@ -15,23 +15,33 @@ exports[`Loading should render an Loading container 1`] = `
     }
     width="1534"
   />
-  <Motion
-    style={
+  <Spring
+    config={
       Object {
-        "alpha": Object {
-          "damping": 80,
-          "precision": 0.01,
-          "stiffness": 80,
-          "val": 0,
-        },
-        "rotate": Object {
-          "damping": 60,
-          "precision": 0.01,
-          "stiffness": 80,
-          "val": 0,
-        },
+        "friction": 50,
+        "tension": 10,
       }
     }
-  />
+    delay={1000}
+    force={false}
+    from={
+      Object {
+        "alpha": 0,
+        "rotate": 0,
+      }
+    }
+    immediate={false}
+    inject={[Function]}
+    native={false}
+    reset={false}
+    to={
+      Object {
+        "alpha": 1,
+        "rotate": -24,
+      }
+    }
+  >
+    <Component />
+  </Spring>
 </div>
 `;

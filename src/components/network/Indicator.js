@@ -1,5 +1,5 @@
 import React from 'react';
-import { Motion, spring } from 'react-motion'
+import { Spring } from 'react-spring'
 import { timeStampToHR } from './../../utils/secsToHMS'
 const {remote} = window.electron;
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
@@ -117,32 +117,30 @@ export default class Indicator extends React.Component {
         return (
             <div className="content__indicator">
                 <span>{idx == 0 ? 'Wallet balance' : 'Gas balance'}</span>
-                <Motion defaultStyle={{
-                balanceAnimated: motionBalanceStart
-            }} style={{
-                balanceAnimated: spring(Number(balance[idx]*currencyRate), {
-                    stiffness: 500,
-                    damping: 50
-                })
-            }}>
+                <Spring 
+                from={{
+                    balanceAnimated: motionBalanceStart
+                }}
+                to={{
+                    balanceAnimated: Number(balance[idx]*currencyRate)
+                }}>
                     {({balanceAnimated}) => <span className="amount" onClick={::this.toggleUSD.bind(this, defaultCurrency)}>{!toggler && <span className="symbol__usd">$</span> }{::this.formatAmount(Number(balanceAnimated))}</span>}
-                </Motion>
+                </Spring>
                 <div className="currency-menu" role="menu">
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="GNT" onClick={this._convertTo.bind(this, dictCurrency.GNT)}>{(!toggler && defaultCurrency == dictCurrency.GNT) ? 'tUSD' : 'tGNT'}</span>
                     <span className="amount__item" role="menuitemradio" tabIndex="0" aria-label="ETH" onClick={this._convertTo.bind(this, dictCurrency.ETH)}>{(!toggler && defaultCurrency == dictCurrency.ETH) ? 'tUSD' : 'tETH'}</span>
                 </div>
                 {!toggler && <span className="currency-info">Estimated Amount</span>}
                 {toggler && balance[2] && 
-                    <Motion defaultStyle={{
-                    timeAnimated: motionLastTimeStart
-                }} style={{
-                    timeAnimated: spring(+balance[idx + 2], {
-                        stiffness: 500,
-                        damping: 50
-                    })
-                }}>
+                    <Spring 
+                    from={{
+                        timeAnimated: motionLastTimeStart
+                    }}
+                    to={{
+                        timeAnimated: +balance[idx + 2]
+                    }}>
                         {({timeAnimated}) => <span className="currency-info__update">Last update: {this.formatTime(timeAnimated)}</span>}
-                    </Motion>
+                    </Spring>
                 }
             </div>
         );

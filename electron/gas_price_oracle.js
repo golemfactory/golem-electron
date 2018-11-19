@@ -2,7 +2,7 @@ const axios = require('axios');
 
 module.exports = async function getEstimatedGasPrice() {
 	try {
-		const {data} = await axios.get('https://www.etherchain.org/api/gasPriceOracles')
+		const {data} = await axios.get('https://www.etherchain.org/api/gasPriceOracle')
     	return {data, error: false};
 	} catch (error) {
 		// Error

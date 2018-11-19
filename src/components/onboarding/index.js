@@ -433,7 +433,7 @@ class OnboardIndex extends React.Component {
                             {_connectionProblem.issue === "PORT" ? 
                                 <span>It looks like you don't have ports forwarded. Follow <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">these steps.</a></span>
                                 :
-                                <span>Interface coomunication problem with Golem. Please restart.</span>
+                                <span>Interface communication problem with Golem. Please restart.</span>
                             }
                         </div>
                         <span className="icon-close" onClick={::this._closeInfo}/>
@@ -515,13 +515,13 @@ class OnboardIndex extends React.Component {
         } else if(_step > steps.STEP1){
             return <div>
                         <span 
-                            className="icon-arrow-left-white" 
+                            className="icon-arrow-left-small" 
                             onClick={::this._handlePrev} 
                             aria-label="Prev" 
                             tabIndex="0"/>
                         <span>{_step - 6} of 4</span>
                         <span
-                            className="icon-arrow-right-white" 
+                            className="icon-arrow-right-small" 
                             onClick={::this._handleNext} 
                             aria-label="Next" 
                             tabIndex="0"/>
@@ -530,7 +530,7 @@ class OnboardIndex extends React.Component {
             return <div>
                         <span>{_step - 6} of 4</span>
                         <span
-                            className="icon-arrow-right-white"
+                            className="icon-arrow-right-small"
                             aria-label="Next"
                             onClick={e => {
                                 this.step2.activityFormButton.click()

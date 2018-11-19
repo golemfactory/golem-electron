@@ -19,14 +19,23 @@ export default class WithdrawForm extends React.Component {
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
             sendTo: "",
             isValid: false,
-            isSubmitted: false
+            isSubmitted: false,
+            gasPriceOracle: {},
+            adjustedGasPrice: new BigNumber(0) //GWEI
         }
+
     }
 
     componentDidMount() {
         const { formData } = this.props
 
-        mainProcess.getEstimatedGasPrice().then(console.log);
+        mainProcess.getEstimatedGasPrice()
+            .then(({data}) => this.setState(
+                {
+                    gasPriceOracle: data,
+                    adjustedGasPrice: new BigNumber(data.standard)
+                }
+            ));
 
         this.inputSchema = {
             amount: yup.object().shape({
@@ -38,7 +47,7 @@ export default class WithdrawForm extends React.Component {
 
             sendTo: yup.object().shape({
                 sendTo: yup.string()
-                    .matches(/0x[a-fA-F0-9]{40}/)
+                    .matches(/^0x[a-fA-F0-9]{40}$/)
                     .required()
             })
         }
@@ -49,7 +58,7 @@ export default class WithdrawForm extends React.Component {
                 .max(this.props.balance.toNumber())
                 .required(),
             sendTo: yup.string()
-                .matches(/0x[a-fA-F0-9]{40}/)
+                .matches(/^0x[a-fA-F0-9]{40}$/)
                 .required()
         });
 
@@ -188,13 +197,17 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
-    _setGasPrice(val){
-        console.log(val)
+    _handleGasFeeSlider = (val) => {
+        this.setState({
+            adjustedGasPrice: new BigNumber(val)
+        })
     }
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid, isSubmitted} = this.state
+        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice} = this.state
+        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(0.000000001)
+        const totalAmount = amount.dividedBy(ETH_DENOM).plus(adjustedGasPriceInETH);
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
                     <div>
@@ -202,7 +215,7 @@ export default class WithdrawForm extends React.Component {
                         <div className="currency-tag">
                         	<span className="label-currency">{suffix}</span>
                         	<br/>
-                        	<strong>{balance.toFixed(4)}...</strong>
+                        	<strong>{balance.toFixed(8)}...</strong>
                         	<br/>
                         	<span className="label-estimation">est. $ {balance.multipliedBy(currency[suffix]).toFixed(2)}...</span>
                         </div>
@@ -222,6 +235,33 @@ export default class WithdrawForm extends React.Component {
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
                     	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                    </div>
+                    <div className="form-field">
+                        <label>Adjust transaction fee
+                            <span className="average-cost"> | standard transfer cost: {gasPriceOracle.standard > 0 && Number(gasPriceOracle.standard).toFixed(1)} gwei</span>
+                        </label>
+                        <div className="gas_fee_slider">
+                            {gasPriceOracle.standard > 0 
+                                && <div>
+                                    <Slider 
+                                        inputId="gas_fee_slider" 
+                                        value={Number(gasPriceOracle.standard)} 
+                                        min={Math.trunc(gasPriceOracle.safeLow)}
+                                        max={Math.trunc(gasPriceOracle.fastest)} 
+                                        step={0.1}
+                                        mainColor={"#1c76e7"} 
+                                        aria-label="Adjust Gas Fee with Slider" 
+                                        callback={this._handleGasFeeSlider}
+                                        warn={false}/>
+                                    <span className="slider__info-gas slider__info-gas--slow">Takes more time</span>
+                                    <span className="slider__info-gas slider__info-gas--fast">Faster</span>
+                                </div>
+                                }
+                        </div>
+                        <div className="total-amount__info">
+                            <span>Total: {totalAmount.toFixed(8)} ETH</span>
+                            <span>est. ${totalAmount.multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                        </div>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
