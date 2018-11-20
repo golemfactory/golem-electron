@@ -33,6 +33,7 @@
     justify-content: space-around; // <-- space-between is unexpectedly buggy in here
     transition: margin .5s;
     box-sizing: border-box;
+    margin-bottom: 20px;
     @media screen and (min-width: 610px) {
         margin: 0 90px;
     }
@@ -46,15 +47,15 @@
     text-align: center;
 }
 
-.switch__gpu {
+.switch__gpu,
+.switch__trust {
     @include flex;
-
     position: relative;
     justify-content: center;
-    padding: 40px 0 0 0;
-    font-size: 9pt;
+    padding: 20px 0 0 0;
+    font-size: 8pt;
     .switch-box {
-        padding: 0 20px 0 0;
+        padding: 0 30px 0 0;
         margin: 0 0 3px 0;
     }
 
@@ -62,11 +63,19 @@
         position: absolute;
         font-size: 7pt;
         margin-left: 2px;
-        top: 40px;
+        top: 20px;
         color: $color-text3;
         cursor: pointer;
     }
 }
+
+.switch__trust {
+    padding: 20px 0 0 0px;
+    .switch-box {
+        padding: 0 20px 0 0;
+    }
+}
+
 
 .advanced__tips {
     padding: 36px 25px 15px 25px;
