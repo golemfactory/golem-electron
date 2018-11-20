@@ -8,6 +8,7 @@ import {modals, currencyIcons} from './../../../../constants'
 const {clipboard, remote } = window.electron;
 const mainProcess = remote.require('./index');
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const GWEI_DENOM = 10 ** 9;
 
 export default class WithdrawForm extends React.Component {
 
@@ -21,7 +22,8 @@ export default class WithdrawForm extends React.Component {
             isValid: false,
             isSubmitted: false,
             gasPriceOracle: {},
-            adjustedGasPrice: new BigNumber(0) //GWEI
+            adjustedGasPrice: new BigNumber(0), //GWEI
+            gasCost: new BigNumber(0) //WEI
         }
 
     }
@@ -30,12 +32,17 @@ export default class WithdrawForm extends React.Component {
         const { formData } = this.props
 
         mainProcess.getEstimatedGasPrice()
-            .then(({data}) => this.setState(
-                {
-                    gasPriceOracle: data,
-                    adjustedGasPrice: new BigNumber(data.standard)
-                }
-            ));
+            .then(({data}) => {
+                this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
+                    .then(gasCost => {
+                        if(gasCost)
+                            this.setState({
+                                gasPriceOracle: data,
+                                adjustedGasPrice: new BigNumber(data.standard),
+                                gasCost: new BigNumber(gasCost)
+                            })
+                    })      
+            });
 
         this.inputSchema = {
             amount: yup.object().shape({
@@ -108,7 +115,7 @@ export default class WithdrawForm extends React.Component {
      */
     _handleApply(e) {
         e.preventDefault();
-        const { amount, sendTo } = this.state
+        const { amount, sendTo, adjustedGasPrice } = this.state
 
         this.setState({
             isSubmitted: true
@@ -117,9 +124,9 @@ export default class WithdrawForm extends React.Component {
         mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
         .then(sendToChecksum => {
             this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
-            .then(result => {
-                if(result)
-                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
+            .then(gasCost => {
+                if(gasCost)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(gasCost), adjustedGasPrice)
             })
             .catch(error => console.error);
         })
@@ -198,15 +205,21 @@ export default class WithdrawForm extends React.Component {
     }
 
     _handleGasFeeSlider = (val) => {
-        this.setState({
-            adjustedGasPrice: new BigNumber(val)
-        })
+        this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
+            .then(gasCost => {
+                if(gasCost)
+                    this.setState({
+                        adjustedGasPrice: new BigNumber(val),
+                        gasCost: new BigNumber(gasCost)
+                    })
+            })
     }
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice} = this.state
-        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(0.000000001)
+        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice, gasCost} = this.state
+        const gasCostInGWEI = gasCost.dividedBy(GWEI_DENOM)
+        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(gasCostInGWEI).dividedBy(GWEI_DENOM);
         const totalAmount = amount.dividedBy(ETH_DENOM).plus(adjustedGasPriceInETH);
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>

@@ -5,6 +5,7 @@ import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const GWEI_DENOM = 10 ** 9;
 
 export default class Confirmation extends React.Component {
 
@@ -36,9 +37,12 @@ export default class Confirmation extends React.Component {
     }
 
     render() {
-        const {type, suffix, formData, currency, gasCost} = this.props
+        const {type, suffix, formData, currency, gasCost, gasPrice} = this.props
         const {amount, sendTo} = formData
         const { lockApply } = this.state
+        const gasCostInGWEI = gasCost.dividedBy(GWEI_DENOM)
+        const totalGasInGWEI = gasCostInGWEI.multipliedBy(gasPrice)
+        const totalGasPrice = totalGasInGWEI.dividedBy(GWEI_DENOM)
         return (
                 <div className="content__modal content__modal--confirmation ">
                     <div>
@@ -58,9 +62,9 @@ export default class Confirmation extends React.Component {
                     <div className="info-gas__container">
                         <strong className="info-label">GAS price</strong>
                         <br/>
-                        <strong className="info-price">{gasCost.dividedBy(ETH_DENOM).toFixed(5)}...</strong><span>ETH</span>
+                        <strong className="info-price">{totalGasPrice.toFixed(5)}...</strong><span>ETH</span>
                         <br/>
-                        <span className="info-estimation">est. $ {gasCost.dividedBy(ETH_DENOM).multipliedBy(currency["ETH"]).toFixed(2)}</span>
+                        <span className="info-estimation">est. $ {totalGasPrice.multipliedBy(currency["ETH"]).toFixed(2)}</span>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleBack}>Back</span>
