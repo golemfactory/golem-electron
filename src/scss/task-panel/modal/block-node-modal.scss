@@ -8,16 +8,19 @@
         .icon-blocked {
             &:before {
                 content: "\e927";
+                padding-left: 30px;
+                padding-right: 10px;
             }
             display: inline-block;
             color: $color-text4;
             background: #f33333;
-            font-size: 7em;
+            font-size: 3em;
+            padding: 20px 0;
             text-align: center;
             border-radius: 50%;
         }
         .icon-checkmark {
-            padding: 40px 40px;
+            padding: 30px 30px;
             display: inline-block;
             border-radius: 50%;
             box-shadow: 0px 0px 0px 3px rgb(100, 193, 134);
