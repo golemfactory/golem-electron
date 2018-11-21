@@ -180,11 +180,14 @@ export class Resources extends React.Component {
                                 : { value: resource, max: 100 }
         return (
             <div className="content__resources">
-                <div className="advanced-toggler" onClick={this._toggleAdvanced.bind(null, max)}>
-                        { toggleAdvanced
-                            ? <span><span className="icon-settings-simplified"/>Simplified</span>
-                            : <span><span className="icon-settings"/>Advanced</span>
-                        }
+                <div className="advanced-toggler">
+                        <h5>Resources</h5>
+                        <div className="toggler-btn" onClick={this._toggleAdvanced.bind(null, max)}>
+                            { toggleAdvanced
+                                ? <span><span className="icon-settings-simplified"/>Simplified</span>
+                                : <span><span className="icon-settings"/>Advanced</span>
+                            }
+                        </div>
                 </div>
                 <Transition
                     items={
@@ -230,7 +233,7 @@ export class Resources extends React.Component {
                         }}>{item}</animated.div>
                     }
                 </Transition>
-                <div style={{marginTop: "80px"}}>
+                <div style={{marginTop: "90px"}}>
                 {max.memory 
                     ? <TrailEffect 
                         native 

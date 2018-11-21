@@ -11,15 +11,22 @@
     .advanced-toggler {
         @include flex;
         flex-direction: row;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         text-align: right;
-        font-size: 8pt;
         font-weight: 500;
-        margin-top: 30px;
-        color: $color-primary;
+        margin-top: 40px;
         transition: color 0.5s;
-        cursor: pointer;
+
+        .toggler-btn{
+            cursor: pointer;
+            color: $color-primary;
+            font-size: 8pt;
+
+            &:hover {
+                color: $button-hover-color;
+            }
+        }
 
         [class^="icon-"],
         [class*=" icon-"] {
@@ -27,13 +34,9 @@
             top: 1px;
             margin-right: 5px;
         }
-
-        &:hover {
-            color: $button-hover-color;
-        }
     }
     .slider {
-        margin: 30px 0 20px 0;
+        margin: 30px 0 40px 0;
     }
     .icon-single-server {
         font-size: 16pt;
@@ -46,10 +49,10 @@
 }
 
 .resource-switch-panel{
-    margin-top: -70px;
+    margin-top: -90px;
     transition: .5s margin-top;
     &.expand{
-        margin-top: 40px;
+        margin-top: -12px;
     }
 
     .switch__gpu,
@@ -60,6 +63,11 @@
         justify-content: flex-start;
         padding: 15px;
         font-size: 9pt;
+
+        .switch-box {
+            padding: 0 10px 0 0;
+            margin: 0 0 3px 0;
+        }
 
         .icon-question-mark{
             position: absolute;
@@ -73,7 +81,7 @@
     
 
     .slider__tips {
-        margin-top: 30px;
+        margin-top: 18px;
         font-size: 9pt;
         padding: 0 26px;
         line-height: 1.6em;
