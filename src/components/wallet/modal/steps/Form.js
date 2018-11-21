@@ -23,23 +23,26 @@ export default class WithdrawForm extends React.Component {
             isSubmitted: false,
             gasPriceOracle: {},
             adjustedGasPrice: new BigNumber(0), //GWEI
-            gasCost: new BigNumber(0) //WEI
+            gasLimit: new BigNumber(0) //WEI
         }
 
     }
 
     componentDidMount() {
         const { formData } = this.props
+        const gasPriceInGWEI = new BigNumber(formData.gasPrice).dividedBy(GWEI_DENOM)
 
         mainProcess.getEstimatedGasPrice()
             .then(({data}) => {
                 this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
-                    .then(gasCost => {
-                        if(gasCost)
+                    .then(gasLimit => {
+                        if(gasLimit)
                             this.setState({
                                 gasPriceOracle: data,
-                                adjustedGasPrice: new BigNumber(data.standard),
-                                gasCost: new BigNumber(gasCost)
+                                adjustedGasPrice: gasPriceInGWEI.isGreaterThan(0) 
+                                                    ? gasPriceInGWEI 
+                                                    : new BigNumber(data.standard),
+                                gasLimit: new BigNumber(gasLimit)
                             })
                     })      
             });
@@ -124,9 +127,9 @@ export default class WithdrawForm extends React.Component {
         mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
         .then(sendToChecksum => {
             this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
-            .then(gasCost => {
-                if(gasCost)
-                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(gasCost), adjustedGasPrice)
+            .then(gasLimit => {
+                if(gasLimit)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(gasLimit), adjustedGasPrice)
             })
             .catch(error => console.error);
         })
@@ -206,20 +209,19 @@ export default class WithdrawForm extends React.Component {
 
     _handleGasFeeSlider = (val) => {
         this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
-            .then(gasCost => {
-                if(gasCost)
+            .then(gasLimit => {
+                if(gasLimit)
                     this.setState({
                         adjustedGasPrice: new BigNumber(val),
-                        gasCost: new BigNumber(gasCost)
+                        gasLimit: new BigNumber(gasLimit)
                     })
             })
     }
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice, gasCost} = this.state
-        const gasCostInGWEI = gasCost.dividedBy(GWEI_DENOM)
-        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(gasCostInGWEI).dividedBy(GWEI_DENOM);
+        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice, gasLimit} = this.state
+        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(gasLimit).dividedBy(GWEI_DENOM);
         const totalAmount = amount.dividedBy(ETH_DENOM).plus(adjustedGasPriceInETH);
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
@@ -255,10 +257,10 @@ export default class WithdrawForm extends React.Component {
                         </label>
                         <div className="gas_fee_slider">
                             {gasPriceOracle.standard > 0 
-                                && <div>
+                                ? <div>
                                     <Slider 
                                         inputId="gas_fee_slider" 
-                                        value={Number(gasPriceOracle.standard)} 
+                                        value={adjustedGasPrice.toNumber()} 
                                         min={Math.trunc(gasPriceOracle.safeLow)}
                                         max={Math.trunc(gasPriceOracle.fastest)} 
                                         step={0.1}
@@ -268,6 +270,9 @@ export default class WithdrawForm extends React.Component {
                                         warn={false}/>
                                     <span className="slider__info-gas slider__info-gas--slow">Takes more time</span>
                                     <span className="slider__info-gas slider__info-gas--fast">Faster</span>
+                                </div>
+                                : <div className="loading__slider">
+                                    <span>Gas price fetching...</span>
                                 </div>
                                 }
                         </div>

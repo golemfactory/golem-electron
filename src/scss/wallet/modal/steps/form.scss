@@ -115,6 +115,12 @@
         }
     }
 
+    .loading__slider{
+        font-size: 9pt;
+        line-height: 2em;
+        text-align: center;
+    }
+
     .total-amount__info{
         @include flex;
         justify-content: space-between;

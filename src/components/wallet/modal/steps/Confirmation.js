@@ -37,12 +37,10 @@ export default class Confirmation extends React.Component {
     }
 
     render() {
-        const {type, suffix, formData, currency, gasCost, gasPrice} = this.props
-        const {amount, sendTo} = formData
+        const {type, suffix, formData, currency, txCost} = this.props
+        const {amount, sendTo, gasPrice} = formData
         const { lockApply } = this.state
-        const gasCostInGWEI = gasCost.dividedBy(GWEI_DENOM)
-        const totalGasInGWEI = gasCostInGWEI.multipliedBy(gasPrice)
-        const totalGasPrice = totalGasInGWEI.dividedBy(GWEI_DENOM)
+        const totalTXCost = txCost.dividedBy(GWEI_DENOM)
         return (
                 <div className="content__modal content__modal--confirmation ">
                     <div>
@@ -62,9 +60,9 @@ export default class Confirmation extends React.Component {
                     <div className="info-gas__container">
                         <strong className="info-label">GAS price</strong>
                         <br/>
-                        <strong className="info-price">{totalGasPrice.toFixed(5)}...</strong><span>ETH</span>
+                        <strong className="info-price">{totalTXCost.toFixed(5)}...</strong><span>ETH</span>
                         <br/>
-                        <span className="info-estimation">est. $ {totalGasPrice.multipliedBy(currency["ETH"]).toFixed(2)}</span>
+                        <span className="info-estimation">est. $ {totalTXCost.multipliedBy(currency["ETH"]).toFixed(2)}</span>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleBack}>Back</span>

@@ -12,6 +12,7 @@ import Result from "./steps/Result"
 import {modals, currencyIcons} from './../../../constants'
 
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const GWEI_DENOM = 10 ** 9;
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey
@@ -32,11 +33,10 @@ export class WithdrawModal extends React.Component {
                 amount: new BigNumber(0).multipliedBy(ETH_DENOM),
                 sendFrom: props.publicKey,
                 sendTo: "",
-                isSuccess: false,
-                txList: []
+                gasPrice: new BigNumber(0)
             },
-            gasCost: new BigNumber(0),
-            gasPrice: new BigNumber(0)
+            isSuccess: false,
+            txList: []
         }
     }
 
@@ -59,7 +59,7 @@ export class WithdrawModal extends React.Component {
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
-    _handleApply(_amount, _sendTo, _suffix, _gasCost = 0, _gasPrice) {
+    _handleApply(_amount, _sendTo, _suffix, _gasLimit = 0, _gasPrice) {
 
         //TO DO go to confirmation screen
         if(this.state.index == 0){
@@ -68,13 +68,14 @@ export class WithdrawModal extends React.Component {
                     sendFrom: this.props.publicKey,
                     amount: _amount,
                     sendTo: _sendTo,
-                    type: _suffix
+                    type: _suffix,
+                    gasPrice: _gasPrice.multipliedBy(GWEI_DENOM).toNumber() //WEI
                 },
-                gasCost: _gasCost,
-                gasPrice: _gasPrice
+                gasLimit: _gasLimit, //GWEI
+                txCost: _gasPrice.multipliedBy(_gasLimit) //GWEI
             }, () => {
                 this.setState({
-                        index: this.state.index + 1
+                    index: this.state.index + 1
                 })
             })
         } else if(this.state.index === 1){
@@ -95,11 +96,12 @@ export class WithdrawModal extends React.Component {
 
     _withdrawAsync(_formData){
         return new Promise((response, reject) => {
-            const {amount, sendTo, type} = _formData
+            const {amount, sendTo, type, gasPrice} = _formData
             this.props.actions.withdraw({
                     amount: amount.toString(), 
                     sendTo, 
-                    type
+                    type,
+                    gasPrice
                 },
                 response,
                 reject)
@@ -121,8 +123,7 @@ export class WithdrawModal extends React.Component {
                     backHandler={::this._handleBack} 
                     applyHandler={::this._handleApply}
                     formData={this.state.formData}
-                    gasCost={this.state.gasCost}
-                    gasPrice={this.state.gasPrice}
+                    txCost={this.state.txCost}
                     />
             case 2:
                 return <Result 
