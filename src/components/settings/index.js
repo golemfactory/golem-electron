@@ -6,6 +6,7 @@ import * as Actions from '../../actions'
 import Personal from './Personal'
 import Performance from './Performance'
 import Price from './Price'
+import Concent from './Concent'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
 import Geth from './Geth'
@@ -25,6 +26,10 @@ const accordionItems = [
     {
         title: 'Price',
         content: <Price/>
+    },
+    {
+        title: 'Concent Settings',
+        content: <Concent/>
     },
     {
         title: 'Network Trust',

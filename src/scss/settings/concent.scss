@@ -1,0 +1,44 @@
+.content__concent{
+	@include flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	line-height: 1.8em;
+
+	height: 200px;
+    font-size: 9pt;
+
+    a {
+    	font-weight: 400;
+    }
+
+    .tips__concent{
+    	margin: 20px 0;
+    }
+
+    .switch__concent {
+        @include flex;
+        flex-direction: row;
+        position: relative;
+        justify-content: flex-start;
+        padding: 15px;
+        font-size: 9pt;
+        align-self: flex-start;
+        margin-bottom: 15px;
+
+        .switch-box {
+            padding: 0 10px 0 0;
+            margin: 0 0 3px 0;
+        }
+
+        .icon-question-mark{
+            position: absolute;
+            font-size: 7pt;
+            margin-left: 2px;
+            top: 10px;
+            color: $color-text3;
+            cursor: pointer;
+        }
+    }
+}
