@@ -42,7 +42,7 @@ function dayDiff(timeDiff){
             ((!flatDay && !flatHour && !flatMin) ? flatSec + "s " : "");
 }
 
-function timeStampToHR(timestamp, isFlatDate = false) {
+function timeStampToHR(timestamp, isFlatDate = false, onlyDate = false) {
     // Create a new JavaScript Date object based on the timestamp
     var date = new Date(parseInt(timestamp * (10 ** 3)));
     var hours = date.getHours();
@@ -52,13 +52,19 @@ function timeStampToHR(timestamp, isFlatDate = false) {
     var month = (date.getMonth() + 1); //January is 0!
     var year = date.getFullYear();
 
-    var ss = seconds.toString().padStart(2, "0");
-    var mm = minutes.toString().padStart(2, "0");
-    var hh = hours.toString().padStart(2, "0");
+
     var dd = days.toString().padStart(2, "0");
     var M = month.toString().padStart(2, "0");
 
     var formattedDate = dd + '/' + M + '/' + year;
+
+    if(onlyDate)
+        return `${isDateToday(formattedDate) ? formattedTime : formattedDate}`
+
+    var ss = seconds.toString().padStart(2, "0");
+    var mm = minutes.toString().padStart(2, "0");
+    var hh = hours.toString().padStart(2, "0");
+
     // Will display time in 10:30:23 format
     var formattedTime = hh + ':' + mm + ':' + ss;
 
