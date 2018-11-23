@@ -13,7 +13,8 @@ const filter = {
 const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
-    paymentHistory: getFilteredPaymentHistory.bind(null, state)
+    paymentHistory: getFilteredPaymentHistory.bind(null, state),
+    concentBalance: state.realTime.concentBalance
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -38,6 +39,11 @@ class TransactionTube extends Component {
         txHistoryBtn.classList.remove("selected")
         concentBtn.classList.remove("selected")
         elm.target.classList.add("selected")
+
+        if(elm.target.id === concentBtn.id){
+            this.props.actions.getConcentBalance();
+        }
+
         this.setState({
             showConcentInfo: elm.target.id === concentBtn.id
         })
@@ -49,6 +55,7 @@ class TransactionTube extends Component {
 
     _fetchLastTransaction = list => {
         const { created, type, value } = list[0].data;
+        const { concentBalance } = this.props;
         const { showConcentInfo } = this.state;
         return (
             <div className="content__tube">
