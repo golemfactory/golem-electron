@@ -175,6 +175,9 @@ export class History extends React.Component {
           <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">
             Outgoing
           </div>
+          <div className="tab__title" value="deposit" onClick={this._handleTab} role="tab" tabIndex="0">
+            Deposit
+          </div>
           <div className="tab__back">
             <span onClick={toggleTransactionHistory}><span className="icon-back-up"/>Back</span>
           </div>
