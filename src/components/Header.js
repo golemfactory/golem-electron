@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { hashHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -195,14 +194,28 @@ export class Header extends Component {
 
     }
 
-    _openDoc() {}
-
     _taskHints(engine, peers){
         if(!engine)
             return (<p>Golem is not started yet.</p>)
         if(!peers)
             return (<p>There's no connected node yet.</p>)
         return (<p>New Task</p>)
+    }
+
+    _fetchNotification = () => {
+        
+        const concentTemplate = <span>
+                    You are not using Concent service and thus are not fully secure. 
+                    <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
+                    <br/>Turn on Concent</span> or 
+                    <a href="https://docs.golem.network"> Learn more</a> about it.
+                </span>
+
+        return [concentTemplate]
+            .map( item => <div className="list-item__notification">
+                            <span className="bullet__list"/>
+                            <span>{item}</span>
+                        </div>)
     }
 
     // <div className="top-titlebar">
@@ -238,14 +251,31 @@ export class Header extends Component {
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
                     <Tooltip
-                      html={(<p>Notifications</p>)}
+                      arrow
+                      html={
+                            <div className="list__notification">
+                                {
+                                    this._fetchNotification()
+                                }
+                            </div>
+                        }
+                      interactive
                       position="bottom"
-                      trigger="mouseenter"
-                      hideOnClick={connectedPeers}>
-                        <li className="menu__item"><a href={DOCLINK}>
-                            <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation"/>
-                            </a>
-                        </li>
+                      theme="light"
+                      trigger="click"
+                      style={{right: "-20px"}}
+                      hideOnClick>
+                        <Tooltip
+                          html={(<p>Notifications</p>)}
+                          position="bottom"
+                          trigger="mouseenter"
+                          hideOnClick={connectedPeers}>
+                            <li className="menu__item">
+                                <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
+                                    <span className="indicator__notification">1</span>
+                                </span>
+                            </li>
+                        </Tooltip>
                     </Tooltip>
                     <Tooltip
                       html={
