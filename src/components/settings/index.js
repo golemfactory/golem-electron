@@ -105,7 +105,7 @@ export class Settings extends React.Component {
     loadAccordionMenu(data) {
         const {isDeveloperMode} = this.props
         return data
-        .filter((_, index) => isDeveloperMode || index < 5)
+        .filter((_, index) => isDeveloperMode || index < 6)
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>
