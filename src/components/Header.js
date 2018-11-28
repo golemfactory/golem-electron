@@ -212,7 +212,7 @@ export class Header extends Component {
                 </span>
 
         return [concentTemplate]
-            .map( item => <div className="list-item__notification">
+            .map( (item, index) => <div key={index.toString()} className="list-item__notification">
                             <span className="bullet__list"/>
                             <span>{item}</span>
                         </div>)
