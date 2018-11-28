@@ -13,6 +13,7 @@ import { accountFlow } from './account';
 import { advancedFlow } from "./advanced";
 import { balanceFlow } from "./balance";
 import { chainInfoFlow } from "./chainInfo";
+import { concentFlow } from "./concent";
 import { connectedPeersFlow } from "./connectedPeers";
 import { currencyFlow } from "./currency";
 import { encryptionFlow } from "./password";
@@ -248,6 +249,7 @@ export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
 
+    yield fork(concentFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
     yield fork(historyFlow, connection);

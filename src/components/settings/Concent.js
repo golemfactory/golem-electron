@@ -25,6 +25,8 @@ export class Concent extends React.Component {
     _toggleConcentSwitch = () => {
         this.setState({
             isConcentOn: !this.state.isConcentOn
+        }, () => {
+            this.props.actions.toggleConcent(this.state.isConcentOn)
         })
     }
 
