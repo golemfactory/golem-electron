@@ -7,20 +7,25 @@ import { config, _handleRPC } from './handler'
 const {TOGGLE_CONCENT, SET_CONCENT_SWITCH} = dict
 
 
-export function toggleConcent(session, payload) {
+export function toggleConcent(session, payload, toggleLock = false) {
     return new Promise((response, reject) => {
+
         function on_info(args) {
-            let info = args[0];
-            console.log("info", info);
+            let info = args[0]
+            console.log("info", info)
             response({
                 type: SET_CONCENT_SWITCH,
                 payload: info
             })
         }
-        if(payload)
-            _handleRPC(on_info, session, config.CONCENT_ON_RPC)
-        else
-            _handleRPC(on_info, session, config.CONCENT_OFF_RPC)
+
+        function on_lock(args) {
+            let lock = args[0];
+            console.log("lock", lock);
+            _handleRPC(on_info, session, payload ? config.CONCENT_ON_RPC : config.CONCENT_OFF_RPC)
+        }
+        
+        _handleRPC(on_lock, session, toggleLock ? config.CONCENT_UNLOCK : config.CONCENT_RELOCK)
     })
 }
 
@@ -28,11 +33,11 @@ export function toggleConcent(session, payload) {
  * [*toggleConcentBase generator toggle concent feature]
  * @param {[type]} session       [Session of the wamp connection]
  */
-export function* toggleConcentBase(session, {payload}) {
+export function* toggleConcentBase(session, {payload, toggleLock}) {
     const action = yield call(toggleConcent, session, payload);
     yield action && put(action)
 }
 
-export function* concentFlow(session, payload) {
+export function* concentFlow(session, payload, toggleLock) {
     yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
 }

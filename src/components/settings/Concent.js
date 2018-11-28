@@ -18,15 +18,23 @@ export class Concent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isConcentOn: false
+            isConcentOn: this.props.isConcentOn
         }
     }
 
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.isConcentOn !== this.props.isConcentOn){
+            this.setState({
+                isConcentOn: nextProps.isConcentOn
+            })
+        }
+    }
+    
     _toggleConcentSwitch = () => {
         this.setState({
             isConcentOn: !this.state.isConcentOn
-        }, () => {
-            this.props.actions.toggleConcent(this.state.isConcentOn)
+        },() => {
+            this.props.toggleConcentSwitch(this.state.isConcentOn)
         })
     }
 
@@ -55,7 +63,7 @@ export class Concent extends React.Component {
                                 <input 
                                     type="checkbox" 
                                     onChange={::this._toggleConcentSwitch} 
-                                    defaultChecked={isConcentOn}  
+                                    checked={isConcentOn}  
                                     aria-label="Trust switch providing/requesting" 
                                     tabIndex="0" 
                                     disabled={isEngineOn}/>
