@@ -71,10 +71,13 @@ export class Resources extends React.Component {
         const {systemInfo} = this.props
         let ratio = val / 100;
         let cpu_cores = systemInfo.cpu_cores * ratio
-        if (cpu_cores < 1 && val > 0) {
-            cpu_cores = 1
-            ratio = ratio / 2
+        const payOff = (1 - cpu_cores) / systemInfo.cpu_cores
+        
+        if(payOff > 0 && val > 0) {
+            cpu_cores = 1;
+            ratio -= payOff / 2;
         }
+
         const memory = systemInfo.memory * ratio;
         const disk = systemInfo.disk * ratio;
         return {
