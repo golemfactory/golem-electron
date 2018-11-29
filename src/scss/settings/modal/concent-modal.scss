@@ -1,12 +1,13 @@
 .container__concent-modal {
     .content__modal {
-        height: 220px;
+        height: 390px;
         text-align: center;
         padding: 20px;
-        .icon-warning {
+        font-size: 12pt;
+        .icon-lock {
             display: inline-block;
             color: $color-text4;
-            background: $color-accent2;
+            background: $button-active-color;
             font-size: 2.6em;
             width: 1em;
             height: 1em;
@@ -14,6 +15,30 @@
             padding: 0.3em;
             text-align: center;
             border-radius: 50%;
+        }
+
+        .radio-label-left {
+            line-height: 2.2em !important;
+            font-size: 9pt;
+            font-weight: 400;
+            color: #444 !important;
+
+            &:before {
+                margin-right: .5em !important;
+                font-size: 12pt !important;
+                margin-top: 2px;
+            }
+        }
+
+        .tips__conncent-modal{
+            font-size: 8pt;
+            line-height: 1.4em;
+            font-weight: 400;
+            color: $color-text2;
+        }
+
+        .btn--primary{
+            width: 100px;
         }
     }
 }

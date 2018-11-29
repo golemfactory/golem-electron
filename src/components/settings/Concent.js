@@ -38,11 +38,15 @@ export class Concent extends React.Component {
         })
     }
 
+    _handleUnlockDeposit = () = {
+        this.props.actions.unlockConcentDeposit()
+    }
+
     render() {
         const {isEngineOn} = this.props
         const {isConcentOn} = this.state
         return (
-            <div className="content__concent">
+            <div className="content__concent" style={{height: isConcentOn ? 260 : 360 }}>
                 <span>Concent is service of the Golem network, which aims to improve the integrity
                 <br/>and security of marketplace. As a Provider, you should be paid for
                 <br/>computations, and as a Requestor, you are assured to get proper results.
@@ -51,43 +55,55 @@ export class Concent extends React.Component {
                     <span>Remember! To activate the settings please stop Golem first.</span>
                 </div>
                 <div className="switch__concent">
-                        <div className={`switch-box ${!isConcentOn ? "switch-box--green" : ""}`}>
-                          <Tooltip
-                            html={<p>To change switch first stop Golem</p>}
-                            position="top-end"
-                            trigger="mouseenter"
-                            interactive={false}
-                            size="small"
-                            disabled={!isEngineOn}>
-                            <label className="switch">
-                                <input 
-                                    type="checkbox" 
-                                    onChange={::this._toggleConcentSwitch} 
-                                    checked={isConcentOn}  
-                                    aria-label="Trust switch providing/requesting" 
-                                    tabIndex="0" 
-                                    disabled={isEngineOn}/>
-                                <div className="switch-slider round"></div>
-                            </label>
-                          </Tooltip>
-                        </div>
-                        <span style={{
-                            color: isConcentOn ? '#4e4e4e' : '#9b9b9b'
-                        }}>Concent Service turned {!isConcentOn ? "off" : "on"}.
-                          <Tooltip
-                                    html={<p className='info-gpu'>
-                                            For now there is no option to set the amount of shared resources 
-                                            <br/> with GPU.So Golem will take up to 100% of your graphic card
-                                            <br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
-                                            Learn more.</a>
-                                        </p>}
-                                    position="top"
-                                    trigger="mouseenter"
-                                    interactive={true}>
-                              <span className="icon-question-mark"/>
-                          </Tooltip>
-                        </span>
+                    <div className={`switch-box ${!isConcentOn ? "switch-box--green" : ""}`}>
+                      <Tooltip
+                        html={<p>To change switch first stop Golem</p>}
+                        position="top-end"
+                        trigger="mouseenter"
+                        interactive={false}
+                        size="small"
+                        disabled={!isEngineOn}>
+                        <label className="switch">
+                            <input 
+                                type="checkbox" 
+                                onChange={::this._toggleConcentSwitch} 
+                                checked={isConcentOn}  
+                                aria-label="Trust switch providing/requesting" 
+                                tabIndex="0" 
+                                disabled={isEngineOn}/>
+                            <div className="switch-slider round"></div>
+                        </label>
+                      </Tooltip>
                     </div>
+                    <span style={{
+                        color: isConcentOn ? '#4e4e4e' : '#9b9b9b'
+                    }}>Concent Service turned {!isConcentOn ? "off" : "on"}.
+                      <Tooltip
+                                html={<p className='info-gpu'>
+                                        For now there is no option to set the amount of shared resources 
+                                        <br/> with GPU.So Golem will take up to 100% of your graphic card
+                                        <br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
+                                        Learn more.</a>
+                                    </p>}
+                                position="top"
+                                trigger="mouseenter"
+                                interactive={true}>
+                          <span className="icon-question-mark"/>
+                      </Tooltip>
+                    </span>
+                </div>
+                {
+                    !isConcentOn 
+                        && <div className="deposit-info__concent">
+                            <div>
+                                <span>
+                                    Deposit amount: <b>213123123 GNT</b>
+                                    <br/>You can turn concent on later without any additional transaction fees if you keep the deposit or unlock it. <a href="">Learn more</a>
+                                </span>
+                            </div>
+                            <button className="btn--primary" onClick={this._handleUnlockDeposit}>Unlock deposit</button>
+                        </div>
+                }
             </div>
         );
     }

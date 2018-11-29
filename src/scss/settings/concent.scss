@@ -5,15 +5,24 @@
 	align-items: center;
 	text-align: center;
 	line-height: 1.8em;
+    transition: .5s height;
 
-	height: 200px;
+	height: 360px;
     font-size: 9pt;
 
     a {
     	font-weight: 400;
     }
 
-    .tips__concent{
+    .btn--primary{
+        margin: 20px 0 35px 0;
+    }
+
+    .deposit-info__concent {
+        text-align: left;
+    }
+    
+    .tips__concent {
     	margin: 20px 0;
     }
 
@@ -22,7 +31,7 @@
         flex-direction: row;
         position: relative;
         justify-content: flex-start;
-        padding: 15px;
+        padding: 15px 0;
         font-size: 9pt;
         align-self: flex-start;
         margin-bottom: 15px;
