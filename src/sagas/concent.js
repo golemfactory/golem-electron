@@ -6,7 +6,7 @@ import { config, _handleRPC } from './handler'
 
 const {TOGGLE_CONCENT, UNLOCK_CONCENT_DEPOSIT, SET_CONCENT_SWITCH} = dict
 
-export function toggleConcent(session) {
+export function unlockDepositConcent(session) {
     return new Promise((response, reject) => {
 
         function on_unlock(args) {

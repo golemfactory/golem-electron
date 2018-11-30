@@ -38,7 +38,7 @@ export class Concent extends React.Component {
         })
     }
 
-    _handleUnlockDeposit = () = {
+    _handleUnlockDeposit = () => {
         this.props.actions.unlockConcentDeposit()
     }
 
