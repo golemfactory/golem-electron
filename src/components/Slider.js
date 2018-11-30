@@ -74,7 +74,7 @@ export default class Slider extends React.Component {
                 const sliderWidth = slider.getBoundingClientRect().width;
                 indicator.innerHTML = val;
                 indicator.style.color = color;
-                indicator.style.left = (val * ((sliderWidth - 32 )/(max)) + ((((appWidth - sliderWidth)/ 2) + 6))) - (this.props.transform ? 24 : 0) + 'px';
+                indicator.style.left = ((val - min) * ((sliderWidth - 32 )/(max - min)) + ((((appWidth - sliderWidth)/ 2) + 6))) - (this.props.transform ? 24 : 0) + 'px';
         } 
     }
 

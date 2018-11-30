@@ -70,7 +70,7 @@ export class Resources extends React.Component {
     calculateHardwareAmount(val) {
         const {systemInfo} = this.props
         let ratio = val / 100;
-        let cpu_cores = systemInfo.cpu_cores * ratio
+        let cpu_cores = systemInfo.cpu_cores * ratio;
         const payOff = (1 - cpu_cores) / systemInfo.cpu_cores
         
         if(payOff > 0 && val > 0) {
@@ -132,7 +132,6 @@ export class Resources extends React.Component {
      * @param  {Event}      evt
      */
     _handleInputChange(key, value) {
-        value = Math.max(1, value)
         let val = Number(value)
         if (['memory', 'disk'].includes(key)) {
             val *= MEBI // GiB to KiB
