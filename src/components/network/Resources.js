@@ -347,18 +347,6 @@ export class Resources extends React.Component {
                         <span style={{
                             color: !isNodeProvider ? '#4e4e4e' : '#9b9b9b'
                         }}>I want to act only as a Requestor. Don't send tasks to my node.
-                          <Tooltip
-                                    html={<p className='info-gpu'>
-                                            For now there is no option to set the amount of shared resources 
-                                            <br/> with GPU.So Golem will take up to 100% of your graphic card
-                                            <br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
-                                            Learn more.</a>
-                                        </p>}
-                                    position="top"
-                                    trigger="mouseenter"
-                                    interactive={true}>
-                              <span className="icon-question-mark"/>
-                          </Tooltip>
                         </span>
                     </div>
                         { !toggleAdvanced 
