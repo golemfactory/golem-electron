@@ -75,18 +75,6 @@ export class Concent extends React.Component {
                     <span style={{
                         color: isConcentOn ? '#4e4e4e' : '#9b9b9b'
                     }}>Concent Service turned {!isConcentOn ? "off" : "on"}.
-                      <Tooltip
-                                html={<p className='info-gpu'>
-                                        For now there is no option to set the amount of shared resources 
-                                        <br/> with GPU.So Golem will take up to 100% of your graphic card
-                                        <br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
-                                        Learn more.</a>
-                                    </p>}
-                                position="top"
-                                trigger="mouseenter"
-                                interactive={true}>
-                          <span className="icon-question-mark"/>
-                      </Tooltip>
                     </span>
                 </div>
                 {
