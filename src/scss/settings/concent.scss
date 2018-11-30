@@ -3,7 +3,7 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	text-align: center;
+	text-align: left;
 	line-height: 1.8em;
     transition: .5s height;
 
@@ -54,7 +54,7 @@
         padding: 15px 0;
         font-size: 9pt;
         align-self: flex-start;
-        margin-bottom: 15px;
+        margin: 15px 0;
 
         .switch-box {
             padding: 0 10px 0 0;

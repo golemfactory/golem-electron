@@ -46,14 +46,11 @@ export class Concent extends React.Component {
         const {isEngineOn} = this.props
         const {isConcentOn} = this.state
         return (
-            <div className="content__concent" style={{height: isConcentOn ? 260 : 360 }}>
+            <div className="content__concent" style={{height: isConcentOn ? 200 : 360 }}>
                 <span>Concent is service of the Golem network, which aims to improve the integrity
                 <br/>and security of marketplace. As a Provider, you should be paid for
                 <br/>computations, and as a Requestor, you are assured to get proper results.
                 <br/><a href="">Learn more</a> about Concent Service.</span>
-                <div className="tips__concent">
-                    <span>Remember! To activate the settings please stop Golem first.</span>
-                </div>
                 <div className="switch__concent">
                     <div className={`switch-box ${!isConcentOn ? "switch-box--green" : ""}`}>
                       <Tooltip
