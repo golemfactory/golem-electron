@@ -17,16 +17,62 @@
             border-radius: 50%;
         }
 
-        .radio-label-left {
-            line-height: 2.2em !important;
-            font-size: 9pt;
-            font-weight: 400;
-            color: #444 !important;
+        .radio-group__concent-modal{
+            width: 100%;
+            color: grey;
+            text-align: left;
+            padding-left: 40px;
+            box-sizing: border-box;
 
-            &:before {
-                margin-right: .5em !important;
-                font-size: 12pt !important;
-                margin-top: 2px;
+            [class^="icon-"], [class*=" icon-"] {
+                margin-right: 5px;
+                font-size: 10pt;
+                position: relative;
+                top:.5px;
+            }
+
+            input[type=radio] {
+                display: none;
+                padding: 0 20px;
+                box-sizing: border-box;
+            }
+
+            /* changed style when checked */
+            input[type=radio]:checked + label {
+                color: #000;
+                
+                & > .overlay {
+                  background-color: $color-primary;
+                }
+            }
+
+            label{
+                font-size: 9pt;
+                margin-left:5px;
+                margin-right:50px;
+                font-weight: 400;
+                cursor: pointer;
+            }
+
+            .radio-item{
+                margin: 15px 0;
+                padding: 0;
+            }
+
+            /* default radio button style: unchecked */
+            .overlay {
+              display: inline-block;
+              position: relative;
+              top: .25em;
+              left: -.5em; /* or whatever length you need here */
+              height: .5em;
+              width: .5em;
+              border-radius: 50%;
+              border: 1px solid $color-primary;
+              background-clip: border-box;
+              padding: 4px;
+              background-clip: content-box;
+              cursor: pointer;
             }
         }
 

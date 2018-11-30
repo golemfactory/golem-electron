@@ -98,10 +98,17 @@ export class Concent extends React.Component {
                             <div>
                                 <span>
                                     Deposit amount: <b>213123123 GNT</b>
-                                    <br/>You can turn concent on later without any additional transaction fees if you keep the deposit or unlock it. <a href="">Learn more</a>
+                                    <br/>
+                                    <br/>If you keep the deposit you can turn concent on later without any additional
+                                    <br/> transaction fees or you can unlock it now. <a href="">Learn more</a>
                                 </span>
                             </div>
-                            <button className="btn--primary" onClick={this._handleUnlockDeposit}>Unlock deposit</button>
+                            <div className="action__concent">
+                                <button className="btn--outline" onClick={this._handleUnlockDeposit}>Unlock deposit</button>
+                                <span className="action-info__concent">By leaving the Deposit locked you can
+                                <br/>reduce future Deposit creation transaction
+                                <br/>fee <a href="">Learn more</a></span>
+                            </div>
                         </div>
                 }
             </div>

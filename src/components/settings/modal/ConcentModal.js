@@ -41,16 +41,28 @@ export default class ConcentModal extends React.Component {
                         Are you sure you don't want
                         <br/>to use concent anymore?
                     </span>
-                    <div className="checkbox-item" onChange={this._handleUnlockCheckbox}>
-                        <input id="unlockConcentRadio" type="checkbox" name="taskType" defaultChecked={true} readOnly/>
-                        <label htmlFor="unlockConcentRadio" className="radio-label-left">Leave the deposit locked</label>
-                    </div>
                     <div className="tips__conncent-modal">
                         Any tasks that have been started with Concent will
                         <br/>still continue to use the Concent Service until they're
                         <br/>finished and settled. Any future tasks as well as the
                         <br/>restarted tasks will be computed without the
                         <br/>Concent Service.
+                    </div>
+                    <div className="radio-group__concent-modal" onChange={this._handleUnlockCheckbox}>
+                        <div className="radio-item">
+                            <input type="radio" id="unlockConcentRadio" value={true} name="unlockDepositConcent" defaultChecked={true}/>
+                            <label htmlFor="unlockConcentRadio">
+                                <span className="overlay"/>
+                                Leave the funds in the deposit
+                            </label>
+                        </div>
+                        <div className="radio-item">
+                            <input type="radio" id="unlockConcentRadio2" value={false} name="unlockDepositConcent"/>
+                            <label htmlFor="unlockConcentRadio2">
+                                <span className="overlay"/>
+                                Withdraw deposited funds
+                            </label>
+                        </div>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>
