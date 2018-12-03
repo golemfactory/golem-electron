@@ -179,12 +179,6 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
-    _preventTypeAfterLimit(e){
-        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {
-           e.preventDefault();
-        }
-    }
-
     render() {
         const {type, suffix, currency, balance} = this.props
         const {amountCopied, amount, isValid, isSubmitted} = this.state
@@ -208,7 +202,6 @@ export default class WithdrawForm extends React.Component {
                             type="number"
                             min={0}
                             max={balance.toNumber()}
-                            onKeyPress={::this._preventTypeAfterLimit}
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>
