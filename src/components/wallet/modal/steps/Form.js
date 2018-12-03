@@ -179,6 +179,25 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    /**
+     * [_preventTypeAfterLimit max limit fixed to 9999999]
+     * @param  {[type]} e [event]
+     */
+    _preventTypeAfterLimit(e){
+        const usdEstimation = document.getElementById("amountEstimatedUSD")
+
+        if (parseFloat(e.currentTarget.value) >= ((10 ** 7) - 1)) {             //9999999
+            e.preventDefault();
+        } else if (parseFloat(e.currentTarget.value) >= ((10 ** 3) - 1)) {       //999
+            usdEstimation.style.fontSize = 10;
+            usdEstimation.style.marginTop = 10;
+        }
+        else { 
+            usdEstimation.style.fontSize = 12;
+            usdEstimation.style.marginTop = 8.1;
+        }
+    }
+
     render() {
         const {type, suffix, currency, balance} = this.props
         const {amountCopied, amount, isValid, isSubmitted} = this.state
@@ -202,12 +221,13 @@ export default class WithdrawForm extends React.Component {
                             type="number"
                             min={0}
                             max={balance.toNumber()}
+                            onKeyPress={::this._preventTypeAfterLimit}
                             onChange={::this._handleAmountChange}
                             required/>
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                    	<span id="amountEstimatedUSD" className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
