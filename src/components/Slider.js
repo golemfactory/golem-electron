@@ -7,6 +7,22 @@ const WARN = "#FEC62E"
 const DANGER = "#F65A23"
 const DISABLED = "#CBCBCB"
 
+
+function isFloat(n){
+    return n % 1 !== 0
+}
+
+/**
+ * [balanceTextToCenter if value has float and integer part is gte 100 push text left to balance it center]
+ * @param  {[type]}  n [description]
+ * @return {Boolean}   [description]
+ */
+function balanceTextToCenter(n){
+    if(n / 100 >= 1 && isFloat(n))
+        return 3;
+    return 0;
+}
+
 export default class Slider extends React.Component {
 
     constructor(props) {
@@ -34,7 +50,7 @@ export default class Slider extends React.Component {
         const slider = document.getElementById(this.props.inputId);
         const indicator = document.getElementById(`${this.props.inputId}__indicator`);
         if(slider && indicator){       
-                const val = slider.value
+                const val = Number(slider.value)
                 const min = slider.getAttribute('min')
                 const max = slider.getAttribute('max')
                 const value = (val - min) / (max - min);
@@ -56,6 +72,12 @@ export default class Slider extends React.Component {
                     color = DISABLED;
                     slider.style.cursor = "not-allowed";
                 }
+
+                if(val > 999){
+                    indicator.style.fontSize= 8;
+                } else {
+                    indicator.style.fontSize= 10;
+                }
         
                 slider.style.background = color;
                 slider.style.backgroundImage = [
@@ -67,14 +89,20 @@ export default class Slider extends React.Component {
                     'color-stop(' + value + ', #eff1f2)',
                     ')'
                 ].join('');
-        
+                
                 const appWidth = window.innerWidth
                 || document.documentElement.clientWidth
                 || document.body.clientWidth;
                 const sliderWidth = slider.getBoundingClientRect().width;
-                indicator.innerHTML = val;
+                indicator.innerHTML = isFloat(val) ? val.toFixed(1) : val;
                 indicator.style.color = color;
-                indicator.style.left = ((val - min) * ((sliderWidth - 32 )/(max - min)) + ((((appWidth - sliderWidth)/ 2) + 6))) - (this.props.transform ? 24 : 0) + 'px';
+                indicator.style.left = (
+                    (val - min)
+                    * ((sliderWidth - 32 )/(max - min)) 
+                    + ((((appWidth - sliderWidth)/ 2) + 6))) 
+                - (this.props.transform ? 24 : 0)
+                - balanceTextToCenter(val)
+                + 'px';
         } 
     }
 

@@ -244,10 +244,11 @@ export class Resources extends React.Component {
                                     key={memory ? memory.toString() : 'ram_slider'} 
                                     inputId="ram_slider" 
                                     value={memory} 
-                                    max={max.memory} 
+                                    max={parseFloat(max.memory).toFixed(1)}
                                     textLeft="RAM" 
                                     textRight="GiB"  
-                                    callback={this._handleInputChange.bind(this, 'memory')} 
+                                    callback={this._handleInputChange.bind(this, 'memory')}
+                                    step={0.1}
                                     warn={true} 
                                     warnStep={[max.memory - 2, max.memory-1]}
                                     transform={true}
@@ -256,10 +257,11 @@ export class Resources extends React.Component {
                                     key={disk ? disk.toString() : 'disk_slider'} 
                                     inputId="disk_slider" 
                                     value={disk} 
-                                    max={max.disk}
+                                    max={parseFloat(max.disk).toFixed(1)}
                                     textLeft="DISK" 
                                     textRight="GiB"   
                                     callback={this._handleInputChange.bind(this, 'disk')} 
+                                    step={0.1}
                                     warn={true} 
                                     warnStep={[((max.disk/100) * 75), ((max.disk/100) * 90)]}
                                     transform={true}
