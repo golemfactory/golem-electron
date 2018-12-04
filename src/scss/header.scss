@@ -379,6 +379,16 @@
     }
 }
 
+/**
+ * Popper.js arrow position issue
+ * @see https://github.com/tvkhoa/react-tippy/issues/74
+ */
+#tippy-tooltip-2{
+    .arrow-regular{
+        left: 161px !important;
+    }
+}
+
 /*                 OS DIFFERENCES
 ================================================== */
 

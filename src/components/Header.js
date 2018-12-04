@@ -212,7 +212,7 @@ export class Header extends Component {
                 </span>
 
         return [concentTemplate]
-            .map( item => <div className="list-item__notification">
+            .map( (item, index) => <div className="list-item__notification" key={index.toString()}>
                             <span className="bullet__list"/>
                             <span>{item}</span>
                         </div>)
@@ -260,6 +260,7 @@ export class Header extends Component {
                             </div>
                         }
                       interactive
+                      unmountHTMLWhenHide
                       position="bottom"
                       theme="light"
                       trigger="click"
