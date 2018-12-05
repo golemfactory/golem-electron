@@ -294,7 +294,7 @@ export class Resources extends React.Component {
                         trigger="mouseenter"
                         interactive={false}
                         size="small"
-                        disabled={!isEngineOn}>
+                        disabled={!gpuEnvironment.supported ? false : !isEngineOn}>
                           <label className="switch">
                               <input 
                                 type="checkbox" 
@@ -326,7 +326,7 @@ export class Resources extends React.Component {
                     </span>
                     </div>
                     <div className="switch__trust">
-                        <div className={`switch-box ${!isNodeProvider ? "switch-box--green" : ""}`}>
+                        <div className="switch-box switch-box--green">
                           <Tooltip
                             html={<p>To change switch first stop Golem</p>}
                             position="top-end"
