@@ -96,7 +96,8 @@ export class Header extends Component {
      * @param  {Object}     _       [Element in target]
      */
     _navigateTo(to, _) {
-        window.routerHistory.push(to);
+        if(window.routerHistory.location.pathname !== to) 
+            window.routerHistory.push(to);
     }
 
 
