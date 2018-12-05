@@ -361,8 +361,8 @@ exports.selectDirectory = function(directory, _isMainNet) {
         "BLEND"
     ]
 
-    if(!_isMainNet)
-        masterList.push("LXS")
+    // if(!_isMainNet)
+    //     masterList.push("LXS")
 
 
     let ignorePlaftormFiles = function(file) {

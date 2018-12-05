@@ -21,12 +21,12 @@ const mockList = [
         title: 'CPU'
     },
     {
-        icon: 'icon-luxrender',
-        title: 'Luxrender'
+        icon: 'icon-blender',
+        title: 'Blender CPU'
     },
     {
-        icon: 'icon-blender-bw',
-        title: 'Blender'
+        icon: 'icon-blender_nvgpu',
+        title: 'Blender GPU'
     }
 ]
 //loadingIndicator && <span className="icon-progress"/>

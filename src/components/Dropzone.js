@@ -213,7 +213,7 @@ export class DropZone extends React.Component {
                             relativePath: [].map.call(files, item => item.path)[0]
                         })
                     } else {
-                        alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
+                        alert("There's no main file! There should be at least one blender file.")
                     }
                 })
         }

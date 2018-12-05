@@ -145,7 +145,7 @@ export class NewTask extends React.Component {
                                 <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label-right">Blender</label>
                             </div>
-                            {isMainNet ? 
+                            {true ? //disabled
                                 undefined 
                                 :
                                 <div className="radio-item">

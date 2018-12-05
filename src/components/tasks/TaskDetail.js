@@ -893,6 +893,19 @@ export class TaskDetail extends React.Component {
             .map(item => item.content)
     }
 
+    _fetchRadioOptions = (type) => {
+        let computeOnRadioOptions = {};
+
+        if(this.state.isDetailPage) {
+            computeOnRadioOptions['readOnly'] = true;
+            computeOnRadioOptions['checked'] = this.state.compute_on === type;
+        } else {
+            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
+        }
+
+        return computeOnRadioOptions
+    }
+
     render() {
 
         const {
@@ -922,14 +935,6 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
-
-        let computeOnRadioOptions = {};
-
-        if(isDetailPage) {
-            computeOnRadioOptions['readOnly'] = true;
-        } else {
-            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
-        }
 
         return (
             <div>
@@ -984,16 +989,16 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                 <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group" {...computeOnRadioOptions}>
+                                <div className="render-on__radio-group">
                                     <div>
-                                        <input type="radio" id="cpu" value="cpu" name="compute_on" checked={compute_on === "cpu"}/>
+                                        <input type="radio" id="cpu" value="cpu" name="compute_on" {...this._fetchRadioOptions('cpu')}/>
                                         <label htmlFor="cpu">
                                             <span className="overlay"/>
                                             <span className="icon-cpu"/>CPU
                                         </label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="gpu" value="gpu" name="compute_on" checked={compute_on === "gpu"}/>
+                                        <input type="radio" id="gpu" value="gpu" name="compute_on" {...this._fetchRadioOptions('gpu')}/>
                                         <label htmlFor="gpu">
                                             <span className="overlay"/>
                                             <span className="icon-gpu"/>GPU

@@ -207,7 +207,7 @@ describe('actions', () => {
     })
 
     it('should create an action to setPerformanceCharts', () => {
-        const payload = {cpu: 1200, blender: 600, luxrender: 500}
+        const payload = {cpu: 1200, blender: 600, blender_gpu: 500}
         const expectedAction = {
             payload: payload,
             type: actions.dict.SET_PERFORMANCE_CHARTS
