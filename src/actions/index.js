@@ -67,6 +67,9 @@ export let dict = Object.freeze({
     SET_ENVIRONMENTS: 'SET_ENVIRONMENTS',
     ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
     DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
+    //NOTIFICATION_CENTER
+    PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
+    REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -182,6 +185,9 @@ const {
     UPDATE_MULTIPLIER,
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
+    //NOTIFICATION CENTER
+    PUSH_NOTIFICATION,
+    REMOVE_NOTIFICATION,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -466,6 +472,16 @@ export const enableEnvironment = (payload) => ({
 
 export const disableEnvironment = (payload) => ({
     type: DISABLE_ENVIRONMENT,
+    payload
+})
+
+export const pushNotification = (payload) => ({
+    type: PUSH_NOTIFICATION,
+    payload
+})
+
+export const removeNotification = (payload) => ({
+    type: REMOVE_NOTIFICATION,
     payload
 })
 

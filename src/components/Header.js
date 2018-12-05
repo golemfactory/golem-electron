@@ -8,6 +8,8 @@ import * as Actions from '../actions'
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg'
 import testNetLogo from './../assets/img/testnet-logo-small.svg'
 
+import NotificationCenter from './NotificationCenter'
+
 import {Tooltip} from 'react-tippy';
 /**
  * @see http://react-component.github.io/tooltip/
@@ -202,22 +204,6 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
-    _fetchNotification = () => {
-        
-        const concentTemplate = <span>
-                    You are not using Concent service and thus are not fully secure. 
-                    <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
-                    <br/>Turn on Concent</span> or 
-                    <a href="https://docs.golem.network"> Learn more</a> about it.
-                </span>
-
-        return [concentTemplate]
-            .map( (item, index) => <div className="list-item__notification" key={index.toString()}>
-                            <span className="bullet__list"/>
-                            <span>{item}</span>
-                        </div>)
-    }
-
     // <div className="top-titlebar">
     //     <div style={styling} className="draggable draggable--win"></div>
     //     <div>
@@ -252,20 +238,15 @@ export class Header extends Component {
             <ul className="menu" role="menu">
                     <Tooltip
                       arrow
-                      html={
-                            <div className="list__notification">
-                                {
-                                    this._fetchNotification()
-                                }
-                            </div>
-                        }
+                      html={<NotificationCenter/>}
                       interactive
-                      unmountHTMLWhenHide
                       position="bottom"
                       theme="light"
                       trigger="click"
                       style={{right: "-20px"}}
-                      hideOnClick>
+                      hideOnClick
+                      unmountHTMLWhenHide
+                      useContext>
                         <Tooltip
                           html={(<p>Notifications</p>)}
                           position="bottom"
