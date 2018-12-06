@@ -7,7 +7,7 @@ const initialState = {
     charts: {
         estimated_performance: 0,
         estimated_blender_performance: 0,
-        estimated_blender_gpu_performance: 0
+        estimated_blender_nvgpu_performance: 0
     },
     loadingIndicator: false,
     multiplier: 0,
