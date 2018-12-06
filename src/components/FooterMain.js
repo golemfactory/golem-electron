@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import {Tooltip} from 'react-tippy';
+
 import checkNested from './../utils/checkNested'
 import golem_loading from './../assets/img/golem-loading.svg'
 
@@ -41,10 +43,10 @@ export default class FooterMain extends Component {
 
     //TODO re-write it cleaner
     golemDotClass(_golemStatus, _connectionProblem){
-        if(isGolemReady(_golemStatus.status)){
+        if(_golemStatus && isGolemReady(_golemStatus.status)){
             return (_connectionProblem && _connectionProblem.status) ? "yellow" : "green"
         }
-        else if(_golemStatus.status !== "Exception"){
+        else if(_golemStatus && _golemStatus.status !== "Exception"){
             return "yellow"
         }
         return "red"
@@ -106,13 +108,34 @@ export default class FooterMain extends Component {
             <div className="content__footer-main">
                 <div className="section__actions">
                     <div className="section__actions-status">
-                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status, connectionProblem)}`}/>
+                        <Tooltip
+                          open={checkNested(status, 'client', 'status') && status.client.status !== "Ready"}
+                          html={
+                            <div className="status__components">
+                                <div className="item__status">
+                                    <span>Docker: </span><span>{status.docker && status.docker.message}</span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Geth: </span><span>{status.ethereum && status.ethereum.message}</span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hyperg: </span><span>{status.hyperdrive && status.hyperdrive.message}</span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hypervisor: </span><span>{status.hypervisor && status.hypervisor.message}</span>
+                                </div>
+                            </div>
+                        }
+                          position="top"
+                          trigger="mouseenter">
+                            <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
+                        </Tooltip>
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${status.message} `}</span>
-                                {::this._loadErrorUrl(status.message)}
-                                {(status.message && status.message.length > 10) && <br/>}
+                                <span className="status-message">{`${status.client && status.client.message} `}</span>
+                                {status.client && ::this._loadErrorUrl(status.client.message)}
+                                {(checkNested(status, 'client', 'status', 'message') && status.client.message.length > 10) && <br/>}
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">

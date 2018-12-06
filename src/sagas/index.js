@@ -393,7 +393,7 @@ export function* flow() {
         yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
-            payload: ['client', 'start', 'pre']
+            payload: [{client:["start", "pre", null]}]
         });
         const { task } = yield call(connectionFlow);
         let action = yield take(LOGOUT);

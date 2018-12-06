@@ -16,7 +16,7 @@ describe('realTime reducer', () => {
             ],
             connectedPeers: null,
             peerInfo: [],
-            golemStatus: ['client', 'start', 'pre'],
+            golemStatus: [{client: ['start', 'pre', null]}],
             passwordModal: {
                 error: false,
                 register: false, 
@@ -62,10 +62,10 @@ describe('realTime reducer', () => {
     it('should handle exception on SET_GOLEM_STATUS', () => {
         expect(getStatusSelector(
         {
-            golemStatus: ['client', 'start', 'exception'],
+            golemStatus: [{client: ['start', 'exception', null]}],
             connectedPeers: 5
         }, "golemStatus")
-        ).toEqual({"message": "Error starting Golem", "status": "Exception"})
+        ).toEqual({client: {"message": "Error starting Golem", "status": "Exception"}})
     })
 
 })
