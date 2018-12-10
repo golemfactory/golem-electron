@@ -45,6 +45,8 @@ export let dict = Object.freeze({
     SAVE_TASK_PRESET: 'SAVE_TASK_PRESET',
     DELETE_TASK_PRESET: 'DELETE_TASK_PRESET',
     SET_FOOTER_INFO: 'SET_FOOTER_INFO',
+    GET_TASK_GAS_PRICE: 'GET_TASK_GAS_PRICE',
+    SET_TASK_GAS_PRICE: 'SET_TASK_GAS_PRICE',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_LOCAL_GETH: 'SET_LOCAL_GETH',
@@ -163,6 +165,7 @@ const {
     SAVE_TASK_PRESET, 
     DELETE_TASK_PRESET, 
     SET_FOOTER_INFO,
+    GET_TASK_GAS_PRICE,
     //SETTINGS
     SET_FILE_LOCATION, 
     SET_LOCAL_GETH,
@@ -662,6 +665,10 @@ export const deleteTaskPreset = (payload) => ({
 export const setFooterInfo = (payload) => ({
     type: SET_FOOTER_INFO,
     payload
+})
+
+export const getTaskGasPrice = () => ({
+    type: GET_TASK_GAS_PRICE
 })
 
 export const setPreviewRadio = (payload) => ({

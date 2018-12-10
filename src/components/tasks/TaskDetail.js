@@ -10,6 +10,7 @@ import yup from 'yup'
 import TestResult from './TestResult'
 import NodeList from './NodeList'
 import PresetModal from './modal/PresetModal'
+import DepositTimeModal from './modal/DepositTimeModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
@@ -108,7 +109,8 @@ const mapStateToProps = state => ({
     subtasksList: state.single.subtasksList,
     task: state.create.task,
     taskInfo: state.details.detail,
-    testStatus: state.details.test_status
+    testStatus: state.details.test_status,
+    gasInfo: state.details.gasInfo
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -124,6 +126,7 @@ export class TaskDetail extends React.Component {
             modalData: null,
             isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             isInPatient: false,
+            isDepositimeApplied: false,
             //INPUTS
             compositing: false,
             concent: false,
@@ -144,6 +147,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             presetModal: false,
+            depositTimeModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
             insufficientAmountModal: {
@@ -187,6 +191,8 @@ export class TaskDetail extends React.Component {
             document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
                 Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
             })
+
+        actions.getTaskGasPrice()
     }
 
     componentWillUnmount() {
@@ -727,6 +733,18 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton = () => {
+        const {gasInfo} = this.props
+        const {concent, depositTimeModal, isDepositimeApplied} = this.state
+
+        if(!isDepositimeApplied
+            &&concent
+            && gasInfo 
+            && gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)){
+            this.setState({
+                depositTimeModal: true
+            })
+            return false
+        }
 
         this._nextStep = true
         this.setState({
@@ -783,6 +801,13 @@ export class TaskDetail extends React.Component {
                 }
             }, resolve, reject)
         })
+    }
+
+    _createTaskOnHighGas = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn,
+            isDepositimeApplied: true
+        }, this._handleStartTaskButton)
     }
 
     /**
@@ -918,7 +943,8 @@ export class TaskDetail extends React.Component {
             managePresetModal, 
             maxSubtasks,
             modalData, 
-            presetModal, 
+            presetModal,
+            depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
             testLock
@@ -1108,6 +1134,7 @@ export class TaskDetail extends React.Component {
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
+                {depositTimeModal && <DepositTimeModal closeModal={::this._closeModal} createTaskOnHighGas={::this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
