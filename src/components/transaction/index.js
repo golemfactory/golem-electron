@@ -14,7 +14,8 @@ const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     paymentHistory: getFilteredPaymentHistory.bind(null, state),
-    concentBalance: state.realTime.concentBalance
+    concentBalance: state.realTime.concentBalance,
+    concentSwitch: state.concent.concentSwitch
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -55,13 +56,15 @@ class TransactionTube extends Component {
 
     _fetchLastTransaction = list => {
         const { created, type, value } = list[0].data;
-        const { concentBalance } = this.props;
+        const { concentBalance, concentSwitch } = this.props;
         const { showConcentInfo } = this.state;
         return (
             <div className="content__tube">
-                <div id="txHistoryBtn" className="tx-switch-btn selected" onClick={this._toggleTxTube}>
-                    <span className="icon-transaction-history"/>
-                </div>
+                {concentSwitch 
+                    && <div id="txHistoryBtn" className="tx-switch-btn selected" onClick={this._toggleTxTube}>
+                        <span className="icon-transaction-history"/>
+                    </div>
+                }
                 {
                     !showConcentInfo
                         ? <div className="section__tube content__latest-tx">
@@ -93,10 +96,11 @@ class TransactionTube extends Component {
                             </div>
                         </div>
                 }
-                
-                <div id="concentBtn" className="tx-switch-btn" onClick={this._toggleTxTube}>
-                    <span className="icon-locked"/>
-                </div>
+                {concentSwitch 
+                    && <div id="concentBtn" className="tx-switch-btn" onClick={this._toggleTxTube}>
+                        <span className="icon-locked"/>
+                    </div>
+                }
             </div>
         );
     };

@@ -19,7 +19,7 @@ import ConcentToS from './../tos/ConcentToS'
 export var ConcentToSComponent = function(ComposedComponent) {
 
     const mapStateToProps = state => ({
-        showConcentToS: !state.info.isConcentTermsAccepted,
+        showConcentToS: state.info.isConcentTermsAccepted,
         concentTerms: state.info.concentTerms
     })
 

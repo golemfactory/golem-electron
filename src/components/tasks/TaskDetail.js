@@ -110,7 +110,8 @@ const mapStateToProps = state => ({
     task: state.create.task,
     taskInfo: state.details.detail,
     testStatus: state.details.test_status,
-    gasInfo: state.details.gasInfo
+    gasInfo: state.details.gasInfo,
+    concentSwitch: state.concent.concentSwitch
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -129,7 +130,7 @@ export class TaskDetail extends React.Component {
             isDepositimeApplied: false,
             //INPUTS
             compositing: false,
-            concent: false,
+            concent: !props.concentSwitch,
             resolution: [NaN,NaN],
             frames: '',
             format: '',
@@ -935,6 +936,7 @@ export class TaskDetail extends React.Component {
         const {
             bid, 
             compute_on,
+            concent,
             defaultSettingsModal, 
             insufficientAmountModal, 
             isDetailPage, 
@@ -1053,7 +1055,7 @@ export class TaskDetail extends React.Component {
                                     <div className="switch-box switch-box--green">
                                          <span className="switch-label switch-label--left">Off</span>
                                          <label className="switch">
-                                             <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                             <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
                                              <div className="switch-slider round"></div>
                                          </label>
                                          <span className="switch-label switch-label--right">On</span>
