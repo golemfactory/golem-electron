@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
-import { hashHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -8,6 +7,8 @@ import * as Actions from '../actions'
 
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg'
 import testNetLogo from './../assets/img/testnet-logo-small.svg'
+
+import NotificationCenter from './NotificationCenter'
 
 import {Tooltip} from 'react-tippy';
 /**
@@ -63,7 +64,6 @@ export class Header extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            disableUploadTooltip: false,
             isMac: mainProcess.isMac()
         }
     }
@@ -197,33 +197,12 @@ export class Header extends Component {
 
     }
 
-    _openDoc() {}
-
     _taskHints(engine, peers){
         if(!engine)
             return (<p>Golem is not started yet.</p>)
         if(!peers)
             return (<p>There's no connected node yet.</p>)
         return (<p>New Task</p>)
-    }
-
-    _toggleUploadMenu(elm){
-        const uploadIcon = elm.currentTarget
-        const siblings = getSiblings(uploadIcon.parentNode)
-        const listener = () => {
-            uploadIcon.classList.remove("upload-menu-active")
-            listener && uploadIcon.removeEventListener("mouseenter", listener)
-            this.setState({
-                disableUploadTooltip: false
-            })
-        }
-
-        uploadIcon.classList.toggle("upload-menu-active")
-        siblings.map( item => item.addEventListener("mouseenter", listener))
-
-        this.setState({
-            disableUploadTooltip: !this.state.disableUploadTooltip
-        })
     }
 
     // <div className="top-titlebar">
@@ -237,8 +216,12 @@ export class Header extends Component {
     //     </div>
     // </div>
 
+
+    //<span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add File" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
+    //<span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add Folder" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
+
     render() {
-        const {disableUploadTooltip, isMac} = this.state
+        const {isMac} = this.state
         const {activeHeader, connectedPeers, taskDetails, detail, isEngineOn, isMainNet} = this.props
         let styling = {
             'WebkitAppRegion': 'drag'
@@ -255,16 +238,78 @@ export class Header extends Component {
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
                     <Tooltip
-                      html={this._taskHints(isEngineOn, connectedPeers)}
+                      arrow
+                      html={<NotificationCenter/>}
+                      interactive
                       position="bottom"
-                      trigger="mouseenter"
-                      disabled={disableUploadTooltip}
-                      hideOnClick={connectedPeers}>
-                        <li className="menu__item upload-menu" onClick={(isEngineOn && connectedPeers) ? (isMac ? this._onFileDialog.bind(this, ["openFile", "openDirectory"]) : ::this._toggleUploadMenu) : undefined}>
-                            <span className="icon-add" role="menuitem" tabIndex="0" aria-label="New Task" title="Close"/>
-                            <span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add File" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
-                            <span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add Folder" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
-                        </li>
+                      theme="light"
+                      trigger="click"
+                      style={{right: "-20px"}}
+                      hideOnClick
+                      unmountHTMLWhenHide
+                      useContext>
+                        <Tooltip
+                          html={(<p>Notifications</p>)}
+                          position="bottom"
+                          trigger="mouseenter"
+                          hideOnClick={connectedPeers}>
+                            <li className="menu__item">
+                                <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
+                                    <span className="indicator__notification">1</span>
+                                </span>
+                            </li>
+                        </Tooltip>
+                    </Tooltip>
+                    <Tooltip
+                      html={
+                            <div className="menu__upload">
+                                <div  
+                                    className="menu-item__upload"
+                                    onClick={this._onFileDialog.bind(this, ["openFile"])}>
+                                        <span 
+                                            className="icon-file-menu"
+                                            role="menuitem" 
+                                            tabIndex="0" 
+                                            aria-label="Add file for task"  
+                                            title="Add File"/>
+                                        <span>Add file</span>
+                                </div>
+                                <div 
+                                    className="menu-item__upload"
+                                    onClick={this._onFileDialog.bind(this, ["openDirectory"])}>
+                                    <span  
+                                        className="icon-folder-menu"
+                                        role="menuitem" 
+                                        tabIndex="0" 
+                                        aria-label="New folder for task"  
+                                        title="Add Folder"/>
+                                    <span>Add folder</span>
+                                </div>
+                            </div>
+                        }
+                      interactive
+                      position="bottom"
+                      theme="light"
+                      trigger="click"
+                      disabled={isMac || !isEngineOn || !connectedPeers}
+                      hideOnClick>
+                        <Tooltip
+                          html={this._taskHints(isEngineOn, connectedPeers)}
+                          position="bottom"
+                          trigger="mouseenter"
+                          hideOnClick={connectedPeers}>
+                            <li className="menu__item upload-menu" >
+                                <span 
+                                    className="icon-add" 
+                                    role="menuitem" 
+                                    tabIndex="0" 
+                                    aria-label="New Task" 
+                                    title="Upload file for the task"
+                                    onClick={(isEngineOn && connectedPeers && isMac) 
+                                                ? this._onFileDialog.bind(this, ["openFile", "openDirectory"])
+                                                : undefined}/>
+                            </li>
+                        </Tooltip>
                     </Tooltip>
                     <Tooltip
                       html={(<p>Docs</p>)}

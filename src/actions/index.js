@@ -74,6 +74,9 @@ export let dict = Object.freeze({
     TOGGLE_CONCENT: 'TOGGLE_CONCENT',
     UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
     SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    //NOTIFICATION_CENTER
+    PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
+    REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -193,6 +196,9 @@ const {
     DISABLE_ENVIRONMENT,
     TOGGLE_CONCENT,
     UNLOCK_CONCENT_DEPOSIT,
+    //NOTIFICATION CENTER
+    PUSH_NOTIFICATION,
+    REMOVE_NOTIFICATION,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -491,6 +497,16 @@ export const toggleConcent = (payload) => ({
 
 export const unlockConcentDeposit = (payload) => ({
     type: UNLOCK_CONCENT_DEPOSIT,
+    payload
+})
+
+export const pushNotification = (payload) => ({
+    type: PUSH_NOTIFICATION,
+    payload
+})
+
+export const removeNotification = (payload) => ({
+    type: REMOVE_NOTIFICATION,
     payload
 })
 

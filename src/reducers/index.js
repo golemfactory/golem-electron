@@ -24,6 +24,8 @@ import create from './tasks/create'
 import onboard from './onboard'
 /*Account*/
 import account from './account'
+/*Notification Center*/
+import notification from './notification'
 /*Rest*/
 import input from './input'
 import loader from './loader'
@@ -58,6 +60,8 @@ const reducer = combineReducers({
     onboard,
     //ACCOUNT
     account,
+    //NOTIFICATION CENTER
+    notification,
     //GENERAL
     input,
     loader,
