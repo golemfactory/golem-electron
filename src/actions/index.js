@@ -67,6 +67,9 @@ export let dict = Object.freeze({
     SET_ENVIRONMENTS: 'SET_ENVIRONMENTS',
     ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
     DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
+    TOGGLE_CONCENT: 'TOGGLE_CONCENT',
+    UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
+    SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -182,6 +185,8 @@ const {
     UPDATE_MULTIPLIER,
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
+    TOGGLE_CONCENT,
+    UNLOCK_CONCENT_DEPOSIT,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -466,6 +471,16 @@ export const enableEnvironment = (payload) => ({
 
 export const disableEnvironment = (payload) => ({
     type: DISABLE_ENVIRONMENT,
+    payload
+})
+
+export const toggleConcent = (payload) => ({
+    type: TOGGLE_CONCENT,
+    payload
+})
+
+export const unlockConcentDeposit = (payload) => ({
+    type: UNLOCK_CONCENT_DEPOSIT,
     payload
 })
 

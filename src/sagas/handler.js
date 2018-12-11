@@ -102,7 +102,12 @@ export let config = Object.freeze({
     //Task Presets
     TASK_PRESETS_RPC: 'comp.tasks.preset.get',
     SAVE_TASK_PRESET_RPC: 'comp.tasks.preset.save',
-    DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete'
+    DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete',
+    //Concent
+    CONCENT_UNLOCK: 'pay.deposit.relock',
+    CONCENT_RELOCK: 'pay.deposit.unlock',
+    CONCENT_ON_RPC: '', //TODO -> fill when RPC is be ready
+    CONCENT_OFF_RPC: '' //TODO -> fill when RPC is be ready
 })
 
 

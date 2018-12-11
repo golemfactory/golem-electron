@@ -8,6 +8,7 @@ import advanced from './network/advanced'
 import history, * as fromHistory from './network/history'
 import resources from './network/resources'
 /*Settings*/
+import concent from './settings/concent'
 import fileLocation from './settings/fileLocation'
 import geth from './settings/geth'
 import performance, * as fromPerformance from './settings/performance'
@@ -41,6 +42,7 @@ const reducer = combineReducers({
     history,
     resources,
     //SETTINGS
+    concent,
     fileLocation,
     geth,
     performance,

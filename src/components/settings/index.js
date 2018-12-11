@@ -6,6 +6,8 @@ import * as Actions from '../../actions'
 import Personal from './Personal'
 import Performance from './Performance'
 import Price from './Price'
+import Concent from './Concent'
+import ConcentModal from './modal/ConcentModal'
 import Trust from './Trust'
 import FileLocation from './FileLocation'
 import Geth from './Geth'
@@ -16,37 +18,6 @@ import { APP_VERSION } from './../../main'
 const {remote} = window.electron;
 const {dialog} = remote
 const versionGUI = remote.app.getVersion();
-
-const accordionItems = [
-    {
-        title: 'Performance',
-        content: <Performance/>
-    },
-    {
-        title: 'Price',
-        content: <Price/>
-    },
-    {
-        title: 'Network Trust',
-        content: <Trust/>
-    },
-    {
-        title: 'Default File Location',
-        content: <FileLocation/>
-    },
-    {
-        title: 'Custom Geth',
-        content: <Geth/>
-    },
-    {
-        title: "Peers",
-        content: <Peers/>
-    },
-    {
-        title: "Stats",
-        content: <Stats/>
-    }
-]
 
 let activateContent
 
@@ -66,7 +37,9 @@ export class Settings extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeContent: undefined
+            activeContent: null,
+            concentModal: false,
+            isConcentOn: false
         }
     }
 
@@ -91,7 +64,7 @@ export class Settings extends React.Component {
     componentWillUpdate(nextProps, nextState) {
         if(nextProps.isDeveloperMode != this.props.isDeveloperMode && this.state.activeContent > 3){
             this.setState({
-                activeContent: undefined
+                activeContent: null
             })
         }
     }
@@ -114,7 +87,7 @@ export class Settings extends React.Component {
         targetRoot.classList.toggle('active')
         target.children[1].classList.toggle('arrow-expand')
         this.setState({
-            activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : undefined
+            activeContent: this.state.activeContent !== parseInt(index) ? parseInt(index) : null
         },() => {
             if(!Number.isInteger(this.state.activeContent)){
                 this.headerEl.classList.remove("smaller")
@@ -132,7 +105,7 @@ export class Settings extends React.Component {
     loadAccordionMenu(data) {
         const {isDeveloperMode} = this.props
         return data
-        .filter((_, index) => isDeveloperMode || index < 5)
+        .filter((_, index) => isDeveloperMode || index < 6)
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>
@@ -144,14 +117,78 @@ export class Settings extends React.Component {
                     </div>)
     }
 
+    /**
+     * [_closeModal funcs. closes modals.]
+     */
+    _closeModal = (isCancel = false) => {
+        this.setState({
+            concentModal: false
+        })
+
+        if(isCancel)
+            this.setState({
+                isConcentOn: true
+            })
+    }
+
+    _toggleConcentSwitch = (isConcentOn) => {
+
+        if(!isConcentOn)
+            this.setState({
+                concentModal: true
+            })
+
+        this.setState({
+            isConcentOn
+        })
+        //this.props.actions.toggleConcent(this.state.isConcentOn)
+    }
+
     render() {
         const {version} = this.props
+        const {concentModal, isConcentOn} = this.state
+        const accordionItems = [
+            {
+                title: 'Performance',
+                content: <Performance/>
+            },
+            {
+                title: 'Price',
+                content: <Price/>
+            },
+            {
+                title: 'Concent Settings',
+                content: <Concent toggleConcentSwitch={this._toggleConcentSwitch} isConcentOn={isConcentOn}/>
+            },
+            {
+                title: 'Network Trust',
+                content: <Trust/>
+            },
+            {
+                title: 'Default File Location',
+                content: <FileLocation/>
+            },
+            {
+                title: 'Custom Geth',
+                content: <Geth/>
+            },
+            {
+                title: "Peers",
+                content: <Peers/>
+            },
+            {
+                title: "Stats",
+                content: <Stats/>
+            }
+        ]
+
         return (
             <div className="content__settings">
                 <Personal/>
                 <div className="tab__accordion" id="tabAcordion">
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
+                {concentModal && <ConcentModal closeModal={this._closeModal}/>}
                 <div className="footer__settings">
                     <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
                     <br/>
