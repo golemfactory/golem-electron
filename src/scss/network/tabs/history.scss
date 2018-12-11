@@ -18,8 +18,12 @@
         text-align: left;
     }
 
-    .tab__title:nth-child(2) {
-        margin-right: 40px;
+    .tab__title:nth-child(1){
+        margin-left: 5px;
+    }
+
+    .tab__title + .tab__title {
+        margin-right: 30px;
     }
 
     .tab__back {
