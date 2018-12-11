@@ -70,11 +70,14 @@ export class Resources extends React.Component {
     calculateHardwareAmount(val) {
         const {systemInfo} = this.props
         let ratio = val / 100;
-        let cpu_cores = systemInfo.cpu_cores * ratio
-        if (cpu_cores < 1 && val > 0) {
-            cpu_cores = 1
-            ratio = ratio / 2
+        let cpu_cores = systemInfo.cpu_cores * ratio;
+        const payOff = (1 - cpu_cores) / systemInfo.cpu_cores
+        
+        if(payOff > 0 && val > 0) {
+            cpu_cores = 1;
+            ratio -= payOff / 2;
         }
+
         const memory = systemInfo.memory * ratio;
         const disk = systemInfo.disk * ratio;
         return {
@@ -129,7 +132,6 @@ export class Resources extends React.Component {
      * @param  {Event}      evt
      */
     _handleInputChange(key, value) {
-        value = Math.max(1, value)
         let val = Number(value)
         if (['memory', 'disk'].includes(key)) {
             val *= MEBI // GiB to KiB
@@ -180,11 +182,14 @@ export class Resources extends React.Component {
                                 : { value: resource, max: 100 }
         return (
             <div className="content__resources">
-                <div className="advanced-toggler" onClick={this._toggleAdvanced.bind(null, max)}>
-                        { toggleAdvanced
-                            ? <span><span className="icon-settings-simplified"/>Simplified</span>
-                            : <span><span className="icon-settings"/>Advanced</span>
-                        }
+                <div className="advanced-toggler">
+                        <h5>Resources</h5>
+                        <div className="toggler-btn" onClick={this._toggleAdvanced.bind(null, max)}>
+                            { toggleAdvanced
+                                ? <span><span className="icon-settings-simplified"/>Simplified</span>
+                                : <span><span className="icon-settings"/>Advanced</span>
+                            }
+                        </div>
                 </div>
                 <Transition
                     items={
@@ -230,7 +235,7 @@ export class Resources extends React.Component {
                         }}>{item}</animated.div>
                     }
                 </Transition>
-                <div style={{marginTop: "80px"}}>
+                <div style={{marginTop: "90px"}}>
                 {max.memory 
                     ? <TrailEffect 
                         native 
@@ -239,10 +244,11 @@ export class Resources extends React.Component {
                                     key={memory ? memory.toString() : 'ram_slider'} 
                                     inputId="ram_slider" 
                                     value={memory} 
-                                    max={max.memory} 
+                                    max={parseFloat(max.memory).toFixed(1)}
                                     textLeft="RAM" 
                                     textRight="GiB"  
-                                    callback={this._handleInputChange.bind(this, 'memory')} 
+                                    callback={this._handleInputChange.bind(this, 'memory')}
+                                    step={0.1}
                                     warn={true} 
                                     warnStep={[max.memory - 2, max.memory-1]}
                                     transform={true}
@@ -251,10 +257,11 @@ export class Resources extends React.Component {
                                     key={disk ? disk.toString() : 'disk_slider'} 
                                     inputId="disk_slider" 
                                     value={disk} 
-                                    max={max.disk}
+                                    max={parseFloat(max.disk).toFixed(1)}
                                     textLeft="DISK" 
                                     textRight="GiB"   
                                     callback={this._handleInputChange.bind(this, 'disk')} 
+                                    step={0.1}
                                     warn={true} 
                                     warnStep={[((max.disk/100) * 75), ((max.disk/100) * 90)]}
                                     transform={true}
@@ -287,7 +294,7 @@ export class Resources extends React.Component {
                         trigger="mouseenter"
                         interactive={false}
                         size="small"
-                        disabled={!isEngineOn}>
+                        disabled={!gpuEnvironment.supported ? false : !isEngineOn}>
                           <label className="switch">
                               <input 
                                 type="checkbox" 
@@ -319,7 +326,7 @@ export class Resources extends React.Component {
                     </span>
                     </div>
                     <div className="switch__trust">
-                        <div className={`switch-box ${!isNodeProvider ? "switch-box--green" : ""}`}>
+                        <div className="switch-box switch-box--green">
                           <Tooltip
                             html={<p>To change switch first stop Golem</p>}
                             position="top-end"
@@ -342,18 +349,6 @@ export class Resources extends React.Component {
                         <span style={{
                             color: !isNodeProvider ? '#4e4e4e' : '#9b9b9b'
                         }}>I want to act only as a Requestor. Don't send tasks to my node.
-                          <Tooltip
-                                    html={<p className='info-gpu'>
-                                            For now there is no option to set the amount of shared resources 
-                                            <br/> with GPU.So Golem will take up to 100% of your graphic card
-                                            <br/> during computation. <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
-                                            Learn more.</a>
-                                        </p>}
-                                    position="top"
-                                    trigger="mouseenter"
-                                    interactive={true}>
-                              <span className="icon-question-mark"/>
-                          </Tooltip>
                         </span>
                     </div>
                         { !toggleAdvanced 

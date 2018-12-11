@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import checkNested from './../utils/checkNested'
 import golem_loading from './../assets/img/golem-loading.svg'
 
 const {remote, ipcRenderer} = window.electron;
@@ -78,6 +79,25 @@ export default class FooterMain extends Component {
     _openLogs = () => {
         ipcRenderer.send('open-logs')
     }
+    
+    _fetchState(stat){
+        if(stat){
+            let state = stat.status;
+            if(checkNested(stat, 'environment')){
+                state += this._fetchEnvironment(stat.environment[0])
+            }
+            return state
+        }
+        
+    }
+
+    _fetchEnvironment(env){
+            switch(env) {
+                case "BLENDER":         return " (CPU)"
+                case "BLENDER_NVGPU":   return " (GPU)"
+                case "BLENDER_SGX":     return " (SGX)"
+            }
+    }
 
     render() {
         const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
@@ -96,7 +116,7 @@ export default class FooterMain extends Component {
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
                             <div className="status-node">
-                                <span>Provider state: {stats && stats.host_state}</span>
+                                <span>Provider state: {stats ? this._fetchState(stats.provider_state) : ""}</span>
                                 <br/>
                                 <span>Attempted: {(stats && stats.subtasks_computed) && (stats.subtasks_computed[1] + stats.subtasks_with_timeout[1] + stats.subtasks_with_errors[1])}</span>
                                 <br/>

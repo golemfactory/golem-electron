@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.16",
+    "version": "0.1.17",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -181,7 +181,7 @@
         "react": "16.4.2",
         "react-a11y": "1.0.0",
         "react-dom": "16.4.2",
-        "react-hot-loader": "4.3.3",
+        "react-hot-loader": "4.5.1",
         "react-password-strength": "^2.3.1",
         "react-pose": "^3.3.5",
         "react-redux": "^5.0.7",

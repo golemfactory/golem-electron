@@ -7,6 +7,22 @@ const WARN = "#FEC62E"
 const DANGER = "#F65A23"
 const DISABLED = "#CBCBCB"
 
+
+function isFloat(n){
+    return n % 1 !== 0
+}
+
+/**
+ * [balanceTextToCenter if value has float and integer part is gte 100 push text left to balance it center]
+ * @param  {[type]}  n [description]
+ * @return {Boolean}   [description]
+ */
+function balanceTextToCenter(n){
+    if(n / 100 >= 1 && isFloat(n))
+        return 3;
+    return 0;
+}
+
 export default class Slider extends React.Component {
 
     constructor(props) {
@@ -35,7 +51,7 @@ export default class Slider extends React.Component {
         const indicator = document.getElementById(`${this.props.inputId}__indicator`);
         const iconOffset = (this.props.iconLeft || this.props.textLeft) ? 14 : -10
         if(slider && indicator){       
-                const val = slider.value
+                const val = Number(slider.value)
                 const min = slider.getAttribute('min')
                 const max = slider.getAttribute('max')
                 const value = (val - min) / (max - min);
@@ -57,6 +73,12 @@ export default class Slider extends React.Component {
                     color = DISABLED;
                     slider.style.cursor = "not-allowed";
                 }
+
+                if(val > 999){
+                    indicator.style.fontSize= 8;
+                } else {
+                    indicator.style.fontSize= 10;
+                }
         
                 slider.style.background = color;
                 slider.style.backgroundImage = [
@@ -68,14 +90,22 @@ export default class Slider extends React.Component {
                     'color-stop(' + value + ', #eff1f2)',
                     ')'
                 ].join('');
-
+                
+                const appWidth = window.innerWidth
+                || document.documentElement.clientWidth
+                || document.body.clientWidth;
                 const sliderWidth = slider.getBoundingClientRect().width;
-                const ratio = ((val - min) / (max - min));
-                const thumbSize = 32
-
-                indicator.innerHTML = val;
+                indicator.innerHTML = isFloat(val) ? val.toFixed(1) : val;
                 indicator.style.color = color;
-                indicator.style.left =  (ratio * sliderWidth) + (thumbSize / 2) - (thumbSize * ratio)  + iconOffset - (this.props.transform ? 24 : 0) + 'px';
+                indicator.style.left = (
+                    (val - min)
+                    * ((sliderWidth - 32 )/(max - min)) 
+                    + ((((this.props.iconLeft || this.props.textLeft) 
+                        ? ((appWidth - sliderWidth)/ 2) 
+                        : 0) + 6))) 
+                - (this.props.transform ? 24 : 0)
+                - balanceTextToCenter(val)
+                + 'px';
         } 
     }
 
@@ -94,12 +124,19 @@ export default class Slider extends React.Component {
         const {defaultValue} = this.state
         return (
             <div>
-                <div className="slider">
-                    {iconLeft 
-                        ? <span className={`slider-icon ${iconLeft}`}/>
-                        : (textLeft ? <span className="slider-text--left">{textLeft}</span> : "")
-                    }
-                    <div className="slider__input">
+                <Tooltip
+                        html={<p>To change resources first stop Golem</p>}
+                        position="top"
+                        trigger="mouseenter"
+                        interactive={false}
+                        distance={-30}
+                        size="small"
+                        disabled={!disabled}>
+                    <div className="slider">
+                        {iconLeft 
+                            ? <span className={`slider-icon ${iconLeft}`}/>
+                            : (textLeft ? <span className="slider-text--left">{textLeft}</span> : "")
+                        }
                         <input 
                             ref={this.props.inputId} 
                             type="range" 
@@ -115,13 +152,13 @@ export default class Slider extends React.Component {
                             aria-label="Machine's Resource" 
                             onMouseUp={::this._handleCallback} 
                             disabled={disabled}/>
-                            <span className="slider-indicator__resources top" id={`${this.props.inputId}__indicator`}/>
+                        <span className="slider-indicator__resources" id={`${this.props.inputId}__indicator`}/>
+                        {iconRight 
+                            ? <span className={`slider-icon ${iconRight}`}/>
+                            : (textRight ? <span className="slider-text--right">{textRight}</span> : "")
+                        }
                     </div>
-                    {iconRight 
-                        ? <span className={`slider-icon ${iconRight}`}/>
-                        : (textRight ? <span className="slider-text--right">{textRight}</span> : "")
-                    }
-                </div>
+                </Tooltip>
             </div>
         );
     }

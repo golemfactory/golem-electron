@@ -80,7 +80,8 @@
     .slider-text--left,
     .slider-text--right{
         font-size: 10pt;
-        width: 40px;
+        font-weight: 400;
+        width: 45px;
     }
 
     .slider-text--left{
@@ -98,6 +99,6 @@
     }
 }
 
-.slider>span {
+.slider > span {
     font-size: 16pt;
 }

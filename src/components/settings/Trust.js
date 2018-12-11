@@ -25,15 +25,6 @@ export class Trust extends React.Component {
     }
 
     /**
-     * [_handleProviderSwitch onChange function]
-     * @return  {Boolean}   true
-     */
-    _handleProviderSwitch(evt) {
-        const {actions} = this.props;
-        actions.setProviding(!evt.target.checked);
-    }
-
-    /**
      * [_handleRequestorTrustSlider]
      * @param  {Boolean}     value      [Boolean value from slider switch]
      */

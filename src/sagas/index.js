@@ -160,12 +160,13 @@ export function subscribe(session) {
         function on_connection(args) {
             var connection = args[0];
             const {listening, port_statuses, connected} = connection
+            const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open")
             if (
                 connected ||
-                (!connected && Object.keys(port_statuses).length === 0)
+                (!connected && checkIfPortsAreHealty)
             ) {
                 emit(true);
-            } else if (Object.keys(port_statuses).length > 0) {
+            } else if (!checkIfPortsAreHealty) {
 
                 if(!skipError){
                     const skipErrorInterval = setInterval(() => {
