@@ -70,6 +70,9 @@ describe('<MainFragment />', () => {
                     subtasks_with_errors: []
                 }
             },
+            concent: { 
+                concentSwitch: false
+            }
         }
 
         sinon.spy(MainFragment.prototype, 'componentDidMount');
@@ -113,6 +116,9 @@ describe('<MainFragment />', () => {
             input: {
                 developerMode: false
             },
+            concent: { 
+                concentSwitch: false
+            }
         }
 
         const props = {
