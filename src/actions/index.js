@@ -123,6 +123,10 @@ export let dict = Object.freeze({
     CHECK_TERMS_ACCEPTED: 'CHECK_TERMS_ACCEPTED',
     ACCEPT_TERMS: 'ACCEPT_TERMS',
     SET_TERMS_STATUS: 'SET_TERMS_STATUS',
+    SET_CONCENT_TERMS: 'SET_CONCENT_TERMS',
+    CHECK_CONCENT_TERMS_ACCEPTED: 'CHECK_CONCENT_TERMS_ACCEPTED',
+    ACCEPT_CONCENT_TERMS: 'ACCEPT_CONCENT_TERMS',
+    SET_CONCENT_TERMS_STATUS: 'SET_CONCENT_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -241,6 +245,9 @@ const {
     CHECK_TERMS_ACCEPTED,
     ACCEPT_TERMS,
     SET_TERMS_STATUS,
+    CHECK_CONCENT_TERMS_ACCEPTED,
+    ACCEPT_CONCENT_TERMS,
+    SET_CONCENT_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
@@ -757,6 +764,10 @@ export const checkTermsAccepted = () => ({
     type: CHECK_TERMS_ACCEPTED
 })
 
+export const checkConcentTermsAccepted = () => ({
+    type: CHECK_CONCENT_TERMS_ACCEPTED
+})
+
 export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     type: ACCEPT_TERMS,
     monitor,
@@ -765,8 +776,19 @@ export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     _reject
 })
 
+export const acceptConcentTerms = (_resolve, _reject) => ({
+    type: ACCEPT_CONCENT_TERMS,
+    _resolve,
+    _reject
+})
+
 export const setTermsStatus = (payload) => ({
     type: SET_TERMS_STATUS,
+    payload
+})
+
+export const setConcentTermsStatus = (payload) => ({
+    type: SET_CONCENT_TERMS_STATUS,
     payload
 })
 

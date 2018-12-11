@@ -17,6 +17,8 @@ const {
     SET_GOLEM_LOADING_STATUS,
     SET_TERMS_STATUS,
     SET_TERMS,
+    SET_CONCENT_TERMS_STATUS,
+    SET_CONCENT_TERMS,
     SET_CHAIN_INFO
 } = dict
 
@@ -49,6 +51,8 @@ const initialState = {
     isEngineLoading: false,
     terms: "",
     isTermsAccepted: false,
+    concentTerms: "",
+    isConcentTermsAccepted: false,
     isNodeProvider: true
 }
 
@@ -131,6 +135,16 @@ const setInfo = (state = initialState, action) => {
     case SET_TERMS:
         return Object.assign({}, state, {
             terms: action.payload
+        });
+
+    case SET_CONCENT_TERMS_STATUS:
+        return Object.assign({}, state, {
+            isConcentTermsAccepted: action.payload
+        });
+
+    case SET_CONCENT_TERMS:
+        return Object.assign({}, state, {
+            concentTerms: action.payload
         });
 
     case SET_CHAIN_INFO:

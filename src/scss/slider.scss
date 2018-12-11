@@ -6,7 +6,7 @@
     box-sizing: border-box;
     .slider__resources {
         flex-grow: 1;
-        height: 2px;
+        height: 4px;
         margin: 10px 12px 0 12px;
         background: #37C481; //GRADIENT TRANSITION HACK
         background-image: -webkit-gradient( linear, left top, right top, color-stop(0.2, transparent), color-stop(0.2, $color-accent3));

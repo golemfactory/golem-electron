@@ -94,6 +94,9 @@ export let config = Object.freeze({
     GET_TERMS_RPC: 'golem.terms.show',
     CHECK_TERMS_RPC: 'golem.terms',
     ACCEPT_TERMS_RPC: 'golem.terms.accept',
+    GET_CONCENT_TERMS_RPC: 'golem.concent.terms.show',
+    CHECK_CONCENT_TERMS_RPC: 'golem.concent.terms',
+    ACCEPT_CONCENT_TERMS_RPC: 'golem.concent.terms.accept',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',
