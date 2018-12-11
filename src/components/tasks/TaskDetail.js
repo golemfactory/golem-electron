@@ -10,6 +10,7 @@ import yup from 'yup'
 import TestResult from './TestResult'
 import NodeList from './NodeList'
 import PresetModal from './modal/PresetModal'
+import DepositTimeModal from './modal/DepositTimeModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
@@ -108,7 +109,8 @@ const mapStateToProps = state => ({
     subtasksList: state.single.subtasksList,
     task: state.create.task,
     taskInfo: state.details.detail,
-    testStatus: state.details.test_status
+    testStatus: state.details.test_status,
+    gasInfo: state.details.gasInfo
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -124,8 +126,10 @@ export class TaskDetail extends React.Component {
             modalData: null,
             isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             isInPatient: false,
+            isDepositimeApplied: false,
             //INPUTS
             compositing: false,
+            concent: false,
             resolution: [NaN,NaN],
             frames: '',
             format: '',
@@ -143,6 +147,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             presetModal: false,
+            depositTimeModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
             insufficientAmountModal: {
@@ -186,6 +191,8 @@ export class TaskDetail extends React.Component {
             document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
                 Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
             })
+
+        actions.getTaskGasPrice()
     }
 
     componentWillUnmount() {
@@ -473,6 +480,17 @@ export class TaskDetail extends React.Component {
     }
 
     /**
+     * [_handleCheckbox func. updates checkbox value]
+     * @param  {Event}  e
+     */
+    _handleConcentCheckbox(e) {
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.setState({
+            concent: e.target.checked
+        })
+    }
+
+    /**
      * [_handleTimeoutInputs func. updtes timeout values form inputs]
      * @param  {[type]} state [Name of the state]
      * @param  {[type]} e     
@@ -715,6 +733,18 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton = () => {
+        const {gasInfo} = this.props
+        const {concent, depositTimeModal, isDepositimeApplied} = this.state
+
+        if(!isDepositimeApplied
+            &&concent
+            && gasInfo 
+            && gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)){
+            this.setState({
+                depositTimeModal: true
+            })
+            return false
+        }
 
         this._nextStep = true
         this.setState({
@@ -771,6 +801,13 @@ export class TaskDetail extends React.Component {
                 }
             }, resolve, reject)
         })
+    }
+
+    _createTaskOnHighGas = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn,
+            isDepositimeApplied: true
+        }, this._handleStartTaskButton)
     }
 
     /**
@@ -906,7 +943,8 @@ export class TaskDetail extends React.Component {
             managePresetModal, 
             maxSubtasks,
             modalData, 
-            presetModal, 
+            presetModal,
+            depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
             testLock
@@ -1002,6 +1040,26 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </div>
                             </div>
+                            <div className="section-concent__task-detail">
+                                <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-concent__task-detail" distance={-20}/>
+                                <div className="item-concent">
+                                    <InfoLabel 
+                                        type="span" 
+                                        label="Set" 
+                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
+                                            <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                        cls="title" 
+                                        infoHidden={true}/>
+                                    <div className="switch-box switch-box--green">
+                                         <span className="switch-label switch-label--left">Off</span>
+                                         <label className="switch">
+                                             <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                             <div className="switch-slider round"></div>
+                                         </label>
+                                         <span className="switch-label switch-label--right">On</span>
+                                     </div>
+                                </div>
+                            </div>
                             <div className="section-price__task-detail">
                                 <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                                 <div className="item-price">
@@ -1076,6 +1134,7 @@ export class TaskDetail extends React.Component {
                 </form>
                 {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
+                {depositTimeModal && <DepositTimeModal closeModal={::this._closeModal} createTaskOnHighGas={::this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
