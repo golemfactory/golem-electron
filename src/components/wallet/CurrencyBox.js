@@ -88,7 +88,7 @@ export default class CurrencyBox extends Component {
             lockWithdraw
         } = this.props;
         return (
-            <div className="container">
+            <div className="container__currency-box">
                 <div id="cube" className={expandedAmount ? (expandedAmount === suffix ? "show-top" : "show-front") : "show-top"}>
                     <div className={`side1 ${suffix}`}>
                         <span className="lock__container">

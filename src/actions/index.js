@@ -19,6 +19,8 @@ export let dict = Object.freeze({
     SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     SET_ADVANCED_MANUALLY: 'SET_ADVANCED_MANUALLY',
     BLOCK_NODE: 'BLOCK_NODE',
+    SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
+    GET_CONCENT_DEPOSIT_BALANCE: 'GET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
@@ -141,6 +143,7 @@ const {
     SET_CHOSEN_HARDWARE_PRESET, 
     SET_ADVANCED_MANUALLY,
     BLOCK_NODE,
+    GET_CONCENT_DEPOSIT_BALANCE,
     //TASKS
     SET_TASKLIST, 
     SET_TASK_DETAILS, 
@@ -369,6 +372,10 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 })
 
+export const getConcentBalance = (payload) => ({
+    type: GET_CONCENT_DEPOSIT_BALANCE,
+    payload
+})
 
 export const setHistory = (payload) => ({
     type: SET_HISTORY,

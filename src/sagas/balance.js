@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put, cancel } from 'redux-saga/effects'
+import { take, takeLatest, call, put, cancel } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js';
 
 import { dict } from '../actions'
@@ -7,7 +7,7 @@ import { dict } from '../actions'
 import { config, _handleSUBPUB, _handleUNSUBPUB, _handleRPC } from './handler'
 
 
-const {SET_BALANCE} = dict
+const {SET_BALANCE, SET_CONCENT_DEPOSIT_BALANCE, GET_CONCENT_DEPOSIT_BALANCE} = dict
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
 const BALANCE_DICT = Object.freeze({
     GNT: 'gnt',
@@ -100,12 +100,33 @@ export function subscribeBalance(session) {
     })
 }
 
+
+export function concentDepositBalance(session) {
+    return new Promise((response, reject) => {
+        function on_info(args) {
+            let info = args[0];
+            response({
+                type: SET_CONCENT_DEPOSIT_BALANCE,
+                payload: info
+            })
+        }
+
+        _handleRPC(on_info, session, config.CONCENT_DEPOSIT_BALANCE_RPC, [])
+    })
+}
+
+export function* concentDepositBalanceBase(session) {
+    const action = yield call(concentDepositBalance, session);
+    yield action && put(action)
+}
+
 /**
  * [*connectedPeers generator]
  * @param  {Object} session     [Websocket connection session]
  * @yield   {Object}            [Action object]
  */
 export function* balanceFlow(session) {
+    yield takeLatest(GET_CONCENT_DEPOSIT_BALANCE, concentDepositBalanceBase, session)
     const channel = yield call(subscribeBalance, session)
     try {
         while (true) {

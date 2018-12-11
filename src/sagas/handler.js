@@ -79,6 +79,7 @@ export let config = Object.freeze({
     INCOME_RPC: 'pay.incomes',
     DEPOSIT_RPC: 'pay.deposit_payments',
     BALANCE_CH: 'evt.pay.balance',
+    CONCENT_DEPOSIT_BALANCE_RPC: 'pay.deposit_balance',
     //General
     VERSION_RPC: 'golem.version',
     CHAIN_INFO_RPC: 'golem.mainnet',

@@ -234,13 +234,20 @@
 	.flipper.flip {
 		transform: rotateY(180deg);
 	}
+
+	.container__currency-box{
+		height: auto;
+		margin-top: 0;
+	}
 }
 
-.container {
+.container__currency-box {
 	outline: 1px solid transparent;
 	will-change: transform;
 	perspective: 100000px;
 	backface-visibility: hidden;
+	height: 70px;
+	margin-top: -25px;
 }
 
 #cube {
@@ -251,16 +258,16 @@
 	transition: transform 0.5s;
 
 	&.show-front {
-		-webkit-transform: translateZ(-40px);
-		transform: translateZ(-40px);
+		-webkit-transform: translateZ(-32px);
+		transform: translateZ(-32px);
 		.side2 {
 			opacity: 0;
 		}
 	}
 
 	&.show-top {
-		-webkit-transform: translateZ(-40px) rotateX(-90deg);
-		transform: translateZ(-40px) rotateX(-90deg);
+		-webkit-transform: translateZ(-32px) rotateX(-90deg);
+		transform: translateZ(-32px) rotateX(-90deg);
 		.side1 {
 			opacity: 0;
 		}
@@ -274,8 +281,8 @@
 	text-align: left;
 	font-size: 10pt;
 
-	-webkit-transform: translateZ(40px);
-	transform: translateZ(40px) translateY(35px);
+	-webkit-transform: translateZ(32px);
+	transform: translateZ(32px) translateY(34px);
 	transition: opacity 0.3s ease 0.1s;
 
 	b {
@@ -305,7 +312,7 @@
 	}
 }
 .side2 {
-	-webkit-transform: rotateX(90deg) translateZ(40px);
-	transform: rotateX(90deg) translateZ(40px);
+	-webkit-transform: rotateX(90deg) translateZ(32px);
+	transform: rotateX(90deg) translateZ(32px);
 	transition: opacity 0.3s ease 0.1s;
 }
