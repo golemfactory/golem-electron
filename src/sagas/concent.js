@@ -27,25 +27,38 @@ export function* toggleConcentUnlockBase(session) {
     //yield action && put(action)
 }
 
-export function toggleConcent(session, payload, toggleLock = false) {
+export function toggleConcent(session, {payload, informRPC, toggleLock = false}) {
     return new Promise((response, reject) => {
 
-        function on_info(args) {
-            let info = args[0]
-            console.log("info", info)
+        if(!informRPC)
             response({
                 type: SET_CONCENT_SWITCH,
-                payload: info
+                payload
             })
-        }
+        else {
+            response({
+                type: SET_CONCENT_SWITCH,
+                payload
+            })
 
-        function on_lock(args) {
-            let lock = args[0];
-            console.log("lock", lock);
-            _handleRPC(on_info, session, payload ? config.CONCENT_ON_RPC : config.CONCENT_OFF_RPC)
+            console.log("RPC informed")
         }
+        // function on_info(args) {
+        //     let info = args[0]
+        //     console.log("info", info)
+        //     response({
+        //         type: SET_CONCENT_SWITCH,
+        //         payload: info
+        //     })
+        // }
+
+        // function on_lock(args) {
+        //     let lock = args[0];
+        //     console.log("lock", lock);
+        //     _handleRPC(on_info, session, payload ? config.CONCENT_ON_RPC : config.CONCENT_OFF_RPC)
+        // }
         
-        _handleRPC(on_lock, session, toggleLock ? config.CONCENT_UNLOCK : config.CONCENT_RELOCK)
+        // _handleRPC(on_lock, session, toggleLock ? config.CONCENT_UNLOCK : config.CONCENT_RELOCK)
     })
 }
 
@@ -53,12 +66,12 @@ export function toggleConcent(session, payload, toggleLock = false) {
  * [*toggleConcentBase generator toggle concent feature]
  * @param {[type]} session       [Session of the wamp connection]
  */
-export function* toggleConcentBase(session, {payload, toggleLock}) {
+export function* toggleConcentBase(session, payload) {
     const action = yield call(toggleConcent, session, payload);
     yield action && put(action)
 }
 
-export function* concentFlow(session, payload, toggleLock) {
+export function* concentFlow(session, payload) {
     yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
     yield takeLatest(UNLOCK_CONCENT_DEPOSIT, toggleConcentUnlockBase, session)
 }

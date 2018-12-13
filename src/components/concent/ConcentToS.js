@@ -26,6 +26,14 @@ export default class ConcentToS extends React.Component {
         
     }
 
+    _handleCancel = () => {
+        this.props.actions.toggleConcent(false, true)
+    }
+
+    _handleApply = () => {
+        this.props.actions.toggleConcent(true, true)
+    }
+
     render() {
         const {isAcceptLocked } = this.state
         const { concentTerms } = this.props
@@ -39,8 +47,8 @@ export default class ConcentToS extends React.Component {
                     </div>
                     <span className="info__concent-tos">By clicking Accept, you confirm that you have read and agree to the <strong>user interaction guidelines</strong>, <strong>disclaimer</strong> and <a href="https://golem.network/privacy">privacy policy</a>.</span>
                     <div className="action-container__concent-tos">
-                        <span className="btn--cancel">Cancel</span>
-                        <button className="btn btn--primary">Accept</button>
+                        <span className="btn--cancel" onClick={this._handleCancel}>Cancel</span>
+                        <button className="btn btn--primary" onClick={this._handleApply}>Accept</button>
                     </div>
                 </div>
             </div>

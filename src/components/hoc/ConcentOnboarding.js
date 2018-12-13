@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 
 
 import * as Actions from '../../actions'
-import ConcentToS from './../tos/ConcentToS'
+import ConcentToS from './../concent/ConcentToS'
 
 /**
  * { HIGH ORDER COMPONENT }
@@ -16,18 +16,19 @@ import ConcentToS from './../tos/ConcentToS'
  * @param      {React Component}        ComposedComponent   The composed component which is we waiting for; see router in Container/App.js
  * @return     {ConnectedComponent>}                        { Returning connected component (Redux) }
  */
-export var ConcentToSComponent = function(ComposedComponent) {
+export var ConcentOnboardingComponent = function(ComposedComponent) {
 
     const mapStateToProps = state => ({
-        showConcentToS: state.info.isConcentTermsAccepted,
-        concentTerms: state.info.concentTerms
+        showConcentToS: !state.info.isConcentTermsAccepted,
+        concentTerms: state.info.concentTerms,
+        concentSwitch: state.concent.concentSwitch
     })
 
     const mapDispatchToProps = dispatch => ({
         actions: bindActionCreators(Actions, dispatch)
     })
 
-    class ConcentToSHoC extends React.Component {
+    class ConcentOnboardingHoC extends React.Component {
 
 
         constructor(props) {
@@ -38,8 +39,8 @@ export var ConcentToSComponent = function(ComposedComponent) {
 
 
         render() {
-            const {showConcentToS, concentTerms} = this.props
-            if(showConcentToS){
+            const {concentSwitch, concentTerms, showConcentToS} = this.props
+            if(showConcentToS && concentSwitch){
                 return <ConcentToS {...this.props}/>
             }
             return (
@@ -50,6 +51,6 @@ export var ConcentToSComponent = function(ComposedComponent) {
         }
     }
 
-    return connect(mapStateToProps, mapDispatchToProps)(ConcentToSHoC);
+    return connect(mapStateToProps, mapDispatchToProps)(ConcentOnboardingHoC);
 }
 

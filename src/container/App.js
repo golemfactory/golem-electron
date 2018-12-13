@@ -14,7 +14,7 @@ import TaskDetail from '../components/tasks/TaskDetail'
 import Settings from '../components/settings'
 import NotFound from '../components/NotFound'
 import { OnBoardingComponent } from '../components/hoc/Onboarding'
-import { ConcentToSComponent } from '../components/hoc/ConcentToS'
+import { ConcentOnboardingComponent } from '../components/hoc/ConcentOnboarding'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -37,9 +37,9 @@ Array.prototype.last = function() {
 const routes = (
 <div>
     <Switch>
-        <Route exact path="/" component={OnBoardingComponent(ConcentToSComponent(MainFragment))} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
-        <Route path="/tasks" component={OnBoardingComponent(ConcentToSComponent(Tasks))} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
-        <Route path="/settings" component={OnBoardingComponent(ConcentToSComponent(Settings))} />
+        <Route exact path="/" component={OnBoardingComponent(ConcentOnboardingComponent(MainFragment))} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
+        <Route path="/tasks" component={OnBoardingComponent(ConcentOnboardingComponent(Tasks))} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
+        <Route path="/settings" component={OnBoardingComponent(ConcentOnboardingComponent(Settings))} />
         <Route path="/task/:id" component={ TaskDetail } />
         <Route path="/add-task/type/:type?" component={ NewTask } />
         <Route path="/add-task/settings" component={ TaskDetail } />

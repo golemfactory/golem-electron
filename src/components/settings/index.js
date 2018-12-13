@@ -25,7 +25,8 @@ let activateContent
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     version: state.info.version,
-    isDeveloperMode: state.input.developerMode
+    isDeveloperMode: state.input.developerMode,
+    concentSwitch: state.concent.concentSwitch
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -39,7 +40,7 @@ export class Settings extends React.Component {
         this.state = {
             activeContent: null,
             concentModal: false,
-            isConcentOn: false
+            isConcentOn: props.concentSwitch
         }
     }
 
@@ -48,23 +49,18 @@ export class Settings extends React.Component {
         actions.showTrust(nodeId)
 
          this.headerEl = document.getElementById('personal');
-        // const resizeHeaderOnScroll = () => {
-        //     const elementY = document.getElementById('tabAcordion'),
-        //     shrinkOn = 0;
-        //     if (elementY.scrollTop > shrinkOn && Number.isInteger(this.state.activeContent)) {
-        //         this.headerEl.classList.add("smaller");
-        //     } else if(!Number.isInteger(this.state.activeContent)) {
-        //         this.headerEl.classList.remove("smaller");
-        //     }
-        // }
-
-        // window.addEventListener('scroll', resizeHeaderOnScroll, true);
     }
 
     componentWillUpdate(nextProps, nextState) {
         if(nextProps.isDeveloperMode != this.props.isDeveloperMode && this.state.activeContent > 3){
             this.setState({
                 activeContent: null
+            })
+        }
+
+        if(nextProps.concentSwitch !== this.props.concentSwitch && !nextProps.concentSwitch){
+            this.setState({
+                concentModal: !nextProps.concentSwitch
             })
         }
     }
@@ -126,27 +122,23 @@ export class Settings extends React.Component {
         })
 
         if(isCancel)
-            this.setState({
-                isConcentOn: true
-            })
+            this.props.actions.toggleConcent(true, true)
     }
 
-    _toggleConcentSwitch = (isConcentOn) => {
-
-        if(!isConcentOn)
-            this.setState({
-                concentModal: true
-            })
-
+    /**
+     * [_disableConcent will disable concent with optional lock fund feature]
+     * @param  {Boolean} isUnlockIncluded [if user wants to unlock the fund, the parameter will be true]
+     * @return 
+     */
+    _disableConcent = (isUnlockIncluded) => {
         this.setState({
-            isConcentOn
-        })
-        //this.props.actions.toggleConcent(this.state.isConcentOn)
+            concentModal: false
+        }, () => this.props.actions.toggleConcent(false, true, isUnlockIncluded))
     }
 
     render() {
         const {version} = this.props
-        const {concentModal, isConcentOn} = this.state
+        const {concentModal} = this.state
         const accordionItems = [
             {
                 title: 'Performance',
@@ -158,7 +150,7 @@ export class Settings extends React.Component {
             },
             {
                 title: 'Concent Settings',
-                content: <Concent toggleConcentSwitch={this._toggleConcentSwitch} isConcentOn={isConcentOn}/>
+                content: <Concent/>
             },
             {
                 title: 'Network Trust',
@@ -188,7 +180,7 @@ export class Settings extends React.Component {
                 <div className="tab__accordion" id="tabAcordion">
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
-                {concentModal && <ConcentModal closeModal={this._closeModal}/>}
+                {concentModal && <ConcentModal closeModal={this._closeModal} toggleConcentCallback={this._disableConcent}/>}
                 <div className="footer__settings">
                     <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
                     <br/>

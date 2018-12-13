@@ -497,9 +497,11 @@ export const disableEnvironment = (payload) => ({
     payload
 })
 
-export const toggleConcent = (payload) => ({
+export const toggleConcent = (payload, informRPC, toggleLock) => ({
     type: TOGGLE_CONCENT,
-    payload
+    payload,
+    informRPC,
+    toggleLock
 })
 
 export const unlockConcentDeposit = (payload) => ({

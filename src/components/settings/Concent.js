@@ -6,7 +6,8 @@ import {Tooltip} from 'react-tippy';
 import * as Actions from './../../actions'
 
 const mapStateToProps = state => ({
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    concentSwitch: state.concent.concentSwitch
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -18,14 +19,14 @@ export class Concent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isConcentOn: this.props.isConcentOn
+            isConcentOn: props.concentSwitch
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        if(nextProps.isConcentOn !== this.props.isConcentOn){
+        if(nextProps.concentSwitch !== this.props.concentSwitch){
             this.setState({
-                isConcentOn: nextProps.isConcentOn
+                isConcentOn: nextProps.concentSwitch
             })
         }
     }
@@ -34,7 +35,10 @@ export class Concent extends React.Component {
         this.setState({
             isConcentOn: !this.state.isConcentOn
         },() => {
-            this.props.toggleConcentSwitch(this.state.isConcentOn)
+            if(this.state.isConcentOn)
+                this.props.actions.toggleConcent(this.state.isConcentOn, true)
+            else
+                this.props.actions.toggleConcent(this.state.isConcentOn, false)
         })
     }
 
@@ -66,8 +70,7 @@ export class Concent extends React.Component {
                                 onChange={::this._toggleConcentSwitch} 
                                 checked={isConcentOn}  
                                 aria-label="Trust switch providing/requesting" 
-                                tabIndex="0" 
-                                disabled={isEngineOn}/>
+                                tabIndex="0" />
                             <div className="switch-slider round"></div>
                         </label>
                       </Tooltip>
