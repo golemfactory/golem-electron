@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 import ConcentToS from './../concent/ConcentToS'
+import ConcentOnboarding from './../concent/Onboarding'
 
 /**
  * { HIGH ORDER COMPONENT }
@@ -33,13 +34,27 @@ export var ConcentOnboardingComponent = function(ComposedComponent) {
 
         constructor(props) {
             super(props);
+            this.state = {
+                isOnboadingActive: true
+            }
         }
 
         componentWillMount() {}
 
 
+        _handleOnboardingDone = () => {
+            this.setState({
+                isOnboadingActive: false
+            })
+        }
+
+
         render() {
             const {concentSwitch, concentTerms, showConcentToS} = this.props
+            const {isOnboadingActive} = this.state
+            if(isOnboadingActive && concentSwitch){
+                return <ConcentOnboarding handleOnboardingDone={this._handleOnboardingDone}/>
+            }
             if(showConcentToS && concentSwitch){
                 return <ConcentToS {...this.props}/>
             }
