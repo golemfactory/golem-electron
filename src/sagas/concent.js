@@ -75,7 +75,7 @@ export function toggleConcent(session, {payload, informRPC, toggleLock = false})
             function on_lock(args) {
                 let lock = args[0];
                 console.log("lock", lock);
-                _handleRPC(on_info, session, CONCENT_SWITCH_RPC, [payload])
+                _handleRPC(on_info, session, config.CONCENT_SWITCH_RPC, [payload])
             }
             
             _handleRPC(on_lock, session, toggleLock ? config.CONCENT_UNLOCK : config.CONCENT_RELOCK)
