@@ -13,7 +13,7 @@ export function fectConcentStatus(session) {
             let info = args[0];
             response({
                 type: SET_CONCENT_SWITCH,
-                info
+                payload: info
             })
         }
         
@@ -27,7 +27,7 @@ export function fectConcentStatus(session) {
  */
 export function* fetchConcentStatusBase(session) {
     const action = yield call(fectConcentStatus, session);
-    //yield action && put(action)
+    yield action && put(action)
 }
 
 export function unlockDepositConcent(session) {
@@ -65,16 +65,14 @@ export function toggleConcent(session, {payload, informRPC, toggleLock = false})
             
             function on_info(args) {
                 let info = args[0]
-                console.log("info", info)
                 response({
                     type: SET_CONCENT_SWITCH,
-                    payload: info
+                    payload
                 })
             }
 
             function on_lock(args) {
                 let lock = args[0];
-                console.log("lock", lock);
                 _handleRPC(on_info, session, config.CONCENT_SWITCH_RPC, [payload])
             }
             

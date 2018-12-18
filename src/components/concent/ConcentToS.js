@@ -31,7 +31,15 @@ export default class ConcentToS extends React.Component {
     }
 
     _handleApply = () => {
-        this.props.actions.toggleConcent(true, true)
+        this._acceptConcentTermsAsync()
+        .then(() => this.props.actions.toggleConcent(true, true))
+        .catch((err) => console.error("Couldn't accept the terms, reason:", err))
+    }
+
+    _acceptConcentTermsAsync = () => {
+        return new Promise((resolve, reject) => {
+            this.props.actions.acceptConcentTerms(resolve, reject)
+        })
     }
 
     render() {

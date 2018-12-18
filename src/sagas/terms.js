@@ -50,13 +50,23 @@ export function acceptConcentTerms(session, {_resolve, _reject}) {
     _handleRPC(on_info, session, config.ACCEPT_CONCENT_TERMS_RPC, [])
 }
 
+export function* acceptConcentTermsBase(session, payload) {
+    yield call(acceptConcentTerms, session, payload)
+    const action = yield call(checkConcentTermsAccepted, session)
+    yield put(action)
+}
+
 export function acceptTerms(session, {monitor, sentry, _resolve, _reject}) {
     function on_info(args) {
         let info = args[0];
         _resolve(info)
     }
 
-    _handleRPC(on_info, session, config.ACCEPT_TERMS_RPC, [monitor, sentry])
+    function on_error(error) {
+        _reject(error)
+    }
+
+    _handleRPC(on_info, session, config.ACCEPT_TERMS_RPC, [monitor, sentry], on_error)
 }
 
 export function* checkTermsBase(session){
@@ -106,5 +116,5 @@ export function* termsFlow(session) {
     yield fork(getTermsBase, session)
     yield fork(checkTermsBase, session)
     yield takeLatest(ACCEPT_TERMS, acceptTerms, session)
-    yield takeLatest(ACCEPT_CONCENT_TERMS, acceptConcentTerms, session)
+    yield takeLatest(ACCEPT_CONCENT_TERMS, acceptConcentTermsBase, session)
 }

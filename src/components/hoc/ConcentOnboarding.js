@@ -33,13 +33,22 @@ export var ConcentOnboardingComponent = function(ComposedComponent) {
 
         constructor(props) {
             super(props);
+            this.state = {
+                showConcentToS: props.showConcentToS
+            }
         }
 
-        componentWillMount() {}
-
+        componentWillReceiveProps(nextProps) {
+            if(nextProps.showConcentToS !== this.props.showConcentToS){
+                this.setState({
+                    showConcentToS: nextProps.showConcentToS
+                })
+            }
+        }
 
         render() {
-            const {concentSwitch, concentTerms, showConcentToS} = this.props
+            const {concentSwitch, concentTerms} = this.props
+            const {showConcentToS} = this.state
             if(showConcentToS && concentSwitch){
                 return <ConcentToS {...this.props}/>
             }

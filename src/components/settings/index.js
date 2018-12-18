@@ -122,7 +122,7 @@ export class Settings extends React.Component {
         })
 
         if(isCancel)
-            this.props.actions.toggleConcent(true, true)
+            this.props.actions.toggleConcent(true, false)
     }
 
     /**
