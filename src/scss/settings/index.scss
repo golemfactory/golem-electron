@@ -60,6 +60,7 @@ $item__accordion-height: 78.7px;
     height: 100%;
     position: relative;
     overflow-y: overlay;
+    overflow-x: hidden;
     transform: translateZ(0);
 }
 

@@ -41,10 +41,6 @@ class TransactionTube extends Component {
         concentBtn.classList.remove("selected")
         elm.target.classList.add("selected")
 
-        if(elm.target.id === concentBtn.id){
-            this.props.actions.getConcentBalance();
-        }
-
         this.setState({
             showConcentInfo: elm.target.id === concentBtn.id
         })

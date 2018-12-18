@@ -1,5 +1,5 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { take, takeLatest, call, put, cancel } from 'redux-saga/effects'
+import { fork, take, takeLatest, call, put, cancel } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js';
 
 import { dict } from '../actions'
@@ -102,16 +102,39 @@ export function subscribeBalance(session) {
 
 
 export function concentDepositBalance(session) {
-    return new Promise((response, reject) => {
-        function on_info(args) {
-            let info = args[0];
-            response({
-                type: SET_CONCENT_DEPOSIT_BALANCE,
-                payload: info
-            })
+    const interval = 10000
+
+    return eventChannel(emit => {
+
+        const fetchConcentBalance = () => {
+
+            function on_info(args) {
+                let {value, status, timelock} = args[0];
+                emit({
+                    type: SET_CONCENT_DEPOSIT_BALANCE,
+                    payload: {
+                        value: new BigNumber(value),
+                        status,
+                        timelock
+                    }
+                })
+            }
+
+            _handleRPC(on_info, session, config.CONCENT_DEPOSIT_BALANCE_RPC, [])
         }
 
-        _handleRPC(on_info, session, config.CONCENT_DEPOSIT_BALANCE_RPC, [])
+        const fetchOnStartup = () => {
+                fetchConcentBalance()
+
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
+
+        return () => {
+            console.log('negative')
+            clearInterval(channelInterval);
+        }
     })
 }
 
@@ -120,13 +143,26 @@ export function* concentDepositBalanceBase(session) {
     yield action && put(action)
 }
 
+export function* concentBalanceFlow(session){
+    const channel = yield call(concentDepositBalance, session)
+    try {
+        while (true) {
+            let action = yield take(channel)
+            yield put(action)
+        }
+    } finally {
+        console.info('yield cancelled!')
+        channel.close()
+    }
+}
+
 /**
  * [*connectedPeers generator]
  * @param  {Object} session     [Websocket connection session]
  * @yield   {Object}            [Action object]
  */
 export function* balanceFlow(session) {
-    yield takeLatest(GET_CONCENT_DEPOSIT_BALANCE, concentDepositBalanceBase, session)
+    yield fork(concentBalanceFlow, session);
     const channel = yield call(subscribeBalance, session)
     try {
         while (true) {

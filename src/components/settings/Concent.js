@@ -5,8 +5,11 @@ import {Tooltip} from 'react-tippy';
 
 import * as Actions from './../../actions'
 
+const ETH_DENOM = 10 ** 18;
+
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
+    concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch
 })
 
@@ -47,7 +50,7 @@ export class Concent extends React.Component {
     }
 
     render() {
-        const {isEngineOn} = this.props
+        const {isEngineOn, concentBalance} = this.props
         const {isConcentOn} = this.state
         return (
             <div className="content__concent" style={{height: isConcentOn ? 200 : 360 }}>
@@ -85,7 +88,10 @@ export class Concent extends React.Component {
                         && <div className="deposit-info__concent">
                             <div>
                                 <span>
-                                    Deposit amount: <b>213123123 GNT</b>
+                                    Deposit amount: <b>{concentBalance 
+                                            ? concentBalance.value.dividedBy(ETH_DENOM).toFixed(4) 
+                                            : "-"
+                                        } GNT</b>
                                     <br/>
                                     <br/>If you keep the deposit you can turn concent on later without any additional
                                     <br/> transaction fees or you can unlock it now. <a href="">Learn more</a>

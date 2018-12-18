@@ -44,7 +44,8 @@
     }
 
     .ReactVirtualized__List{
-        overflow: overlay !important;
+        overflow-y: overlay !important;
+        overflow-x: hidden !important;
     }
 }
 

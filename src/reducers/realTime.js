@@ -98,11 +98,7 @@ const realTime = (state = initialState, action) => {
     case SET_CONCENT_DEPOSIT_BALANCE:
         const {value, status, timelock} = action.payload
         return Object.assign({}, state, {
-            concentBalance: {
-                value: new BigNumber(value),
-                status,
-                timelock
-            }
+            concentBalance: action.payload
         });
 
     default:
