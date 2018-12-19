@@ -41,7 +41,7 @@ export default class Step2 extends React.Component {
                 </div>
                 <div className="desc__onboarding">
                     <span>Please name your node.
-                    <br/>Adding an avatar is optional, but can help
+                    <br/>Having a name for your node will help
                     <br/>to build trust, an important part 
                     <br/>of the Golem system.</span>
                 </div>

@@ -86,6 +86,4 @@ var randseed = new Array(4);
  
   export default blockies
  
-//usage blockies.create({seed:"0xAe70978e5CcB8A86757f6E0F149EEC8Eb76fFbEa".toLowerCase(),size:8,scale:16}).toDataURL();
-//const icon = document.getElementById("icon");
-//icon.style.backgroundImage='url('+ img + ')';
+//usage blockies.create({seed:"PUBLIC_ADDRESS".toLowerCase(),size:8,scale:16}).toDataURL(); # will return base64 image
