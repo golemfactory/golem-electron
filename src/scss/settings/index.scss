@@ -46,6 +46,13 @@ $item__accordion-height: 78.7px;
 
     .image__personal{
         max-height: 0;
+        max-width: 0;
+        &--border{
+            max-height: 0;
+            max-width: 0;
+            opacity: 0;
+            visibility: hidden;
+        }
     }
 
     .backup-info__personal{

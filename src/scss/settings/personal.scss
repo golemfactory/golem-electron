@@ -127,9 +127,29 @@
     margin-top: 22px;
 }
 
+.avatar-container{
+    position: relative;
+}
+
 .image__personal {
-    width: 161px;
-    height: 161px;
+    position: relative;
+    width: 20vh;
+    height: 20vh;
     max-height: 161px;
+    max-width: 161px;
     transition: .8s all;
+    border-radius: 30%;
+
+    &--border{
+        position: absolute;
+        top: 0;
+        width: 20vh;
+        height: 20vh;
+        max-height: 161px;
+        max-width: 161px;
+        border: 10px solid rgba(white, 0.5);
+        box-sizing: border-box;
+        border-radius: 30%;
+        transition: .8s all;
+    }
 }
