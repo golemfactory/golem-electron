@@ -41,10 +41,6 @@ class TransactionTube extends Component {
         concentBtn.classList.remove("selected")
         elm.target.classList.add("selected")
 
-        if(elm.target.id === concentBtn.id){
-            this.props.actions.getConcentBalance();
-        }
-
         this.setState({
             showConcentInfo: elm.target.id === concentBtn.id
         })
@@ -86,7 +82,14 @@ class TransactionTube extends Component {
                         : <div className="section__tube content__concent-info">
                             <div className="concent-info__deposit">
                                 <span>Deposit amount: </span>
-                                <span><b>{(4.4444).toFixed(4)} GNT</b></span>
+                                <span>
+                                    <b>
+                                        {concentBalance 
+                                            ? concentBalance.value.dividedBy(ETH_DENOM).toFixed(4) 
+                                            : "-"
+                                        } GNT
+                                    </b>
+                                    </span>
                             </div>
                             <div className="btn__concent-settings" onClick={this._openConcentSetting}>
                                 <span>

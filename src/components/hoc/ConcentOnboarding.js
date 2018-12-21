@@ -20,9 +20,10 @@ import ConcentOnboarding from './../concent/Onboarding'
 export var ConcentOnboardingComponent = function(ComposedComponent) {
 
     const mapStateToProps = state => ({
-        showConcentToS: !state.info.isConcentTermsAccepted,
         concentTerms: state.info.concentTerms,
-        concentSwitch: state.concent.concentSwitch
+        concentSwitch: state.concent.concentSwitch,
+        isOnboadingActive: !state.concent.hasOnboardingShown,
+        showConcentToS: !state.info.isConcentTermsAccepted
     })
 
     const mapDispatchToProps = dispatch => ({
@@ -35,23 +36,37 @@ export var ConcentOnboardingComponent = function(ComposedComponent) {
         constructor(props) {
             super(props);
             this.state = {
-                isOnboadingActive: true
+                isOnboadingActive: props.isOnboadingActive,
+                showConcentToS: props.showConcentToS
             }
         }
 
-        componentWillMount() {}
-
+        componentWillReceiveProps(nextProps) {
+            if(nextProps.showConcentToS !== this.props.showConcentToS){
+                this.setState({
+                    showConcentToS: nextProps.showConcentToS
+                })
+            }
+            if(nextProps.isOnboadingActive !== this.props.isOnboadingActive){
+                this.setState({
+                    isOnboadingActive: nextProps.isOnboadingActive
+                })
+            }
+        }
 
         _handleOnboardingDone = () => {
-            this.setState({
-                isOnboadingActive: false
-            })
+            const {actions, showConcentToS} = this.props
+            actions.setConcentOnboardingShown()
+            if(!showConcentToS){
+                actions.toggleConcent(true, true)
+            }
         }
 
 
         render() {
-            const {concentSwitch, concentTerms, showConcentToS} = this.props
-            const {isOnboadingActive} = this.state
+            const {concentSwitch, concentTerms} = this.props
+            const {showConcentToS, isOnboadingActive} = this.state
+
             if(isOnboadingActive && concentSwitch){
                 return <ConcentOnboarding handleOnboardingDone={this._handleOnboardingDone}/>
             }

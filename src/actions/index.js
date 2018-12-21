@@ -20,7 +20,6 @@ export let dict = Object.freeze({
     SET_ADVANCED_MANUALLY: 'SET_ADVANCED_MANUALLY',
     BLOCK_NODE: 'BLOCK_NODE',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
-    GET_CONCENT_DEPOSIT_BALANCE: 'GET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
@@ -74,6 +73,7 @@ export let dict = Object.freeze({
     TOGGLE_CONCENT: 'TOGGLE_CONCENT',
     UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
     SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    SET_CONCENT_ONBOARDING_SHOWN: 'SET_CONCENT_ONBOARDING_SHOWN',
     //NOTIFICATION_CENTER
     PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
     REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
@@ -152,7 +152,6 @@ const {
     SET_CHOSEN_HARDWARE_PRESET, 
     SET_ADVANCED_MANUALLY,
     BLOCK_NODE,
-    GET_CONCENT_DEPOSIT_BALANCE,
     //TASKS
     SET_TASKLIST, 
     SET_TASK_DETAILS, 
@@ -200,6 +199,7 @@ const {
     DISABLE_ENVIRONMENT,
     TOGGLE_CONCENT,
     UNLOCK_CONCENT_DEPOSIT,
+    SET_CONCENT_ONBOARDING_SHOWN,
     //NOTIFICATION CENTER
     PUSH_NOTIFICATION,
     REMOVE_NOTIFICATION,
@@ -388,11 +388,6 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 })
 
-export const getConcentBalance = (payload) => ({
-    type: GET_CONCENT_DEPOSIT_BALANCE,
-    payload
-})
-
 export const setHistory = (payload) => ({
     type: SET_HISTORY,
     payload
@@ -507,6 +502,10 @@ export const toggleConcent = (payload, informRPC, toggleLock) => ({
 export const unlockConcentDeposit = (payload) => ({
     type: UNLOCK_CONCENT_DEPOSIT,
     payload
+})
+
+export const setConcentOnboardingShown = () => ({
+    type: SET_CONCENT_ONBOARDING_SHOWN
 })
 
 export const pushNotification = (payload) => ({

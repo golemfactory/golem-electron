@@ -15,6 +15,12 @@
 		flex: 1 1 70%;
 	}
 
+	&__section-image{
+		margin-top: 20px;
+		height: 40vh;
+		width: 100%;
+	}
+
 	&__desc{
 		padding: 40px 30px;
 
@@ -23,20 +29,58 @@
 			margin: 0 0 20px 0;
 		}
 
+		h3{
+			margin: 50px 0 0 0;
+		}
+
 		.concent-info{
 			font-size: 11pt;
 			font-weight: 500;
 			line-height: 1.3em;
+
+			@media screen and (max-height: 700px) {
+				font-size: 9pt;
+			}
+
 		}
 
 		.whats-new{
 			&__list{
 				padding: 50px 35px 15px 35px;
+				transition: .5s padding;
 			}
 			&__item{
 				@include flex;
-				font-size: 10pt;
 				padding: 25px 0;
+				transition: .5s padding;
+
+				h4{
+					color: $color-primary;
+					margin: 10px 0;
+				}
+
+				span{
+					font-size: 8pt;
+					font-weight: 400;
+				}
+
+				[class^="icon-"], 
+				[class*=" icon-"] {
+					font-size: 30pt;
+					min-width: 50px;
+					margin-right: 20px;
+					text-align: center;
+					color: $color-primary;
+				}
+			}
+
+			@media screen and (max-height: 700px) {
+				&__list{
+					padding: 10px 35px 15px 35px;
+				}
+				&__item{
+					padding: 10px 0;
+				}
 			}
 		}
 	}

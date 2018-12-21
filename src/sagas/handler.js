@@ -112,8 +112,8 @@ export let config = Object.freeze({
     //Concent
     CONCENT_UNLOCK: 'pay.deposit.relock',
     CONCENT_RELOCK: 'pay.deposit.unlock',
-    CONCENT_ON_RPC: '', //TODO -> fill when RPC is be ready
-    CONCENT_OFF_RPC: '' //TODO -> fill when RPC is be ready
+    CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
 })
 
 

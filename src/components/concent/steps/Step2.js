@@ -27,8 +27,6 @@ export default class Step2 extends React.Component {
             <div className="concent-onboarding__container-step">
                 <div className="concent-onboarding__section-image">
                    <Lottie options={defaultOptions}
-                      height={400}
-                      width={400}
                       isStopped={this.state.isStopped}
                       isPaused={this.state.isPaused}/>
                 </div>
