@@ -26,6 +26,7 @@ const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     version: state.info.version,
     isDeveloperMode: state.input.developerMode,
+    isMainNet: state.info.isMainNet,
     concentSwitch: state.concent.concentSwitch
 })
 
@@ -99,9 +100,10 @@ export class Settings extends React.Component {
      * @return {DOM}                    [Elements of accordion list]
      */
     loadAccordionMenu(data) {
-        const {isDeveloperMode} = this.props
+        const {isDeveloperMode, isMainNet} = this.props
         return data
         .filter((_, index) => isDeveloperMode || index < 6)
+        .filter((item, _) => item.title != "Concent Settings" && isMainNet)
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>

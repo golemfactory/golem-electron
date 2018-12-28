@@ -237,29 +237,32 @@ export class Header extends Component {
                 }
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
-                    <Tooltip
-                      arrow
-                      html={<NotificationCenter/>}
-                      interactive
-                      position="bottom"
-                      theme="light"
-                      trigger="click"
-                      style={{right: "-20px"}}
-                      hideOnClick
-                      unmountHTMLWhenHide
-                      useContext>
+                    {
+                        !isMainNet &&
                         <Tooltip
-                          html={(<p>Notifications</p>)}
+                          arrow
+                          html={<NotificationCenter/>}
+                          interactive
                           position="bottom"
-                          trigger="mouseenter"
-                          hideOnClick={connectedPeers}>
-                            <li className="menu__item">
-                                <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
-                                    <span className="indicator__notification">1</span>
-                                </span>
-                            </li>
+                          theme="light"
+                          trigger="click"
+                          style={{right: "-20px"}}
+                          hideOnClick
+                          unmountHTMLWhenHide
+                          useContext>
+                            <Tooltip
+                              html={(<p>Notifications</p>)}
+                              position="bottom"
+                              trigger="mouseenter"
+                              hideOnClick={connectedPeers}>
+                                <li className="menu__item">
+                                    <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
+                                        <span className="indicator__notification">1</span>
+                                    </span>
+                                </li>
+                            </Tooltip>
                         </Tooltip>
-                    </Tooltip>
+                    }
                     <Tooltip
                       html={
                             <div className="menu__upload">

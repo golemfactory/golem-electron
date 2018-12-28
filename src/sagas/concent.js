@@ -1,4 +1,4 @@
-import { fork, takeLatest, call, put } from 'redux-saga/effects'
+import { fork, takeLatest, call, put, select } from 'redux-saga/effects'
 import { dict } from '../actions'
 
 import { config, _handleRPC } from './handler'
@@ -95,7 +95,11 @@ export function* toggleConcentBase(session, payload) {
 }
 
 export function* concentFlow(session, payload) {
-    yield fork(fetchConcentStatusBase, session)
-    yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
-    yield takeLatest(UNLOCK_CONCENT_DEPOSIT, toggleConcentUnlockBase, session)
+    const getNetwork = state => state.info.isMainNet;
+    const isMainNet = select(getNetwork);
+    if(!isMainNet){
+        yield fork(fetchConcentStatusBase, session)
+        yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
+        yield takeLatest(UNLOCK_CONCENT_DEPOSIT, toggleConcentUnlockBase, session)
+    }
 }

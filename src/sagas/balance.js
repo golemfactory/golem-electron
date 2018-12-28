@@ -109,15 +109,18 @@ export function concentDepositBalance(session) {
         const fetchConcentBalance = () => {
 
             function on_info(args) {
-                let {value, status, timelock} = args[0];
-                emit({
-                    type: SET_CONCENT_DEPOSIT_BALANCE,
-                    payload: {
-                        value: new BigNumber(value),
-                        status,
-                        timelock
-                    }
-                })
+                const concent_info = args[0];
+                if(concent_info){
+                    const {value, status, timelock} = concent_info;
+                    emit({
+                        type: SET_CONCENT_DEPOSIT_BALANCE,
+                        payload: {
+                            value: new BigNumber(value),
+                            status,
+                            timelock
+                        }
+                    })
+                }
             }
 
             _handleRPC(on_info, session, config.CONCENT_DEPOSIT_BALANCE_RPC, [])
