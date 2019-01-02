@@ -5,6 +5,7 @@ import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const mainEtherscan = "https://etherscan.io/address";
 
 export default class Confirmation extends React.Component {
 
@@ -53,7 +54,7 @@ export default class Confirmation extends React.Component {
                     <div>
                         <strong className="info-label">to</strong>
                         <br/>
-                        <span className="info-address">{sendTo}</span>
+                        <span className="info-address"><a href={`${mainEtherscan}/${sendTo}`}>{sendTo}</a></span>
                     </div>
                     <div className="info-gas__container">
                         <strong className="info-label">GAS price</strong>

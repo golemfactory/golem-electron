@@ -108,9 +108,11 @@ export class Geth extends React.Component {
     }
 
     _handleSave(e){
+        this.setState({
+            loadingGethCheck: true
+        })
         const {isLocalGeth, gethPort, gethAddress} = this.state
-        const {isMainnet} = this.props
-
+        const {isMainnet, localGeth} = this.props
         if(gethAddress || isLocalGeth){
             //TODO check geth
             const deferred = mainProcess.validateGeth(isLocalGeth, gethAddress, gethPort, isMainnet)
@@ -123,24 +125,48 @@ export class Geth extends React.Component {
                     })
 
                     this.setState({
-                        gethError: result.error
+                        gethError: result.error,
+                        loadingGethCheck: false
                     })
 
                 } else if(result && !result.status){
                     this.setState({
-                        gethError: result.error
+                        gethError: result.error,
+                        loadingGethCheck: false,
+                        gethAddress: localGeth.gethAddress
+                    }, () =>{
+                        setTimeout(() => {
+
+                            this.setState({
+                                gethError: null
+                            })
+
+                            this.gethInput.value = localGeth.gethAddress
+                        }, 3000)
+
                     })
+
+
                 }
             });
+        } else if(!gethAddress && !isLocalGeth){
+            this.props.actions.setLocalGeth({
+                    isLocalGeth, 
+                    gethPort, 
+                    gethAddress
+                })
+            this.setState({
+                loadingGethCheck: false
+            })
         }
     }
 
     render() {
-        const {isStartLocked, isLocalGeth, gethError} = this.state
+        const {isStartLocked, isLocalGeth, gethError, loadingGethCheck} = this.state
         const {isEngineOn, localGeth} = this.props
         const { gethPort, gethAddress} = localGeth
         return (
-            <form className="content__geth" onSubmit={::this._handleSave}>
+            <form className="content__geth" onSubmit={!loadingGethCheck ? ::this._handleSave : undefined}>
                 <div className="section__flag">
                     <span>Local Geth</span>
                     <div className="switch-box switch-box--green">
@@ -156,6 +182,7 @@ export class Geth extends React.Component {
                     <span>Remote Geth Address</span>
                     <input 
                         type="text" 
+                        ref={el => this.gethInput = el}
                         defaultValue={gethAddress} 
                         onChange={::this._handleGethAddress} 
                         onKeyPress={::this._preventSpace}
@@ -163,9 +190,9 @@ export class Geth extends React.Component {
                         aria-label="URI of Local Geth" 
                         pattern="^(https?)://.*$"
                         placeholder="To connect default geth leave blank."
-                        disabled={isLocalGeth}/>
+                        disabled={isLocalGeth || loadingGethCheck || gethError}/>
                 </div>
-                <button type="submit" className="btn btn--outline" disabled={isStartLocked}>Save</button>
+                <button type="submit" className="btn btn--outline" disabled={isStartLocked}>{!loadingGethCheck ? "Save" : "Checking..."}</button>
                 <div className="section__tips">
                     <span className="tips__geth">Enabling custom geth option will require restart of the application</span>
                     {gethError && <span className="error_geth">{gethError}</span>}
