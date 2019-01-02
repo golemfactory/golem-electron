@@ -179,9 +179,22 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    /**
+     * [_preventTypeAfterLimit max limit fixed to 9999999]
+     * @param  {[type]} e [event]
+     */
     _preventTypeAfterLimit(e){
-        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {
-           e.preventDefault();
+        const usdEstimation = document.getElementById("amountEstimatedUSD")
+
+        if (parseFloat(e.currentTarget.value) >= ((10 ** 7) - 1)) {             //9999999
+            e.preventDefault();
+        } else if (parseFloat(e.currentTarget.value) >= ((10 ** 3) - 1)) {       //999
+            usdEstimation.style.fontSize = 10;
+            usdEstimation.style.marginTop = 10;
+        }
+        else { 
+            usdEstimation.style.fontSize = 12;
+            usdEstimation.style.marginTop = 8.1;
         }
     }
 
@@ -214,7 +227,7 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                    	<span id="amountEstimatedUSD" className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>
