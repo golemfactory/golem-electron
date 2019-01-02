@@ -182,7 +182,7 @@ export class Header extends Component {
                                 relativePath: data[0]
                             })
                         } else {
-                            alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
+                            alert("There's no main file! There should be at least one blender file.")
                         }
                     })
             }
