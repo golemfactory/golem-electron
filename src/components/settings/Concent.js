@@ -10,7 +10,10 @@ const ETH_DENOM = 10 ** 18;
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     concentBalance: state.realTime.concentBalance,
-    concentSwitch: state.concent.concentSwitch
+    concentSwitch: state.concent.concentSwitch,
+    isOnboadingActive: !state.concent.hasOnboardingShown,
+    showConcentToS: !state.info.isConcentTermsAccepted,
+    nodeId: state.info.networkInfo.key,
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -35,13 +38,14 @@ export class Concent extends React.Component {
     }
     
     _toggleConcentSwitch = () => {
+        const {actions, isOnboadingActive, showConcentToS} = this.props
         this.setState({
             isConcentOn: !this.state.isConcentOn
         },() => {
             if(this.state.isConcentOn)
-                this.props.actions.toggleConcent(this.state.isConcentOn, true)
+                actions.toggleConcent(this.state.isConcentOn, (!isOnboadingActive && !showConcentToS))
             else
-                this.props.actions.toggleConcent(this.state.isConcentOn, false)
+                actions.toggleConcent(this.state.isConcentOn, false)
         })
     }
 
@@ -50,7 +54,7 @@ export class Concent extends React.Component {
     }
 
     render() {
-        const {isEngineOn, concentBalance} = this.props
+        const {concentBalance, isEngineOn, nodeId} = this.props
         const {isConcentOn} = this.state
         return (
             <div className="content__concent" style={{height: isConcentOn ? 200 : 360 }}>
@@ -72,8 +76,9 @@ export class Concent extends React.Component {
                                 type="checkbox" 
                                 onChange={::this._toggleConcentSwitch} 
                                 checked={isConcentOn}  
-                                aria-label="Trust switch providing/requesting" 
-                                tabIndex="0" />
+                                aria-label="Concent switch on/off" 
+                                tabIndex="0" 
+                                disabled={!nodeId}/>
                             <div className="switch-slider round"></div>
                         </label>
                       </Tooltip>

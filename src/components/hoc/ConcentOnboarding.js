@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 import ConcentToS from './../concent/ConcentToS'
+import ConcentOnboarding from './../concent/Onboarding'
 
 /**
  * { HIGH ORDER COMPONENT }
@@ -19,9 +20,10 @@ import ConcentToS from './../concent/ConcentToS'
 export var ConcentOnboardingComponent = function(ComposedComponent) {
 
     const mapStateToProps = state => ({
-        showConcentToS: !state.info.isConcentTermsAccepted,
         concentTerms: state.info.concentTerms,
-        concentSwitch: state.concent.concentSwitch
+        concentSwitch: state.concent.concentSwitch,
+        isOnboadingActive: !state.concent.hasOnboardingShown,
+        showConcentToS: !state.info.isConcentTermsAccepted
     })
 
     const mapDispatchToProps = dispatch => ({
@@ -34,6 +36,7 @@ export var ConcentOnboardingComponent = function(ComposedComponent) {
         constructor(props) {
             super(props);
             this.state = {
+                isOnboadingActive: props.isOnboadingActive,
                 showConcentToS: props.showConcentToS
             }
         }
@@ -44,11 +47,29 @@ export var ConcentOnboardingComponent = function(ComposedComponent) {
                     showConcentToS: nextProps.showConcentToS
                 })
             }
+            if(nextProps.isOnboadingActive !== this.props.isOnboadingActive){
+                this.setState({
+                    isOnboadingActive: nextProps.isOnboadingActive
+                })
+            }
         }
+
+        _handleOnboardingDone = () => {
+            const {actions, showConcentToS} = this.props
+            actions.setConcentOnboardingShown()
+            if(!showConcentToS){
+                actions.toggleConcent(true, true)
+            }
+        }
+
 
         render() {
             const {concentSwitch, concentTerms} = this.props
-            const {showConcentToS} = this.state
+            const {showConcentToS, isOnboadingActive} = this.state
+
+            if(isOnboadingActive && concentSwitch){
+                return <ConcentOnboarding handleOnboardingDone={this._handleOnboardingDone}/>
+            }
             if(showConcentToS && concentSwitch){
                 return <ConcentToS {...this.props}/>
             }

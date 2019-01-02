@@ -73,6 +73,7 @@ export let dict = Object.freeze({
     TOGGLE_CONCENT: 'TOGGLE_CONCENT',
     UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
     SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    SET_CONCENT_ONBOARDING_SHOWN: 'SET_CONCENT_ONBOARDING_SHOWN',
     //NOTIFICATION_CENTER
     PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
     REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
@@ -198,6 +199,7 @@ const {
     DISABLE_ENVIRONMENT,
     TOGGLE_CONCENT,
     UNLOCK_CONCENT_DEPOSIT,
+    SET_CONCENT_ONBOARDING_SHOWN,
     //NOTIFICATION CENTER
     PUSH_NOTIFICATION,
     REMOVE_NOTIFICATION,
@@ -500,6 +502,10 @@ export const toggleConcent = (payload, informRPC, toggleLock) => ({
 export const unlockConcentDeposit = (payload) => ({
     type: UNLOCK_CONCENT_DEPOSIT,
     payload
+})
+
+export const setConcentOnboardingShown = () => ({
+    type: SET_CONCENT_ONBOARDING_SHOWN
 })
 
 export const pushNotification = (payload) => ({
