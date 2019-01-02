@@ -26,7 +26,7 @@ export function* accountBase(session) {
     yield action && put(action)
 }
 
-export function withdraw(session, {amount, sendTo, type}, _response, _reject) {
+export function withdraw(session, {amount, sendTo, type, gasPrice}, _response, _reject) {
     return new Promise((response, reject) => {
         function on_info(args) {
             let info = args[0];
@@ -38,7 +38,7 @@ export function withdraw(session, {amount, sendTo, type}, _response, _reject) {
                 _response([])
         }
 
-        _handleRPC(on_info, session, config.WITHDRAW_RPC, [amount, sendTo, type], on_error)
+        _handleRPC(on_info, session, config.WITHDRAW_RPC, [amount, sendTo, type, gasPrice], on_error)
     })
 }
 

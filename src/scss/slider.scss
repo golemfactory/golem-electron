@@ -4,6 +4,13 @@
     justify-content: space-between;
     align-items: center;
     box-sizing: border-box;
+    position: relative;
+    .slider__input{
+        @include flex;
+        flex: 1 1 auto;
+        position: relative;
+        box-sizing: border-box;
+    }
     .slider__resources {
         flex-grow: 1;
         height: 4px;
@@ -19,8 +26,9 @@
     @media screen and (-webkit-min-device-pixel-ratio: 0) {
         .slider__resources {
             -webkit-appearance: none;
-            margin: 10px 12px;
+            margin: 10px 0;
             width: 100%;
+            position: relative;
             &:focus {
                 outline: none;
             }
@@ -60,6 +68,15 @@
         width: 25px;
     }
 
+    .slider-icon {
+        margin-right: 7.5px;
+    }
+
+    .slider__input ~ .slider-icon {
+        margin-left: 7.5px;
+        margin-right: 0;
+    }
+
     .slider-text--left,
     .slider-text--right{
         font-size: 10pt;
@@ -69,9 +86,11 @@
 
     .slider-text--left{
         text-align: center;
+        margin-right: 7.5px;
     }
     .slider-text--right{
         text-align: right;
+        margin-left: 7.5px;
     }
 
     [class^="icon-"],

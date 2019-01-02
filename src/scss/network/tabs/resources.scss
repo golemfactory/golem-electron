@@ -78,7 +78,13 @@
             cursor: pointer;
         }
     }
-    
+
+    .switch__trust {
+        .switch-box {
+            padding: 0 20px 0 0;
+            margin: 0 0 3px 0;
+        }
+    }
 
     .slider__tips {
         margin-top: 18px;

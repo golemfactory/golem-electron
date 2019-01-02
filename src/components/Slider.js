@@ -49,6 +49,7 @@ export default class Slider extends React.Component {
         const primaryColor = this.props.mainColor || TRUST
         const slider = document.getElementById(this.props.inputId);
         const indicator = document.getElementById(`${this.props.inputId}__indicator`);
+        const iconOffset = (this.props.iconLeft || this.props.textLeft) ? 14 : -10
         if(slider && indicator){       
                 const val = Number(slider.value)
                 const min = slider.getAttribute('min')
@@ -99,7 +100,9 @@ export default class Slider extends React.Component {
                 indicator.style.left = (
                     (val - min)
                     * ((sliderWidth - 32 )/(max - min)) 
-                    + ((((appWidth - sliderWidth)/ 2) + 6))) 
+                    + ((((this.props.iconLeft || this.props.textLeft) 
+                        ? ((appWidth - sliderWidth)/ 2) 
+                        : 0) + 6))) 
                 - (this.props.transform ? 24 : 0)
                 - balanceTextToCenter(val)
                 + 'px';
@@ -143,7 +146,7 @@ export default class Slider extends React.Component {
                             min={min || 0} 
                             max={max || 100} 
                             step={step || 1} 
-                            list="steplist" 
+                            list="steplist"
                             onInput={this._handleFillLower.bind(this, disabled)} 
                             role="slider" 
                             aria-label="Machine's Resource" 
