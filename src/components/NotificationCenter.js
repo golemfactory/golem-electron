@@ -30,12 +30,13 @@ export class NotificationCenter extends Component {
      * @param  {Object}     _       [Element in target]
      */
     _navigateTo(to) {
-        window.routerHistory.push(to);
+        if(window.routerHistory.location.pathname !== to)
+            window.routerHistory.push(to);
     }
 
     _fetchNotification = () => {
         
-        const concentTemplate = <span>
+        const concentTemplate = <span onClick={this._navigateTo.bind(this, "/settings")}>
                     You are not using Concent service and thus are not fully secure. 
                     <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
                     <br/>Turn on Concent</span> or 

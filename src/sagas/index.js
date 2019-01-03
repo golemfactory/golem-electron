@@ -161,24 +161,26 @@ export function subscribe(session) {
         function on_connection(args) {
             var connection = args[0];
             const {listening, port_statuses, connected} = connection
-            const checkIfPortsAreHealty = port_statuses && Object.values(port_statuses).every(i => i == "open")
-            if (
-                connected ||
-                (!connected && checkIfPortsAreHealty)
-            ) {
-                emit(true);
-            } else if (!checkIfPortsAreHealty) {
 
-                if(!skipError){
-                    const skipErrorInterval = setInterval(() => {
-                        if(skipError){
-                            emit(skipError) 
-                            clearInterval(skipErrorInterval)
-                        } 
-                    }, 500);
+            if( port_statuses ){
+                const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open");
+                if (
+                    connected ||
+                    (!connected && checkIfPortsAreHealty)
+                ) {
+                    emit(true);
+                } else if (!checkIfPortsAreHealty) {
+
+                    if(!skipError){
+                        const skipErrorInterval = setInterval(() => {
+                            if(skipError){
+                                emit(skipError) 
+                                clearInterval(skipErrorInterval)
+                            } 
+                        }, 500);
+                    }
+                     emit(skipError);
                 }
-                
-                 emit(skipError);
             }
         }
 

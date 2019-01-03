@@ -130,7 +130,7 @@ export class TaskDetail extends React.Component {
             isDepositimeApplied: false,
             //INPUTS
             compositing: false,
-            concent: !props.concentSwitch,
+            concent: props.concentSwitch,
             resolution: [NaN,NaN],
             frames: '',
             format: '',
@@ -159,7 +159,6 @@ export class TaskDetail extends React.Component {
             resolutionChangeInfo: [],
             loadingTaskIndicator: false
         }
-
     }
 
     componentDidMount() {
@@ -939,6 +938,7 @@ export class TaskDetail extends React.Component {
             computeOnRadioOptions['checked'] = this.state.compute_on === type;
         } else {
             computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
+            computeOnRadioOptions['defaultChecked'] = this.state.compute_on === type;
         }
 
         return computeOnRadioOptions
@@ -1047,26 +1047,29 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </div>
                             </div>
-                            <div className="section-concent__task-detail">
-                                <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-concent__task-detail" distance={-20}/>
-                                <div className="item-concent">
-                                    <InfoLabel 
-                                        type="span" 
-                                        label="Set" 
-                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
-                                            <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
-                                        cls="title" 
-                                        infoHidden={true}/>
-                                    <div className="switch-box switch-box--green">
-                                         <span className="switch-label switch-label--left">Off</span>
-                                         <label className="switch">
-                                             <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
-                                             <div className="switch-slider round"></div>
-                                         </label>
-                                         <span className="switch-label switch-label--right">On</span>
-                                     </div>
+                            { !isMainNet
+                                &&
+                                <div className="section-concent__task-detail">
+                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-concent__task-detail" distance={-20}/>
+                                    <div className="item-concent">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Set" 
+                                            info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
+                                                <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                            cls="title" 
+                                            infoHidden={true}/>
+                                        <div className="switch-box switch-box--green">
+                                             <span className="switch-label switch-label--left">Off</span>
+                                             <label className="switch">
+                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                                 <div className="switch-slider round"></div>
+                                             </label>
+                                             <span className="switch-label switch-label--right">On</span>
+                                         </div>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                             <div className="section-price__task-detail">
                                 <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                                 <div className="item-price">

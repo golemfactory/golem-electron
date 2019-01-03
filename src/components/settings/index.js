@@ -103,7 +103,7 @@ export class Settings extends React.Component {
         const {isDeveloperMode, isMainNet} = this.props
         return data
         .filter((_, index) => isDeveloperMode || index < 6)
-        .filter((item, _) => item.title != "Concent Settings" && isMainNet)
+        .filter((item, _) => !(item.title == "Concent Settings" && isMainNet))
         .map((item, index) => <div className="item__accordion" key={index.toString()} value={index}>
                         <div className="item-title__accordion" onClick={::this._handleTab} role="tab" tabIndex="0">
                             <span>{item.title}</span>

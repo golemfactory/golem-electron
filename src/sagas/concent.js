@@ -96,7 +96,7 @@ export function* toggleConcentBase(session, payload) {
 
 export function* concentFlow(session, payload) {
     const getNetwork = state => state.info.isMainNet;
-    const isMainNet = select(getNetwork);
+    const isMainNet = yield select(getNetwork);
     if(!isMainNet){
         yield fork(fetchConcentStatusBase, session)
         yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
