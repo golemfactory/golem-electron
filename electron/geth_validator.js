@@ -1,11 +1,11 @@
-const Web3 = require('web3');
+const Web3Net = require('web3-net');
 const axios = require('axios');
+const getNetworkType = require('../src/utils/getNetworkType');
 
 
 module.exports = async function validateGeth(isLocalGeth, gethAddress, gethPort, isMainnet) {
 	const gethURL = `${isLocalGeth ? "http://localhost" : gethAddress}${isLocalGeth ? ":" + (gethPort || 8545) : ""}`
-	const web3Provider = new Web3.providers.HttpProvider(gethURL)
-	const web3 = new Web3(web3Provider);
+	const web3Net = new Web3Net(gethURL);
 
 	try{
 
@@ -16,9 +16,9 @@ module.exports = async function validateGeth(isLocalGeth, gethAddress, gethPort,
 				headers: {'Content-Type': 'application/json'}
 		});
 
-		const isListening = await web3.eth.net.isListening()
+		const isListening = await web3Net.isListening()
 		if(isListening && isValid){
-		    const guessedChain = await web3.eth.net.getNetworkType()
+		    const guessedChain = await getNetworkType(gethURL, web3Net)
 	        if((guessedChain === "main" && isMainnet) ||
 	            (guessedChain === "rinkeby" && !isMainnet)) {
 	        	return { status: true, error: null }

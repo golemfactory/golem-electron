@@ -14,6 +14,7 @@ describe('realTime reducer', () => {
                 new BigNumber(0).toString(),
                 new BigNumber(0).toString()
             ],
+            concentBalance: null,
             connectedPeers: null,
             peerInfo: [],
             golemStatus: ['client', 'start', 'pre'],

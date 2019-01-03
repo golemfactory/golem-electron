@@ -335,6 +335,7 @@ mark {
 .pageSwap-enter {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(100%, 0, 0);
 }
@@ -342,6 +343,7 @@ mark {
 .pageSwap-enter.pageSwap-enter-active {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(0, 0, 0);
   transition: all ease-out 600ms;
@@ -362,6 +364,7 @@ mark {
 .pageSwapBack-enter {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(-100%, 0, 0);
 }
@@ -369,6 +372,7 @@ mark {
 .pageSwapBack-enter.pageSwapBack-enter-active {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(0, 0, 0);
   transition: all ease-out 600ms;

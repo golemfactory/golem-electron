@@ -13,6 +13,7 @@ import { accountFlow } from './account';
 import { advancedFlow } from "./advanced";
 import { balanceFlow } from "./balance";
 import { chainInfoFlow } from "./chainInfo";
+import { concentFlow } from "./concent";
 import { connectedPeersFlow } from "./connectedPeers";
 import { currencyFlow } from "./currency";
 import { encryptionFlow } from "./password";
@@ -160,24 +161,26 @@ export function subscribe(session) {
         function on_connection(args) {
             var connection = args[0];
             const {listening, port_statuses, connected} = connection
-            const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open")
-            if (
-                connected ||
-                (!connected && checkIfPortsAreHealty)
-            ) {
-                emit(true);
-            } else if (!checkIfPortsAreHealty) {
 
-                if(!skipError){
-                    const skipErrorInterval = setInterval(() => {
-                        if(skipError){
-                            emit(skipError) 
-                            clearInterval(skipErrorInterval)
-                        } 
-                    }, 500);
+            if( port_statuses ){
+                const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open");
+                if (
+                    connected ||
+                    (!connected && checkIfPortsAreHealty)
+                ) {
+                    emit(true);
+                } else if (!checkIfPortsAreHealty) {
+
+                    if(!skipError){
+                        const skipErrorInterval = setInterval(() => {
+                            if(skipError){
+                                emit(skipError) 
+                                clearInterval(skipErrorInterval)
+                            } 
+                        }, 500);
+                    }
+                     emit(skipError);
                 }
-                
-                 emit(skipError);
             }
         }
 
@@ -196,14 +199,49 @@ export function subscribe(session) {
     });
 }
 
-/*function* write(socket) {
-  while (true) {
-    const { payload } = yield take(`${sendMessage}`);
-    socket.emit('message', payload);
-  }
-}*/
+/**
+ * [testRPC function will test given procedure if it's registered on Golem 
+ * within 5 seconds timeout, if not it will fail and will cancel all other
+ * forked connections.]
+ * @param  {[Object]}   session [The connection and session of ws]
+ * @return {[Object]}           [Promise]
+ */
+export function testRPC(session) {
+
+    let paymentTimeout = null;
+    let timeoutCount = 0
+
+    return new Promise((response, reject) => {
+
+        function on_info(args) {
+            if(paymentTimeout)
+                clearTimeout(paymentTimeout)
+            response(true)
+        }
+
+        function on_error(args){
+            if(timeoutCount < 5){
+                runTimeout()
+                timeoutCount++;
+            } else {
+                reject(args)
+            }
+        }
+
+        function runWithTimeout(){
+            _handleRPC(on_info, session, config.PAYMENT_ADDRESS_RPC, [], on_error)
+        }
+
+        function runTimeout(){
+            paymentTimeout = setTimeout(runWithTimeout, 1000)
+        }
+
+        runWithTimeout();
+    })
+}
 
 export function* apiFlow(connection) {
+    yield call(testRPC, connection); //will block flow and wait for registered rpc procedures
     yield fork(accountFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
@@ -213,6 +251,7 @@ export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
 
+    yield fork(concentFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
     yield fork(historyFlow, connection);
@@ -336,6 +375,13 @@ export function* connectionFlow() {
         }
     } finally {
         console.info("yield cancelled!");
+        yield put({
+                    type: SET_CONNECTION_PROBLEM,
+                    payload: {
+                        status: true,
+                        issue: "WEBSOCKET"
+                    }
+                });
         yield cancel(task);
     }
     return task;

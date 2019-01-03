@@ -46,5 +46,5 @@ export const getFilteredPaymentSelector = createCachedSelector(
 		(state, filter, isDefault) => isDefault,
 		(getHistoryList, filter, isDefault) => extractData(getHistoryList, filter, isDefault)
 	)(
-	  	(state, type) => type ? type : "all", // Cache selectors by type name
+	  	(state, filter) => filter ? filter : "all", // Cache selectors by type name
 	)

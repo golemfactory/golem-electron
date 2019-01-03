@@ -8,6 +8,7 @@ import advanced from './network/advanced'
 import history, * as fromHistory from './network/history'
 import resources from './network/resources'
 /*Settings*/
+import concent from './settings/concent'
 import fileLocation from './settings/fileLocation'
 import geth from './settings/geth'
 import performance, * as fromPerformance from './settings/performance'
@@ -23,6 +24,8 @@ import create from './tasks/create'
 import onboard from './onboard'
 /*Account*/
 import account from './account'
+/*Notification Center*/
+import notification from './notification'
 /*Rest*/
 import input from './input'
 import loader from './loader'
@@ -41,6 +44,7 @@ const reducer = combineReducers({
     history,
     resources,
     //SETTINGS
+    concent,
     fileLocation,
     geth,
     performance,
@@ -56,6 +60,8 @@ const reducer = combineReducers({
     onboard,
     //ACCOUNT
     account,
+    //NOTIFICATION CENTER
+    notification,
     //GENERAL
     input,
     loader,

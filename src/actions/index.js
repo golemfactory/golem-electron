@@ -19,6 +19,7 @@ export let dict = Object.freeze({
     SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     SET_ADVANCED_MANUALLY: 'SET_ADVANCED_MANUALLY',
     BLOCK_NODE: 'BLOCK_NODE',
+    SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
     SET_TASK_DETAILS: 'SET_TASK_DETAILS',
@@ -45,6 +46,8 @@ export let dict = Object.freeze({
     SAVE_TASK_PRESET: 'SAVE_TASK_PRESET',
     DELETE_TASK_PRESET: 'DELETE_TASK_PRESET',
     SET_FOOTER_INFO: 'SET_FOOTER_INFO',
+    GET_TASK_GAS_PRICE: 'GET_TASK_GAS_PRICE',
+    SET_TASK_GAS_PRICE: 'SET_TASK_GAS_PRICE',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_LOCAL_GETH: 'SET_LOCAL_GETH',
@@ -67,6 +70,13 @@ export let dict = Object.freeze({
     SET_ENVIRONMENTS: 'SET_ENVIRONMENTS',
     ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
     DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
+    TOGGLE_CONCENT: 'TOGGLE_CONCENT',
+    UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
+    SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    SET_CONCENT_ONBOARDING_SHOWN: 'SET_CONCENT_ONBOARDING_SHOWN',
+    //NOTIFICATION_CENTER
+    PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
+    REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -113,6 +123,10 @@ export let dict = Object.freeze({
     CHECK_TERMS_ACCEPTED: 'CHECK_TERMS_ACCEPTED',
     ACCEPT_TERMS: 'ACCEPT_TERMS',
     SET_TERMS_STATUS: 'SET_TERMS_STATUS',
+    SET_CONCENT_TERMS: 'SET_CONCENT_TERMS',
+    CHECK_CONCENT_TERMS_ACCEPTED: 'CHECK_CONCENT_TERMS_ACCEPTED',
+    ACCEPT_CONCENT_TERMS: 'ACCEPT_CONCENT_TERMS',
+    SET_CONCENT_TERMS_STATUS: 'SET_CONCENT_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
@@ -163,6 +177,7 @@ const {
     SAVE_TASK_PRESET, 
     DELETE_TASK_PRESET, 
     SET_FOOTER_INFO,
+    GET_TASK_GAS_PRICE,
     //SETTINGS
     SET_FILE_LOCATION, 
     SET_LOCAL_GETH,
@@ -182,6 +197,12 @@ const {
     UPDATE_MULTIPLIER,
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
+    TOGGLE_CONCENT,
+    UNLOCK_CONCENT_DEPOSIT,
+    SET_CONCENT_ONBOARDING_SHOWN,
+    //NOTIFICATION CENTER
+    PUSH_NOTIFICATION,
+    REMOVE_NOTIFICATION,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -211,7 +232,6 @@ const {
     LOGOUT, 
     LOGIN_FRAME, 
     LOGOUT_FRAME, 
-    SET_AUTOLAUNCH, 
     SET_CONNECTED_PEERS, 
     SET_PREVIEW_RADIO, 
     SET_PREVIEW_EXPANDED, 
@@ -225,6 +245,9 @@ const {
     CHECK_TERMS_ACCEPTED,
     ACCEPT_TERMS,
     SET_TERMS_STATUS,
+    CHECK_CONCENT_TERMS_ACCEPTED,
+    ACCEPT_CONCENT_TERMS,
+    SET_CONCENT_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
     SET_FILE_CHECK} = dict
@@ -365,7 +388,6 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 })
 
-
 export const setHistory = (payload) => ({
     type: SET_HISTORY,
     payload
@@ -470,6 +492,32 @@ export const disableEnvironment = (payload) => ({
     payload
 })
 
+export const toggleConcent = (payload, informRPC, toggleLock) => ({
+    type: TOGGLE_CONCENT,
+    payload,
+    informRPC,
+    toggleLock
+})
+
+export const unlockConcentDeposit = (payload) => ({
+    type: UNLOCK_CONCENT_DEPOSIT,
+    payload
+})
+
+export const setConcentOnboardingShown = () => ({
+    type: SET_CONCENT_ONBOARDING_SHOWN
+})
+
+export const pushNotification = (payload) => ({
+    type: PUSH_NOTIFICATION,
+    payload
+})
+
+export const removeNotification = (payload) => ({
+    type: REMOVE_NOTIFICATION,
+    payload
+})
+
 export const setTaskDetails = (payload) => ({
     type: SET_TASK_DETAILS,
     payload
@@ -571,11 +619,6 @@ export const setBalance = (payload) => ({
     payload
 })
 
-export const setAutoLaunch = (payload) => ({
-    type: SET_AUTOLAUNCH,
-    payload
-})
-
 export const setTaskList = (payload) => ({
     type: SET_TASKLIST,
     payload
@@ -670,6 +713,10 @@ export const setFooterInfo = (payload) => ({
     payload
 })
 
+export const getTaskGasPrice = () => ({
+    type: GET_TASK_GAS_PRICE
+})
+
 export const setPreviewRadio = (payload) => ({
     type: SET_PREVIEW_RADIO,
     payload
@@ -718,6 +765,10 @@ export const checkTermsAccepted = () => ({
     type: CHECK_TERMS_ACCEPTED
 })
 
+export const checkConcentTermsAccepted = () => ({
+    type: CHECK_CONCENT_TERMS_ACCEPTED
+})
+
 export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     type: ACCEPT_TERMS,
     monitor,
@@ -726,8 +777,19 @@ export const acceptTerms = (monitor, sentry, _resolve, _reject) => ({
     _reject
 })
 
+export const acceptConcentTerms = (_resolve, _reject) => ({
+    type: ACCEPT_CONCENT_TERMS,
+    _resolve,
+    _reject
+})
+
 export const setTermsStatus = (payload) => ({
     type: SET_TERMS_STATUS,
+    payload
+})
+
+export const setConcentTermsStatus = (payload) => ({
+    type: SET_CONCENT_TERMS_STATUS,
     payload
 })
 

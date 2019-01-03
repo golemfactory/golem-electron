@@ -13,49 +13,11 @@
 
 .content__main {
     position: relative;
-    height: 100%;
+    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-content: space-between;
     box-sizing: border-box;
     text-align: center;
-
-    .section__quick-settings {
-        @include flex;
-
-        flex-direction: column;
-        position: relative;
-        flex-grow: 1;
-        border-bottom: 1px solid $color-border;
-
-        .tab-panel {
-            @include flex;
-
-            align-self: stretch;
-            height: 47px;
-            border-bottom: 1px solid $color-border;
-
-            .tab__title {
-                flex: 0 0 18%;
-                font-weight: 500;
-                font-size: 11pt;
-                line-height: 1.3em;
-                color: $color-text3;
-                cursor: pointer;
-                transition: .5s all;
-
-                &.active {
-                    color: $color-text;
-                }
-            }
-        }
-
-        .tab__content {
-            width: 100%;
-            min-height: 0;
-            flex: 1 1;
-            overflow: overlay;
-            transform: translateZ(0);
-        }
-    }
 }

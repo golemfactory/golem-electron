@@ -1,18 +1,99 @@
 .content__resources {
+    flex-direction: column;
+    position: relative;
+    flex: 1 1 100%;
+    overflow: overlay;
+    border-bottom: 1px solid $color-border;
     width: 100%;
     box-sizing: border-box;
+    overflow-x: hidden;
+
+    .advanced-toggler {
+        @include flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        text-align: right;
+        font-weight: 500;
+        margin-top: 40px;
+        transition: color 0.5s;
+
+        .toggler-btn{
+            cursor: pointer;
+            color: $color-primary;
+            font-size: 9pt;
+
+            &:hover {
+                color: $button-hover-color;
+            }
+        }
+
+        [class^="icon-"],
+        [class*=" icon-"] {
+            position: relative;
+            top: 1px;
+            margin-right: 5px;
+        }
+    }
     .slider {
-        margin: 45px 0 30px 0;
+        margin: 30px 0 40px 0;
     }
     .icon-single-server {
         font-size: 16pt;
     }
+
+    .horizontal-transition-container{
+        position: absolute;
+        width: calc(100% - 48px);
+    }
 }
 
-.slider__tips {
-    font-size: 9pt;
-    padding: 0 26px;
-    line-height: 1.6em;
-    font-weight: 400;
-    color: $color-text3;
+.resource-switch-panel{
+    margin-top: -90px;
+    transition: .5s margin-top;
+    &.expand{
+        margin-top: -12px;
+    }
+
+    .switch__gpu,
+    .switch__trust {
+        @include flex;
+        flex-direction: row;
+        position: relative;
+        justify-content: flex-start;
+        padding: 10px;
+        font-size: 9pt;
+
+        .switch-box {
+            padding: 0 10px 0 0;
+            margin: 0 0 3px 0;
+        }
+
+        .icon-question-mark{
+            position: absolute;
+            font-size: 7pt;
+            margin-left: 2px;
+            top: 10px;
+            color: $color-text3;
+            cursor: pointer;
+        }
+    }
+
+    .switch__trust {
+        .switch-box {
+            padding: 0 20px 0 0;
+            margin: 0 0 3px 0;
+        }
+    }
+
+    .slider__tips {
+        margin-top: 18px;
+        font-size: 9pt;
+        padding: 0 26px;
+        line-height: 1.6em;
+        font-weight: 400;
+        color: $color-text3;
+
+    }
 }
+

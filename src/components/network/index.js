@@ -13,9 +13,10 @@ import {getStatus} from '../../reducers'
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
 import Indicator from './Indicator'
+import TransactionTube from '../transaction'
 import Wallet from '../wallet'
-import Resources from './tabs/Resources'
-import History from './tabs/History'
+import Resources from './Resources'
+import History from '../History'
 import Advanced from './tabs/Advanced'
 import FooterMain from '../FooterMain'
 import PresetModal from './modal/PresetModal'
@@ -31,7 +32,6 @@ import ManagePresetModal from './modal/ManagePresetModal'
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
-    autoLaunch: state.input.autoLaunch,
     connectionProblem: state.info.connectionProblem,
     status: getStatus(state, 'golemStatus'),
     chosenPreset: state.advanced.chosenPreset,
@@ -55,12 +55,12 @@ export class MainFragment extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0,
             presetModal: false,
             managePresetModal: false,
             modalData: null,
             engineLoading: false,
-            isPresetNameExist: false
+            isPresetNameExist: false,
+            toggleHistory: false
         }
     //props.actions.setOnboard(true)
     }
@@ -129,52 +129,27 @@ export class MainFragment extends React.Component {
         setTimeout(endLoading, 8000)
     }
 
-    /**
-     * [_handleAutoLaunchSwitch onChange function for switch input]
-     */
-    _handleAutoLaunchSwitch() {
-        const {actions} = this.props
-        const {autoLaunchSwitch} = this.refs
-        actions.setAutoLaunch(autoLaunchSwitch.checked)
-    }
-
-    /**
-     * [_handleTab to change active class of selected tab title]
-     *
-     * @param   {Object}     elm     [target element]
-     */
-    _handleTab(elm) {
-        const tabPanel = document.getElementById('networkTab');
-        const tabTitles = tabPanel.childNodes;
-        for (var i = 0; i < tabTitles.length; i++) {
-            tabTitles[i].classList.remove('active')
-        }
-        elm.currentTarget.classList.add('active')
+    _toggleTransactionHistory = () => {
         this.setState({
-            activeTab: elm.target.getAttribute('value')
+            toggleHistory: !this.state.toggleHistory
         })
     }
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
         const {message, actions, autoLaunch, connectionProblem, status, isEngineOn, isEngineLoading, balance, currency, version} = this.props
-        const {activeTab, presetModal, managePresetModal, modalData, isPresetNameExist} = this.state
+        const {presetModal, managePresetModal, modalData, isPresetNameExist, toggleHistory} = this.state
 
         return (
             <div className="content__main">
             <Wallet balance={balance} currency={currency}/>
-            <div className="section__quick-settings">
-                <div id="networkTab" className="tab-panel" role="tablist">
-                    <div className="tab__title active" value='0' onClick={::this._handleTab} role="tab" tabIndex="0">Resources</div>
-                    <div className="tab__title" value='1' onClick={::this._handleTab} role="tab" tabIndex="0">History</div>
-                    <div className="tab__title" value='2' onClick={::this._handleTab} role="tab" tabIndex="0">Advanced</div>
-                </div>
-                <div className="tab__content">
-                    {activeTab == 0 && <Resources role="tabpanel"/>}
-                    {activeTab == 1 && <History role="tabpanel"/>}
-                    {activeTab == 2 && <Advanced role="tabpanel" modalHandler={::this._handlePresetModal} manageHandler={::this._handleManagePresetModal} />}
-                </div>
-            </div>
+            {!toggleHistory 
+                ? [
+                    <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory} key="transaction"/>,
+                    <Resources key="resources"/>
+                  ]
+                : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
+            }
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <FooterMain {...this.props}/>

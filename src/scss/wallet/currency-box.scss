@@ -1,72 +1,96 @@
-.content__currency-box{
+.content__currency-box {
 	min-width: 100px;
 	width: 140px;
-	min-height: 60px;
-	display: flex;
-	flex: 1;
-	flex-flow: row;
-	align-items: center;
-	justify-content: space-around;
+	min-height: 50px;
 	border: 0px solid transparent;
-	transition: .8s all;
+	transition: 0.8s all;
 	cursor: pointer;
 	transition: all 300ms linear;
 
-	span{
+	.front {
+		display: flex;
+		flex: 1 1 auto;
+		align-items: center;
+		justify-content: space-around;
+		margin-left: 30px;
+	}
+
+	.back {
+		display: none;
+	}
+
+	span {
 		margin: 0 2px;
 		display: block;
 		font-size: 9pt;
 		line-height: 1.5;
 		text-align: left;
 
-		&:first-child{
+		&:first-child {
 			font-weight: 500;
 			font-size: 11pt;
 		}
 	}
-	
-	span[class^="icon"][class$="logo"]{
+
+	span[class^="icon"][class$="logo"] {
 		display: inline;
-		font-size:26pt;
+		font-size: 28pt;
 		color: $color-text4;
 		border-radius: 50%;
-		transition: .8s all;
+		padding: 1px;
+		transition: 0.8s all;
 		margin-right: 5px;
 	}
 
-	.icon-golem-logo{
-		background: #001D57;
+	.icon-golem-logo {
+		background: $color-text4;
+		border: 0.5px solid $color-border;
+		box-sizing: border-box;
 	}
 
-	.icon-ethereum-logo{
-		background: #3C3C3D;
+	.icon-ethereum-logo {
+		background: $color-text4;
+		border: 0.5px solid $color-border;
+		box-sizing: border-box;
 	}
 
+	.locked-amount,
+	.unconverted-amount {
+		display: none;
+	}
 
-	.currency-suffix{
+	.action-menu {
+		@include flex;
+		justify-content: space-around;
+		width: 100%;
+		padding: 0 20px;
+		box-sizing: border-box;
+	}
+
+	.currency-suffix {
 		display: inline !important;
 		font-size: 9px !important;
 		font-weight: 300 !important;
 	}
 
-	.icon-question-mark{
+	.icon-question-mark {
 		cursor: pointer;
-		margin-top: -15px;
+		margin-top: -20px;
 		font-size: 8pt !important;
 		align-self: flex-start;
 		color: $color-text3;
 	}
 
-	.wallet__btn-withdraw{
+	.wallet__btn-withdraw {
 		display: none;
-		animation:.2s ease .8s normal forwards 1 fadein;
-		-webkit-animation:0.2s ease 0.8s normal forwards 1 fadein;
-		opacity:0;
+		animation: 0.2s ease 0.8s normal forwards 1 fadein;
+		-webkit-animation: 0.2s ease 0.8s normal forwards 1 fadein;
+		opacity: 0;
 	}
 }
 
-.expand__wallet{
-	.content__currency-box{
+.expand__wallet {
+	.content__currency-box {
 		position: relative;
 		width: 188px;
 		height: 194px;
@@ -81,98 +105,214 @@
 		border: 1px solid $color-border;
 	}
 
-	span[class^="icon"][class$="logo"]{
-		font-size:36pt;
+	span[class^="icon"][class$="logo"] {
+		font-size: 36pt;
+		border: 0;
+		margin: 0;
 	}
 
-	span{
+	span {
 		text-align: center;
 	}
-	
 
-	.tip{
+	.tip {
 		position: absolute;
 		right: 5px;
 		top: 20px;
 		margin: 0;
 	}
 
-	.wallet__btn-withdraw{
-		display: block;
+	.icon-question-mark {
+		margin-top: -15px;
+	}
+
+	.amount-usd {
+		font-size: 7pt;
+		line-height: 0.8em;
+	}
+	
+	.locked-amount,
+	.unconverted-amount {
+		@include flex;
+
+		span {
+			display: inline;
+			font-size: 7pt;
+			font-weight: 300;
+			line-height: 1em;
+		}
+
+		.amount {
+			font-weight: 500;
+			font-size: 11pt;
+			padding: 0 2px;
+		}
+	}
+
+	.available-amount {
+		span {
+			font-weight: 300;
+			font-size: 7pt;
+		}
+
+		.amount {
+			font-weight: 500;
+			font-size: 11pt;
+			padding: 0 2px;
+		}
+	}
+
+	.batch-contract-adress {
+		span {
+			display: inline;
+			font-size: 8pt;
+			font-weight: 400;
+		}
+	}
+
+	.wallet__btn-withdraw {
+		display: flex;
+		align-items: center;
+	}
+
+	/**
+ * Flip effect
+ */
+
+	.flipper {
+		transition: 0.6s;
+		transform-style: preserve-3d;
+		position: relative;
+
+		.front {
+			display: flex;
+			flex: 1 1 auto;
+			flex-flow: column;
+			align-items: center;
+			justify-content: space-around;
+
+			height: 100%;
+			backface-visibility: hidden;
+			position: absolute;
+			z-index: 2;
+			transform: rotateY(0deg);
+			margin-left: 0;
+
+			.action-menu{
+				margin-right: 10px;
+			}
+		}
+		.back {
+			display: flex;
+			flex: 1 1 auto;
+			flex-flow: column;
+			justify-content: space-around;
+
+			height: 100%;
+			backface-visibility: hidden;
+			position: absolute;
+			transform: rotateY(180deg);
+			padding-top: 10px;
+
+			.locked-amount,
+			.unconverted-amount {
+				justify-content: space-between;
+				margin: 15px 0;
+			}
+
+			.action-menu {
+				margin-bottom: 10px;
+
+				.icon-back-up{
+					transform: rotate(-90deg);
+					margin-left: 10px;
+				}
+			}
+		}
+	}
+
+	.flipper.flip {
+		transform: rotateY(180deg);
+	}
+
+	.container__currency-box{
+		height: auto;
+		margin-top: 0;
 	}
 }
 
-.container {
+.container__currency-box {
 	outline: 1px solid transparent;
 	will-change: transform;
 	perspective: 100000px;
 	backface-visibility: hidden;
+	height: 70px;
+	margin-top: -25px;
 }
 
 #cube {
-    transform-style: preserve-3d;
-    -webkit-transform-style: preserve-3d;
-    text-align: center;
-    -webkit-transition: -webkit-transform 0.5s;
-    transition: transform 0.5s;
+	transform-style: preserve-3d;
+	-webkit-transform-style: preserve-3d;
+	text-align: center;
+	-webkit-transition: -webkit-transform 0.5s;
+	transition: transform 0.5s;
 
-    &.show-front {
-	    -webkit-transform: translateZ(-40px);
-	    transform: translateZ(-40px);
-	    .side2{
+	&.show-front {
+		-webkit-transform: translateZ(-32px);
+		transform: translateZ(-32px);
+		.side2 {
 			opacity: 0;
 		}
 	}
 
 	&.show-top {
-	    -webkit-transform: translateZ(-40px) rotateX(-90deg);
-	    transform: translateZ(-40px) rotateX(-90deg);
-	    .side1{
+		-webkit-transform: translateZ(-32px) rotateX(-90deg);
+		transform: translateZ(-32px) rotateX(-90deg);
+		.side1 {
 			opacity: 0;
 		}
 	}
 }
 
 .side1 {
-
 	height: 40px;
 	display: flex;
 	flex-direction: column;
 	text-align: left;
 	font-size: 10pt;
 
-    -webkit-transform: translateZ(40px);
-    transform: translateZ(40px) translateY(35px);
-    transition: opacity 0.3s ease 0.1s;
+	-webkit-transform: translateZ(32px);
+	transform: translateZ(32px) translateY(34px);
+	transition: opacity 0.3s ease 0.1s;
 
-    b{
-    	margin-left: 10px;
-    }
+	b {
+		margin-left: 10px;
+	}
 
-    .lock__container{
+	.lock__container {
 		display: flex;
-	  	justify-content: space-between;
-	  	width: 100%;
+		justify-content: space-between;
+		width: 100%;
 
-	  	.icon-question-mark{
+		.icon-question-mark {
 			cursor: pointer;
-		    font-size: 8pt !important;
-		    align-self: flex-start;
-		    color: $color-text3;
-		    margin-left: 8px;
+			font-size: 8pt !important;
+			align-self: flex-start;
+			color: $color-text3;
+			margin-left: 8px;
 		}
-    }
+	}
 
-    &.GNT{
+	&.GNT {
 		align-items: flex-start;
-    }
+	}
 
-    &.ETH{
+	&.ETH {
 		align-items: flex-end;
-    }
+	}
 }
 .side2 {
-    -webkit-transform: rotateX(90deg) translateZ(40px);
-    transform: rotateX(90deg) translateZ(40px);
-    transition: opacity 0.3s ease 0.1s;
+	-webkit-transform: rotateX(90deg) translateZ(32px);
+	transform: rotateX(90deg) translateZ(32px);
+	transition: opacity 0.3s ease 0.1s;
 }

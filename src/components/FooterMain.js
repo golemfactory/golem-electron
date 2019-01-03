@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import checkNested from './../utils/checkNested'
 import golem_loading from './../assets/img/golem-loading.svg'
 
-const {remote} = window.electron;
+const {remote, ipcRenderer} = window.electron;
 const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
@@ -76,6 +76,10 @@ export default class FooterMain extends Component {
         }
     }
 
+    _openLogs = () => {
+        ipcRenderer.send('open-logs')
+    }
+    
     _fetchState(stat){
         if(stat){
             let state = stat.status;
@@ -123,11 +127,15 @@ export default class FooterMain extends Component {
                     <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
                 </div>
                 <div className="content__footer-social">
-                    <a href="https://www.github.com/golemfactory">
-                        <u>github page</u>
+                    <span className="element__footer" onClick={this._openLogs}>
+                        <span className="icon-logs"/>
+                        <u>open logs</u>
+                    </span>
+                    <a className="element__footer" href="https://www.github.com/golemfactory">
+                        <span className="icon-golem-logo"/>{versionTemplate}
                     </a>
-                    <span>{versionTemplate}</span>
-                    <a href="https://chat.golem.network">
+                    <a className="element__footer" href="https://chat.golem.network">
+                        <span className="icon-chat"/>
                         <u>golem chat</u>
                     </a>
                 </div>
