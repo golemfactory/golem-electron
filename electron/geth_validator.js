@@ -1,6 +1,6 @@
 const Web3Net = require('web3-net');
 const axios = require('axios');
-const getNetworkType = require('../src/utils/getNetworkType');
+const getNetworkType = require('./get_network_type');
 
 
 module.exports = async function validateGeth(isLocalGeth, gethAddress, gethPort, isMainnet) {
