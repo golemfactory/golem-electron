@@ -50,9 +50,10 @@
 
 .resource-switch-panel{
     margin-top: -90px;
-    transition: .5s margin-top;
+    transition: .5s margin-top ease .5s;
     &.expand{
         margin-top: -12px;
+        transition: .5s margin-top ease 0s;
     }
 
     .switch__gpu,
@@ -93,7 +94,7 @@
         line-height: 1.6em;
         font-weight: 400;
         color: $color-text3;
-
+        transition: .5s;
     }
 }
 

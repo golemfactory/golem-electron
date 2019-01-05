@@ -22,6 +22,7 @@
             outline: none;
         }
     }
+
     /*Chrome*/
     @media screen and (-webkit-min-device-pixel-ratio: 0) {
         .slider__resources {
@@ -50,6 +51,10 @@
                 margin-top: -16px;
             }
         }
+
+        span + .slider__resources{
+            margin: 10px 12px;
+        }
     }
     .slider-indicator__resources {
         position: absolute;
@@ -66,10 +71,6 @@
     .slider-icon {
         display: none;
         width: 25px;
-    }
-
-    .slider-icon {
-        margin-right: 7.5px;
     }
 
     .slider__input ~ .slider-icon {
