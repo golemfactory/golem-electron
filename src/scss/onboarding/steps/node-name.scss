@@ -11,21 +11,31 @@
 }
 
 .nickname-area__onboarding {
-    height: 30px !important;
     box-sizing: border-box;
-    margin: 24px 0 10px 0;
+    margin: 84px 0 10px 0;
 
     @include flex;
 }
 
 .nickname-input__onboarding {
-    width: 100%;
-    border: 0;
-    background: $color-bg;
+    width: 300px !important;
+    height: 30px;
+    border: 1px solid $color-border;
     color: #000;
     font-size: 16pt;
     box-sizing: border-box;
-    -webkit-animation: blink-animation 1s steps(3, start) infinite;
+
+    &::-webkit-input-placeholder {
+        color: $color-text2 !important; 
+        font-size: 10pt;
+        font-weight: 300;
+    }
+
+    &:focus::-webkit-input-placeholder {
+        color: $color-text2 !important; 
+        font-size: 10pt;
+        font-weight: 300;
+    }
 
     @keyframes blink-animation {
       to {

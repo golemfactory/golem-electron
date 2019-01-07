@@ -12,7 +12,7 @@ import {getPasswordModalStatus} from '../../reducers'
 import Onboarding from './../onboarding';
 
 import Welcome from './steps/Welcome'
-import ChainInfo from './steps/ChainInfo'
+import VirtualisationInfo from './steps/VirtualisationInfo'
 import Terms from './steps/Terms'
 import Type from './steps/Type'
 import Register from './steps/Register'
@@ -32,7 +32,7 @@ const {app} = remote
 
 const steps = Object.freeze({
     WELCOME: 1,
-    CHAININFO: 2,
+    VIRTUALISATION: 2,
     TERMS: 3,
     TYPE: 4,
     REGISTER: 5,
@@ -143,7 +143,7 @@ class OnboardIndex extends React.Component {
             if(event.key === "Enter" && 
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
-                this.state.currentStep !== steps.STEP1 &&
+                this.state.currentStep !== steps.STEP4 &&
                 this.props.isConnected){
                 this._handleNext.call(this)
             }
@@ -165,6 +165,7 @@ class OnboardIndex extends React.Component {
     }
 
     _setNodeName(name) {
+        console.log("name", name);
         this.setState({
             nodeName: name
         })
@@ -230,10 +231,10 @@ class OnboardIndex extends React.Component {
         let key = Symbol(id).toString();
         switch (id) {
         case steps.WELCOME:
-            step = <Welcome key={key}/>
+            step = <Welcome key={key} isMainNet={isMainNet}/>
             break;
-        case steps.CHAININFO:
-            step = <ChainInfo isMainNet={isMainNet}/>
+        case steps.VIRTUALISATION:
+            step = <VirtualisationInfo />
             break;
         case steps.TERMS:
             step = isTermsDeclined ? <Decline/> : <Terms 
@@ -264,12 +265,7 @@ class OnboardIndex extends React.Component {
                     isSkippingPrint={isSkippingPrint}/>
             break;
         case steps.STEP1:
-            step = <Step2 
-                    ref={(ref) => this.step2 = ref}
-                    nodeName={nodeName}
-                    setNodeName={::this._setNodeName} 
-                    key={key} 
-                    handleNext={::this._handleNext}/>
+            step = <Step2 key={key}/>
             break;
         case steps.STEP2:
             step = <Step3 key={key}/>
@@ -278,7 +274,12 @@ class OnboardIndex extends React.Component {
             step = <Step4 key={key}/>
             break;
         case steps.STEP4:
-            step = <Step5 key={key}/>
+            step = <Step5 key={key}
+                    ref={(ref) => this.stepNickname = ref}
+                    nodeName={nodeName}
+                    setNodeName={::this._setNodeName} 
+                    key={key} 
+                    handleNext={::this._handleNext}/>
             break;
         // case 6:
         //     step = <Step6/>
@@ -307,7 +308,7 @@ class OnboardIndex extends React.Component {
     _handleNext() {
         const { actions, passwordModal, isTermsAccepted } = this.props
         const { currentStep, nodeName, isRegisterRequired } = this.state 
-        if (currentStep === steps.STEP2) {
+        if (currentStep === steps.STEP4) {
             const queuedTask = {
                 action: "updateNodeName",
                 arguments: [nodeName]
@@ -453,7 +454,7 @@ class OnboardIndex extends React.Component {
     _initControl(_step){
         const {passwordModal, isConnected} = this.props
         const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
-        if(_step === steps.WELCOME || _step === steps.STEP4){
+        if(_step === steps.WELCOME){
             return <div>
                 <button className="btn btn--primary" 
                         onClick={::this._handleNext} 
@@ -481,7 +482,7 @@ class OnboardIndex extends React.Component {
                     </button>
                 </div>
         }
-        else if(_step === steps.CHAININFO || _step === steps.TYPE){
+        else if(_step === steps.VIRTUALISATION || _step === steps.TYPE){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Got It</button>
             </div>
@@ -522,7 +523,26 @@ class OnboardIndex extends React.Component {
                                 Next
                     </button>
                 </div>
-        } else if(_step > steps.STEP1){
+        } else if(_step === steps.STEP1){
+            return <div>
+                        <span>{_step - 6} of 4</span>
+                        <span
+                            className="icon-arrow-right-small"
+                            onClick={::this._handleNext} 
+                            aria-label="Next"
+                            tabIndex="0"/>
+                   </div>
+        } else if(_step === steps.STEP4){
+            return <div>
+                <button className="btn btn--primary" 
+                        onClick={e => {
+                            this.stepNickname.activityFormButton.click()
+                        }}
+                        disabled={!isConnected}>
+                            {isConnected ? "Get Started" : "Connecting..."}
+                </button>
+            </div>
+        } else {
             return <div>
                         <span 
                             className="icon-arrow-left-small" 
@@ -534,17 +554,6 @@ class OnboardIndex extends React.Component {
                             className="icon-arrow-right-small" 
                             onClick={::this._handleNext} 
                             aria-label="Next" 
-                            tabIndex="0"/>
-                   </div>
-        } else {
-            return <div>
-                        <span>{_step - 6} of 4</span>
-                        <span
-                            className="icon-arrow-right-small"
-                            aria-label="Next"
-                            onClick={e => {
-                                this.step2.activityFormButton.click()
-                            }}
                             tabIndex="0"/>
                    </div>
         }

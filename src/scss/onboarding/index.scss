@@ -24,6 +24,12 @@ mark {
     padding-bottom: 38px;
     box-sizing:border-box;
 
+    h1{
+        color: $color-primary;
+        margin: 0 0 30px 0;
+        font-size: 1.8em;
+    }
+
     span:first-child{
         width: 100%;
     }
@@ -128,11 +134,11 @@ mark {
 .desc__onboarding {
     width: 100%;
     margin-top: 8vh;
-    padding: 0 40px;
-    font-size: 14pt;
-    font-weight: 400;
-    text-align: center;
-    line-height: 1.3em;
+    padding: 0 50px;
+    font-size: 10pt;
+    font-weight: 600;
+    text-align: left;
+    line-height: 1.5em;
     box-sizing: border-box;
     transition: .5s all;
 
