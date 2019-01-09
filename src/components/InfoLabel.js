@@ -22,7 +22,8 @@ export default class InfoLabel extends Component {
     	const {info, type, label, cls, infoHidden, distance, interactive} = this.props
         return (
             <div className={`info-label__container ${cls}`}>
-    			<Tooltip
+    			{info 
+            ? <Tooltip
                   html={info}
                   position="bottom"
                   trigger="mouseenter"
@@ -30,6 +31,7 @@ export default class InfoLabel extends Component {
                   distance={distance}>
             		{this._initLabel(type, label, infoHidden)}
 	            </Tooltip>
+            : this._initLabel(type, label, infoHidden)}
             </div>
         );
     }
