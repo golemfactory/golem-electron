@@ -1,18 +1,35 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import penIcon from './../../../assets/img/pen.svg'
+import animData from './../../../assets/anims/onboarding/no-recovery.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Type extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isStopped: false, 
+            isPaused: false
+        };
     }
 
     render() {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={penIcon}/>
+                   <Lottie options={defaultOptions}
+                      isStopped={this.state.isStopped}
+                      isPaused={this.state.isPaused}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>There is no password recovery</h1>

@@ -86,8 +86,9 @@ mark {
 
 .section-image__onboarding {
     position: relative;
+    margin-top: 20px;
+    height: 40vh;
     width: 100%;
-    flex: 0 0 288px;
     background: $color-bg2;
     text-align: center;
     transition: .5s all;
@@ -391,7 +392,6 @@ mark {
 @media screen and (max-height: 720px)
 {
     .section-image__onboarding{
-        flex: 0 0 200px;
         
         .welcome-image,
         .chain-image{
@@ -400,9 +400,9 @@ mark {
     }
 
     .desc__onboarding {
-        font-size: 12pt;
+        font-size: 8pt;
         line-height: 1.6;
-        margin-top: 4vh;
+        margin-top: 10vh;
     }
 
     .info__register{

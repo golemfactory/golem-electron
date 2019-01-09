@@ -1,11 +1,26 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import avatar from './../../../assets/img/avatar.svg'
+import animData from './../../../assets/anims/onboarding/node-name.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Step5 extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isStopped: false, 
+            isPaused: false
+        };
     }
 
     _setNodeName(e) {
@@ -21,7 +36,9 @@ export default class Step5 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding">
-                    <img className="avatar" src={avatar}/>
+                    <Lottie options={defaultOptions}
+                      isStopped={this.state.isStopped}
+                      isPaused={this.state.isPaused}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>Name your node</h1>

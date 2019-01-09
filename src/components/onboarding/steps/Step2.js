@@ -1,20 +1,36 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import networkPreview from './../../../assets/img/network-preview.png'
+import animData from './../../../assets/anims/onboarding/setup-ports.json'
 import SpotLight from '../../SpotLight'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Step2 extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isStopped: false, 
+            isPaused: false
+        };
     }
 
     render() {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding section__fixed">
-                    <img src={networkPreview}/>
-                    <SpotLight posX={[300, 20]} posY={[300, 20]} r={[50, 10]}/>
+                    <Lottie options={defaultOptions}
+                      isStopped={this.state.isStopped}
+                      isPaused={this.state.isPaused}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>Connecting to network</h1>

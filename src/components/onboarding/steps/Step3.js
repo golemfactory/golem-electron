@@ -1,20 +1,36 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import tasksPreview from './../../../assets/img/tasks-preview.png'
+import animData from './../../../assets/anims/onboarding/provider.json'
 import SpotLight from '../../SpotLight'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Step3 extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            isStopped: false, 
+            isPaused: false
+        };
     }
 
     render() {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding section__fixed">
-                    <img src={tasksPreview}/>
-                    <SpotLight posX={[10, 37]} posY={[18, 18]} r={[10, 10]}/>
+                    <Lottie options={defaultOptions}
+                      isStopped={this.state.isStopped}
+                      isPaused={this.state.isPaused}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>Start as provider</h1>
