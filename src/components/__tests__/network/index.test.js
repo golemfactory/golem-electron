@@ -113,6 +113,14 @@ describe('<MainFragment />', () => {
             input: {
                 developerMode: false
             },
+            stats: {
+                stats: {
+                    host_state: "",
+                    subtasks_computed: [],
+                    subtasks_with_timeout: [],
+                    subtasks_with_errors: []
+                }
+            },
         }
 
         const props = {
