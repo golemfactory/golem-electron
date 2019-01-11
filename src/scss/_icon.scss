@@ -8,6 +8,21 @@ $color_7: rgb(255, 255, 255);
 $color_8: rgb(64, 93, 175);
 $color_9: rgb(245, 166, 35);
 
+.icon-high-five {
+  &:before {
+    content: "\e968";
+  }
+}
+.icon-ok-hand {
+  &:before {
+    content: "\e969";
+  }
+}
+.icon-shield {
+  &:before {
+    content: "\e96a";
+  }
+}
 .icon-file-menu {
   &:before {
     content: "\e953";

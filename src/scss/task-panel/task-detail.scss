@@ -162,7 +162,8 @@
 }
 
 .section-task__task-detail,
-.section-settings__task-detail {
+.section-settings__task-detail,
+.section-concent__task-detail {
     box-sizing: border-box;
     padding-bottom: 15px !important;
     border-bottom: 1px solid $color-border;
@@ -264,6 +265,37 @@
           padding: 4px;
           background-clip: content-box;
           cursor: pointer;
+        }
+    }
+}
+.section-concent__task-detail{
+    .item-concent{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 10pt;
+
+        .title{
+            align-self: center;
+            flex: 0 0 100px;
+        }
+
+        .switch-box{
+            flex: 0 0 280px;
+            
+            .switch-label{
+                font-size: 9pt;
+
+                &--left {
+                    margin-right: 10px;
+                }
+
+                &--right {
+                    margin-left: 10px;
+                }
+            }
         }
     }
 }

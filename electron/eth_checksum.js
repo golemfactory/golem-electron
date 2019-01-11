@@ -1,6 +1,5 @@
-const Web3 = require('web3');
+const web3Utils = require('web3-utils');
 
 module.exports = async function toChecksumAddress(address) {
-	const web3 = new Web3();
-	return await web3.utils.toChecksumAddress(address)
+	return await web3Utils.toChecksumAddress(address)
 }

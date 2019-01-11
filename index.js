@@ -19,6 +19,7 @@ const ipcHandler = require('./electron/ipc_handler.js')
 const golemHandler = require('./electron/golem_handler.js')
 const gethValidator = require('./electron/geth_validator.js')
 const ethChecksum = require('./electron/eth_checksum.js')
+const estimatedGas = require('./electron/gas_price_oracle.js')
 
 function isDevelopment() {
     return process.env.NODE_ENV === 'development'
@@ -361,8 +362,8 @@ exports.selectDirectory = function(directory, _isMainNet) {
         "BLEND"
     ]
 
-    if(!_isMainNet)
-        masterList.push("LXS")
+    // if(!_isMainNet)
+    //     masterList.push("LXS")
 
 
     let ignorePlaftormFiles = function(file) {
@@ -492,4 +493,4 @@ exports.isWin = isWin;
 exports.isMac = isMac;
 exports.validateGeth = gethValidator;
 exports.toChecksumAddress = ethChecksum;
-
+exports.getEstimatedGasPrice = estimatedGas;

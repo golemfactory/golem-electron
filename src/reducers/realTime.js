@@ -11,7 +11,8 @@ const {
         SET_GOLEM_STATUS, 
         SET_FOOTER_INFO, 
         SET_PASSWORD_MODAL, 
-        SET_PASSWORD
+        SET_PASSWORD,
+        SET_CONCENT_DEPOSIT_BALANCE
     } = dict
 
 const initialState = {
@@ -24,6 +25,7 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
+    concentBalance: null,
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
@@ -91,6 +93,12 @@ const realTime = (state = initialState, action) => {
     case SET_FOOTER_INFO:
         return Object.assign({}, state, {
             footerInfo: action.payload
+        });
+
+    case SET_CONCENT_DEPOSIT_BALANCE:
+        const {value, status, timelock} = action.payload
+        return Object.assign({}, state, {
+            concentBalance: action.payload
         });
 
     default:

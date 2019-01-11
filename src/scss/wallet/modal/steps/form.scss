@@ -1,5 +1,5 @@
 .content__modal--form {
-    height: 360px;
+    height: 430px;
     text-align: center;
     padding: 20px;
 }
@@ -82,11 +82,52 @@
         transition: .5s all;
     }
 
-
     .amount__estimation{
         float:right;
-        font-size: 10pt;
+        font-size: 9pt;
         margin-top: 8px;
+    }
+
+    .average-cost{
+        font-size: 8pt;
+        font-weight: 300;
+    }
+
+    .gas_fee_slider{
+        margin-top: 20px;
+        height: 40px;
+    }
+
+    .slider__info-gas{
+        font-size: 7pt;
+        margin-top: -7px;
+
+        &--slow{
+            display: block;
+            float: left;
+            color: $color-accent2;
+        }
+
+        &--fast{
+            display: block;
+            float: right;
+            color: $color-accent1;
+        }
+    }
+
+    .loading__slider{
+        font-size: 9pt;
+        line-height: 2em;
+        text-align: center;
+    }
+
+    .total-amount__info{
+        @include flex;
+        justify-content: space-between;
+        width: 100%;
+        
+        font-size: 8pt;
+        margin: 20px 0 10px 0;
     }
 
     .form-field{

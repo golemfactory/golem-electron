@@ -18,14 +18,18 @@
         text-align: left;
     }
 
-    .tab__title:nth-child(2) {
-        margin-right: 40px;
+    .tab__title:nth-child(1){
+        margin-left: 5px;
+    }
+
+    .tab__title + .tab__title {
+        margin-right: 30px;
     }
 
     .tab__back {
         flex: 0 1 150px;
         text-align: right;
-        font-size: 7pt;
+        font-size: 8pt;
         font-weight: 500;
         color: $color-primary;
         cursor: pointer;
@@ -40,7 +44,8 @@
     }
 
     .ReactVirtualized__List{
-        overflow: overlay !important;
+        overflow-y: overlay !important;
+        overflow-x: hidden !important;
     }
 }
 
