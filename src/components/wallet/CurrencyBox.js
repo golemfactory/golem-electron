@@ -6,6 +6,9 @@ import { BigNumber } from "bignumber.js";
 import { timeStampToHR } from "./../../utils/secsToHMS";
 import { currencyIcons } from "./../../constants";
 
+const mainEtherscan = "https://etherscan.io/address/";
+const testEtherscan = "https://rinkeby.etherscan.io/address/";
+
 let motionBalanceStart = {};
 
 function isGolemReady(status) {
@@ -76,6 +79,7 @@ export default class CurrencyBox extends Component {
             balance,
             lockedBalance,
             currency,
+            contractAddresses,
             suffix,
             description,
             descriptionLock,
@@ -87,6 +91,7 @@ export default class CurrencyBox extends Component {
             golemStatus,
             lockWithdraw
         } = this.props;
+        const contractUrlGNTB = contractAddresses && `${isMainNet ? mainEtherscan : testEtherscan}${contractAddresses.GNTB}`
         return (
             <div className="container__currency-box">
                 <div id="cube" className={expandedAmount ? (expandedAmount === suffix ? "show-top" : "show-front") : "show-top"}>
@@ -237,7 +242,7 @@ export default class CurrencyBox extends Component {
                                 </div>
                                 <div className="batch-contract-adress">
                                     <span>
-                                        GNTb contract address<a href="">
+                                        GNTb contract address<a href={contractUrlGNTB}>
                                             <span className="icon-new-window" />
                                         </a>
                                     </span>

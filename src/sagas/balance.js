@@ -16,7 +16,8 @@ const BALANCE_DICT = Object.freeze({
     GNT_LOCK: 'gnt_lock',
     ETH_LOCK: 'eth_lock',
     LAST_GNT_UPDATE: 'last_gnt_update',
-    LAST_ETH_UPDATE: 'last_eth_update'
+    LAST_ETH_UPDATE: 'last_eth_update',
+    CONTRACTS: 'contract_addresses'
 })
 
 
@@ -59,6 +60,7 @@ export function subscribeBalance(session) {
                 let eth = new BigNumber(balance[BALANCE_DICT.ETH] === null ? 0 : balance[BALANCE_DICT.ETH])
                 let gntLock = new BigNumber(balance[BALANCE_DICT.GNT_LOCK] === null ? 0 : balance[BALANCE_DICT.GNT_LOCK])
                 let ethLock = new BigNumber(balance[BALANCE_DICT.ETH_LOCK] === null ? 0 : balance[BALANCE_DICT.ETH_LOCK])
+                let contractAddresses = balance[BALANCE_DICT.CONTRACTS];
 
                 if(gnt.isNaN()){
                     gnt  = 0
@@ -77,7 +79,8 @@ export function subscribeBalance(session) {
                         balance[BALANCE_DICT.LAST_ETH_UPDATE],
                         gntLock.dividedBy(ETH_DENOM).precision(8).toString(),
                         ethLock.dividedBy(ETH_DENOM).precision(8).toString(),
-                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).precision(8).toString()
+                        gntTotal.minus(gnt).dividedBy(ETH_DENOM).precision(8).toString(),
+                        contractAddresses
                     ]
                 })
             }
