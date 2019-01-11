@@ -29,7 +29,7 @@ const initialState = {
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
-    golemStatus: ["client", "start", "pre"],
+    golemStatus: [{client:["start", "pre", null]}],
     footerInfo: null,
     passwordModal: { 
         status: false, 
@@ -245,6 +245,13 @@ const messages = {
     }
 }
 
+function objectMap(object, mapFn) {
+    return Object.keys(object).reduce(function(result, key) {
+        result[key] = mapFn(object[key], key)
+        return result
+    }, {})
+}
+
 function nodesString(num) {
     if (num < 1) return 'No Nodes Connected';
     const postfix = num != 1 ? 's' : '';
@@ -284,11 +291,17 @@ export const getStatusSelector = createCachedSelector(
         (state) => state.passwordModal,
         (state, key) => key,
         (golemStatus, connectedPeers, passwordModal, key) => {
-            let statusObj = getGolemStatus.apply(null, golemStatus)
-            
-            if(statusObj.status !== "Exception"){
+            let statusObj = objectMap(golemStatus[0], 
+                (status, component) => getGolemStatus
+                                        .apply(null, [component]
+                                        .concat(status)))
+
+            if(statusObj 
+                && !Object
+                    .keys(statusObj)
+                    .some(key => statusObj[key].status === "Exception" )){
                 if(Number.isInteger(connectedPeers)){
-                    statusObj = {
+                    statusObj.client = {
                         status: 'Ready',
                         message: nodesString(connectedPeers),
                     }
@@ -307,12 +320,13 @@ export const passwordModalSelector = createCachedSelector(
     (state, key) => key,
     (state, passwordModal) => {
         const currentStatus = getStatusSelector(state, 'golemStatus')
-        if(currentStatus){
-            if(currentStatus.message === password.REGISTER && !_isPasswordModalPopped){
+        if(currentStatus && currentStatus.client){
+            const clientMessage = currentStatus.client;
+            if(clientMessage.message === password.REGISTER && !_isPasswordModalPopped){
                 passwordModal = {...passwordModal,  status: true, register: true}
                 _isPasswordModalPopped = true
             }
-            else if(currentStatus.message === password.LOGIN && !_isPasswordModalPopped){
+            else if(clientMessage.message === password.LOGIN && !_isPasswordModalPopped){
                 passwordModal = {...passwordModal, status: true, register: false}
                 _isPasswordModalPopped = true
             }

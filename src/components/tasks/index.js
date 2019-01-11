@@ -4,7 +4,6 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
-import {getStatus} from '../../reducers'
 
 import Table from './Table'
 import Preview from './Preview'
@@ -22,13 +21,6 @@ const mapStateToProps = state => ({
     currency: state.currency,
     preview: state.input.preview,
     expandedPreview: state.input.expandedPreview,
-    status: getStatus(state, 'golemStatus'),
-    connectionProblem: state.info.connectionProblem,
-    chosenPreset: state.advanced.chosenPreset,
-    isEngineOn: state.info.isEngineOn,
-    stats: state.stats.stats,
-    isEngineLoading: state.info.isEngineLoading,
-    version: state.info.version
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -179,7 +171,7 @@ _toggleTransactionHistory = () => {
                     
                     {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
                     {restartModal && <RestartModal closeModal={::this._closeModal} {...restartProps}/>}
-                    <FooterMain {...this.props}/>
+                    <FooterMain/>
                 </div>
         )
     }

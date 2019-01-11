@@ -1,4 +1,12 @@
 import React, { Component } from 'react'
+import {Tooltip} from 'react-tippy';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+
+import * as Actions from './../actions'
+import {getStatus, getPasswordModalStatus} from './../reducers'
+
+import LoaderBar from './LoaderBar'
 import checkNested from './../utils/checkNested'
 import golem_loading from './../assets/img/golem-loading.svg'
 
@@ -13,7 +21,22 @@ function isGolemReady(status) {
     return status === "Ready"
 }
 
-export default class FooterMain extends Component {
+const mapStateToProps = state => ({
+    connectionProblem: state.info.connectionProblem,
+    status: getStatus(state, 'golemStatus'),
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
+    chosenPreset: state.advanced.chosenPreset,
+    isEngineOn: state.info.isEngineOn,
+    stats: state.stats.stats,
+    isEngineLoading: state.info.isEngineLoading,
+    version: state.info.version
+})
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+})
+
+export class FooterMain extends Component {
 
      constructor(props) {
         super(props);
@@ -41,10 +64,10 @@ export default class FooterMain extends Component {
 
     //TODO re-write it cleaner
     golemDotClass(_golemStatus, _connectionProblem){
-        if(isGolemReady(_golemStatus.status)){
+        if(_golemStatus && isGolemReady(_golemStatus.status)){
             return (_connectionProblem && _connectionProblem.status) ? "yellow" : "green"
         }
-        else if(_golemStatus.status !== "Exception"){
+        else if(_golemStatus && _golemStatus.status !== "Exception"){
             return "yellow"
         }
         return "red"
@@ -100,28 +123,82 @@ export default class FooterMain extends Component {
     }
 
     render() {
-        const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, version} = this.props
+        const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, passwordModal, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
+
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
                     <div className="section__actions-status">
-                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status, connectionProblem)}`}/>
+                        <Tooltip
+                          open={checkNested(status, 'client', 'status') 
+                          && status.client.status !== "Ready" 
+                          && checkNested(passwordModal, 'status')
+                          && !passwordModal.status}
+                          distance={17}
+                          html={
+                            <div className="status__components">
+                                <div className="item__status">
+                                    <span>Docker: </span>
+                                    <span>{status.docker 
+                                            ? status.docker.message
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Geth: </span>
+                                    <span>{status.ethereum 
+                                            ? status.ethereum.message
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hyperg: </span>
+                                    <span>{status.hyperdrive 
+                                            ? status.hyperdrive.message
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hypervisor: </span>
+                                    <span>{status.hypervisor 
+                                            ? status.hypervisor.message 
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                          position="top"
+                          trigger="mouseenter">
+                            <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
+                        </Tooltip>
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${status.message} `}</span>
-                                {::this._loadErrorUrl(status.message)}
-                                {(status.message && status.message.length > 10) && <br/>}
+                                <span className="status-message">{`${status.client && status.client.message} `}</span>
+                                {status.client && ::this._loadErrorUrl(status.client.message)}
+                                {(checkNested(status, 'client', 'status', 'message') && status.client.message.length > 10) && <br/>}
                                 {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
                             </span>
-                            <div className="status-node">
-                                <span>Provider state: {stats ? this._fetchState(stats.provider_state) : ""}</span>
-                                <br/>
-                                <span>Attempted: {(stats && stats.subtasks_computed) && (stats.subtasks_computed[1] + stats.subtasks_with_timeout[1] + stats.subtasks_with_errors[1])}</span>
-                                <br/>
-                                <span>{(stats && stats.subtasks_with_errors) && `${stats.subtasks_with_errors[1]} error | ${stats.subtasks_with_timeout[1]} timeout | ${stats.subtasks_computed[1]} success` }</span>
-                            </div>
+                            {!!Object.keys(stats).length
+                                ? <div className="status-node">
+                                    <span>Provider state: {this._fetchState(stats.provider_state)}</span>
+                                    <br/>
+                                    <span>Attempted: {(stats.subtasks_computed) && (stats.subtasks_computed[1] + stats.subtasks_with_timeout[1] + stats.subtasks_with_errors[1])}</span>
+                                    <br/>
+                                    <span>{stats.subtasks_with_errors && `${stats.subtasks_with_errors[1]} error | ${stats.subtasks_with_timeout[1]} timeout | ${stats.subtasks_computed[1]} success` }</span>
+                                </div>
+                                :<div className="status-node__loading">
+                                    <span>
+                                        Warming up
+                                        <span className="jumping-dots">
+                                            <span className="dot-1">.</span>
+                                            <span className="dot-2">.</span>
+                                            <span className="dot-3">.</span>
+                                        </span>
+                                    </span>
+                                </div>
+                            }
                         </div>
                     </div>
                     <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
@@ -147,3 +224,5 @@ export default class FooterMain extends Component {
         );
     }
 }
+
+export default connect(mapStateToProps, mapDispatchToProps)(FooterMain)

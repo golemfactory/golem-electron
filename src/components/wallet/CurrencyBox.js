@@ -4,6 +4,7 @@ import { Tooltip } from "react-tippy";
 import { BigNumber } from "bignumber.js";
 
 import { timeStampToHR } from "./../../utils/secsToHMS";
+import checkNested from './../../utils/checkNested'
 import { currencyIcons } from "./../../constants";
 
 const mainEtherscan = "https://etherscan.io/address/";
@@ -11,8 +12,9 @@ const testEtherscan = "https://rinkeby.etherscan.io/address/";
 
 let motionBalanceStart = {};
 
-function isGolemReady(status) {
-    return status === "Ready";
+function isGolemReady(golemStatus) {
+    return checkNested(golemStatus, 'client', 'status') 
+            && golemStatus.client.status === "Ready";
 }
 
 export default class CurrencyBox extends Component {
@@ -177,7 +179,7 @@ export default class CurrencyBox extends Component {
                                     <button
                                         className="btn--ghost wallet__btn-withdraw"
                                         onClick={() => clickHandler(suffix, currency, balance)}
-                                        disabled={!isMainNet || !isGolemReady(golemStatus.status) || lockWithdraw}>
+                                        disabled={!isMainNet || !isGolemReady(golemStatus) || lockWithdraw}>
                                         <span className="icon-withdraw" />Withdraw
                                     </button>
                                 </div>
