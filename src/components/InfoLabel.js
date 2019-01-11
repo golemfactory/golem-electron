@@ -22,7 +22,7 @@ export default class InfoLabel extends Component {
     	const {info, type, label, cls, infoHidden, distance, interactive} = this.props
         return (
             <div className={`info-label__container ${cls}`}>
-    			<Tooltip
+        	    <Tooltip
                   html={info}
                   position="bottom"
                   trigger="mouseenter"

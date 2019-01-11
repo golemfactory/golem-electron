@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import * as Actions from './../actions'
 import {getStatus, getPasswordModalStatus} from './../reducers'
 
+import LoaderBar from './LoaderBar'
 import checkNested from './../utils/checkNested'
 import golem_loading from './../assets/img/golem-loading.svg'
 
@@ -44,49 +45,12 @@ export class FooterMain extends Component {
         }
     }
 
-    componentDidMount() {
-        this._initLoaderBar()
-    }   
-
     componentWillUpdate(nextProps, nextState) {
         if (nextProps.isEngineOn !== this.props.isEngineOn) {
             this.setState({
                 engineLoading: false
             })
         }
-    }
-
-    _initLoaderBar(){
-        const loadingSpanList = document.getElementsByClassName("loading"),
-              steps           = 20,   // length of bar
-              speed           = 50,   // #ms
-              iteration       = 10000; // iteration * speed = timeout #ms
-
-        let c = 0,
-            p = Promise.resolve();
-
-        for (let i = 0; i < iteration; i++) {
-            p = p.then(_ => new Promise(resolve =>
-                setTimeout(function () {
-                        parseInt(i/steps) % 2 == 0 
-                        ? c++
-                        : c--;
-                    drawLoader(c, resolve);
-                }, speed)
-            ));
-        }
-
-        function drawLoader(i, resolve){
-            const loadArray = new Array(steps + 5).fill("-")
-            loadArray[0] = "[";
-            loadArray[steps + 4] = "]";
-            loadArray[i+1] = "="
-            loadArray[i+2] = "="
-            loadArray[i+3] = "="
-            Array.from(loadingSpanList)
-            .forEach(item => item.textContent = loadArray.join(""));
-            resolve();
-         }
     }
 
     _golemize() {
@@ -178,28 +142,28 @@ export class FooterMain extends Component {
                                     <span>Docker: </span>
                                     <span>{status.docker 
                                             ? status.docker.message
-                                            : <span id="loading" className="loading"></span>}
+                                            : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Geth: </span>
                                     <span>{status.ethereum 
                                             ? status.ethereum.message
-                                            : <span id="loading" className="loading"></span>}
+                                            : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Hyperg: </span>
                                     <span>{status.hyperdrive 
                                             ? status.hyperdrive.message
-                                            : <span id="loading" className="loading"></span>}
+                                            : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Hypervisor: </span>
                                     <span>{status.hypervisor 
                                             ? status.hypervisor.message 
-                                            : <span id="loading" className="loading"></span>}
+                                            : <LoaderBar/>}
                                     </span>
                                 </div>
                             </div>
