@@ -111,10 +111,6 @@ mark {
     }
 }
 
-.section__fixed{
-    flex: 0 0 288px !important;
-}
-
 
 .mark--chain{
     font-size: 9pt;
@@ -191,7 +187,8 @@ mark {
           .icon-eye{
             position: absolute;
             right: 10px;
-            bottom: 7px;
+            bottom: 8px;
+            font-size: 14pt;
             z-index: 4;
             cursor: pointer;
             color: $color-text3;
@@ -222,6 +219,7 @@ mark {
                 height: 32px;
             }
             .ReactPasswordStrength-strength-desc{
+                width: 150px;
                 top:20px;
                 font-size: 9pt;
                 text-align: right;

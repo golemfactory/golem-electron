@@ -1,6 +1,18 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+import animDataTestNet from './../../../assets/anims/onboarding/welcome-testnet.json'
+import animDataMainNet from './../../../assets/anims/onboarding/welcome-mainnet.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: null,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Welcome extends React.Component {
 
@@ -10,10 +22,11 @@ export default class Welcome extends React.Component {
 
     render() {
         const {isMainNet} = this.props
+        defaultOptions.animationData = isMainNet ? animDataMainNet : animDataTestNet
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={welcomeBeta}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>You are running {isMainNet ? "mainnet": "testnet"}</h1>

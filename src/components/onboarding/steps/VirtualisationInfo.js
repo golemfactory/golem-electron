@@ -1,7 +1,16 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
-import mainNetIcon from './../../../assets/img/main-net-icon.svg'
-import testNetIcon from './../../../assets/img/test-net-icon.svg'
+import animData from './../../../assets/anims/onboarding/vt-x-windows.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class VirtualisationInfo extends React.Component {
 
@@ -14,7 +23,7 @@ export default class VirtualisationInfo extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="chain-image" src={isMainNet ? mainNetIcon : testNetIcon}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>Virtualisation is required</h1>

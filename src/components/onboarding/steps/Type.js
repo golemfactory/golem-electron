@@ -17,19 +17,13 @@ export default class Type extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            isStopped: false, 
-            isPaused: false
-        };
     }
 
     render() {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <Lottie options={defaultOptions}
-                      isStopped={this.state.isStopped}
-                      isPaused={this.state.isPaused}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>There is no password recovery</h1>

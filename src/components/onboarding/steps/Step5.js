@@ -17,10 +17,6 @@ export default class Step5 extends React.Component {
 
     constructor(props) {
         super(props);
-        this.state = {
-            isStopped: false, 
-            isPaused: false
-        };
     }
 
     _setNodeName(e) {
@@ -36,9 +32,7 @@ export default class Step5 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding">
-                    <Lottie options={defaultOptions}
-                      isStopped={this.state.isStopped}
-                      isPaused={this.state.isPaused}/>
+                    <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     <h1>Name your node</h1>
