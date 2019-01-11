@@ -155,15 +155,6 @@ class OnboardIndex extends React.Component {
         document.removeEventListener("keypress", this._keypressListener);
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        if(nextState.currentStep !== this.state.currentStep){
-            if(nextState.currentStep > steps.STEP1 && nextState.currentStep < steps.STEP4)
-                this.refs.stepControl.classList.add('back-active')
-            else
-                this.refs.stepControl.classList.remove('back-active')
-        }
-    }
-
     _setNodeName(name) {
         console.log("name", name);
         this.setState({
@@ -343,6 +334,14 @@ class OnboardIndex extends React.Component {
         if(currentStep === steps.WELCOME){
             actions.checkTermsAccepted()
         }
+    }
+
+    _handleSkip = () => {
+        let nextStep = 10;
+        this.setState({
+            currentStep: nextStep,
+            isNext: true
+        })
     }
 
     _handleTermsBack(){
@@ -525,16 +524,34 @@ class OnboardIndex extends React.Component {
                 </div>
         } else if(_step === steps.STEP1){
             return <div>
-                        <span>{_step - 6} of 4</span>
-                        <span
-                            className="icon-arrow-right-small"
-                            onClick={::this._handleNext} 
-                            aria-label="Next"
-                            tabIndex="0"/>
+                       <div>
+                           <div>
+                                <span className="step-placeholder"/>
+                                <span>{_step - 6} of 4</span>
+                                <span
+                                  className="icon-arrow-right-small"
+                                  onClick={::this._handleNext} 
+                                  aria-label="Next"
+                                  tabIndex="0"/>
+                           </div>
+                           <div className="btn__skip">
+                                <span onClick={this._handleSkip}>skip</span>   
+                           </div>
+                       </div>
+
                    </div>
         } else if(_step === steps.STEP4){
             return <div>
-                <button className="btn btn--primary" 
+                <div>
+                    <span 
+                        className="icon-arrow-left-small" 
+                        onClick={::this._handlePrev} 
+                        aria-label="Prev" 
+                        tabIndex="0"/>
+                    <span>{_step - 6} of 4</span>
+                    <span className="step-placeholder"/>
+               </div>
+                <button className="btn btn--primary btn--last" 
                         onClick={e => {
                             this.stepNickname.activityFormButton.click()
                         }}
@@ -544,18 +561,23 @@ class OnboardIndex extends React.Component {
             </div>
         } else {
             return <div>
-                        <span 
-                            className="icon-arrow-left-small" 
-                            onClick={::this._handlePrev} 
-                            aria-label="Prev" 
-                            tabIndex="0"/>
-                        <span>{_step - 6} of 4</span>
-                        <span
-                            className="icon-arrow-right-small" 
-                            onClick={::this._handleNext} 
-                            aria-label="Next" 
-                            tabIndex="0"/>
-                   </div>
+                        <div>
+                            <span 
+                                className="icon-arrow-left-small" 
+                                onClick={::this._handlePrev} 
+                                aria-label="Prev" 
+                                tabIndex="0"/>
+                            <span>{_step - 6} of 4</span>
+                            <span
+                                className="icon-arrow-right-small" 
+                                onClick={::this._handleNext} 
+                                aria-label="Next" 
+                                tabIndex="0"/>
+                       </div>
+                       <div className="btn__skip">
+                            <span onClick={this._handleSkip}>skip</span>   
+                       </div>
+                    </div>
         }
 
     }

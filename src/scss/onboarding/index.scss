@@ -21,17 +21,12 @@ mark {
     height: 100%;
     background: $color-text4;
     z-index: 99999 !important;
-    padding-bottom: 38px;
     box-sizing:border-box;
 
     h1{
         color: $color-primary;
         margin: 0 0 30px 0;
         font-size: 1.8em;
-    }
-
-    span:first-child{
-        width: 100%;
     }
 
     .information-band__onboarding{
@@ -126,6 +121,18 @@ mark {
 
 .btn--print{
     width: 150px;
+}
+
+.btn__skip{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 9pt;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.btn--last{
+    margin-top: 4px;
 }
 
 .desc__onboarding {
@@ -270,10 +277,15 @@ mark {
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
-    padding-left: 42px;
     box-sizing: border-box;
+    margin-bottom: 40px;
 
     @include flex;
+
+    .step-placeholder{
+        display: inline-block;
+        width: 42.66px;
+    }
 
     .icon-arrow-left-small,
     .icon-arrow-right-small {
@@ -287,7 +299,6 @@ mark {
         position: relative;
         top: 10px;
         cursor: pointer;
-        margin-right: 32px;
     }
 
     .btn--cancel{
@@ -297,10 +308,6 @@ mark {
         font-weight: 500;
         padding:0 30px;
     }
-}
-
-.back-active{
-        padding-left: 0;
 }
 
 .container-checkbox__onboarding {
