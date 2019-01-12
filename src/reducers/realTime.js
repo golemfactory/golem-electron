@@ -1,6 +1,7 @@
 import {BigNumber} from 'bignumber.js';
 import createCachedSelector from 're-reselect';
 import { dict } from './../actions'
+import checkNested from './../utils/checkNested'
 const {ipcRenderer, remote} = window.electron
 const log = remote.require('./electron/debug_handler.js')
 
@@ -309,15 +310,17 @@ export const getStatusSelector = createCachedSelector(
                         message: nodesString(connectedPeers),
                     }
                 }
-            }
-
-            if(!isEngineOn){
-                statusObj.client = {
+                if(!isEngineOn
+                    && checkNested(statusObj, "client", "message")
+                    && !(statusObj.client.message === password.LOGIN
+                        || statusObj.client.message === password.REGISTER)){
+                    statusObj.client = {
                         status: 'Not Ready',
                         message: "Waiting for configuration",
                     }
+                }
             }
-
+            
             return statusObj
         }
     )(
