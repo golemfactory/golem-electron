@@ -276,6 +276,8 @@ function getGolemStatus(component, method, stage, data) {
 
     if (stage == 'exception') {
         result.status = 'Exception';
+    } else if (stage == 'post') {
+        result.status = 'Ready';
     } else try {
         result.status = 'Not Ready';
     } catch ( e ) { 
@@ -289,8 +291,9 @@ export const getStatusSelector = createCachedSelector(
         (state) => state.golemStatus,
         (state) => state.connectedPeers,
         (state) => state.passwordModal,
+        (state) => state.isEngineOn,
         (state, key) => key,
-        (golemStatus, connectedPeers, passwordModal, key) => {
+        (golemStatus, connectedPeers, passwordModal, isEngineOn, key) => {
             let statusObj = objectMap(golemStatus[0], 
                 (status, component) => getGolemStatus
                                         .apply(null, [component]
@@ -306,6 +309,13 @@ export const getStatusSelector = createCachedSelector(
                         message: nodesString(connectedPeers),
                     }
                 }
+            }
+
+            if(!isEngineOn){
+                statusObj.client = {
+                        status: 'Not Ready',
+                        message: "Waiting for configuration",
+                    }
             }
 
             return statusObj

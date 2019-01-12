@@ -169,7 +169,7 @@ export class FooterMain extends Component {
                             </div>
                         }
                           position="top"
-                          trigger="mouseenter">
+                          unmountHTMLWhenHide>
                             <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
                         </Tooltip>
                         

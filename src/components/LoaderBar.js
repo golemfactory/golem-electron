@@ -10,14 +10,22 @@ export default class LoaderBar extends Component {
 
     componentDidMount() {
         this._initLoaderBar()
-    }   
+    }
+
+    componentWillUnmount() {
+        var id = window.setTimeout(null,0);
+        while (id--) 
+        {   
+            window.clearTimeout(id);
+        }
+    }
 
 
     _initLoaderBar(){
         const loadingSpanList = document.getElementsByClassName("loading"),
               steps        = 20,     // length of bar
               speed        = 50,     // #ms
-              iteration    = 10000;  // iteration * speed = timeout #ms
+              iteration    = 2000;  // iteration * speed = timeout #ms
 
         let c = 0,
             p = Promise.resolve();

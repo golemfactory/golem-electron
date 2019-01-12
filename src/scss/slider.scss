@@ -13,8 +13,9 @@
     }
     .slider__resources {
         flex-grow: 1;
-        height: 4px;
+        height: 3px;
         margin: 10px 12px 0 12px;
+        border-radius: 30px;
         background: #37C481; //GRADIENT TRANSITION HACK
         background-image: -webkit-gradient( linear, left top, right top, color-stop(0.2, transparent), color-stop(0.2, $color-accent3));
         transition: .5s background;
@@ -36,6 +37,7 @@
             &::-webkit-slider-runnable-track {
                 width: 100%;
                 height: 2px;
+                padding: 10px 0 !important;
                 animate: 0.2s;
                 box-shadow: 0px 0px 0px #000000;
                 border-radius: 0px;
@@ -63,7 +65,7 @@
         text-align: center;
         font-size: 8pt;
         font-weight: 500;
-        margin-top: -1px;
+        margin-top: 0px;
         transition: .5s color;
         pointer-events: none; // to click underlying element 
     }
