@@ -31,7 +31,7 @@ export default class VirtualisationInfo extends React.Component {
                     We have detected that Virtualisation on your machine <br/>
                     is disabled. Vt-X/AMD-v needs to be ennabled in BIOS <br/>
                     as it is mandatory to run Golem. If you want to know <br/>
-                    how to enable it, please follow this <a href="">instructions</a>
+                    how to enable it, please follow this <a href="https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users">instructions</a>
                     </span>
                 </div>  
             </div>

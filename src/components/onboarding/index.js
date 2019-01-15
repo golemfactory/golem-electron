@@ -26,7 +26,7 @@ import Decline from './steps/Decline'
 
 import golem_logo from './../../assets/img/golem-black.svg'
 
-const {remote} = window.electron;
+const {remote, shell} = window.electron;
 const {app} = remote
 
 
@@ -107,7 +107,8 @@ const mapStateToProps = state => ({
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
     isMainNet: state.info.isMainNet,
-    connectionProblem: state.info.connectionProblem
+    connectionProblem: state.info.connectionProblem,
+    isVirtualizationExist: state.info.isVirtualizationExist
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -141,6 +142,7 @@ class OnboardIndex extends React.Component {
         this._keypressListener = event => {
 
             if(event.key === "Enter" && 
+                this.state.currentStep !== steps.VIRTUALISATION &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
                 this.state.currentStep !== steps.STEP4 &&
@@ -297,7 +299,7 @@ class OnboardIndex extends React.Component {
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
-        const { actions, passwordModal, isTermsAccepted } = this.props
+        const { actions, passwordModal, isTermsAccepted, isVirtualizationExist } = this.props
         const { currentStep, nodeName, isRegisterRequired } = this.state 
         if (currentStep === steps.STEP4) {
             const queuedTask = {
@@ -310,12 +312,27 @@ class OnboardIndex extends React.Component {
         if (currentStep < steps.STEP4) {
             let nextStep = currentStep + 1;
 
+            /**
+             * Check if user need register screen on onboarding
+             */
             if(nextStep === steps.REGISTER){
                 this.setState({
                     isRegisterRequired: passwordModal.register
                 })
             }
 
+            /**
+             * Move next step if virtualization is okay.
+             */
+            if (currentStep === steps.WELCOME
+            && isVirtualizationExist) {
+                nextStep++;
+            }
+
+            /**
+             * If user registered go next step
+             * If user accepted terms go to next step
+             */
             if((!isRegisterRequired && 
                             nextStep === steps.PRINT) ||
                 (isTermsAccepted && 
@@ -365,6 +382,11 @@ class OnboardIndex extends React.Component {
                                 resolve, 
                                 reject)
         });
+    }
+
+    _handleLeaveWithInstructions(){
+        shell.openExternal('https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users');
+        this._handleLeave();
     }
 
     _handleLeave(){
@@ -481,7 +503,12 @@ class OnboardIndex extends React.Component {
                     </button>
                 </div>
         }
-        else if(_step === steps.VIRTUALISATION || _step === steps.TYPE){
+        else if( _step === steps.VIRTUALISATION){
+            return <div>
+                <button className="btn btn--primary" onClick={::this._handleLeaveWithInstructions}>Quit</button>
+            </div>
+        }
+        else if( _step === steps.TYPE){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Got It</button>
             </div>
