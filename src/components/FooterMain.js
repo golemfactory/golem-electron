@@ -110,7 +110,7 @@ export class FooterMain extends Component {
         if(stat){
             let state = stat.status;
             if(checkNested(stat, 'environment')){
-                state += this._fetchEnvironment(stat.environment[0])
+                state += this._fetchEnvironment(stat.environment)
             }
             return state
         }
