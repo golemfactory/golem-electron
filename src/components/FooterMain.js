@@ -17,8 +17,11 @@ const versionGUI = remote.app.getVersion();
 
 /*############# HELPER FUNCTIONS ############# */
 
-function isGolemReady(status) {
-    return status === "Ready"
+function isGolemReady(gs) {
+    return gs.status === "Ready" 
+        && gs.message
+        .toLowerCase()
+        .includes("node");
 }
 
 const mapStateToProps = state => ({
@@ -64,7 +67,7 @@ export class FooterMain extends Component {
 
     //TODO re-write it cleaner
     golemDotClass(_golemStatus, _connectionProblem){
-        if(_golemStatus && isGolemReady(_golemStatus.status)){
+        if(_golemStatus && isGolemReady(_golemStatus)){
             return (_connectionProblem && _connectionProblem.status) ? "yellow" : "green"
         }
         else if(_golemStatus && _golemStatus.status !== "Exception"){
@@ -122,6 +125,28 @@ export class FooterMain extends Component {
             }
     }
 
+    _loadConnectionError(status, connectionProblem){
+        return [
+            (checkNested(status, 'client', 'message')) 
+                ? status.client.message.length > 10
+                    ? <br key="br"/>
+                    : ""
+                : <br key="br"/>,
+            connectionProblem.issue == "PORT" 
+                ? <span key="infoPorts" className="info__ports">
+                        problem with ports
+                        <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
+                            <span className="icon-new-window"/>
+                        </a>
+                    </span> 
+                : connectionProblem.issue == "WEBSOCKET" 
+                    ? <span key="infoPorts" className="info__ports">
+                            connection dropped
+                        </span> 
+                    : ""
+        ]
+    }
+
     render() {
         const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, passwordModal, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
@@ -131,10 +156,10 @@ export class FooterMain extends Component {
                 <div className="section__actions">
                     <div className="section__actions-status">
                         <Tooltip
-                          open={checkNested(status, 'client', 'status') 
-                          && status.client.status !== "Ready" 
-                          && checkNested(passwordModal, 'status')
-                          && !passwordModal.status}
+                          open={checkNested(status, 'client', 'status')
+                                && status.client.status !== "Ready"
+                                && checkNested(passwordModal, 'status')
+                                && !passwordModal.status}
                           distance={17}
                           html={
                             <div className="status__components">
@@ -175,10 +200,18 @@ export class FooterMain extends Component {
                         
                         <div>
                             <span>
-                                <span className="status-message">{`${status.client && status.client.message} `}</span>
+                                <span className="status-message">
+                                    {status.client 
+                                        ? <span>{status.client.message}</span> 
+                                        : <span>
+                                            Outdated version
+                                            <a href="https://github.com/golemfactory/golem#installing-and-testing">
+                                                <span className="icon-new-window"/>
+                                            </a>
+                                        </span>}
+                                </span>
                                 {status.client && ::this._loadErrorUrl(status.client.message)}
-                                {(checkNested(status, 'client', 'status', 'message') && status.client.message.length > 10) && <br/>}
-                                {connectionProblem.status ? <span className="info__ports">problem with ports<a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started"><span className="icon-new-window"/></a></span> : ""}
+                                {this._loadConnectionError(status, connectionProblem)}
                             </span>
                             {!!Object.keys(stats).length
                                 ? <div className="status-node">
@@ -188,15 +221,21 @@ export class FooterMain extends Component {
                                     <br/>
                                     <span>{stats.subtasks_with_errors && `${stats.subtasks_with_errors[1]} error | ${stats.subtasks_with_timeout[1]} timeout | ${stats.subtasks_computed[1]} success` }</span>
                                 </div>
-                                :<div className="status-node__loading">
-                                    <span>
-                                        Warming up
-                                        <span className="jumping-dots">
-                                            <span className="dot-1">.</span>
-                                            <span className="dot-2">.</span>
-                                            <span className="dot-3">.</span>
-                                        </span>
-                                    </span>
+                                : 
+                                <div className="status-node__loading">
+                                    {
+                                        checkNested(status, 'client', 'status') 
+                                        && status.client.status !== "Exception"
+                                        ?   <span>
+                                                Warming up
+                                                <span className="jumping-dots">
+                                                    <span className="dot-1">.</span>
+                                                    <span className="dot-2">.</span>
+                                                    <span className="dot-3">.</span>
+                                                </span>
+                                            </span>
+                                        : <span>Error while fetching status</span>
+                                    }
                                 </div>
                             }
                         </div>

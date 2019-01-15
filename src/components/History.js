@@ -130,7 +130,7 @@ export class History extends React.Component {
     const content = (
       <div className="item__history">
         <div className="info__history">
-          <h5>{(payee || payer).substr(0, 24)}...</h5>
+          <h5>{(payee || payer || "").substr(0, 24)}...</h5>
           <span>{timeStampToHR(created)}</span>
           <span className="status__history">{status}</span>
         </div>

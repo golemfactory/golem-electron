@@ -79,7 +79,6 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_GOLEM_STATUS:
-        _isPasswordModalPopped = false
         return Object.assign({}, state, {
             golemStatus: action.payload
         });
@@ -291,10 +290,9 @@ function getGolemStatus(component, method, stage, data) {
 export const getStatusSelector = createCachedSelector(
         (state) => state.golemStatus,
         (state) => state.connectedPeers,
-        (state) => state.passwordModal,
         (state) => state.isEngineOn,
         (state, key) => key,
-        (golemStatus, connectedPeers, passwordModal, isEngineOn, key) => {
+        (golemStatus, connectedPeers, isEngineOn, key) => {
             let statusObj = objectMap(golemStatus[0], 
                 (status, component) => getGolemStatus
                                         .apply(null, [component]
@@ -304,19 +302,30 @@ export const getStatusSelector = createCachedSelector(
                 && !Object
                     .keys(statusObj)
                     .some(key => statusObj[key].status === "Exception" )){
-                if(Number.isInteger(connectedPeers)){
+                if(isEngineOn && Number.isInteger(connectedPeers)){
                     statusObj.client = {
                         status: 'Ready',
                         message: nodesString(connectedPeers),
                     }
-                }
-                if(!isEngineOn
+                } else if(!isEngineOn
                     && checkNested(statusObj, "client", "message")
                     && !(statusObj.client.message === password.LOGIN
                         || statusObj.client.message === password.REGISTER)){
                     statusObj.client = {
                         status: 'Not Ready',
                         message: "Waiting for configuration",
+                    }
+                }
+
+                /**
+                 * Dirty hack to show component status tooltip when user 
+                 * logged in successfully, cuz "logged in" is post status on Golem side.
+                 */
+                if(checkNested(statusObj, "client", "message")
+                    && statusObj.client.message === "Logged In"){
+                    statusObj.client = {
+                        status: 'Not Ready',
+                        message: statusObj.client.message,
                     }
                 }
             }
@@ -332,16 +341,15 @@ export const passwordModalSelector = createCachedSelector(
     (state) => state.passwordModal,
     (state, key) => key,
     (state, passwordModal) => {
-        const currentStatus = getStatusSelector(state, 'golemStatus')
+        const currentStatus = getStatusSelector(state, 'golemStatus');
+
         if(currentStatus && currentStatus.client){
             const clientMessage = currentStatus.client;
-            if(clientMessage.message === password.REGISTER && !_isPasswordModalPopped){
+            if(clientMessage.message === password.REGISTER){
                 passwordModal = {...passwordModal,  status: true, register: true}
-                _isPasswordModalPopped = true
             }
-            else if(clientMessage.message === password.LOGIN && !_isPasswordModalPopped){
+            else if(clientMessage.message === password.LOGIN){
                 passwordModal = {...passwordModal, status: true, register: false}
-                _isPasswordModalPopped = true
             }
         }
 
