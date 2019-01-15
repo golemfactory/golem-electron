@@ -219,7 +219,7 @@ export class FooterMain extends Component {
                                     <br/>
                                     <span>Attempted: {(stats.subtasks_computed) && (stats.subtasks_computed[1] + stats.subtasks_with_timeout[1] + stats.subtasks_with_errors[1])}</span>
                                     <br/>
-                                    <span>{stats.subtasks_with_errors && `${stats.subtasks_with_errors[1]} error | ${stats.subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted[1]} success` }</span>
+                                    <span>{stats.subtasks_with_errors && `${stats.subtasks_with_errors[1]} error | ${stats.subtasks_with_timeout && stats.subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted && stats.subtasks_accepted[1]} success` }</span>
                                 </div>
                                 : 
                                 <div className="status-node__loading">
