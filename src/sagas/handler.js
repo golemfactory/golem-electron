@@ -110,8 +110,8 @@ export let config = Object.freeze({
     SAVE_TASK_PRESET_RPC: 'comp.tasks.preset.save',
     DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete',
     //Concent
-    CONCENT_UNLOCK: 'pay.deposit.relock',
-    CONCENT_RELOCK: 'pay.deposit.unlock',
+    CONCENT_UNLOCK: 'pay.deposit.unlock',
+    CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
     CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
 })

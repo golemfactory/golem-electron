@@ -13,20 +13,17 @@
 
 		.section__tube{
 			@include flex;
-			justify-content: space-evenly;
+			justify-content: space-between;
+			padding: 0 10px;
 			flex: 1 1 auto;
 
 			&.content__concent-info{
 				justify-content: space-between;
 			}
+		}
 
-			.btn__concent-settings{
-				margin-right: 10px;
-			}
-
-			.concent-info__deposit{
-				margin-left: 10px;
-			}
+		.tx-switch-btn + .section__tube{
+			padding: 0 5px;
 		}
 
 		.finance__indicator {

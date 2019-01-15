@@ -1,6 +1,7 @@
 import {BigNumber} from 'bignumber.js';
 import createCachedSelector from 're-reselect';
 import { dict } from './../actions'
+import checkNested from './../utils/checkNested'
 const {ipcRenderer, remote} = window.electron
 const log = remote.require('./electron/debug_handler.js')
 
@@ -29,7 +30,7 @@ const initialState = {
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
-    golemStatus: ["client", "start", "pre"],
+    golemStatus: [{client:["start", "pre", null]}],
     footerInfo: null,
     passwordModal: { 
         status: false, 
@@ -78,7 +79,6 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_GOLEM_STATUS:
-        _isPasswordModalPopped = false
         return Object.assign({}, state, {
             golemStatus: action.payload
         });
@@ -245,6 +245,13 @@ const messages = {
     }
 }
 
+function objectMap(object, mapFn) {
+    return Object.keys(object).reduce(function(result, key) {
+        result[key] = mapFn(object[key], key)
+        return result
+    }, {})
+}
+
 function nodesString(num) {
     if (num < 1) return 'No Nodes Connected';
     const postfix = num != 1 ? 's' : '';
@@ -269,6 +276,8 @@ function getGolemStatus(component, method, stage, data) {
 
     if (stage == 'exception') {
         result.status = 'Exception';
+    } else if (stage == 'post') {
+        result.status = 'Ready';
     } else try {
         result.status = 'Not Ready';
     } catch ( e ) { 
@@ -281,20 +290,46 @@ function getGolemStatus(component, method, stage, data) {
 export const getStatusSelector = createCachedSelector(
         (state) => state.golemStatus,
         (state) => state.connectedPeers,
-        (state) => state.passwordModal,
+        (state) => state.isEngineOn,
         (state, key) => key,
-        (golemStatus, connectedPeers, passwordModal, key) => {
-            let statusObj = getGolemStatus.apply(null, golemStatus)
-            
-            if(statusObj.status !== "Exception"){
-                if(Number.isInteger(connectedPeers)){
-                    statusObj = {
+        (golemStatus, connectedPeers, isEngineOn, key) => {
+            let statusObj = objectMap(golemStatus[0], 
+                (status, component) => getGolemStatus
+                                        .apply(null, [component]
+                                        .concat(status)))
+
+            if(statusObj 
+                && !Object
+                    .keys(statusObj)
+                    .some(key => statusObj[key].status === "Exception" )){
+                if(isEngineOn && Number.isInteger(connectedPeers)){
+                    statusObj.client = {
                         status: 'Ready',
                         message: nodesString(connectedPeers),
                     }
+                } else if(!isEngineOn
+                    && checkNested(statusObj, "client", "message")
+                    && !(statusObj.client.message === password.LOGIN
+                        || statusObj.client.message === password.REGISTER)){
+                    statusObj.client = {
+                        status: 'Not Ready',
+                        message: "Waiting for configuration",
+                    }
+                }
+
+                /**
+                 * Dirty hack to show component status tooltip when user 
+                 * logged in successfully, cuz "logged in" is post status on Golem side.
+                 */
+                if(checkNested(statusObj, "client", "message")
+                    && statusObj.client.message === "Logged In"){
+                    statusObj.client = {
+                        status: 'Not Ready',
+                        message: statusObj.client.message,
+                    }
                 }
             }
-
+            
             return statusObj
         }
     )(
@@ -306,15 +341,15 @@ export const passwordModalSelector = createCachedSelector(
     (state) => state.passwordModal,
     (state, key) => key,
     (state, passwordModal) => {
-        const currentStatus = getStatusSelector(state, 'golemStatus')
-        if(currentStatus){
-            if(currentStatus.message === password.REGISTER && !_isPasswordModalPopped){
+        const currentStatus = getStatusSelector(state, 'golemStatus');
+
+        if(currentStatus && currentStatus.client){
+            const clientMessage = currentStatus.client;
+            if(clientMessage.message === password.REGISTER){
                 passwordModal = {...passwordModal,  status: true, register: true}
-                _isPasswordModalPopped = true
             }
-            else if(currentStatus.message === password.LOGIN && !_isPasswordModalPopped){
+            else if(clientMessage.message === password.LOGIN){
                 passwordModal = {...passwordModal, status: true, register: false}
-                _isPasswordModalPopped = true
             }
         }
 

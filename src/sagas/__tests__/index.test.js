@@ -45,7 +45,7 @@ describe('handleIO', () => {
         },
         start_message: {
             type: 'SET_GOLEM_STATUS',
-            payload: [ 'client', 'start', 'pre' ]
+            payload: [{client: [ 'start', 'pre', null ]}]
         },
         logout: {
             type: 'LOGOUT'

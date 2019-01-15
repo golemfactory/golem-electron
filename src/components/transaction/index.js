@@ -51,7 +51,7 @@ class TransactionTube extends Component {
     }
 
     _fetchLastTransaction = list => {
-        const { created, type, value } = list[0].data;
+        const { created, type, value } = list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch } = this.props;
         const { showConcentInfo } = this.state;
         return (
@@ -63,22 +63,34 @@ class TransactionTube extends Component {
                 }
                 {
                     !showConcentInfo
-                        ? <div className="section__tube content__latest-tx">
-                            <span>Latest transaction:</span>
-                            <span>
-                                <span className={`finance__indicator ${type === filter.INCOME ? "indicator--up" : "indicator--down"}`}>
-                                    {type === filter.INCOME ? "+ " : "- "}
-                                </span>
-                                <b>{(value / ETH_DENOM).toFixed(4)} GNT</b>
-                            </span>
-                            <span>{timeStampToHR(created, false, true)}</span>
-                            <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                        ? (list.length > 0
+                            ? <div className="section__tube content__latest-tx">
+                                <span>Latest transaction:</span>
                                 <span>
-                                    <span className="icon-transaction-history" />
-                                    <b>Transaction History</b>
+                                    <span className={`finance__indicator ${type === filter.INCOME ? "indicator--up" : "indicator--down"}`}>
+                                        {type === filter.INCOME ? "+ " : "- "}
+                                    </span>
+                                    <b>{(value / ETH_DENOM).toFixed(4)} GNT</b>
                                 </span>
+                                <span>{timeStampToHR(created, false, true)}</span>
+                                <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                                    <span>
+                                        <span className="icon-transaction-history" />
+                                        <b>Transaction History</b>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                            : <div className="section__tube content__latest-tx">
+                                <span className="no-payment">
+                                    You don't have any payment yet.
+                                </span>
+                                <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                                    <span>
+                                        <span className="icon-transaction-history" />
+                                        <b>Transaction History</b>
+                                    </span>
+                                </div>
+                            </div>)
                         : <div className="section__tube content__concent-info">
                             <div className="concent-info__deposit">
                                 <span>Deposit amount: </span>
