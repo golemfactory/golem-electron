@@ -205,7 +205,7 @@ export class FooterMain extends Component {
                                         ? <span>{status.client.message}</span> 
                                         : <span>
                                             Outdated version
-                                            <a href="Test">
+                                            <a href="https://github.com/golemfactory/golem#installing-and-testing">
                                                 <span className="icon-new-window"/>
                                             </a>
                                         </span>}
