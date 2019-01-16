@@ -3,8 +3,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import * as Actions from "../../actions";
-import { getFilteredPaymentHistory } from "../../reducers";
+import { getFilteredPaymentHistory, getStatus } from "../../reducers";
 import { timeStampToHR } from "../../utils/secsToHMS";
+import checkNested from '../../utils/checkNested'
 
 const filter = {
     PAYMENT: "payment",
@@ -13,9 +14,10 @@ const filter = {
 const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
-    paymentHistory: getFilteredPaymentHistory.bind(null, state),
     concentBalance: state.realTime.concentBalance,
-    concentSwitch: state.concent.concentSwitch
+    concentSwitch: state.concent.concentSwitch,
+    paymentHistory: getFilteredPaymentHistory.bind(null, state),
+    status: getStatus(state, 'golemStatus')
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -121,14 +123,16 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory } = this.props;
+        const { paymentHistory, status } = this.props;
         const filteredList = paymentHistory(0);
         return (
             <div className="container__tube">
                 {
-                    (paymentHistory && filteredList.length > 0) 
-                        ? this._fetchLastTransaction(filteredList) 
-                        : <span className="content__tube">Loading...</span>
+                    (paymentHistory 
+                        && checkNested(status, 'client', 'status') 
+                        && status.client.status === "Ready") 
+                            ? this._fetchLastTransaction(filteredList) 
+                            : <span className="content__tube">Loading...</span>
                 }
             </div>
         );
