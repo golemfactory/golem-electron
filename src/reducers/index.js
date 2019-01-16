@@ -78,3 +78,4 @@ export const getFilteredPaymentHistory = (state, filter, isDefault) => fromHisto
 export const getStatus = (state, key) => fromRealTime.getStatusSelector({...state.realTime, ...state.info}, key)
 export const getPasswordModalStatus = (state, key) => fromRealTime.passwordModalSelector({...state.realTime, ...state.info}, key)
 export const getGPUEnvironment = (state, key) => fromPerformance.getGPUEnvironmentSelector(state.performance, key)
+export const getConcentDepositStatus = (state, key) => fromRealTime.concentDepositStatusSelector(state.realTime, key)
