@@ -66,6 +66,8 @@ describe('<MainFragment />', () => {
                 stats: {
                     host_state: "",
                     subtasks_computed: [],
+                    subtasks_accepted: [],
+                    subtasks_rejected: [],
                     subtasks_with_timeout: [],
                     subtasks_with_errors: []
                 }

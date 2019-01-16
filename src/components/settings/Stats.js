@@ -27,9 +27,11 @@ export class Stats extends React.Component {
                     <div> 
                         <p>Tasks on network: {stats.in_network}</p>
                         <p>Supported tasks: {stats.supported}</p>
-                        <p>Computed subtask: {stats.subtasks_computed[1]}</p>
-                        <p>Subtask with errors: {stats.subtasks_with_errors[1]}</p>
-                        <p>Subtask with timeouts: {stats.subtasks_with_timeout[1]}</p>
+                        <p>Computed subtasks: {stats.subtasks_computed[1]}</p>
+                        <p>Accepted subtasks: {stats.subtasks_accepted[1]}</p>
+                        <p>Rejected subtasks: {stats.subtasks_rejected[1]}</p>
+                        <p>Subtasks with errors: {stats.subtasks_with_errors[1]}</p>
+                        <p>Subtasks with timeouts: {stats.subtasks_with_timeout[1]}</p>
                     </div>
                     :
                     <div className="no-stats">No available data.</div>
