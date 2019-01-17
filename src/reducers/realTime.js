@@ -362,7 +362,6 @@ export const concentDepositStatusSelector = createCachedSelector(
     (state) => state.concentBalance,
     (state, key) => key,
     (concentBalance, key) => {
-        console.log("concentBalance", concentBalance);
         if(concentBalance){
             switch (concentBalance.status) {
                 case "unlocking": return { statusCode: 2, time: concentBalance.timelock}
