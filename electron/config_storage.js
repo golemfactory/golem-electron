@@ -9,7 +9,7 @@ const TERMS_VERSION = 3;
  */
 
 //store.delete('DEFAULT_GETH') // <-- Rollback geth
-//store.delete('HIDE_ONBOARD_FLOW') // <-- Rollback onboard
+//store.delete('HIDE_ONBOARD_FLOW:TEST_V'+TERMS_VERSION) // <-- Rollback onboard
 const dictConfig = MAINNET ? {
     AUTOLUNCH_SWITCH: 'AUTOLUNCH_SWITCH:MAIN',
     CONCENT_ONBOARDING: 'CONCENT_ONBOARDING:MAIN',

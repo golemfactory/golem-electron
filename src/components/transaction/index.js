@@ -3,8 +3,9 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import * as Actions from "../../actions";
-import { getFilteredPaymentHistory } from "../../reducers";
+import { getFilteredPaymentHistory, getStatus } from "../../reducers";
 import { timeStampToHR } from "../../utils/secsToHMS";
+import checkNested from '../../utils/checkNested'
 
 const filter = {
     PAYMENT: "payment",
@@ -13,9 +14,10 @@ const filter = {
 const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
-    paymentHistory: getFilteredPaymentHistory.bind(null, state),
     concentBalance: state.realTime.concentBalance,
-    concentSwitch: state.concent.concentSwitch
+    concentSwitch: state.concent.concentSwitch,
+    paymentHistory: getFilteredPaymentHistory.bind(null, state),
+    status: getStatus(state, 'golemStatus')
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -51,7 +53,7 @@ class TransactionTube extends Component {
     }
 
     _fetchLastTransaction = list => {
-        const { created, type, value } = list[0].data;
+        const { created, type, value } = list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch } = this.props;
         const { showConcentInfo } = this.state;
         return (
@@ -63,22 +65,34 @@ class TransactionTube extends Component {
                 }
                 {
                     !showConcentInfo
-                        ? <div className="section__tube content__latest-tx">
-                            <span>Latest transaction:</span>
-                            <span>
-                                <span className={`finance__indicator ${type === filter.INCOME ? "indicator--up" : "indicator--down"}`}>
-                                    {type === filter.INCOME ? "+ " : "- "}
-                                </span>
-                                <b>{(value / ETH_DENOM).toFixed(4)} GNT</b>
-                            </span>
-                            <span>{timeStampToHR(created, false, true)}</span>
-                            <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                        ? (list.length > 0
+                            ? <div className="section__tube content__latest-tx">
+                                <span>Latest transaction:</span>
                                 <span>
-                                    <span className="icon-transaction-history" />
-                                    <b>Transaction History</b>
+                                    <span className={`finance__indicator ${type === filter.INCOME ? "indicator--up" : "indicator--down"}`}>
+                                        {type === filter.INCOME ? "+ " : "- "}
+                                    </span>
+                                    <b>{(value / ETH_DENOM).toFixed(4)} GNT</b>
                                 </span>
+                                <span>{timeStampToHR(created, false, true)}</span>
+                                <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                                    <span>
+                                        <span className="icon-transaction-history" />
+                                        <b>Transaction History</b>
+                                    </span>
+                                </div>
                             </div>
-                        </div>
+                            : <div className="section__tube content__latest-tx">
+                                <span className="no-payment">
+                                    You don't have any payment yet.
+                                </span>
+                                <div className="btn__transaction-history" onClick={this._toggleHistory}>
+                                    <span>
+                                        <span className="icon-transaction-history" />
+                                        <b>Transaction History</b>
+                                    </span>
+                                </div>
+                            </div>)
                         : <div className="section__tube content__concent-info">
                             <div className="concent-info__deposit">
                                 <span>Deposit amount: </span>
@@ -109,14 +123,16 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory } = this.props;
+        const { paymentHistory, status } = this.props;
         const filteredList = paymentHistory(0);
         return (
             <div className="container__tube">
                 {
-                    (paymentHistory && filteredList.length > 0) 
-                        ? this._fetchLastTransaction(filteredList) 
-                        : <span className="content__tube">Loading...</span>
+                    (paymentHistory 
+                        && checkNested(status, 'client', 'status') 
+                        && status.client.status === "Ready") 
+                            ? this._fetchLastTransaction(filteredList) 
+                            : <span className="content__tube">Loading...</span>
                 }
             </div>
         );

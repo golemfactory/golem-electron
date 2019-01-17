@@ -1,6 +1,18 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import welcomeBeta from './../../../assets/img/welcome-beta.svg'
+import animDataTestNet from './../../../assets/anims/onboarding/welcome-testnet.json'
+import animDataMainNet from './../../../assets/anims/onboarding/welcome-mainnet.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: null,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Welcome extends React.Component {
 
@@ -9,26 +21,19 @@ export default class Welcome extends React.Component {
     }
 
     render() {
+        const {isMainNet} = this.props
+        defaultOptions.animationData = isMainNet ? animDataMainNet : animDataTestNet
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={welcomeBeta}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>Thanks for installing Brass Golem.
+                    <h1>You are running {isMainNet ? "mainnet": "testnet"}</h1>
+                    <span>That means you will be using tGNT and tETH which are testnet network tokens and do not hold any real value.</span>
                     <br/>
-                    Let’s set up a few things 
                     <br/>
-                    for you before we start.</span>
-                    <br/>
-                    <span className="desc__port"><mark><strong>Attention:</strong> Please make sure that your computer has a public IP
-                    <br/>or forwarded ports <strong>40102, 40103, 3282</strong>. Otherwise
-                    <br/>you may not be able to run Golem properly! <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">Learn more</a>
-                    <br/>
-                    <br/><b>Virtualization VT-X/AMD-v needs to be enabled</b> in BIOS
-                    <br/>as it is mandatory for Golem. <a href="">Learn more</a>
-                    </mark>
-                    </span>
+                    <span>Other than that the app works exactly same and has some experimental functionalities.</span>
                 </div>
             </div>
         );

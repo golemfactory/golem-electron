@@ -290,8 +290,7 @@ export default class WithdrawForm extends React.Component {
                                 }
                         </div>
                         <div className="total-amount__info">
-                            <span>Total: {totalAmount.toFixed(8)} ETH</span>
-                            <span>est. ${totalAmount.multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                            <span>Tx Fee. {adjustedGasPriceInETH.toFixed(8)} ETH</span>
                         </div>
                     </div>
                     <div className="form-field">

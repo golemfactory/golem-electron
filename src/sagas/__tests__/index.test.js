@@ -18,6 +18,7 @@ import { balanceFlow } from '../balance'
 import { historyFlow } from '../history'
 import { advancedFlow } from '../advanced'
 import { performanceFlow } from '../performance'
+import { virtualizationFlow } from '../virtualization'
 import { quitFlow } from '../quit';
 import { statsFlow } from '../stats'
 import { trustFlow } from '../trust'
@@ -45,7 +46,7 @@ describe('handleIO', () => {
         },
         start_message: {
             type: 'SET_GOLEM_STATUS',
-            payload: [ 'client', 'start', 'pre' ]
+            payload: [{client: [ 'start', 'pre', null ]}]
         },
         logout: {
             type: 'LOGOUT'
@@ -142,6 +143,9 @@ describe('handleIO', () => {
     it('should fork read generator (handleIO)', () => {
         let sagaHandleIO = testSaga(handleIO, connection)
         sagaHandleIO
+            .next()
+            .fork(virtualizationFlow, connection)
+            
             .next()
             .fork(quitFlow, connection)
 

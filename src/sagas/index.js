@@ -30,6 +30,7 @@ import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
 import { termsFlow } from './terms';
 import { versionFlow } from "./version";
+import { virtualizationFlow } from "./virtualization";
 
 const {
     SET_CONNECTION_PROBLEM,
@@ -276,6 +277,7 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
+        yield fork(virtualizationFlow, connection);
         yield fork(quitFlow, connection);
         yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
@@ -397,7 +399,7 @@ export function* flow() {
         yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
-            payload: ['client', 'start', 'pre']
+            payload: [{client:["start", "pre", null]}]
         });
         const { task } = yield call(connectionFlow);
         let action = yield take(LOGOUT);

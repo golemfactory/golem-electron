@@ -1,6 +1,17 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import termsIcon from './../../../assets/img/terms.svg'
+import animData from './../../../assets/anims/onboarding/terms.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Terms extends React.Component {
 
@@ -17,11 +28,9 @@ export default class Terms extends React.Component {
             document.getElementById('blurTop').style.opacity = _ratio;
             document.getElementById('blurBottom').style.opacity = 1 - _ratio;
 
-            if(e.target.scrollTop > (e.target.scrollHeight - 250)){
-                this.props.handleLock(false)
-            } else {
-                this.props.handleLock(true)
-            }
+            // scrollHeight - clientHeight = total length of scroll, equals to scrollTop when scroll is at bottom
+            const isTermsLocked = e.target.scrollTop > (e.target.scrollHeight - (e.target.clientHeight + 51));
+            this.props.handleLock(!isTermsLocked)
         }
         
     }
@@ -31,8 +40,8 @@ export default class Terms extends React.Component {
         const { terms, isSentryAccepted, isMonitorAccepted } = this.props
         return (
             <div className="container-step__onboarding">
-                <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={termsIcon}/>
+                <div className="section-image__onboarding welcome-beta terms-image">
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     <div className="container__terms" onScroll={::this._handleScroll}>

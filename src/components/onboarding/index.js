@@ -12,7 +12,7 @@ import {getPasswordModalStatus} from '../../reducers'
 import Onboarding from './../onboarding';
 
 import Welcome from './steps/Welcome'
-import ChainInfo from './steps/ChainInfo'
+import VirtualisationInfo from './steps/VirtualisationInfo'
 import Terms from './steps/Terms'
 import Type from './steps/Type'
 import Register from './steps/Register'
@@ -26,13 +26,13 @@ import Decline from './steps/Decline'
 
 import golem_logo from './../../assets/img/golem-black.svg'
 
-const {remote} = window.electron;
+const {remote, shell} = window.electron;
 const {app} = remote
 
 
 const steps = Object.freeze({
     WELCOME: 1,
-    CHAININFO: 2,
+    VIRTUALISATION: 2,
     TERMS: 3,
     TYPE: 4,
     REGISTER: 5,
@@ -107,7 +107,8 @@ const mapStateToProps = state => ({
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
     isMainNet: state.info.isMainNet,
-    connectionProblem: state.info.connectionProblem
+    connectionProblem: state.info.connectionProblem,
+    isVirtualizationExist: state.info.isVirtualizationExist
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -133,7 +134,8 @@ class OnboardIndex extends React.Component {
             isPrinted: false,
             isSkippingPrint: false,
             printInfo: "",
-            closeInformationBand: false
+            closeInformationBand: false,
+            isSlideBlocked: false
         }
     }
 
@@ -141,9 +143,10 @@ class OnboardIndex extends React.Component {
         this._keypressListener = event => {
 
             if(event.key === "Enter" && 
+                this.state.currentStep !== steps.VIRTUALISATION &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
-                this.state.currentStep !== steps.STEP1 &&
+                this.state.currentStep !== steps.STEP4 &&
                 this.props.isConnected){
                 this._handleNext.call(this)
             }
@@ -155,19 +158,25 @@ class OnboardIndex extends React.Component {
         document.removeEventListener("keypress", this._keypressListener);
     }
 
-    componentWillUpdate(nextProps, nextState) {
-        if(nextState.currentStep !== this.state.currentStep){
-            if(nextState.currentStep > steps.STEP1 && nextState.currentStep < steps.STEP4)
-                this.refs.stepControl.classList.add('back-active')
-            else
-                this.refs.stepControl.classList.remove('back-active')
-        }
-    }
-
     _setNodeName(name) {
+        console.log("name", name);
         this.setState({
             nodeName: name
         })
+    }
+
+    /**
+     * _transitionBlocker will block next prev and skip buttons,
+     * to keep transition away from the style deformation
+     */
+    _transitionBlocker(){
+        this.setState({
+            isSlideBlocked: true
+        },
+        () => setTimeout( _ => 
+            this.setState({
+              isSlideBlocked: false  
+        }), 600))
     }
 
     _handleLock(_lock){
@@ -230,10 +239,10 @@ class OnboardIndex extends React.Component {
         let key = Symbol(id).toString();
         switch (id) {
         case steps.WELCOME:
-            step = <Welcome key={key}/>
+            step = <Welcome key={key} isMainNet={isMainNet}/>
             break;
-        case steps.CHAININFO:
-            step = <ChainInfo isMainNet={isMainNet}/>
+        case steps.VIRTUALISATION:
+            step = <VirtualisationInfo />
             break;
         case steps.TERMS:
             step = isTermsDeclined ? <Decline/> : <Terms 
@@ -264,12 +273,7 @@ class OnboardIndex extends React.Component {
                     isSkippingPrint={isSkippingPrint}/>
             break;
         case steps.STEP1:
-            step = <Step2 
-                    ref={(ref) => this.step2 = ref}
-                    nodeName={nodeName}
-                    setNodeName={::this._setNodeName} 
-                    key={key} 
-                    handleNext={::this._handleNext}/>
+            step = <Step2 key={key}/>
             break;
         case steps.STEP2:
             step = <Step3 key={key}/>
@@ -278,7 +282,12 @@ class OnboardIndex extends React.Component {
             step = <Step4 key={key}/>
             break;
         case steps.STEP4:
-            step = <Step5 key={key}/>
+            step = <Step5 key={key}
+                    ref={(ref) => this.stepNickname = ref}
+                    nodeName={nodeName}
+                    setNodeName={::this._setNodeName} 
+                    key={key} 
+                    handleNext={::this._handleNext}/>
             break;
         // case 6:
         //     step = <Step6/>
@@ -292,6 +301,8 @@ class OnboardIndex extends React.Component {
      * [_handlePrev func. will redirect user to previous step]
      */
     _handlePrev() {
+        if(this.state.isSlideBlocked) return;
+
         const {currentStep} = this.state
         if(currentStep > steps.STEP1){
             this.setState({
@@ -299,15 +310,19 @@ class OnboardIndex extends React.Component {
                 isNext: false
             })
         }
+
+        this._transitionBlocker();
     }
 
     /**
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
-        const { actions, passwordModal, isTermsAccepted } = this.props
+        if(this.state.isSlideBlocked) return;
+
+        const { actions, passwordModal, isTermsAccepted, isVirtualizationExist } = this.props
         const { currentStep, nodeName, isRegisterRequired } = this.state 
-        if (currentStep === steps.STEP2) {
+        if (currentStep === steps.STEP4) {
             const queuedTask = {
                 action: "updateNodeName",
                 arguments: [nodeName]
@@ -318,12 +333,27 @@ class OnboardIndex extends React.Component {
         if (currentStep < steps.STEP4) {
             let nextStep = currentStep + 1;
 
+            /**
+             * Check if user need register screen on onboarding
+             */
             if(nextStep === steps.REGISTER){
                 this.setState({
                     isRegisterRequired: passwordModal.register
                 })
             }
 
+            /**
+             * Move next step if virtualization is okay.
+             */
+            if (currentStep === steps.WELCOME
+            && isVirtualizationExist) {
+                nextStep++;
+            }
+
+            /**
+             * If user registered go next step
+             * If user accepted terms go to next step
+             */
             if((!isRegisterRequired && 
                             nextStep === steps.PRINT) ||
                 (isTermsAccepted && 
@@ -342,6 +372,20 @@ class OnboardIndex extends React.Component {
         if(currentStep === steps.WELCOME){
             actions.checkTermsAccepted()
         }
+
+        this._transitionBlocker();
+    }
+
+    _handleSkip = () => {
+        if(this.state.isSlideBlocked) return;
+        
+        let nextStep = 10;
+        this.setState({
+            currentStep: nextStep,
+            isNext: true
+        })
+
+        this._transitionBlocker();
     }
 
     _handleTermsBack(){
@@ -365,6 +409,11 @@ class OnboardIndex extends React.Component {
                                 resolve, 
                                 reject)
         });
+    }
+
+    _handleLeaveWithInstructions(){
+        shell.openExternal('https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users');
+        this._handleLeave();
     }
 
     _handleLeave(){
@@ -453,7 +502,7 @@ class OnboardIndex extends React.Component {
     _initControl(_step){
         const {passwordModal, isConnected} = this.props
         const {loadingIndicator, isAcceptLocked, isTermsDeclined, isPrinted, isPasswordValid} = this.state
-        if(_step === steps.WELCOME || _step === steps.STEP4){
+        if(_step === steps.WELCOME){
             return <div>
                 <button className="btn btn--primary" 
                         onClick={::this._handleNext} 
@@ -481,7 +530,12 @@ class OnboardIndex extends React.Component {
                     </button>
                 </div>
         }
-        else if(_step === steps.CHAININFO || _step === steps.TYPE){
+        else if( _step === steps.VIRTUALISATION){
+            return <div>
+                <button className="btn btn--primary" onClick={::this._handleLeaveWithInstructions}>Quit</button>
+            </div>
+        }
+        else if( _step === steps.TYPE){
             return <div>
                 <button className="btn btn--primary" onClick={::this._handleNext}>Got It</button>
             </div>
@@ -522,31 +576,63 @@ class OnboardIndex extends React.Component {
                                 Next
                     </button>
                 </div>
-        } else if(_step > steps.STEP1){
+        } else if(_step === steps.STEP1){
             return <div>
-                        <span 
-                            className="icon-arrow-left-small" 
-                            onClick={::this._handlePrev} 
-                            aria-label="Prev" 
-                            tabIndex="0"/>
-                        <span>{_step - 6} of 4</span>
-                        <span
-                            className="icon-arrow-right-small" 
-                            onClick={::this._handleNext} 
-                            aria-label="Next" 
-                            tabIndex="0"/>
+                       <div>
+                           <div>
+                                <span className="step-placeholder"/>
+                                <span>{_step - 6} of 4</span>
+                                <span
+                                  className="icon-arrow-right-small"
+                                  onClick={::this._handleNext} 
+                                  aria-label="Next"
+                                  tabIndex="0"/>
+                           </div>
+                           <div className="btn__skip">
+                                <span onClick={this._handleSkip}>skip</span>   
+                           </div>
+                       </div>
+
                    </div>
+        } else if(_step === steps.STEP4){
+            return <div>
+                <div>
+                    <span 
+                        className="icon-arrow-left-small" 
+                        onClick={::this._handlePrev} 
+                        aria-label="Prev" 
+                        tabIndex="0"/>
+                    <span>{_step - 6} of 4</span>
+                    <span className="step-placeholder"/>
+               </div>
+                <button className="btn btn--primary btn--last" 
+                        type="button"
+                        onClick={e => {
+                            this.stepNickname.activityFormButton.click()
+                        }}
+                        disabled={!isConnected}>
+                            {isConnected ? "Get Started" : "Connecting..."}
+                </button>
+            </div>
         } else {
             return <div>
-                        <span>{_step - 6} of 4</span>
-                        <span
-                            className="icon-arrow-right-small"
-                            aria-label="Next"
-                            onClick={e => {
-                                this.step2.activityFormButton.click()
-                            }}
-                            tabIndex="0"/>
-                   </div>
+                        <div>
+                            <span 
+                                className="icon-arrow-left-small" 
+                                onClick={::this._handlePrev} 
+                                aria-label="Prev" 
+                                tabIndex="0"/>
+                            <span>{_step - 6} of 4</span>
+                            <span
+                                className="icon-arrow-right-small" 
+                                onClick={::this._handleNext} 
+                                aria-label="Next" 
+                                tabIndex="0"/>
+                       </div>
+                       <div className="btn__skip">
+                            <span onClick={this._handleSkip}>skip</span>   
+                       </div>
+                    </div>
         }
 
     }

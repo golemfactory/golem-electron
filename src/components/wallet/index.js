@@ -104,6 +104,7 @@ export class Wallet extends Component {
                             balance={balance[0]}
                             lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
+                            contractAddresses={balance[7]}
                             suffix="GNT"
                             description={
                                 isMainNet ? (
@@ -145,6 +146,7 @@ export class Wallet extends Component {
                             balance={balance[1]}
                             lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
+                            contractAddresses={balance[7]}
                             suffix="ETH"
                             description={
                                 isMainNet ? (

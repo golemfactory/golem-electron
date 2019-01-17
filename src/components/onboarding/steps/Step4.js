@@ -1,7 +1,18 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
-import tasksPreview from './../../../assets/img/tasks-preview.png'
+import docPreview from './../../../assets/img/doc-preview.png'
+import animData from './../../../assets/anims/onboarding/requestor.json'
 import SpotLight from '../../SpotLight'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Step4 extends React.Component {
 
@@ -13,13 +24,18 @@ export default class Step4 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding section__fixed">
-                    <img src={tasksPreview}/>
-                    <SpotLight posX={[10, 37]} posY={[18, 18]} r={[10, 10]}/>
+                    <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>The Tasks tab is where you can request computing power from the Golem Network, edit task settings and monitor progress.</span>
+                    <h1>Become a requestor</h1>
+                    <span>
+                        In order to commission tasks to the network you will 
+                        need GNT and ETH. After toping up your wallet, you just
+                        drag & drop your files and after adjusting your task 
+                        settings send them to the network.
+                    </span>
                 </div>
             </div>
-        )
+        );
     }
 }

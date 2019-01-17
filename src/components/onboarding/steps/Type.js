@@ -1,6 +1,17 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import penIcon from './../../../assets/img/pen.svg'
+import animData from './../../../assets/anims/onboarding/no-recovery.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Type extends React.Component {
 
@@ -12,22 +23,16 @@ export default class Type extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={penIcon}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
-                    <span>We do not keep a copy of your
-                    <br/>
-                    password. Remember to write it down,
-                    <br/>
-                    otherwise there will be <strong>no option</strong>
-                    <br/>
-                    to recover it. <a href="https://golem.network/documentation/02-risks/">Learn more</a></span>
-                    
-                    <span className="info__print">After creating your password you will
-                    <br/>
-                    have an option to print it out. But as it is not
-                    <br/>
-                    fully secure, we advise you write it down in a safe place.
+                    <h1>There is no password recovery</h1>
+                    <span>
+                        We do not keep a copy of your password. After 
+                        password creation remember to write it down or print
+                        it, as there is no password recovery option
+                        <br/>
+                        <a href="https://golem.network/documentation/02-risks/">Learn more</a>
                     </span>
                 </div>  
             </div>

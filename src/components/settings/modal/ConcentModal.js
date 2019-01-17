@@ -6,7 +6,7 @@ export default class ConcentModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            toggleConcentLock: true
+            toggleConcentLock: false
         }
     }
 
@@ -56,14 +56,14 @@ export default class ConcentModal extends React.Component {
                     </div>
                     <div className="radio-group__concent-modal" onChange={this._handleUnlockCheckbox}>
                         <div className="radio-item">
-                            <input type="radio" id="unlockConcentRadio" value={true} name="unlockDepositConcent" defaultChecked={true}/>
+                            <input type="radio" id="unlockConcentRadio" value={false} name="unlockDepositConcent" defaultChecked={true}/>
                             <label htmlFor="unlockConcentRadio">
                                 <span className="overlay"/>
                                 Leave the funds in the deposit
                             </label>
                         </div>
                         <div className="radio-item">
-                            <input type="radio" id="unlockConcentRadio2" value={false} name="unlockDepositConcent"/>
+                            <input type="radio" id="unlockConcentRadio2" value={true} name="unlockDepositConcent"/>
                             <label htmlFor="unlockConcentRadio2">
                                 <span className="overlay"/>
                                 Withdraw deposited funds

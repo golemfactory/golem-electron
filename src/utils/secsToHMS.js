@@ -58,9 +58,6 @@ function timeStampToHR(timestamp, isFlatDate = false, onlyDate = false) {
 
     var formattedDate = dd + '/' + M + '/' + year;
 
-    if(onlyDate)
-        return `${isDateToday(formattedDate) ? formattedTime : formattedDate}`
-
     var ss = seconds.toString().padStart(2, "0");
     var mm = minutes.toString().padStart(2, "0");
     var hh = hours.toString().padStart(2, "0");
@@ -68,9 +65,12 @@ function timeStampToHR(timestamp, isFlatDate = false, onlyDate = false) {
     // Will display time in 10:30:23 format
     var formattedTime = hh + ':' + mm + ':' + ss;
 
-    if(isFlatDate){
+    if(onlyDate)
+        return `${isDateToday(formattedDate) ? formattedTime : formattedDate}`
+
+    // Will display time in 1d 10h 2m 10s format
+    if(isFlatDate)
         return dayDiff(date)
-    }
 
     return `${isDateToday(formattedDate) ? '' : formattedDate + ' -'} ${formattedTime}`
 }

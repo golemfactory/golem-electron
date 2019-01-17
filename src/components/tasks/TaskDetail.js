@@ -214,8 +214,8 @@ export class TaskDetail extends React.Component {
                 type: nextProps.taskInfo.type
             }, () => {
 
-                const {type, timeout, subtasks_count, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                const {type, timeout, subtasks_count, subtask_timeout, compute_on, concent_enabled, options, bid} = nextProps.taskInfo
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, concentRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks_count || 0
                 this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
@@ -224,10 +224,12 @@ export class TaskDetail extends React.Component {
                     resolutionW.value = options.resolution[0]
                     resolutionH.value = options.resolution[1]
                     outputPath.value = options.output_path
-                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
+                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
+                    concentRef.checked = concent_enabled
                     this.setState({
                         formatIndex,
-                        compute_on
+                        compute_on,
+                        concent: concent_enabled
                     })
 
                     if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
@@ -1050,13 +1052,11 @@ export class TaskDetail extends React.Component {
                             { !isMainNet
                                 &&
                                 <div className="section-concent__task-detail">
-                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-concent__task-detail" distance={-20}/>
+                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" distance={-20}/>
                                     <div className="item-concent">
                                         <InfoLabel 
                                             type="span" 
-                                            label="Set" 
-                                            info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
-                                                <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                            label="Set"
                                             cls="title" 
                                             infoHidden={true}/>
                                         <div className="switch-box switch-box--green">

@@ -8,7 +8,6 @@ import a11y from 'react-a11y'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
-import {getStatus} from '../../reducers'
 
 import golem_logo from './../../assets/img/golem-tray.png'
 import golem_svg from './../../assets/img/golem.svg'
@@ -32,13 +31,6 @@ import ManagePresetModal from './modal/ManagePresetModal'
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
-    connectionProblem: state.info.connectionProblem,
-    status: getStatus(state, 'golemStatus'),
-    chosenPreset: state.advanced.chosenPreset,
-    isEngineOn: state.info.isEngineOn,
-    stats: state.stats.stats,
-    isEngineLoading: state.info.isEngineLoading,
-    version: state.info.version
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -137,7 +129,7 @@ export class MainFragment extends React.Component {
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, connectionProblem, status, isEngineOn, isEngineLoading, balance, currency, version} = this.props
+        const {message, actions, autoLaunch, balance, currency} = this.props
         const {presetModal, managePresetModal, modalData, isPresetNameExist, toggleHistory} = this.state
 
         return (
@@ -152,7 +144,7 @@ export class MainFragment extends React.Component {
             }
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
             {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
-            <FooterMain {...this.props}/>
+            <FooterMain/>
         </div>
         );
     }

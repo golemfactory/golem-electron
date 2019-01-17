@@ -46,7 +46,7 @@
     @include flex;
     justify-content: space-around;
     box-sizing: border-box;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
     transition: .8s all;
 }
 
@@ -133,8 +133,8 @@
 
 .image__personal {
     position: relative;
-    width: 20vh;
-    height: 20vh;
+    width: 15vh;
+    height: 15vh;
     max-height: 161px;
     max-width: 161px;
     transition: .8s all;
@@ -143,8 +143,8 @@
     &--border{
         position: absolute;
         top: 0;
-        width: 20vh;
-        height: 20vh;
+        width: 15vh;
+        height: 15vh;
         max-height: 161px;
         max-width: 161px;
         border: 10px solid rgba(white, 0.5);
