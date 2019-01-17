@@ -1,8 +1,7 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import penIcon from './../../../assets/img/pen.svg'
-import animData from './../../../assets/anims/onboarding/no-recovery.json'
+import animData from './../../../assets/anims/onboarding/vt-x-windows.json'
 
 const defaultOptions = {
     loop: false,
@@ -13,26 +12,26 @@ const defaultOptions = {
     }
 };
 
-export default class Type extends React.Component {
+export default class VirtualisationInfo extends React.Component {
 
     constructor(props) {
         super(props);
     }
 
     render() {
+        const {isMainNet} = this.props
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
                    <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
-                    <h1>There is no password recovery</h1>
+                    <h1>Virtualisation is required</h1>
                     <span>
-                        We do not keep a copy of your password. After 
-                        password creation remember to write it down or print
-                        it, as there is no password recovery option
-                        <br/>
-                        <a href="https://golem.network/documentation/02-risks/">Learn more</a>
+                    We have detected that Virtualisation on your machine <br/>
+                    is disabled. Vt-X/AMD-v needs to be ennabled in BIOS <br/>
+                    as it is mandatory to run Golem. If you want to know <br/>
+                    how to enable it, please follow this <a href="https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users">instructions</a>
                     </span>
                 </div>  
             </div>

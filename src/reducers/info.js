@@ -19,7 +19,8 @@ const {
     SET_TERMS,
     SET_CONCENT_TERMS_STATUS,
     SET_CONCENT_TERMS,
-    SET_CHAIN_INFO
+    SET_CHAIN_INFO,
+    SET_VIRTUALIZATION_STATUS
 } = dict
 
 const {GOLEM_STARTER, HIDE_ONBOARD} = dictConfig
@@ -53,7 +54,8 @@ const initialState = {
     isTermsAccepted: false,
     concentTerms: "",
     isConcentTermsAccepted: false,
-    isNodeProvider: true
+    isNodeProvider: true,
+    isVirtualizationExist: false
 }
 
 function isNewVersion(_old, _new){
@@ -156,12 +158,17 @@ const setInfo = (state = initialState, action) => {
     case SET_CONNECTION:
         return Object.assign({}, state, {
             isConnected: action.payload
-        })
+        });
 
     case IS_NODE_PROVIDER:
         return Object.assign({}, state, {
             isNodeProvider: action.payload
-        })
+        });
+
+    case SET_VIRTUALIZATION_STATUS:
+        return Object.assign({}, state, {
+            isVirtualizationExist: action.payload
+        });
 
     default:
         return state;

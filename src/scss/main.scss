@@ -130,6 +130,10 @@ h6 {
     margin: 5px;
 }
 
+input {
+    caret-color: $color-primary;
+}
+
 sup {
     font-size: 0.83em;
     vertical-align: super;

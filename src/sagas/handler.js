@@ -84,6 +84,7 @@ export let config = Object.freeze({
     //General
     VERSION_RPC: 'golem.version',
     CHAIN_INFO_RPC: 'golem.mainnet',
+    VIRTUALIZATION_RPC: 'env.hw.virtualization',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
