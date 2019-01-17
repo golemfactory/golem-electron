@@ -134,7 +134,8 @@ class OnboardIndex extends React.Component {
             isPrinted: false,
             isSkippingPrint: false,
             printInfo: "",
-            closeInformationBand: false
+            closeInformationBand: false,
+            isSlideBlocked: false
         }
     }
 
@@ -162,6 +163,20 @@ class OnboardIndex extends React.Component {
         this.setState({
             nodeName: name
         })
+    }
+
+    /**
+     * _transitionBlocker will block next prev and skip buttons,
+     * to keep transition away from the style deformation
+     */
+    _transitionBlocker(){
+        this.setState({
+            isSlideBlocked: true
+        },
+        () => setTimeout( _ => 
+            this.setState({
+              isSlideBlocked: false  
+        }), 600))
     }
 
     _handleLock(_lock){
@@ -286,6 +301,8 @@ class OnboardIndex extends React.Component {
      * [_handlePrev func. will redirect user to previous step]
      */
     _handlePrev() {
+        if(this.state.isSlideBlocked) return;
+
         const {currentStep} = this.state
         if(currentStep > steps.STEP1){
             this.setState({
@@ -293,12 +310,16 @@ class OnboardIndex extends React.Component {
                 isNext: false
             })
         }
+
+        this._transitionBlocker();
     }
 
     /**
      * [_handleNext will redirect user to next step]
      */
     _handleNext() {
+        if(this.state.isSlideBlocked) return;
+
         const { actions, passwordModal, isTermsAccepted, isVirtualizationExist } = this.props
         const { currentStep, nodeName, isRegisterRequired } = this.state 
         if (currentStep === steps.STEP4) {
@@ -351,14 +372,20 @@ class OnboardIndex extends React.Component {
         if(currentStep === steps.WELCOME){
             actions.checkTermsAccepted()
         }
+
+        this._transitionBlocker();
     }
 
     _handleSkip = () => {
+        if(this.state.isSlideBlocked) return;
+        
         let nextStep = 10;
         this.setState({
             currentStep: nextStep,
             isNext: true
         })
+
+        this._transitionBlocker();
     }
 
     _handleTermsBack(){
@@ -579,6 +606,7 @@ class OnboardIndex extends React.Component {
                     <span className="step-placeholder"/>
                </div>
                 <button className="btn btn--primary btn--last" 
+                        type="button"
                         onClick={e => {
                             this.stepNickname.activityFormButton.click()
                         }}

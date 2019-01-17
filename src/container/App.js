@@ -23,6 +23,7 @@ import {getStatus, getPasswordModalStatus} from '../reducers'
 import IssueModal from './modal/IssueModal'
 import WithdrawModal from './../components/wallet/modal/WithdrawModal'
 import PasswordModal from './modal/PasswordModal'
+import checkNested from './../utils/checkNested'
 
 
 Array.prototype.last = function() {
@@ -48,15 +49,17 @@ const routes = (
 </div>
 );
 
-function isGolemReady(status) {
-    return status === "Ready"
+function isGolemReady(gs) {
+    return gs.status === "Ready" 
+        && gs.message
+        .toLowerCase()
+        .includes("node");
 }
 
 const mapStateToProps = state => ({
     golemStatus: getStatus(state, 'golemStatus'),
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
-    taskQueue: state.queue.next,
     withdrawModal: state.account.withdrawModal,
     passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     showOnboard: state.onboard.showOnboard,
@@ -88,8 +91,11 @@ export class App extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(isGolemReady(nextProps.golemStatus.status) && nextProps.taskQueue.length > 0){
+        if(checkNested(nextProps, 'golemStatus', 'client') 
+            && isGolemReady(nextProps.golemStatus.client) 
+            && nextProps.taskQueue.length > 0){
             const newTask = nextProps.taskQueue.last();
+            console.log("newTask app", newTask);
             if(newTask){
                 nextProps.actions[newTask.action](...newTask.arguments)
                 nextProps.actions.removeQueuedTask()
