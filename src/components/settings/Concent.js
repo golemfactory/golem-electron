@@ -2,6 +2,7 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {Tooltip} from 'react-tippy';
+import { BigNumber } from "bignumber.js";
 
 import * as Actions from './../../actions';
 import {getConcentDepositStatus} from './../../reducers';
@@ -90,7 +91,7 @@ export class Concent extends React.Component {
                             <div>
                                 <span>
                                     Deposit amount: <b>{concentBalance 
-                                            ? concentBalance.value.dividedBy(ETH_DENOM).toFixed(4) 
+                                            ? new BigNumber(concentBalance.value).dividedBy(ETH_DENOM).toFixed(4) 
                                             : "-"
                                         } GNT</b>
                                     <br/>

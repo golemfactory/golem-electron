@@ -6,6 +6,9 @@ import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose, __DO_NOT_USE__ActionTypes } from 'redux'
+import { persistStore, persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
+import { PersistGate } from 'redux-persist/integration/react'
 import createSagaMiddleware from 'redux-saga'
 import { routerMiddleware, connectRouter } from 'connected-react-router'
 import { createHashHistory } from 'history'
@@ -41,11 +44,21 @@ const enhancer = compose(
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
+const persistConfig = {
+  key: 'root',
+  storage,
+  blacklist: ['golemStatus', 'info']
+}
+
+const persistedReducer = persistReducer(persistConfig, reducer)
+
 let store = createStore(
-        connectRouter(history)(reducer), 
+        connectRouter(history)(persistedReducer), 
         [], 
         window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
+let persistor = persistStore(store)
+//persistor.purge();
 const RPC_QUIT_STATES = {
     INITIAL: 0,
     PENDING: 1,
@@ -109,7 +122,9 @@ document.addEventListener('DOMContentLoaded', function() {
     window.applicationSurface = document.getElementById('mount')
     render(
           <Provider store={ store }>
-            <App history={ history } />
+            <PersistGate loading={null} persistor={persistor}>
+                <App history={ history } />
+            </PersistGate>
           </Provider>,
         window.applicationSurface
     )

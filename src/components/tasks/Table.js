@@ -17,7 +17,7 @@ import TaskItem from './TaskItem'
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
     isEngineOn: state.info.isEngineOn,
-    connectedPeers: state.realTime.connectedPeers,
+    connectedPeers: state.golemStatus.connectedPeers,
     psEnabled: state.preview.ps.enabled,
     psId: state.preview.ps.id,
 })

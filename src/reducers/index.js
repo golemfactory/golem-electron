@@ -31,6 +31,7 @@ import input from './input'
 import loader from './loader'
 import currency from './currency'
 import realTime, * as fromRealTime from './realTime'
+import golemStatus, * as fromStatus from './golemStatus'
 import info from './info'
 import queue from './queue'
 
@@ -63,6 +64,7 @@ const reducer = combineReducers({
     //NOTIFICATION CENTER
     notification,
     //GENERAL
+    golemStatus,
     input,
     loader,
     currency,
@@ -75,7 +77,7 @@ export default reducer
 
 
 export const getFilteredPaymentHistory = (state, filter, isDefault) => fromHistory.getFilteredPaymentSelector(state.history, filter, isDefault)
-export const getStatus = (state, key) => fromRealTime.getStatusSelector({...state.realTime, ...state.info}, key)
-export const getPasswordModalStatus = (state, key) => fromRealTime.passwordModalSelector({...state.realTime, ...state.info}, key)
+export const getStatus = (state, key) => fromStatus.getStatusSelector({...state.golemStatus, ...state.info}, key)
+export const getPasswordModalStatus = (state, key) => fromStatus.passwordModalSelector({...state.golemStatus, ...state.info}, key)
 export const getGPUEnvironment = (state, key) => fromPerformance.getGPUEnvironmentSelector(state.performance, key)
 export const getConcentDepositStatus = (state, key) => fromRealTime.concentDepositStatusSelector(state.realTime, key)

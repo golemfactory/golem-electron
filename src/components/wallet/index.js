@@ -86,11 +86,13 @@ export class Wallet extends Component {
     }
 
     _checkIfEnoughToWithdraw(_balance, isERC = false) {
-        if (isERC) {
-            return _balance[0].isEqualTo(zero) || _balance[1].isEqualTo(zero);
-        }
+        if(BigNumber.isBigNumber(_balance)){
+            if (isERC) {
+                return _balance[0].isEqualTo(zero) || _balance[1].isEqualTo(zero);
+            }
 
-        return _balance[1].isEqualTo(zero);
+            return _balance[1].isEqualTo(zero);
+        }
     }
 
     render() {

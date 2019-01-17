@@ -53,7 +53,7 @@ export default class CurrencyBox extends Component {
     }
 
     _formatAmount = (_balance, _suffix, currency = 1) => {
-        const totalBalance = this.props.balance.precision(this.state.amountPrecision).toString();
+        const totalBalance = new BigNumber(this.props.balance).precision(this.state.amountPrecision).toString();
 
         const animatedBalance = new BigNumber(_balance.toString())
             .dividedBy(currency)
@@ -140,7 +140,7 @@ export default class CurrencyBox extends Component {
                                     </Spring>
                                     <Spring
                                         from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
-                                        to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                                        to={{ balanceAnimated: Number(new BigNumber(balance).multipliedBy(currency[suffix])) }}>
                                         {({ balanceAnimated }) => (
                                             <span className="amount amount-usd">
                                                 est. {!isMainNet ? "t" : ""}${" "}
@@ -152,7 +152,7 @@ export default class CurrencyBox extends Component {
                                 <div className="locked-amount">
                                     <Spring
                                         from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
-                                        to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                                        to={{ balanceAnimated: Number(new BigNumber(balance).multipliedBy(currency[suffix])) }}>
                                         {({ balanceAnimated }) => (
                                             <span>
                                                 Locked:{" "}
@@ -205,7 +205,7 @@ export default class CurrencyBox extends Component {
                                         <span>Locked:</span>
                                         <Spring
                                             from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
-                                            to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                                            to={{ balanceAnimated: Number(new BigNumber(balance).multipliedBy(currency[suffix])) }}>
                                             {({ balanceAnimated }) => (
                                                 <span>
                                                     <span className="amount">
@@ -225,7 +225,7 @@ export default class CurrencyBox extends Component {
                                         <span>Unconverted:</span>
                                         <Spring
                                             from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
-                                            to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                                            to={{ balanceAnimated: Number(new BigNumber(balance).multipliedBy(currency[suffix])) }}>
                                             {({ balanceAnimated }) => (
                                                 <span>
                                                     <span className="amount">

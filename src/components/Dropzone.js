@@ -19,7 +19,7 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
     fileCheckModal: state.info.fileCheckModal,
-    connectedPeers: state.realTime.connectedPeers,
+    connectedPeers: state.golemStatus.connectedPeers,
     isMainNet: state.info.isMainNet
 })
 

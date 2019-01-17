@@ -39,7 +39,7 @@ const getSiblings = function (elem) {
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    connectedPeers: state.realTime.connectedPeers,
+    connectedPeers: state.golemStatus.connectedPeers,
     isMainNet: state.info.isMainNet
 })
 

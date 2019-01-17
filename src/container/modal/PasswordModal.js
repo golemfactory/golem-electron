@@ -10,7 +10,7 @@ import mainNetIcon from './../../assets/img/main-net-icon.svg'
 import testNetIcon from './../../assets/img/test-net-icon.svg'
 
 const mapStateToProps = state => ({
-    passwordModal: state.realTime.passwordModal,
+    passwordModal: state.golemStatus.passwordModal,
     isMainNet: state.info.isMainNet
 })
 
