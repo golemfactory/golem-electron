@@ -36,9 +36,9 @@ export default class Print extends React.Component {
             return <span>
                         Security guidelines.
                         <br/>
-                        After printing your password, delete
+                        After printing your password, delete the PDF
                         <br/>
-                        the PDF and temporary files from your machine. You can also
+                        and temporary files from your machine. You can also
                         <br/>
                         encrypt the PDF file with password and store it in
                         <br/>

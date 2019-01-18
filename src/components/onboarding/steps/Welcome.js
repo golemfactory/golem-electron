@@ -30,10 +30,15 @@ export default class Welcome extends React.Component {
                 </div>
                 <div className="desc__onboarding">
                     <h1>You are running {isMainNet ? "mainnet": "testnet"}</h1>
-                    <span>That means you will be using tGNT and tETH which are testnet network tokens and do not hold any real value.</span>
+                    {isMainNet
+                        ? <span>Take care when setting prices and depositing GNT or ETH for use in the app.</span>
+                        : <span>That means you will be using tGNT and tETH which are testnet network tokens and do not hold any real value.</span>
+                    }
                     <br/>
                     <br/>
-                    <span>Other than that the app works exactly same and has some experimental functionalities.</span>
+                    {isMainNet
+                        ? <span>In the cryptoworld, there is no reversing transactions. If you lose GNT because you sent it to the wrong address you cannot get it back.</span>
+                        : <span>The testnet app works the same as our mainnet app in all other aspects. Happy testing!</span>}
                 </div>
             </div>
         );

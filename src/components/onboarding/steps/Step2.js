@@ -33,7 +33,7 @@ export default class Step2 extends React.Component {
                         Otherwise you may not be able to run Golem node properly.
                         <br/>
                         <br/>
-                        If you don't know how to do it please follow this <a href="">instructions</a>.
+                        If you don't know how to do it please follow this <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">instructions</a>.
                     </span>
                 </div>
             </div>

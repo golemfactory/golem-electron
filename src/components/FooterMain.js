@@ -114,15 +114,15 @@ export class FooterMain extends Component {
             }
             return state
         }
-        
     }
 
     _fetchEnvironment(env){
-            switch(env) {
-                case "BLENDER":         return " (CPU)"
-                case "BLENDER_NVGPU":   return " (GPU)"
-                case "BLENDER_SGX":     return " (SGX)"
-            }
+        switch(env) {
+            case "BLENDER":         return " (CPU)"
+            case "BLENDER_NVGPU":   return " (GPU)"
+            case "BLENDER_SGX":     return " (SGX)"
+            default:                return ""
+        }
     }
 
     _loadConnectionError(status, connectionProblem){

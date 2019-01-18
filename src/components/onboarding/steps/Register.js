@@ -148,7 +148,7 @@ export class Register extends React.Component {
                                         <br/>
                                         or print it, as there is no password recovery option.
                                         <br/>
-                                        <a href="">Learn more</a>
+                                        <a href="https://golem.network/documentation/02-risks/">Learn more</a>
                                     </span>
                                 )
                              :
