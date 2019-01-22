@@ -27,16 +27,12 @@ export default class Step3 extends React.Component {
                     <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
-                    <h1>Start as provider</h1>
+                    <h1>Start as a provider</h1>
                     <span>
-                        If your Golem node was properly installed the only 
-                        thing you do is allocating the amount of resources 
-                        that you want to share with the network.
+                        If your Golem node was properly installed the only thing you need to do is allocate your desired amount of resources to share with the network.
                         <br/>
                         <br/>
-                        If you don't recieve any tasks it only means that
-                        currently there is not so many in the network. Be 
-                        patient and they will surely appear.
+                        Keep in mind that network traffic varies so if you do not receive tasks right away, be patient and some will surely appear over time.
                     </span>
                 </div>
             </div>

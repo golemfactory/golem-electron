@@ -9,6 +9,7 @@ import {Tooltip} from 'react-tippy';
 import * as Actions from './../actions'
 
 const mapStateToProps = state => ({
+    notificationList: state.notification.notificationList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -24,6 +25,10 @@ export class NotificationCenter extends Component {
         super(props)
     }
 
+    componentDidMount() {
+        this.props.actions.setSeenNotification();
+    }
+
     /**
      * [_navigateTo active class handling for navigation items]
      * @param  {String}     to      [Route fo the page]
@@ -34,27 +39,26 @@ export class NotificationCenter extends Component {
             window.routerHistory.push(to);
     }
 
-    _fetchNotification = () => {
-        
-        const concentTemplate = <span onClick={this._navigateTo.bind(this, "/settings")}>
-                    You are not using Concent service and thus are not fully secure. 
-                    <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
-                    <br/>Turn on Concent</span> or 
-                    <a href="https://docs.golem.network"> Learn more</a> about it.
-                </span>
+    _fetchNotification = (list) => {
 
-        return [concentTemplate]
+        const firstTemplate = <span onClick={this._navigateTo.bind(this, "/settings")}>
+                                    You are not using Concent service and thus are not fully secure. 
+                                    <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
+                                    <br/>Turn on Concent</span> or 
+                                    <a href="https://docs.golem.network"> Learn more</a> about it.
+                                </span>
+        return list
             .map( (item, index) => <div className="list-item__notification" key={index.toString()}>
                             <span className="bullet__list"/>
-                            <span>{item}</span>
+                            <span>{item.id === 0 ? firstTemplate : item.content}</span>
                         </div>)
     }
 
     render() {
-        const {  } = this.props
+        const { notificationList } = this.props
         return (
             <div className="list__notification">
-                { this._fetchNotification() }
+                { this._fetchNotification(notificationList) }
             </div>
         );
     }

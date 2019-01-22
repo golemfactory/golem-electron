@@ -30,7 +30,7 @@ export default class Type extends React.Component {
                     <span>
                         We do not keep a copy of your password. After 
                         password creation remember to write it down or print
-                        it, as there is no password recovery option
+                        it, as there is no password recovery option.
                         <br/>
                         <a href="https://golem.network/documentation/02-risks/">Learn more</a>
                     </span>

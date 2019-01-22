@@ -225,11 +225,14 @@ export class TaskDetail extends React.Component {
                     resolutionH.value = options.resolution[1]
                     outputPath.value = options.output_path
                     let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
-                    concentRef.checked = concent_enabled
+                    
+                    /*Apply concent option only on testnet*/
+                    if(!this.props.isMainNet) concentRef.checked = concent_enabled
+
                     this.setState({
                         formatIndex,
                         compute_on,
-                        concent: concent_enabled
+                        concent: !!concent_enabled
                     })
 
                     if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {

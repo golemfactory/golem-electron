@@ -187,7 +187,7 @@
         "react-redux": "^5.0.7",
         "react-router-dom": "^4.3.1",
         "react-router-redux": "^4.0.7",
-        "react-spring": "6.1.8",
+        "react-spring": "7.2.9",
         "react-tippy": "github:mdtanrikulu/react-tippy#svg_support",
         "react-transition-group": "^1.2.1",
         "react-virtualized": "^9.20.1",

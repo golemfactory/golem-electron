@@ -40,7 +40,8 @@ const getSiblings = function (elem) {
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     connectedPeers: state.realTime.connectedPeers,
-    isMainNet: state.info.isMainNet
+    isMainNet: state.info.isMainNet,
+    notificationList: state.notification.notificationList
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -205,6 +206,43 @@ export class Header extends Component {
         return (<p>New Task</p>)
     }
 
+    _initNotificationCenter(){
+        const {connectedPeers, notificationList} = this.props
+        const unreadNotificationAmount = notificationList
+            .reduce(function(n, item) {
+                return n + (item.seen === false);
+            }, 0);
+
+        return  <Tooltip
+                  arrow
+                  html={<NotificationCenter/>}
+                  interactive
+                  position="bottom"
+                  theme="light"
+                  trigger="click"
+                  style={{right: "-20px"}}
+                  hideOnClick
+                  unmountHTMLWhenHide
+                  useContext>
+                    <Tooltip
+                      html={(<p>Notifications</p>)}
+                      position="bottom"
+                      trigger="mouseenter"
+                      hideOnClick={connectedPeers}>
+                        <li className="menu__item">
+                            <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
+                                {unreadNotificationAmount 
+                                    ? <span className="indicator__notification">
+                                        {unreadNotificationAmount}
+                                    </span>
+                                    : undefined
+                                }
+                            </span>
+                        </li>
+                    </Tooltip>
+                </Tooltip>
+    }
+
     // <div className="top-titlebar">
     //     <div style={styling} className="draggable draggable--win"></div>
     //     <div>
@@ -238,30 +276,7 @@ export class Header extends Component {
                 {activeHeader === 'main' &&
             <ul className="menu" role="menu">
                     {
-                        !isMainNet &&
-                        <Tooltip
-                          arrow
-                          html={<NotificationCenter/>}
-                          interactive
-                          position="bottom"
-                          theme="light"
-                          trigger="click"
-                          style={{right: "-20px"}}
-                          hideOnClick
-                          unmountHTMLWhenHide
-                          useContext>
-                            <Tooltip
-                              html={(<p>Notifications</p>)}
-                              position="bottom"
-                              trigger="mouseenter"
-                              hideOnClick={connectedPeers}>
-                                <li className="menu__item">
-                                    <span className="icon-notification" role="menuitem" tabIndex="0" aria-label="Documentation">
-                                        <span className="indicator__notification">1</span>
-                                    </span>
-                                </li>
-                            </Tooltip>
-                        </Tooltip>
+                        !isMainNet && this._initNotificationCenter()
                     }
                     <Tooltip
                       html={

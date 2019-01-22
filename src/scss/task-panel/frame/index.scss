@@ -80,10 +80,10 @@
 }
 
 .tooltip-dev {
-    width: 500px;
+    width: 300px;
     .developer_view__tooltip {
         display: flex;
-        justify-content: space-around;
+        justify-content: center;
     }
 
     .time__tooltip {
@@ -109,23 +109,11 @@
     .subtask-id__tooltip{
         cursor: pointer;
         font-size: 10pt;
+        height: 120px;
     }
 
     .dev-tag__tooltip{
         width: 200px;
-    }
-
-    .desc__tooltip {
-        width: 240px;
-        height: 120px;
-        padding-left: 20px;
-        line-height: 1.2em;
-        color: $color-text2;
-        margin: .4em 0 7em 0;
-        word-wrap: break-word;
-        overflow-y: scroll;
-        overflow-x: none;
-        font-size: 10pt;
     }
 
     .resubmit_block_btns__tooltip {

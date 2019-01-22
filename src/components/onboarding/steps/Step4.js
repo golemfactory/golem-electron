@@ -29,10 +29,7 @@ export default class Step4 extends React.Component {
                 <div className="desc__onboarding">
                     <h1>Become a requestor</h1>
                     <span>
-                        In order to commission tasks to the network you will 
-                        need GNT and ETH. After toping up your wallet, you just
-                        drag & drop your files and after adjusting your task 
-                        settings send them to the network.
+                        After topping up your wallet you just drag & drop your files and adjust your task settings before sending them to the network.
                     </span>
                 </div>
             </div>
