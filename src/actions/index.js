@@ -77,6 +77,7 @@ export let dict = Object.freeze({
     //NOTIFICATION_CENTER
     PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
     REMOVE_NOTIFICATION: 'REMOVE_NOTIFICATION',
+    SET_SEEN_NOTIFICATION: 'SET_SEEN_NOTIFICATION',
     //FRAME WINDOW
     SET_ALL_FRAMES: 'SET_ALL_FRAMES',
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
@@ -204,6 +205,7 @@ const {
     //NOTIFICATION CENTER
     PUSH_NOTIFICATION,
     REMOVE_NOTIFICATION,
+    SET_SEEN_NOTIFICATION,
     //FRAME WINDOW
     SET_ALL_FRAMES, 
     SET_FRAMES_WITH_SUBTASKS, 
@@ -517,6 +519,10 @@ export const pushNotification = (payload) => ({
 export const removeNotification = (payload) => ({
     type: REMOVE_NOTIFICATION,
     payload
+})
+
+export const setSeenNotification = () => ({
+    type: SET_SEEN_NOTIFICATION
 })
 
 export const setTaskDetails = (payload) => ({
