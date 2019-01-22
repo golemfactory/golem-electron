@@ -17,7 +17,7 @@ const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     paymentHistory: getFilteredPaymentHistory.bind(null, state),
-    status: getStatus(state, 'golemStatus')
+    nodeId: state.info.networkInfo.key,
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -123,14 +123,12 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory, status } = this.props;
+        const { paymentHistory, nodeId } = this.props;
         const filteredList = paymentHistory(0);
         return (
             <div className="container__tube">
                 {
-                    (paymentHistory 
-                        && checkNested(status, 'client', 'status') 
-                        && status.client.status === "Ready") 
+                    (paymentHistory && nodeId) 
                             ? this._fetchLastTransaction(filteredList) 
                             : <span className="content__tube">Loading...</span>
                 }
