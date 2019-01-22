@@ -280,9 +280,6 @@ export class SubTask extends React.Component {
                                         <b>{this.state.subtaskIdCopied[subtask.subtask_id] ? "Subtask ID copied!" : "Click to copy Subtask ID!"}</b>
                                     </p>}
                                 </div>
-                                <div>
-                                    {isDevMode && <p className="desc__tooltip">{subtask.description}</p>}
-                                </div>
                             </div>
                             {isDevMode && <div className="logs_errors_btns__tooltip">
                                 <button type="button" onClick={this._handleOpenFile.bind(this, subtask.stdout)} disabled={!subtask.stdout}>Logs</button>
