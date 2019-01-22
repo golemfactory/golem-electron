@@ -87,10 +87,10 @@ export class Wallet extends Component {
 
     _checkIfEnoughToWithdraw(_balance, isERC = false) {
         if (isERC) {
-            return _balance[0].isEqualTo(zero) || _balance[1].isEqualTo(zero);
+            return _balance[0].isLessThanOrEqualTo(zero) || _balance[1].isLessThanOrEqualTo(zero);
         }
 
-        return _balance[1].isEqualTo(zero);
+        return _balance[1].isLessThanOrEqualTo(zero);
     }
 
     render() {
