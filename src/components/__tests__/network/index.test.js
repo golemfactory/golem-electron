@@ -33,8 +33,10 @@ describe('<MainFragment />', () => {
     it('should call componentDidMount', () => {
         const states = {
             realTime: {
-                balance:[new BigNumber(0), new BigNumber(0)],
-                golemStatus: ['client', 'start', 'pre']
+                balance:[new BigNumber(0), new BigNumber(0)]
+            },
+            golemStatus: {
+                golemStatus: [{client: ['start', 'exception', null]}]
             },
             input: {
                 autoLaunch: false
@@ -89,8 +91,10 @@ describe('<MainFragment />', () => {
         //let clock = jest.useFakeTimers();
         const states = {
             realTime: {
-                balance:[new BigNumber(0), new BigNumber(0)],
-                golemStatus: ['client', 'start', 'pre']
+                balance:[new BigNumber(0), new BigNumber(0)]
+            },
+            golemStatus: {
+                golemStatus: [{client: ['start', 'exception', null]}]
             },
             info: {
                 connectionProblem: false,
