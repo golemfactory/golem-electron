@@ -93,8 +93,6 @@ export default class CurrencyBox extends Component {
             golemStatus,
             lockWithdraw
         } = this.props;
-
-        console.log("lockedBalance", lockedBalance);
         const contractUrlGNTB = contractAddresses && `${isMainNet ? mainEtherscan : testEtherscan}${contractAddresses.GNTB}`
         return (
             <div className="container__currency-box">
