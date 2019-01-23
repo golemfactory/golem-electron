@@ -130,7 +130,7 @@ class TransactionTube extends Component {
                 {
                     (paymentHistory 
                         && networkInfo 
-                        && networkInfo.nodeId) 
+                        && networkInfo.key) 
                             ? this._fetchLastTransaction(filteredList) 
                             : <span className="content__tube">Loading...</span>
                 }
