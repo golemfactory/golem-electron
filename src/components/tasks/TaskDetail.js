@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
 import isEqual from 'lodash.isequal';
+import { BigNumber } from "bignumber.js";
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
@@ -244,18 +245,7 @@ export class TaskDetail extends React.Component {
                     } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
                     }
-
-                    if(!nextProps.estimated_cost)
-                        this.props.actions.getEstimatedCost({
-                            type: nextProps.taskInfo.type,
-                            options: {
-                                price: Number(bid),
-                                num_subtasks: Number(subtasks_count),
-                                subtask_time: getTimeAsFloat(subtask_timeout)
-                            }
-                        })
                 }
-
             })
         }
 
@@ -280,14 +270,13 @@ export class TaskDetail extends React.Component {
     componentWillUpdate(nextProps, nextState) {
         const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
         const {actions, task} = this.props
-
         if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
                     price: Number(nextState.bid),
-                    num_subtasks: Number(nextState.subtasks_count),
-                    subtask_time: nextState.subtask_timeout
+                    subtasks_count: Number(nextState.subtasks_count),
+                    subtask_timeout: floatToString(nextState.subtask_timeout)
                 }
             })
         }
@@ -851,6 +840,10 @@ export class TaskDetail extends React.Component {
     _handleFormByType(type, isDetail) {
         const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
         const {testStatus, estimated_cost} = this.props;
+        if(estimated_cost){
+            estimated_cost.GNT = new BigNumber(estimated_cost.GNT).dividedBy(ETH_DENOM).toNumber()
+            estimated_cost.ETH = new BigNumber(estimated_cost.ETH).dividedBy(ETH_DENOM).toNumber()
+        }
         let formTemplate = [
             {
                 order: 0,
