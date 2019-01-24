@@ -44,6 +44,12 @@ const password = {
     LOGIN: "Requires password"
 }
 
+const statusDict = {
+    READY       : "Ready",
+    NOTREADY    : "Not Ready",
+    EXCEPTION   : "Exception"
+}
+
 let badgeActive = false
 let badgeTemp = 0
 let _isPasswordModalPopped = false
@@ -107,17 +113,6 @@ const realTime = (state = initialState, action) => {
 }
 
 export default realTime
-
-const statuses = {
-    client: {
-        'start': {
-            post: 'Ready'
-        },
-        'quit': {
-            pre: 'Not Ready'
-        }
-    }
-}
 
 const messages = {
     hyperdrive: {
@@ -192,6 +187,11 @@ const messages = {
             pre: 'Creating Docker VM',
             post: 'Docker VM created',
             exception: 'Error stopping a VM'
+        },
+        'instance.check': {
+            pre: 'Checking for Docker VM',
+            post: 'Docker VM is available',
+            exception: 'Docker VM is not available'
         },
     },
     ethereum: {
@@ -275,11 +275,11 @@ function getGolemStatus(component, method, stage, data) {
     }
 
     if (stage == 'exception') {
-        result.status = 'Exception';
+        result.status = statusDict.EXCEPTION;
     } else if (stage == 'post') {
-        result.status = 'Ready';
+        result.status = statusDict.READY;
     } else try {
-        result.status = 'Not Ready';
+        result.status = statusDict.NOTREADY;
     } catch ( e ) { 
         log.warn('SAGA > GOLEM', e)
     }
@@ -301,31 +301,25 @@ export const getStatusSelector = createCachedSelector(
             if(statusObj 
                 && !Object
                     .keys(statusObj)
-                    .some(key => statusObj[key].status === "Exception" )){
-                if(isEngineOn && Number.isInteger(connectedPeers)){
+                    .some(key => statusObj[key].status === statusDict.EXCEPTION )){
+                if(statusObj[0]){
                     statusObj.client = {
-                        status: 'Ready',
+                        status: statusDict.EXCEPTION,
+                        message: "Outdated version",
+                    }
+                } else if(isEngineOn && Number.isInteger(connectedPeers)){
+                    statusObj.client = {
+                        status: statusDict.READY,
                         message: nodesString(connectedPeers),
                     }
-                } else if(!isEngineOn
-                    && checkNested(statusObj, "client", "message")
+                } else if(checkNested(statusObj, "client", "message")
                     && !(statusObj.client.message === password.LOGIN
                         || statusObj.client.message === password.REGISTER)){
                     statusObj.client = {
-                        status: 'Not Ready',
-                        message: "Waiting for configuration",
-                    }
-                }
-
-                /**
-                 * Dirty hack to show component status tooltip when user 
-                 * logged in successfully, cuz "logged in" is post status on Golem side.
-                 */
-                if(checkNested(statusObj, "client", "message")
-                    && statusObj.client.message === "Logged In"){
-                    statusObj.client = {
-                        status: 'Not Ready',
-                        message: statusObj.client.message,
+                        status: statusDict.NOTREADY,
+                        message: isEngineOn 
+                            ? statusObj.client.message || "Starting Golem"
+                            : "Waiting for configuration",
                     }
                 }
             }
