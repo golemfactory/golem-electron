@@ -160,7 +160,7 @@ export class History extends React.Component {
   };
 
   render() {
-    const { isEngineOn, paymentHistory, toggleTransactionHistory } = this.props;
+    const { isEngineOn, isMainNet, paymentHistory, toggleTransactionHistory } = this.props;
     const { activeTab } = this.state;
     const filteredList = paymentHistory(activeTab);
     return (
@@ -175,9 +175,11 @@ export class History extends React.Component {
           <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">
             Outgoing
           </div>
-          <div className="tab__title" value="deposit" onClick={this._handleTab} role="tab" tabIndex="0">
-            Deposit
-          </div>
+          { !isMainNet &&
+            <div className="tab__title" value="deposit" onClick={this._handleTab} role="tab" tabIndex="0">
+              Deposit
+            </div>
+          }
           <div className="tab__back">
             <span onClick={toggleTransactionHistory}><span className="icon-back-up"/>Back</span>
           </div>

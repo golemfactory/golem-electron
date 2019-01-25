@@ -150,14 +150,13 @@ export class FooterMain extends Component {
     render() {
         const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, passwordModal, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
-
         return (
             <div className="content__footer-main">
                 <div className="section__actions">
                     <div className="section__actions-status">
                         <Tooltip
                           open={checkNested(status, 'client', 'status')
-                                && status.client.status !== "Ready"
+                                && status.client.status === "Not Ready"
                                 && checkNested(passwordModal, 'status')
                                 && !passwordModal.status}
                           distance={17}
@@ -201,14 +200,15 @@ export class FooterMain extends Component {
                         <div>
                             <span>
                                 <span className="status-message">
-                                    {status.client 
-                                        ? <span>{status.client.message}</span> 
-                                        : <span>
-                                            Outdated version
+                                    <span>{status.client.message}</span> 
+                                    {status
+                                    && status[0]
+                                    &&  <span>
                                             <a href="https://github.com/golemfactory/golem#installing-and-testing">
                                                 <span className="icon-new-window"/>
                                             </a>
-                                        </span>}
+                                        </span>
+                                    }
                                 </span>
                                 {status.client && ::this._loadErrorUrl(status.client.message)}
                                 {this._loadConnectionError(status, connectionProblem)}
@@ -240,7 +240,13 @@ export class FooterMain extends Component {
                             }
                         </div>
                     </div>
-                    <button className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} onClick={::this._golemize}>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                    <button 
+                        className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} 
+                        onClick={::this._golemize}
+                        disabled={checkNested(status, 'client', 'status') // this condition will keep button disabled 
+                                    && status.client.status !== "Ready"   // until golem lands successfully
+                                    && isEngineOn
+                                }>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
                 </div>
                 <div className="content__footer-social">
                     <span className="element__footer" onClick={this._openLogs}>

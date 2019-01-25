@@ -48,7 +48,7 @@ export default class Confirmation extends React.Component {
                         <div className="currency-tag">
                         	<strong className="info-label">sending</strong>
                         	<br/>
-                        	<strong className="info-price">{amount.dividedBy(ETH_DENOM).toFixed(4)}...</strong><span>{suffix}</span>
+                        	<strong className="info-price">{amount.dividedBy(ETH_DENOM).minus(totalTXCost).toFixed(8, 1)}...</strong><span>{suffix}</span>
                         	<br/>
                         	<span className="info-estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(4)}</span>
                         </div>
