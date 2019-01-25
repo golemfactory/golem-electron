@@ -6,10 +6,12 @@ const { NOTIFICATION_CENTER } = dictConfig
 
 const {PUSH_NOTIFICATION, REMOVE_NOTIFICATION, SET_SEEN_NOTIFICATION} = dict
 
-const fetchedNotification = NOTIFICATION_CENTER && getConfig(NOTIFICATION_CENTER);
+let fetchedNotification = NOTIFICATION_CENTER && getConfig(NOTIFICATION_CENTER);
 //Hardcodded first notification
-if(!fetchedNotification && NOTIFICATION_CENTER)
+if(!fetchedNotification && NOTIFICATION_CENTER){
     setConfig(NOTIFICATION_CENTER, [{id: 0, title: "Concent", content: "", date: Date.now(), seen: false}])
+    fetchedNotification = getConfig(NOTIFICATION_CENTER);
+}
 
 const initialState = {
     notificationList: fetchedNotification || []
