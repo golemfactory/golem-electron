@@ -345,6 +345,7 @@
             margin-right: 5px;
             width: 300px;
             text-align: right;
+            font-weight: 400;
         }
 
         .estimated_usd{
@@ -363,6 +364,24 @@
 
         span:last-child {
             margin-top: 22px;
+        }
+    }
+
+    .estimated-deposit__panel {
+        padding-top: 20px;
+
+        .info-title,
+        .estimated_cost,
+        .estimated_usd{
+            font-size: 12px;
+        }
+
+        .estimated_cost{
+            font-weight: 400;
+        }
+
+        .item-price{
+            margin: 5px 0;
         }
     }
 

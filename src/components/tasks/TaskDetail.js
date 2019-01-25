@@ -274,7 +274,7 @@ export class TaskDetail extends React.Component {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
-                    price: Number(nextState.bid),
+                    price: new BigNumber(nextState.bid).multipliedBy(ETH_DENOM).toString(), //wei
                     subtasks_count: Number(nextState.subtasks_count),
                     subtask_timeout: floatToString(nextState.subtask_timeout)
                 }
@@ -839,11 +839,7 @@ export class TaskDetail extends React.Component {
 
     _handleFormByType(type, isDetail) {
         const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
-        const {testStatus, estimated_cost} = this.props;
-        if(estimated_cost){
-            estimated_cost.GNT = new BigNumber(estimated_cost.GNT).dividedBy(ETH_DENOM).toNumber()
-            estimated_cost.ETH = new BigNumber(estimated_cost.ETH).dividedBy(ETH_DENOM).toNumber()
-        }
+        const {testStatus} = this.props;
         let formTemplate = [
             {
                 order: 0,
@@ -973,7 +969,7 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
-
+        console.log("estimated_cost", estimated_cost);
         return (
             <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -1122,6 +1118,47 @@ export class TaskDetail extends React.Component {
                                         </div>
                                         <div className="estimated_usd">
                                             <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="estimated-deposit__panel">
+                                    <div className="item-price">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Deposit payment" 
+                                            info={<p className="tooltip_task">The deposit amount is higher than the cost of task to ensure that you 
+                                                <br/>have enough funds to participate in the network. The real cost 
+                                                <br/>of a task is unchanging. Providers using Concent Service will 
+                                                <br/>check if requestors have no less than twice the amount 
+                                                <br/>of funds in their Deposit for covering a task payment.
+                                                </p>} 
+                                            cls="title" 
+                                            infoHidden={true} 
+                                            interactive={true}/>
+                                        <div className="estimated_cost">
+                                            {this._convertPriceAsHR(estimated_cost.deposit.GNT_suggested, "GNT", 3, 14)}
+                                            <span>{isMainNet ? "" : "t"} GNT</span>
+                                        </div>
+                                        <div className="estimated_usd">
+                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.GNT_suggested || 0) * currency["GNT"], "USD", 4, 14)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="item-price">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Deposit Tx fee" 
+                                            info={<p className="tooltip_task">You need small amount of ETH (used for gas) avaliable on your account 
+                                                <br/>to submit a deposit to the Concent Service
+                                                </p>} 
+                                            cls="title" 
+                                            infoHidden={true} 
+                                            interactive={true}/>
+                                        <div className="estimated_cost">
+                                            {this._convertPriceAsHR(estimated_cost.deposit.ETH, "ETH", 5, 14)}
+                                            <span>{isMainNet ? "" : "t"} ETH</span>
+                                        </div>
+                                        <div className="estimated_usd">
+                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.ETH || 0) * currency["GNT"], "USD", 5, 14)}</span>
                                         </div>
                                     </div>
                                 </div>
