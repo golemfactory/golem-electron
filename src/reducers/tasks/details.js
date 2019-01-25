@@ -1,14 +1,25 @@
 import { BigNumber } from "bignumber.js";
 import { dict } from './../../actions'
 
+const ETH_DENOM = 10 ** 18;
+
+function weiToETH(x){
+    return new BigNumber(x).dividedBy(ETH_DENOM).toNumber()
+}
+
 const {SET_TASK_DETAILS, SET_TASK_PRESETS, SET_ESTIMATED_COST, SET_TASK_TEST_STATUS, SET_TASK_GAS_PRICE, CLEAR_TASK_PLAIN, SET_HEALTHY_NODE_NUMBER} = dict
 
 const initialState = {
     detail: {},
     presets: {},
     estimated_cost: {
-        GNT: 0,
-        ETH: 0
+        GNT: new BigNumber(0),
+        ETH: new BigNumber(0),
+        deposit: {
+            GNT_suggested: new BigNumber(0),
+            GNT_required: new BigNumber(0),
+            ETH: new BigNumber(0)
+        }
     },
     test_status: {},
     nodeNumber: {},
@@ -27,8 +38,26 @@ const setTaskDetails = (state = initialState, action) => {
         });
 
     case SET_ESTIMATED_COST:
+        let {GNT, ETH, deposit} = action.payload
+        if(!action.payload){
+            GNT = 0,
+            ETH = 0,
+            deposit = {
+                GNT_suggested: 0,
+                GNT_required: 0,
+                ETH: 0
+            }
+        }
         return Object.assign({}, state, {
-            estimated_cost: action.payload
+            estimated_cost: {
+                GNT: weiToETH(GNT),
+                ETH: weiToETH(ETH),
+                deposit: {
+                    GNT_suggested: weiToETH(deposit.GNT_suggested),
+                    GNT_required: weiToETH(deposit.GNT_required),
+                    ETH: weiToETH(deposit.ETH)
+                }
+            }
         });
 
     case SET_TASK_GAS_PRICE:

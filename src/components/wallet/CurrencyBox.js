@@ -158,8 +158,8 @@ export default class CurrencyBox extends Component {
                                                 Locked:{" "}
                                                 <span className="amount">
                                                     {this._formatAmount(
-                                                        Number(lockedBalance[expandedAmount === "GNT" ? 0 : 1]),
-                                                        `${suffix}-USD`,
+                                                        Number(lockedBalance[suffix === "GNT" ? 0 : 1]),
+                                                        `${suffix}`,
                                                         currency[suffix]
                                                     )}
                                                 </span>{" "}
@@ -210,8 +210,8 @@ export default class CurrencyBox extends Component {
                                                 <span>
                                                     <span className="amount">
                                                         {this._formatAmount(
-                                                            Number(lockedBalance[expandedAmount === "GNT" ? 0 : 1]),
-                                                            `${suffix}-USD`,
+                                                            Number(lockedBalance[suffix === "GNT" ? 0 : 1]),
+                                                            `${suffix}`,
                                                             currency[suffix]
                                                         )}
                                                     </span>{" "}
@@ -221,26 +221,29 @@ export default class CurrencyBox extends Component {
                                             )}
                                         </Spring>
                                     </div>
-                                    <div className="unconverted-amount">
-                                        <span>Unconverted:</span>
-                                        <Spring
-                                            from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
-                                            to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
-                                            {({ balanceAnimated }) => (
-                                                <span>
-                                                    <span className="amount">
-                                                        {this._formatAmount(
-                                                            Number(lockedBalance[expandedAmount === "GNT" ? 0 : 1]),
-                                                            `${suffix}-USD`,
-                                                            currency[suffix]
-                                                        )}
-                                                    </span>{" "}
-                                                    {!isMainNet ? "t" : ""}
-                                                    {suffix}{" "}
-                                                </span>
-                                            )}
-                                        </Spring>
-                                    </div>
+                                    { suffix === "GNT"
+                                        ? <div className="unconverted-amount">
+                                            <span>Unconverted:</span>
+                                            <Spring
+                                                from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
+                                                to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
+                                                {({ balanceAnimated }) => (
+                                                    <span>
+                                                        <span className="amount">
+                                                            {this._formatAmount(
+                                                                Number(lockedBalance[2]),
+                                                                `${suffix}`,
+                                                                currency[suffix]
+                                                            )}
+                                                        </span>{" "}
+                                                        {!isMainNet ? "t" : ""}
+                                                        {suffix}{" "}
+                                                    </span>
+                                                )}
+                                            </Spring>
+                                        </div>
+                                        : <div className="unconverted-amount"/>
+                                    }
                                 </div>
                                 <div className="batch-contract-adress">
                                     <span>

@@ -1,8 +1,20 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
+import animDataSuccess from './../../../../assets/anims/success';
+import animDataError from './../../../../assets/anims/error';
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard } = window.electron
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: null,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class WithdrawResult extends React.Component {
 
@@ -46,10 +58,11 @@ export default class WithdrawResult extends React.Component {
 //<span className="btn--cancel">Back</span>
     render() {
         const {type, currency, isSuccess} = this.props
+        defaultOptions.animationData = isSuccess ? animDataSuccess : animDataError
         return (
                 <div className="content__modal content__modal--result ">
                     <div className="container__icon">
-                        <span className={`icon-${isSuccess ? "confirmation" : "close"}`}/>
+                        <Lottie options={defaultOptions}/>
                     </div>
                     {this._initResult(isSuccess)}
                     <div className="action__modal">
