@@ -28,10 +28,11 @@ export default class VirtualisationInfo extends React.Component {
                 <div className="desc__onboarding">
                     <h1>Virtualisation is required</h1>
                     <span>
-                    We have detected that Virtualisation on your machine <br/>
-                    is disabled. Vt-X/AMD-v needs to be ennabled in BIOS <br/>
-                    as it is mandatory to run Golem. If you want to know <br/>
-                    how to enable it, please follow this <a href="https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users">instructions</a>
+                    We have detected that virtualisation may be disabled <br/>
+                    on your machine. Virtualisation is required in order <br/>
+                    to run Golem. Please make sure that this option is <br/>
+                    enabled in BIOS. If you'd like to know how to enable it, <br/>
+                    please follow these <a href="https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users">instructions</a>.
                     </span>
                 </div>  
             </div>

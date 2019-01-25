@@ -143,7 +143,6 @@ class OnboardIndex extends React.Component {
         this._keypressListener = event => {
 
             if(event.key === "Enter" && 
-                this.state.currentStep !== steps.VIRTUALISATION &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
                 this.state.currentStep !== steps.STEP4 &&
@@ -411,11 +410,6 @@ class OnboardIndex extends React.Component {
         });
     }
 
-    _handleLeaveWithInstructions(){
-        shell.openExternal('https://golem.network/documentation/how-to-enable-vt-x-in-bios/#enabling-virtualization-in-bios-required-for-windows-users');
-        this._handleLeave();
-    }
-
     _handleLeave(){
         //TO DO close app
         app.quit()
@@ -532,7 +526,7 @@ class OnboardIndex extends React.Component {
         }
         else if( _step === steps.VIRTUALISATION){
             return <div>
-                <button className="btn btn--primary" onClick={::this._handleLeaveWithInstructions}>Quit</button>
+                <button className="btn btn--primary" onClick={::this._handleNext}>Got It!</button>
             </div>
         }
         else if( _step === steps.TYPE){
