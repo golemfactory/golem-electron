@@ -1,20 +1,14 @@
 .container__concent-modal {
     .content__modal {
-        height: 390px;
+        height: 420px;
         text-align: center;
         padding: 20px;
         font-size: 12pt;
-        .icon-lock {
-            display: inline-block;
-            color: $color-text4;
-            background: $button-active-color;
-            font-size: 2.6em;
-            width: 1em;
-            height: 1em;
-            line-height: 0.9em;
-            padding: 0.3em;
-            text-align: center;
-            border-radius: 50%;
+
+        .icon-container{
+            width: 120px;
+            height: 120px;
+            margin-bottom: 10px;
         }
 
         .radio-group__concent-modal{

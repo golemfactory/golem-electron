@@ -1,4 +1,16 @@
 import React from 'react';
+import Lottie from 'react-lottie';
+
+import animData from './../../../assets/anims/deposit-unlock';
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class ConcentModal extends React.Component {
 
@@ -40,8 +52,8 @@ export default class ConcentModal extends React.Component {
         return (
             <div className="container__modal container__concent-modal">
                 <div className="content__modal">
-                    <div>
-                        <span className="icon-lock"/>
+                    <div className="icon-container">
+                        <Lottie options={defaultOptions}/>
                     </div>
                     <span>
                         Are you sure you don't want
