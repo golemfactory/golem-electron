@@ -5,6 +5,7 @@ import { hot } from 'react-hot-loader'
 
 import constants from '../constants'
 
+import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import MainFragment from '../components/network'
 import Tasks from '../components/tasks'
@@ -87,6 +88,7 @@ export class App extends Component {
 
     componentDidMount() {
         const {actions} = this.props
+        console.log("ErrorBoundary", ErrorBoundary);
         actions.login('Muhammed')
     }
 
@@ -145,7 +147,7 @@ export class App extends Component {
     render() {
         const {actions, history, connectionProblem, latestVersion, withdrawModal, passwordModal, showOnboard} = this.props
         return (
-            <div>
+            <ErrorBoundary>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <ConnectedRouter history={history}>
                     { routes }
@@ -153,7 +155,7 @@ export class App extends Component {
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
                  { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
-            </div>
+            </ErrorBoundary>
         );
     }
 }
