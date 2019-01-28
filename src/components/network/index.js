@@ -143,7 +143,7 @@ export class MainFragment extends React.Component {
                 : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
             }
             {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
-            {managePresetModal.asda.asda && <ManagePresetModal closeModal={::this._closeModal}/>}
+            {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
             <FooterMain/>
         </div>
         );
