@@ -1,15 +1,28 @@
 import { dict } from './../../actions'
 const {remote} = window.electron;
-const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
-const {SET_CONCENT_SWITCH, SET_CONCENT_ONBOARDING_SHOWN} = dict
-const {CONCENT_ONBOARDING} = dictConfig
+const {CONCENT_BALANCE_STATE, CONCENT_ONBOARDING, UNLOCK_DEPOSIT_STATE} = dictConfig
+const {
+    SET_CONCENT_SWITCH, 
+    SET_CONCENT_DEPOSIT_BALANCE, 
+    SET_CONCENT_ONBOARDING_SHOWN, 
+    TOGGLE_CONCENT, 
+    UNLOCK_CONCENT_DEPOSIT
+} = dict
+
+const tempCB = JSON.parse(getConfig(CONCENT_BALANCE_STATE))
+const lastConcentStatus = tempCB 
+? tempCB.status
+: null
 
 const initialState = {
     concentSwitch: false,
-    hasOnboardingShown: getConfig(CONCENT_ONBOARDING) || false
+    hasOnboardingShown: getConfig(CONCENT_ONBOARDING) || false,
+    isConcentWaiting: getConfig(UNLOCK_DEPOSIT_STATE) || false,
+    concentStatus: lastConcentStatus || null
 }
+
 const setConcentSwitch = (state = initialState, action) => {
     switch (action.type) {
 
@@ -22,6 +35,34 @@ const setConcentSwitch = (state = initialState, action) => {
     	setConfig(CONCENT_ONBOARDING, true)
         return Object.assign({}, state, {
             hasOnboardingShown: true
+        });
+
+    case UNLOCK_CONCENT_DEPOSIT:
+        setConfig(UNLOCK_DEPOSIT_STATE, true)
+        return Object.assign({}, state, {
+            isConcentWaiting: true
+        });
+
+    case TOGGLE_CONCENT:
+        const {isSwitchOn, informRPC, toggleLock = false} = action;
+        const depositState = (
+            !isSwitchOn 
+            && informRPC 
+            && (state.concentStatus 
+                === "unlocking")) 
+        || (informRPC && toggleLock);
+        
+        setConfig(UNLOCK_DEPOSIT_STATE, depositState)
+        return Object.assign({}, state, {
+            isConcentWaiting: depositState
+        });
+
+    case SET_CONCENT_DEPOSIT_BALANCE:
+        const {status} = action.payload
+        setConfig(UNLOCK_DEPOSIT_STATE, false)
+        return Object.assign({}, state, {
+            isConcentWaiting: false,
+            concentStatus: status
         });
 
     default:

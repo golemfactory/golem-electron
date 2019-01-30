@@ -1,11 +1,9 @@
 import { dict } from './../../actions'
 const {remote} = window.electron;
-const mainProcess = remote.require('./index')
 const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {SET_LOCAL_GETH} = dict
 const {DEFAULT_GETH} = dictConfig
-//console.log(" mainProcess.getDefaultLocation", mainProcess.getDefaultLocation())
 
 const defaultGethObj = {
     isLocalGeth: false,

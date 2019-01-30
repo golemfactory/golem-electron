@@ -16,7 +16,8 @@ const mapStateToProps = state => ({
     isOnboadingActive: !state.concent.hasOnboardingShown,
     showConcentToS: !state.info.isConcentTermsAccepted,
     nodeId: state.info.networkInfo.key,
-    isDepositUnlocked: getConcentDepositStatus(state, 'concentDeposit')
+    depositStatus: getConcentDepositStatus(state, 'concentDeposit'),
+    isConcentWaiting: state.concent.isConcentWaiting
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -57,8 +58,8 @@ export class Concent extends React.Component {
     }
 
     render() {
-        const {concentBalance, isDepositUnlocked, isEngineOn, nodeId} = this.props
-        const {time, statusCode} = isDepositUnlocked;
+        const {concentBalance, depositStatus, isEngineOn, nodeId, isConcentWaiting} = this.props
+        const {time, statusCode} = depositStatus;
         const {isConcentOn} = this.state
         return (
             <div className="content__concent" style={{height: isConcentOn ? 200 : 360 }}>
@@ -84,6 +85,7 @@ export class Concent extends React.Component {
                     }}>Concent Service turned {!isConcentOn ? "off" : "on"}.
                     </span>
                 </div>
+                {isConcentWaiting && <span className="waiting-response">Waiting for response from the chain</span>}
                 {
                     !isConcentOn && statusCode !== 1
                         && <div className="deposit-info__concent">
@@ -94,7 +96,7 @@ export class Concent extends React.Component {
                                             : "-"
                                         } GNT</b>
                                     <br/>
-                                    {statusCode === 2 
+                                    {statusCode === 2
                                         ? <span>
                                             <br/>Your balance will be unlocked at <span className="timelock__concent">{timeStampToHR(time)}</span>
                                             <br/>Turning it on again till this date will reduce potential future deposit 
@@ -109,9 +111,23 @@ export class Concent extends React.Component {
                                 </span>
                             </div>
                             {
-                                statusCode !== 2 && 
-                                <div className="action__concent">
-                                    <button className="btn--outline" onClick={this._handleUnlockDeposit}>Unlock deposit</button>
+                                statusCode !== 2
+                                && <div className="action__concent">
+                                    <button 
+                                        className="btn--outline" 
+                                        onClick={this._handleUnlockDeposit} 
+                                        disabled={isConcentWaiting}>
+                                        {!isConcentWaiting 
+                                            ? <span>Unlock deposit</span> 
+                                            : <span>
+                                                Unlocking deposit
+                                                    <span className="jumping-dots">
+                                                        <span className="dot-1">.</span>
+                                                        <span className="dot-2">.</span>
+                                                        <span className="dot-3">.</span>
+                                                    </span>
+                                                </span>}
+                                    </button>
                                     <span className="action-info__concent">By leaving the Deposit locked you can
                                     <br/>reduce future Deposit creation transaction
                                     <br/>fee <a href="">Learn more</a></span>

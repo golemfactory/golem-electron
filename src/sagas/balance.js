@@ -1,6 +1,7 @@
 import { eventChannel, buffers } from 'redux-saga'
-import { fork, take, takeLatest, call, put, cancel } from 'redux-saga/effects'
+import { fork, take, takeLatest, call, put, cancel, select } from 'redux-saga/effects'
 import {BigNumber} from 'bignumber.js';
+import isEqual from 'lodash.isequal';
 
 import { dict } from '../actions'
 
@@ -144,17 +145,14 @@ export function concentDepositBalance(session) {
     })
 }
 
-export function* concentDepositBalanceBase(session) {
-    const action = yield call(concentDepositBalance, session);
-    yield action && put(action)
-}
-
 export function* concentBalanceFlow(session){
-    const channel = yield call(concentDepositBalance, session)
+    const getConcentBalance = state => state.realTime.concentBalance;
+    const channel = yield call(concentDepositBalance, session);
     try {
         while (true) {
-            let action = yield take(channel)
-            yield put(action)
+            let action = yield take(channel);
+            const concentBalance = yield select(getConcentBalance);
+            if(!isEqual(concentBalance, action.payload)) yield put(action);
         }
     } finally {
         console.info('yield cancelled!')

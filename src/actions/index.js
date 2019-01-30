@@ -495,9 +495,9 @@ export const disableEnvironment = (payload) => ({
     payload
 })
 
-export const toggleConcent = (payload, informRPC, toggleLock) => ({
+export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     type: TOGGLE_CONCENT,
-    payload,
+    isSwitchOn,
     informRPC,
     toggleLock
 })

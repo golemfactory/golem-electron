@@ -4,7 +4,9 @@ import { dict } from './../actions'
 import checkNested from './../utils/checkNested'
 const {ipcRenderer, remote} = window.electron
 const log = remote.require('./electron/debug_handler.js')
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
+const {CONCENT_BALANCE_STATE} = dictConfig
 const {
         SET_BALANCE, 
         SET_TASKLIST, 
@@ -16,6 +18,15 @@ const {
         SET_CONCENT_DEPOSIT_BALANCE
     } = dict
 
+const tempCB = JSON.parse(getConfig(CONCENT_BALANCE_STATE))
+const lastConcentBalance = tempCB 
+? {
+    value: new BigNumber(tempCB.value),
+    status: tempCB.status,
+    timelock: tempCB.timelock
+}
+: null
+
 const initialState = {
     balance: [
         new BigNumber(0), 
@@ -26,7 +37,7 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
-    concentBalance: null,
+    concentBalance: lastConcentBalance || null,
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
@@ -103,6 +114,7 @@ const realTime = (state = initialState, action) => {
 
     case SET_CONCENT_DEPOSIT_BALANCE:
         const {value, status, timelock} = action.payload
+        setConfig(CONCENT_BALANCE_STATE, JSON.stringify(action.payload))
         return Object.assign({}, state, {
             concentBalance: action.payload
         });
@@ -357,6 +369,7 @@ export const concentDepositStatusSelector = createCachedSelector(
     (state, key) => key,
     (concentBalance, key) => {
         if(concentBalance){
+            console.log("concentBalance", concentBalance);
             switch (concentBalance.status) {
                 case "unlocking": return { statusCode: 2, time: concentBalance.timelock}
                 case "unlocked" : return { statusCode: 1, time: null}
