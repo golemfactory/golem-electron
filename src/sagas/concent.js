@@ -51,14 +51,14 @@ export function* toggleConcentUnlockBase(session) {
     //yield action && put(action)
 }
 
-export function toggleConcent(session, {payload, informRPC, toggleLock = false}) {
+export function toggleConcent(session, {isSwitchOn, informRPC, toggleLock = false}) {
     return new Promise((response, reject) => {
 
         if(!informRPC)
 
             response({
                 type: SET_CONCENT_SWITCH,
-                payload
+                payload: isSwitchOn
             })
 
         else {
@@ -67,19 +67,17 @@ export function toggleConcent(session, {payload, informRPC, toggleLock = false})
                 let info = args[0]
                 response({
                     type: SET_CONCENT_SWITCH,
-                    payload
+                    payload: isSwitchOn
                 })
             }
 
             function on_lock(args) {
                 let lock = args[0];
-                _handleRPC(on_info, session, config.CONCENT_SWITCH_RPC, [payload])
+                _handleRPC(on_info, session, config.CONCENT_SWITCH_RPC, [isSwitchOn])
             }
-            
+
             _handleRPC(on_lock, session, toggleLock ? config.CONCENT_UNLOCK : config.CONCENT_RELOCK)
-
-
-
+            
             console.log("RPC informed")
         }
     })

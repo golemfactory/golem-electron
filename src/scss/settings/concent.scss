@@ -23,6 +23,7 @@
         .btn--outline{
             height: 35px;
             padding: 0 15px;
+            transition: all .5s;
         }
 
         .action-info__concent{
@@ -74,5 +75,26 @@
             color: $color-text3;
             cursor: pointer;
         }
+    }
+
+    .waiting-response{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        animation: fade 2s steps(5, start) infinite;
+    }
+
+    @keyframes fade {
+        from { opacity: 1; }
+        10% { opacity: .8; }
+        20% { opacity: .6; }
+        30% { opacity: .4; }
+        40% { opacity: .2; }
+        50% { opacity: 0; }
+        60% { opacity: .2; }
+        70% { opacity: .4; }
+        80% { opacity: .6; }
+        90% { opacity: .8; }
+        to { opacity: 1; }
     }
 }

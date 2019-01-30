@@ -4,7 +4,9 @@ import { dict } from './../actions'
 import checkNested from './../utils/checkNested'
 const {ipcRenderer, remote} = window.electron
 const log = remote.require('./electron/debug_handler.js')
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
+const {CONCENT_BALANCE_STATE} = dictConfig
 const {
         SET_BALANCE, 
         SET_TASKLIST, 
@@ -16,6 +18,18 @@ const {
         SET_CONCENT_DEPOSIT_BALANCE
     } = dict
 
+const tempCBSString = getConfig(CONCENT_BALANCE_STATE)
+const tempCBS =  tempCBSString
+    ? JSON.parse(tempCBSString) 
+    : null
+const lastConcentBalance = tempCBS 
+? {
+    value: new BigNumber(tempCBS.value),
+    status: tempCBS.status,
+    timelock: tempCBS.timelock
+}
+: null
+
 const initialState = {
     balance: [
         new BigNumber(0), 
@@ -26,7 +40,7 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
-    concentBalance: null,
+    concentBalance: lastConcentBalance || null,
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
@@ -103,6 +117,7 @@ const realTime = (state = initialState, action) => {
 
     case SET_CONCENT_DEPOSIT_BALANCE:
         const {value, status, timelock} = action.payload
+        setConfig(CONCENT_BALANCE_STATE, JSON.stringify(action.payload))
         return Object.assign({}, state, {
             concentBalance: action.payload
         });
