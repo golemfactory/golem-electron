@@ -236,15 +236,25 @@ export class TaskDetail extends React.Component {
                         concent: !!concent_enabled
                     })
 
-                    if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
+                    if ((type || this.state.type) === taskType.BLENDER) {
                         // compositingRef.checked = options.compositing
                         // this.setState({
                         //     compositing: options.compositing
                         // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
+                    } else if ((type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
                     }
+
+                    if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
+                        this.props.actions.getEstimatedCost({
+                            type: type,
+                            options: {
+                                price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
+                                subtasks_count: Number(subtasks_count),
+                                subtask_timeout: subtask_timeout
+                            }
+                        })
                 }
             })
         }
@@ -969,7 +979,6 @@ export class TaskDetail extends React.Component {
             task,
             testStatus
         } = this.props;
-        console.log("estimated_cost", estimated_cost);
         return (
             <div>
                 <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
@@ -1121,47 +1130,49 @@ export class TaskDetail extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="estimated-deposit__panel">
-                                    <div className="item-price">
-                                        <InfoLabel 
-                                            type="span" 
-                                            label="Deposit payment" 
-                                            info={<p className="tooltip_task">The deposit amount is higher than the cost of task to ensure that you 
-                                                <br/>have enough funds to participate in the network. The real cost 
-                                                <br/>of a task is unchanging. Providers using Concent Service will 
-                                                <br/>check if requestors have no less than twice the amount 
-                                                <br/>of funds in their Deposit for covering a task payment.
-                                                </p>} 
-                                            cls="title" 
-                                            infoHidden={true} 
-                                            interactive={true}/>
-                                        <div className="estimated_cost">
-                                            {this._convertPriceAsHR(estimated_cost.deposit.GNT_suggested, "GNT", 3, 14)}
-                                            <span>{isMainNet ? "" : "t"} GNT</span>
+                                { concent &&
+                                    <div className="estimated-deposit__panel">
+                                        <div className="item-price">
+                                            <InfoLabel 
+                                                type="span" 
+                                                label="Deposit payment" 
+                                                info={<p className="tooltip_task">The deposit amount is higher than the cost of task to ensure that you 
+                                                    <br/>have enough funds to participate in the network. The real cost 
+                                                    <br/>of a task is unchanging. Providers using Concent Service will 
+                                                    <br/>check if requestors have no less than twice the amount 
+                                                    <br/>of funds in their Deposit for covering a task payment.
+                                                    </p>} 
+                                                cls="title" 
+                                                infoHidden={true} 
+                                                interactive={true}/>
+                                            <div className="estimated_cost">
+                                                {this._convertPriceAsHR(estimated_cost.deposit.GNT_suggested, "GNT", 3, 14)}
+                                                <span>{isMainNet ? "" : "t"} GNT</span>
+                                            </div>
+                                            <div className="estimated_usd">
+                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.GNT_suggested || 0) * currency["GNT"], "USD", 4, 14)}</span>
+                                            </div>
                                         </div>
-                                        <div className="estimated_usd">
-                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.GNT_suggested || 0) * currency["GNT"], "USD", 4, 14)}</span>
+                                        <div className="item-price">
+                                            <InfoLabel 
+                                                type="span" 
+                                                label="Deposit Tx fee" 
+                                                info={<p className="tooltip_task">You need small amount of ETH (used for gas) avaliable on your account 
+                                                    <br/>to submit a deposit to the Concent Service
+                                                    </p>} 
+                                                cls="title" 
+                                                infoHidden={true} 
+                                                interactive={true}/>
+                                            <div className="estimated_cost">
+                                                {this._convertPriceAsHR(estimated_cost.deposit.ETH, "ETH", 5, 14)}
+                                                <span>{isMainNet ? "" : "t"} ETH</span>
+                                            </div>
+                                            <div className="estimated_usd">
+                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.ETH || 0) * currency["GNT"], "USD", 5, 14)}</span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className="item-price">
-                                        <InfoLabel 
-                                            type="span" 
-                                            label="Deposit Tx fee" 
-                                            info={<p className="tooltip_task">You need small amount of ETH (used for gas) avaliable on your account 
-                                                <br/>to submit a deposit to the Concent Service
-                                                </p>} 
-                                            cls="title" 
-                                            infoHidden={true} 
-                                            interactive={true}/>
-                                        <div className="estimated_cost">
-                                            {this._convertPriceAsHR(estimated_cost.deposit.ETH, "ETH", 5, 14)}
-                                            <span>{isMainNet ? "" : "t"} ETH</span>
-                                        </div>
-                                        <div className="estimated_usd">
-                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.ETH || 0) * currency["GNT"], "USD", 5, 14)}</span>
-                                        </div>
-                                    </div>
-                                </div>
+                                }
                                 <span className="item-price tips__price">
                                     You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
                                 </span>  
