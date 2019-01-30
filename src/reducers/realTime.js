@@ -18,12 +18,15 @@ const {
         SET_CONCENT_DEPOSIT_BALANCE
     } = dict
 
-const tempCB = JSON.parse(getConfig(CONCENT_BALANCE_STATE))
-const lastConcentBalance = tempCB 
+const tempCBSString = getConfig(CONCENT_BALANCE_STATE)
+const tempCBS =  tempCBSString
+    ? JSON.parse(tempCBSString) 
+    : null
+const lastConcentBalance = tempCBS 
 ? {
-    value: new BigNumber(tempCB.value),
-    status: tempCB.status,
-    timelock: tempCB.timelock
+    value: new BigNumber(tempCBS.value),
+    status: tempCBS.status,
+    timelock: tempCBS.timelock
 }
 : null
 
