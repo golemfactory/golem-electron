@@ -78,6 +78,9 @@
     }
 
     .waiting-response{
+        width: 100%;
+        display: flex;
+        justify-content: center;
         animation: fade 2s steps(5, start) infinite;
     }
 
