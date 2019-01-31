@@ -7,7 +7,7 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
@@ -15,7 +15,7 @@ import {dict} from './actions'
 
 
 import App from './container/App.frame'
-import reducer from './reducers'
+import createRootReducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
@@ -34,8 +34,7 @@ const enhancer = compose(
 )
 
 let store = createStore(
-        connectRouter(history)(reducer), 
-        [], 
+        createRootReducer(history),
         applyMiddleware(sagaMiddleware, routingMiddleware));
 
 sagaMiddleware.run(sagas)

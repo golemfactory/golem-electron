@@ -5,24 +5,28 @@ import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import { routerMiddleware, syncHistoryWithStore } from 'react-router-redux'
-import { hashHistory } from 'react-router'
+import { routerMiddleware } from 'connected-react-router'
+import { createHashHistory } from 'history'
 import './utils/electronLayer'
 
 
 import App from './container/App.doc'
+import createRootReducer from './reducers'
 import './scss/main.scss'
 
-const routingMiddleware = routerMiddleware(hashHistory)
-const sagaMiddleware = createSagaMiddleware()
+const history = window.routerHistory = createHashHistory()
+const routingMiddleware = routerMiddleware(history)
+const appEnv = remote.getGlobal('process').env.NODE_ENV;
+const sagaMiddleware = ( appEnv === "development" ? createSagaMiddleware.default() : createSagaMiddleware())
 const enhancer = compose(
     // Middleware you want to use in development:
     applyMiddleware(routingMiddleware),
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
-let store = createStore(reducer, {}, window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(routingMiddleware));
-let history = syncHistoryWithStore(hashHistory, store)
+let store = createStore(
+        createRootReducer(history), 
+        window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
 document.addEventListener('DOMContentLoaded', function() {
 

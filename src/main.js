@@ -7,14 +7,14 @@ import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose, __DO_NOT_USE__ActionTypes } from 'redux'
 import createSagaMiddleware from 'redux-saga'
-import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import './utils/electronLayer'
 import {dict} from './actions'
 
 
 import App from './container/App'
-import reducer from './reducers'
+import createRootReducer from './reducers'
 import sagas from './sagas'
 import './scss/main.scss'
 
@@ -42,8 +42,7 @@ const enhancer = compose(
 )
 
 let store = createStore(
-        connectRouter(history)(reducer), 
-        [], 
+        createRootReducer(history), 
         window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
 const RPC_QUIT_STATES = {

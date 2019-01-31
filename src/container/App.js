@@ -37,7 +37,6 @@ Array.prototype.last = function() {
  * @return     {Route}
  */
 const routes = (
-<div>
     <Switch>
         <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
         <Route path="/tasks" component={OnBoardingComponent(Tasks)} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
@@ -47,7 +46,6 @@ const routes = (
         <Route path="/add-task/settings" component={ TaskDetail } />
         <Route component={ NotFound } status={404} />
     </Switch>
-</div>
 );
 
 function isGolemReady(gs) {
@@ -88,7 +86,6 @@ export class App extends Component {
 
     componentDidMount() {
         const {actions} = this.props
-        console.log("ErrorBoundary", ErrorBoundary);
         actions.login('Muhammed')
     }
 
