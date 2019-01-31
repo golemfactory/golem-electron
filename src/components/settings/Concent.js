@@ -66,7 +66,7 @@ export class Concent extends React.Component {
                 <span>Concent is service of the Golem network, which aims to improve the integrity
                 <br/>and security of marketplace. As a Provider, you should be paid for
                 <br/>computations, and as a Requestor, you are assured to get proper results.
-                <br/><a href="">Learn more</a> about Concent Service.</span>
+                <br/><a href="https://golem.network/documentation/concent-service">Learn more</a> about Concent Service.</span>
                 <div className="switch__concent">
                     <div className={`switch-box ${!isConcentOn ? "switch-box--green" : ""}`}>
                         <label className="switch">
@@ -105,12 +105,12 @@ export class Concent extends React.Component {
                                                 ? <span>
                                                     <br/>Your balance will be unlocked at <span className="timelock__concent">{timeStampToHR(time)}</span>
                                                     <br/>Turning it on again till this date will reduce potential future deposit 
-                                                    <br/>creation transaction fees. <a href="">Learn more</a>
+                                                    <br/>creation transaction fees. <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">Learn more</a>
                                                 </span>
                                                 :
                                                 <span>
                                                     <br/>You can turn it on without any additional transaction fees, 
-                                                    <br/>transaction fees or you can unlock it now. <a href="">Learn more</a>
+                                                    <br/>transaction fees or you can unlock it now. <a href="https://golem.network/documentation/concent-service#can-i-withdraw-my-tokens-from-the-deposit">Learn more</a>
                                                 </span>
                                             }
                                         </span>
@@ -135,7 +135,7 @@ export class Concent extends React.Component {
                                             </button>
                                             <span className="action-info__concent">By leaving the Deposit locked you can
                                             <br/>reduce future Deposit creation transaction
-                                            <br/>fee <a href="">Learn more</a></span>
+                                            <br/>fee <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">Learn more</a></span>
                                         </div>
                                     }
                                 </div>

@@ -1,6 +1,6 @@
 .container__concent-modal {
     .content__modal {
-        height: 420px;
+        height: 440px;
         text-align: center;
         padding: 20px;
         font-size: 12pt;
@@ -17,6 +17,7 @@
             text-align: left;
             padding-left: 40px;
             box-sizing: border-box;
+            margin-bottom: 30px;
 
             [class^="icon-"], [class*=" icon-"] {
                 margin-right: 5px;
@@ -43,9 +44,17 @@
             label{
                 font-size: 9pt;
                 margin-left:5px;
-                margin-right:50px;
+                margin-right:45px;
                 font-weight: 400;
                 cursor: pointer;
+
+                .icon-question-mark{
+                    display: inline;
+                    font-size: 7pt;
+                    margin-left:2px;
+                    top: -5px;
+                    color: $color-text3;
+                }
             }
 
             .radio-item{
