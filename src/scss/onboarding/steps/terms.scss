@@ -65,17 +65,6 @@
     -webkit-box-decoration-break: clone;
 }
 
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-  background-color: rgba(0, 0, 0, .1);
-}
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, .5);
-  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-}
-
 /*MEDIA*/
 
 @media screen and (max-height: 760px)

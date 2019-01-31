@@ -11,7 +11,7 @@ const {
     UNLOCK_CONCENT_DEPOSIT
 } = dict
 
-const  tempCBS = getConfig(CONCENT_BALANCE_STATE)
+const  tempCBS = CONCENT_BALANCE_STATE && getConfig(CONCENT_BALANCE_STATE)
 const lastConcentStatus = tempCBS 
     ? JSON.parse(tempCBS).status
     : null

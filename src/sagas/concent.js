@@ -22,7 +22,7 @@ export function fectConcentStatus(session) {
 }
 
 /**
- * [*toggleConcentUnlockBase generator to unlock concent deposit]
+ * [*fetchConcentStatusBase generator to  get soft switch information]
  * @param {[type]} session       [Session of the wamp connection]
  */
 export function* fetchConcentStatusBase(session) {
@@ -37,7 +37,6 @@ export function unlockDepositConcent(session) {
             let info = args[0];
             console.log("info", info)
         }
-        
         _handleRPC(on_unlock, session, config.CONCENT_UNLOCK)
     })
 }
@@ -48,7 +47,6 @@ export function unlockDepositConcent(session) {
  */
 export function* toggleConcentUnlockBase(session) {
     const action = yield call(unlockDepositConcent, session);
-    //yield action && put(action)
 }
 
 export function toggleConcent(session, {isSwitchOn, informRPC, toggleLock = false}) {

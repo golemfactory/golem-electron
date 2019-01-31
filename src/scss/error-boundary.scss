@@ -11,6 +11,9 @@
     box-sizing: border-box;
 
     &__content{
+    	position: relative;
+    	width: 100%;
+    	padding: 0 25px;
     	display: flex;
     	align-items: center;
     	flex-direction: column;
@@ -53,5 +56,8 @@
 	    white-space: pre-wrap;
     	overflow-y: overlay;
     	height: 50%;
+    	overflow-x: overlay;
+    	width: 100%;
+    	box-sizing: border-box;
 	}
 }

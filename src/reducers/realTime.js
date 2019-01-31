@@ -18,7 +18,7 @@ const {
         SET_CONCENT_DEPOSIT_BALANCE
     } = dict
 
-const tempCBSString = getConfig(CONCENT_BALANCE_STATE)
+const tempCBSString = CONCENT_BALANCE_STATE && getConfig(CONCENT_BALANCE_STATE)
 const tempCBS =  tempCBSString
     ? JSON.parse(tempCBSString) 
     : null
