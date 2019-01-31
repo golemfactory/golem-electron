@@ -1,5 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
+import {Tooltip} from 'react-tippy';
 
 import animData from './../../../assets/anims/deposit-unlock';
 
@@ -41,7 +42,6 @@ export default class ConcentModal extends React.Component {
     }
 
     _handleUnlockCheckbox = evt => {
-        console.log(evt.target.value)
         this.setState({
             toggleConcentLock: evt.target.value
         })
@@ -67,20 +67,45 @@ export default class ConcentModal extends React.Component {
                         <br/>Concent Service.
                     </div>
                     <div className="radio-group__concent-modal" onChange={this._handleUnlockCheckbox}>
-                        <div className="radio-item">
-                            <input type="radio" id="unlockConcentRadio" value={false} name="unlockDepositConcent" defaultChecked={true}/>
-                            <label htmlFor="unlockConcentRadio">
-                                <span className="overlay"/>
-                                Leave the funds in the deposit
-                            </label>
-                        </div>
-                        <div className="radio-item">
-                            <input type="radio" id="unlockConcentRadio2" value={true} name="unlockDepositConcent"/>
-                            <label htmlFor="unlockConcentRadio2">
-                                <span className="overlay"/>
-                                Withdraw deposited funds
-                            </label>
-                        </div>
+                        <Tooltip
+                          html={<p>
+                            By leaving the Deposit locked you can<br/>
+                            reduce future Deposit creation<br/>
+                            transaction fee. <a href="https://golem.network/documentation/concent-service/#how-much-can-i-save-by-not-unlocking-my-deposit">Learn more</a></p>}
+                          position="top"
+                          trigger="mouseenter"
+                          distance={-10}
+                          offset={-20}
+                          size="small"
+                          interactiveBorder={15}
+                          interactive>
+                            <div className="radio-item">
+                                <input type="radio" id="unlockConcentRadio" value={false} name="unlockDepositConcent" defaultChecked={true}/>
+                                <label htmlFor="unlockConcentRadio">
+                                    <span className="overlay"/>
+                                    Leave the funds in the deposit
+                                    <span className="icon-question-mark"/>
+                                </label>
+                            </div>
+                        </Tooltip>
+                        <Tooltip
+                          html={<p>Funds restore will take up to 48h. <a href="https://golem.network/documentation/concent-service/#can-i-withdraw-my-tokens-from-the-deposit">Learn more</a></p>}
+                          position="bottom"
+                          trigger="mouseenter"
+                          distance={-10}
+                          offset={-20}
+                          size="small"
+                          interactiveBorder={15}
+                          interactive>
+                            <div className="radio-item">
+                                <input type="radio" id="unlockConcentRadio2" value={true} name="unlockDepositConcent"/>
+                                <label htmlFor="unlockConcentRadio2">
+                                    <span className="overlay"/>
+                                    Withdraw deposited funds
+                                    <span className="icon-question-mark"/>
+                                </label>
+                            </div>
+                        </Tooltip>
                     </div>
                     <div className="action__modal">
                         <span className="btn--cancel" onClick={::this._handleCancel}>Cancel</span>

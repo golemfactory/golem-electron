@@ -82,10 +82,12 @@ export default class CurrencyBox extends Component {
             lockedBalance,
             currency,
             contractAddresses,
+            lastUpdate,
             suffix,
             description,
             descriptionLock,
             descriptionWaiting,
+            descriptionUnconverted,
             clickHandler,
             expandAmount,
             expandedAmount,
@@ -122,6 +124,7 @@ export default class CurrencyBox extends Component {
                     <div className="side2">
                         <div ref={"currencyBox" + suffix} className="content__currency-box flipper" onClick={expandAmount.bind(this, suffix)}>
                             <div className="front">
+                                <span className="last-update">Last update: {lastUpdate ? timeStampToHR(lastUpdate) : "-"}</span>
                                 <div>
                                     <span className={`icon-${currencyIcons[suffix]}`} />
                                 </div>
@@ -202,7 +205,9 @@ export default class CurrencyBox extends Component {
                                         </Spring>
                                     </div>
                                     <div className="locked-amount">
-                                        <span>Locked:</span>
+                                        <Tooltip html={descriptionLock || "No information"} position="top" trigger="mouseenter">
+                                            <span>Locked:</span>
+                                        </Tooltip>
                                         <Spring
                                             from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
                                             to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>
@@ -223,7 +228,9 @@ export default class CurrencyBox extends Component {
                                     </div>
                                     { suffix === "GNT"
                                         ? <div className="unconverted-amount">
-                                            <span>Unconverted:</span>
+                                             <Tooltip html={descriptionUnconverted || "No information"} position="top" trigger="mouseenter">
+                                                <span>Unconverted:</span>
+                                            </Tooltip>
                                             <Spring
                                                 from={{ balanceAnimated: motionBalanceStart[`${suffix}-USD`] }}
                                                 to={{ balanceAnimated: Number(balance.multipliedBy(currency[suffix])) }}>

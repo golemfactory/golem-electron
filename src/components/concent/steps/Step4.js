@@ -33,10 +33,10 @@ export default class Step4 extends React.Component {
                 <div className="concent-onboarding__desc">
                     <h2>FAQ</h2>
                     <span className="concent-info">
-                        If you have any more questions regarding Concent Service and it's usage, please head over to our docs, where we try to answer most of the questions you might have.
+                        If you have any more questions regarding Concent Service and it's usage, please head over to our <a href="https://golem.network/documentation/concent-service">docs</a>, where we try to answer most of the questions you might have.
                         <br/>
                         <br/>
-                        You can also talk with us via chat.
+                        You can also talk with us via <a href="https://chat.golem.network">chat</a>.
                     </span>
                 </div>  
             </div>

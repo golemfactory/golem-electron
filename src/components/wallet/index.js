@@ -105,6 +105,7 @@ export class Wallet extends Component {
                             lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             contractAddresses={balance[7]}
+                            lastUpdate={balance[2]}
                             suffix="GNT"
                             description={
                                 isMainNet ? (
@@ -135,6 +136,13 @@ export class Wallet extends Component {
                                     <br />May be overestimated.
                                 </p>
                             }
+                            descriptionUnconverted={
+                                <p className="tooltip__wallet">
+                                    Tokens that are not fully operational. 
+                                    <br />You need to top up your ETH account 
+                                    <br />to make conversion possible.
+                                </p>
+                            }
                             expandAmount={::this._expandAmount}
                             expandedAmount={expandedAmount}
                             golemStatus={status}
@@ -147,6 +155,7 @@ export class Wallet extends Component {
                             lockedBalance={[balance[4], balance[5], balance[6]]}
                             currency={currency}
                             contractAddresses={balance[7]}
+                            lastUpdate={balance[3]}
                             suffix="ETH"
                             description={
                                 isMainNet ? (
