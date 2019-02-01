@@ -42,7 +42,7 @@ const enhancer = compose(
 )
 
 let store = createStore(
-        createRootReducer(history), 
+        createRootReducer(history),
         window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
 const RPC_QUIT_STATES = {

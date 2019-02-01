@@ -37,15 +37,17 @@ Array.prototype.last = function() {
  * @return     {Route}
  */
 const routes = (
-    <Switch>
-        <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
-        <Route path="/tasks" component={OnBoardingComponent(Tasks)} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
-        <Route path="/settings" component={OnBoardingComponent(ConcentOnboardingComponent(Settings))} />
-        <Route path="/task/:id" component={ TaskDetail } />
-        <Route path="/add-task/type/:type?" component={ NewTask } />
-        <Route path="/add-task/settings" component={ TaskDetail } />
-        <Route component={ NotFound } status={404} />
-    </Switch>
+    <div>
+        <Switch>
+            <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
+            <Route path="/tasks" component={OnBoardingComponent(Tasks)} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
+            <Route path="/settings" component={OnBoardingComponent(ConcentOnboardingComponent(Settings))} />
+            <Route path="/task/:id" component={ TaskDetail } />
+            <Route path="/add-task/type/:type?" component={ NewTask } />
+            <Route path="/add-task/settings" component={ TaskDetail } />
+            <Route component={ NotFound } status={404} />
+        </Switch>
+    </div>
 );
 
 function isGolemReady(gs) {
