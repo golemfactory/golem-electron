@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux'
-import { connectRouter } from 'connected-react-router'
 /*Frame*/
 import all from './frame/all'
 import single from './frame/single'
