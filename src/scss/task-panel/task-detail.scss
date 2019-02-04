@@ -53,6 +53,13 @@
         padding: 20px;
         box-sizing: border-box;
 
+        .missing-file-list{
+            max-height: 100px;
+            overflow-y: overlay;
+            padding-right: 15px;
+            margin: 10px 0;
+        }
+
         .local-render__action{
             margin: 20px 0 10px 0;
             display: flex;

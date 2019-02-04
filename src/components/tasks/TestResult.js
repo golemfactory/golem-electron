@@ -101,10 +101,13 @@ class TestResult extends Component {
                                 className={`local-render__info info-${status}`}>
                                 <h4>Test passed, but...</h4>
                                 <span>It looks like some data is missing;</span>
-                                <ul>{fillFiles(more
-                                                .after_test_data
-                                                .warnings
-                                                .missing_files)}</ul>
+                                <div className="missing-file-list">
+                                    <ul>{fillFiles(more
+                                                    .after_test_data
+                                                    .warnings
+                                                    .missing_files)}
+                                    </ul>
+                                </div>
                                 <span>You can try to add missing files, like textures with the button below. You can also try to add missing scripts to your .blend file and resubmit the task. Or you can simply ignore this warning if the scripts or textures are not needed.</span>
                                 <div className="local-render__action">
                                     <span onClick={::this._ignoreTestWarning}>Ignore</span>
