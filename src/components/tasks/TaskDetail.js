@@ -228,7 +228,7 @@ export class TaskDetail extends React.Component {
                     let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
                     
                     /*Apply concent option only on testnet*/
-                    if(!this.props.isMainNet) concentRef.checked = concent_enabled
+                    if(!this.props.isMainNet && nextProps.concentSwitch) concentRef.checked = concent_enabled
 
                     this.setState({
                         formatIndex,
@@ -972,6 +972,7 @@ export class TaskDetail extends React.Component {
         const {
             actions,
             currency,
+            concentSwitch, //from settings
             estimated_cost, 
             isDeveloperMode,
             isMainNet,
@@ -1051,6 +1052,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             </div>
                             { !isMainNet
+                                && concentSwitch
                                 &&
                                 <div className="section-concent__task-detail">
                                     <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" distance={-20}/>
