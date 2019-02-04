@@ -5,13 +5,13 @@ import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom'
 import { Provider } from 'react-redux'
 import { createStore, applyMiddleware, compose } from 'redux'
-import { routerMiddleware } from 'connected-react-router'
+import { routerMiddleware, connectRouter } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import './utils/electronLayer'
 
 
 import App from './container/App.doc'
-import createRootReducer from './reducers'
+import reducer from './reducers'
 import './scss/main.scss'
 
 const history = window.routerHistory = createHashHistory()
@@ -25,7 +25,8 @@ const enhancer = compose(
 )
 
 let store = createStore(
-        createRootReducer(history), 
+        connectRouter(history)(reducer),
+        [],
         window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
 
 document.addEventListener('DOMContentLoaded', function() {

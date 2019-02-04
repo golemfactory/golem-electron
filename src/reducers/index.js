@@ -35,7 +35,7 @@ import realTime, * as fromRealTime from './realTime'
 import info from './info'
 import queue from './queue'
 
-export default (reduxHistory) => combineReducers({
+const reducer = combineReducers({
     //FRAME
     all,
     single,
@@ -69,9 +69,10 @@ export default (reduxHistory) => combineReducers({
     currency,
     realTime,
     info,
-    queue,
-    router: connectRouter(reduxHistory)
+    queue
 })
+
+export default reducer
 
 export const getFilteredPaymentHistory = (state, filter, isDefault) => fromHistory.getFilteredPaymentSelector(state.history, filter, isDefault)
 export const getStatus = (state, key) => fromRealTime.getStatusSelector({...state.realTime, ...state.info}, key)
