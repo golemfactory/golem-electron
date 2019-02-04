@@ -24,12 +24,26 @@
         "test:coverage": "jest --coverage --watch --no-cache",
         "pack": "build --dir",
         "dist": "build",
+        "dist:all": "build -mwl",
         "dist:debug": "cross-env DEBUG=electron-builder build"
     },
     "build": {
         "appId": "network.golem.app",
         "mac": {
-            "category": "public.app-category.productivity"
+            "category": "public.app-category.productivity",
+            "target": "dmg",
+            "artifactName": "golem-electron-beta-${os}os-${version}.${ext}"
+        },
+        "win": {
+            "target": "zip",
+            "publisherName": "Golem Factory GmbH",
+            "artifactName": "golem-electron-beta-${os}-${version}.${ext}"
+        },
+        "linux": {
+            "target": "tar.gz",
+            "icon": "./build/icons/32x32.png",
+            "category": "Utility",
+            "artifactName": "golem-electron-beta-${os}-${version}.${ext}"
         },
         "files": [
             "index.js",
