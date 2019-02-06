@@ -13,6 +13,7 @@ const initialState = {
         size: 0
     },
     subtasksList: [],
+    hasSubtasksLoaded: false,
     frameIndex: 0,
     frameId: 0
 }
@@ -37,7 +38,8 @@ const setSingleFrames = (state = initialState, action) => {
 
     case SET_SUBTASKS_LIST:
         return Object.assign({}, state, {
-            subtasksList: action.payload
+            subtasksList: action.payload,
+            hasSubtasksLoaded: true
         });
 
     case SET_PREVIEW_LIST:
@@ -76,7 +78,8 @@ const setSingleFrames = (state = initialState, action) => {
 
     case CLEAR_TASK_PLAIN:
         return Object.assign({}, state, {
-            subtasksList: []
+            subtasksList: [],
+            hasSubtasksLoaded: false
         });
 
     default:

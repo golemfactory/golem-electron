@@ -148,30 +148,41 @@ class NodeList extends Component {
     }
 
     render() {
-    	const {subtasksList} = this.props
+    	const {subtasksList, hasSubtasksLoaded} = this.props
         const {blockNodeModal, nodeBlocked, errMsg, subtask2block} = this.state
         return <div className="section-node-list__task-detail">
                     <h4 className="experiment">Dev mode</h4>
-                { subtasksList && subtasksList.length > 0 ?
-                    [<div key={"countSubtasks"}>
-                        {::this._countStatus(subtasksList)}
-                    </div>,
-                    <table key={"fillNode"}>
-                        <thead>
-                            <tr>
-                              <th>Subtask</th>
-                              <th>State</th>
-                              <th>Node</th>
-                              <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {::this._fillNodeInfo(subtasksList)}
-                        </tbody>
-                    </table>]
-                    :
+                { hasSubtasksLoaded
+                    ? (subtasksList && subtasksList.length > 0)
+                        ? [<div key={"countSubtasks"}>
+                                {::this._countStatus(subtasksList)}
+                            </div>,
+                            <table key={"fillNode"}>
+                                <thead>
+                                    <tr>
+                                      <th>Subtask</th>
+                                      <th>State</th>
+                                      <th>Node</th>
+                                      <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {::this._fillNodeInfo(subtasksList)}
+                                </tbody>
+                            </table>]
+                        :
+                        <div className="no-node__task">
+                            <span>There's no active node.</span>
+                        </div>
+                    : 
                     <div className="no-node__task">
-                        <span>There's no active node.</span>
+                        <span>Loading nodes
+                            <span className="jumping-dots">
+                                <span className="dot-1">.</span>
+                                <span className="dot-2">.</span>
+                                <span className="dot-3">.</span>
+                            </span>
+                        </span>
                     </div>
                 }
                 {blockNodeModal 
