@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom'
 import {Tooltip} from 'react-tippy';
 
 import BlockNodeModal from './modal/BlockNodeModal'
@@ -39,7 +40,6 @@ class NodeList extends Component {
     }
 
     _lockScroll(isLocked){
-        console.log(isLocked ? "Locked": "Unlocked")
         this.props.overflowRef.style.setProperty("overflow-y", isLocked ? "hidden" : "overlay", "important");
     }
 
@@ -174,12 +174,16 @@ class NodeList extends Component {
                         <span>There's no active node.</span>
                     </div>
                 }
-                {blockNodeModal && <BlockNodeModal
+                {blockNodeModal 
+                    && ReactDOM.createPortal(
+                    <BlockNodeModal
                     cancelAction={::this._closeBlockNodeModal}
                     blockAction={::this._blockNode}
                     nodeBlocked={nodeBlocked}
                     errMsg={errMsg}
-                    subtask2block={subtask2block}/>}
+                    subtask2block={subtask2block}/>,
+                    document.getElementById("modalPortal")
+                    )}
                 </div>
     }
 }

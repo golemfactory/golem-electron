@@ -1,4 +1,16 @@
 import React from 'react';
+import Lottie from 'react-lottie';
+
+import animData from './../../../assets/anims/are-you-sure';
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class DeleteModal extends React.Component {
 
@@ -28,8 +40,8 @@ export default class DeleteModal extends React.Component {
         return (
             <div className="container__modal container__delete-modal">
                 <div className="content__modal">
-                    <div>
-                        <span className="icon-warning"/>
+                    <div className="image-container">
+                        <Lottie options={defaultOptions}/>
                     </div>
                     <span>Are you sure  you want to delete this task? You can’t undo this.</span>
                     <div className="action__modal">

@@ -4,9 +4,14 @@
         justify-content: space-around;
         max-height: 500px;
         padding: 20px;
-        .container-icon {
-            padding: 25px 0;
-            flex: 0 0 40px;
+        .image-container {
+            width: 150px;
+            height: 150px;
+        }
+        .description{
+            margin-top: 10px;
+            font-size: 12pt;
+            font-weight: 400;
         }
         & > span {
             padding: 20px 0;
@@ -43,9 +48,11 @@
                 width: 280px;
                 word-wrap: break-word;
                 padding-left: 10px;
+                line-height: 1.5em;
                 &::before {
                     position: absolute;
-                    content: '⬤';
+                    content: '◕';
+                    margin-top: 2px;
                     left: -10px;
                 }
             }
