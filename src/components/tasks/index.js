@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -154,8 +155,8 @@ _toggleTransactionHistory = () => {
                     { !isWalletTray && <Wallet balance={balance} currency={currency}/> }
                     <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory}/>
                     {!toggleHistory
-                        ? <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`}>
-                            <DropZone>
+                        ? <div className={`container__task-panel ${preview && 'container__task-panel--with-preview'}`} ref={node => this.overflowTaskList = node}>
+                            <DropZone overflowRef={this.overflowTaskList}>
                                 <div className="section__table">
                                     <Table 
                                         deleteModalHandler={::this._handleDeleteModal} 
@@ -169,8 +170,16 @@ _toggleTransactionHistory = () => {
                         : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
                     }
                     
-                    {deleteModal && <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>}
-                    {restartModal && <RestartModal closeModal={::this._closeModal} {...restartProps}/>}
+                    {deleteModal
+                        && ReactDOM.createPortal(
+                            <DeleteModal closeModal={::this._closeModal} {...deleteProps}/>,
+                            document.getElementById("modalPortal")
+                            )}
+                    {restartModal
+                        && ReactDOM.createPortal(
+                            <RestartModal closeModal={::this._closeModal} {...restartProps}/>,
+                            document.getElementById("modalPortal")
+                            )}
                     <FooterMain/>
                 </div>
         )

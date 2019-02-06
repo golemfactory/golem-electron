@@ -5,6 +5,12 @@
         width: 300px;
         text-align: center;
         padding: 20px;
+
+        .image-container{
+            width: 120px;
+            height: 120px;
+        }
+
         .icon-blocked {
             &:before {
                 content: "\e927";
@@ -34,5 +40,6 @@
 .node_id_span {
     display: block;
     font-size: 8.5pt;
-    color: #cbcbcb;
+    color: #888;
+    margin-top: 5px;
 }

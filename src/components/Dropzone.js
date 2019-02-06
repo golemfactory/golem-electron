@@ -118,6 +118,10 @@ export class DropZone extends React.Component {
         this.setState({
             className: classDict.SHOW
         });
+        if(this.props.overflowRef){
+            this.props.overflowRef.scrollTop = 0;
+            this.props.overflowRef.style.setProperty("overflow-y", "hidden");
+        }
         e.stopPropagation();
         e.preventDefault();
         return false;
@@ -143,6 +147,9 @@ export class DropZone extends React.Component {
         this.setState({
             className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         });
+        if(this.props.overflowRef){
+            this.props.overflowRef.style.setProperty("overflow-y", "overlay", "important");
+        }
         e.stopPropagation();
         e.preventDefault();
         return false;
@@ -163,6 +170,9 @@ export class DropZone extends React.Component {
             this.setState({
                 className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             });
+            if(this.props.overflowRef){
+                this.props.overflowRef.style.setProperty("overflow-y", "overlay", "important");
+            }
 
             return false;
         }

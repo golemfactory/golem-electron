@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import * as Actions from '../../actions'
@@ -182,7 +183,12 @@ export class Settings extends React.Component {
                 <div className="tab__accordion" id="tabAcordion">
                     { this.loadAccordionMenu(accordionItems)}
                 </div>
-                {concentModal && <ConcentModal closeModal={this._closeModal} toggleConcentCallback={this._disableConcent}/>}
+                {concentModal 
+                    && ReactDOM.createPortal(
+                        <ConcentModal closeModal={this._closeModal} toggleConcentCallback={this._disableConcent}/>,
+                        document.getElementById("modalPortal")
+                    )
+                }
                 <div className="footer__settings">
                     <span>{version.error ? version.message : `${version.message}${version.number}`}</span>
                     <br/>

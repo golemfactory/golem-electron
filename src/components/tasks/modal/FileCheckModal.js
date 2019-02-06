@@ -1,5 +1,16 @@
 import React from 'react';
-import { hashHistory } from 'react-router'
+import Lottie from 'react-lottie';
+
+import animData from './../../../assets/anims/warning';
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 
 export default class FileCheckModal extends React.Component {
@@ -23,7 +34,7 @@ export default class FileCheckModal extends React.Component {
      */
     _handleCancel() {
         this.props.closeModal()
-        hashHistory.push('/tasks')
+        window.routerHistory.push('/tasks')
     }
 
     /**
@@ -41,10 +52,10 @@ export default class FileCheckModal extends React.Component {
         return (
             <div className="container__modal container__file-check-modal">
                 <div className="content__modal">
-                    <div className="container-icon">
-                        <span className="icon-warning"/>
+                    <div className="image-container">
+                        <Lottie options={defaultOptions}/>
                     </div>
-                    <span>Sorry, but we couldn't recognise some of the files needed for this task. Please check them and try again.</span>
+                    <span className="description">Sorry, but we couldn't recognise some of the files needed for this task. Please check them and try again.</span>
                     <div className="list__file-check-modal">
                     {this.fetchFiles(unknownFiles)}
                     </div>
