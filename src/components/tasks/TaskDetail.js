@@ -108,6 +108,7 @@ const mapStateToProps = state => ({
     presets: state.details.presets,
     requestorMaxPrice: state.price.requestorMaxPrice,
     subtasksList: state.single.subtasksList,
+    hasSubtasksLoaded: state.single.hasSubtasksLoaded,
     task: state.create.task,
     taskInfo: state.details.detail,
     testStatus: state.details.test_status,
@@ -976,7 +977,8 @@ export class TaskDetail extends React.Component {
             estimated_cost, 
             isDeveloperMode,
             isMainNet,
-            subtasksList, 
+            subtasksList,
+            hasSubtasksLoaded, 
             task,
             testStatus
         } = this.props;
@@ -992,7 +994,7 @@ export class TaskDetail extends React.Component {
                         />
                     <section className="section-details__task-detail">
                         <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
-                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} overflowRef={this.overflowTaskDetail} actions={actions}/>}
+                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
                             <div className="section-settings__task-detail">
                                     <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
                                     {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
