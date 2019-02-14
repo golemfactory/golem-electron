@@ -1,0 +1,56 @@
+.master-file-picker{
+    &__radio{
+        display: none;
+        & + label {
+            cursor: pointer;
+        }
+        &:checked + label {
+            font-weight: 500;
+        }
+    }
+    &__content{
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background: $color-bg2;
+    }
+    &__container{
+        margin: 20px 0;
+    	.directory-nodes{
+            &__item{
+                cursor: pointer;
+            }
+
+            &__filter-input{
+                width: 100%;
+                height: 30px;
+                margin-bottom: 20px;
+                padding: 0 5px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+
+                &:focus{
+                    border: 1px solid $button-static-color;
+                }
+            }
+        }
+    }
+
+    &__container-action{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 2;
+        flex: 0 0 90px;
+        background: $color-text4;
+        z-index: 999;
+        span {
+            margin-right: 20px;
+        }
+    }
+}

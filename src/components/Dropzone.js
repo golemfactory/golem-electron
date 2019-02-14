@@ -4,6 +4,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from './../actions'
+import directorySelector from './../utils/directorySelector';
+
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
@@ -203,29 +205,8 @@ export class DropZone extends React.Component {
         // Upload files
         // actions.uploadFile(files)
         if (files) {
-            mainProcess.selectDirectory([].map.call(files, item => item.path), this.props.isMainNet)
-                .then(item => {
-                    let mergedList = [].concat.apply([], item);
-                    let unknownFiles = mergedList.filter(({malicious}) => (malicious));
-                    let masterFiles = mergedList.filter(({master}) => (master));
-                    let dominantFileType = checkDominantType(masterFiles.map(file => file.extension));
-                    //console.log("masterFiles", masterFiles);
-                    (masterFiles.length > 0 || unknownFiles.length > 0) && window.routerHistory.push(`/add-task/type${!!dominantFileType ? `/${dominantFileType.substring(1)}` : ''}`)
-                    if (unknownFiles.length > 0) {
-                        this.props.actions.setFileCheck({
-                            status: true,
-                            files: unknownFiles
-                        })
-                    } else if (masterFiles.length > 0) {
-                        this.props.actions.createTask({
-                            resources: mergedList.map(item => item.path),
-                            taskName: masterFiles[0].name,
-                            relativePath: [].map.call(files, item => item.path)[0]
-                        })
-                    } else {
-                        alert("There's no main file! There should be at least one blender file.")
-                    }
-                })
+            const data = [].map.call(files, item => item.path);
+            directorySelector.call(this, data);
         }
 
         // for (var i = 0; i < files.length; i++) {
