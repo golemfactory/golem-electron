@@ -58,7 +58,7 @@ export class FooterMain extends Component {
         }
     }
 
-    _golemize() {
+    _golemize = () => {
         const {actions, isEngineOn, isEngineLoading, chosenPreset} = this.props
         if (isEngineOn) {
             actions.stopGolem()
@@ -78,7 +78,7 @@ export class FooterMain extends Component {
         return "red"
     }
 
-    _loadErrorUrl(msg){
+    _loadErrorUrl = msg => {
         switch (msg) {
             case "Error creating Docker VM":    //docker
                 return  <a href={currentPlatform === "win32" 
@@ -227,7 +227,7 @@ export class FooterMain extends Component {
                                 </span>
                                 {status.client 
                                     && checkNested(status, 'client', 'message') 
-                                    && ::this._loadErrorUrl(status.client.message)}
+                                    && this._loadErrorUrl(status.client.message)}
                                 {this._loadConnectionError(status, connectionProblem)}
                             </span>
                             {!!Object.keys(stats).length
@@ -259,7 +259,7 @@ export class FooterMain extends Component {
                     </div>
                     <button 
                         className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} 
-                        onClick={::this._golemize}
+                        onClick={this._golemize}
                         disabled={checkNested(status, 'client', 'status') // this condition will keep button disabled 
                                     && status.client.status !== "Ready"   // until golem lands successfully
                                     && isEngineOn
