@@ -255,7 +255,7 @@
             "^.*[.](png|PNG|svg|SVG)$": "<rootDir>/__mocks__/EmptyModule"
         },
         "transformIgnorePatterns": [
-            "/node_modules/"
+            "<rootDir>/node_modules/(?!lodash-es)"
         ],
         "unmockedModulePathPatterns": [
             "<rootDir>/node_modules/react",
@@ -263,7 +263,8 @@
             "<rootDir>/node_modules/fbjs",
             "<rootDir>/node_modules/react-addons-test-utils",
             "<rootDir>/__mocks__/EmptyModule.js"
-        ]
+        ],
+        "transform": { "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest" }
     },
     "env": {
         "test": {

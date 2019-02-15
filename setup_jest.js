@@ -26,6 +26,9 @@ global.window.require = function () {
     remote: {
         require: function () {
             return {
+                        dirToJson: function () {
+                            return new Promise((res, rej) => {})
+                        },
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
@@ -74,6 +77,9 @@ global.window.electron = {
             },
             require: function () {
                 return {
+                        dirToJson: function () {
+                            return new Promise((res, rej) => {})
+                        },
                         getDefaultLocation: function () {},
                         selectDirectory: function () {
                             return new Promise((res, rej) => {})
