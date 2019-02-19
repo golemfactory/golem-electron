@@ -980,7 +980,8 @@ export class TaskDetail extends React.Component {
             subtasksList,
             hasSubtasksLoaded, 
             task,
-            testStatus
+            testStatus,
+            match
         } = this.props;
         return (
             <div>
@@ -994,7 +995,7 @@ export class TaskDetail extends React.Component {
                         />
                     <section className="section-details__task-detail">
                         <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
-                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
+                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList[match.params.id]} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
                             <div className="section-settings__task-detail">
                                     <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
                                     {!isDetailPage && <div className="source-path">{task.relativePath}</div>}

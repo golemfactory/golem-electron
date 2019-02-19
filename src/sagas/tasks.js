@@ -125,7 +125,8 @@ export function fetchSubtaskList(session, {payload}) {
             //console.log(config.GET_SUBTASKS_RPC, subtask_list)
             resolve({
                 type: SET_SUBTASKS_LIST,
-                payload: subtask_list
+                payload: subtask_list,
+                id: payload
             })
         }
 

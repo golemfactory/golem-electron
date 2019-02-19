@@ -12,6 +12,8 @@ import {taskStatus} from './../../constants/statusDicts'
 import * as Actions from '../../actions'
 
 import Preview from './Preview'
+import Details from './Details'
+import ConditionalRender from '../hoc/ConditionalRender'
 
 const ETH_DENOM = 10 ** 18;
 
@@ -158,7 +160,7 @@ export class TaskItem extends React.Component {
                                 <span className="path4"></span>
                             </span>
                         </div>
-                        <div>
+                        <div className="task-item__main">
                             <h4>{item.name}</h4>
                             <div className="duration">
                                 {this._fetchStatus(item)}
@@ -179,54 +181,65 @@ export class TaskItem extends React.Component {
                                         <span> Subtask timeout: {item.subtask_timeout}</span>
                                     </div>
                                 </div>
+                                <div className="control-panel__task">
+                                    <Tooltip
+                                      html={<p>Preview</p>}
+                                      position="bottom"
+                                      trigger="mouseenter">
+                                        <span 
+                                            className="icon-trash" 
+                                            tabIndex="0" 
+                                            aria-label="Preview" 
+                                            onClick={this._togglePreview.bind(this, item)}><span className="info-label">Preview</span></span>
+                                    </Tooltip>
+                                    <Tooltip
+                                      html={<p>Task Details</p>}
+                                      position="bottom"
+                                      trigger="mouseenter"
+                                      className="task-details-icon">
+                                        <Link 
+                                            to={`/task/${item && item.id}`} 
+                                            tabIndex="0" 
+                                            aria-label="Task Details">
+                                            <span className="icon-trash"><span className="info-label">Details</span></span>
+                                        </Link>
+                                    </Tooltip>
+                                    <Tooltip
+                                      html={<p>Restart</p>}
+                                      position="bottom"
+                                      trigger="mouseenter">
+                                        <span 
+                                            className="icon-progress-clockwise" 
+                                            tabIndex="0" 
+                                            aria-label="Restart Task" 
+                                            onClick={(item.status !== taskStatus.RESTART) 
+                                                        ? _handleRestartModal 
+                                                        : undefined} 
+                                            disabled={!(item.status !== taskStatus.RESTART)}><span className="info-label">Restart</span></span>
+                                    </Tooltip>
+                                    <Tooltip
+                                      html={<p>Output</p>}
+                                      position="bottom"
+                                      trigger="mouseenter">
+                                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={_handleDeleteModal}><span className="info-label">Output</span></span>
+                                    </Tooltip>
+                                    <Tooltip
+                                      html={<p>Delete</p>}
+                                      position="bottom"
+                                      trigger="mouseenter">
+                                        <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={_handleDeleteModal}><span className="info-label">Delete</span></span>
+                                    </Tooltip>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="control-panel__task">
-                        <Tooltip
-                          html={<p>Preview</p>}
-                          position="right"
-                          trigger="mouseenter">
-                            <span 
-                                className="icon-eye" 
-                                tabIndex="0" 
-                                aria-label="Preview" 
-                                onClick={this._togglePreview.bind(this, item)}></span>
-                        </Tooltip>
-                        <Tooltip
-                          html={<p>Task Details</p>}
-                          position="right"
-                          trigger="mouseenter"
-                          className="task-details-icon">
-                            <Link 
-                                to={`/task/${item && item.id}`} 
-                                tabIndex="0" 
-                                aria-label="Task Details">
-                                <span className="icon-info-small"></span>
-                            </Link>
-                        </Tooltip>
-                        <Tooltip
-                          html={<p>Restart</p>}
-                          position="right"
-                          trigger="mouseenter">
-                            <span 
-                                className="icon-progress-clockwise" 
-                                tabIndex="0" 
-                                aria-label="Restart Task" 
-                                onClick={(item.status !== taskStatus.RESTART) 
-                                            ? _handleRestartModal 
-                                            : undefined} 
-                                disabled={!(item.status !== taskStatus.RESTART)}></span>
-                        </Tooltip>
-                        <Tooltip
-                          html={<p>Delete</p>}
-                          position="right"
-                          trigger="mouseenter">
-                            <span className="icon-trash" tabIndex="0" aria-label="Open Delete Task Popup" onClick={_handleDeleteModal}></span>
-                        </Tooltip>
-                    </div>
                 </div>
-                { (item.id === psId && toggledPreviewList[psId]) && <Preview id={item.id} src={item.preview} progress={item.progress}/>}
+                <ConditionalRender showIf={(item.id === psId && toggledPreviewList[psId])}>
+                    <Preview id={item.id} src={item.preview} progress={item.progress}/>
+                </ConditionalRender>
+                <ConditionalRender showIf={(item.id === psId  && !toggledPreviewList[psId])}>
+                    <Details id={item.id} />
+                </ConditionalRender>
             </div>}
             </Spring>
         );
