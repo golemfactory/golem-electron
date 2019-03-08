@@ -24,11 +24,6 @@ const enhancer = compose(
 );
 
 let store = createStore(
-        connectRouter(history)(reducer),
-        [],
-        window.__REDUX_DEVTOOLS_EXTENSION__ ? enhancer : applyMiddleware(sagaMiddleware, routingMiddleware));
-
-let store = createStore(
     reducer,
     {},
     window.__REDUX_DEVTOOLS_EXTENSION__
