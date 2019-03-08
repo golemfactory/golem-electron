@@ -96,7 +96,6 @@ export class App extends Component {
             && isGolemReady(nextProps.golemStatus.client) 
             && nextProps.taskQueue.length > 0){
             const newTask = nextProps.taskQueue.last();
-            console.log("newTask app", newTask);
             if(newTask){
                 nextProps.actions[newTask.action](...newTask.arguments)
                 nextProps.actions.removeQueuedTask()
@@ -151,6 +150,7 @@ export class App extends Component {
                 <ConnectedRouter history={history}>
                     { routes }
                 </ConnectedRouter>
+                <div id="modalPortal" className="modal-portal"/>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
                  { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}

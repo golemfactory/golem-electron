@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -166,7 +167,11 @@ export class NewTask extends React.Component {
                         <button ref="nextButton" type="submit" className="btn--primary" disabled={!type}>Next</button>
                     </div>
                 </form>
-                {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}
+                {fileCheckModal.status 
+                    && ReactDOM.createPortal(
+                        <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>,
+                        document.getElementById("modalPortal")
+                        )}
             </div>
         );
     }

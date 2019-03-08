@@ -221,7 +221,7 @@ export function testRPC(session) {
         }
 
         function on_error(args){
-            if(timeoutCount < 5){
+            if(timeoutCount < 120){ // 2 min
                 runTimeout()
                 timeoutCount++;
             } else {

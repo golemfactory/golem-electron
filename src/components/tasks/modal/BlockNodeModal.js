@@ -1,4 +1,16 @@
-import React from 'react';
+import React, {Fragment} from 'react';
+import Lottie from 'react-lottie';
+
+import animData from './../../../assets/anims/block-node';
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class BlockNodeModal extends React.Component {
 
@@ -16,7 +28,7 @@ export default class BlockNodeModal extends React.Component {
     }
 
     _blockNodeModal(subtask, cancelAction, blockAction) {
-        return <React.Fragment>
+        return <Fragment>
             <span>Are you sure you want to block the "
                 <b>{this._nodeName(subtask)}</b>"
                 node?
@@ -26,22 +38,22 @@ export default class BlockNodeModal extends React.Component {
                 <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
                 <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
             </div>
-         </React.Fragment>
+         </Fragment>
     }
 
     _errorModal(errMsg, cancelAction) {
-        return <React.Fragment>
+        return <Fragment>
             <span>
                 {errMsg}
             </span>
             <div className="action__modal">
                 <button className="btn--warning" onClick={cancelAction}>Cancel</button>
             </div>
-        </React.Fragment>
+        </Fragment>
     }
 
     _confirmationModal(subtask, cancelAction) {
-        return <React.Fragment>
+        return <Fragment>
             <span>The "
                 <b>{this._nodeName(subtask)}</b>"
                 node was added to the blacklist.
@@ -49,7 +61,7 @@ export default class BlockNodeModal extends React.Component {
             <div className="action__modal">
                 <button type="button" className="btn--primary" onClick={cancelAction} autoFocus>OK!</button>
             </div>
-        </React.Fragment>
+        </Fragment>
     }
 
     render() {
@@ -57,8 +69,8 @@ export default class BlockNodeModal extends React.Component {
         return (
             <div className="container__modal container__block-node-modal">
                 <div className="content__modal">
-                    <div>
-                        <span className={`${nodeBlocked ? "icon-checkmark" : "icon-blocked"}`}/>
+                    <div className="image-container">
+                        <Lottie options={defaultOptions}/>
                     </div>
                     { nodeBlocked
                         ? this._confirmationModal(subtask2block, cancelAction)
@@ -71,3 +83,5 @@ export default class BlockNodeModal extends React.Component {
         );
     }
 }
+//<span className={`${nodeBlocked ? "icon-checkmark" : "icon-blocked"}`}/>
+
