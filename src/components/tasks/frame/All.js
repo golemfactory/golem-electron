@@ -58,6 +58,7 @@ export class All extends React.Component {
 
     constructor(props) {
         super(props);
+        this.state = { items: [] }
     }
 
     /**
@@ -141,54 +142,60 @@ export class All extends React.Component {
     // show == 'complete' && 
     render() {
         const {show, details} = this.props
-        const animatedList = this.getStyles()
+        const animatedList = this.getStyles();
         return (
             <div>
                 <div className="container__all-frame">
                 <Transition
                   native
-                  keys={animatedList.map(item => item.key.toString())}
+                  items={animatedList}
+                  keys={item => item.key}
                   from={this.getDefaultStyles}
                   enter={this.willEnter}
                   leave={this.willLeave}>
-                    {animatedList.map(({key, data}, index) => style => <animated.div className="item__all-frame" key={index.toString()} style={style}>
-                            <Tooltip
-                                  html={<div className="content__tooltip">
-                                        {data.status === statusDict.FINISHED 
-                                            && <p className="status__tooltip">Completed</p>}
-                                        <p className={`time__tooltip ${data.status === statusDict.FINISHED 
-                                                                            && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) 
-                                                                            : 'Not started'}</p>
-                                        <button 
-                                            className="btn btn--primary" 
-                                            onClick={this._handleResubmit.bind(this, data, data.id)} 
-                                            disabled={
-                                                (data.status === statusDict.NOTREADY
-                                                ||
-                                                data.status === statusDict.RESTART
-                                                ||
-                                                details.status === statusDict.RESTART)
-                                            }>Resubmit</button>
-                                    </div>}
-                                  position="bottom"
-                                  trigger="mouseenter"
-                                  interactive={true}
-                                  arrow={true}
-                                  width="500"
-                                  size="regular">
-                                <div 
-                                    className={`${statusClassDict[data.status]}`} 
-                                    onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} 
-                                    onKeyDown={(event) => {event.keyCode === 13 
-                                                            && (this._handleClick.call(this, data, index))}} 
-                                    role="button" 
-                                    tabIndex="0" 
-                                    aria-label="Preview of Frame"></div>
-                            </Tooltip>
-                        </animated.div>
-                    )
-                }
-             </Transition>
+                  {({key, data}, index) => props => {
+                    return <animated.div
+                      style={props}
+                      key={index.toString()}
+                      className="item__all-frame"
+                      children={
+                        <Tooltip
+                            html={<div className="content__tooltip">
+                                    {data.status === statusDict.FINISHED 
+                                        && <p className="status__tooltip">Completed</p>}
+                                    <p className={`time__tooltip ${data.status === statusDict.FINISHED 
+                                                                        && 'time__tooltip--done'}`}>{data.created ? timeStampToHR(data.created) 
+                                                                        : 'Not started'}</p>
+                                    <button 
+                                        className="btn btn--primary" 
+                                        onClick={this._handleResubmit.bind(this, data, data.id)} 
+                                        disabled={
+                                            (data.status === statusDict.NOTREADY
+                                            ||
+                                            data.status === statusDict.RESTART
+                                            ||
+                                            details.status === statusDict.RESTART)
+                                        }>Resubmit</button>
+                                </div>}
+                              position="bottom"
+                              trigger="mouseenter"
+                              interactive={true}
+                              arrow={true}
+                              width="500"
+                              size="regular">
+                            <div 
+                                className={`${statusClassDict[data.status]}`} 
+                                onClick={this._handleClick.bind(this, data, this._getIndexById(data.id))} 
+                                onKeyDown={(event) => {event.keyCode === 13 
+                                                        && (this._handleClick.call(this, data, index))}} 
+                                role="button" 
+                                tabIndex="0" 
+                                aria-label="Preview of Frame"></div>
+                        </Tooltip>
+                      }
+                    />
+                  }}
+                </Transition>
             </div>
         </div>
         );

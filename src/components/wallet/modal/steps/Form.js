@@ -2,11 +2,13 @@ import React from 'react';
 import {BigNumber} from 'bignumber.js';
 import yup from 'yup'
 
+import Slider from './../../../Slider.js'
 import {modals, currencyIcons} from './../../../../constants'
 
 const {clipboard, remote } = window.electron;
 const mainProcess = remote.require('./index');
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const GWEI_DENOM = 10 ** 9;
 
 export default class WithdrawForm extends React.Component {
 
@@ -18,12 +20,32 @@ export default class WithdrawForm extends React.Component {
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
             sendTo: "",
             isValid: false,
-            isSubmitted: false
+            isSubmitted: false,
+            gasPriceOracle: {},
+            adjustedGasPrice: new BigNumber(0), //GWEI
+            gasLimit: new BigNumber(0) //WEI
         }
+
     }
 
     componentDidMount() {
         const { formData } = this.props
+        const gasPriceInGWEI = new BigNumber(formData.gasPrice).dividedBy(GWEI_DENOM)
+
+        mainProcess.getEstimatedGasPrice()
+            .then(({data}) => {
+                this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
+                    .then(gasLimit => {
+                        if(gasLimit)
+                            this.setState({
+                                gasPriceOracle: data,
+                                adjustedGasPrice: gasPriceInGWEI.isGreaterThan(0) 
+                                                    ? gasPriceInGWEI 
+                                                    : new BigNumber(data.standard),
+                                gasLimit: new BigNumber(gasLimit)
+                            })
+                    })      
+            });
 
         this.inputSchema = {
             amount: yup.object().shape({
@@ -96,7 +118,7 @@ export default class WithdrawForm extends React.Component {
      */
     _handleApply(e) {
         e.preventDefault();
-        const { amount, sendTo } = this.state
+        const { amount, sendTo, adjustedGasPrice } = this.state
 
         this.setState({
             isSubmitted: true
@@ -105,9 +127,9 @@ export default class WithdrawForm extends React.Component {
         mainProcess.toChecksumAddress(sendTo) //Checksum ethereum address
         .then(sendToChecksum => {
             this._getGasCostAsync(amount.toString(), sendToChecksum, this.props.suffix)
-            .then(result => {
-                if(result)
-                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(result))
+            .then(gasLimit => {
+                if(gasLimit)
+                    this.props.applyHandler(amount, sendToChecksum, this.props.suffix, new BigNumber(gasLimit), adjustedGasPrice)
             })
             .catch(error => console.error);
         })
@@ -179,15 +201,41 @@ export default class WithdrawForm extends React.Component {
         }
     }
 
+    /**
+     * [_preventTypeAfterLimit max limit fixed to 9999999]
+     * @param  {[type]} e [event]
+     */
     _preventTypeAfterLimit(e){
-        if (parseFloat(e.currentTarget.value) > parseFloat(e.currentTarget.max)) {
-           e.preventDefault();
+        const usdEstimation = document.getElementById("amountEstimatedUSD")
+
+        if (parseFloat(e.currentTarget.value) >= ((10 ** 7) - 1)) {             //9999999
+            e.preventDefault();
+        } else if (parseFloat(e.currentTarget.value) >= ((10 ** 3) - 1)) {       //999
+            usdEstimation.style.fontSize = 10;
+            usdEstimation.style.marginTop = 10;
         }
+        else { 
+            usdEstimation.style.fontSize = 12;
+            usdEstimation.style.marginTop = 8.1;
+        }
+    }
+
+    _handleGasFeeSlider = (val) => {
+        this._getGasCostAsync(this.state.amount.toString(), this.state.sendTo, this.props.suffix)
+            .then(gasLimit => {
+                if(gasLimit)
+                    this.setState({
+                        adjustedGasPrice: new BigNumber(val),
+                        gasLimit: new BigNumber(gasLimit)
+                    })
+            })
     }
 
     render() {
         const {type, suffix, currency, balance} = this.props
-        const {amountCopied, amount, isValid, isSubmitted} = this.state
+        const {amountCopied, amount, isValid, isSubmitted, gasPriceOracle, adjustedGasPrice, gasLimit} = this.state
+        const adjustedGasPriceInETH = adjustedGasPrice.multipliedBy(gasLimit).dividedBy(GWEI_DENOM);
+        const totalAmount = amount.dividedBy(ETH_DENOM).plus(adjustedGasPriceInETH);
         return (
                 <form className="content__modal content__modal--form " onSubmit={::this._handleApply} noValidate>
                     <div>
@@ -195,7 +243,7 @@ export default class WithdrawForm extends React.Component {
                         <div className="currency-tag">
                         	<span className="label-currency">{suffix}</span>
                         	<br/>
-                        	<strong>{balance.toFixed(4)}...</strong>
+                        	<strong>{balance.toFixed(8)}...</strong>
                         	<br/>
                         	<span className="label-estimation">est. $ {balance.multipliedBy(currency[suffix]).toFixed(2)}...</span>
                         </div>
@@ -214,7 +262,36 @@ export default class WithdrawForm extends React.Component {
                     	<span className="currency">{suffix}</span>
                     	<span className={`${amountCopied ? "checkmark" : "copy"}`} onClick={::this._handleCopyToClipboard}>{amountCopied ? "balance copied" : "copy balance"}</span>
                     	{amountCopied && <span className="status-copy">balance copied</span>}
-                    	<span className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                    	<span id="amountEstimatedUSD" className="amount__estimation">est. $ {amount.dividedBy(ETH_DENOM).multipliedBy(currency[suffix]).toFixed(2)}...</span>
+                    </div>
+                    <div className="form-field">
+                        <label>Adjust transaction fee
+                            <span className="average-cost"> | standard transfer cost: {gasPriceOracle.standard > 0 && Number(gasPriceOracle.standard).toFixed(1)} gwei</span>
+                        </label>
+                        <div className="gas_fee_slider">
+                            {gasPriceOracle.standard > 0 
+                                ? <div>
+                                    <Slider 
+                                        inputId="gas_fee_slider" 
+                                        value={adjustedGasPrice.toNumber()} 
+                                        min={Math.trunc(gasPriceOracle.safeLow)}
+                                        max={Math.trunc(gasPriceOracle.fastest)} 
+                                        step={0.1}
+                                        mainColor={"#1c76e7"} 
+                                        aria-label="Adjust Gas Fee with Slider" 
+                                        callback={this._handleGasFeeSlider}
+                                        warn={false}/>
+                                    <span className="slider__info-gas slider__info-gas--slow">Takes more time</span>
+                                    <span className="slider__info-gas slider__info-gas--fast">Faster</span>
+                                </div>
+                                : <div className="loading__slider">
+                                    <span>Gas price fetching...</span>
+                                </div>
+                                }
+                        </div>
+                        <div className="total-amount__info">
+                            <span>Tx Fee. {adjustedGasPriceInETH.toFixed(8)} ETH</span>
+                        </div>
                     </div>
                     <div className="form-field">
                     	<label>Sending to</label>

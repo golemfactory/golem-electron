@@ -129,7 +129,8 @@ export class PasswordModal extends React.Component {
                                 className: "form-control", 
                                 onKeyPress: this._preventSpace,
                                 required: true,
-                                autoFocus: true
+                                autoFocus: true,
+                                disabled: loadingIndicator
                             }}
                             />
                             <span 
@@ -143,6 +144,7 @@ export class PasswordModal extends React.Component {
                                     type={`${this.state.confirmationMaskToggle ? "text" : "password"}`}  
                                     onChange={::this._confirmPassword} 
                                     onKeyPress={::this._preventSpace} 
+                                    disabled={loadingIndicator}
                                     required/>
                             <span 
                                 ref="passwordMaskToggle" 
@@ -156,6 +158,7 @@ export class PasswordModal extends React.Component {
                                 type={`${passwordMaskToggle ? "text" : "password"}`}
                                 onChange={::this._handlePassword} 
                                 onKeyPress={::this._preventSpace}
+                                disabled={loadingIndicator}
                                 required autoFocus/>
                             <span ref="passwordMaskToggle" 
                             className={`icon-eye ${passwordMaskToggle ? "active" : ""}`} 

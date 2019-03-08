@@ -1,0 +1,93 @@
+.container__concent-modal {
+    .content__modal {
+        height: 440px;
+        text-align: center;
+        padding: 20px;
+        font-size: 12pt;
+
+        .icon-container{
+            width: 120px;
+            height: 120px;
+            margin-bottom: 10px;
+        }
+
+        .radio-group__concent-modal{
+            width: 100%;
+            color: grey;
+            text-align: left;
+            padding-left: 40px;
+            box-sizing: border-box;
+            margin-bottom: 30px;
+
+            [class^="icon-"], [class*=" icon-"] {
+                margin-right: 5px;
+                font-size: 10pt;
+                position: relative;
+                top:.5px;
+            }
+
+            input[type=radio] {
+                display: none;
+                padding: 0 20px;
+                box-sizing: border-box;
+            }
+
+            /* changed style when checked */
+            input[type=radio]:checked + label {
+                color: #000;
+                
+                & > .overlay {
+                  background-color: $color-primary;
+                }
+            }
+
+            label{
+                font-size: 9pt;
+                margin-left:5px;
+                margin-right:45px;
+                font-weight: 400;
+                cursor: pointer;
+
+                .icon-question-mark{
+                    display: inline;
+                    font-size: 7pt;
+                    margin-left:2px;
+                    top: -5px;
+                    color: $color-text3;
+                }
+            }
+
+            .radio-item{
+                margin: 15px 0;
+                padding: 0;
+            }
+
+            /* default radio button style: unchecked */
+            .overlay {
+              display: inline-block;
+              position: relative;
+              top: .25em;
+              left: -.5em; /* or whatever length you need here */
+              height: .5em;
+              width: .5em;
+              border-radius: 50%;
+              border: 1px solid $color-primary;
+              background-clip: border-box;
+              padding: 4px;
+              background-clip: content-box;
+              cursor: pointer;
+            }
+        }
+
+        .tips__conncent-modal{
+            font-size: 8pt;
+            line-height: 1.4em;
+            font-weight: 400;
+            color: $color-text2;
+        }
+
+        .btn--primary{
+            width: 100px;
+        }
+    }
+}

@@ -3,12 +3,25 @@ import { hashHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import ReactPasswordStrength from 'react-password-strength';
+import Lottie from 'react-lottie';
 
 import * as Actions from '../../../actions'
 
 import lockedIcon from './../../../assets/img/locked.svg'
 import unlockedIcon from './../../../assets/img/unlocked.svg'
 
+import animDataLocked from './../../../assets/anims/onboarding/password.json'
+import animDataGenerating from './../../../assets/anims/onboarding/generating-keys.json'
+import animDataUnlocked from './../../../assets/anims/onboarding/unlocked-app.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: null,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 const mapStateToProps = state => ({
 })
@@ -113,19 +126,29 @@ export class Register extends React.Component {
                         {(_passwordModal.register) ?
                                 (_loadingIndicator ? 
                                     <span>
-                                        Your unique <strong>Golem User ID</strong>
+                                        <h1>Generating keys...</h1>
+                                        Key generation may take some time depending on
                                         <br/>
-                                        is being created, this may take some time.
+                                        the power of your machine. Even up to 20 minutes...
                                         <br/>
-                                        It can take up to 20 minutes.
+                                        <br/>
+                                        Your identicon avatar based on ethereum address is
+                                        <br/>
+                                        being generated. It is a security icon, to allow you to
+                                        <br/>
+                                        easily check if an address you want to interact with is
+                                        <br/>
+                                        being the right one.
                                     </span>
                                     :
                                     <span>
-                                        <strong>It is critical to know that</strong>
+                                        We don't keep a copy of your password.
                                         <br/>
-                                        the password <strong>can not</strong> be recovered.
+                                        After password creation remember to write it down
                                         <br/>
-                                        <strong>Write it down in a safe and secure place!</strong>
+                                        or print it, as there is no password recovery option.
+                                        <br/>
+                                        <a href="https://golem.network/documentation/02-risks/">Learn more</a>
                                     </span>
                                 )
                              :
@@ -136,14 +159,16 @@ export class Register extends React.Component {
                         </div>
                     <form id="passwordForm" onSubmit={::this._setPassword}>
                      {(_passwordModal.register) ?
-                        [
+                        _loadingIndicator 
+                        ? <div/>
+                        : [
                             <div key="1" className="container__field">
                                 <label>Password</label>
                                 <ReactPasswordStrength
                                   className="passwordField"
                                   minLength={5}
                                   minScore={2}
-                                  scoreWords={['too weak', 'weak', 'good', 'strong', 'stronger']}
+                                  scoreWords={['too weak', 'weak', 'good', 'strong', 'you should feel safe']}
                                   changeCallback={::this._handleChange}
                                   inputProps={{
                                     id: "register",
@@ -207,10 +232,15 @@ export class Register extends React.Component {
 
     render() {
         const {passwordModal, loadingIndicator} = this.props
+        defaultOptions.animationData = passwordModal.status 
+            ? (loadingIndicator
+                ? animDataGenerating
+                : animDataLocked)
+            : animDataUnlocked;
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={passwordModal.status ? lockedIcon : unlockedIcon}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     {passwordModal && ::this._initProperContent(passwordModal, loadingIndicator)}

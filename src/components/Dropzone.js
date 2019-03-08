@@ -118,6 +118,10 @@ export class DropZone extends React.Component {
         this.setState({
             className: classDict.SHOW
         });
+        if(this.props.overflowRef){
+            this.props.overflowRef.scrollTop = 0;
+            this.props.overflowRef.style.setProperty("overflow-y", "hidden");
+        }
         e.stopPropagation();
         e.preventDefault();
         return false;
@@ -143,6 +147,9 @@ export class DropZone extends React.Component {
         this.setState({
             className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
         });
+        if(this.props.overflowRef){
+            this.props.overflowRef.style.setProperty("overflow-y", "overlay", "important");
+        }
         e.stopPropagation();
         e.preventDefault();
         return false;
@@ -163,6 +170,9 @@ export class DropZone extends React.Component {
             this.setState({
                 className: this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
             });
+            if(this.props.overflowRef){
+                this.props.overflowRef.style.setProperty("overflow-y", "overlay", "important");
+            }
 
             return false;
         }
@@ -213,7 +223,7 @@ export class DropZone extends React.Component {
                             relativePath: [].map.call(files, item => item.path)[0]
                         })
                     } else {
-                        alert("There's no main file! There should be at least one blender" + (this.props.isMainNet ? " " : "or luxrender") + "file.")
+                        alert("There's no main file! There should be at least one blender file.")
                     }
                 })
         }

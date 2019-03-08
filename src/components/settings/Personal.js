@@ -7,6 +7,7 @@ import {Tooltip} from 'react-tippy';
 import * as Actions from '../../actions'
 
 import RadialProgress from './../RadialProgress'
+import blockies from './../../utils/blockies'
 import PlaceHolderAvatar from './../../assets/img/avatar.svg'
 
 const {clipboard } = window.electron
@@ -16,6 +17,7 @@ const mapStateToProps = state => ({
     avatar: state.profile.avatar,
     nodeName: state.profile.nodeName,
     nodeId: state.info.networkInfo.key,
+    publicKey: state.account.publicKey,
     providerTrust: state.profile.networkProviderTrust,
     requestorTrust: state.profile.networkRequestorTrust
 })
@@ -95,15 +97,17 @@ export class Personal extends React.Component {
     // <RadialProgress pct={providerTrust} warn={false}/>
     // <span>Provider</span>
     render() {
-        const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust} = this.props
+        const {avatar, charts, nodeName, nodeId, requestorTrust, providerTrust, publicKey} = this.props
         const {nodeIdCopied, editMode} = this.state
+        const avatarImg = blockies.createBlockie({seed:publicKey.toLowerCase(),size:8,scale:16}).toDataURL();
         return (
             <div className="section__personal" id="personal">
                 <div className="indicator-panel__personal">
                     <div className="indicator__personal">
                     </div>
-                    <div>
-                        <img className="image__personal" src={avatar || PlaceHolderAvatar} alt="avatar"/>
+                    <div className="avatar-container">
+                        <img className="image__personal" src={avatarImg} alt="avatar"/>
+                        <div className="image__personal--border"/>
                     </div>
                     <div className="indicator__personal">
                     </div>

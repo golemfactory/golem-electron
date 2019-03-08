@@ -1,6 +1,8 @@
 const electron = require('electron')
+var path = require('path')
 const {app, ipcMain, shell} = electron
 const log = require('./debug_handler.js')
+const {DATADIR} = require('./golem_config.js');
 
 let openedWindowsMap = null;
 function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) {
@@ -19,10 +21,13 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
         app.setBadgeCount(counter)
     })
 
+    ipcMain.on('open-file', (event, filePath) => {
+        filePath = filePath.replace(/ /g,  "\\ ")
+        shell.openItem(filePath)
+    })
 
-    ipcMain.on('open-file', (event, logPath) => {
-        logPath = logPath.replace(/ /g,  "\\ ")
-        shell.openItem(logPath)
+    ipcMain.on('open-logs', (event) => {
+        shell.openItem(path.join(DATADIR, "logs"))
     })
 
     /**
@@ -70,6 +75,8 @@ function ipcRemover() {
     ipcMain.removeAllListeners('preview-switch')
     ipcMain.removeAllListeners('preview-screen')
     ipcMain.removeAllListeners('set-badge')
+    ipcMain.removeAllListeners('open-file')
+    ipcMain.removeAllListeners('open-logs')
     console.info('IPC Listeners destroyed.')
 }
 

@@ -13,6 +13,7 @@ import { accountFlow } from './account';
 import { advancedFlow } from "./advanced";
 import { balanceFlow } from "./balance";
 import { chainInfoFlow } from "./chainInfo";
+import { concentFlow } from "./concent";
 import { connectedPeersFlow } from "./connectedPeers";
 import { currencyFlow } from "./currency";
 import { encryptionFlow } from "./password";
@@ -29,6 +30,7 @@ import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
 import { termsFlow } from './terms';
 import { versionFlow } from "./version";
+import { virtualizationFlow } from "./virtualization";
 
 const {
     SET_CONNECTION_PROBLEM,
@@ -160,24 +162,26 @@ export function subscribe(session) {
         function on_connection(args) {
             var connection = args[0];
             const {listening, port_statuses, connected} = connection
-            const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open")
-            if (
-                connected ||
-                (!connected && checkIfPortsAreHealty)
-            ) {
-                emit(true);
-            } else if (!checkIfPortsAreHealty) {
 
-                if(!skipError){
-                    const skipErrorInterval = setInterval(() => {
-                        if(skipError){
-                            emit(skipError) 
-                            clearInterval(skipErrorInterval)
-                        } 
-                    }, 500);
+            if( port_statuses ){
+                const checkIfPortsAreHealty = Object.values(port_statuses).every(i => i == "open");
+                if (
+                    connected ||
+                    (!connected && checkIfPortsAreHealty)
+                ) {
+                    emit(true);
+                } else if (!checkIfPortsAreHealty) {
+
+                    if(!skipError){
+                        const skipErrorInterval = setInterval(() => {
+                            if(skipError){
+                                emit(skipError) 
+                                clearInterval(skipErrorInterval)
+                            } 
+                        }, 500);
+                    }
+                     emit(skipError);
                 }
-                
-                 emit(skipError);
             }
         }
 
@@ -217,7 +221,7 @@ export function testRPC(session) {
         }
 
         function on_error(args){
-            if(timeoutCount < 5){
+            if(timeoutCount < 120){ // 2 min
                 runTimeout()
                 timeoutCount++;
             } else {
@@ -248,6 +252,7 @@ export function* apiFlow(connection) {
     yield fork(performanceFlow, connection);
     yield fork(networkInfoFlow, connection);
 
+    yield fork(concentFlow, connection);
     yield fork(connectedPeersFlow, connection);
     yield fork(balanceFlow, connection);
     yield fork(historyFlow, connection);
@@ -272,6 +277,7 @@ export function* handleIO(connection) {
     try {
 
         //yield fork(read, connection);
+        yield fork(virtualizationFlow, connection);
         yield fork(quitFlow, connection);
         yield fork(chainInfoFlow, connection);
         yield fork(golemStatusFlow, connection);
@@ -393,7 +399,7 @@ export function* flow() {
         yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
-            payload: ['client', 'start', 'pre']
+            payload: [{client:["start", "pre", null]}]
         });
         const { task } = yield call(connectionFlow);
         let action = yield take(LOGOUT);

@@ -3,7 +3,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const {exec, execSync, spawn} = require('child_process');
+const {execSync, spawn} = require('child_process');
 const {app} = electron;
 
 const log = require('./debug_handler.js');

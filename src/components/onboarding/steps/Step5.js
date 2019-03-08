@@ -1,23 +1,73 @@
-import React from 'react';
+import React from "react";
+import Lottie from "react-lottie";
 
-import docPreview from './../../../assets/img/doc-preview.png'
-import SpotLight from '../../SpotLight'
+import animData from "./../../../assets/anims/onboarding/node-name.json";
 
-export default class Step6 extends React.Component {
+const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
 
+export default class Step5 extends React.Component {
     constructor(props) {
         super(props);
+    }
+
+    _setNodeName(e) {
+        return this.props.setNodeName(e.target.value);
+    }
+
+    componentDidMount() {
+        const nickInput = document.getElementById("nickInput");
+        if (nickInput) {
+            setTimeout(() => nickInput.focus(), 600); //CSSTransition issue related
+            nickInput.value = this.props.nodeName || "";
+            nickInput.oninvalid = function(event) {
+                event.target.style.border = "1px solid red";
+            };
+        }
     }
 
     render() {
         return (
             <div className="container-step__onboarding">
-                <div className="section-image__onboarding section__fixed">
-                    <img className="doc-image" src={docPreview}/>
-                    <SpotLight posX={[37, 51]} posY={[18, 26]} r={[10, 10]}/>
+                <div className="section-image__onboarding">
+                    <Lottie options={defaultOptions} />
                 </div>
                 <div className="desc__onboarding">
-                    <span>If you need help at any time, the Docs button on the toolbar should answer most of your questions. You’re also welcome to join <a href="https://chat.golem.network">our public chat</a>.</span>
+                    <h1>Name your node</h1>
+                    <span>
+                        You will be able to change your node name later on
+                        inside the app settings.
+                    </span>
+                    <form
+                        ref={ref => (this.nodeNameForm = ref)}
+                        id="nodeNameForm"
+                        name="nodeNameForm"
+                        className="nickname-area__onboarding"
+                        onSubmit={::this.props.handleNext}>
+                        <input
+                            id="nickInput"
+                            className="nickname-input__onboarding"
+                            placeholder="Name your node"
+                            onChange={::this._setNodeName}
+                            maxLength={16}
+                            pattern="^\S+(?: \S+)*$"
+                            required
+                        />
+                        <button
+                            style={{ display: "none" }}
+                            type="submit"
+                            ref={button => {
+                                this.activityFormButton = button;
+                            }}>
+                            Submit
+                        </button>
+                    </form>
                 </div>
             </div>
         );

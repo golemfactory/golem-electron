@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import { Link } from 'react-router-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -145,7 +146,7 @@ export class NewTask extends React.Component {
                                 <input id="taskTypeRadio1" type="radio" name="taskType" value="Blender" checked={type === radioTypes.blend} readOnly required/>
                                 <label htmlFor="taskTypeRadio1" className="radio-label-right">Blender</label>
                             </div>
-                            {isMainNet ? 
+                            {true ? //disabled
                                 undefined 
                                 :
                                 <div className="radio-item">
@@ -166,7 +167,11 @@ export class NewTask extends React.Component {
                         <button ref="nextButton" type="submit" className="btn--primary" disabled={!type}>Next</button>
                     </div>
                 </form>
-                {fileCheckModal.status && <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>}
+                {fileCheckModal.status 
+                    && ReactDOM.createPortal(
+                        <FileCheckModal closeModal={::this._closeModal} unknownFiles={fileCheckModal.files}/>,
+                        document.getElementById("modalPortal")
+                        )}
             </div>
         );
     }

@@ -5,6 +5,7 @@ import { hot } from 'react-hot-loader'
 
 import constants from '../constants'
 
+import ErrorBoundary from '../components/ErrorBoundary'
 import Header from '../components/Header'
 import MainFragment from '../components/network'
 import Tasks from '../components/tasks'
@@ -14,6 +15,7 @@ import TaskDetail from '../components/tasks/TaskDetail'
 import Settings from '../components/settings'
 import NotFound from '../components/NotFound'
 import { OnBoardingComponent } from '../components/hoc/Onboarding'
+import { ConcentOnboardingComponent } from '../components/hoc/ConcentOnboarding'
 
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -22,6 +24,7 @@ import {getStatus, getPasswordModalStatus} from '../reducers'
 import IssueModal from './modal/IssueModal'
 import WithdrawModal from './../components/wallet/modal/WithdrawModal'
 import PasswordModal from './modal/PasswordModal'
+import checkNested from './../utils/checkNested'
 
 
 Array.prototype.last = function() {
@@ -37,8 +40,8 @@ const routes = (
 <div>
     <Switch>
         <Route exact path="/" component={OnBoardingComponent(MainFragment)} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/ />
-        <Route path="/tasks" component={Tasks} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
-        <Route path="/settings" component={ Settings } />
+        <Route path="/tasks" component={OnBoardingComponent(Tasks)} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/ />
+        <Route path="/settings" component={OnBoardingComponent(ConcentOnboardingComponent(Settings))} />
         <Route path="/task/:id" component={ TaskDetail } />
         <Route path="/add-task/type/:type?" component={ NewTask } />
         <Route path="/add-task/settings" component={ TaskDetail } />
@@ -47,15 +50,17 @@ const routes = (
 </div>
 );
 
-function isGolemReady(status) {
-    return status === "Ready"
+function isGolemReady(gs) {
+    return gs.status === "Ready" 
+        && gs.message
+        .toLowerCase()
+        .includes("node");
 }
 
 const mapStateToProps = state => ({
     golemStatus: getStatus(state, 'golemStatus'),
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
-    taskQueue: state.queue.next,
     withdrawModal: state.account.withdrawModal,
     passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     showOnboard: state.onboard.showOnboard,
@@ -87,7 +92,9 @@ export class App extends Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if(isGolemReady(nextProps.golemStatus.status) && nextProps.taskQueue.length > 0){
+        if(checkNested(nextProps, 'golemStatus', 'client') 
+            && isGolemReady(nextProps.golemStatus.client) 
+            && nextProps.taskQueue.length > 0){
             const newTask = nextProps.taskQueue.last();
             if(newTask){
                 nextProps.actions[newTask.action](...newTask.arguments)
@@ -138,15 +145,16 @@ export class App extends Component {
     render() {
         const {actions, history, connectionProblem, latestVersion, withdrawModal, passwordModal, showOnboard} = this.props
         return (
-            <div>
+            <ErrorBoundary>
                 <Header actions={ actions } activeHeader={'main'}/>
                 <ConnectedRouter history={history}>
                     { routes }
                 </ConnectedRouter>
+                <div id="modalPortal" className="modal-portal"/>
                  {this._showIssueModal(connectionProblem, latestVersion) && <IssueModal closeModal={::this._closeModal}/>}
                  {(withdrawModal && withdrawModal.status) && <WithdrawModal {...withdrawModal.payload} closeModal={::this._closeModal}/>}
                  { (!showOnboard && passwordModal && passwordModal.status) && <PasswordModal closeModal={::this._closeModal}/>}
-            </div>
+            </ErrorBoundary>
         );
     }
 }

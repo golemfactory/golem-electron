@@ -58,6 +58,7 @@ export let config = Object.freeze({
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
+    GET_GAS_PRICE_RPC: 'pay.gas_price',
     //Files management
     GET_RES_DIRS_RPC: 'res.dirs',
     GET_RES_DIR_RPC: 'res.dir',
@@ -77,10 +78,13 @@ export let config = Object.freeze({
     PAYMENTS_RPC: 'pay.payments',
     PAYMENT_ADDRESS_RPC: 'pay.ident',
     INCOME_RPC: 'pay.incomes',
+    DEPOSIT_RPC: 'pay.deposit_payments',
     BALANCE_CH: 'evt.pay.balance',
+    CONCENT_DEPOSIT_BALANCE_RPC: 'pay.deposit_balance',
     //General
     VERSION_RPC: 'golem.version',
     CHAIN_INFO_RPC: 'golem.mainnet',
+    VIRTUALIZATION_RPC: 'env.hw.virtualization',
     QUIT_RPC: 'ui.quit',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
@@ -91,6 +95,9 @@ export let config = Object.freeze({
     GET_TERMS_RPC: 'golem.terms.show',
     CHECK_TERMS_RPC: 'golem.terms',
     ACCEPT_TERMS_RPC: 'golem.terms.accept',
+    GET_CONCENT_TERMS_RPC: 'golem.concent.terms.show',
+    CHECK_CONCENT_TERMS_RPC: 'golem.concent.terms',
+    ACCEPT_CONCENT_TERMS_RPC: 'golem.concent.terms.accept',
     //Hardware Presets
     PRESETS_RPC: 'env.hw.presets',
     PRESET_RPC: 'env.hw.preset',
@@ -102,7 +109,12 @@ export let config = Object.freeze({
     //Task Presets
     TASK_PRESETS_RPC: 'comp.tasks.preset.get',
     SAVE_TASK_PRESET_RPC: 'comp.tasks.preset.save',
-    DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete'
+    DELETE_TASK_PRESET_RPC: 'comp.tasks.preset.delete',
+    //Concent
+    CONCENT_UNLOCK: 'pay.deposit.unlock',
+    CONCENT_RELOCK: 'pay.deposit.relock',
+    CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
 })
 
 

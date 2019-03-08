@@ -34,11 +34,11 @@ export function activatePreset(session, chosenPreset) {
             console.log("error", error);
             resolve({
                 type: SET_GOLEM_STATUS,
-                payload: ['docker', 'allocation', 'exception']
+                payload: [{docker: ['allocation', 'exception', null]}]
             })
         }
-
-        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset, on_error)
+        //Recalculate benchmark when RPC get success
+        _handleRPC(onPerformanceFetch.bind(this, resolve), session, config.PRESET_ACTIVATE_RPC, chosenPreset, on_error) 
     })
 }
 
