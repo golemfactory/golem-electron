@@ -1,25 +1,25 @@
-import React from 'react'
+import React from "react";
 /**
  * react-a11y is an Accessibility control tool
  * @see https://github.com/reactjs/react-a11y
  * @see https://www.w3.org/TR/wai-aria/
  */
-import a11y from 'react-a11y'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import * as Actions from '../../actions'
+import a11y from "react-a11y";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as Actions from "../../actions";
 
-import golem_logo from './../../assets/img/golem-tray.png'
-import golem_svg from './../../assets/img/golem.svg'
-import Indicator from './Indicator'
-import TransactionTube from '../transaction'
-import Wallet from '../wallet'
-import Resources from './Resources'
-import History from '../History'
-import Advanced from './tabs/Advanced'
-import FooterMain from '../FooterMain'
-import PresetModal from './modal/PresetModal'
-import ManagePresetModal from './modal/ManagePresetModal'
+import golem_logo from "./../../assets/img/golem-tray.png";
+import golem_svg from "./../../assets/img/golem.svg";
+import Indicator from "./Indicator";
+import TransactionTube from "../transaction";
+import Wallet from "../wallet";
+import Resources from "./Resources";
+import History from "../History";
+import Advanced from "./tabs/Advanced";
+import FooterMain from "../FooterMain";
+import PresetModal from "./modal/PresetModal";
+import ManagePresetModal from "./modal/ManagePresetModal";
 /*if (!("require" in window)) {
     console.info("This browser does not support electron features.");
 } else {
@@ -30,12 +30,12 @@ import ManagePresetModal from './modal/ManagePresetModal'
 
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
-    currency: state.currency,
-})
+    currency: state.currency
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 /**
  * { Class for main fragment component. Aka. Homepage }
@@ -43,7 +43,6 @@ const mapDispatchToProps = dispatch => ({
  * @class      MainFragment (name)
  */
 export class MainFragment extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
@@ -53,8 +52,8 @@ export class MainFragment extends React.Component {
             engineLoading: false,
             isPresetNameExist: false,
             toggleHistory: false
-        }
-    //props.actions.setOnboard(true)
+        };
+        //props.actions.setOnboard(true)
     }
 
     /**
@@ -66,7 +65,7 @@ export class MainFragment extends React.Component {
         this.setState({
             presetModal: true,
             modalData: data
-        })
+        });
     }
 
     /**
@@ -75,79 +74,106 @@ export class MainFragment extends React.Component {
     _handleManagePresetModal() {
         this.setState({
             managePresetModal: true
-        })
+        });
     }
 
     /**
      * [_closeModal funct. will make all modals invisible]
      */
-    _closeModal() {
+    _closeModal = () => {
         this.setState({
             presetModal: false,
             managePresetModal: false,
             modalData: null,
             isPresetNameExist: false
-        })
-    }
+        });
+    };
 
     /**
      * [_handleSavePreset func. will create hardware preset with given custom hardware preset object]
      * @param  {Object}     data    [Custom hardware preset object]
      */
     _handleSavePreset(data) {
-        this._savePresetAsync(data).then( result => {
-                this.setState({
-                    isPresetNameExist: result === "wamp.error.runtime_error"
-                })
+        this._savePresetAsync(data).then(result => {
+            this.setState({
+                isPresetNameExist: result === "wamp.error.runtime_error"
+            });
 
-                if(result !== "wamp.error.runtime_error")
-                    this._closeModal()
-            })
+            if (result !== "wamp.error.runtime_error") this._closeModal();
+        });
     }
 
-    _savePresetAsync(data){
+    _savePresetAsync(data) {
         return new Promise((_resolve, _reject) => {
-            this.props.actions.createAdvancedPreset(data, _resolve, _reject)
-        })
+            this.props.actions.createAdvancedPreset(data, _resolve, _reject);
+        });
     }
 
     componentDidMount() {
-        const {actions} = this.props
+        const { actions } = this.props;
         const endLoading = () => {
-            actions.endLoading("MAIN_LOADER")
-        }
+            actions.endLoading("MAIN_LOADER");
+        };
 
-        actions.startLoading("MAIN_LOADER", "I am loading!")
-        setTimeout(endLoading, 8000)
+        actions.startLoading("MAIN_LOADER", "I am loading!");
+        setTimeout(endLoading, 8000);
     }
 
     _toggleTransactionHistory = () => {
         this.setState({
             toggleHistory: !this.state.toggleHistory
-        })
-    }
+        });
+    };
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const {message, actions, autoLaunch, balance, currency} = this.props
-        const {presetModal, managePresetModal, modalData, isPresetNameExist, toggleHistory} = this.state
+        const { message, actions, autoLaunch, balance, currency } = this.props;
+        const {
+            presetModal,
+            managePresetModal,
+            modalData,
+            isPresetNameExist,
+            toggleHistory
+        } = this.state;
 
         return (
             <div className="content__main">
-            <Wallet balance={balance} currency={currency}/>
-            {!toggleHistory 
-                ? [
-                    <TransactionTube toggleTransactionHistory={this._toggleTransactionHistory} key="transaction"/>,
-                    <Resources key="resources"/>
-                  ]
-                : <History toggleTransactionHistory={this._toggleTransactionHistory}/> 
-            }
-            {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={this._handleSavePreset.bind(this)} isNameExist={isPresetNameExist} {...modalData}/>}
-            {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
-            <FooterMain/>
-        </div>
+                <Wallet balance={balance} currency={currency} />
+                {!toggleHistory ? (
+                    [
+                        <TransactionTube
+                            toggleTransactionHistory={
+                                this._toggleTransactionHistory
+                            }
+                            key="transaction"
+                        />,
+                        <Resources key="resources" />
+                    ]
+                ) : (
+                    <History
+                        toggleTransactionHistory={
+                            this._toggleTransactionHistory
+                        }
+                    />
+                )}
+                {presetModal && (
+                    <PresetModal
+                        closeModal={this._closeModal}
+                        saveCallback={this._handleSavePreset.bind(this)}
+                        isNameExist={isPresetNameExist}
+                        {...modalData}
+                    />
+                )}
+                {managePresetModal && (
+                    <ManagePresetModal closeModal={this._closeModal} />
+                )}
+                <FooterMain />
+            </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainFragment)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(MainFragment);
