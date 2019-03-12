@@ -449,10 +449,6 @@ class OnboardIndex extends React.Component {
             });
 
             printPage(temp);
-
-            this.setState({
-                printInfo: ""
-            });
         });
 
         this.setState({
@@ -463,8 +459,9 @@ class OnboardIndex extends React.Component {
     _handleNextPrint = () => {
         if (!this.state.isPrinted && !this.state.isSkippingPrint) {
             this.setState({
-                isSkippingPrint: true
-            });
+                isSkippingPrint: true,
+                printInfo: ""
+            })
         } else {
             this._handleNext();
         }

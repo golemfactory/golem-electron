@@ -193,7 +193,8 @@ export class Resources extends React.Component {
                     <h5>Resources</h5>
                     <div
                         className="toggler-btn"
-                        onClick={this._toggleAdvanced.bind(null, max)}>
+                        onClick={this._toggleAdvanced.bind(null, max)}
+                    >
                         {toggleAdvanced ? (
                             <span>
                                 <span className="icon-settings-simplified" />
@@ -259,7 +260,8 @@ export class Resources extends React.Component {
                     initial={null}
                     from={{ opacity: 0, transform: 100 }}
                     enter={{ opacity: 1, transform: 0 }}
-                    leave={{ opacity: 0, transform: 100 }}>
+                    leave={{ opacity: 0, transform: 100 }}
+                >
                     {item => ({ opacity, transform }) => (
                         <animated.div
                             className="horizontal-transition-container"
@@ -268,7 +270,8 @@ export class Resources extends React.Component {
                                 transform: transform.interpolate(
                                     x => `translate3d(${x}%,0,0)`
                                 )
-                            }}>
+                            }}
+                        >
                             {item}
                         </animated.div>
                     )}
@@ -322,7 +325,8 @@ export class Resources extends React.Component {
                             ]}
                             keys={[1, 2, 3]}
                             reverse={false}
-                            state={toggleAdvanced ? "open" : "close"}>
+                            state={toggleAdvanced ? "open" : "close"}
+                        >
                             {(item, i) => ({ x, ...props }) => (
                                 <animated.div
                                     style={{
@@ -330,7 +334,8 @@ export class Resources extends React.Component {
                                             x => `translate3d(${x}%,0,0)`
                                         ),
                                         ...props
-                                    }}>
+                                    }}
+                                >
                                     {item}
                                 </animated.div>
                             )}
@@ -342,7 +347,8 @@ export class Resources extends React.Component {
                 <div
                     className={`resource-switch-panel ${
                         toggleAdvanced ? "expand" : ""
-                    }`}>
+                    }`}
+                >
                     <div className="switch__gpu">
                         <div className={`switch-box`}>
                             <Tooltip
@@ -361,12 +367,16 @@ export class Resources extends React.Component {
                                     !gpuEnvironment.supported
                                         ? false
                                         : !isEngineOn
-                                }>
+                                }
+                            >
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        onChange={this._handleGPUProviderSwitch}
-                                        defaultChecked={
+                                        onChange={
+                                            ::this._handleGPUProviderSwitch
+                                        }
+                                        checked={
+                                            gpuEnvironment &&
                                             gpuEnvironment.supported &&
                                             gpuEnvironment.accepted
                                         }
@@ -383,7 +393,8 @@ export class Resources extends React.Component {
                                 color: gpuEnvironment.supported
                                     ? "#4e4e4e"
                                     : "#9b9b9b"
-                            }}>
+                            }}
+                        >
                             Use my GPU as a resource. For Linux users with
                             Nvidia card.
                             <Tooltip
@@ -401,7 +412,8 @@ export class Resources extends React.Component {
                                 }
                                 position="top"
                                 trigger="mouseenter"
-                                interactive={true}>
+                                interactive={true}
+                            >
                                 <span className="icon-question-mark" />
                             </Tooltip>
                         </span>
@@ -414,12 +426,13 @@ export class Resources extends React.Component {
                                 trigger="mouseenter"
                                 interactive={false}
                                 size="small"
-                                disabled={!isEngineOn}>
+                                disabled={!isEngineOn}
+                            >
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        onChange={this._handleProviderSwitch}
-                                        defaultChecked={!isNodeProvider}
+                                        onChange={::this._handleProviderSwitch}
+                                        checked={!isNodeProvider}
                                         aria-label="Trust switch providing/requesting"
                                         tabIndex="0"
                                         disabled={isEngineOn}
@@ -431,7 +444,8 @@ export class Resources extends React.Component {
                         <span
                             style={{
                                 color: !isNodeProvider ? "#4e4e4e" : "#9b9b9b"
-                            }}>
+                            }}
+                        >
                             I want to act only as a Requestor. Don't send tasks
                             to my node.
                         </span>
