@@ -331,8 +331,6 @@ export function* handleIO(connection) {
             channel.close();
             channel = null;
         }
-
-        started = false;
     }
 }
 
