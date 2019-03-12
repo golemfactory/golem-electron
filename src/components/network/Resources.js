@@ -56,12 +56,12 @@ export class Resources extends React.Component {
      * [_setResource func. will update resource and advanced states on redux store]
      * @param {Int}         value       [Percentage of the resources]
      */
-    _setResource(value) {
+    _setResource = value => {
         this.props.actions.setResources(value);
         this.props.actions.setAdvancedManually(
             this.calculateHardwareAmount(value)
         );
-    }
+    };
 
     /**
      * [calculateHardwareAmount func. will calculate amount the hardware with given resource percentage]
@@ -100,21 +100,21 @@ export class Resources extends React.Component {
      * [_handleGPUProviderSwitch onChange function]
      * @return  {Boolean}   true
      */
-    _handleGPUProviderSwitch(evt) {
+    _handleGPUProviderSwitch = e => {
         const { actions } = this.props;
         const gpuENV = "BLENDER_NVGPU";
-        if (evt.target.checked) actions.enableEnvironment(gpuENV);
+        if (e.target.checked) actions.enableEnvironment(gpuENV);
         else actions.disableEnvironment(gpuENV);
-    }
+    };
 
     /**
      * [_handleProviderSwitch onChange function]
      * @return  {Boolean}   true
      */
-    _handleProviderSwitch(evt) {
+    _handleProviderSwitch = e => {
         const { actions } = this.props;
-        actions.setProviding(!evt.target.checked);
-    }
+        actions.setProviding(!e.target.checked);
+    };
 
     /** converts memory and disk resources from KiB to GiB */
     toGibibytes(obj) {
@@ -223,7 +223,7 @@ export class Resources extends React.Component {
                                       max={100}
                                       iconLeft="icon-single-server"
                                       iconRight="icon-multi-server"
-                                      callback={::this._setResource}
+                                      callback={this._setResource}
                                       warn={true}
                                       transform={true}
                                       disabled={isEngineOn}
