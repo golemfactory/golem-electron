@@ -338,7 +338,7 @@ export class Resources extends React.Component {
                                 <input 
                                     type="checkbox" 
                                     onChange={::this._handleProviderSwitch} 
-                                    defaultChecked={!isNodeProvider}  
+                                    checked={!isNodeProvider}  
                                     aria-label="Trust switch providing/requesting" 
                                     tabIndex="0" 
                                     disabled={isEngineOn}/>
