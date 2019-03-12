@@ -144,7 +144,7 @@ export class App extends Component {
         return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100);
     }
 
-    _closeModal(_modalType) {
+    _closeModal = _modalType => {
         const { actions } = this.props;
         const modals = constants.modals;
         if (modals.ISSUEMODAL === _modalType) {
@@ -152,7 +152,7 @@ export class App extends Component {
         } else if (modals.WITHDRAWMODAL === _modalType) {
             actions.callWithdrawModal(false, null);
         }
-    }
+    };
 
     _showIssueModal(...args) {
         const issues = args.map(item => (item ? item.issue : null));
@@ -176,16 +176,16 @@ export class App extends Component {
                 <ConnectedRouter history={history}>{routes}</ConnectedRouter>
                 <div id="modalPortal" className="modal-portal" />
                 {this._showIssueModal(connectionProblem, latestVersion) && (
-                    <IssueModal closeModal={::this._closeModal} />
+                    <IssueModal closeModal={this._closeModal} />
                 )}
                 {withdrawModal && withdrawModal.status && (
                     <WithdrawModal
                         {...withdrawModal.payload}
-                        closeModal={::this._closeModal}
+                        closeModal={this._closeModal}
                     />
                 )}
                 {!showOnboard && passwordModal && passwordModal.status && (
-                    <PasswordModal closeModal={::this._closeModal} />
+                    <PasswordModal closeModal={this._closeModal} />
                 )}
             </ErrorBoundary>
         );

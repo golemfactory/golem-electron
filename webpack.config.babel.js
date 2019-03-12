@@ -84,7 +84,7 @@ module.exports = (env, argv) => ({
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV && "react-hot-loader/babel" : false , "transform-class-properties"].filter(Boolean),
+                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV ? "react-hot-loader/babel" : false , "transform-class-properties"].filter(Boolean),
                     presets: ['react', 'env', 'stage-0']
                 }
             }],

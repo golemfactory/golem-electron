@@ -61,14 +61,14 @@ export class NewTask extends React.Component {
     /**
      * [_closeModal funcs. closes modals]
      */
-    _closeModal() {
+    _closeModal = () => {
         const { actions } = this.props;
         actions.setFileCheck({
             status: false
         });
-    }
+    };
 
-    checkInputValidity(e) {
+    checkInputValidity = e => {
         const { taskNameHint, nextButton } = this.refs;
         e.target.checkValidity();
         if (e.target.validity.valid) {
@@ -78,36 +78,36 @@ export class NewTask extends React.Component {
             taskNameHint.style.display = "block";
             nextButton.disabled = true;
         }
-    }
+    };
 
     /**
      * [_handleNameInput funcs. updates name of the new task]
      * @param  {Event}  e
      */
-    _handleNameInput(e) {
+    _handleNameInput = e => {
         //console.log(e.target.value)
-        ::this.checkInputValidity(e);
+        this.checkInputValidity(e);
         this.setState({
             name: e.target.value
         });
-    }
+    };
 
     /**
      * [_handleTypeRadio funcs. updates type of the new task]
      * @param  {Event}  e
      */
-    _handleTypeRadio(e) {
+    _handleTypeRadio = e => {
         //console.log(e.target.value)
         this.setState({
             type: e.target.value
         });
-    }
+    };
 
     /**
      * [_handleNextButton funcs. redirect user to the next step]
      * @param  {Event}  e
      */
-    _handleNextButton(e) {
+    _handleNextButton = e => {
         e.preventDefault();
         this._nextStep = true;
         const { name, type } = this.state;
@@ -116,7 +116,7 @@ export class NewTask extends React.Component {
             type
         });
         window.routerHistory.push("/task/settings");
-    }
+    };
 
     render() {
         const { fileCheckModal, isMainNet, relativePath } = this.props;
@@ -125,7 +125,7 @@ export class NewTask extends React.Component {
             <div>
                 <form
                     className="content__new-task"
-                    onSubmit={::this._handleNextButton}>
+                    onSubmit={this._handleNextButton}>
                     <div className="container-name__new-task">
                         <div className="label">
                             <InfoLabel
@@ -151,7 +151,7 @@ export class NewTask extends React.Component {
                             minLength={4}
                             maxLength={24}
                             autoFocus
-                            onChange={::this._handleNameInput}
+                            onChange={this._handleNameInput}
                             required
                         />
                     </div>
@@ -174,7 +174,7 @@ export class NewTask extends React.Component {
                         <div
                             ref="radioCloud"
                             className="container-radio__new-task"
-                            onChange={::this._handleTypeRadio}>
+                            onChange={this._handleTypeRadio}>
                             <div className="radio-item">
                                 <span className="icon-blender">
                                     <span className="path1" />
@@ -243,7 +243,7 @@ export class NewTask extends React.Component {
                 {fileCheckModal.status &&
                     ReactDOM.createPortal(
                         <FileCheckModal
-                            closeModal={::this._closeModal}
+                            closeModal={this._closeModal}
                             unknownFiles={fileCheckModal.files}
                         />,
                         document.getElementById("modalPortal")
