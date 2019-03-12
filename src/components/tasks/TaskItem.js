@@ -1,69 +1,65 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import React from "react";
+import { Link } from "react-router-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import {Tooltip} from 'react-tippy';
+import { Tooltip } from "react-tippy";
 
-import { Spring, config} from 'react-spring'
-import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
-import {taskStatus} from './../../constants/statusDicts'
+import { Spring, config } from "react-spring";
+import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
+import { taskStatus } from "./../../constants/statusDicts";
 
-import * as Actions from '../../actions'
+import * as Actions from "../../actions";
 
-import Preview from './Preview'
-import Details from './Details'
-import ConditionalRender from '../hoc/ConditionalRender'
+import Preview from "./Preview";
+import Details from "./Details";
+import ConditionalRender from "../hoc/ConditionalRender";
 
 const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
     nodeNumbers: state.details.nodeNumber
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 export class TaskItem extends React.Component {
-
-
     constructor(props) {
         super(props);
 
-        this._fetchStatus = ::this._fetchStatus
-
         this.state = {
             toggledPreviewList: []
-        }
+        };
     }
 
     componentDidMount() {
-        const {actions, item} = this.props
-        let interval = ()=> {
-                actions.fetchHealthyNodeNumber(item.id)
-                return interval
-            }
+        const { actions, item } = this.props;
+        let interval = () => {
+            actions.fetchHealthyNodeNumber(item.id);
+            return interval;
+        };
 
-        this.liveSubList = setInterval(interval(), 5000)
+        this.liveSubList = setInterval(interval(), 5000);
     }
 
     componentWillUnmount() {
-        this.liveSubList && clearInterval(this.liveSubList)
+        this.liveSubList && clearInterval(this.liveSubList);
     }
 
-    _togglePreview({id}, evt){
-        evt.target.classList.toggle('icon--active');
-        const prevList = this.state.toggledPreviewList
+    _togglePreview({ id }, evt) {
+        evt.target.classList.toggle("icon--active");
+        const prevList = this.state.toggledPreviewList;
         const prevToggle = this.state.toggledPreviewList[id];
 
-        prevList[id] = !prevToggle
-        this.props._toggleWalletTray(!prevToggle)
+        prevList[id] = !prevToggle;
+        this.props._toggleWalletTray(!prevToggle);
 
         this.setState({
             toggledPreviewList: prevList
-        })
+        });
     }
 
     /**
@@ -71,75 +67,125 @@ export class TaskItem extends React.Component {
      * @param  {Object}     item    [Task item]
      * @return {DOM}                [Element of the status]
      */
-    _fetchStatus(item) {
-    	const {options} = item
-        const {nodeNumbers} = this.props
+    _fetchStatus = item => {
+        const { options } = item;
+        const { nodeNumbers } = this.props;
 
         switch (item.status) {
-        case taskStatus.TIMEOUT:
-            return <div>
-            	<span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
-            	<span className="bumper"> | </span>
-            	<span className="duration--timeout">Timed out: </span>
-            	<span>{timeStampToHR(item.last_updated)}</span>
-            </div>
+            case taskStatus.TIMEOUT:
+                return (
+                    <div>
+                        <span>
+                            Task time:{" "}
+                            {timeStampToHR(
+                                item.last_updated - item.time_started,
+                                true
+                            )}
+                        </span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--timeout">Timed out: </span>
+                        <span>{timeStampToHR(item.last_updated)}</span>
+                    </div>
+                );
 
-        case taskStatus.NOTREADY:
-            return <div>
-                <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span className="bumper"> | </span>
-                <span className="duration--preparing">Preparing for computation... </span>
-            </div>
+            case taskStatus.NOTREADY:
+                return (
+                    <div>
+                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--preparing">
+                            Preparing for computation...{" "}
+                        </span>
+                    </div>
+                );
 
-        case taskStatus.WAITING:
-            return <div>
-                <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span className="bumper"> | </span>
-                <span className="duration--preparing">Waiting for computation... </span>
-            </div>
+            case taskStatus.WAITING:
+                return (
+                    <div>
+                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--preparing">
+                            Waiting for computation...{" "}
+                        </span>
+                    </div>
+                );
 
-        case taskStatus.RESTART:
-            return <div>
-                <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
-                <span className="bumper"> | </span>
-                <span className="duration--restarted">Restarted</span>
-            </div>
+            case taskStatus.RESTART:
+                return (
+                    <div>
+                        <span>
+                            Task time:{" "}
+                            {timeStampToHR(
+                                item.last_updated - item.time_started,
+                                true
+                            )}
+                        </span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--restarted">Restarted</span>
+                    </div>
+                );
 
-        case taskStatus.COMPUTING:
-            return <div>
-                <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                <span className="bumper"> | </span>
-                <span className="duration--computing">Computing... </span>
-                <span className="bumper"> | </span>
-                <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
-            </div>
+            case taskStatus.COMPUTING:
+                return (
+                    <div>
+                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--computing">
+                            Computing...{" "}
+                        </span>
+                        <span className="bumper"> | </span>
+                        <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
+                    </div>
+                );
 
-        default:
-            return <div>
-                <span>Task time: {timeStampToHR((item.last_updated - item.time_started), true)}</span>
-                <span className="bumper"> | </span>
-                <span className="duration--finished">Finished: </span>
-                <span>{timeStampToHR(item.last_updated)}</span>
-            </div>
+            default:
+                return (
+                    <div>
+                        <span>
+                            Task time:{" "}
+                            {timeStampToHR(
+                                item.last_updated - item.time_started,
+                                true
+                            )}
+                        </span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--finished">Finished: </span>
+                        <span>{timeStampToHR(item.last_updated)}</span>
+                    </div>
+                );
         }
-    }
+    };
 
-    _fetchCost(item){
+    _fetchCost(item) {
         const fixedTo = 4;
-        return <span>{(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) || 
-                      (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)} GNT/
-                     {item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo) || 
-                      (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)} ETH</span>
+        return (
+            <span>
+                {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{" "}
+                GNT/
+                {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{" "}
+                ETH
+            </span>
+        );
     }
 
     render() {
-    	const {item, index, _handleRowClick, _handleRestartModal, _handleDeleteModal, psId} = this.props
-        const {toggledPreviewList} = this.state
-        const {options} = item
-        return (<Spring 
+        const {
+            item,
+            index,
+            _handleRowClick,
+            _handleRestartModal,
+            _handleDeleteModal,
+            psId
+        } = this.props;
+        const { toggledPreviewList } = this.state;
+        const { options } = item;
+        return (
+            <Spring
                 from={{
                     progress: 0
-                }} 
+                }}
                 to={{
                     progress: item.progress
                 }} 
@@ -231,7 +277,74 @@ export class TaskItem extends React.Component {
                                     </Tooltip>
                                 </div>
                             </div>
+                            <div className="control-panel__task">
+                                <Tooltip
+                                    html={<p>Preview</p>}
+                                    position="right"
+                                    trigger="mouseenter">
+                                    <span
+                                        className="icon-eye"
+                                        tabIndex="0"
+                                        aria-label="Preview"
+                                        onClick={this._togglePreview.bind(
+                                            this,
+                                            item
+                                        )}
+                                    />
+                                </Tooltip>
+                                <Tooltip
+                                    html={<p>Task Details</p>}
+                                    position="right"
+                                    trigger="mouseenter"
+                                    className="task-details-icon">
+                                    <Link
+                                        to={`/task/${item && item.id}`}
+                                        tabIndex="0"
+                                        aria-label="Task Details">
+                                        <span className="icon-info-small" />
+                                    </Link>
+                                </Tooltip>
+                                <Tooltip
+                                    html={<p>Restart</p>}
+                                    position="right"
+                                    trigger="mouseenter">
+                                    <span
+                                        className="icon-progress-clockwise"
+                                        tabIndex="0"
+                                        aria-label="Restart Task"
+                                        onClick={
+                                            item.status !== taskStatus.RESTART
+                                                ? _handleRestartModal
+                                                : undefined
+                                        }
+                                        disabled={
+                                            !(
+                                                item.status !==
+                                                taskStatus.RESTART
+                                            )
+                                        }
+                                    />
+                                </Tooltip>
+                                <Tooltip
+                                    html={<p>Delete</p>}
+                                    position="right"
+                                    trigger="mouseenter">
+                                    <span
+                                        className="icon-trash"
+                                        tabIndex="0"
+                                        aria-label="Open Delete Task Popup"
+                                        onClick={_handleDeleteModal}
+                                    />
+                                </Tooltip>
+                            </div>
                         </div>
+                        {item.id === psId && toggledPreviewList[psId] && (
+                            <Preview
+                                id={item.id}
+                                src={item.preview}
+                                progress={item.progress}
+                            />
+                        )}
                     </div>
                 </div>
                 <ConditionalRender showIf={(item.id === psId && toggledPreviewList[psId])}>
@@ -241,9 +354,13 @@ export class TaskItem extends React.Component {
                     <Details id={item.id} />
                 </ConditionalRender>
             </div>}
+                )}
             </Spring>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskItem)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TaskItem);

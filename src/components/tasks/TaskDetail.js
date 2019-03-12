@@ -274,7 +274,7 @@ export class TaskDetail extends React.Component {
         }
 
         if(nextProps.task.resources !== this.props.task.resources){
-            setTimeout(() => ::this._handleLocalRender(), 2000);
+            setTimeout(() => this._handleLocalRender(), 2000);
         }
     }
 
@@ -588,7 +588,7 @@ export class TaskDetail extends React.Component {
         return arr1.toString() === arr2.toString() //String representation hack
     }
 
-    _applyPresetOption(preset, isResolutionIncluded = true, applyStates = true){
+    _applyPresetOption = (preset, isResolutionIncluded = true, applyStates = true) => {
 
         const { format, frames, output_path, resolution, sample_per_pixel} = preset.value //compositing,
         const {resolutionW, resolutionH, framesRef, formatRef, outputPath, haltspp} = this.refs //compositingRef,
@@ -645,7 +645,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleComputeOnOptionChange(e){
+    _handleComputeOnOptionChange = e => {
         this.setState({
             compute_on: e.target.value,
         })
@@ -654,7 +654,7 @@ export class TaskDetail extends React.Component {
     /**
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
-    _handleSavePresetModal() {
+    _handleSavePresetModal = () => {
         const {resolution, frames, format, output_path, compositing, sample_per_pixel} = this.state
         this.setState({
             presetModal: true,
@@ -675,7 +675,7 @@ export class TaskDetail extends React.Component {
      * @param  {String} preset_name [Name of the custom preset]
      * @param  {Object} data        [Custom preset object]
      */
-    _handlePresetSave(preset_name, data) {
+    _handlePresetSave = (preset_name, data) => {
         this.props.actions.saveTaskPreset({
             preset_name,
             task_type: this.props.task.type,
@@ -683,7 +683,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _applyDefaultPreset(){
+    _applyDefaultPreset = () => {
         const {resolution, file_format} = this.props.testStatus.more.after_test_data
         const {resolutionW, resolutionH, formatRef} = this.refs
         const format = file_format.replace(".", "").toUpperCase()
@@ -709,16 +709,12 @@ export class TaskDetail extends React.Component {
     /**
      * [_closeModal func. closes all modals]
      */
-    _closeModal(_modal) {
-        this.setState({
-            [_modal]: false
-        })
-    }
+    _closeModal = _modal => this.setState({ [_modal]: false })
 
     /**
      * [_handleOutputPath func. opens file chooser dialog and updates output path of that task]
      */
-    _handleOutputPath() {
+    _handleOutputPath = () => {
         let onFolderHandler = data => {
             if (data) {
                 this.setState({
@@ -771,7 +767,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleLocalRender() {
+    _handleLocalRender = () => {
         const {actions, task} = this.props;
         const {compute_on} = this.state;
         const {resources, type, name} = task
@@ -818,7 +814,7 @@ export class TaskDetail extends React.Component {
     /**
     * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
     */
-    _handleManagePresetModal() {
+    _handleManagePresetModal = () => {
         this.setState({
             managePresetModal: true
         })
@@ -830,7 +826,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _toggleTestLock(result){
+    _toggleTestLock = result => {
         this.setState({
             testLock: result
         })
@@ -857,7 +853,7 @@ export class TaskDetail extends React.Component {
                 detailContent: false,
                 content: <div className="item-settings" key="0">
                             <InfoLabel type="span" label="Preset" info={<p className="tooltip_task">Create and manage a number of presets to simplify the process of rendering with Golem.<br/>Create presets for commonly used sizes, frame ranges.</p>} cls="title" infoHidden={true}/>
-                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={::this._handleManagePresetModal}  presetManager/> 
+                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={this._handleManagePresetModal}  presetManager/> 
                         </div>
             },
             {
@@ -881,14 +877,14 @@ export class TaskDetail extends React.Component {
                 content: <div className="item-settings" key="4">
                                 <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png then frames ~/project/<br/>output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
                                 <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
-                                <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={isDetailPage}>Change</button>
+                                <button type="button" className="btn--outline" onClick={this._handleOutputPath} disabled={isDetailPage}>Change</button>
                           </div>
             },
             {
                 order: 6,
                 detailContent: false,
                 content: <div className="item-settings item__preset-button" key="6">
-                                <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
+                                <button type="button" className="btn--outline" onClick={this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
                             </div>
             }
         ]
@@ -909,7 +905,7 @@ export class TaskDetail extends React.Component {
             //                 <div className="switch-box switch-box--green">
             //                     <span>{compositing ? 'On' : 'Off'}</span>
             //                     <label className="switch">
-            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
+            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
             //                         <div className="switch-slider round"></div>
             //                     </label>
             //                 </div>
@@ -942,7 +938,7 @@ export class TaskDetail extends React.Component {
             computeOnRadioOptions['readOnly'] = true;
             computeOnRadioOptions['checked'] = this.state.compute_on === type;
         } else {
-            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
+            computeOnRadioOptions['onChange'] = this._handleComputeOnOptionChange;
             computeOnRadioOptions['defaultChecked'] = this.state.compute_on === type;
         }
 
@@ -985,13 +981,13 @@ export class TaskDetail extends React.Component {
         } = this.props;
         return (
             <div>
-                <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
+                <form id="taskForm" onSubmit={this._handleStartTaskButton} className="content__task-detail">
                     <TestResult 
                         testStatus={testStatus} 
                         isDetailPage={isDetailPage}
                         task={task}
                         actions={actions}
-                        toggleTestLock={::this._toggleTestLock}
+                        toggleTestLock={this._toggleTestLock}
                         />
                     <section className="section-details__task-detail">
                         <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
@@ -1191,12 +1187,12 @@ export class TaskDetail extends React.Component {
                         <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testLock || loadingTaskIndicator}>Start Task</button>
                     </section>}
                 </form>
-                {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
-                {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
-                {depositTimeModal && <DepositTimeModal closeModal={::this._closeModal} createTaskOnHighGas={::this._createTaskOnHighGas}/> }
-                {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
-                {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
-                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
+                {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
+                {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
+                {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
+                {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
+                {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={this._closeModal}/>}
             </div>
         );
     }
@@ -1215,7 +1211,7 @@ export class TaskDetail extends React.Component {
 //     && !isDetailPage
 //     && !(testStatus.status === testStatusDict.SUCCESS 
 //         || testStatus.status === testStatusDict.ERROR)) 
-// &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
+// &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={this._toggleLoadingHint}>
 //         { isInPatient 
 //             && <div className="loading--patient">
 //             <img src={whoaImg} alt="Please be patient"/>
