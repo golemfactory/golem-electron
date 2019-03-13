@@ -6,6 +6,7 @@ const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CompressionPlugin = require("compression-webpack-plugin");
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const modes = {
@@ -78,13 +79,25 @@ module.exports = (env, argv) => ({
             template: 'template.html'
         }),
         new HtmlWebpackHarddiskPlugin(),
+        /*In case of Lodash errors @see https://github.com/lodash/lodash-webpack-plugin*/
+        new LodashModuleReplacementPlugin({
+          'collections': true,
+          'exotics': true,
+          'cloning': true,
+          'currying': true,
+          'guards': true,
+          'metadata': true,
+          'paths': true,
+          'placeholders': true,
+          'shorthands': true
+        }),
         new HappyPack({
             id: 'jsx',
             loaders: [{
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV ? "react-hot-loader/babel" : false , "transform-class-properties"].filter(Boolean),
+                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV ? "react-hot-loader/babel" : false , "transform-class-properties", "lodash"].filter(Boolean),
                     presets: ['react', 'env', 'stage-0']
                 }
             }],

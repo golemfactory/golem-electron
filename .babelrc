@@ -1,4 +1,4 @@
 {
   "presets": ['react', 'env', 'stage-0'],
-  "plugins": ["transform-decorators-legacy", "react-hot-loader/babel", "transform-class-properties"]
+  "plugins": ["transform-decorators-legacy", "react-hot-loader/babel", "transform-class-properties", "lodash"]
 }
