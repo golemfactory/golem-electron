@@ -21,11 +21,12 @@ mark {
     height: 100%;
     background: $color-text4;
     z-index: 99999 !important;
-    padding-bottom: 38px;
     box-sizing:border-box;
 
-    span:first-child{
-        width: 100%;
+    h1{
+        color: $color-primary;
+        margin: 0 0 30px 0;
+        font-size: 1.8em;
     }
 
     .information-band__onboarding{
@@ -80,9 +81,9 @@ mark {
 
 .section-image__onboarding {
     position: relative;
+    margin-top: 20px;
+    height: 40vh;
     width: 100%;
-    flex: 0 0 288px;
-    background: $color-bg2;
     text-align: center;
     transition: .5s all;
 
@@ -104,10 +105,6 @@ mark {
     }
 }
 
-.section__fixed{
-    flex: 0 0 288px !important;
-}
-
 
 .mark--chain{
     font-size: 9pt;
@@ -125,14 +122,26 @@ mark {
     width: 150px;
 }
 
+.btn__skip{
+    text-align: center;
+    text-decoration: underline;
+    font-size: 9pt;
+    margin-top: 30px;
+    cursor: pointer;
+}
+
+.btn--last{
+    margin-top: 4px;
+}
+
 .desc__onboarding {
     width: 100%;
     margin-top: 8vh;
-    padding: 0 40px;
-    font-size: 14pt;
-    font-weight: 400;
-    text-align: center;
-    line-height: 1.3em;
+    padding: 0 50px;
+    font-size: 10pt;
+    font-weight: 600;
+    text-align: left;
+    line-height: 1.5em;
     box-sizing: border-box;
     transition: .5s all;
 
@@ -184,7 +193,8 @@ mark {
           .icon-eye{
             position: absolute;
             right: 10px;
-            bottom: 7px;
+            bottom: 8px;
+            font-size: 14pt;
             z-index: 4;
             cursor: pointer;
             color: $color-text3;
@@ -215,6 +225,7 @@ mark {
                 height: 32px;
             }
             .ReactPasswordStrength-strength-desc{
+                width: 150px;
                 top:20px;
                 font-size: 9pt;
                 text-align: right;
@@ -265,10 +276,15 @@ mark {
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
-    padding-left: 42px;
     box-sizing: border-box;
+    margin-bottom: 40px;
 
     @include flex;
+
+    .step-placeholder{
+        display: inline-block;
+        width: 42.66px;
+    }
 
     .icon-arrow-left-small,
     .icon-arrow-right-small {
@@ -282,7 +298,6 @@ mark {
         position: relative;
         top: 10px;
         cursor: pointer;
-        margin-right: 32px;
     }
 
     .btn--cancel{
@@ -292,10 +307,6 @@ mark {
         font-weight: 500;
         padding:0 30px;
     }
-}
-
-.back-active{
-        padding-left: 0;
 }
 
 .container-checkbox__onboarding {
@@ -335,6 +346,7 @@ mark {
 .pageSwap-enter {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(100%, 0, 0);
 }
@@ -342,6 +354,7 @@ mark {
 .pageSwap-enter.pageSwap-enter-active {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(0, 0, 0);
   transition: all ease-out 600ms;
@@ -362,6 +375,7 @@ mark {
 .pageSwapBack-enter {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(-100%, 0, 0);
 }
@@ -369,6 +383,7 @@ mark {
 .pageSwapBack-enter.pageSwapBack-enter-active {
   position: absolute;
   left: 0;
+  top: 0;
   width: 100%;
   transform: translate3d(0, 0, 0);
   transition: all ease-out 600ms;
@@ -381,7 +396,6 @@ mark {
 @media screen and (max-height: 720px)
 {
     .section-image__onboarding{
-        flex: 0 0 200px;
         
         .welcome-image,
         .chain-image{
@@ -390,9 +404,9 @@ mark {
     }
 
     .desc__onboarding {
-        font-size: 12pt;
+        font-size: 8pt;
         line-height: 1.6;
-        margin-top: 4vh;
+        margin-top: 10vh;
     }
 
     .info__register{

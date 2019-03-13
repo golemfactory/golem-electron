@@ -1,4 +1,6 @@
 const path = require('path');
+const sass = require('sass');
+const Fiber = require('fibers');
 const webpack = require('webpack');
 const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
@@ -82,15 +84,15 @@ module.exports = (env, argv) => ({
                 loader: 'babel-loader',
                 options: {
                     cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV && "react-hot-loader/babel" : false , "transform-class-properties"].filter(Boolean),
+                    plugins: ['transform-decorators-legacy', argv.mode === modes.DEV ? "react-hot-loader/babel" : false , "transform-class-properties"].filter(Boolean),
                     presets: ['react', 'env', 'stage-0']
                 }
             }],
             threadPool: happyThreadPool
         }),
         new HappyPack({
-            id: 'styles',
-            loaders: [ 'style-loader', 'css-loader', 'sass-loader' ],
+            id: 'css',
+            loaders: [ 'style-loader', 'css-loader'],
             threadPool: happyThreadPool,
         }),
         argv.mode === modes.PROD && new CompressionPlugin({ // <-- don't forget to activate gzip on web server
@@ -113,13 +115,25 @@ module.exports = (env, argv) => ({
             {
                 // Test expects a RegExp! Note the slashes!
                 test: /\.(scss)$/,
-                use: 'happypack/loader?id=styles',
+                use: [
+                    {
+                        loader: "style-loader"
+                    }, {
+                        loader: "css-loader"
+                    }, {
+                        loader: "sass-loader",
+                        options: {
+                            implementation: sass,
+                            fiber: Fiber
+                        }
+                    }
+                ],
                 // Include accepts either a path or an array of paths.
                 include: path.join(__dirname, 'src/scss')
             },
             {
                 test: /\.css$/,
-                use: 'happypack/loader?id=styles'
+                use: 'happypack/loader?id=css'
             },
             {
                 test: /\.(woff(2)?|ttf|eot)(\?[a-z0-9]+)?$/,

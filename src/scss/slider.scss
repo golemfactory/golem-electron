@@ -2,11 +2,20 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     box-sizing: border-box;
+    position: relative;
+    .slider__input{
+        @include flex;
+        flex: 1 1 auto;
+        position: relative;
+        box-sizing: border-box;
+    }
     .slider__resources {
         flex-grow: 1;
-        height: 2px;
+        height: 3px;
         margin: 10px 12px 0 12px;
+        border-radius: 30px;
         background: #37C481; //GRADIENT TRANSITION HACK
         background-image: -webkit-gradient( linear, left top, right top, color-stop(0.2, transparent), color-stop(0.2, $color-accent3));
         transition: .5s background;
@@ -14,18 +23,21 @@
             outline: none;
         }
     }
+
     /*Chrome*/
     @media screen and (-webkit-min-device-pixel-ratio: 0) {
         .slider__resources {
             -webkit-appearance: none;
-            margin: 10px 12px;
+            margin: 10px 0;
             width: 100%;
+            position: relative;
             &:focus {
                 outline: none;
             }
             &::-webkit-slider-runnable-track {
                 width: 100%;
                 height: 2px;
+                padding: 10px 0 !important;
                 animate: 0.2s;
                 box-shadow: 0px 0px 0px #000000;
                 border-radius: 0px;
@@ -41,6 +53,10 @@
                 margin-top: -16px;
             }
         }
+
+        span + .slider__resources{
+            margin: 10px 12px;
+        }
     }
     .slider-indicator__resources {
         position: absolute;
@@ -49,7 +65,7 @@
         text-align: center;
         font-size: 8pt;
         font-weight: 500;
-        margin-top: 4px;
+        margin-top: 0px;
         transition: .5s color;
         pointer-events: none; // to click underlying element 
     }
@@ -59,12 +75,33 @@
         width: 25px;
     }
 
+    .slider__input ~ .slider-icon {
+        margin-left: 7.5px;
+        margin-right: 0;
+    }
+
+    .slider-text--left,
+    .slider-text--right{
+        font-size: 10pt;
+        font-weight: 400;
+        width: 45px;
+    }
+
+    .slider-text--left{
+        text-align: center;
+        margin-right: 7.5px;
+    }
+    .slider-text--right{
+        text-align: right;
+        margin-left: 7.5px;
+    }
+
     [class^="icon-"],
     [class*=" icon-"] {
         display: block;
     }
 }
 
-.slider>span {
+.slider > span {
     font-size: 16pt;
 }

@@ -1,0 +1,63 @@
+.error-boundary{
+	display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content:space-between;
+    border-top: 1px solid #777;
+    border-bottom: 1px solid #777;
+    padding: 24px;
+    height: 100%;
+    user-select: all !important;
+    box-sizing: border-box;
+
+    &__content{
+    	position: relative;
+    	width: 100%;
+    	padding: 0 25px;
+    	display: flex;
+    	align-items: center;
+    	flex-direction: column;
+    }
+	
+	.action-bar{
+		flex: 0 0 40px;
+		margin-top: 20px;
+		&__element{
+			color: $color-primary;
+			margin: 0 10px;
+			cursor: pointer;
+
+			&:active{
+				color: $button-active-color;
+			}
+
+			[class^="icon-"], 
+			[class*=" icon-"]{
+    			position: relative;
+				bottom: -6px;
+				font-size: 20pt;
+			}
+		}
+	}
+
+    .animContainer{
+	    width: 200px;
+	    height: 200px;
+	}
+
+	.snippet{
+		position: relative;
+		border-radius: 0px;
+	    -webkit-border-radius: 0px; 
+	    border: 0px;
+	    margin: 20px 0;
+	    padding: 5px;
+	    font: 12px Monaco,Consolas,"Andale  Mono","DejaVu Sans Mono", monospace;
+	    white-space: pre-wrap;
+    	overflow-y: overlay;
+    	height: 50%;
+    	overflow-x: overlay;
+    	width: 100%;
+    	box-sizing: border-box;
+	}
+}

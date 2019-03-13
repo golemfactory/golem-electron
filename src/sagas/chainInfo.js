@@ -23,6 +23,5 @@ export function callChainInfo(session) {
 
 export function* chainInfoFlow(session) {
     const action = yield call(callChainInfo, session);
-    //console.log("SETTINGS_ACTION", action)
     yield action && put(action)
 }

@@ -1,9 +1,12 @@
 import {BigNumber} from 'bignumber.js';
 import createCachedSelector from 're-reselect';
 import { dict } from './../actions'
+import checkNested from './../utils/checkNested'
 const {ipcRenderer, remote} = window.electron
 const log = remote.require('./electron/debug_handler.js')
+const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
+const {CONCENT_BALANCE_STATE} = dictConfig
 const {
         SET_BALANCE, 
         SET_TASKLIST, 
@@ -11,8 +14,21 @@ const {
         SET_GOLEM_STATUS, 
         SET_FOOTER_INFO, 
         SET_PASSWORD_MODAL, 
-        SET_PASSWORD
+        SET_PASSWORD,
+        SET_CONCENT_DEPOSIT_BALANCE
     } = dict
+
+const tempCBSString = CONCENT_BALANCE_STATE && getConfig(CONCENT_BALANCE_STATE)
+const tempCBS =  tempCBSString
+    ? JSON.parse(tempCBSString) 
+    : null
+const lastConcentBalance = tempCBS 
+? {
+    value: new BigNumber(tempCBS.value),
+    status: tempCBS.status,
+    timelock: tempCBS.timelock
+}
+: null
 
 const initialState = {
     balance: [
@@ -24,10 +40,11 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
+    concentBalance: lastConcentBalance || null,
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
-    golemStatus: ["client", "start", "pre"],
+    golemStatus: [{client:["start", "pre", null]}],
     footerInfo: null,
     passwordModal: { 
         status: false, 
@@ -39,6 +56,12 @@ const initialState = {
 const password = {
     REGISTER: "Requires new password",
     LOGIN: "Requires password"
+}
+
+const statusDict = {
+    READY       : "Ready",
+    NOTREADY    : "Not Ready",
+    EXCEPTION   : "Exception"
 }
 
 let badgeActive = false
@@ -76,7 +99,6 @@ const realTime = (state = initialState, action) => {
         });
 
     case SET_GOLEM_STATUS:
-        _isPasswordModalPopped = false
         return Object.assign({}, state, {
             golemStatus: action.payload
         });
@@ -93,23 +115,19 @@ const realTime = (state = initialState, action) => {
             footerInfo: action.payload
         });
 
+    case SET_CONCENT_DEPOSIT_BALANCE:
+        const {value, status, timelock} = action.payload
+        setConfig(CONCENT_BALANCE_STATE, JSON.stringify(action.payload))
+        return Object.assign({}, state, {
+            concentBalance: action.payload
+        });
+
     default:
         return state
     }
 }
 
 export default realTime
-
-const statuses = {
-    client: {
-        'start': {
-            post: 'Ready'
-        },
-        'quit': {
-            pre: 'Not Ready'
-        }
-    }
-}
 
 const messages = {
     hyperdrive: {
@@ -185,6 +203,11 @@ const messages = {
             post: 'Docker VM created',
             exception: 'Error stopping a VM'
         },
+        'instance.check': {
+            pre: 'Checking for Docker VM',
+            post: 'Docker VM is available',
+            exception: 'Docker VM is not available'
+        },
     },
     ethereum: {
         'node.start': {
@@ -237,6 +260,13 @@ const messages = {
     }
 }
 
+function objectMap(object, mapFn) {
+    return Object.keys(object).reduce(function(result, key) {
+        result[key] = mapFn(object[key], key)
+        return result
+    }, {})
+}
+
 function nodesString(num) {
     if (num < 1) return 'No Nodes Connected';
     const postfix = num != 1 ? 's' : '';
@@ -260,9 +290,11 @@ function getGolemStatus(component, method, stage, data) {
     }
 
     if (stage == 'exception') {
-        result.status = 'Exception';
+        result.status = statusDict.EXCEPTION;
+    } else if (stage == 'post') {
+        result.status = statusDict.READY;
     } else try {
-        result.status = 'Not Ready';
+        result.status = statusDict.NOTREADY;
     } catch ( e ) { 
         log.warn('SAGA > GOLEM', e)
     }
@@ -273,24 +305,44 @@ function getGolemStatus(component, method, stage, data) {
 export const getStatusSelector = createCachedSelector(
         (state) => state.golemStatus,
         (state) => state.connectedPeers,
-        (state) => state.passwordModal,
+        (state) => state.isEngineOn,
         (state, key) => key,
-        (golemStatus, connectedPeers, passwordModal, key) => {
-            let statusObj = getGolemStatus.apply(null, golemStatus)
-            
-            if(statusObj.status !== "Exception"){
-                if(Number.isInteger(connectedPeers)){
-                    statusObj = {
-                        status: 'Ready',
+        (golemStatus, connectedPeers, isEngineOn, key) => {
+            let statusObj = objectMap(golemStatus[0], 
+                (status, component) => getGolemStatus
+                                        .apply(null, [component]
+                                        .concat(status)))
+
+            if(statusObj 
+                && !Object
+                    .keys(statusObj)
+                    .some(key => statusObj[key].status === statusDict.EXCEPTION )){
+                if(statusObj[0]){
+                    statusObj.client = {
+                        status: statusDict.EXCEPTION,
+                        message: "Outdated version",
+                    }
+                } else if(isEngineOn && Number.isInteger(connectedPeers)){
+                    statusObj.client = {
+                        status: statusDict.READY,
                         message: nodesString(connectedPeers),
+                    }
+                } else if(checkNested(statusObj, "client", "message")
+                    && !(statusObj.client.message === password.LOGIN
+                        || statusObj.client.message === password.REGISTER)){
+                    statusObj.client = {
+                        status: statusDict.NOTREADY,
+                        message: isEngineOn 
+                            ? statusObj.client.message || "Starting Golem"
+                            : "Waiting for configuration",
                     }
                 }
             }
-
+            
             return statusObj
         }
     )(
-        (state, key) => key, // Cache selectors by type name
+        (state, key) => key // Cache selectors by type name
     )
 
 export const passwordModalSelector = createCachedSelector(
@@ -298,19 +350,35 @@ export const passwordModalSelector = createCachedSelector(
     (state) => state.passwordModal,
     (state, key) => key,
     (state, passwordModal) => {
-        const currentStatus = getStatusSelector(state, 'golemStatus')
-        if(currentStatus){
-            if(currentStatus.message === password.REGISTER && !_isPasswordModalPopped){
+        const currentStatus = getStatusSelector(state, 'golemStatus');
+
+        if(currentStatus && currentStatus.client){
+            const clientMessage = currentStatus.client;
+            if(clientMessage.message === password.REGISTER){
                 passwordModal = {...passwordModal,  status: true, register: true}
-                _isPasswordModalPopped = true
             }
-            else if(currentStatus.message === password.LOGIN && !_isPasswordModalPopped){
+            else if(clientMessage.message === password.LOGIN){
                 passwordModal = {...passwordModal, status: true, register: false}
-                _isPasswordModalPopped = true
             }
         }
 
         return passwordModal
     })(
-        (state, key) => key, // Cache selectors by type name
+        (state, key) => key // Cache selectors by type name
+    )
+
+export const concentDepositStatusSelector = createCachedSelector(
+    (state) => state.concentBalance,
+    (state, key) => key,
+    (concentBalance, key) => {
+        if(concentBalance){
+            switch (concentBalance.status) {
+                case "unlocking": return { statusCode: 2, time: concentBalance.timelock}
+                case "unlocked" : return { statusCode: 1, time: null}
+                default         : return { statusCode: 0, time: null} //locked
+            }
+        }
+        return { statusCode: 0, time: null}
+    })(
+        (state, key) => key // Cache selectors by type name
     )

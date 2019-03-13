@@ -1,143 +1,153 @@
-import React from 'react';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-import { hashHistory } from 'react-router'
-import {BigNumber} from 'bignumber.js';
+import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import { hashHistory } from "react-router";
+import { BigNumber } from "bignumber.js";
 
-import * as Actions from '../../../actions'
+import * as Actions from "../../../actions";
 
-import WithdrawForm from "./steps/Form"
-import Confirmation from "./steps/Confirmation"
-import Result from "./steps/Result"
-import {modals, currencyIcons} from './../../../constants'
+import WithdrawForm from "./steps/Form";
+import Confirmation from "./steps/Confirmation";
+import Result from "./steps/Result";
+import { modals, currencyIcons } from "./../../../constants";
 
 const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
+const GWEI_DENOM = 10 ** 9;
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 export class WithdrawModal extends React.Component {
-
-
     constructor(props) {
         super(props);
         this.state = {
-        	index: 0,
+            index: 0,
             formData: {
                 amount: new BigNumber(0).multipliedBy(ETH_DENOM),
                 sendFrom: props.publicKey,
                 sendTo: "",
-                isSuccess: false,
-                txList: []
-            }
-        }
+                gasPrice: new BigNumber(0)
+            },
+            isSuccess: false,
+            txList: []
+        };
     }
 
     /**
      * [_handleCancel funcs. closes modal]
      */
-    _handleCancel() {
-        this.props.closeModal(modals.WITHDRAWMODAL)
-    }
+    _handleCancel = () => this.props.closeModal(modals.WITHDRAWMODAL);
 
     /**
      * [_handleBack funcs. go back to steps]
      */
-    _handleBack() {
-   		this.setState({
-   			index: this.state.index - 1
-        })
-    }
+    _handleBack = () => this.setState({ index: this.state.index - 1 });
 
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
-    _handleApply(_amount, _sendTo, _suffix, _gasCost = 0) {
-
+    _handleApply = (_amount, _sendTo, _suffix, _gasLimit = 0, _gasPrice) => {
         //TO DO go to confirmation screen
-        if(this.state.index == 0){
-        	this.setState({
-                formData: {
-                    sendFrom: this.props.publicKey,
-                    amount: _amount,
-                    sendTo: _sendTo,
-                    type: _suffix
+        if (this.state.index == 0) {
+            this.setState(
+                {
+                    formData: {
+                        sendFrom: this.props.publicKey,
+                        amount: _amount,
+                        sendTo: _sendTo,
+                        type: _suffix,
+                        gasPrice: _gasPrice.multipliedBy(GWEI_DENOM).toNumber() //WEI
+                    },
+                    gasLimit: _gasLimit, //GWEI
+                    txCost: _gasPrice.multipliedBy(_gasLimit) //GWEI
                 },
-                gasCost: _gasCost
-            }, () => {
-                this.setState({
+                () => {
+                    this.setState({
                         index: this.state.index + 1
-                })
-            })
-        } else if(this.state.index === 1){
-            this._withdrawAsync(this.state.formData).then((result) => {
-                if(result){
+                    });
+                }
+            );
+        } else if (this.state.index === 1) {
+            this._withdrawAsync(this.state.formData).then(result => {
+                if (result) {
                     this.setState({
                         index: this.state.index + 1,
                         txList: result,
                         isSuccess: result && result.length > 0
-                    })
+                    });
                 }
-            })
+            });
+        } else {
+            this.props.closeModal(modals.WITHDRAWMODAL);
         }
-        else {
-            this.props.closeModal(modals.WITHDRAWMODAL)
-        }
-    }
+    };
 
-    _withdrawAsync(_formData){
+    _withdrawAsync(_formData) {
         return new Promise((response, reject) => {
-            const {amount, sendTo, type} = _formData
-            this.props.actions.withdraw({
-                    amount: amount.toString(), 
-                    sendTo, 
-                    type
+            const { amount, sendTo, type, gasPrice } = _formData;
+            this.props.actions.withdraw(
+                {
+                    amount: amount.toString(),
+                    sendTo,
+                    type,
+                    gasPrice
                 },
                 response,
-                reject)
-        })
+                reject
+            );
+        });
     }
 
-    _initSteps(_index){
-    	switch(_index){
-    		case 0:
-    			return <WithdrawForm 
-                    {...this.props} 
-                    cancelHandler={::this._handleCancel}
-                    applyHandler={::this._handleApply}
-                    formData={this.state.formData}
+    _initSteps(_index) {
+        switch (_index) {
+            case 0:
+                return (
+                    <WithdrawForm
+                        {...this.props}
+                        cancelHandler={this._handleCancel}
+                        applyHandler={this._handleApply}
+                        formData={this.state.formData}
                     />
-    		case 1:
-    			return <Confirmation 
-                    {...this.props}  
-                    backHandler={::this._handleBack} 
-                    applyHandler={::this._handleApply}
-                    formData={this.state.formData}
-                    gasCost={this.state.gasCost}
+                );
+            case 1:
+                return (
+                    <Confirmation
+                        {...this.props}
+                        backHandler={this._handleBack}
+                        applyHandler={this._handleApply}
+                        formData={this.state.formData}
+                        txCost={this.state.txCost}
                     />
+                );
             case 2:
-                return <Result 
-                            applyHandler={::this._handleApply} 
-                            isSuccess={this.state.isSuccess}
-                            txList={this.state.txList}/>
-    		default:
-    			return <div></div>
-    	}
+                return (
+                    <Result
+                        applyHandler={this._handleApply}
+                        isSuccess={this.state.isSuccess}
+                        txList={this.state.txList}
+                    />
+                );
+            default:
+                return <div />;
+        }
     }
 
     render() {
-    	const { index } = this.state
+        const { index } = this.state;
         return (
             <div className="container__modal container__withdraw-modal">
-            	{this._initSteps(index)}
+                {this._initSteps(index)}
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WithdrawModal)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(WithdrawModal);

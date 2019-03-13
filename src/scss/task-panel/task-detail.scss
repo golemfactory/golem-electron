@@ -53,6 +53,13 @@
         padding: 20px;
         box-sizing: border-box;
 
+        .missing-file-list{
+            max-height: 100px;
+            overflow-y: overlay;
+            padding-right: 15px;
+            margin: 10px 0;
+        }
+
         .local-render__action{
             margin: 20px 0 10px 0;
             display: flex;
@@ -132,6 +139,7 @@
     left: 0;
     background-image: linear-gradient(to bottom, #898989, rgba(255, 255, 255, 0));
     font-weight: 600;
+    z-index: 2;
 
     & > a {
         display: flex;
@@ -162,7 +170,8 @@
 }
 
 .section-task__task-detail,
-.section-settings__task-detail {
+.section-settings__task-detail,
+.section-concent__task-detail {
     box-sizing: border-box;
     padding-bottom: 15px !important;
     border-bottom: 1px solid $color-border;
@@ -267,6 +276,37 @@
         }
     }
 }
+.section-concent__task-detail{
+    .item-concent{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        font-size: 10pt;
+
+        .title{
+            align-self: center;
+            flex: 0 0 100px;
+        }
+
+        .switch-box{
+            flex: 0 0 280px;
+            
+            .switch-label{
+                font-size: 9pt;
+
+                &--left {
+                    margin-right: 10px;
+                }
+
+                &--right {
+                    margin-left: 10px;
+                }
+            }
+        }
+    }
+}
 
 .section-price__task-detail {
     .item-price {
@@ -313,6 +353,7 @@
             margin-right: 5px;
             width: 300px;
             text-align: right;
+            font-weight: 400;
         }
 
         .estimated_usd{
@@ -331,6 +372,24 @@
 
         span:last-child {
             margin-top: 22px;
+        }
+    }
+
+    .estimated-deposit__panel {
+        padding-top: 20px;
+
+        .info-title,
+        .estimated_cost,
+        .estimated_usd{
+            font-size: 12px;
+        }
+
+        .estimated_cost{
+            font-weight: 400;
+        }
+
+        .item-price{
+            margin: 5px 0;
         }
     }
 

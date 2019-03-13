@@ -55,15 +55,16 @@
 
 .list-item__performance {
     @include flex;
-    padding: 10px 0;
+    padding: 5px 0;
     .icon__list-item__acount {
         font-size: 16pt;
-        width: 30px;
+        width: 35px;
+        height: 30px;
         color: $color-text2;
     }
     .title__list-item__acount {
         font-size: 10pt;
-        flex: 0 0 70px;
+        flex: 0 0 80px;
         color: $color-text;
         font-weight: 400;
     }

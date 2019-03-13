@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
 import isEqual from 'lodash.isequal';
+import { BigNumber } from "bignumber.js";
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
 
@@ -10,6 +11,7 @@ import yup from 'yup'
 import TestResult from './TestResult'
 import NodeList from './NodeList'
 import PresetModal from './modal/PresetModal'
+import DepositTimeModal from './modal/DepositTimeModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
@@ -106,9 +108,12 @@ const mapStateToProps = state => ({
     presets: state.details.presets,
     requestorMaxPrice: state.price.requestorMaxPrice,
     subtasksList: state.single.subtasksList,
+    hasSubtasksLoaded: state.single.hasSubtasksLoaded,
     task: state.create.task,
     taskInfo: state.details.detail,
-    testStatus: state.details.test_status
+    testStatus: state.details.test_status,
+    gasInfo: state.details.gasInfo,
+    concentSwitch: state.concent.concentSwitch
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -124,8 +129,10 @@ export class TaskDetail extends React.Component {
             modalData: null,
             isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             isInPatient: false,
+            isDepositimeApplied: false,
             //INPUTS
             compositing: false,
+            concent: props.concentSwitch,
             resolution: [NaN,NaN],
             frames: '',
             format: '',
@@ -143,6 +150,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             presetModal: false,
+            depositTimeModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
             insufficientAmountModal: {
@@ -153,7 +161,6 @@ export class TaskDetail extends React.Component {
             resolutionChangeInfo: [],
             loadingTaskIndicator: false
         }
-
     }
 
     componentDidMount() {
@@ -186,6 +193,8 @@ export class TaskDetail extends React.Component {
             document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
                 Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
             })
+
+        actions.getTaskGasPrice()
     }
 
     componentWillUnmount() {
@@ -207,8 +216,8 @@ export class TaskDetail extends React.Component {
                 type: nextProps.taskInfo.type
             }, () => {
 
-                const {type, timeout, subtasks_count, subtask_timeout, compute_on, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                const {type, timeout, subtasks_count, subtask_timeout, compute_on, concent_enabled, options, bid} = nextProps.taskInfo
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, concentRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
                 this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
                 subtaskCount.value = subtasks_count || 0
                 this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
@@ -217,33 +226,37 @@ export class TaskDetail extends React.Component {
                     resolutionW.value = options.resolution[0]
                     resolutionH.value = options.resolution[1]
                     outputPath.value = options.output_path
-                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format)
+                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
+                    
+                    /*Apply concent option only on testnet*/
+                    if(!this.props.isMainNet && nextProps.concentSwitch) concentRef.checked = concent_enabled
+
                     this.setState({
                         formatIndex,
-                        compute_on
+                        compute_on,
+                        concent: !!concent_enabled
                     })
 
-                    if ((nextProps.task.type || this.state.type) === taskType.BLENDER) {
+                    if ((type || this.state.type) === taskType.BLENDER) {
                         // compositingRef.checked = options.compositing
                         // this.setState({
                         //     compositing: options.compositing
                         // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else if ((nextProps.task.type || this.state.type) === taskType.LUXRENDER) {
+                    } else if ((type || this.state.type) === taskType.LUXRENDER) {
                         haltspp.value = options.haltspp
                     }
 
-                    if(!nextProps.estimated_cost)
+                    if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
                         this.props.actions.getEstimatedCost({
-                            type: nextProps.taskInfo.type,
+                            type: type,
                             options: {
-                                price: Number(bid),
-                                num_subtasks: Number(subtasks_count),
-                                subtask_time: getTimeAsFloat(subtask_timeout)
+                                price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
+                                subtasks_count: Number(subtasks_count),
+                                subtask_timeout: subtask_timeout
                             }
                         })
                 }
-
             })
         }
 
@@ -261,21 +274,20 @@ export class TaskDetail extends React.Component {
         }
 
         if(nextProps.task.resources !== this.props.task.resources){
-            setTimeout(() => ::this._handleLocalRender(), 2000);
+            setTimeout(() => this._handleLocalRender(), 2000);
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
         const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
         const {actions, task} = this.props
-
         if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
-                    price: Number(nextState.bid),
-                    num_subtasks: Number(nextState.subtasks_count),
-                    subtask_time: nextState.subtask_timeout
+                    price: new BigNumber(nextState.bid).multipliedBy(ETH_DENOM).toString(), //wei
+                    subtasks_count: Number(nextState.subtasks_count),
+                    subtask_timeout: floatToString(nextState.subtask_timeout)
                 }
             })
         }
@@ -492,6 +504,17 @@ export class TaskDetail extends React.Component {
     }
 
     /**
+     * [_handleCheckbox func. updates checkbox value]
+     * @param  {Event}  e
+     */
+    _handleConcentCheckbox(e) {
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.setState({
+            concent: e.target.checked
+        })
+    }
+
+    /**
      * [_handleTimeoutInputs func. updtes timeout values form inputs]
      * @param  {[type]} state [Name of the state]
      * @param  {[type]} e     
@@ -584,7 +607,7 @@ export class TaskDetail extends React.Component {
         return arr1.toString() === arr2.toString() //String representation hack
     }
 
-    _applyPresetOption(preset, isResolutionIncluded = true, applyStates = true){
+    _applyPresetOption = (preset, isResolutionIncluded = true, applyStates = true) => {
 
         const { format, frames, output_path, resolution, sample_per_pixel} = preset.value //compositing,
         const {resolutionW, resolutionH, framesRef, formatRef, outputPath, haltspp} = this.refs //compositingRef,
@@ -641,7 +664,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleComputeOnOptionChange(e){
+    _handleComputeOnOptionChange = e => {
         this.setState({
             compute_on: e.target.value,
         })
@@ -650,7 +673,7 @@ export class TaskDetail extends React.Component {
     /**
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
-    _handleSavePresetModal() {
+    _handleSavePresetModal = () => {
         const {resolution, frames, format, output_path, compositing, sample_per_pixel} = this.state
         this.setState({
             presetModal: true,
@@ -671,7 +694,7 @@ export class TaskDetail extends React.Component {
      * @param  {String} preset_name [Name of the custom preset]
      * @param  {Object} data        [Custom preset object]
      */
-    _handlePresetSave(preset_name, data) {
+    _handlePresetSave = (preset_name, data) => {
         this.props.actions.saveTaskPreset({
             preset_name,
             task_type: this.props.task.type,
@@ -679,7 +702,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _applyDefaultPreset(){
+    _applyDefaultPreset = () => {
         const {resolution, file_format} = this.props.testStatus.more.after_test_data
         const {resolutionW, resolutionH, formatRef} = this.refs
         const format = file_format.replace(".", "").toUpperCase()
@@ -705,16 +728,12 @@ export class TaskDetail extends React.Component {
     /**
      * [_closeModal func. closes all modals]
      */
-    _closeModal(_modal) {
-        this.setState({
-            [_modal]: false
-        })
-    }
+    _closeModal = _modal => this.setState({ [_modal]: false })
 
     /**
      * [_handleOutputPath func. opens file chooser dialog and updates output path of that task]
      */
-    _handleOutputPath() {
+    _handleOutputPath = () => {
         let onFolderHandler = data => {
             if (data) {
                 this.setState({
@@ -734,6 +753,18 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton = () => {
+        const {gasInfo} = this.props
+        const {concent, depositTimeModal, isDepositimeApplied} = this.state
+
+        if(!isDepositimeApplied
+            &&concent
+            && gasInfo 
+            && gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)){
+            this.setState({
+                depositTimeModal: true
+            })
+            return false
+        }
 
         this._nextStep = true
         this.setState({
@@ -755,7 +786,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _handleLocalRender() {
+    _handleLocalRender = () => {
         const {actions, task} = this.props;
         const {compute_on} = this.state;
         const {resources, type, name} = task
@@ -792,10 +823,17 @@ export class TaskDetail extends React.Component {
         })
     }
 
+    _createTaskOnHighGas = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn,
+            isDepositimeApplied: true
+        }, this._handleStartTaskButton)
+    }
+
     /**
     * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
     */
-    _handleManagePresetModal() {
+    _handleManagePresetModal = () => {
         this.setState({
             managePresetModal: true
         })
@@ -807,7 +845,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _toggleTestLock(result){
+    _toggleTestLock = result => {
         this.setState({
             testLock: result
         })
@@ -827,14 +865,14 @@ export class TaskDetail extends React.Component {
 
     _handleFormByType(type, isDetail) {
         const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
-        const {testStatus, estimated_cost} = this.props;
+        const {testStatus} = this.props;
         let formTemplate = [
             {
                 order: 0,
                 detailContent: false,
                 content: <div className="item-settings" key="0">
                             <InfoLabel type="span" label="Preset" info={<p className="tooltip_task">Create and manage a number of presets to simplify the process of rendering with Golem.<br/>Create presets for commonly used sizes, frame ranges.</p>} cls="title" infoHidden={true}/>
-                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={::this._handleManagePresetModal}  presetManager/> 
+                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={this._handleManagePresetModal}  presetManager/> 
                         </div>
             },
             {
@@ -858,14 +896,14 @@ export class TaskDetail extends React.Component {
                 content: <div className="item-settings" key="4">
                                 <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png then frames ~/project/<br/>output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
                                 <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
-                                <button type="button" className="btn--outline" onClick={::this._handleOutputPath} disabled={isDetailPage}>Change</button>
+                                <button type="button" className="btn--outline" onClick={this._handleOutputPath} disabled={isDetailPage}>Change</button>
                           </div>
             },
             {
                 order: 6,
                 detailContent: false,
                 content: <div className="item-settings item__preset-button" key="6">
-                                <button type="button" className="btn--outline" onClick={::this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
+                                <button type="button" className="btn--outline" onClick={this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
                             </div>
             }
         ]
@@ -886,7 +924,7 @@ export class TaskDetail extends React.Component {
             //                 <div className="switch-box switch-box--green">
             //                     <span>{compositing ? 'On' : 'Off'}</span>
             //                     <label className="switch">
-            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind(this)} disabled={isDetailPage}/>
+            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
             //                         <div className="switch-slider round"></div>
             //                     </label>
             //                 </div>
@@ -912,11 +950,26 @@ export class TaskDetail extends React.Component {
             .map(item => item.content)
     }
 
+    _fetchRadioOptions = (type) => {
+        let computeOnRadioOptions = {};
+
+        if(this.state.isDetailPage) {
+            computeOnRadioOptions['readOnly'] = true;
+            computeOnRadioOptions['checked'] = this.state.compute_on === type;
+        } else {
+            computeOnRadioOptions['onChange'] = this._handleComputeOnOptionChange;
+            computeOnRadioOptions['defaultChecked'] = this.state.compute_on === type;
+        }
+
+        return computeOnRadioOptions
+    }
+
     render() {
 
         const {
             bid, 
             compute_on,
+            concent,
             defaultSettingsModal, 
             insufficientAmountModal, 
             isDetailPage, 
@@ -925,7 +978,8 @@ export class TaskDetail extends React.Component {
             managePresetModal, 
             maxSubtasks,
             modalData, 
-            presetModal, 
+            presetModal,
+            depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
             testLock
@@ -934,35 +988,28 @@ export class TaskDetail extends React.Component {
         const {
             actions,
             currency,
+            concentSwitch, //from settings
             estimated_cost, 
             isDeveloperMode,
             isMainNet,
-            subtasksList, 
+            subtasksList,
+            hasSubtasksLoaded, 
             task,
             testStatus
         } = this.props;
-
-        let computeOnRadioOptions = {};
-
-        if(isDetailPage) {
-            computeOnRadioOptions['readOnly'] = true;
-        } else {
-            computeOnRadioOptions['onChange'] = ::this._handleComputeOnOptionChange;
-        }
-
         return (
             <div>
-                <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
+                <form id="taskForm" onSubmit={this._handleStartTaskButton} className="content__task-detail">
                     <TestResult 
                         testStatus={testStatus} 
                         isDetailPage={isDetailPage}
                         task={task}
                         actions={actions}
-                        toggleTestLock={::this._toggleTestLock}
+                        toggleTestLock={this._toggleTestLock}
                         />
                     <section className="section-details__task-detail">
                         <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
-                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} overflowRef={this.overflowTaskDetail} actions={actions}/>}
+                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
                             <div className="section-settings__task-detail">
                                     <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
                                     {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
@@ -1003,16 +1050,16 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="item-settings">
                                 <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group" {...computeOnRadioOptions}>
+                                <div className="render-on__radio-group">
                                     <div>
-                                        <input type="radio" id="cpu" value="cpu" name="compute_on" checked={compute_on === "cpu"}/>
+                                        <input type="radio" id="cpu" value="cpu" name="compute_on" {...this._fetchRadioOptions('cpu')}/>
                                         <label htmlFor="cpu">
                                             <span className="overlay"/>
                                             <span className="icon-cpu"/>CPU
                                         </label>
                                     </div>
                                     <div>
-                                        <input type="radio" id="gpu" value="gpu" name="compute_on" checked={compute_on === "gpu"}/>
+                                        <input type="radio" id="gpu" value="gpu" name="compute_on" {...this._fetchRadioOptions('gpu')}/>
                                         <label htmlFor="gpu">
                                             <span className="overlay"/>
                                             <span className="icon-gpu"/>GPU
@@ -1021,6 +1068,28 @@ export class TaskDetail extends React.Component {
                                 </div>
                             </div>
                             </div>
+                            { !isMainNet
+                                && concentSwitch
+                                &&
+                                <div className="section-concent__task-detail">
+                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" distance={-20}/>
+                                    <div className="item-concent">
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Set"
+                                            cls="title" 
+                                            infoHidden={true}/>
+                                        <div className="switch-box switch-box--green">
+                                             <span className="switch-label switch-label--left">Off</span>
+                                             <label className="switch">
+                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                                 <div className="switch-slider round"></div>
+                                             </label>
+                                             <span className="switch-label switch-label--right">On</span>
+                                         </div>
+                                    </div>
+                                </div>
+                            }
                             <div className="section-price__task-detail">
                                 <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
                                 <div className="item-price">
@@ -1080,6 +1149,49 @@ export class TaskDetail extends React.Component {
                                         </div>
                                     </div>
                                 </div>
+                                { concent &&
+                                    <div className="estimated-deposit__panel">
+                                        <div className="item-price">
+                                            <InfoLabel 
+                                                type="span" 
+                                                label="Deposit payment" 
+                                                info={<p className="tooltip_task">The deposit amount is higher than the cost of task to ensure that you 
+                                                    <br/>have enough funds to participate in the network. The real cost 
+                                                    <br/>of a task is unchanging. Providers using Concent Service will 
+                                                    <br/>check if requestors have no less than twice the amount 
+                                                    <br/>of funds in their Deposit for covering a task payment.
+                                                    </p>} 
+                                                cls="title" 
+                                                infoHidden={true} 
+                                                interactive={true}/>
+                                            <div className="estimated_cost">
+                                                {this._convertPriceAsHR(estimated_cost.deposit.GNT_suggested, "GNT", 3, 14)}
+                                                <span>{isMainNet ? "" : "t"} GNT</span>
+                                            </div>
+                                            <div className="estimated_usd">
+                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.GNT_suggested || 0) * currency["GNT"], "USD", 4, 14)}</span>
+                                            </div>
+                                        </div>
+                                        <div className="item-price">
+                                            <InfoLabel 
+                                                type="span" 
+                                                label="Deposit Tx fee" 
+                                                info={<p className="tooltip_task">You need small amount of ETH (used for gas) avaliable on your account 
+                                                    <br/>to submit a deposit to the Concent Service
+                                                    </p>} 
+                                                cls="title" 
+                                                infoHidden={true} 
+                                                interactive={true}/>
+                                            <div className="estimated_cost">
+                                                {this._convertPriceAsHR(estimated_cost.deposit.ETH, "ETH", 5, 14)}
+                                                <span>{isMainNet ? "" : "t"} ETH</span>
+                                            </div>
+                                            <div className="estimated_usd">
+                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.ETH || 0) * currency["GNT"], "USD", 5, 14)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                                 <span className="item-price tips__price">
                                     You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
                                 </span>  
@@ -1093,11 +1205,12 @@ export class TaskDetail extends React.Component {
                         <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testLock || loadingTaskIndicator}>Start Task</button>
                     </section>}
                 </form>
-                {presetModal && <PresetModal closeModal={::this._closeModal} saveCallback={::this._handlePresetSave} {...modalData}/>}
-                {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
-                {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
-                {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
-                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
+                {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
+                {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
+                {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
+                {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
+                {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={this._closeModal}/>}
             </div>
         );
     }
@@ -1116,7 +1229,7 @@ export class TaskDetail extends React.Component {
 //     && !isDetailPage
 //     && !(testStatus.status === testStatusDict.SUCCESS 
 //         || testStatus.status === testStatusDict.ERROR)) 
-// &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={::this._toggleLoadingHint}>
+// &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={this._toggleLoadingHint}>
 //         { isInPatient 
 //             && <div className="loading--patient">
 //             <img src={whoaImg} alt="Please be patient"/>

@@ -1,10 +1,42 @@
-$color_1: rgb(255, 255, 255);
-$color_2: rgb(64, 93, 175);
-$color_3: rgb(245, 166, 35);
+$color_1: #4e4e4e;
+$color_2: rgb(52, 52, 52);
+$color_3: rgb(140, 140, 140);
+$color_4: rgb(60, 60, 59);
+$color_5: rgb(20, 20, 20);
+$color_6: rgb(57, 57, 57);
+$color_7: rgb(255, 255, 255);
+$color_8: rgb(64, 93, 175);
+$color_9: rgb(245, 166, 35);
 
+.icon-high-five {
+  &:before {
+    content: "\e968";
+  }
+}
+.icon-ok-hand {
+  &:before {
+    content: "\e969";
+  }
+}
+.icon-shield {
+  &:before {
+    content: "\e96a";
+  }
+}
+.icon-file-menu {
+  &:before {
+    content: "\e953";
+  }
+}
+.icon-folder-menu {
+  &:before {
+    content: "\e954";
+  }
+}
 .icon-cpu {
   &:before {
     content: "\e900";
+    color: $color_1;
   }
 }
 .icon-gpu {
@@ -17,9 +49,63 @@ $color_3: rgb(245, 166, 35);
     content: "\e95b";
   }
 }
+.icon-chat {
+  &:before {
+    content: "\e95c";
+  }
+}
+.icon-ethereum-logo {
+  .path1 {
+    &:before {
+      content: "\e95d";
+      color: $color_2;
+    }
+  }
+  .path2 {
+    &:before {
+      content: "\e95e";
+      margin-left: -1em;
+      color: $color_3;
+    }
+  }
+  .path3 {
+    &:before {
+      content: "\e95f";
+      margin-left: -1em;
+      color: $color_4;
+    }
+  }
+  .path4 {
+    &:before {
+      content: "\e960";
+      margin-left: -1em;
+      color: $color_3;
+    }
+  }
+  .path5 {
+    &:before {
+      content: "\e961";
+      margin-left: -1em;
+      color: $color_5;
+    }
+  }
+  .path6 {
+    &:before {
+      content: "\e962";
+      margin-left: -1em;
+      color: $color_6;
+    }
+  }
+}
+.icon-logs {
+  &:before {
+    content: "\e963";
+  }
+}
 .icon-golem-logo {
   &:before {
     content: "\e902";
+    color: $color_8;
   }
 }
 .icon-notification {
@@ -38,21 +124,21 @@ $color_3: rgb(245, 166, 35);
   .path1 {
     &:before {
       content: "\e905";
-      color: $color_1;
+      color: $color_7;
     }
   }
   .path2 {
     &:before {
       content: "\e906";
       margin-left: -1.25em;
-      color: $color_2;
+      color: $color_8;
     }
   }
   .path3 {
     &:before {
       content: "\e907";
       margin-left: -1.25em;
-      color: $color_3;
+      color: $color_9;
     }
   }
 }
@@ -446,19 +532,14 @@ $color_3: rgb(245, 166, 35);
     content: "\e951";
   }
 }
-.icon-ethereum-logo {
+.icon-ethereum-logo1 {
   &:before {
     content: "\e952";
   }
 }
-.icon-file-menu {
+.icon-withdraw{
   &:before {
-    content: "\e953";
-  }
-}
-.icon-folder-menu {
-  &:before {
-    content: "\e954";
+    content: "\e964";
   }
 }
 .icon-info-small {
@@ -491,3 +572,25 @@ $color_3: rgb(245, 166, 35);
     content: "\e95a";
   }
 }
+.icon-back-up {
+  &:before {
+    content: "\e965";
+  }
+}
+.icon-settings-simplified {
+  &:before {
+    content: "\e966";
+  }
+}
+.icon-transaction-history {
+  &:before {
+    content: "\e967";
+  }
+}
+.icon-ethereum-logo {
+  &:before {
+    content: "\e952";
+    color: $color_5;
+  }
+}
+

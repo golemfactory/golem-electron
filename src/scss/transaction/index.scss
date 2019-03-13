@@ -1,0 +1,95 @@
+.container__tube {
+	border: 1px solid $color-border;
+	border-radius: 50px;
+	box-sizing: border-box;
+	margin: 0 20px;
+	font-size: 8pt;
+	flex: 0 0 28px;
+
+	.content__tube {
+		@include flex;
+		justify-content: space-evenly;
+		height: 26px;
+
+		.section__tube{
+			@include flex;
+			justify-content: space-between;
+			padding: 0 10px;
+			flex: 1 1 auto;
+
+			&.content__concent-info{
+				justify-content: space-between;
+			}
+		}
+
+		.tx-switch-btn + .section__tube{
+			padding: 0 5px;
+		}
+
+		.finance__indicator {
+			&.indicator {
+				&--down,
+				&--up {
+					font-weight: 400;
+					margin-right: 2px;
+				}
+
+				&--down {
+					color: $color-error;
+				}
+				&--up {
+					color: $color-accent1;
+				}
+			}
+		}
+
+		.tx-switch-btn{
+			border-radius: 50%;
+			background: $color-primary;
+			color: $button-font-color;
+			font-size: 13pt;
+			font-weight: 400;
+			padding: 2px;
+			cursor: pointer;
+			opacity: 0.3;
+			margin: 0 3px;
+
+			[class^="icon-"], 
+			[class*=" icon-"] {
+				pointer-events: none;
+			}
+
+			&.selected{
+				background: $button-active-color;
+				opacity: 1;
+			}
+
+			&:hover{
+				background: $button-hover-color;
+				opacity: 1;
+			}
+		}
+	}
+
+	.btn__transaction-history,
+	.btn__concent-settings {
+		cursor: pointer;
+		height: 26px;
+		line-height: 28px;
+		z-index: 1;
+		position: relative;
+		color: $color-primary;
+
+		.icon-settings{
+			margin-right: 4px;
+			position: relative;
+			bottom: -1px;
+		}
+
+		.icon-transaction-history{
+			position: relative;
+			font-size: 12pt;
+			bottom: -4px;
+		}
+	}
+}

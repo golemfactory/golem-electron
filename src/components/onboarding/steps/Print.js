@@ -1,6 +1,17 @@
 import React from 'react';
+import Lottie from 'react-lottie';
 
 import printIcon from './../../../assets/img/print.svg'
+import animData from './../../../assets/anims/onboarding/printer.json'
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class Print extends React.Component {
 
@@ -10,40 +21,38 @@ export default class Print extends React.Component {
 
 
     _initContent(_isPrinted, _isSkippingPrint){
-        if(!_isSkippingPrint){
+        if(!_isSkippingPrint || _isPrinted){
             if(!_isPrinted){
-                return <span className="desc__print">We do care about your safety!
+                return <span>We do care about your safety!
                         <br/>
-                        So just to be sure that you actually
+                        So just to be sure that you actually have your password
                         <br/>
-                        have your password saved, please save
+                        saved, please write it down in a safe place.
                         <br/>
-                        it as a PDF file or just print it out.
+                        You can also print it out or save it as PDF file.
                         </span>
             }
 
-            return <span className="desc__print">
-                        <strong>Security guidelines.</strong>
+            return <span>
+                        Security guidelines.
                         <br/>
-                        After printing your password, <strong>delete</strong>
+                        After printing your password, delete the PDF
                         <br/>
-                        <strong>.pdf and temporary files from your machine.</strong>
+                        and temporary files from your machine. You can also
                         <br/>
-                        <strong>You can also encrypt .pdf file with password</strong>
+                        encrypt the PDF file with password and store it in
                         <br/>
-                        and <strong>store it in secure place</strong>, like USB drive.
+                        secure place, like a USB drive.
                         </span>
         } 
-        return <span className="desc__print">
+        return <span>
                         Hey!
                         <br/>
-                        Are you sure that you don't want
+                        Are you sure that you don't want to print your
                         <br/>
-                        to print your password? We hope
+                        password? We hope that you have written it down and
                         <br/>
-                        that you have written it down in a safe
-                        <br/>
-                        and secure place.
+                        stored it in a safe and secure place!
                         </span>
     }
 
@@ -52,7 +61,7 @@ export default class Print extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding welcome-beta">
-                   <img className="welcome-image" src={printIcon}/>
+                   <Lottie options={defaultOptions}/>
                 </div>
                 <div className="desc__onboarding">
                     {this._initContent(isPrinted, isSkippingPrint)}

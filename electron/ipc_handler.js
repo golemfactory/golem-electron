@@ -1,7 +1,8 @@
 const electron = require('electron')
-const {app, ipcMain} = electron
+var path = require('path')
+const {app, ipcMain, shell} = electron
 const log = require('./debug_handler.js')
-var exec = require('child_process').exec;
+const {DATADIR} = require('./golem_config.js');
 
 let openedWindowsMap = null;
 function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) {
@@ -20,19 +21,13 @@ function ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT) 
         app.setBadgeCount(counter)
     })
 
-    function getOpenCommand() {
-       switch (process.platform) { 
-          case 'darwin' : return 'open';
-          case 'win32' : return 'start';
-          case 'win64' : return 'start';
-          default : return 'xdg-open';
-       }
-}
+    ipcMain.on('open-file', (event, filePath) => {
+        filePath = filePath.replace(/ /g,  "\\ ")
+        shell.openItem(filePath)
+    })
 
-    ipcMain.on('open-file', (event, path) => {
-        path = path.replace(/ /g,  "\\ ")
-        console.log("path", getOpenCommand(), path);
-        exec(getOpenCommand() + ' ' + path);
+    ipcMain.on('open-logs', (event) => {
+        shell.openItem(path.join(DATADIR, "logs"))
     })
 
     /**
@@ -80,6 +75,8 @@ function ipcRemover() {
     ipcMain.removeAllListeners('preview-switch')
     ipcMain.removeAllListeners('preview-screen')
     ipcMain.removeAllListeners('set-badge')
+    ipcMain.removeAllListeners('open-file')
+    ipcMain.removeAllListeners('open-logs')
     console.info('IPC Listeners destroyed.')
 }
 

@@ -31,7 +31,6 @@ exports[`Loading should render an Loading container 1`] = `
       }
     }
     immediate={false}
-    impl={[Function]}
     inject={[Function]}
     native={false}
     reset={false}
@@ -41,6 +40,8 @@ exports[`Loading should render an Loading container 1`] = `
         "rotate": -24,
       }
     }
-  />
+  >
+    <Component />
+  </Spring>
 </div>
 `;

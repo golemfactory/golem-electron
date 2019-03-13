@@ -1,55 +1,69 @@
-import React from 'react';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
-const {clipboard} = window.electron;
+import React from "react";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+const { clipboard } = window.electron;
 
-import {Tooltip} from 'react-tippy';
+import { Tooltip } from "react-tippy";
 
-import * as Actions from './../../actions'
+import * as Actions from "./../../actions";
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     peerInfo: state.realTime.peerInfo
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 export class Peers extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             isDataCopied: false
-        }
+        };
     }
 
     _handleCopyToClipboard(data, evt) {
         if (data) {
-            clipboard.writeText(data)
-            this.setState({
-                isDataCopied: true
-            }, () => {
-                this.copyTimeout = setTimeout(() => {
-                    this.setState({
-                        isDataCopied: false
-                    })
-                }, 3000)
-            })
+            clipboard.writeText(data);
+            this.setState(
+                {
+                    isDataCopied: true
+                },
+                () => {
+                    this.copyTimeout = setTimeout(() => {
+                        this.setState({
+                            isDataCopied: false
+                        });
+                    }, 3000);
+                }
+            );
         }
     }
 
-    _fillNodeInfo(peerInfo){
-        const {isDataCopied} = this.state
-        return peerInfo.map(({address, port, node_name}, index) => <tr key={index.toString()}>
+    _fillNodeInfo = peerInfo => {
+        const { isDataCopied } = this.state;
+        return peerInfo.map(({ address, port, node_name }, index) => (
+            <tr key={index.toString()}>
                 <td>
                     <Tooltip
-                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy <Adress:Port>'}</p>}
-                      position="bottom"
-                      trigger="mouseenter"
-                      hideOnClick={false}>
-                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, `${address}:${port}`)}>
+                        html={
+                            <p>
+                                {isDataCopied
+                                    ? "Copied Succesfully!"
+                                    : "Click to copy <Adress:Port>"}
+                            </p>
+                        }
+                        position="bottom"
+                        trigger="mouseenter"
+                        hideOnClick={false}>
+                        <div
+                            className="clipboard-subtask-id"
+                            onClick={this._handleCopyToClipboard.bind(
+                                this,
+                                `${address}:${port}`
+                            )}>
                             <span>{address}</span>
                         </div>
                     </Tooltip>
@@ -59,45 +73,58 @@ export class Peers extends React.Component {
                 </td>
                 <td>
                     <Tooltip
-                      html={<p>{isDataCopied ? 'Copied Succesfully!' : 'Click to copy'}</p>}
-                      position="bottom"
-                      trigger="mouseenter"
-                      hideOnClick={false}>
-                        <div className="clipboard-subtask-id" onClick={this._handleCopyToClipboard.bind(this, node_name)}>
+                        html={
+                            <p>
+                                {isDataCopied
+                                    ? "Copied Succesfully!"
+                                    : "Click to copy"}
+                            </p>
+                        }
+                        position="bottom"
+                        trigger="mouseenter"
+                        hideOnClick={false}>
+                        <div
+                            className="clipboard-subtask-id"
+                            onClick={this._handleCopyToClipboard.bind(
+                                this,
+                                node_name
+                            )}>
                             <span>{node_name || "Anonymous node"}</span>
                         </div>
                     </Tooltip>
                 </td>
-            </tr>)
-    }
+            </tr>
+        ));
+    };
 
     render() {
-        const {isEngineOn, peerInfo} = this.props
+        const { isEngineOn, peerInfo } = this.props;
         return (
             <div className="content__peers">
-            { peerInfo && peerInfo.length > 0 ?
-                <div className="node-info__peers">
-                    <table>
-                        <thead>
-                            <tr>
-                              <th>Address</th>
-                              <th>Port</th>
-                              <th>Node Name</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {::this._fillNodeInfo(peerInfo)}
-                        </tbody>
-                    </table>
-                </div>
-                :
-                <div className="no-node__peers">
-                    <span>There's no active node.</span>
-                </div>
-                }
+                {peerInfo && peerInfo.length > 0 ? (
+                    <div className="node-info__peers">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Address</th>
+                                    <th>Port</th>
+                                    <th>Node Name</th>
+                                </tr>
+                            </thead>
+                            <tbody>{this._fillNodeInfo(peerInfo)}</tbody>
+                        </table>
+                    </div>
+                ) : (
+                    <div className="no-node__peers">
+                        <span>There's no active node.</span>
+                    </div>
+                )}
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Peers)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Peers);

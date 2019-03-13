@@ -18,19 +18,30 @@ export function subscribeHistory(session) {
     return eventChannel(emit => {
         const iv = setInterval(function fetchHistory() {
             let incomeList;
+            let paymentList;
             let allPayments = []
+
+            function on_history_deposits(args) {
+                let deposits = args[0];
+                deposits = deposits.map(deposit => {
+                    deposit.type = "deposit";
+                    return deposit
+                })
+                let allPayments = [...paymentList, ...incomeList, ...deposits];
+                emit({
+                    type: SET_HISTORY,
+                    payload: allPayments
+                })
+            }
+
             function on_history_payments(args) {
                 let payments = args[0];
                 payments = payments.map(payment => {
                     payment.type = "payment";
                     return payment
                 })
-                let allPayments = [...payments, ...incomeList];
-                //console.info(config.PAYMENTS_RPC, allPayments)
-                emit({
-                    type: SET_HISTORY,
-                    payload: allPayments
-                })
+                paymentList = payments
+                _handleRPC(on_history_deposits, session, config.DEPOSIT_RPC)
             }
 
             function on_history_income(args) {
@@ -40,11 +51,6 @@ export function subscribeHistory(session) {
                     return income
                 })
                 incomeList = incomes
-                //console.info(config.INCOME_RPC, incomes)
-                // emit({
-                //     type: SET_HISTORY,
-                //     payload: incomes
-                // })
                 _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
             }
 

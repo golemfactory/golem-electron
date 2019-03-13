@@ -27,10 +27,40 @@ const {
         SET_SUBTASKS_LIST, 
         FETCH_SUBTASKS_LIST,
         FETCH_HEALTHY_NODE_NUMBER,
-        SET_HEALTHY_NODE_NUMBER
+        SET_HEALTHY_NODE_NUMBER,
+        GET_TASK_GAS_PRICE,
+        SET_TASK_GAS_PRICE
     } = dict
 
 let channelTestInterval
+
+/**
+ * [getGasPrice func. fetchs current gas price on network and the safe max limit]
+ * @param  {Object} session     [Websocket connection session]
+ * @return {Object}             [Action object]
+ */
+export function getGasPrice(session) {
+
+    return new Promise((resolve, reject) => {
+
+        function on_success(args) {
+            const on_info = args[0];
+            if(on_info){
+                resolve({
+                    type: SET_TASK_GAS_PRICE,
+                    payload: on_info
+                })
+            }
+        }
+
+        _handleRPC(on_success, session, config.GET_GAS_PRICE_RPC)
+    })
+}
+
+export function* gasPriceBase(session) {
+    let action = yield call(getGasPrice, session)
+    yield put(action)
+}
 
 /**
  * [subscribeHistory func. fetchs subtasklist of the given task, with interval]
@@ -514,4 +544,5 @@ export function* tasksFlow(session) {
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session)
     yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session)
     yield takeLatest(BLOCK_NODE, blockNodeBase, session)
+    yield takeEvery(GET_TASK_GAS_PRICE, gasPriceBase, session)
 }

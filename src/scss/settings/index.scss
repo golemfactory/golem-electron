@@ -1,6 +1,8 @@
 @import "personal";
 @import "performance";
 @import "price";
+@import "concent";
+@import "modal/concent-modal";
 @import "trust";
 @import "file-location";
 @import "geth";
@@ -27,7 +29,7 @@ $item__accordion-height: 78.7px;
 }
 
 .section__personal {
-    flex: 0 0 342px;
+    flex: 0 0 300px;
     transition: .8s all;
 }
 
@@ -46,6 +48,13 @@ $item__accordion-height: 78.7px;
 
     .image__personal{
         max-height: 0;
+        max-width: 0;
+        &--border{
+            max-height: 0;
+            max-width: 0;
+            opacity: 0;
+            visibility: hidden;
+        }
     }
 
     .backup-info__personal{
@@ -58,6 +67,7 @@ $item__accordion-height: 78.7px;
     height: 100%;
     position: relative;
     overflow-y: overlay;
+    overflow-x: hidden;
     transform: translateZ(0);
 }
 
