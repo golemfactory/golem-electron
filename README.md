@@ -56,13 +56,13 @@ npm run start -- --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:6000
 While using application, you can choose `Debug mode` from the `View` menu or press;
 
 Windows: &nbsp;
-<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
+<kbd>Ctrl</kbd>&nbsp; + <kbd>Shift</kbd> + <kbd>L</kbd>
 <br/>
 Mac: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <kbd>⌘ cmd</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
 <br/>
 Linux: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>L</kbd>
+<kbd>Ctrl</kbd>&nbsp;&nbsp; + <kbd>Shift</kbd> + <kbd>L</kbd>
 <br/>
 <br/>
 Debug mode will be activated. 
@@ -75,10 +75,10 @@ You'll find debug logs in;
 <br/>
 
 |OS|Path|General Log|Error Log|
-|---|---|---|---|
-|Windows|`%LOCALAPPDATA%\golem\golem\default\{CURRENT_CHAIN}\logs\`|`gui.log`|`gui-error.log`|
-|Mac|`~/Library/Application\ Support/golem/default/{CURRENT_CHAIN}/logs/`|`gui.log`|`gui-error.log`|
-|Linux|`~/.local/share/golem/default/{CURRENT_CHAIN}/logs/gui.log/`|`gui.log`|`gui-error.log`|
+| --- | --- | :---: | :---: |
+|Windows|`%LOCALAPPDATA%\golem\golem\default\{CURRENT_CHAIN}\logs\`|gui.log|<span>gui&#8209;error.log</span>|
+|Mac|`~/Library/Application\ Support/golem/default/{CURRENT_CHAIN}/logs/`|gui.log|<span>gui&#8209;error.log</span>|
+|Linux|`~/.local/share/golem/default/{CURRENT_CHAIN}/logs/gui.log/`|gui.log|<span>gui&#8209;error.log</span>|
 
 <br/>
 Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.
@@ -88,13 +88,13 @@ Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on main
 While using application, you can choose `Developer mode` from the `View` menu or press;
 
 Windows: &nbsp;
-<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>
+<kbd>Ctrl</kbd>&nbsp; + <kbd>Shift</kbd> + <kbd>D</kbd>
 <br/>
 Mac: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <kbd>⌘ cmd</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>
 <br/>
 Linux: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>
+<kbd>Ctrl</kbd>&nbsp;&nbsp; + <kbd>Shift</kbd> + <kbd>D</kbd>
 <br/>
 <br/>
 Developer mode will be activated. 
