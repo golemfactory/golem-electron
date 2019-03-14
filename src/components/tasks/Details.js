@@ -50,10 +50,14 @@ export class Preview extends React.Component {
                             htmlFor={`taskTypeRadio${key}`}
                             className="checkbox-label-left"
                         >
-                            <b>Subtask number: </b> {key} | <b>Progress: </b>{" "}
-                            {item.progress * 100}% | <b>State: </b>{" "}
+                            <b>Subtask number: </b> {key}<span className="bumper"/><b>Progress: </b>{" "}
+                            {item.progress * 100}%<span className="bumper"/><b>State: </b>{" "}
                             {item.status}
                         </label>
+                        <div className="checkbox-item__action">
+                            <span className="icon-progress-clockwise"/>
+                            <span className="icon-arrow-down"/>
+                        </div>
                     </div>
                 </div>
             ))}

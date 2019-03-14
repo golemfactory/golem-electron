@@ -98,7 +98,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--timeout">Timed out: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -108,7 +108,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--preparing">
                             Preparing for computation...{" "}
                         </span>
@@ -119,7 +119,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--preparing">
                             Waiting for computation...{" "}
                         </span>
@@ -136,7 +136,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--restarted">Restarted</span>
                     </div>
                 );
@@ -145,11 +145,11 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--computing">
                             Computing...{" "}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
                     </div>
                 );
@@ -164,7 +164,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper"/>
                         <span className="duration--finished">Finished: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -254,10 +254,7 @@ export class TaskItem extends React.Component {
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper"/>
                                                 <span>
                                                     {" "}
                                                     Resolution:{" "}
@@ -267,10 +264,7 @@ export class TaskItem extends React.Component {
                                                         )) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper"/>
                                                 <span>
                                                     Cost:{" "}
                                                     {this._fetchCost(item)}
@@ -281,18 +275,12 @@ export class TaskItem extends React.Component {
                                                     Subtasks:{" "}
                                                     {item.subtasks_count || 0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper"/>
                                                 <span>
                                                     {" "}
                                                     Task timeout: {item.timeout}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper"/>
                                                 <span>
                                                     {" "}
                                                     Subtask timeout:{" "}

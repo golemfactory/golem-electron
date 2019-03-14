@@ -1,32 +1,47 @@
-.details{
-	&__section{
-		ul{
+.details {
+	&__section {
+		ul {
 			padding: 0;
 			margin: 0;
 		}
 		.container-checkbox__details {
-		    display: flex;
-		    justify-content: flex-start;
-		    align-items: center;
-		    flex-wrap: wrap;
-		    font-size: 8pt;
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			flex-wrap: wrap;
+			font-size: 8pt;
+			border-top: 1px solid $color-border;
 
-		    .checkbox-item{
-		    	width: 100%;
-		    	margin: 0;
-		    	padding: 10px 25px;
-		    	line-height: 2.5em;
-		    	border-top: 1px solid $color-border;
+			.checkbox-item {
+				width: 100%;
+				margin: 0;
+				padding: 10px 25px;
+				line-height: 2.6em;
 
-		    	&:last-child{
-		    		border-bottom: 1px solid $color-border;
-		    	}
-		    }
+				&__action {
+					display: none;
+					justify-content: space-around;
+					flex: 0 0 40px;
+					span {
+						cursor: pointer;
+						color: $color-primary;
+					}
+				}
 
+				&:hover {
+					.checkbox-item__action {
+						display: flex;
+					}
+				}
+			}
+
+			&:last-child {
+				border-bottom: 1px solid $color-border;
+			}
 		}
 	}
 
-	&__subtask-stats{
+	&__subtask-stats {
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
@@ -34,14 +49,14 @@
 		font-size: 9pt;
 	}
 
-	&__subtask-action{
+	&__subtask-action {
 		display: flex;
 		justify-content: space-around;
 		align-items: center;
 		height: 25px;
 		font-size: 9pt;
 		color: $color-primary;
-		span{
+		span {
 			cursor: pointer;
 		}
 	}

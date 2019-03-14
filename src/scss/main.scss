@@ -647,6 +647,13 @@ input[type="number"]::-webkit-inner-spin-button {
     max-width: 510px !important;
 }
 
+.bumper {
+    &:before{
+        content: "|";
+        margin: 0 6px;
+    }
+}
+
 .jumping-dots {
     span {
         position: relative;
