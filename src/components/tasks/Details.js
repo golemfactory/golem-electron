@@ -10,6 +10,7 @@ import ConditionalRender from "../hoc/ConditionalRender";
 import flow from "lodash/fp/flow";
 import groupBy from "lodash/fp/groupBy";
 import every from "lodash/every";
+import size from "lodash/size";
 const map = require("lodash/fp/map").convert({ cap: false });
 
 const mapStateToProps = state => ({
@@ -39,7 +40,11 @@ export class Preview extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.checkedItems !== this.state.checkedItems) {
+        if (
+            nextState.checkedItems !== this.state.checkedItems &&
+            nextProps.subtasksList[nextProps.id].length ===
+                size(nextState.checkedItems)
+        ) {
             const isAllChecked = every(
                 nextState.checkedItems,
                 item => item === true
@@ -59,11 +64,9 @@ export class Preview extends React.Component {
                 (tempObj[key] =
                     val !== null ? !this.state.isAllChecked : !tempObj[key])
         );
-        this.setState(
-            {
-                checkedItems: tempObj
-            }
-        );
+        this.setState({
+            checkedItems: tempObj
+        });
     };
 
     _toggleAll = () => {
@@ -82,9 +85,9 @@ export class Preview extends React.Component {
                             type="checkbox"
                             name="taskType"
                             value={item.subtask_id}
-                            onChange={this._toggleItems.bind(null, [
-                                item.subtask_id
-                            ])}
+                            onChange={() =>
+                                this._toggleItems.call(null, [item.subtask_id])
+                            }
                             checked={
                                 this.state.checkedItems[item.subtask_id] ||
                                 false
