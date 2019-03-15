@@ -170,7 +170,7 @@
         "electron-builder": "20.38.5",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
-        "electron-reload": "^1.2.2",
+        "electron-reload": "^1.4.0",
         "enzyme": "3.6.0",
         "enzyme-adapter-react-16": "1.7.0",
         "enzyme-to-json": "3.3.4",
