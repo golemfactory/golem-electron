@@ -14,7 +14,7 @@ import { taskStatus } from "./../../constants/statusDicts";
 import * as Actions from "../../actions";
 
 import Preview from "./Preview";
-import Details from "./Details";
+import Details from "./details";
 import ConditionalRender from "../hoc/ConditionalRender";
 
 const ETH_DENOM = 10 ** 18;
