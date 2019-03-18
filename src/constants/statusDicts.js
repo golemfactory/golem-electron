@@ -6,6 +6,7 @@ const testStatusDict = Object.freeze({
 
 const taskStatus = Object.freeze({
     WAITINGFORPEER: 'Waiting for peer',
+    DEPOSIT: 'Creating the deposit',
     NOTREADY: 'Not started',
     READY: 'Ready',
     WAITING: 'Waiting',
