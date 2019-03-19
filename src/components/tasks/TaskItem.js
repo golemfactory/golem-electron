@@ -113,7 +113,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Creating concent deposit...{" "}
+                            Creating the deposit...{" "}
                         </span>
                     </div>
                 );
