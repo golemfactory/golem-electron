@@ -12,6 +12,7 @@ import TestResult from './TestResult'
 import NodeList from './NodeList'
 import PresetModal from './modal/PresetModal'
 import DepositTimeModal from './modal/DepositTimeModal'
+import TaskSummaryModal from './modal/TaskSummaryModal'
 import ManagePresetModal from './modal/ManagePresetModal'
 import DefaultSettingsModal from './modal/DefaultSettingsModal'
 import ResolutionChangeModal from './modal/ResolutionChangeModal'
@@ -149,6 +150,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             presetModal: false,
+            taskSummaryModal: false,
             depositTimeModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
@@ -733,6 +735,12 @@ export class TaskDetail extends React.Component {
         }, onFolderHandler)
     }
 
+    _handleConfirmationModal = () => {
+        this.setState({
+            taskSummaryModal: true
+        })
+    }
+
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
@@ -963,6 +971,7 @@ export class TaskDetail extends React.Component {
             maxSubtasks,
             modalData, 
             presetModal,
+            taskSummaryModal,
             depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
@@ -982,7 +991,7 @@ export class TaskDetail extends React.Component {
         } = this.props;
         return (
             <div>
-                <form id="taskForm" onSubmit={::this._handleStartTaskButton} className="content__task-detail">
+                <form id="taskForm" onSubmit={this._handleConfirmationModal} className="content__task-detail">
                     <TestResult 
                         testStatus={testStatus} 
                         isDetailPage={isDetailPage}
@@ -1192,6 +1201,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {depositTimeModal && <DepositTimeModal closeModal={::this._closeModal} createTaskOnHighGas={::this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
+                {taskSummaryModal && <TaskSummaryModal closeModal={::this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} {...this.state}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
             </div>
