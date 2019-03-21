@@ -5,7 +5,7 @@ import { hashHistory } from "react-router";
 import { BigNumber } from "bignumber.js";
 
 import * as Actions from "./../../actions";
-import { timeStampToHR } from "./../../utils/secsToHMS";
+import { timeStampToHR } from "./../../utils/time";
 
 import { getStatus } from "../../reducers";
 import CurrencyBox from "./CurrencyBox";

@@ -31,6 +31,7 @@ import {once} from './../../utils/once'
 import zipObject from './../../utils/zipObject'
 import isObjectEmpty from './../../utils/isObjectEmpty'
 import {testStatusDict} from './../../constants/statusDicts'
+import { getTimeAsFloat, floatToHR } from './../../utils/time'
 import calculateFrameAmount from './../../utils/calculateFrameAmount'
     
 import whoaImg from './../../assets/img/whoa.png'
@@ -75,29 +76,6 @@ const hints = {
         "Hint: To pick random frames, e.g. \"2;6;7\".",
         "Hint: To use common diff. e.g. \"1-7,2\"."
     ]
-}
-
-/*############# HELPER FUNCTIONS ############# */
-
-function getTimeAsFloat(time) {
-    let result = 0;
-    time = time.split(':')
-    result += Number(time[0]) * 3600
-    result += Number(time[1]) * 60
-    result += Number(time[2])
-    return result / 3600
-}
-
-function floatToString(timeFloat) {
-    let time = timeFloat * 3600;
-    let date = new Date(1970, 0, 1); //time travel :)
-    let startDay = date.getDate()
-    date.setSeconds(time);
-
-    let endDay = date.getDate()
-    let day = endDay - startDay
-    let hours = date.getHours() + (day * 24)
-    return hours +':'+ date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, "$1");
 }
 
 const mapStateToProps = state => ({
@@ -288,7 +266,7 @@ export class TaskDetail extends React.Component {
                 options: {
                     price: new BigNumber(nextState.bid).multipliedBy(ETH_DENOM).toString(), //wei
                     subtasks_count: Number(nextState.subtasks_count),
-                    subtask_timeout: floatToString(nextState.subtask_timeout)
+                    subtask_timeout: floatToHR(nextState.subtask_timeout)
                 }
             })
         }
@@ -799,9 +777,9 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                timeout: floatToString(timeout),
+                timeout: floatToHR(timeout),
                 subtasks_count: Number(subtasks_count),
-                subtask_timeout: floatToString(subtask_timeout),
+                subtask_timeout: floatToHR(subtask_timeout),
                 bid,
                 estimated_memory : (testStatus && testStatus.estimated_memory),
                 options: {
@@ -1201,7 +1179,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={::this._closeModal}/>}
                 {depositTimeModal && <DepositTimeModal closeModal={::this._closeModal} createTaskOnHighGas={::this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={::this._closeModal} applyPreset={::this._applyDefaultPreset}/>}
-                {taskSummaryModal && <TaskSummaryModal closeModal={::this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} {...this.state}/>}
+                {taskSummaryModal && <TaskSummaryModal closeModal={::this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} estimated_cost={estimated_cost} {...this.state}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={::this._closeModal} applyPreset={::this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={::this._closeModal}/>}
             </div>

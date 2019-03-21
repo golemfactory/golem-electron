@@ -7,7 +7,7 @@ import * as Actions from '../../../actions'
 
 import BlockNodeModal from './../modal/BlockNodeModal'
 
-import { convertSecsToHMS, timeStampToHR } from './../../../utils/secsToHMS'
+import { convertSecsToHMS, timeStampToHR } from './../../../utils/time'
 
 const {ipcRenderer, clipboard} = window.electron;
 

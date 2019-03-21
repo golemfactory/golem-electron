@@ -9,7 +9,7 @@ import { connect } from 'react-redux'
 
 import * as Actions from '../../actions'
 import blender_logo from './../../assets/img/blender_logo.png'
-import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS'
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time'
 
 import InsufficientAmountModal from './modal/InsufficientAmountModal'
 import TaskItem from './TaskItem'
