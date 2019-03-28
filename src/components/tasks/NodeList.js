@@ -72,7 +72,7 @@ class NodeList extends Component {
             return result[0].map((item, index) => (
                 <span key={index.toString()} className="indicator__node-count">
                     <span className={`icon-status-dot ${statusDot(item)}`} />
-                    {result[1][index]}
+                    {" " + result[1][index]}
                 </span>
             ));
         return [];
@@ -82,7 +82,7 @@ class NodeList extends Component {
         const { isDataCopied } = this.state;
         return data.map(
             (
-                { subtask_id, status, node_name, node_ip_address, node_id },
+                { subtask_id, status, node_name, node_id },
                 index
             ) => (
                 <tr key={index.toString()}>
@@ -99,7 +99,7 @@ class NodeList extends Component {
                             trigger="mouseenter"
                             hideOnClick={false}>
                             <div
-                                className="clipboard-subtask-id"
+                                className="clipboard-subtask-item"
                                 onClick={this._handleCopyToClipboard.bind(
                                     this,
                                     subtask_id
@@ -126,19 +126,20 @@ class NodeList extends Component {
                                 <p>
                                     {isDataCopied
                                         ? "Copied Succesfully!"
-                                        : "Click to copy IP Address"}
+                                        : "Click to copy"}
                                 </p>
                             }
                             position="bottom-end"
                             trigger="mouseenter"
                             hideOnClick={false}>
-                            <span
+                            <div
+                                className="clipboard-subtask-item"
                                 onClick={this._handleCopyToClipboard.bind(
                                     this,
-                                    node_ip_address
+                                    node_name
                                 )}>
-                                {node_name || "Anonymous node"}
-                            </span>
+                                <span>{node_name || "Anonymous node"}</span>
+                            </div>
                         </Tooltip>
                     </td>
                     <td>
