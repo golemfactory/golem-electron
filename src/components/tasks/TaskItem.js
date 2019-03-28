@@ -1,17 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
+import { Tooltip } from 'react-tippy';
 
-import { Spring, config } from "react-spring";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
-import { taskStatus } from "./../../constants/statusDicts";
+import { Spring, config } from 'react-spring';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+import { taskStatus } from './../../constants/statusDicts';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 
-import Preview from "./Preview";
+import Preview from './Preview';
 
 const ETH_DENOM = 10 ** 18;
 
@@ -40,7 +40,11 @@ export class TaskItem extends React.Component {
             return interval;
         };
 
-        this.liveSubList = setInterval(interval(), 5000);
+        if (item.status == taskStatus.COMPUTING) {
+            this.liveSubList = setInterval(interval(), 5000);
+        } else {
+            actions.fetchHealthyNodeNumber(item.id);
+        }
     }
 
     componentWillUnmount() {
@@ -48,7 +52,7 @@ export class TaskItem extends React.Component {
     }
 
     _togglePreview({ id }, evt) {
-        evt.target.classList.toggle("icon--active");
+        evt.target.classList.toggle('icon--active');
         const prevList = this.state.toggledPreviewList;
         const prevToggle = this.state.toggledPreviewList[id];
 
@@ -73,7 +77,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -91,7 +95,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Preparing for computation...{" "}
+                            Preparing for computation...{' '}
                         </span>
                     </div>
                 );
@@ -102,7 +106,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Waiting for computation...{" "}
+                            Waiting for computation...{' '}
                         </span>
                     </div>
                 );
@@ -113,7 +117,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Creating the deposit...{" "}
+                            Creating the deposit...{' '}
                         </span>
                     </div>
                 );
@@ -122,7 +126,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -139,7 +143,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--computing">
-                            Computing...{" "}
+                            Computing...{' '}
                         </span>
                         <span className="bumper"> | </span>
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
@@ -150,7 +154,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -169,10 +173,10 @@ export class TaskItem extends React.Component {
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
                 ETH
             </span>
         );
@@ -214,7 +218,7 @@ export class TaskItem extends React.Component {
                                         ? `linear-gradient(90deg, #E3F3FF ${value.progress *
                                               100}%, transparent ${value.progress *
                                               100}%)`
-                                        : "transparent"
+                                        : 'transparent'
                             }}
                             onClick={e => _handleRowClick(e, item, index)}>
                             <div
@@ -237,53 +241,53 @@ export class TaskItem extends React.Component {
                                         <div className="info__task">
                                             <div>
                                                 <span>
-                                                    Frames:{" "}
+                                                    Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
-                                                    Resolution:{" "}
+                                                    {' '}
+                                                    Resolution:{' '}
                                                     {(options &&
                                                         options.resolution.join(
-                                                            "x"
+                                                            'x'
                                                         )) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    Cost:{" "}
+                                                    Cost:{' '}
                                                     {this._fetchCost(item)}
                                                 </span>
                                             </div>
                                             <div>
                                                 <span>
-                                                    Subtasks:{" "}
+                                                    Subtasks:{' '}
                                                     {item.subtasks_count || 0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
+                                                    {' '}
                                                     Task timeout: {item.timeout}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
-                                                    Subtask timeout:{" "}
+                                                    {' '}
+                                                    Subtask timeout:{' '}
                                                     {item.subtask_timeout}
                                                 </span>
                                             </div>

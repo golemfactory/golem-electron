@@ -150,7 +150,6 @@ export class TaskPanel extends React.Component {
             toggleHistory
         } = this.state;
         const {
-            actions,
             preview,
             expandedPreview,
             balance,
