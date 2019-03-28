@@ -781,24 +781,25 @@ export class TaskDetail extends React.Component {
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, subtasks_count, subtask_timeout, bid, compositing} = this.state
+        const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, subtasks_count, subtask_timeout, timeout} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
+                bid,
                 compute_on,
-                timeout: floatToString(timeout),
+                concent_enabled: concent,
+                estimated_memory : (testStatus && testStatus.estimated_memory),
                 subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
-                bid,
-                estimated_memory : (testStatus && testStatus.estimated_memory),
+                timeout: floatToString(timeout),
                 options: {
-                    resolution,
                     frames,
                     format,
                     compositing,
                     output_path,
+                    resolution,
                 }
             }, resolve, reject)
         })
@@ -1050,7 +1051,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             </div>
                             { !isMainNet
-                                && concentSwitch
+                                && (concentSwitch || isDetailPage)
                                 &&
                                 <div className="section-concent__task-detail">
                                     <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" distance={-20}/>
@@ -1063,7 +1064,7 @@ export class TaskDetail extends React.Component {
                                         <div className="switch-box switch-box--green">
                                              <span className="switch-label switch-label--left">Off</span>
                                              <label className="switch">
-                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" checked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
                                                  <div className="switch-slider round"></div>
                                              </label>
                                              <span className="switch-label switch-label--right">On</span>
