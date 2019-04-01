@@ -85,7 +85,7 @@ export class Concent extends React.Component {
                     computations, and as a Requestor, you are assured to get
                     proper results.
                     <br />
-                    <a href="https://golem.network/documentation/concent-service">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service">
                         Learn more
                     </a>{" "}
                     about Concent Service.
@@ -148,7 +148,7 @@ export class Concent extends React.Component {
                                                 future deposit
                                                 <br />
                                                 creation transaction fees.{" "}
-                                                <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                     Learn more
                                                 </a>
                                             </span>
@@ -160,7 +160,7 @@ export class Concent extends React.Component {
                                                 <br />
                                                 transaction fees or you can
                                                 unlock it now.{" "}
-                                                <a href="https://golem.network/documentation/concent-service#can-i-withdraw-my-tokens-from-the-deposit">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
                                                     Learn more
                                                 </a>
                                             </span>
@@ -200,7 +200,7 @@ export class Concent extends React.Component {
                                             transaction
                                             <br />
                                             fee{" "}
-                                            <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                            <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                 Learn more
                                             </a>
                                         </span>

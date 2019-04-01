@@ -78,7 +78,7 @@ export default class ConcentModal extends React.Component {
                                     reduce future Deposit creation
                                     <br />
                                     transaction fee.{" "}
-                                    <a href="https://golem.network/documentation/concent-service/#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                         Learn more
                                     </a>
                                 </p>
@@ -109,7 +109,7 @@ export default class ConcentModal extends React.Component {
                             html={
                                 <p>
                                     Funds restore will take up to 48h.{" "}
-                                    <a href="https://golem.network/documentation/concent-service/#can-i-withdraw-my-tokens-from-the-deposit">
+                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
                                         Learn more
                                     </a>
                                 </p>
