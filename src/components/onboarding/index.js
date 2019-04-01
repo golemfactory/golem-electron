@@ -493,7 +493,7 @@ class OnboardIndex extends React.Component {
                             <span>
                                 It looks like you don't have ports forwarded.
                                 Follow{" "}
-                                <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
+                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
                                     these steps.
                                 </a>
                             </span>
