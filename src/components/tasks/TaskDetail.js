@@ -242,8 +242,7 @@ export class TaskDetail extends React.Component {
                         // this.setState({
                         //     compositing: options.compositing
                         // })
-                        this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else if ((type || this.state.type) === taskType.LUXRENDER) {
+                        this.refs.framesRef.value = options.frames ? options.frames : 1;
                         haltspp.value = options.haltspp
                     }
 
@@ -622,13 +621,10 @@ export class TaskDetail extends React.Component {
         if (this.props.task.type === taskType.BLENDER) {
 
             framesRef.value = frames
-            //compositingRef.checked = compositing
-
-        } else if (this.props.task.type === taskType.LUXRENDER) {
-
             haltspp.value = sample_per_pixel
-
+            //compositingRef.checked = compositing
         }
+
         this.setState({...preset.value, formatIndex})
     }
 
@@ -781,13 +777,14 @@ export class TaskDetail extends React.Component {
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, subtasks_count, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, compute_on, timeout, sample_per_pixel, subtasks_count, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
+                sample_per_pixel,
                 timeout: floatToString(timeout),
                 subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
@@ -799,6 +796,7 @@ export class TaskDetail extends React.Component {
                     format,
                     compositing,
                     output_path,
+                    sample_per_pixel
                 }
             }, resolve, reject)
         })
@@ -898,6 +896,13 @@ export class TaskDetail extends React.Component {
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
+            formTemplate.push({
+                order: 5,
+                content: <div className="item-settings" key="5">
+                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
+                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
             // formTemplate.push({
             //     order: 5,
             //     content: <div className="item-settings" key="5">
@@ -911,15 +916,6 @@ export class TaskDetail extends React.Component {
             //                 </div>
             //             </div>
             // })
-            break;
-        case taskType.LUXRENDER:
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
-                         </div>
-            })
             break;
         }
 
