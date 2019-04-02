@@ -243,7 +243,8 @@ export class TaskDetail extends React.Component {
                         //     compositing: options.compositing
                         // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1;
-                        haltspp.value = options.haltspp
+                        if(options.samples)
+                            haltspp.value = options.samples
                     }
 
                     if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
