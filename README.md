@@ -24,7 +24,9 @@ You can use npm or yarn to install dependecies, to do;
 
 
 That's it!
-
+<br/>
+<br/>
+<br/>
 
 ### :computer: Usage (from source)
 Start dev server
@@ -36,7 +38,8 @@ Start electron application
 |Testnet | Mainnet|
 | :------: | :------: |
 | `npm run start` | `npm run start:mainnet` |
-
+<br/>
+<br/>
 
 ### :triangular_flag_on_post: Custom flags 
 
@@ -50,7 +53,9 @@ npm run start -- --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:6000
 ```
 
 ***Note:** Don't forget to add `--` to `npm run start` before adding your flags.*
-
+<br/>
+<br/>
+<br/>
 
 ### :bug: Debug mode
 While using application, you can choose `Debug mode` from the `View` menu or press;
@@ -73,6 +78,7 @@ Now you can restart the application to catch all critical informations from begi
 You'll find debug logs in;
 <br/>
 <br/>
+<br/>
 
 |OS|Path|General Log|Error Log|
 | --- | --- | :---: | :---: |
@@ -83,7 +89,9 @@ You'll find debug logs in;
 <br/>
 
 ***Note:** `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.*
-<br/><br/>
+<br/>
+<br/>
+<br/>
 
 ### :control_knobs: Developer mode
 While using application, you can choose `Developer mode` from the `View` menu or press;
@@ -107,7 +115,8 @@ You'll find additional information about;
 - peer list in settings tab
 - stats about the application in settings tab
 - more detailed tooltip information while hovering subtask borders in preview window 
-
+<br/>
+<br/>
 
 ### :umbrella: Testing
 Run tests
