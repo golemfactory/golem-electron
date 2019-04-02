@@ -64,7 +64,7 @@ const presetSchema = {
             resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
             output_path: yup.string(),
             format: yup.string(),
-            sample_per_pixel: yup.number().min(1).required(),
+            samples: yup.number().min(1).required(),
         })
 }
 
@@ -139,7 +139,7 @@ export class TaskDetail extends React.Component {
             formatIndex: 0,
             output_path: props.location,
             compute_on: 'cpu',
-            sample_per_pixel: 0,
+            samples: 0,
             timeout: '',
             subtasks_count: 1,
             maxSubtasks: 0,
@@ -278,7 +278,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, sample_per_pixel} = this.state
+        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, samples} = this.state
         const {actions, task} = this.props
         if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
@@ -316,7 +316,7 @@ export class TaskDetail extends React.Component {
             this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
         }
 
-        if(nextState.frames !== frames || nextState.sample_per_pixel !== sample_per_pixel){
+        if(nextState.frames !== frames || nextState.samples !== samples){
             this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
@@ -545,7 +545,7 @@ export class TaskDetail extends React.Component {
                 [state]: e.target.value
             })
         } else if(!this.state.savePresetLock && 
-                    (state === "frames" || state === "sample_per_pixel") 
+                    (state === "frames" || state === "samples") 
                     && !this.checkInputValidity(e)){
             this.setState({
                 [state]: null,
@@ -589,7 +589,7 @@ export class TaskDetail extends React.Component {
 
     _applyPresetOption = (preset, isResolutionIncluded = true, applyStates = true) => {
 
-        const { format, frames, output_path, resolution, sample_per_pixel} = preset.value //compositing,
+        const { format, frames, output_path, resolution, samples} = preset.value //compositing,
         const {resolutionW, resolutionH, framesRef, formatRef, outputPath, haltspp} = this.refs //compositingRef,
         
         if(isResolutionIncluded){
@@ -621,7 +621,7 @@ export class TaskDetail extends React.Component {
         if (this.props.task.type === taskType.BLENDER) {
 
             framesRef.value = frames
-            haltspp.value = sample_per_pixel
+            haltspp.value = samples
             //compositingRef.checked = compositing
         }
 
@@ -651,7 +651,7 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal = () => {
-        const {resolution, frames, format, output_path, compositing, sample_per_pixel} = this.state
+        const {resolution, frames, format, output_path, compositing, samples} = this.state
         this.setState({
             presetModal: true,
             modalData: {
@@ -659,7 +659,7 @@ export class TaskDetail extends React.Component {
                 frames,
                 format,
                 output_path,
-                sample_per_pixel,
+                samples,
                 compositing,
                 task_type: this.props.task.type
             }
@@ -777,14 +777,14 @@ export class TaskDetail extends React.Component {
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, sample_per_pixel, subtasks_count, subtask_timeout, bid, compositing} = this.state
+        const {resolution, frames, format, output_path, compute_on, timeout, samples, subtasks_count, subtask_timeout, bid, compositing} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                sample_per_pixel,
+                samples,
                 timeout: floatToString(timeout),
                 subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
@@ -796,7 +796,7 @@ export class TaskDetail extends React.Component {
                     format,
                     compositing,
                     output_path,
-                    sample_per_pixel
+                    samples
                 }
             }, resolve, reject)
         })
@@ -836,8 +836,8 @@ export class TaskDetail extends React.Component {
 
     isPresetFieldsFilled(nextState) {
         if(this.props.match.params.id === editMode){
-            const {resolution, frames, sample_per_pixel, compositing, format} = nextState;
-            return presetSchema[this.props.task.type].isValid({resolution, frames, sample_per_pixel, compositing, format})
+            const {resolution, frames, samples, compositing, format} = nextState;
+            return presetSchema[this.props.task.type].isValid({resolution, frames, samples, compositing, format})
         }
         return new Promise(res => res(false))
     }
@@ -900,7 +900,7 @@ export class TaskDetail extends React.Component {
                 order: 5,
                 content: <div className="item-settings" key="5">
                             <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'samples')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
             // formTemplate.push({
