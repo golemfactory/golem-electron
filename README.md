@@ -77,8 +77,6 @@ Now you can restart the application to catch all critical informations from begi
 <br/>
 You'll find debug logs in;
 <br/>
-<br/>
-<br/>
 
 |OS|Path|General Log|Error Log|
 | --- | --- | :---: | :---: |
