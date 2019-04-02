@@ -8,35 +8,35 @@
 <p align="center"> 
 The desktop application using Electron, React and Redux.
 </p>
+<p align="center">
+<img width="420" alt="Golem Testnet" src="https://user-images.githubusercontent.com/2774845/55406812-230ec200-555d-11e9-97fb-127fd322bcdc.png">
+<img width="420" alt="Golem Mainnet" src="https://user-images.githubusercontent.com/2774845/55406865-3c177300-555d-11e9-907b-f60e646b386b.png">
+</p>
+
 
 ## Development
 ### :wrench: Installation
-Go to project main folder and hit;
-```
-npm install
-```
-or if you wish;
-```
-yarn 
-```
+You can use npm or yarn to install dependecies, to do;
+
+|NPM | Yarn|
+| :------: | :------: |
+| `npm install` | `yarn` |
+
+
 That's it!
 
 
-### :computer: Usage
+### :computer: Usage (from source)
 Start dev server
 ```
 npm run start:app
 ```
+Start electron application
 
-Start electron application on testnet (development mode)
-```
-npm run start
-```
+|Testnet | Mainnet|
+| :------: | :------: |
+| `npm run start` | `npm run start:mainnet` |
 
-Start electron application on mainnet (development mode)
-```
-npm run start:mainnet
-```
 
 ### :triangular_flag_on_post: Custom flags 
 
@@ -49,7 +49,7 @@ golemapp --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:60003
 npm run start -- --datadir /Users/USER/test_datadir --rpc-address 127.0.0.1:60003
 ```
 
-*Note: Don't forget to add `--` to `npm run start` before adding your flags.*
+***Note:** Don't forget to add `--` to `npm run start` before adding your flags.*
 
 
 ### :bug: Debug mode
@@ -81,7 +81,8 @@ You'll find debug logs in;
 |Linux|`~/.local/share/golem/default/{CURRENT_CHAIN}/logs/gui.log/`|gui.log|<span>gui&#8209;error.log</span>|
 
 <br/>
-Note: `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.
+
+***Note:** `{CURRENT_CHAIN}` parameter will be `mainnet` if you running golem on mainnet, if you're on testnet it will be `rinkeby` in this case.*
 <br/><br/>
 
 ### :control_knobs: Developer mode
