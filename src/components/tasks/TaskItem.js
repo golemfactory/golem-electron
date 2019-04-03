@@ -68,7 +68,6 @@ export class TaskItem extends React.Component {
     _fetchStatus = item => {
         const { options } = item;
         const { nodeNumbers } = this.props;
-
         switch (item.status) {
             case taskStatus.TIMEOUT:
                 return (
@@ -104,6 +103,17 @@ export class TaskItem extends React.Component {
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
                             Waiting for computation...{" "}
+                        </span>
+                    </div>
+                );
+
+            case taskStatus.DEPOSIT:
+                return (
+                    <div>
+                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span className="bumper"> | </span>
+                        <span className="duration--preparing">
+                            Creating the deposit...{" "}
                         </span>
                     </div>
                 );
