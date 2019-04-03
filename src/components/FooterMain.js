@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import {Tooltip} from 'react-tippy';
+import Lottie from 'react-lottie';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import * as Actions from './../actions'
 import {getStatus, getPasswordModalStatus} from './../reducers'
+import animData from './../assets/anims/wave.json'
 
 import LoaderBar from './LoaderBar'
 import checkNested from './../utils/checkNested'
@@ -14,6 +16,14 @@ const {remote, ipcRenderer} = window.electron;
 const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
+const defaultOptions = {
+    loop: true,
+    autoplay: true, 
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 /*############# HELPER FUNCTIONS ############# */
 
@@ -153,52 +163,11 @@ export class FooterMain extends Component {
         const {status, connectionProblem, isEngineOn, stats, engineLoading, isEngineLoading, passwordModal, version} = this.props
         const versionTemplate = version && (version.error ? version.message : `${version.message}${version.number}`);
         return (
-            <div className="content__footer-main">
+            <div className={`content__footer-main ${(checkNested(status, 'client', 'status')
+                                            && status.client.status === "Not Ready") && "content__footer-main__loading"}`}>
                 <div className="section__actions">
                     <div className="section__actions-status">
-                        <Tooltip
-                          open={checkNested(status, 'client', 'status')
-                                && status.client.status === "Not Ready"
-                                && checkNested(passwordModal, 'status')
-                                && !passwordModal.status}
-                          distance={17}
-                          html={
-                            <div className="status__components">
-                                <div className="item__status">
-                                    <span>Docker: </span>
-                                    <span>{checkNested(status, 'docker', 'message') 
-                                            ? status.docker.message
-                                            : <LoaderBar/>}
-                                    </span>
-                                </div>
-                                <div className="item__status">
-                                    <span>Geth: </span>
-                                    <span>{checkNested(status, 'ethereum', 'message')  
-                                            ? status.ethereum.message
-                                            : <LoaderBar/>}
-                                    </span>
-                                </div>
-                                <div className="item__status">
-                                    <span>Hyperg: </span>
-                                    <span>{checkNested(status, 'hyperdrive', 'message') 
-                                            ? status.hyperdrive.message
-                                            : <LoaderBar/>}
-                                    </span>
-                                </div>
-                                <div className="item__status">
-                                    <span>Hypervisor: </span>
-                                    <span>{checkNested(status, 'hypervisor', 'message') 
-                                            ? status.hypervisor.message 
-                                            : <LoaderBar/>}
-                                    </span>
-                                </div>
-                            </div>
-                        }
-                          position="top"
-                          unmountHTMLWhenHide>
-                            <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
-                        </Tooltip>
-                        
+                        <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
                         <div>
                             <span>
                                 <span className="status-message">
@@ -243,14 +212,33 @@ export class FooterMain extends Component {
                                     {
                                         checkNested(status, 'client', 'status') 
                                         && status.client.status !== "Exception"
-                                        ?   <span>
-                                                Warming up
-                                                <span className="jumping-dots">
-                                                    <span className="dot-1">.</span>
-                                                    <span className="dot-2">.</span>
-                                                    <span className="dot-3">.</span>
+                                        ? 
+                                        <div className="status__components">
+                                            <div className="item__status">
+                                                <span>Hyperg: </span>
+                                                <span>{checkNested(status, 'hyperdrive', 'message') 
+                                                        && status.hyperdrive.message}
                                                 </span>
-                                            </span>
+                                            </div>
+                                            <div className="item__status">
+                                                <span>Hypervisor: </span>
+                                                <span>{checkNested(status, 'hypervisor', 'message') 
+                                                        && status.hypervisor.message }
+                                                </span>
+                                            </div>
+                                            <div className="item__status">
+                                                <span>Docker: </span>
+                                                <span>{checkNested(status, 'docker', 'message') 
+                                                        && status.docker.message}
+                                                </span>
+                                            </div>
+                                            <div className="item__status">
+                                                <span>Geth: </span>
+                                                <span>{checkNested(status, 'ethereum', 'message')  
+                                                        && status.ethereum.message}
+                                                </span>
+                                            </div>
+                                        </div>
                                         : <span>Error while fetching status</span>
                                     }
                                 </div>
@@ -264,6 +252,14 @@ export class FooterMain extends Component {
                                     && status.client.status !== "Ready"   // until golem lands successfully
                                     && isEngineOn
                                 }>{isEngineOn ? 'Stop' : 'Start'} Golem</button>
+                    {
+                        (checkNested(status, 'client', 'status')
+                                            && status.client.status === "Not Ready")
+                        &&
+                        <div className="wave-loading">
+                            <Lottie width={"100%"} options={defaultOptions}/>
+                        </div>
+                    }
                 </div>
                 <div className="content__footer-social">
                     <span className="element__footer" onClick={this._openLogs}>
