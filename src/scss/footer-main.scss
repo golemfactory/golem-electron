@@ -3,7 +3,7 @@
     flex-direction: column;
     justify-content: center;
     flex: 0 0 130px;
-    transition: .5s all;
+    transition: 0.5s all;
 
     &__loading {
         flex: 0 0 190px;
@@ -31,6 +31,10 @@
                 line-height: 1.8em;
             }
         }
+
+        .wave-loading {
+            height: 190px !important;
+        }
     }
 
     .section__actions {
@@ -44,7 +48,7 @@
         z-index: 2;
         background: $color-text4;
         flex: 0 0 100px;
-        transition: .5s all;
+        transition: 0.5s all;
 
         &-status {
             @include flex;
@@ -108,9 +112,33 @@
             position: absolute;
             margin-left: -24px;
             bottom: 0;
-            height: 190px;
+            height: 0;
             pointer-events: none;
             z-index: 1;
+            transition: 1.5s height ease;
+        }
+
+        .component-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-bottom: -1px;
+            margin-left: -23px;
+            margin-right: 13px;
+
+            &--blue {
+                background-color: $button-static-color;
+            }
+            &--yellow {
+                background-color: $color-accent2;
+            }
+            &--green {
+                background-color: $color-accent1;
+            }
+            &--grey {
+                background-color: $color-text2;
+            }
         }
     }
 
