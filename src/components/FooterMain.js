@@ -70,7 +70,7 @@ export class FooterMain extends Component {
 
     componentDidMount() {
         const waveLoading = document.getElementById("waveLoading");
-        waveLoading.addEventListener(
+        waveLoading && waveLoading.addEventListener(
             "webkitTransitionEnd",
             function(event) {
                 waveLoading.remove();
