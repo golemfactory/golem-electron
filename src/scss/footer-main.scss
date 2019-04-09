@@ -3,7 +3,8 @@
     flex-direction: column;
     justify-content: center;
     flex: 0 0 130px;
-    transition: 0.5s all;
+    transition: 0.5s flex;
+    transition-delay: .5s;
 
     &__loading {
         flex: 0 0 190px;
@@ -48,7 +49,8 @@
         z-index: 2;
         background: $color-text4;
         flex: 0 0 100px;
-        transition: 0.5s all;
+        transition: 0.5s flex;
+        transition-delay: .5s;
 
         &-status {
             @include flex;
@@ -115,7 +117,8 @@
             height: 0;
             pointer-events: none;
             z-index: 1;
-            transition: 1.5s height ease;
+            transition: 1.5s height linear;
+            transition-delay: .5s;
         }
 
         .component-dot {

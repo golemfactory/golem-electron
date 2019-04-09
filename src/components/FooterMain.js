@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Tooltip } from "react-tippy";
 import Lottie from "react-lottie";
+import { Transition, animated, interpolate } from "react-spring";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
@@ -164,6 +165,7 @@ export class FooterMain extends Component {
     }
 
     _fetchEnvironment(env) {
+        _fetchEnvironment(env) {
         switch (env) {
             case "BLENDER":         return " (CPU)";
             case "BLENDER_NVGPU":   return " (GPU)";
@@ -273,100 +275,174 @@ export class FooterMain extends Component {
                                     connectionProblem
                                 )}
                             </span>
-                            {!!Object.keys(stats).length ? (
-                                <div className="status-node">
-                                    <span>
-                                        Provider state:{" "}
-                                        {this._fetchState(stats.provider_state)}
-                                    </span>
-                                    <br />
-                                    <span>
-                                        Attempted:{" "}
-                                        {stats.subtasks_computed &&
-                                            stats.subtasks_computed[1] +
-                                                stats.subtasks_with_timeout[1] +
-                                                stats.subtasks_with_errors[1]}
-                                    </span>
-                                    <br />
-                                    <span>
-                                        {stats.subtasks_with_errors &&
-                                            `${
-                                                stats.subtasks_with_errors[1]
-                                            } error | ${stats.subtasks_with_timeout &&
-                                                stats
-                                                    .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
-                                                stats
-                                                    .subtasks_accepted[1]} success`}
-                                    </span>
-                                </div>
-                            ) : (
-                                <div className="status-node__loading">
-                                    {checkNested(status, "client", "status") &&
-                                    status.client.status !== "Exception" ? (
-                                        <div className="status__components">
-                                            <div className="item__status">
-                                                <div>
-                                                    <span className="component-dot component-dot--blue" />
-                                                    <span>Hyperg: </span>
-                                                </div>
-                                                <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "hyperdrive",
-                                                        "message"
-                                                    ) &&
-                                                        status.hyperdrive
-                                                            .message}
-                                                </span>
-                                            </div>
-                                            <div className="item__status">
-                                                <div>
-                                                    <span className="component-dot component-dot--grey" />
-                                                    <span>Hypervisor: </span>
-                                                </div>
-                                                <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "hypervisor",
-                                                        "message"
-                                                    ) &&
-                                                        status.hypervisor
-                                                            .message}
-                                                </span>
-                                            </div>
-                                            <div className="item__status">
-                                                <div>
-                                                    <span className="component-dot component-dot--yellow" />
-                                                    <span>Docker: </span>
-                                                </div>
-                                                <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "docker",
-                                                        "message"
-                                                    ) && status.docker.message}
-                                                </span>
-                                            </div>
-                                            <div className="item__status">
-                                                <div>
-                                                    <span className="component-dot component-dot--green" />
-                                                    <span>Geth: </span>
-                                                </div>
-                                                <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "ethereum",
-                                                        "message"
-                                                    ) &&
-                                                        status.ethereum.message}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <span>Error while fetching status</span>
-                                    )}
-                                </div>
-                            )}
+                            <Transition
+                                native
+                                items={!!Object.keys(stats).length}
+                                from={{
+                                    position: "absolute",
+                                    opacity: 0,
+                                    transform: 90
+                                }}
+                                enter={{
+                                    position: "initial",
+                                    opacity: 1,
+                                    transform: 0
+                                }}
+                                leave={{
+                                    position: "absolute",
+                                    opacity: 0,
+                                    transform: -180
+                                }}>
+                                {toggle =>
+                                    toggle
+                                        ? props => (
+                                              <animated.div
+                                                  style={{
+                                                      opacity: props.opacity.interpolate(
+                                                          opacity => opacity
+                                                      ),
+                                                      transform: props.transform.interpolate(
+                                                          y =>
+                                                              `translateX(${y}px)`
+                                                      ),
+                                                      position: props.position
+                                                  }}
+                                                  className="status-node">
+                                                  <span>
+                                                      Provider state:{" "}
+                                                      {this._fetchState(
+                                                          stats.provider_state
+                                                      )}
+                                                  </span>
+                                                  <br />
+                                                  <span>
+                                                      Attempted:{" "}
+                                                      {stats.subtasks_computed &&
+                                                          stats
+                                                              .subtasks_computed[1] +
+                                                              stats
+                                                                  .subtasks_with_timeout[1] +
+                                                              stats
+                                                                  .subtasks_with_errors[1]}
+                                                  </span>
+                                                  <br />
+                                                  <span>
+                                                      {stats.subtasks_with_errors &&
+                                                          `${
+                                                              stats
+                                                                  .subtasks_with_errors[1]
+                                                          } error | ${stats.subtasks_with_timeout &&
+                                                              stats
+                                                                  .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
+                                                              stats
+                                                                  .subtasks_accepted[1]} success`}
+                                                  </span>
+                                              </animated.div>
+                                          )
+                                        : props => (
+                                              <animated.div
+                                                  style={{
+                                                      opacity: props.opacity.interpolate(
+                                                          opacity => opacity
+                                                      ),
+                                                      transform: props.transform.interpolate(
+                                                          y =>
+                                                              `translateX(${y}px)`
+                                                      ),
+                                                      position: props.position
+                                                  }}
+                                                  className="status-node__loading">
+                                                  {checkNested(
+                                                      status,
+                                                      "client",
+                                                      "status"
+                                                  ) &&
+                                                  status.client.status !==
+                                                      "Exception" ? (
+                                                      <div className="status__components">
+                                                          <div className="item__status">
+                                                              <div>
+                                                                  <span className="component-dot component-dot--blue" />
+                                                                  <span>
+                                                                      Hyperg:{" "}
+                                                                  </span>
+                                                              </div>
+                                                              <span>
+                                                                  {checkNested(
+                                                                      status,
+                                                                      "hyperdrive",
+                                                                      "message"
+                                                                  ) &&
+                                                                      status
+                                                                          .hyperdrive
+                                                                          .message}
+                                                              </span>
+                                                          </div>
+                                                          <div className="item__status">
+                                                              <div>
+                                                                  <span className="component-dot component-dot--grey" />
+                                                                  <span>
+                                                                      Hypervisor:{" "}
+                                                                  </span>
+                                                              </div>
+                                                              <span>
+                                                                  {checkNested(
+                                                                      status,
+                                                                      "hypervisor",
+                                                                      "message"
+                                                                  ) &&
+                                                                      status
+                                                                          .hypervisor
+                                                                          .message}
+                                                              </span>
+                                                          </div>
+                                                          <div className="item__status">
+                                                              <div>
+                                                                  <span className="component-dot component-dot--yellow" />
+                                                                  <span>
+                                                                      Docker:{" "}
+                                                                  </span>
+                                                              </div>
+                                                              <span>
+                                                                  {checkNested(
+                                                                      status,
+                                                                      "docker",
+                                                                      "message"
+                                                                  ) &&
+                                                                      status
+                                                                          .docker
+                                                                          .message}
+                                                              </span>
+                                                          </div>
+                                                          <div className="item__status">
+                                                              <div>
+                                                                  <span className="component-dot component-dot--green" />
+                                                                  <span>
+                                                                      Geth:{" "}
+                                                                  </span>
+                                                              </div>
+                                                              <span>
+                                                                  {checkNested(
+                                                                      status,
+                                                                      "ethereum",
+                                                                      "message"
+                                                                  ) &&
+                                                                      status
+                                                                          .ethereum
+                                                                          .message}
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                  ) : (
+                                                      <span>
+                                                          Error while fetching
+                                                          status
+                                                      </span>
+                                                  )}
+                                              </animated.div>
+                                          )
+                                }
+                            </Transition>
                         </div>
                     </div>
                     <button
