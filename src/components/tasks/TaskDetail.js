@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
 import TimeSelection from 'timepoint-selection'
-import isEqual from 'lodash.isequal';
+import {isEqual, isNumber} from 'lodash';
 import { BigNumber } from "bignumber.js";
 const {remote} = window.electron;
 const mainProcess = remote.require('./index')
@@ -243,8 +243,7 @@ export class TaskDetail extends React.Component {
                         //     compositing: options.compositing
                         // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1;
-                        if(options.samples)
-                            haltspp.value = options.samples
+                        haltspp.value = isNumber(options.samples) ? options.samples : 0;
                     }
 
                     if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
@@ -785,7 +784,6 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask({
                 ...task,
                 compute_on,
-                samples,
                 timeout: floatToString(timeout),
                 subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
@@ -797,7 +795,7 @@ export class TaskDetail extends React.Component {
                     format,
                     compositing,
                     output_path,
-                    samples
+                    samples: Number(samples)
                 }
             }, resolve, reject)
         })
