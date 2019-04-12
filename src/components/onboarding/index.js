@@ -459,11 +459,15 @@ class OnboardIndex extends React.Component {
     _handleNextPrint = () => {
         if (!this.state.isPrinted && !this.state.isSkippingPrint) {
             this.setState({
-                isSkippingPrint: true,
-                printInfo: ""
-            })
+                isSkippingPrint: true
+            });
         } else {
-            this._handleNext();
+            this.setState(
+                {
+                    printInfo: ""
+                },
+                () => this._handleNext()
+            );
         }
     };
 
@@ -520,7 +524,8 @@ class OnboardIndex extends React.Component {
                     <button
                         className="btn btn--primary"
                         onClick={this._handleNext}
-                        disabled={!isConnected}>
+                        disabled={!isConnected}
+                    >
                         {isConnected ? "Get Started" : "Connecting..."}
                     </button>
                 </div>
@@ -531,12 +536,14 @@ class OnboardIndex extends React.Component {
                     <div>
                         <span
                             className="btn--cancel"
-                            onClick={this._handleTermsBack}>
+                            onClick={this._handleTermsBack}
+                        >
                             Go Back
                         </span>
                         <button
                             className="btn btn--primary"
-                            onClick={this._handleLeave}>
+                            onClick={this._handleLeave}
+                        >
                             See you soon
                         </button>
                     </div>
@@ -550,7 +557,8 @@ class OnboardIndex extends React.Component {
                     <button
                         className="btn btn--primary"
                         onClick={this._handleTermsAccept}
-                        disabled={isAcceptLocked}>
+                        disabled={isAcceptLocked}
+                    >
                         Accept
                     </button>
                 </div>
@@ -560,7 +568,8 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--primary"
-                        onClick={this._handleNext}>
+                        onClick={this._handleNext}
+                    >
                         Got It!
                     </button>
                 </div>
@@ -570,7 +579,8 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--primary"
-                        onClick={this._handleNext}>
+                        onClick={this._handleNext}
+                    >
                         Got It
                     </button>
                 </div>
@@ -587,7 +597,8 @@ class OnboardIndex extends React.Component {
                             disabled={
                                 loadingIndicator ||
                                 (passwordModal.register && !isPasswordValid)
-                            }>
+                            }
+                        >
                             {loadingIndicator
                                 ? "Signing in"
                                 : passwordModal.register
@@ -604,7 +615,8 @@ class OnboardIndex extends React.Component {
                     ) : (
                         <button
                             className="btn btn--primary"
-                            onClick={this._handleNext}>
+                            onClick={this._handleNext}
+                        >
                             Take me in!
                         </button>
                     )}
@@ -615,14 +627,16 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--outline btn--print"
-                        onClick={this._handlePrint}>
+                        onClick={this._handlePrint}
+                    >
                         {!isPrinted ? "Print" : "Print again"}
                     </button>
                     <br />
                     <br />
                     <button
                         className="btn btn--primary btn--print"
-                        onClick={this._handleNextPrint}>
+                        onClick={this._handleNextPrint}
+                    >
                         Next
                     </button>
                 </div>
@@ -666,7 +680,8 @@ class OnboardIndex extends React.Component {
                         onClick={e => {
                             this.stepNickname.activityFormButton.click();
                         }}
-                        disabled={!isConnected}>
+                        disabled={!isConnected}
+                    >
                         {isConnected ? "Get Started" : "Connecting..."}
                     </button>
                 </div>
@@ -705,7 +720,8 @@ class OnboardIndex extends React.Component {
                 <CSSTransitionGroup
                     transitionName={`${isNext ? "pageSwap" : "pageSwapBack"}`}
                     transitionEnterTimeout={600}
-                    transitionLeaveTimeout={600}>
+                    transitionLeaveTimeout={600}
+                >
                     {this.shownStep(currentStep)}
                 </CSSTransitionGroup>
                 <div ref="stepControl" className="step-control__onboarding">
