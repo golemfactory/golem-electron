@@ -1,22 +1,21 @@
-import React from 'react';
-const {remote} = window.electron;
-const {dialog} = remote
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import React from "react";
+const { remote } = window.electron;
+const { dialog } = remote;
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as Actions from './../../actions'
+import * as Actions from "./../../actions";
 
 const mapStateToProps = state => ({
     location: state.fileLocation.location,
     isEngineOn: state.info.isEngineOn
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 export class FileLocation extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -24,35 +23,55 @@ export class FileLocation extends React.Component {
     /**
      * [_handleFolderSelection func. will trigger file chooser dialog window and then update default file location on Redux store]
      */
-    _handleFolderSelection() {
+    _handleFolderSelection = () => {
         let onFolderHandler = data => {
             if (data) {
-                //console.log(data)
-                this.props.actions.setFileLocation(data[0])
-                this.refs.outputPath.value = data[0]
+                this.props.actions.setFileLocation(data[0]);
+                this.refs.outputPath.value = data[0];
             }
-        }
+        };
 
-        dialog.showOpenDialog({
-            properties: ['openDirectory']
-        }, onFolderHandler)
-    }
+        dialog.showOpenDialog(
+            {
+                properties: ["openDirectory"]
+            },
+            onFolderHandler
+        );
+    };
 
     render() {
-        const {location, isEngineOn} = this.props
+        const { location, isEngineOn } = this.props;
         return (
             <div className="content__file-location">
                 <div>
                     <span className="title__file-location">Output Folder</span>
-                    <input ref="outputPath" type="text" disabled placeholder="..Docs/Golem/Output" aria-label="Output folder path" value={location}/>
-                    <button className="btn--outline" onClick={::this._handleFolderSelection} disabled={isEngineOn}>Change</button>
+                    <input
+                        ref="outputPath"
+                        type="text"
+                        disabled
+                        placeholder="..Docs/Golem/Output"
+                        aria-label="Output folder path"
+                        value={location}
+                    />
+                    <button
+                        className="btn--outline"
+                        onClick={this._handleFolderSelection}
+                        disabled={isEngineOn}>
+                        Change
+                    </button>
                 </div>
                 <div>
-                    <span className="tips__file-location">Output folder is where the returned results of your tasks will go.</span>
+                    <span className="tips__file-location">
+                        Output folder is where the returned results of your
+                        tasks will go.
+                    </span>
                 </div>
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(FileLocation)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(FileLocation);

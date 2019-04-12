@@ -18,7 +18,9 @@ const versionGUI = remote.app.getVersion();
 /*############# HELPER FUNCTIONS ############# */
 
 function isGolemReady(gs) {
-    return gs.status === "Ready" 
+    return !!gs.status
+        && !!gs.message
+        && gs.status === "Ready"
         && gs.message
         .toLowerCase()
         .includes("node");
@@ -56,7 +58,7 @@ export class FooterMain extends Component {
         }
     }
 
-    _golemize() {
+    _golemize = () => {
         const {actions, isEngineOn, isEngineLoading, chosenPreset} = this.props
         if (isEngineOn) {
             actions.stopGolem()
@@ -76,7 +78,7 @@ export class FooterMain extends Component {
         return "red"
     }
 
-    _loadErrorUrl(msg){
+    _loadErrorUrl = msg => {
         switch (msg) {
             case "Error creating Docker VM":    //docker
                 return  <a href={currentPlatform === "win32" 
@@ -164,28 +166,28 @@ export class FooterMain extends Component {
                             <div className="status__components">
                                 <div className="item__status">
                                     <span>Docker: </span>
-                                    <span>{status.docker 
+                                    <span>{checkNested(status, 'docker', 'message') 
                                             ? status.docker.message
                                             : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Geth: </span>
-                                    <span>{status.ethereum 
+                                    <span>{checkNested(status, 'ethereum', 'message')  
                                             ? status.ethereum.message
                                             : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Hyperg: </span>
-                                    <span>{status.hyperdrive 
+                                    <span>{checkNested(status, 'hyperdrive', 'message') 
                                             ? status.hyperdrive.message
                                             : <LoaderBar/>}
                                     </span>
                                 </div>
                                 <div className="item__status">
                                     <span>Hypervisor: </span>
-                                    <span>{status.hypervisor 
+                                    <span>{checkNested(status, 'hypervisor', 'message') 
                                             ? status.hypervisor.message 
                                             : <LoaderBar/>}
                                     </span>
@@ -200,7 +202,20 @@ export class FooterMain extends Component {
                         <div>
                             <span>
                                 <span className="status-message">
-                                    <span>{status.client.message}</span> 
+                                    <span>
+                                        {
+                                            checkNested(status, 'client', 'message') 
+                                            ? status.client.message
+                                            : <span>
+                                                Loading
+                                                <span className="jumping-dots">
+                                                    <span className="dot-1">.</span>
+                                                    <span className="dot-2">.</span>
+                                                    <span className="dot-3">.</span>
+                                                </span>
+                                            </span>
+                                        }
+                                    </span> 
                                     {status
                                     && status[0]
                                     &&  <span>
@@ -210,7 +225,9 @@ export class FooterMain extends Component {
                                         </span>
                                     }
                                 </span>
-                                {status.client && ::this._loadErrorUrl(status.client.message)}
+                                {status.client 
+                                    && checkNested(status, 'client', 'message') 
+                                    && this._loadErrorUrl(status.client.message)}
                                 {this._loadConnectionError(status, connectionProblem)}
                             </span>
                             {!!Object.keys(stats).length
@@ -242,7 +259,7 @@ export class FooterMain extends Component {
                     </div>
                     <button 
                         className={`btn--primary ${isEngineOn ? 'btn--yellow' : ''}`} 
-                        onClick={::this._golemize}
+                        onClick={this._golemize}
                         disabled={checkNested(status, 'client', 'status') // this condition will keep button disabled 
                                     && status.client.status !== "Ready"   // until golem lands successfully
                                     && isEngineOn

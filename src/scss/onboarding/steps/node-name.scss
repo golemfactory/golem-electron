@@ -44,6 +44,10 @@
         }
         animation: 0;
     }
+
+    &:valid {
+        border-color: #ccc !important;
+    }
 }
 
 /*MEDIA*/

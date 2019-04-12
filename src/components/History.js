@@ -23,7 +23,8 @@ const ETH_DENOM = 10 ** 18;
 
 const filter = {
   PAYMENT: "payment",
-  INCOME: "income"
+  INCOME: "income",
+  DEPOSIT: "deposit"
 };
 
 const Item = posed.default.div({
@@ -136,8 +137,8 @@ export class History extends React.Component {
         </div>
         <div className="action__history">
           <span className="amount__history">
-            <span className={`finance__indicator ${type === filter.INCOME ? "indicator--up" : "indicator--down"}`}>
-              {type === filter.INCOME ? "+ " : "- "}
+            <span className={`finance__indicator ${type === filter.PAYMENT ? "indicator--down" : "indicator--up"}`}>
+              {type === filter.PAYMENT ? "- " : "+ "}
             </span>
             {(value / ETH_DENOM).toFixed(4)} GNT
           </span>
