@@ -32,8 +32,9 @@ export default class TaskSummaryModal extends React.Component {
             estimated_cost,
             format,
             frames,
+            minPerf,
             resolution,
-            sample_per_pixel,
+            samples,
             status,
             subtasks_count,
             subtask_timeout,
@@ -61,7 +62,7 @@ export default class TaskSummaryModal extends React.Component {
                         </div>
                         <div className="summary__item">
                             <span className="title">Samples:</span>
-                            <span className="value">{sample_per_pixel}</span>
+                            <span className="value">{samples}</span>
                         </div>
                         <div className="summary__item">
                             <span className="title">Format:</span>
@@ -91,7 +92,7 @@ export default class TaskSummaryModal extends React.Component {
                             <span className="title">
                                 Minimum provider score:
                             </span>
-                            <span className="value">231</span>
+                            <span className="value">{minPerf * 100}</span>
                         </div>
                         <div className="summary__item">
                             <span className="title">Total:</span>

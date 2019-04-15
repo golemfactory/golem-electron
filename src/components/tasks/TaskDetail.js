@@ -92,7 +92,8 @@ const mapStateToProps = state => ({
     taskInfo: state.details.detail,
     testStatus: state.details.test_status,
     gasInfo: state.details.gasInfo,
-    concentSwitch: state.concent.concentSwitch
+    concentSwitch: state.concent.concentSwitch,
+    minPerf: state.performance.multiplier
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -955,6 +956,7 @@ export class TaskDetail extends React.Component {
             estimated_cost, 
             isDeveloperMode,
             isMainNet,
+            minPerf,
             subtasksList,
             hasSubtasksLoaded, 
             task,
@@ -1172,7 +1174,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
                 {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
-                {taskSummaryModal && <TaskSummaryModal closeModal={this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} estimated_cost={estimated_cost} {...this.state}/>}
+                {taskSummaryModal && <TaskSummaryModal closeModal={this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} estimated_cost={estimated_cost} minPerf={minPerf} {...this.state}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={this._closeModal}/>}
             </div>
