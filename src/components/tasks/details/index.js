@@ -1,20 +1,22 @@
-import React from "react";
-import { Link } from "react-router";
+import React from 'react';
+import { Link } from 'react-router';
+import map from 'lodash/map';
+import filter from 'lodash/filter';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "../../../actions";
-import ConditionalRender from "../../hoc/ConditionalRender";
-import GroupedStatus from "./GroupedStatus";
-import SubtaskList from "./SubtaskList";
+import * as Actions from '../../../actions';
+import ConditionalRender from '../../hoc/ConditionalRender';
+import GroupedStatus from './GroupedStatus';
+import SubtaskList from './SubtaskList';
 
-import every from "lodash/every";
-import size from "lodash/size";
+import every from 'lodash/every';
+import size from 'lodash/size';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
-    subtasksList: state.single.subtasksList
+    fragments: state.details.fragments
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -32,7 +34,7 @@ export class Details extends React.Component {
 
     componentDidMount() {
         let interval = () => {
-            this.props.actions.fetchSubtasksList(this.props.id);
+            this.props.actions.getFragments(this.props.id);
             return interval;
         };
         this.liveSubList = setInterval(interval(), 2000);
@@ -41,8 +43,14 @@ export class Details extends React.Component {
     componentWillUpdate(nextProps, nextState) {
         if (
             nextState.checkedItems !== this.state.checkedItems &&
-            nextProps.subtasksList[nextProps.id].length ===
-                size(nextState.checkedItems)
+            size(
+                filter(
+                    nextProps.fragments,
+                    item =>
+                        item[item.length - 1] &&
+                        item[item.length - 1].subtask_id
+                )
+            ) === size(nextState.checkedItems)
         ) {
             const isAllChecked = every(
                 nextState.checkedItems,
@@ -60,6 +68,7 @@ export class Details extends React.Component {
         const tempObj = { ...this.state.checkedItems };
         keys.forEach(
             key =>
+                !!key &&
                 (tempObj[key] =
                     val !== null ? !this.state.isAllChecked : !tempObj[key])
         );
@@ -69,26 +78,30 @@ export class Details extends React.Component {
     };
 
     _toggleAll = () => {
-        const { id, subtasksList } = this.props;
-        const keyList = subtasksList[id].map(item => item.subtask_id);
+        const { id, fragments } = this.props;
+        const keyList = map(
+            fragments,
+            item => item[item.length - 1] && item[item.length - 1].subtask_id
+        );
         this._toggleItems(keyList, true);
     };
 
     render() {
-        const { id, subtasksList } = this.props;
+        const { id, fragments } = this.props;
         const { checkedItems, isAllChecked } = this.state;
         return (
             <div className="details__section">
-                <ConditionalRender showIf={subtasksList[id]}>
-                    <GroupedStatus subtasksList={subtasksList[id]} />
+                <ConditionalRender showIf={fragments}>
+                    <GroupedStatus subtasksList={fragments} />
                     <div className="details__subtask-action">
                         <span onClick={this._toggleAll}>
-                            {isAllChecked ? "Deselect All" : "Select All"}
+                            {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
+                            Subtasks
                         </span>
-                        <span>Restart</span>
+                        <span>Restart Selected</span>
                     </div>
                     <SubtaskList
-                        list={subtasksList[id]}
+                        list={fragments}
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                     />

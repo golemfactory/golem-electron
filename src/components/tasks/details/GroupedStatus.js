@@ -27,7 +27,7 @@ const GroupedStatus = ({ subtasksList }) => {
 GroupedStatus.displayName = "GroupedStatus";
 
 GroupedStatus.propTypes = {
-	subtasksList: PropTypes.array
+	subtasksList: PropTypes.object
 };
 
 export default GroupedStatus;

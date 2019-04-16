@@ -1,12 +1,13 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
+import map from 'lodash/map';
 
-import SubtaskItem from "./SubtaskItem";
+import SubtaskItem from './SubtaskItem';
 
 const SubtaskList = ({ list, checkedItems, toggleItems }) => {
 	return (
 		<ul>
-			{list.map((item, key) => (
+			{map(list, (item, key) => (
 				<SubtaskItem
 					item={item}
 					key={key.toString()}
@@ -19,10 +20,10 @@ const SubtaskList = ({ list, checkedItems, toggleItems }) => {
 	);
 };
 
-SubtaskList.displayName = "SubtaskList";
+SubtaskList.displayName = 'SubtaskList';
 
 SubtaskList.propTypes = {
-	list: PropTypes.array,
+	list: PropTypes.object,
 	checkedItems: PropTypes.object,
 	toggleItems: PropTypes.func
 };

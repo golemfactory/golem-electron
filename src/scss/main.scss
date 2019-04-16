@@ -436,15 +436,15 @@ input[type="number"]::-webkit-inner-spin-button {
             position: relative;
             margin: 0 !important;
             padding: 0 10px !important;
-            color: $color-text2;
+            color: $color-text4;
             line-height: 1.6em;
         }
         
         + .checkbox-label-left,
         + .radio-label-left {
             &:before {
-                content: "\E91C";
-                background: $color-text4;
+                content: "\e914";
+                background: $color-text2;
                 border-radius: 100%;
                 display: inline-block;
                 position: relative;
@@ -461,19 +461,21 @@ input[type="number"]::-webkit-inner-spin-button {
                 font-variant: normal;
                 text-transform: none;
                 line-height: 1;
+                color: $color-text4;
 
                 /* Better Font Rendering =========== */
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
+                font-size: 9pt;
+                padding: 4px;
             }
         }
         
         + .checkbox-label-right,
         + .radio-label-right {
             &:after {
-                content: "\E91C";
-                background: $color-text4;
+                content: "\e914";
+                background: $color-text2;
                 border-radius: 100%;
                 display: inline-block;
                 position: relative;
@@ -490,11 +492,13 @@ input[type="number"]::-webkit-inner-spin-button {
                 font-variant: normal;
                 text-transform: none;
                 line-height: 1;
+                color: $color-text4;
 
                 /* Better Font Rendering =========== */
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
+                font-size: 9pt;
+                padding: 4px;
             }
         }
 
@@ -502,14 +506,14 @@ input[type="number"]::-webkit-inner-spin-button {
             + .checkbox-label-left,
             + .radio-label-left {
                 &:before {
-                    color: $color-accent1;
+                    background: $color-accent1;
                 }
             }
             
             + .checkbox-label-right,
             + .radio-label-right {
                 &:after {
-                    color: $color-accent1;
+                    background: $color-accent1;
                 }
             }
         }
@@ -519,7 +523,6 @@ input[type="number"]::-webkit-inner-spin-button {
             + .radio-label-left {
                 &:before {
                     outline: none;
-                    border-color: $color-text3;
                 }
             }
             
@@ -527,7 +530,6 @@ input[type="number"]::-webkit-inner-spin-button {
             + .radio-label-right {
                 &:after {
                     outline: none;
-                    border-color: $color-text3;
                 }
             }
         }
@@ -536,9 +538,7 @@ input[type="number"]::-webkit-inner-spin-button {
             + .checkbox-label-left,
             + .radio-label-left {
                 &:before {
-                    box-shadow: inset 0 0 0 4px $color-text2;
-                    border-color: darken($color-text2, 25%);
-                    background: darken($color-text2, 25%);
+                    color: $color-text3;
                     cursor: not-allowed;
                 }
             }
@@ -546,9 +546,7 @@ input[type="number"]::-webkit-inner-spin-button {
             + .checkbox-label-right,
             + .radio-label-right {
                 &:after {
-                    box-shadow: inset 0 0 0 4px $color-text2;
-                    border-color: darken($color-text2, 25%);
-                    background: darken($color-text2, 25%);
+                    color: $color-text3;
                     cursor: not-allowed;
                 }
             }
