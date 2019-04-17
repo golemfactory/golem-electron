@@ -1,17 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
-import flow from "lodash/fp/flow";
-import groupBy from "lodash/fp/groupBy";
+import React from 'react';
+import PropTypes from 'prop-types';
+import flow from 'lodash/fp/flow';
+import groupBy from 'lodash/fp/groupBy';
+import map from 'lodash/map';
 
-const map = require("lodash/fp/map").convert({ cap: false });
+const fpMap = require('lodash/fp/map').convert({ cap: false });
 
 const GroupedStatus = ({ subtasksList }) => {
+	const currentList = map(subtasksList, item =>
+		item.length > 0 ? item[item.length - 1] : {status: 'Not Started'}
+	);
 	const groupedStatuses = flow([
-		groupBy("status"),
-		map((items, name) => {
+		groupBy('status'),
+		fpMap((items, name) => {
 			return { status: name, count: items.length };
 		})
-	])(subtasksList);
+	])(currentList);
 	return (
 		<div className="details__subtask-stats">
 			{groupedStatuses &&
@@ -24,7 +28,7 @@ const GroupedStatus = ({ subtasksList }) => {
 	);
 };
 
-GroupedStatus.displayName = "GroupedStatus";
+GroupedStatus.displayName = 'GroupedStatus';
 
 GroupedStatus.propTypes = {
 	subtasksList: PropTypes.object

@@ -39,6 +39,40 @@
 				border-bottom: 1px solid $color-border;
 			}
 		}
+
+		.fragment__node {
+			&-table {
+				width: 100%;
+				font-size: 8pt;
+				line-height: 2em;
+				padding: 15px 0;
+				border-top: 1px solid $color-border;
+			}
+			&-row{
+				.icon{
+					&-logs,
+					&-locked{
+						color: $color-primary;
+						cursor: pointer;
+					}
+					&-logs::before{
+						font-size: 12pt;
+					}
+					&-locked::before{
+						font-size: 14pt;
+					}
+				}
+			}
+		}
+
+		.icon-arrow-down{
+			transition: 0.5s transform;
+			transition-delay: 0.2s;
+		}
+
+		.arrow-expand {
+			transform: rotate(180deg);
+		}
 	}
 
 	&__subtask-stats {
@@ -51,13 +85,18 @@
 
 	&__subtask-action {
 		display: flex;
-		justify-content: space-around;
+		justify-content: flex-start;
 		align-items: center;
 		height: 25px;
-		font-size: 9pt;
+		font-size: 8pt;
+		padding-left: 15px;
 		color: $color-primary;
 		span {
+			width: 130px;
 			cursor: pointer;
+			margin: 0 10px;
+			font-weight: 600;
+			text-transform: uppercase;
 		}
 	}
 }

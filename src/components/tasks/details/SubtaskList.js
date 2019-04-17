@@ -23,9 +23,9 @@ const SubtaskList = ({ list, checkedItems, toggleItems }) => {
 SubtaskList.displayName = 'SubtaskList';
 
 SubtaskList.propTypes = {
-	list: PropTypes.object,
-	checkedItems: PropTypes.object,
-	toggleItems: PropTypes.func
+	list: PropTypes.object.isRequired,
+	checkedItems: PropTypes.object.isRequired,
+	toggleItems: PropTypes.func.isRequired
 };
 
 export default SubtaskList;

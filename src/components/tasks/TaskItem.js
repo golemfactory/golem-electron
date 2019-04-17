@@ -1,21 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
+import { Tooltip } from 'react-tippy';
 
-import map from "lodash/fp/map";
+import map from 'lodash/fp/map';
 
-import { Spring, config } from "react-spring";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
-import { taskStatus } from "./../../constants/statusDicts";
+import { Spring, config } from 'react-spring';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+import { taskStatus } from './../../constants/statusDicts';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 
-import Preview from "./Preview";
-import Details from "./details";
-import ConditionalRender from "../hoc/ConditionalRender";
+import Preview from './Preview';
+import Details from './details';
+import ConditionalRender from '../hoc/ConditionalRender';
 
 const ETH_DENOM = 10 ** 18;
 
@@ -71,11 +71,11 @@ export class TaskItem extends React.Component {
     }
 
     _togglePreview({ id }, evt) {
-        this._toggle(id, evt, "preview");
+        this._toggle(id, evt, 'preview');
     }
 
     _toggleDetail({ id }, evt) {
-        this._toggle(id, evt, "detail");
+        this._toggle(id, evt, 'detail');
     }
 
     /**
@@ -91,13 +91,13 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--timeout">Timed out: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -107,9 +107,9 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--preparing">
-                            Preparing for computation...{" "}
+                            Preparing for computation...{' '}
                         </span>
                     </div>
                 );
@@ -118,9 +118,9 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--preparing">
-                            Waiting for computation...{" "}
+                            Waiting for computation...{' '}
                         </span>
                     </div>
                 );
@@ -131,7 +131,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Creating the deposit...{" "}
+                            Creating the deposit...{' '}
                         </span>
                     </div>
                 );
@@ -140,13 +140,13 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--restarted">Restarted</span>
                     </div>
                 );
@@ -155,11 +155,11 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--computing">
-                            Computing...{" "}
+                            Computing...{' '}
                         </span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
                     </div>
                 );
@@ -168,13 +168,13 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"/>
+                        <span className="bumper" />
                         <span className="duration--finished">Finished: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -187,10 +187,10 @@ export class TaskItem extends React.Component {
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
                 ETH
             </span>
         );
@@ -221,8 +221,7 @@ export class TaskItem extends React.Component {
                     restDisplacementThreshold: 0.1
                 }}
                 role="listItem"
-                tabIndex="-1"
-            >
+                tabIndex="-1">
                 {value => (
                     <div className="wrapper-task-item">
                         <div
@@ -233,19 +232,16 @@ export class TaskItem extends React.Component {
                                         ? `linear-gradient(90deg, #E3F3FF ${value.progress *
                                               100}%, transparent ${value.progress *
                                               100}%)`
-                                        : "transparent"
+                                        : 'transparent'
                             }}
-                            onClick={e => _handleRowClick(e, item, index)}
-                        >
+                            onClick={e => _handleRowClick(e, item, index)}>
                             <div
                                 className="info__task-item"
                                 tabIndex="0"
-                                aria-label="Task Preview"
-                            >
+                                aria-label="Task Preview">
                                 <div>
                                     <span
-                                        className={`task-icon icon-${item.type.toLowerCase()}`}
-                                    >
+                                        className={`task-icon icon-${item.type.toLowerCase()}`}>
                                         <span className="path1" />
                                         <span className="path2" />
                                         <span className="path3" />
@@ -259,41 +255,41 @@ export class TaskItem extends React.Component {
                                         <div className="info__task">
                                             <div>
                                                 <span>
-                                                    Frames:{" "}
+                                                    Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper"/>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
-                                                    Resolution:{" "}
+                                                    {' '}
+                                                    Resolution:{' '}
                                                     {(options &&
                                                         options.resolution.join(
-                                                            "x"
+                                                            'x'
                                                         )) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper"/>
+                                                <span className="bumper" />
                                                 <span>
-                                                    Cost:{" "}
+                                                    Cost:{' '}
                                                     {this._fetchCost(item)}
                                                 </span>
                                             </div>
                                             <div>
                                                 <span>
-                                                    Subtasks:{" "}
+                                                    Subtasks:{' '}
                                                     {item.subtasks_count || 0}
                                                 </span>
-                                                <span className="bumper"/>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
+                                                    {' '}
                                                     Task timeout: {item.timeout}
                                                 </span>
-                                                <span className="bumper"/>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
-                                                    Subtask timeout:{" "}
+                                                    {' '}
+                                                    Subtask timeout:{' '}
                                                     {item.subtask_timeout}
                                                 </span>
                                             </div>
@@ -302,13 +298,11 @@ export class TaskItem extends React.Component {
                                             className="control-panel__task"
                                             ref={node =>
                                                 (this.controlPanelRef = node)
-                                            }
-                                        >
+                                            }>
                                             <Tooltip
                                                 html={<p>Preview</p>}
                                                 position="bottom"
-                                                trigger="mouseenter"
-                                            >
+                                                trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
                                                     tabIndex="0"
@@ -316,8 +310,7 @@ export class TaskItem extends React.Component {
                                                     onClick={this._togglePreview.bind(
                                                         this,
                                                         item
-                                                    )}
-                                                >
+                                                    )}>
                                                     <span className="info-label">
                                                         Preview
                                                     </span>
@@ -327,8 +320,7 @@ export class TaskItem extends React.Component {
                                                 html={<p>Task Details</p>}
                                                 position="bottom"
                                                 trigger="mouseenter"
-                                                className="task-details-icon"
-                                            >
+                                                className="task-details-icon">
                                                 <span
                                                     className="icon-trash"
                                                     tabIndex="0"
@@ -336,8 +328,7 @@ export class TaskItem extends React.Component {
                                                     onClick={this._toggleDetail.bind(
                                                         this,
                                                         item
-                                                    )}
-                                                >
+                                                    )}>
                                                     <span className="info-label">
                                                         Details
                                                     </span>
@@ -346,8 +337,7 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 html={<p>Restart</p>}
                                                 position="bottom"
-                                                trigger="mouseenter"
-                                            >
+                                                trigger="mouseenter">
                                                 <span
                                                     className="icon-progress-clockwise"
                                                     tabIndex="0"
@@ -363,8 +353,7 @@ export class TaskItem extends React.Component {
                                                             item.status !==
                                                             taskStatus.RESTART
                                                         )
-                                                    }
-                                                >
+                                                    }>
                                                     <span className="info-label">
                                                         Restart
                                                     </span>
@@ -373,14 +362,14 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 html={<p>Output</p>}
                                                 position="bottom"
-                                                trigger="mouseenter"
-                                            >
+                                                trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
                                                     tabIndex="0"
                                                     aria-label="Open Delete Task Popup"
-                                                    onClick={_handleDeleteModal}
-                                                >
+                                                    onClick={
+                                                        _handleDeleteModal
+                                                    }>
                                                     <span className="info-label">
                                                         Output
                                                     </span>
@@ -389,14 +378,14 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 html={<p>Delete</p>}
                                                 position="bottom"
-                                                trigger="mouseenter"
-                                            >
+                                                trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
                                                     tabIndex="0"
                                                     aria-label="Open Delete Task Popup"
-                                                    onClick={_handleDeleteModal}
-                                                >
+                                                    onClick={
+                                                        _handleDeleteModal
+                                                    }>
                                                     <span className="info-label">
                                                         Delete
                                                     </span>
@@ -412,8 +401,7 @@ export class TaskItem extends React.Component {
                                 item.id === psId &&
                                 toggledList[psId] &&
                                 toggledList[psId].preview
-                            }
-                        >
+                            }>
                             <Preview
                                 id={item.id}
                                 src={item.preview}
@@ -425,8 +413,7 @@ export class TaskItem extends React.Component {
                                 item.id === psId &&
                                 toggledList[psId] &&
                                 toggledList[psId].detail
-                            }
-                        >
+                            }>
                             <Details id={item.id} />
                         </ConditionalRender>
                     </div>
