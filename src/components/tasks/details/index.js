@@ -16,14 +16,14 @@ import size from 'lodash/size';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
-    fragments: state.details.fragments
+    fragments: state.details.fragments[0] || {}
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class Details extends React.Component {
+export class Details extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,12 +32,18 @@ export class Details extends React.Component {
         };
     }
 
-    componentDidMount() {
+    componentWillMount() {
+        const { actions, id, updateIf } = this.props;
         let interval = () => {
-            this.props.actions.getFragments(this.props.id);
+            actions.getFragments(id);
             return interval;
         };
-        this.liveSubList = setInterval(interval(), 2000);
+        if (updateIf) this.liveSubList = setInterval(interval(), 2000);
+        else actions.getFragments(id);
+    }
+
+    componentWillUnmount() {
+        this.liveSubList && clearInterval(this.liveSubList);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -61,6 +67,10 @@ export class Details extends React.Component {
                     isAllChecked
                 });
             }
+        }
+
+        if (this.liveSubList && !nextProps.updateIf) {
+            this.liveSubList && clearInterval(this.liveSubList);
         }
     }
 

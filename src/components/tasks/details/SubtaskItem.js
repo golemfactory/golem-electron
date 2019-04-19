@@ -5,7 +5,7 @@ import NodeTable from './NodeTable';
 
 import ConditionalRender from '../../hoc/ConditionalRender';
 
-class SubtaskItem extends React.Component {
+class SubtaskItem extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -13,8 +13,8 @@ class SubtaskItem extends React.Component {
 		};
 	}
 
-	toggleNodeList = () => {
-		const expandButton = document.getElementById('expandSubtaskButton');
+	toggleNodeList = e => {
+		const expandButton = e.target;
 		expandButton.classList.toggle('arrow-expand');
 		this.setState({
 			showNodeList: !this.state.showNodeList
@@ -61,9 +61,12 @@ class SubtaskItem extends React.Component {
 					<div className="checkbox-item__action">
 						<span className="icon-progress-clockwise" />
 						<span
-							id="expandSubtaskButton"
 							className="icon-arrow-down"
-							onClick={this.toggleNodeList}
+							onClick={
+								item.length > 0
+									? this.toggleNodeList
+									: undefined
+							}
 						/>
 					</div>
 				</div>

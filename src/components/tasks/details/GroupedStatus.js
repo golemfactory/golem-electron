@@ -8,7 +8,7 @@ const fpMap = require('lodash/fp/map').convert({ cap: false });
 
 const GroupedStatus = ({ subtasksList }) => {
 	const currentList = map(subtasksList, item =>
-		item.length > 0 ? item[item.length - 1] : {status: 'Not Started'}
+		item.length > 0 ? item[item.length - 1] : { status: 'Not Started' }
 	);
 	const groupedStatuses = flow([
 		groupBy('status'),

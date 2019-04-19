@@ -414,7 +414,16 @@ export class TaskItem extends React.Component {
                                 toggledList[psId] &&
                                 toggledList[psId].detail
                             }>
-                            <Details id={item.id} />
+                            <Details
+                                id={item.id}
+                                updateIf={
+                                    !(
+                                        item.status === taskStatus.RESTART ||
+                                        item.status === taskStatus.TIMEOUT ||
+                                        item.status === taskStatus.FINISHED
+                                    )
+                                }
+                            />
                         </ConditionalRender>
                     </div>
                 )}

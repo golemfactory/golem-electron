@@ -33,7 +33,7 @@ const initialState = {
     test_status: {},
     nodeNumber: {},
     gasInfo: {},
-    fragments: {}
+    fragments: []
 };
 const setTaskDetails = (state = initialState, action) => {
     switch (action.type) {
