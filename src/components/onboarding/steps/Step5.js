@@ -17,9 +17,7 @@ export default class Step5 extends React.Component {
         super(props);
     }
 
-    _setNodeName(e) {
-        return this.props.setNodeName(e.target.value);
-    }
+    _setNodeName = e => this.props.setNodeName(e.target.value);
 
     componentDidMount() {
         const nickInput = document.getElementById("nickInput");
@@ -49,12 +47,12 @@ export default class Step5 extends React.Component {
                         id="nodeNameForm"
                         name="nodeNameForm"
                         className="nickname-area__onboarding"
-                        onSubmit={::this.props.handleNext}>
+                        onSubmit={this.props.handleNext}>
                         <input
                             id="nickInput"
                             className="nickname-input__onboarding"
                             placeholder="Name your node"
-                            onChange={::this._setNodeName}
+                            onChange={this._setNodeName}
                             maxLength={16}
                             pattern="^\S+(?: \S+)*$"
                             required
