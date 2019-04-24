@@ -1,20 +1,18 @@
-import React, { Component } from 'react'
-import { hashHistory } from 'react-router'
+import React, { Component } from 'react';
+import { hashHistory } from 'react-router';
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import {Tooltip} from 'react-tippy';
-
-import * as Actions from './../actions'
+import * as Actions from './../actions';
 
 const mapStateToProps = state => ({
     notificationList: state.notification.notificationList
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 /**
  * { Class for footer component. }
  *
@@ -22,7 +20,7 @@ const mapDispatchToProps = dispatch => ({
  */
 export class NotificationCenter extends Component {
     constructor(props) {
-        super(props)
+        super(props);
     }
 
     componentDidMount() {
@@ -35,33 +33,43 @@ export class NotificationCenter extends Component {
      * @param  {Object}     _       [Element in target]
      */
     _navigateTo(to) {
-        if(window.routerHistory.location.pathname !== to)
+        if (window.routerHistory.location.pathname !== to)
             window.routerHistory.push(to);
     }
 
-    _fetchNotification = (list) => {
-
-        const firstTemplate = <span onClick={this._navigateTo.bind(this, "/settings")}>
-                                    You are not using Concent service and thus are not fully secure. 
-                                    <span className="link--navigate" onClick={this._navigateTo.bind(this, "/settings")}>
-                                    <br/>Turn on Concent</span> or 
-                                    <a href="https://docs.golem.network"> Learn more</a> about it.
-                                </span>
-        return list
-            .map( (item, index) => <div className="list-item__notification" key={index.toString()}>
-                            <span className="bullet__list"/>
-                            <span>{item.id === 0 ? firstTemplate : item.content}</span>
-                        </div>)
-    }
+    _fetchNotification = list => {
+        const firstTemplate = (
+            <span onClick={this._navigateTo.bind(this, '/settings')}>
+                You are not using Concent service and thus are not fully secure.
+                <span
+                    className="link--navigate"
+                    onClick={this._navigateTo.bind(this, '/settings')}>
+                    <br />
+                    Turn on Concent
+                </span>{' '}
+                or
+                <a href="https://docs.golem.network"> Learn more</a> about it.
+            </span>
+        );
+        return list.map((item, index) => (
+            <div className="list-item__notification" key={index.toString()}>
+                <span className="bullet__list" />
+                <span>{item.id === 0 ? firstTemplate : item.content}</span>
+            </div>
+        ));
+    };
 
     render() {
-        const { notificationList } = this.props
+        const { notificationList } = this.props;
         return (
             <div className="list__notification">
-                { this._fetchNotification(notificationList) }
+                {this._fetchNotification(notificationList)}
             </div>
         );
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationCenter)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(NotificationCenter);

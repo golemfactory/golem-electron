@@ -1,5 +1,7 @@
 import "react-hot-loader/patch";
-import "react-tippy/dist/tippy.css";
+import 'tippy.js/themes/light.css';
+import 'tippy.js/themes/translucent.css';
+import 'tippy.js/themes/light.css';
 require("css-browser-selector");
 import React from "react";
 import { AppContainer } from "react-hot-loader";
@@ -12,13 +14,13 @@ import {
     __DO_NOT_USE__ActionTypes
 } from "redux";
 import createSagaMiddleware from "redux-saga";
-import { routerMiddleware, connectRouter } from "connected-react-router";
+import { routerMiddleware } from 'connected-react-router';
 import { createHashHistory } from "history";
 import "./utils/electronLayer";
 import { dict } from "./actions";
 
 import App from "./container/App.frame";
-import reducer from "./reducers";
+import createRootReducer from './reducers';
 import sagas from "./sagas";
 import "./scss/main.scss";
 
@@ -46,8 +48,7 @@ const enhancer = compose(
 );
 
 let store = createStore(
-    connectRouter(history)(reducer),
-    [],
+    createRootReducer(history),
     window.__REDUX_DEVTOOLS_EXTENSION__
         ? enhancer
         : applyMiddleware(sagaMiddleware, routingMiddleware)

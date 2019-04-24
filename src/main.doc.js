@@ -1,19 +1,21 @@
-import "react-hot-loader/patch";
-require("css-browser-selector");
-import React from "react";
-import { AppContainer } from "react-hot-loader";
-import { render } from "react-dom";
-import { Provider } from "react-redux";
-import { createStore, applyMiddleware, compose } from "redux";
-import { routerMiddleware } from "react-router-redux";
-import { createHashHistory } from "history";
-import "./utils/electronLayer";
+import 'react-hot-loader/patch'
+require('css-browser-selector')
+import React from 'react'
+import { AppContainer } from 'react-hot-loader';
+import { render } from 'react-dom'
+import { Provider } from 'react-redux'
+import { createStore, applyMiddleware, compose } from 'redux'
+import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { createHashHistory } from 'history'
+import './utils/electronLayer'
 
-import App from "./container/App.doc";
-import "./scss/main.scss";
 
-const history = (window.routerHistory = createHashHistory());
-const routingMiddleware = routerMiddleware(history);
+import App from './container/App.doc'
+import reducer from './reducers'
+import './scss/main.scss'
+
+const history = window.routerHistory = createHashHistory()
+const routingMiddleware = routerMiddleware(history)
 const sagaMiddleware = createSagaMiddleware();
 const enhancer = compose(
     // Middleware you want to use in development:

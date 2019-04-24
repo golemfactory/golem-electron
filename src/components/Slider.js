@@ -1,11 +1,11 @@
-import React from "react";
-import { Tooltip } from "react-tippy";
+import React from 'react';
+import Tooltip from '@tippy.js/react';
 
-const DEFAULT = "#9b9b9b";
-const TRUST = "#37C481";
-const WARN = "#FEC62E";
-const DANGER = "#F65A23";
-const DISABLED = "#CBCBCB";
+const DEFAULT = '#9b9b9b';
+const TRUST = '#37C481';
+const WARN = '#FEC62E';
+const DANGER = '#F65A23';
+const DISABLED = '#CBCBCB';
 
 function isFloat(n) {
     return n % 1 !== 0;
@@ -52,8 +52,8 @@ export default class Slider extends React.Component {
             this.props.iconLeft || this.props.textLeft ? 14 : -10;
         if (slider && indicator) {
             const val = Number(slider.value);
-            const min = slider.getAttribute("min");
-            const max = slider.getAttribute("max");
+            const min = slider.getAttribute('min');
+            const max = slider.getAttribute('max');
             const value = (val - min) / (max - min);
             const warnValue = this.props.warnStep ? this.props.warnStep[0] : 75;
             const dangerValue = this.props.warnStep
@@ -72,10 +72,10 @@ export default class Slider extends React.Component {
                             ? DEFAULT
                             : DANGER;
                 else color = primaryColor;
-                slider.style.cursor = "pointer";
+                slider.style.cursor = 'pointer';
             } else {
                 color = DISABLED;
-                slider.style.cursor = "not-allowed";
+                slider.style.cursor = 'not-allowed';
             }
 
             if (val > 999) {
@@ -86,14 +86,14 @@ export default class Slider extends React.Component {
 
             slider.style.background = color;
             slider.style.backgroundImage = [
-                "-webkit-gradient(",
-                "linear, ",
-                "left top, ",
-                "right top, ",
-                "color-stop(" + value + ", transparent), ",
-                "color-stop(" + value + ", #eff1f2)",
-                ")"
-            ].join("");
+                '-webkit-gradient(',
+                'linear, ',
+                'left top, ',
+                'right top, ',
+                'color-stop(' + value + ', transparent), ',
+                'color-stop(' + value + ', #eff1f2)',
+                ')'
+            ].join('');
 
             const appWidth =
                 window.innerWidth ||
@@ -110,7 +110,7 @@ export default class Slider extends React.Component {
                     6) -
                 (this.props.transform ? 24 : 0) -
                 balanceTextToCenter(val) +
-                "px";
+                'px';
         }
     }
 
@@ -140,13 +140,13 @@ export default class Slider extends React.Component {
         return (
             <div>
                 <Tooltip
-                    html={<p>To change resources first stop Golem</p>}
-                    position="top"
+                    content={<p>To change resources first stop Golem</p>}
+                    placement="top"
                     trigger="mouseenter"
                     interactive={false}
                     distance={-30}
                     size="small"
-                    disabled={!disabled}>
+                    isEnabled={disabled}>
                     <div className="slider">
                         {iconLeft ? (
                             <span className={`slider-icon ${iconLeft}`} />
@@ -155,7 +155,7 @@ export default class Slider extends React.Component {
                                 {textLeft}
                             </span>
                         ) : (
-                            ""
+                            ''
                         )}
                         <input
                             ref={this.props.inputId}
@@ -163,7 +163,7 @@ export default class Slider extends React.Component {
                             className="slider__resources"
                             id={this.props.inputId}
                             defaultValue={
-                                typeof defaultValue === "number" &&
+                                typeof defaultValue === 'number' &&
                                 defaultValue !== NaN
                                     ? defaultValue
                                     : 0
@@ -189,7 +189,7 @@ export default class Slider extends React.Component {
                                 {textRight}
                             </span>
                         ) : (
-                            ""
+                            ''
                         )}
                     </div>
                 </Tooltip>

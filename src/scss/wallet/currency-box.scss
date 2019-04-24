@@ -79,8 +79,8 @@
 
 	.icon-question-mark {
 		cursor: pointer;
-		margin-top: -20px;
-		font-size: 8pt !important;
+		margin-top: 5px;
+		font-size: 6pt !important;
 		align-self: flex-start;
 		color: $color-text3;
 	}
@@ -139,7 +139,10 @@
 	}
 
 	.icon-question-mark {
-		margin-top: -15px;
+		position: absolute;
+		top: 5px;
+		right: 5px;
+		margin-top: 0;
 	}
 
 	.amount-usd {
@@ -312,15 +315,25 @@
 
 	.lock__container {
 		display: flex;
+		position: relative;
 		justify-content: space-between;
 		width: 100%;
+		top: -2px;
+
+		&:first-of-type {
+			margin-bottom: 4px;
+		}
+
 
 		.icon-question-mark {
-			cursor: pointer;
-			font-size: 8pt !important;
+			position: relative;
+			top: -7px;
+			font-size: 6pt !important;
 			align-self: flex-start;
 			color: $color-text3;
-			margin-left: 8px;
+			margin-left: 5px;
+
+			cursor: pointer;
 		}
 	}
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { CSSTransitionGroup } from "react-transition-group";
+import { TransitionGroup } from "react-transition-group";
 
 import Welcome from "./steps/Welcome";
 import Step1 from "./steps/Step1";
@@ -66,14 +66,13 @@ export default class ConcentOnboarding extends React.Component {
         return (
             <div className="concent-onboarding__content">
                 <div className="concent-onboarding__steps">
-                    <CSSTransitionGroup
-                        transitionName={`${
+                    <TransitionGroup
+                        classNames={`${
                             isNext ? "pageSwap" : "pageSwapBack"
                         }`}
-                        transitionEnterTimeout={600}
-                        transitionLeaveTimeout={600}>
+                        timeout={600}>
                         {this.shownStep(currentStep)}
-                    </CSSTransitionGroup>
+                    </TransitionGroup>
                 </div>
                 <div className="concent-onboarding__action-container">
                     {currentStep === 1 || currentStep === 5 ? (

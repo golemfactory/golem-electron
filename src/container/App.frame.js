@@ -3,7 +3,7 @@ import { Route, Switch } from 'react-router-dom' // react-router v4
 import { ConnectedRouter } from 'connected-react-router'
 
 import Header from '../components/Header'
-import Frame from '../components/tasks/frame'
+import Frame from '../components/frame'
 import NotFound from '../components/NotFound'
 import { LoadingComponent } from '../components/hoc/Loader'
 

@@ -328,11 +328,11 @@ mark {
     }
 }
 
-.pageSwap-leave {
+.pageSwap-exit {
     transform: translate3d(0, 0, 0);
 }
 
-.pageSwap-leave.pageSwap-leave-active {
+.pageSwap-exit.pageSwap-exit-active {
     transform: translate3d(-100%, 0, 0);
     transition: all ease-out 600ms;
 }
@@ -354,11 +354,11 @@ mark {
     transition: all ease-out 600ms;
 }
 
-.pageSwapBack-leave {
+.pageSwapBack-exit {
     transform: translate3d(0, 0, 0);
 }
 
-.pageSwapBack-leave.pageSwapBack-leave-active {
+.pageSwapBack-exit.pageSwapBack-exit-active {
     transform: translate3d(100%, 0, 0);
     transition: all ease-out 600ms;
 }

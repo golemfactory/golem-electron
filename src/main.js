@@ -1,26 +1,27 @@
-import "react-hot-loader/patch";
-import "react-tippy/dist/tippy.css";
-require("css-browser-selector");
-import React from "react";
-import { AppContainer } from "react-hot-loader";
-import { render } from "react-dom";
-import { Provider } from "react-redux";
+import 'react-hot-loader/patch';
+import 'tippy.js/themes/light.css';
+import 'tippy.js/themes/translucent.css';
+require('css-browser-selector');
+import React from 'react';
+import { AppContainer } from 'react-hot-loader';
+import { render } from 'react-dom';
+import { Provider } from 'react-redux';
 import {
     createStore,
     applyMiddleware,
     compose,
     __DO_NOT_USE__ActionTypes
-} from "redux";
-import createSagaMiddleware from "redux-saga";
-import { routerMiddleware, connectRouter } from "connected-react-router";
-import { createHashHistory } from "history";
-import "./utils/electronLayer";
-import { dict } from "./actions";
+} from 'redux';
+import createSagaMiddleware from 'redux-saga';
+import { routerMiddleware } from 'connected-react-router';
+import { createHashHistory } from 'history';
+import './utils/electronLayer';
+import { dict } from './actions';
 
-import App from "./container/App";
-import reducer from "./reducers";
-import sagas from "./sagas";
-import "./scss/main.scss";
+import App from './container/App';
+import createRootReducer from './reducers';
+import sagas from './sagas';
+import './scss/main.scss';
 
 /**
  * Redux dev tools workaround to avoid "state undefined" error
@@ -28,16 +29,16 @@ import "./scss/main.scss";
  * @see https://github.com/reduxjs/redux-devtools/issues/391#issuecomment-361059004
  */
 if (window.__REDUX_DEVTOOLS_EXTENSION__) {
-    __DO_NOT_USE__ActionTypes.INIT = "@@redux/INIT";
-    __DO_NOT_USE__ActionTypes.REPLACE = "@@redux/REPLACE";
+    __DO_NOT_USE__ActionTypes.INIT = '@@redux/INIT';
+    __DO_NOT_USE__ActionTypes.REPLACE = '@@redux/REPLACE';
 }
 
 const { remote, ipcRenderer } = window.electron;
-const { configStore, dictConfig } = remote.getGlobal("configStorage");
+const { configStore, dictConfig } = remote.getGlobal('configStorage');
 
 const history = (window.routerHistory = createHashHistory());
 const routingMiddleware = routerMiddleware(history);
-const appEnv = remote.getGlobal("process").env.NODE_ENV;
+const appEnv = remote.getGlobal('process').env.NODE_ENV;
 const sagaMiddleware = createSagaMiddleware();
 const enhancer = compose(
     // Middleware you want to use in development:
@@ -46,8 +47,7 @@ const enhancer = compose(
 );
 
 let store = createStore(
-    connectRouter(history)(reducer),
-    [],
+    createRootReducer(history),
     window.__REDUX_DEVTOOLS_EXTENSION__
         ? enhancer
         : applyMiddleware(sagaMiddleware, routingMiddleware)
@@ -73,8 +73,8 @@ configStore.onDidChange(dictConfig.DEVELOPER_MODE, newVal => {
 /**
  * In Windows, closing application will kill golem instance
  */
-if (remote.getGlobal("process").platform === "win32") {
-    window.addEventListener("beforeunload", evt => {
+if (remote.getGlobal('process').platform === 'win32') {
+    window.addEventListener('beforeunload', evt => {
         const _process = remote.app.golem.process;
         const _connected = remote.app.golem.connected;
         const _cb = _result => {
@@ -101,14 +101,14 @@ if (remote.getGlobal("process").platform === "win32") {
         /* Send the RPC call */
         evt.returnValue = false;
         store.dispatch({
-            type: "APP_QUIT",
+            type: 'APP_QUIT',
             _cb
         });
     });
 }
 
-document.addEventListener("DOMContentLoaded", function() {
-    window.applicationSurface = document.getElementById("mount");
+document.addEventListener('DOMContentLoaded', function() {
+    window.applicationSurface = document.getElementById('mount');
     render(
         <Provider store={store}>
             <App history={history} />

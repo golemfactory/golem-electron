@@ -1,30 +1,30 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { CSSTransitionGroup } from "react-transition-group";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { TransitionGroup } from 'react-transition-group';
 
-import Handlebars from "handlebars";
-import qrcode from "qrcode-generator";
-import html2pdf from "html2pdf.js";
+import Handlebars from 'handlebars';
+import qrcode from 'qrcode-generator';
+import html2pdf from 'html2pdf.js';
 
-import * as Actions from "../../actions";
-import { getPasswordModalStatus } from "../../reducers";
-import Onboarding from "./../onboarding";
+import * as Actions from '../../actions';
+import { getPasswordModalStatus } from '../../reducers';
+import Onboarding from './../onboarding';
 
-import Welcome from "./steps/Welcome";
-import VirtualisationInfo from "./steps/VirtualisationInfo";
-import Terms from "./steps/Terms";
-import Type from "./steps/Type";
-import Register from "./steps/Register";
-import Print from "./steps/Print";
-import Step2 from "./steps/Step2";
-import Step3 from "./steps/Step3";
-import Step4 from "./steps/Step4";
-import Step5 from "./steps/Step5";
-import Decline from "./steps/Decline";
+import Welcome from './steps/Welcome';
+import VirtualisationInfo from './steps/VirtualisationInfo';
+import Terms from './steps/Terms';
+import Type from './steps/Type';
+import Register from './steps/Register';
+import Print from './steps/Print';
+import Step2 from './steps/Step2';
+import Step3 from './steps/Step3';
+import Step4 from './steps/Step4';
+import Step5 from './steps/Step5';
+import Decline from './steps/Decline';
 //import Step6 from './steps/Step6'
 
-import golem_logo from "./../../assets/img/golem-black.svg";
+import golem_logo from './../../assets/img/golem-black.svg';
 
 const { remote, shell } = window.electron;
 const { app } = remote;
@@ -43,7 +43,7 @@ const steps = Object.freeze({
 });
 
 function printPage(template) {
-    var iframe = document.createElement("iframe"); // create the element
+    var iframe = document.createElement('iframe'); // create the element
     document.body.appendChild(iframe); // insert the element to the DOM
     iframe.contentWindow.document.write(template); // write the HTML to be printed
     setTimeout(() => {
@@ -102,7 +102,7 @@ const someAsyncFunction = function(callback) {
 
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
-    passwordModal: getPasswordModalStatus(state, "passwordModal"),
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
     isMainNet: state.info.isMainNet,
@@ -121,7 +121,7 @@ class OnboardIndex extends React.Component {
             currentStep: 1,
             nodeName: null,
             isNext: true,
-            password: "",
+            password: '',
             isPasswordValid: false,
             loadingIndicator: false,
             isRegisterRequired: false,
@@ -131,7 +131,7 @@ class OnboardIndex extends React.Component {
             isMonitorAccepted: true,
             isPrinted: false,
             isSkippingPrint: false,
-            printInfo: "",
+            printInfo: '',
             closeInformationBand: false,
             isSlideBlocked: false
         };
@@ -140,7 +140,7 @@ class OnboardIndex extends React.Component {
     componentDidMount() {
         this._keypressListener = event => {
             if (
-                event.key === "Enter" &&
+                event.key === 'Enter' &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
                 this.state.currentStep !== steps.STEP4 &&
@@ -149,11 +149,11 @@ class OnboardIndex extends React.Component {
                 this._handleNext.call(this);
             }
         };
-        document.addEventListener("keypress", this._keypressListener);
+        document.addEventListener('keypress', this._keypressListener);
     }
 
     componentWillUnmount() {
-        document.removeEventListener("keypress", this._keypressListener);
+        document.removeEventListener('keypress', this._keypressListener);
     }
 
     _setNodeName = name => this.setState({ nodeName: name });
@@ -341,7 +341,7 @@ class OnboardIndex extends React.Component {
         const { currentStep, nodeName, isRegisterRequired } = this.state;
         if (currentStep === steps.STEP4) {
             const queuedTask = {
-                action: "updateNodeName",
+                action: 'updateNodeName',
                 arguments: [nodeName]
             };
             actions.addQueue(queuedTask);
@@ -427,9 +427,9 @@ class OnboardIndex extends React.Component {
 
     _handlePrint = () => {
         someAsyncFunction(template => {
-            Handlebars.registerHelper("qrcode", data => {
+            Handlebars.registerHelper('qrcode', data => {
                 var typeNumber = 4;
-                var errorCorrectionLevel = "L";
+                var errorCorrectionLevel = 'L';
                 var qr = qrcode(typeNumber, errorCorrectionLevel);
                 qr.addData(data);
                 qr.make();
@@ -442,10 +442,10 @@ class OnboardIndex extends React.Component {
             });
             html2pdf(temp, {
                 margin: 0,
-                filename: "password.pdf",
-                image: { type: "jpeg", quality: 1 },
+                filename: 'password.pdf',
+                image: { type: 'jpeg', quality: 1 },
                 html2canvas: { dpi: 192, letterRendering: true },
-                jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             });
 
             printPage(temp);
@@ -464,7 +464,7 @@ class OnboardIndex extends React.Component {
         } else {
             this.setState(
                 {
-                    printInfo: ""
+                    printInfo: ''
                 },
                 () => this._handleNext()
             );
@@ -481,18 +481,18 @@ class OnboardIndex extends React.Component {
     _isInfoBandShown(_connectionProblem, _closeInformationBand) {
         if (
             _connectionProblem &&
-            (_connectionProblem.issue === "PORT" ||
-                _connectionProblem.issue === "WEBSOCKET") &&
+            (_connectionProblem.issue === 'PORT' ||
+                _connectionProblem.issue === 'WEBSOCKET') &&
             !_closeInformationBand
         )
             return (
                 <div className={`information-band__onboarding show`}>
                     <div className="content-information">
                         <span className="icon-warning" />
-                        {_connectionProblem.issue === "PORT" ? (
+                        {_connectionProblem.issue === 'PORT' ? (
                             <span>
                                 It looks like you don't have ports forwarded.
-                                Follow{" "}
+                                Follow{' '}
                                 <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
                                     these steps.
                                 </a>
@@ -524,9 +524,8 @@ class OnboardIndex extends React.Component {
                     <button
                         className="btn btn--primary"
                         onClick={this._handleNext}
-                        disabled={!isConnected}
-                    >
-                        {isConnected ? "Get Started" : "Connecting..."}
+                        disabled={!isConnected}>
+                        {isConnected ? 'Get Started' : 'Connecting...'}
                     </button>
                 </div>
             );
@@ -536,14 +535,12 @@ class OnboardIndex extends React.Component {
                     <div>
                         <span
                             className="btn--cancel"
-                            onClick={this._handleTermsBack}
-                        >
+                            onClick={this._handleTermsBack}>
                             Go Back
                         </span>
                         <button
                             className="btn btn--primary"
-                            onClick={this._handleLeave}
-                        >
+                            onClick={this._handleLeave}>
                             See you soon
                         </button>
                     </div>
@@ -557,8 +554,7 @@ class OnboardIndex extends React.Component {
                     <button
                         className="btn btn--primary"
                         onClick={this._handleTermsAccept}
-                        disabled={isAcceptLocked}
-                    >
+                        disabled={isAcceptLocked}>
                         Accept
                     </button>
                 </div>
@@ -568,8 +564,7 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--primary"
-                        onClick={this._handleNext}
-                    >
+                        onClick={this._handleNext}>
                         Got It!
                     </button>
                 </div>
@@ -579,8 +574,7 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--primary"
-                        onClick={this._handleNext}
-                    >
+                        onClick={this._handleNext}>
                         Got It
                     </button>
                 </div>
@@ -593,17 +587,16 @@ class OnboardIndex extends React.Component {
                             type="submit"
                             form="passwordForm"
                             className={`btn btn--primary ${loadingIndicator &&
-                                "btn--loading"}`}
+                                'btn--loading'}`}
                             disabled={
                                 loadingIndicator ||
                                 (passwordModal.register && !isPasswordValid)
-                            }
-                        >
+                            }>
                             {loadingIndicator
-                                ? "Signing in"
+                                ? 'Signing in'
                                 : passwordModal.register
-                                ? "Register"
-                                : "Login"}
+                                ? 'Register'
+                                : 'Login'}
                             {loadingIndicator && (
                                 <span className="jumping-dots">
                                     <span className="dot-1">.</span>
@@ -615,8 +608,7 @@ class OnboardIndex extends React.Component {
                     ) : (
                         <button
                             className="btn btn--primary"
-                            onClick={this._handleNext}
-                        >
+                            onClick={this._handleNext}>
                             Take me in!
                         </button>
                     )}
@@ -627,16 +619,14 @@ class OnboardIndex extends React.Component {
                 <div>
                     <button
                         className="btn btn--outline btn--print"
-                        onClick={this._handlePrint}
-                    >
-                        {!isPrinted ? "Print" : "Print again"}
+                        onClick={this._handlePrint}>
+                        {!isPrinted ? 'Print' : 'Print again'}
                     </button>
                     <br />
                     <br />
                     <button
                         className="btn btn--primary btn--print"
-                        onClick={this._handleNextPrint}
-                    >
+                        onClick={this._handleNextPrint}>
                         Next
                     </button>
                 </div>
@@ -680,9 +670,8 @@ class OnboardIndex extends React.Component {
                         onClick={e => {
                             this.stepNickname.activityFormButton.click();
                         }}
-                        disabled={!isConnected}
-                    >
-                        {isConnected ? "Get Started" : "Connecting..."}
+                        disabled={!isConnected}>
+                        {isConnected ? 'Get Started' : 'Connecting...'}
                     </button>
                 </div>
             );
@@ -717,13 +706,11 @@ class OnboardIndex extends React.Component {
         const { connectionProblem } = this.props;
         return (
             <div className="content__onboarding">
-                <CSSTransitionGroup
-                    transitionName={`${isNext ? "pageSwap" : "pageSwapBack"}`}
-                    transitionEnterTimeout={600}
-                    transitionLeaveTimeout={600}
-                >
+                <TransitionGroup
+                    classNames={`${isNext ? 'pageSwap' : 'pageSwapBack'}`}
+                    timeout={600}>
                     {this.shownStep(currentStep)}
-                </CSSTransitionGroup>
+                </TransitionGroup>
                 <div ref="stepControl" className="step-control__onboarding">
                     {this._initControl(currentStep)}
                 </div>
