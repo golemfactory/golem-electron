@@ -1,5 +1,5 @@
 import React from 'react';
-import { Transition, animated } from 'react-spring/renderprops';
+import { Transition, animated } from 'react-spring/renderprops.cjs';
 
 import Welcome from './steps/Welcome';
 import Step1 from './steps/Step1';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Transition, animated } from 'react-spring/renderprops';
+import { Transition, animated } from 'react-spring/renderprops.cjs';
 
 import Handlebars from 'handlebars';
 import qrcode from 'qrcode-generator';
