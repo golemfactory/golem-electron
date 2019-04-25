@@ -1,7 +1,7 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { TransitionGroup } from 'react-transition-group';
+import { Transition, animated } from 'react-spring/renderprops';
 
 import Handlebars from 'handlebars';
 import qrcode from 'qrcode-generator';
@@ -135,6 +135,68 @@ class OnboardIndex extends React.Component {
             closeInformationBand: false,
             isSlideBlocked: false
         };
+
+        this.enterStyle = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            transform: 'translate3d(100%,0,0)'
+        };
+        this.leaveStyle = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            transform: 'translate3d(-100%,0,0)'
+        };
+
+        const { terms, passwordModal, isMainNet, actions } = props;
+        const {
+            isNext,
+            isTermsDeclined,
+            isMonitorAccepted,
+            isSentryAccepted,
+            isPrinted,
+            isSkippingPrint,
+            nodeName,
+            loadingIndicator,
+            isPasswordValid
+        } = this.state;
+
+        this.shownStepList = [
+            <Welcome isMainNet={isMainNet} />,
+            <VirtualisationInfo />,
+            isTermsDeclined ? (
+                <Decline />
+            ) : (
+                <Terms
+                    terms={terms}
+                    handleLock={this._handleLock}
+                    isMonitorAccepted={isMonitorAccepted}
+                    isSentryAccepted={isSentryAccepted}
+                    handleMonitorRadio={this._handleMonitorRadio}
+                    handleSentryRadio={this._handleSentryRadio}
+                />
+            ),
+            <Type />,
+            <Register
+                passwordModal={passwordModal}
+                isPasswordValid={isPasswordValid}
+                loadingIndicator={loadingIndicator}
+                handlePasswordValidation={this._handlePasswordValidation}
+                handleLoading={this._handleLoadingIndicator}
+                printInfo={this._printInfo}
+            />,
+            <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint} />,
+            <Step2 />,
+            <Step3 />,
+            <Step4 />,
+            <Step5
+                ref={ref => (this.stepNickname = ref)}
+                nodeName={nodeName}
+                setNodeName={this._setNodeName}
+                handleNext={this._handleNext}
+            />
+        ];
     }
 
     componentDidMount() {
@@ -210,103 +272,6 @@ class OnboardIndex extends React.Component {
         this.setState({
             printInfo: _info
         });
-    };
-
-    /**
-     * [shownStep func. will redirect user to relevant Step]
-     * @param  {Number}     id      [Id of the step]
-     * @return {DOM}                [Step element]
-     */
-    shownStep = id => {
-        const { terms, passwordModal, isMainNet, actions } = this.props;
-        const {
-            isTermsDeclined,
-            isMonitorAccepted,
-            isSentryAccepted,
-            isPrinted,
-            isSkippingPrint,
-            nodeName,
-            loadingIndicator,
-            isPasswordValid
-        } = this.state;
-
-        let step;
-        let key = Symbol(id).toString();
-        switch (id) {
-            case steps.WELCOME:
-                step = <Welcome key={key} isMainNet={isMainNet} />;
-                break;
-            case steps.VIRTUALISATION:
-                step = <VirtualisationInfo />;
-                break;
-            case steps.TERMS:
-                step = isTermsDeclined ? (
-                    <Decline />
-                ) : (
-                    <Terms
-                        key={key}
-                        terms={terms}
-                        handleLock={this._handleLock}
-                        isMonitorAccepted={isMonitorAccepted}
-                        isSentryAccepted={isSentryAccepted}
-                        handleMonitorRadio={this._handleMonitorRadio}
-                        handleSentryRadio={this._handleSentryRadio}
-                    />
-                );
-                break;
-            case steps.TYPE:
-                step = <Type key={key} />;
-                break;
-            case steps.REGISTER:
-                step = (
-                    <Register
-                        key={key}
-                        passwordModal={passwordModal}
-                        isPasswordValid={isPasswordValid}
-                        loadingIndicator={loadingIndicator}
-                        handlePasswordValidation={
-                            this._handlePasswordValidation
-                        }
-                        handleLoading={this._handleLoadingIndicator}
-                        printInfo={this._printInfo}
-                    />
-                );
-                break;
-            case steps.PRINT:
-                step = (
-                    <Print
-                        isPrinted={isPrinted}
-                        isSkippingPrint={isSkippingPrint}
-                    />
-                );
-                break;
-            case steps.STEP1:
-                step = <Step2 key={key} />;
-                break;
-            case steps.STEP2:
-                step = <Step3 key={key} />;
-                break;
-            case steps.STEP3:
-                step = <Step4 key={key} />;
-                break;
-            case steps.STEP4:
-                step = (
-                    <Step5
-                        key={key}
-                        ref={ref => (this.stepNickname = ref)}
-                        nodeName={nodeName}
-                        setNodeName={this._setNodeName}
-                        key={key}
-                        handleNext={this._handleNext}
-                    />
-                );
-                break;
-            // case 6:
-            //     step = <Step6/>
-            //     break;
-        }
-
-        return step;
     };
 
     /**
@@ -701,16 +666,34 @@ class OnboardIndex extends React.Component {
         }
     };
 
+    wrapWithAnimated = (component, id = Symbol.toString()) => {
+        return style => (
+            <animated.div style={{ ...style }} key={id}>
+                {component}
+            </animated.div>
+        );
+    };
+
     render() {
-        const { currentStep, isNext, closeInformationBand } = this.state;
+        const { currentStep, closeInformationBand, isNext } = this.state;
         const { connectionProblem } = this.props;
         return (
             <div className="content__onboarding">
-                <TransitionGroup
-                    classNames={`${isNext ? 'pageSwap' : 'pageSwapBack'}`}
-                    timeout={600}>
-                    {this.shownStep(currentStep)}
-                </TransitionGroup>
+                <Transition
+                    native
+                    reset
+                    unique
+                    items={currentStep - 1}
+                    from={isNext ? this.enterStyle : this.leaveStyle}
+                    enter={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        transform: 'translate3d(0,0,0)'
+                    }}
+                    leave={isNext ? this.leaveStyle : this.enterStyle}>
+                    {index => this.wrapWithAnimated(this.shownStepList[index])}
+                </Transition>
                 <div ref="stepControl" className="step-control__onboarding">
                     {this._initControl(currentStep)}
                 </div>

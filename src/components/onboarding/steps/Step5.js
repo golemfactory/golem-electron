@@ -1,18 +1,18 @@
-import React from "react";
-import Lottie from "react-lottie";
+import React from 'react';
+import Lottie from 'react-lottie';
 
-import animData from "./../../../assets/anims/onboarding/node-name.json";
+import animData from './../../../assets/anims/onboarding/node-name.json';
 
 const defaultOptions = {
     loop: false,
     autoplay: true,
     animationData: animData,
     rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
+        preserveAspectRatio: 'xMidYMid slice'
     }
 };
 
-export default class Step5 extends React.Component {
+export default class Step5 extends React.PureComponent {
     constructor(props) {
         super(props);
     }
@@ -20,12 +20,12 @@ export default class Step5 extends React.Component {
     _setNodeName = e => this.props.setNodeName(e.target.value);
 
     componentDidMount() {
-        const nickInput = document.getElementById("nickInput");
+        const nickInput = document.getElementById('nickInput');
         if (nickInput) {
             setTimeout(() => nickInput.focus(), 600); //CSSTransition issue related
-            nickInput.value = this.props.nodeName || "";
+            nickInput.value = this.props.nodeName || '';
             nickInput.oninvalid = function(event) {
-                event.target.style.border = "1px solid red";
+                event.target.style.border = '1px solid red';
             };
         }
     }
@@ -58,7 +58,7 @@ export default class Step5 extends React.Component {
                             required
                         />
                         <button
-                            style={{ display: "none" }}
+                            style={{ display: 'none' }}
                             type="submit"
                             ref={button => {
                                 this.activityFormButton = button;

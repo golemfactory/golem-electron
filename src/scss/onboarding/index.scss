@@ -1,6 +1,6 @@
-@import "steps/welcome";
-@import "steps/terms";
-@import "steps/node-name";
+@import 'steps/welcome';
+@import 'steps/terms';
+@import 'steps/node-name';
 
 @mixin flex {
     display: flex;
@@ -183,7 +183,7 @@ mark {
             font-size: 18px;
         }
 
-        input[type="text"] {
+        input[type='text'] {
             font-size: 14px;
         }
 
@@ -269,6 +269,8 @@ mark {
 
 .step-control__onboarding {
     display: block;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
@@ -317,8 +319,8 @@ mark {
         text-align: left;
         height: 50px;
 
-        [class^="icon-"],
-        [class*=" icon-"] {
+        [class^='icon-'],
+        [class*=' icon-'] {
             font-size: 24pt;
         }
     }
@@ -337,53 +339,12 @@ mark {
     transition: all ease-out 600ms;
 }
 
-.pageSwap-enter {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    transform: translate3d(100%, 0, 0);
-}
-
-.pageSwap-enter.pageSwap-enter-active {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    transform: translate3d(0, 0, 0);
-    transition: all ease-out 600ms;
-}
-
-.pageSwapBack-exit {
-    transform: translate3d(0, 0, 0);
-}
-
-.pageSwapBack-exit.pageSwapBack-exit-active {
-    transform: translate3d(100%, 0, 0);
-    transition: all ease-out 600ms;
-}
-
-.pageSwapBack-enter {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    transform: translate3d(-100%, 0, 0);
-}
-
-.pageSwapBack-enter.pageSwapBack-enter-active {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    transform: translate3d(0, 0, 0);
-    transition: all ease-out 600ms;
-}
-
 /*MEDIA*/
 
 @media screen and (max-height: 720px) {
     .section-image__onboarding {
+        width: 80%;
+
         .welcome-image,
         .chain-image {
             width: 120px;

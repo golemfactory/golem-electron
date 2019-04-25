@@ -133,6 +133,7 @@ export class Personal extends React.Component {
                         onSubmit={this._toggleEditMode}>
                         {editMode ? (
                             <input
+                                className="input__node-name"
                                 pattern="^\S+(?: \S+)*$"
                                 title="Please write with English charaters and numbers"
                                 type="text"

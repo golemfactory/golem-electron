@@ -134,7 +134,7 @@ export default class Slider extends React.Component {
             min,
             max,
             step,
-            disabled
+            disabled = false
         } = this.props;
         const { defaultValue } = this.state;
         return (
