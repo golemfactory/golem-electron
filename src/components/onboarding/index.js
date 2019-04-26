@@ -17,10 +17,10 @@ import Terms from './steps/Terms';
 import Type from './steps/Type';
 import Register from './steps/Register';
 import Print from './steps/Print';
+import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
 import Step3 from './steps/Step3';
 import Step4 from './steps/Step4';
-import Step5 from './steps/Step5';
 import Decline from './steps/Decline';
 //import Step6 from './steps/Step6'
 
@@ -148,55 +148,6 @@ class OnboardIndex extends React.Component {
             left: 0,
             transform: 'translate3d(-100%,0,0)'
         };
-
-        const { terms, passwordModal, isMainNet, actions } = props;
-        const {
-            isNext,
-            isTermsDeclined,
-            isMonitorAccepted,
-            isSentryAccepted,
-            isPrinted,
-            isSkippingPrint,
-            nodeName,
-            loadingIndicator,
-            isPasswordValid
-        } = this.state;
-
-        this.shownStepList = [
-            <Welcome isMainNet={isMainNet} />,
-            <VirtualisationInfo />,
-            isTermsDeclined ? (
-                <Decline />
-            ) : (
-                <Terms
-                    terms={terms}
-                    handleLock={this._handleLock}
-                    isMonitorAccepted={isMonitorAccepted}
-                    isSentryAccepted={isSentryAccepted}
-                    handleMonitorRadio={this._handleMonitorRadio}
-                    handleSentryRadio={this._handleSentryRadio}
-                />
-            ),
-            <Type />,
-            <Register
-                passwordModal={passwordModal}
-                isPasswordValid={isPasswordValid}
-                loadingIndicator={loadingIndicator}
-                handlePasswordValidation={this._handlePasswordValidation}
-                handleLoading={this._handleLoadingIndicator}
-                printInfo={this._printInfo}
-            />,
-            <Print isPrinted={isPrinted} isSkippingPrint={isSkippingPrint} />,
-            <Step2 />,
-            <Step3 />,
-            <Step4 />,
-            <Step5
-                ref={ref => (this.stepNickname = ref)}
-                nodeName={nodeName}
-                setNodeName={this._setNodeName}
-                handleNext={this._handleNext}
-            />
-        ];
     }
 
     componentDidMount() {
@@ -216,6 +167,7 @@ class OnboardIndex extends React.Component {
 
     componentWillUnmount() {
         document.removeEventListener('keypress', this._keypressListener);
+        this.transitionTimeout && clearTimeout(this.transitionTimeout);
     }
 
     _setNodeName = name => this.setState({ nodeName: name });
@@ -230,13 +182,13 @@ class OnboardIndex extends React.Component {
                 isSlideBlocked: true
             },
             () =>
-                setTimeout(
+                (this.transitionTimeout = setTimeout(
                     _ =>
                         this.setState({
                             isSlideBlocked: false
                         }),
                     600
-                )
+                ))
         );
     }
 
@@ -666,10 +618,82 @@ class OnboardIndex extends React.Component {
         }
     };
 
-    wrapWithAnimated = (component, id = Symbol.toString()) => {
+    shownStep = index => {
+        const { terms, passwordModal, isMainNet, actions } = this.props;
+        const {
+            isNext,
+            isTermsDeclined,
+            isMonitorAccepted,
+            isSentryAccepted,
+            isPrinted,
+            isSkippingPrint,
+            nodeName,
+            loadingIndicator,
+            isPasswordValid
+        } = this.state;
+
+        switch (index + 1) {
+            case steps.WELCOME:
+                return <Welcome isMainNet={isMainNet} />;
+            case steps.VIRTUALISATION:
+                return <VirtualisationInfo />;
+            case steps.TERMS:
+                return isTermsDeclined ? (
+                    <Decline />
+                ) : (
+                    <Terms
+                        terms={terms}
+                        handleLock={this._handleLock}
+                        isMonitorAccepted={isMonitorAccepted}
+                        isSentryAccepted={isSentryAccepted}
+                        handleMonitorRadio={this._handleMonitorRadio}
+                        handleSentryRadio={this._handleSentryRadio}
+                    />
+                );
+            case steps.TYPE:
+                return <Type />;
+            case steps.REGISTER:
+                return (
+                    <Register
+                        passwordModal={passwordModal}
+                        isPasswordValid={isPasswordValid}
+                        loadingIndicator={loadingIndicator}
+                        handlePasswordValidation={
+                            this._handlePasswordValidation
+                        }
+                        handleLoading={this._handleLoadingIndicator}
+                        printInfo={this._printInfo}
+                    />
+                );
+            case steps.PRINT:
+                return (
+                    <Print
+                        isPrinted={isPrinted}
+                        isSkippingPrint={isSkippingPrint}
+                    />
+                );
+            case steps.STEP1:
+                return <Step1 />;
+            case steps.STEP2:
+                return <Step2 />;
+            case steps.STEP3:
+                return <Step3 />;
+            case steps.STEP4:
+                return (
+                    <Step4
+                        ref={ref => (this.stepNickname = ref)}
+                        nodeName={nodeName}
+                        setNodeName={this._setNodeName}
+                        handleNext={this._handleNext}
+                    />
+                );
+        }
+    };
+
+    wrapWithAnimated = (index, id = Symbol.toString()) => {
         return style => (
             <animated.div style={{ ...style }} key={id}>
-                {component}
+                {this.shownStep(index)}
             </animated.div>
         );
     };
@@ -692,7 +716,7 @@ class OnboardIndex extends React.Component {
                         transform: 'translate3d(0,0,0)'
                     }}
                     leave={isNext ? this.leaveStyle : this.enterStyle}>
-                    {index => this.wrapWithAnimated(this.shownStepList[index])}
+                    {index => this.wrapWithAnimated(index)}
                 </Transition>
                 <div ref="stepControl" className="step-control__onboarding">
                     {this._initControl(currentStep)}

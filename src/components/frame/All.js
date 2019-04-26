@@ -206,7 +206,7 @@ export class All extends React.Component {
                                             trigger="mouseenter"
                                             interactive={true}
                                             arrow={true}
-                                            width="500"
+                                            maxWidth="500"
                                             size="regular">
                                             <div
                                                 className={`${
