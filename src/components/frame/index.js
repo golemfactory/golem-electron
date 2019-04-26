@@ -3,7 +3,7 @@ import { findDOMNode } from 'react-dom'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import * as Actions from '../../../actions'
+import * as Actions from '../../actions'
 
 import SingleFrame from './Single'
 import AllFrame from './All'

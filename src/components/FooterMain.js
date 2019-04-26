@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import { Tooltip } from "react-tippy";
-import Lottie from "react-lottie";
-import { Transition, animated, interpolate } from "react-spring";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import Tooltip from '@tippy.js/react';
+import Lottie from 'react-lottie';
+import { Transition, animated, interpolate } from 'react-spring';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
 import * as Actions from "./../actions";
 import { getStatus, getPasswordModalStatus } from "./../reducers";
