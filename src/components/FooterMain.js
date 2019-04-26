@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Tooltip from '@tippy.js/react';
 import Lottie from 'react-lottie';
-import { Transition, animated, interpolate } from 'react-spring';
+import { Transition, animated, interpolate } from 'react-spring/renderprops.cjs';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
