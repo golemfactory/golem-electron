@@ -1413,7 +1413,6 @@ export class TaskDetail extends React.Component {
                                             specific label to find some help
                                         </p>
                                     }
-                                    distance={-20}
                                 />
                                 {!isDetailPage && (
                                     <div className="source-path">
@@ -1438,7 +1437,6 @@ export class TaskDetail extends React.Component {
                                             be accepted by the network.
                                         </p>
                                     }
-                                    distance={-20}
                                 />
                                 <div className="item-settings">
                                     <InfoLabel
@@ -1447,8 +1445,8 @@ export class TaskDetail extends React.Component {
                                         info={
                                             <p className="tooltip_task">
                                                 Setting a time limit here will
-                                                let Golem know the maximum time
-                                                you will wait <br />
+                                                let Golem know the maximum time<br/>
+                                                you will wait 
                                                 for a task to be accepted by the
                                                 network.{" "}
                                                 <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
@@ -1479,9 +1477,9 @@ export class TaskDetail extends React.Component {
                                         info={
                                             <p className="tooltip_task">
                                                 Tells the system how many
-                                                subtasks to break a task into.
-                                                If you are rendering
-                                                <br />a number of frames you
+                                                subtasks to break a task into.<br />
+                                                If you are rendering 
+                                                a number of frames you
                                                 should set subtasks to the same
                                                 number.{" "}
                                                 <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
@@ -1608,7 +1606,6 @@ export class TaskDetail extends React.Component {
                                             </p>
                                         }
                                         cls="title-concent__task-detail"
-                                        distance={-20}
                                     />
                                     <div className="item-concent">
                                         <InfoLabel
@@ -1658,7 +1655,6 @@ export class TaskDetail extends React.Component {
                                         </p>
                                     }
                                     cls="title-price__task-detail"
-                                    distance={-20}
                                 />
                                 <div className="item-price">
                                     <InfoLabel
@@ -1668,8 +1664,8 @@ export class TaskDetail extends React.Component {
                                             <p className="tooltip_task">
                                                 Set the amount of GNT that you
                                                 are prepared to pay for this
-                                                task. This is a free market,
-                                                <br />
+                                                task.<br /> 
+                                                This is a free market,
                                                 and you should set the price as
                                                 you will but we think that
                                                 keeping close to 0.2$ is ok.
@@ -1718,9 +1714,8 @@ export class TaskDetail extends React.Component {
                                                 <p className="tooltip_task">
                                                     The estimated price that
                                                     you’ll have to pay to render
-                                                    the task is based on Your
-                                                    bid,
-                                                    <br />
+                                                    the task is based<br /> 
+                                                    on Your bid,
                                                     subtask amount and timeout
                                                     settings. Fiat value may
                                                     change during computation
@@ -1767,14 +1762,11 @@ export class TaskDetail extends React.Component {
                                                 <p className="tooltip_task">
                                                     Estimated ETH amount to be
                                                     locked for this task to
-                                                    cover transaction costs.
-                                                    <br />
+                                                    cover<br />transaction costs.
                                                     It may vary from what you
-                                                    will actually pay for this
-                                                    transaction
-                                                    <br />
-                                                    as usually the final cost is
-                                                    much lower.
+                                                    will actually pay for this<br />
+                                                    transaction as usually the 
+                                                    final cost is much lower.
                                                 </p>
                                             }
                                             cls="title"

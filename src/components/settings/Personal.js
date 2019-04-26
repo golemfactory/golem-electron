@@ -2,7 +2,7 @@ import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react';
 
 import * as Actions from "../../actions";
 
@@ -133,6 +133,7 @@ export class Personal extends React.Component {
                         onSubmit={this._toggleEditMode}>
                         {editMode ? (
                             <input
+                                className="input__node-name"
                                 pattern="^\S+(?: \S+)*$"
                                 title="Please write with English charaters and numbers"
                                 type="text"
@@ -157,8 +158,8 @@ export class Personal extends React.Component {
                             </span>
                         )}
                         <Tooltip
-                            html={<p>Edit</p>}
-                            position="bottom"
+                            content={<p>Edit</p>}
+                            placement="bottom"
                             trigger="mouseenter">
                             <span
                                 className={`toggle__edit-mode ${
@@ -172,14 +173,14 @@ export class Personal extends React.Component {
                         <p />
                     </form>
                     <Tooltip
-                        html={
+                        content={
                             <p>
                                 {nodeIdCopied
                                     ? "Copied Succesfully!"
                                     : "Click to copy"}
                             </p>
                         }
-                        position="bottom"
+                        placement="bottom"
                         trigger="mouseenter"
                         hideOnClick={false}>
                         <span

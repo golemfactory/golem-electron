@@ -15,46 +15,14 @@ exports[`<Footer/> should render a footer component 1`] = `
   <div
     className="preview-bar__footer"
   >
-    <Tooltip
-      animateFill={true}
-      animation="shift"
-      arrow={false}
-      arrowSize="regular"
-      className=""
-      customTag="div"
-      delay={0}
-      disabled={false}
-      distance={10}
-      duration={375}
-      followCursor={false}
-      hideDelay={0}
-      hideDuration={375}
-      hideOnClick={true}
-      html={
+    <ForwardRef(TippyWrapper)
+      content={
         <p>
           Preview
         </p>
       }
-      inertia={false}
-      interactive={false}
-      interactiveBorder={2}
-      multiple={false}
-      offset={0}
-      onHidden={[Function]}
-      onHide={[Function]}
-      onRequestClose={[Function]}
-      onShow={[Function]}
-      onShown={[Function]}
-      popperOptions={Object {}}
-      position="bottom"
-      size="regular"
-      sticky={false}
-      stickyDuration={200}
-      style={Object {}}
-      theme="dark"
-      touchHold={false}
+      placement="bottom"
       trigger="mouseenter"
-      unmountHTMLWhenHide={false}
     >
       <div
         className="switch-box switch-box--green"
@@ -72,47 +40,15 @@ exports[`<Footer/> should render a footer component 1`] = `
           />
         </label>
       </div>
-    </Tooltip>
-    <Tooltip
-      animateFill={true}
-      animation="shift"
-      arrow={false}
-      arrowSize="regular"
-      className=""
-      customTag="div"
-      delay={0}
-      disabled={false}
-      distance={10}
-      duration={375}
-      followCursor={false}
-      hideDelay={0}
-      hideDuration={375}
-      hideOnClick={true}
-      html={
+    </ForwardRef(TippyWrapper)>
+    <ForwardRef(TippyWrapper)
+      content={
         <p>
           Preview Window
         </p>
       }
-      inertia={false}
-      interactive={false}
-      interactiveBorder={2}
-      multiple={false}
-      offset={0}
-      onHidden={[Function]}
-      onHide={[Function]}
-      onRequestClose={[Function]}
-      onShow={[Function]}
-      onShown={[Function]}
-      popperOptions={Object {}}
-      position="bottom"
-      size="regular"
-      sticky={false}
-      stickyDuration={200}
-      style={Object {}}
-      theme="dark"
-      touchHold={false}
+      placement="bottom"
       trigger="mouseenter"
-      unmountHTMLWhenHide={false}
     >
       <span
         aria-label="Open Detailed Preview Window"
@@ -122,7 +58,7 @@ exports[`<Footer/> should render a footer component 1`] = `
         role="button"
         tabIndex="0"
       />
-    </Tooltip>
+    </ForwardRef(TippyWrapper)>
   </div>
 </footer>
 `;

@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Tooltip } from "react-tippy";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react'
+import Tooltip from '@tippy.js/react'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
 import * as Actions from "./../actions";
 import { getStatus, getPasswordModalStatus } from "./../reducers";
@@ -196,82 +196,45 @@ export class FooterMain extends Component {
                 <div className="section__actions">
                     <div className="section__actions-status">
                         <Tooltip
-                            open={
-                                checkNested(status, "client", "status") &&
-                                status.client.status === "Not Ready" &&
-                                checkNested(passwordModal, "status") &&
-                                !passwordModal.status
-                            }
-                            distance={17}
-                            html={
-                                <div className="status__components">
-                                    <div className="item__status">
-                                        <span>Docker: </span>
-                                        <span>
-                                            {checkNested(
-                                                status,
-                                                "docker",
-                                                "message"
-                                            ) ? (
-                                                status.docker.message
-                                            ) : (
-                                                <LoaderBar />
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className="item__status">
-                                        <span>Geth: </span>
-                                        <span>
-                                            {checkNested(
-                                                status,
-                                                "ethereum",
-                                                "message"
-                                            ) ? (
-                                                status.ethereum.message
-                                            ) : (
-                                                <LoaderBar />
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className="item__status">
-                                        <span>Hyperg: </span>
-                                        <span>
-                                            {checkNested(
-                                                status,
-                                                "hyperdrive",
-                                                "message"
-                                            ) ? (
-                                                status.hyperdrive.message
-                                            ) : (
-                                                <LoaderBar />
-                                            )}
-                                        </span>
-                                    </div>
-                                    <div className="item__status">
-                                        <span>Hypervisor: </span>
-                                        <span>
-                                            {checkNested(
-                                                status,
-                                                "hypervisor",
-                                                "message"
-                                            ) ? (
-                                                status.hypervisor.message
-                                            ) : (
-                                                <LoaderBar />
-                                            )}
-                                        </span>
-                                    </div>
+                          isVisible={checkNested(status, 'client', 'status')
+                                && status.client.status === "Not Ready"
+                                && checkNested(passwordModal, 'status')
+                                && !passwordModal.status}
+                          distance={17}
+                          content={
+                            <div className="status__components">
+                                <div className="item__status">
+                                    <span>Docker: </span>
+                                    <span>{checkNested(status, 'docker', 'message') 
+                                            ? status.docker.message
+                                            : <LoaderBar/>}
+                                    </span>
                                 </div>
-                            }
-                            position="top"
-                            unmountHTMLWhenHide
-                        >
-                            <span
-                                className={`progress-status indicator-status indicator-status--${this.golemDotClass(
-                                    status.client,
-                                    connectionProblem
-                                )}`}
-                            />
+                                <div className="item__status">
+                                    <span>Geth: </span>
+                                    <span>{checkNested(status, 'ethereum', 'message')  
+                                            ? status.ethereum.message
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hyperg: </span>
+                                    <span>{checkNested(status, 'hyperdrive', 'message') 
+                                            ? status.hyperdrive.message
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                                <div className="item__status">
+                                    <span>Hypervisor: </span>
+                                    <span>{checkNested(status, 'hypervisor', 'message') 
+                                            ? status.hypervisor.message 
+                                            : <LoaderBar/>}
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                          placement="top">
+                            <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
                         </Tooltip>
 
                         <div>

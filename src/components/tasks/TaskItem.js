@@ -1,13 +1,11 @@
-import React from 'react';
+import React, { forwardRef } from 'react';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import { Tooltip } from 'react-tippy';
-
+import Tooltip from '@tippy.js/react';
 import map from 'lodash/fp/map';
-
-import { Spring, config } from 'react-spring';
+import { Spring, config } from 'react-spring/renderprops.cjs';
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
 import { taskStatus } from './../../constants/statusDicts';
 
@@ -436,3 +434,15 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(TaskItem);
+
+const RefLink = forwardRef((props, ref) => {
+    return (
+        <Link
+            innerRef={ref}
+            to={`/task/${props.item && props.item.id}`}
+            tabIndex="0"
+            aria-label="Task Details">
+            <span className="icon-info-small" />
+        </Link>
+    );
+});
