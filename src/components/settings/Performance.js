@@ -166,6 +166,7 @@ export class Performance extends React.Component {
                         aria-label="Performance slider"
                         callback={this._handleMinPerfSlider}
                         warn={false}
+                        disabled={false}
                     />
                     <span className="hint__min-score">
                         Setting the slider to "0" will turn this option off.

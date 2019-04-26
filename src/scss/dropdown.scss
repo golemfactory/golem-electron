@@ -9,7 +9,7 @@
     line-height: 31px;
     font-size: 11pt;
     font-weight: 400;
-    border-radius: 2px;
+    border-radius: 5px;
     &:after {
         content: " ";
         height: 0;
@@ -48,7 +48,7 @@
     z-index: 99;
     border: 1px solid $display-indicator-backround;
     box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.20);
-    border-radius: 4px;
+    border-radius: 5px;
     padding-top: 5px;
     box-sizing: border-box;
     /* Option 1: */

@@ -5,14 +5,14 @@ import ReactDOM from 'react-dom'
 
 import { Provider } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
-import { routerMiddleware, connectRouter } from 'connected-react-router'
+import { routerMiddleware } from 'connected-react-router';
 import {createHashHistory} from "history";
 
 import TestUtils from 'react-dom/test-utils'
 import { registerMiddlewares, buildInitialStoreState, registerInitialStoreState } from 'redux-actions-assertions';
 import configureStore from 'redux-mock-store'
 import ConnectedApp, { App } from '../App'
-import reducer from '../../reducers'
+import createRootReducer from '../../reducers';
 import sinon from 'sinon'
 
 const history = createHashHistory("/test")
@@ -20,7 +20,7 @@ const routingMiddleware = routerMiddleware(history)
 registerMiddlewares([
   routingMiddleware
 ]);
-registerInitialStoreState(buildInitialStoreState(connectRouter(history)(reducer)));
+registerInitialStoreState(buildInitialStoreState(createRootReducer(history)));
 const mockStore = configureStore([routingMiddleware])
 
 const wrapper = shallow(
@@ -43,7 +43,8 @@ it('should check history prop', () => {
             <ConnectedApp history={history}/>
         </Provider>
     )
-    expect(wrapper.props().history).toEqual(history)
+
+    expect(wrapper.dive().props().history).toEqual(history)
 })
 
 

@@ -26,12 +26,12 @@ describe('LoadingComponent Wrapper', () => {
         WrapperComponent = LoadingComponent(MockMainComponent)[0];
         wrapper = shallow(<Provider store={ mockStore({})}>
                                 <WrapperComponent />
-                          </Provider>)
+                          </Provider>);
         instance = wrapper.instance()
     });
 
     it('renders the Main Component as the root element', () => {
-        expect(wrapper.first().is(WrapperComponent)).toBeTruthy()
+        expect(wrapper.find(WrapperComponent).length).toBe(1)
     });
 });
 
