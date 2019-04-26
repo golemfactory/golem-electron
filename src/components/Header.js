@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { findDOMNode } from "react-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { Component } from 'react';
+import { findDOMNode } from 'react-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "../actions";
+import * as Actions from '../actions';
 
-import mainNetLogo from "./../assets/img/mainnet-logo-small.svg";
-import testNetLogo from "./../assets/img/testnet-logo-small.svg";
+import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
+import testNetLogo from './../assets/img/testnet-logo-small.svg';
 
-import NotificationCenter from "./NotificationCenter";
+import NotificationCenter from './NotificationCenter';
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react';
 /**
  * @see http://react-component.github.io/tooltip/
  */
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 
 /**
  * Helper function
@@ -47,11 +47,11 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-const DOCLINK = "https://docs.golem.network/";
+const DOCLINK = 'https://docs.golem.network/';
 const HASHLIST = {
-    "/": 0,
-    "/tasks": 1,
-    "/settings": 4
+    '/': 0,
+    '/tasks': 1,
+    '/settings': 4
 };
 
 /**
@@ -72,13 +72,13 @@ export class Header extends Component {
             HASHLIST[
                 window.routerHistory && window.routerHistory.location.pathname
             ];
-        let navItems = document.getElementsByClassName("nav__item");
-        let menuItems = document.getElementsByClassName("menu__item");
+        let navItems = document.getElementsByClassName('nav__item');
+        let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
         Number.isInteger(index) &&
             allNav &&
             allNav.length > 0 &&
-            allNav[index].classList.add("active");
+            allNav[index].classList.add('active');
 
         /*EXPRIMENTAL*/
         // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
@@ -88,14 +88,14 @@ export class Header extends Component {
         window.routerHistory &&
             window.routerHistory.listen((location, action) => {
                 [].map.call(allNav, item => {
-                    item.classList.remove("active");
+                    item.classList.remove('active');
                 });
 
                 const index = HASHLIST[location.pathname];
                 Number.isInteger(index) &&
                     allNav &&
                     allNav.length > 0 &&
-                    allNav[index].classList.add("active");
+                    allNav[index].classList.add('active');
             });
     }
 
@@ -137,11 +137,11 @@ export class Header extends Component {
             this.props.taskDetails.options &&
             Number(this.props.taskDetails.options.frame_count) > 1
         ) {
-            let menuItems = document.getElementsByClassName("menu__item");
+            let menuItems = document.getElementsByClassName('menu__item');
             for (var i = 0; i < menuItems.length; i++) {
-                menuItems[i].classList.remove("active");
+                menuItems[i].classList.remove('active');
             }
-            elm.currentTarget.classList.add("active");
+            elm.currentTarget.classList.add('active');
             window.routerHistory.push(`/preview/${to}`);
         }
     }
@@ -191,7 +191,7 @@ export class Header extends Component {
                                 `/add-task/type${
                                     !!dominantFileType
                                         ? `/${dominantFileType.substring(1)}`
-                                        : ""
+                                        : ''
                                 }`,
                                 null
                             );
@@ -210,7 +210,7 @@ export class Header extends Component {
                         } else {
                             alert(
                                 "There's no main file!" +
-                                    "There should be at least one blender file."
+                                    'There should be at least one blender file.'
                             );
                         }
                     });
@@ -222,7 +222,7 @@ export class Header extends Component {
          */
         dialog.showOpenDialog(
             {
-                properties: [...dialogRules, "multiSelections"]
+                properties: [...dialogRules, 'multiSelections']
             },
             onFileHandler
         );
@@ -247,18 +247,15 @@ export class Header extends Component {
         return (
             <Tooltip
                 arrow
-                html={<NotificationCenter />}
+                content={<NotificationCenter />}
                 interactive
-                position="bottom"
+                placement="bottom"
                 theme="light"
                 trigger="click"
-                style={{ right: "-20px" }}
-                hideOnClick
-                unmountHTMLWhenHide
-                useContext>
+                hideOnClick>
                 <Tooltip
-                    html={<p>Notifications</p>}
-                    position="bottom"
+                    content={<p>Notifications</p>}
+                    placement="bottom"
                     trigger="mouseenter"
                     hideOnClick={connectedPeers}>
                     <li className="menu__item">
@@ -306,23 +303,23 @@ export class Header extends Component {
             isMainNet
         } = this.props;
         let styling = {
-            WebkitAppRegion: "drag"
+            WebkitAppRegion: 'drag'
         };
         return (
             <header
                 className={`header ${
-                    activeHeader === "secondary" ? "frame__screen" : ""
+                    activeHeader === 'secondary' ? 'frame__screen' : ''
                 }`}>
                 <nav
                     className={`nav ${
-                        isMainNet ? "nav-mainnet" : "nav-testnet"
+                        isMainNet ? 'nav-mainnet' : 'nav-testnet'
                     }`}
                     role="menubar">
                     <div
                         style={styling}
                         className="draggable draggable--other"
                     />
-                    {activeHeader === "main" && (
+                    {activeHeader === 'main' && (
                         <div className="nav__list">
                             <img
                                 src={isMainNet ? mainNetLogo : testNetLogo}
@@ -330,17 +327,17 @@ export class Header extends Component {
                             />
                         </div>
                     )}
-                    {activeHeader === "main" && (
+                    {activeHeader === 'main' && (
                         <ul className="menu" role="menu">
                             {!isMainNet && this._initNotificationCenter()}
                             <Tooltip
-                                html={
+                                content={
                                     <div className="menu__upload">
                                         <div
                                             className="menu-item__upload"
                                             onClick={this._onFileDialog.bind(
                                                 this,
-                                                ["openFile"]
+                                                ['openFile']
                                             )}>
                                             <span
                                                 className="icon-file-menu"
@@ -355,7 +352,7 @@ export class Header extends Component {
                                             className="menu-item__upload"
                                             onClick={this._onFileDialog.bind(
                                                 this,
-                                                ["openDirectory"]
+                                                ['openDirectory']
                                             )}>
                                             <span
                                                 className="icon-folder-menu"
@@ -369,19 +366,19 @@ export class Header extends Component {
                                     </div>
                                 }
                                 interactive
-                                position="bottom"
+                                placement="bottom"
                                 theme="light"
                                 trigger="click"
-                                disabled={
-                                    isMac || !isEngineOn || !connectedPeers
+                                isEnabled={
+                                    !(isMac || !isEngineOn || !connectedPeers)
                                 }
                                 hideOnClick>
                                 <Tooltip
-                                    html={this._taskHints(
+                                    content={this._taskHints(
                                         isEngineOn,
                                         connectedPeers
                                     )}
-                                    position="bottom"
+                                    placement="bottom"
                                     trigger="mouseenter"
                                     hideOnClick={connectedPeers}>
                                     <li className="menu__item upload-menu">
@@ -398,8 +395,8 @@ export class Header extends Component {
                                                     ? this._onFileDialog.bind(
                                                           this,
                                                           [
-                                                              "openFile",
-                                                              "openDirectory"
+                                                              'openFile',
+                                                              'openDirectory'
                                                           ]
                                                       )
                                                     : undefined
@@ -409,8 +406,8 @@ export class Header extends Component {
                                 </Tooltip>
                             </Tooltip>
                             <Tooltip
-                                html={<p>Docs</p>}
-                                position="bottom"
+                                content={<p>Docs</p>}
+                                placement="bottom"
                                 trigger="mouseenter">
                                 <li className="menu__item">
                                     <a href={DOCLINK}>
@@ -424,14 +421,14 @@ export class Header extends Component {
                                 </li>
                             </Tooltip>
                             <Tooltip
-                                html={<p>Settings</p>}
-                                position="bottom"
+                                content={<p>Settings</p>}
+                                placement="bottom"
                                 trigger="mouseenter">
                                 <li
                                     className="menu__item"
                                     onClick={this._navigateTo.bind(
                                         this,
-                                        "/settings"
+                                        '/settings'
                                     )}
                                     role="menuitem"
                                     tabIndex="0"
@@ -441,7 +438,7 @@ export class Header extends Component {
                             </Tooltip>
                         </ul>
                     )}
-                    {activeHeader === "secondary" && (
+                    {activeHeader === 'secondary' && (
                         <div className="header__frame">
                             <div className="title">
                                 <span>{taskDetails.name}</span>
@@ -452,11 +449,11 @@ export class Header extends Component {
                                 </span>
                                 <span className="amount__frame">
                                     {taskDetails.options &&
-                                        taskDetails.options.frame_count}{" "}
+                                        taskDetails.options.frame_count}{' '}
                                     {taskDetails.options &&
                                     taskDetails.options.frame_count > 1
-                                        ? " Frames"
-                                        : " Frame"}
+                                        ? ' Frames'
+                                        : ' Frame'}
                                 </span>
                             </div>
                             <div className="menu" role="menu">
@@ -467,7 +464,7 @@ export class Header extends Component {
                                     aria-label="Completed Frames"
                                     onClick={this._handleMenu.bind(
                                         this,
-                                        "complete"
+                                        'complete'
                                     )}>
                                     Complete
                                 </span>
@@ -475,15 +472,15 @@ export class Header extends Component {
                                     className={`menu__item ${
                                         taskDetails.options &&
                                         taskDetails.options.frame_count > 1
-                                            ? "active"
-                                            : ""
+                                            ? 'active'
+                                            : ''
                                     }`}
                                     role="menuitem"
                                     tabIndex="0"
                                     aria-label="All Frames"
                                     onClick={this._handleMenu.bind(
                                         this,
-                                        "all"
+                                        'all'
                                     )}>
                                     All
                                 </span>
@@ -491,25 +488,25 @@ export class Header extends Component {
                         </div>
                     )}
                 </nav>
-                {activeHeader === "main" && (
+                {activeHeader === 'main' && (
                     <nav className="nav">
                         <ul className="nav__list" role="menu">
-                            {activeHeader === "main" && (
+                            {activeHeader === 'main' && (
                                 <li
                                     className="nav__item"
-                                    onClick={this._navigateTo.bind(this, "/")}
+                                    onClick={this._navigateTo.bind(this, '/')}
                                     role="menuitem"
                                     tabIndex="0"
                                     aria-label="Network">
                                     Network
                                 </li>
                             )}
-                            {activeHeader === "main" && (
+                            {activeHeader === 'main' && (
                                 <li
                                     className="nav__item"
                                     onClick={this._navigateTo.bind(
                                         this,
-                                        "/tasks"
+                                        '/tasks'
                                     )}
                                     role="menuitem"
                                     tabIndex="0"
@@ -517,7 +514,7 @@ export class Header extends Component {
                                     Tasks
                                 </li>
                             )}
-                            {activeHeader === "main" && (
+                            {activeHeader === 'main' && (
                                 <span className="selector" />
                             )}
                         </ul>

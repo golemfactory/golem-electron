@@ -1,13 +1,11 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import tasksPreview from './../../../assets/img/tasks-preview.png'
-import animData from './../../../assets/anims/onboarding/provider.json'
-import SpotLight from '../../SpotLight'
+import animData from './../../../assets/anims/onboarding/requestor.json';
 
 const defaultOptions = {
     loop: false,
-    autoplay: true, 
+    autoplay: true,
     animationData: animData,
     rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
@@ -15,7 +13,6 @@ const defaultOptions = {
 };
 
 export default class Step3 extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -24,18 +21,17 @@ export default class Step3 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding section__fixed">
-                    <Lottie options={defaultOptions}/>
+                    <Lottie options={defaultOptions} />
                 </div>
                 <div className="desc__onboarding">
-                    <h1>Start as a provider</h1>
+                    <h1>Become a requestor</h1>
                     <span>
-                        If your Golem node was properly installed the only thing you need to do is allocate your desired amount of resources to share with the network.
-                        <br/>
-                        <br/>
-                        Keep in mind that network traffic varies so if you do not receive tasks right away, be patient and some will surely appear over time.
+                        After topping up your wallet you just drag & drop your
+                        files and adjust your task settings before sending them
+                        to the network.
                     </span>
                 </div>
             </div>
-        )
+        );
     }
 }

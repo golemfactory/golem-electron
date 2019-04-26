@@ -6,7 +6,7 @@ import OpenSeaDragon from 'openseadragon';
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import * as Actions from '../../../actions'
+import * as Actions from '../../actions'
 
 
 //carrying viewer information to other components

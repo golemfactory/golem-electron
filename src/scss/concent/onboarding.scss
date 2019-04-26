@@ -1,72 +1,85 @@
-.concent-onboarding{
-	&__content{
+.concent-onboarding {
+	&__content {
 		@include flex;
 		flex-direction: column;
-	    position: absolute;
-	    width: 100%;
-	    height: 100%;
-	    background: $color-text4;
-	    z-index: 99 !important;
-	    padding-bottom: 38px;
-	    box-sizing:border-box;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		background: $color-text4;
+		z-index: 99 !important;
+		padding-bottom: 38px;
+		box-sizing: border-box;
 	}
 
-	&__steps{
+	&__container-step {
+		@include flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__steps {
 		flex: 1 1 70%;
 	}
 
-	&__section-image{
+	&__section-image {
+		position: relative;
 		margin-top: 20px;
 		height: 40vh;
 		width: 100%;
+		text-align: center;
+		transition: 0.5s all;
+		align-items: center;
+
+		@media screen and (max-height: 720px) {
+			width: 80%;
+		}
 	}
 
-	&__desc{
+	&__desc {
 		padding: 40px 30px;
 
-		h2{
+		h2 {
 			color: $color-primary;
 			margin: 0 0 20px 0;
 		}
 
-		h3{
+		h3 {
 			margin: 50px 0 0 0;
 		}
 
-		.concent-info{
+		.concent-info {
 			font-size: 11pt;
 			font-weight: 500;
 			line-height: 1.3em;
-			transition: .5s font-size;
+			transition: 0.5s font-size;
 
 			@media screen and (max-height: 700px) {
 				font-size: 9pt;
 			}
-
 		}
 
-		.whats-new{
-			&__list{
+		.whats-new {
+			&__list {
 				padding: 50px 35px 15px 35px;
-				transition: .5s padding;
+				transition: 0.5s padding;
 			}
-			&__item{
+			&__item {
 				@include flex;
 				padding: 25px 0;
-				transition: .5s padding;
+				transition: 0.5s padding;
 
-				h4{
+				h4 {
 					color: $color-primary;
 					margin: 10px 0;
 				}
 
-				span{
+				span {
 					font-size: 8pt;
 					font-weight: 400;
 				}
 
-				[class^="icon-"], 
-				[class*=" icon-"] {
+				[class^='icon-'],
+				[class*=' icon-'] {
 					font-size: 30pt;
 					min-width: 50px;
 					margin-right: 20px;
@@ -76,38 +89,38 @@
 			}
 
 			@media screen and (max-height: 700px) {
-				&__list{
+				&__list {
 					padding: 10px 35px 15px 35px;
 				}
-				&__item{
+				&__item {
 					padding: 10px 0;
 				}
 			}
 		}
 	}
 
-	&__action-container{
-        padding: 0 35px;
-        justify-content: flex-end;
-        font-size: 11pt;
-        .btn--cancel {
-            padding-right: 30px;
-        }
-        .btn--primary {
-            padding: 0;
-            width: 110px;
-        }
+	&__action-container {
+		padding: 0 35px;
+		justify-content: flex-end;
+		font-size: 11pt;
+		.btn--cancel {
+			padding-right: 30px;
+		}
+		.btn--primary {
+			padding: 0;
+			width: 110px;
+		}
 
-        .page-indicator{
-        	font-size: 14pt;
-        }
+		.page-indicator {
+			font-size: 14pt;
+		}
 
-        .icon-arrow-left-small,
-    	.icon-arrow-right-small {
-	        position: relative;
-	        top: 11.5px;
-	        font-size: 32pt;
-	        cursor: pointer;
-	    }
+		.icon-arrow-left-small,
+		.icon-arrow-right-small {
+			position: relative;
+			top: 11.5px;
+			font-size: 32pt;
+			cursor: pointer;
+		}
 	}
 }
