@@ -632,7 +632,7 @@ class OnboardIndex extends React.Component {
             isPasswordValid
         } = this.state;
 
-        switch (index + 1) {
+        switch (index) {
             case steps.WELCOME:
                 return <Welcome isMainNet={isMainNet} />;
             case steps.VIRTUALISATION:
@@ -707,7 +707,7 @@ class OnboardIndex extends React.Component {
                     native
                     reset
                     unique
-                    items={currentStep - 1}
+                    items={currentStep}
                     from={isNext ? this.enterStyle : this.leaveStyle}
                     enter={{
                         position: 'absolute',
