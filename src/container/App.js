@@ -9,7 +9,7 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import Header from "../components/Header";
 import MainFragment from "../components/network";
 import Tasks from "../components/tasks";
-import Frame from "../components/tasks/frame";
+import Frame from "../components/frame";
 import MasterFilePicker from "../components/tasks/MasterFilePicker";
 import NewTask from "../components/tasks/NewTask";
 import TaskDetail from "../components/tasks/TaskDetail";

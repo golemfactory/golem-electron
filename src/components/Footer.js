@@ -4,7 +4,7 @@ import { hashHistory } from "react-router";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react'
 
 import * as Actions from "./../actions";
 
@@ -76,7 +76,7 @@ export class Footer extends Component {
           <span>{footerInfo && footerInfo.message}</span>
         </div>
         <div className="preview-bar__footer">
-          <Tooltip html={<p>Preview</p>} position="bottom" trigger="mouseenter">
+          <Tooltip content={<p>Preview</p>} placement="bottom" trigger="mouseenter">
             <div className="switch-box switch-box--green">
               <label className="switch">
                 <input
@@ -91,8 +91,8 @@ export class Footer extends Component {
             </div>
           </Tooltip>
           <Tooltip
-            html={<p>Preview Window</p>}
-            position="bottom"
+            content={<p>Preview Window</p>}
+            placement="bottom"
             trigger="mouseenter">
             <span
               className={`button__expand icon-new-window ${

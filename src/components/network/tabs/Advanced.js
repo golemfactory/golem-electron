@@ -1,18 +1,18 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { Tooltip } from "react-tippy";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import Tooltip from '@tippy.js/react';
 
-import * as Actions from "../../../actions";
-import { getGPUEnvironment } from "../../../reducers";
+import * as Actions from '../../../actions';
+import { getGPUEnvironment } from '../../../reducers';
 
-import RadialProgress from "./../../RadialProgress";
-import Dropdown from "./../../Dropdown";
+import RadialProgress from './../../RadialProgress';
+import Dropdown from './../../Dropdown';
 
 const MEBI = 1 << 20;
 
 const preset = Object.freeze({
-    CUSTOM: "custom"
+    CUSTOM: 'custom'
 });
 
 const mapStateToProps = state => ({
@@ -21,7 +21,7 @@ const mapStateToProps = state => ({
     chosenPreset: state.advanced.chosenPreset,
     chartValues: state.advanced.chartValues,
     isEngineOn: state.info.isEngineOn,
-    gpuEnvironment: getGPUEnvironment(state, "gpuEnv"),
+    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv'),
     isNodeProvider: state.info.isNodeProvider
 });
 
@@ -42,10 +42,10 @@ export class Advanced extends React.Component {
     _handleInputChange(key, evt) {
         evt.target.value = Math.max(1, evt.target.value);
         let val = Number(evt.target.value);
-        if (["memory", "disk"].includes(key)) {
+        if (['memory', 'disk'].includes(key)) {
             val *= MEBI; // GiB to KiB
         }
-        if (key == "cpu_cores") {
+        if (key == 'cpu_cores') {
             val = ~~val; // round
         }
 
@@ -130,7 +130,7 @@ export class Advanced extends React.Component {
      */
     _handleGPUProviderSwitch = e => {
         const { actions } = this.props;
-        const gpuENV = "BLENDER_NVGPU";
+        const gpuENV = 'BLENDER_NVGPU';
         if (e.target.checked) actions.enableEnvironment(gpuENV);
         else actions.disableEnvironment(gpuENV);
     };
@@ -196,7 +196,7 @@ export class Advanced extends React.Component {
                             disabled={isEngineOn}
                             onChange={this._handleInputChange.bind(
                                 this,
-                                "cpu_cores"
+                                'cpu_cores'
                             )}
                         />
                         <RadialProgress
@@ -208,7 +208,7 @@ export class Advanced extends React.Component {
                             disabled={isEngineOn}
                             onChange={this._handleInputChange.bind(
                                 this,
-                                "memory"
+                                'memory'
                             )}
                         />
                         <RadialProgress
@@ -220,7 +220,7 @@ export class Advanced extends React.Component {
                             disabled={isEngineOn}
                             onChange={this._handleInputChange.bind(
                                 this,
-                                "disk"
+                                'disk'
                             )}
                         />
                     </div>
@@ -232,18 +232,18 @@ export class Advanced extends React.Component {
                 <div className="switch__gpu">
                     <div className={`switch-box`}>
                         <Tooltip
-                            html={
+                            content={
                                 <p>
                                     {gpuEnvironment.supported
-                                        ? "To change switch first stop Golem"
-                                        : "This feature only for Linux at the moment."}
+                                        ? 'To change switch first stop Golem'
+                                        : 'This feature only for Linux at the moment.'}
                                 </p>
                             }
-                            position="top-end"
+                            placement="top-end"
                             trigger="mouseenter"
                             interactive={false}
                             size="small"
-                            disabled={!isEngineOn}>
+                            isEnabled={isEngineOn}>
                             <label className="switch">
                                 <input
                                     type="checkbox"
@@ -260,24 +260,24 @@ export class Advanced extends React.Component {
                     <span
                         style={{
                             color: gpuEnvironment.accepted
-                                ? "#4e4e4e"
-                                : "#9b9b9b"
+                                ? '#4e4e4e'
+                                : '#9b9b9b'
                         }}>
                         Use my GPU as a resource. For Linux users with Nvidia
                         card.
                         <Tooltip
-                            html={
+                            content={
                                 <p className="info-gpu">
                                     For now there is no option to set the amount
                                     of shared resources <br /> with GPU.So Golem
                                     will take up to 100% of your graphic card
-                                    <br /> during computation.{" "}
+                                    <br /> during computation.{' '}
                                     <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
                                         Learn more.
                                     </a>
                                 </p>
                             }
-                            position="top"
+                            placement="top"
                             trigger="mouseenter"
                             interactive={true}>
                             <span className="icon-question-mark" />
@@ -287,15 +287,15 @@ export class Advanced extends React.Component {
                 <div className="switch__trust">
                     <div
                         className={`switch-box ${
-                            !isNodeProvider ? "switch-box--green" : ""
+                            !isNodeProvider ? 'switch-box--green' : ''
                         }`}>
                         <Tooltip
-                            html={<p>To change switch first stop Golem</p>}
-                            position="top-end"
+                            content={<p>To change switch first stop Golem</p>}
+                            placement="top-end"
                             trigger="mouseenter"
                             interactive={false}
                             size="small"
-                            disabled={!isEngineOn}>
+                            isEnabled={isEngineOn}>
                             <label className="switch">
                                 <input
                                     type="checkbox"
@@ -311,23 +311,23 @@ export class Advanced extends React.Component {
                     </div>
                     <span
                         style={{
-                            color: !isNodeProvider ? "#4e4e4e" : "#9b9b9b"
+                            color: !isNodeProvider ? '#4e4e4e' : '#9b9b9b'
                         }}>
                         I want to act only as a Requestor. Don't send tasks to
                         my node.
                         <Tooltip
-                            html={
+                            content={
                                 <p className="info-gpu">
                                     For now there is no option to set the amount
                                     of shared resources <br /> with GPU.So Golem
                                     will take up to 100% of your graphic card
-                                    <br /> during computation.{" "}
+                                    <br /> during computation.{' '}
                                     <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
                                         Learn more.
                                     </a>
                                 </p>
                             }
-                            position="top"
+                            placement="top"
                             trigger="mouseenter"
                             interactive={true}>
                             <span className="icon-question-mark" />
