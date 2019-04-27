@@ -1,18 +1,16 @@
-import React from "react";
-import { findDOMNode } from "react-dom";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { findDOMNode } from 'react-dom';
+import { Link } from 'react-router-dom';
 
-import { Tooltip } from "react-tippy";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import * as Actions from '../../actions';
+import blender_logo from './../../assets/img/blender_logo.png';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 
-import * as Actions from "../../actions";
-import blender_logo from "./../../assets/img/blender_logo.png";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
-
-import InsufficientAmountModal from "./modal/InsufficientAmountModal";
-import TaskItem from "./TaskItem";
+import InsufficientAmountModal from './modal/InsufficientAmountModal';
+import TaskItem from './TaskItem';
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
@@ -27,14 +25,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const status = Object.freeze({
-    WAITINGFORPEER: "Waiting for peer",
-    NOTREADY: "Not started",
-    READY: "Ready",
-    WAITING: "Waiting",
-    COMPUTING: "Computing",
-    FINISHED: "Finished",
-    TIMEOUT: "Timeout",
-    RESTART: "Restart"
+    WAITINGFORPEER: 'Waiting for peer',
+    NOTREADY: 'Not started',
+    READY: 'Ready',
+    WAITING: 'Waiting',
+    COMPUTING: 'Computing',
+    FINISHED: 'Finished',
+    TIMEOUT: 'Timeout',
+    RESTART: 'Restart'
 });
 
 function shouldPSEnabled(_item) {
@@ -90,12 +88,12 @@ export class Table extends React.Component {
      * @param  {Event}  evt
      */
     _navigateTo = evt => {
-        let taskItems = document.getElementsByClassName("task-item");
+        let taskItems = document.getElementsByClassName('task-item');
         [].map.call(taskItems, item => {
-            item.classList.remove("active");
+            item.classList.remove('active');
         });
 
-        evt && evt.currentTarget.classList.add("active");
+        evt && evt.currentTarget.classList.add('active');
     };
 
     /**
@@ -161,8 +159,8 @@ export class Table extends React.Component {
      */
     _handleRestart = (id, isTimedOutOnly) => {
         this._restartAsync(id, isTimedOutOnly).then(_result => {
-            if (_result && !_result[0] && _result[1].includes("Not enough")) {
-                console.warn("Task restart failed!");
+            if (_result && !_result[0] && _result[1].includes('Not enough')) {
+                console.warn('Task restart failed!');
 
                 this.setState({
                     insufficientAmountModal: {
@@ -202,28 +200,28 @@ export class Table extends React.Component {
         let info = connectedPeers
             ? {
                   status: status.READY,
-                  message: "Golem is ready!",
-                  color: "green"
+                  message: 'Golem is ready!',
+                  color: 'green'
               }
             : {
                   status: status.WAITINGFORPEER,
-                  message: "Waiting for peer...",
-                  color: "yellow"
+                  message: 'Waiting for peer...',
+                  color: 'yellow'
               };
         if (waiting) {
             info.status = status.WAITING;
-            info.message = "Task is preparing for computation";
-            info.color = "yellow";
+            info.message = 'Task is preparing for computation';
+            info.color = 'yellow';
         }
         if (computing) {
             info.status = status.COMPUTING;
-            info.message = "Processing your task";
-            info.color = "green";
+            info.message = 'Processing your task';
+            info.color = 'green';
         }
         if (timeout) {
             info.status = status.TIMEOUT;
-            info.message = "Your task has timed out";
-            info.color = "red";
+            info.message = 'Your task has timed out';
+            info.color = 'red';
         }
 
         actions.setFooterInfo(info);

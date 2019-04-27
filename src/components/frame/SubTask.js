@@ -1,12 +1,12 @@
 import React from "react";
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react'
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import * as Actions from "../../../actions";
+import * as Actions from "../../actions";
 
-import BlockNodeModal from "./../modal/BlockNodeModal";
-import { convertSecsToHMS, timeStampToHR } from "./../../../utils/time";
+import BlockNodeModal from "../tasks/modal/BlockNodeModal";
+import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
 
 const { ipcRenderer, clipboard } = window.electron;
 
@@ -279,7 +279,7 @@ export class SubTask extends React.Component {
                 return !!subtask ? (
                     <Tooltip
                         key={index.toString()}
-                        html={
+                        content={
                             <div
                                 className={`tooltip-frame ${
                                     isDevMode ? "tooltip-dev" : ""
@@ -401,14 +401,12 @@ export class SubTask extends React.Component {
                                 </div>
                             </div>
                         }
-                        position="bottom"
+                        placement="bottom"
                         trigger="mouseenter"
                         interactive={true}
                         hideOnClick={false}
-                        unmountHTMLWhenHide={true}
-                        customTag="g"
                         interactiveBorder="15"
-                        hideDelay="2000"
+                        duration={[null, 200]}
                         distance="-15"
                         arrow={true}>
                         <polyline

@@ -859,7 +859,7 @@ export class TaskDetail extends React.Component {
             {
                 order: 4,
                 content: <div className="item-settings" key="4">
-                                <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png then frames ~/project/<br/>output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
+                                <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png<br/>then frames ~/project/output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
                                 <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
                                 <button type="button" className="btn--outline" onClick={this._handleOutputPath} disabled={isDetailPage}>Change</button>
                           </div>
@@ -878,7 +878,7 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers with ;, eg. 1;4;7 will define<br/>frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -976,17 +976,17 @@ export class TaskDetail extends React.Component {
                         <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
                             { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
                             <div className="section-settings__task-detail">
-                                    <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} distance={-20}/>
+                                    <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} />
                                     {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
                                     {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
                             </div>
                             <div className="section-task__task-detail">
-                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings related to price and trust,<br/>it may take a while for your task to be accepted by the network.</p>} distance={-20}/>
+                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings related to price and trust,<br/>it may take a while for your task to be accepted by the network.</p>} />
                                 <div className="item-settings">
                                     <InfoLabel 
                                         type="span" 
                                         label="Task Timeout" 
-                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time you will wait <br/>for a task to
+                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time<br/>you will wait for a task to
                                             be accepted by the network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
                                             Learn more
                                             </a></p>} 
@@ -999,8 +999,8 @@ export class TaskDetail extends React.Component {
                                     <InfoLabel 
                                         type="span" 
                                         label="Subtask Amount" 
-                                        info={<p className="tooltip_task">Tells the system how many subtasks to break a task into. If you are rendering
-                                                <br/>a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                        info={<p className="tooltip_task">Tells the system how many subtasks to break a task into.<br/>If you are rendering 
+                                                a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
                                                 Learn more
                                                 </a>
                                                 </p>} 
@@ -1037,7 +1037,7 @@ export class TaskDetail extends React.Component {
                                 && concentSwitch
                                 &&
                                 <div className="section-concent__task-detail">
-                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" distance={-20}/>
+                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" />
                                     <div className="item-concent">
                                         <InfoLabel 
                                             type="span" 
@@ -1056,13 +1056,13 @@ export class TaskDetail extends React.Component {
                                 </div>
                             }
                             <div className="section-price__task-detail">
-                                <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" distance={-20}/>
+                                <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" />
                                 <div className="item-price">
                                     <InfoLabel 
                                         type="span" 
                                         label="Your bid" 
-                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task. This is a free market,
-                                            <br/>and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
+                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task.<br/>This is a free market, 
+                                            and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
                                         cls="title" 
                                         infoHidden={true}/>
                                     <div className="input__price-set">
@@ -1078,9 +1078,9 @@ export class TaskDetail extends React.Component {
                                         <InfoLabel 
                                             type="span" 
                                             label="Total" 
-                                            info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on Your bid,
-                                                <br/>subtask amount and timeout settings. Fiat value may change during computation
-                                                <br/>as well as gas price 
+                                            info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
+                                                subtask amount and timeout settings. Fiat value may change during computation 
+                                                as well as gas price - 
                                                 <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
                                                 Learn more
                                                 </a>
@@ -1100,9 +1100,9 @@ export class TaskDetail extends React.Component {
                                         <InfoLabel 
                                             type="span" 
                                             label="Tx Fee Lock" 
-                                            info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover transaction costs. 
-                                                <br/>It may vary from what you will actually pay for this transaction 
-                                                <br/>as usually the final cost is much lower.</p>} 
+                                            info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover<br/>transaction costs. 
+                                                It may vary from what you will actually pay for<br/>this transaction 
+                                                as usually the final cost is much lower.</p>} 
                                                 cls="title" 
                                                 infoHidden={true}/>
                                         <div className="estimated_cost">

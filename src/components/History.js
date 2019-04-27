@@ -1,30 +1,30 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
-import { Transition, animated, config } from "react-spring";
-import { AutoSizer, List, defaultCellRangeRenderer } from "react-virtualized";
-const posed = require("react-pose");
+import Tooltip from '@tippy.js/react';
+import { Transition, animated, config } from 'react-spring';
+import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+const posed = require('react-pose');
 const { PoseGroup } = posed;
 
-import * as Actions from "../actions";
-import { getFilteredPaymentHistory } from "../reducers";
-import { timeStampToHR } from "../utils/time";
+import * as Actions from '../actions';
+import { getFilteredPaymentHistory } from '../reducers';
+import { timeStampToHR } from '../utils/time';
 
 const { remote } = window.electron;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 const isWin = mainProcess.isWin();
 const isMac = mainProcess.isMac();
 
-const mainEtherscan = "https://etherscan.io/tx/0x";
-const testEtherscan = "https://rinkeby.etherscan.io/tx/0x";
+const mainEtherscan = 'https://etherscan.io/tx/0x';
+const testEtherscan = 'https://rinkeby.etherscan.io/tx/0x';
 const ETH_DENOM = 10 ** 18;
 
 const filter = {
-  PAYMENT: "payment",
-  INCOME: "income",
-  DEPOSIT: "deposit"
+  PAYMENT: 'payment',
+  INCOME: 'income',
+  DEPOSIT: 'deposit'
 };
 
 const Item = posed.default.div({
@@ -56,14 +56,14 @@ export class History extends React.Component {
    * @param   {Object}     elm     [target element]
    */
   _handleTab = elm => {
-    const tabPanel = document.getElementById("historyTab");
+    const tabPanel = document.getElementById('historyTab');
     const tabTitles = tabPanel.childNodes;
     for (var i = 0; i < tabTitles.length; i++) {
-      tabTitles[i].classList.remove("active");
+      tabTitles[i].classList.remove('active');
     }
-    elm.currentTarget.classList.add("active");
+    elm.currentTarget.classList.add('active');
     this.setState({
-      activeTab: elm.target.getAttribute("value")
+      activeTab: elm.target.getAttribute('value')
     });
   };
 
@@ -109,7 +109,13 @@ export class History extends React.Component {
 
   cellRangeRenderer(props) {
     const children = defaultCellRangeRenderer(props);
-    const animatedChildren = <PoseGroup key="list">{children.map(item => <Item key={item.key}>{item}</Item>)}</PoseGroup>;
+    const animatedChildren = (
+      <PoseGroup key="list">
+        {children.map(item => (
+          <Item key={item.key}>{item}</Item>
+        ))}
+      </PoseGroup>
+    );
 
     return [animatedChildren];
   }
@@ -131,20 +137,29 @@ export class History extends React.Component {
     const content = (
       <div className="item__history">
         <div className="info__history">
-          <h5>{(payee || payer || "").substr(0, 24)}...</h5>
+          <h5>{(payee || payer || '').substr(0, 24)}...</h5>
           <span>{timeStampToHR(created)}</span>
           <span className="status__history">{status}</span>
         </div>
         <div className="action__history">
           <span className="amount__history">
-            <span className={`finance__indicator ${type === filter.PAYMENT ? "indicator--down" : "indicator--up"}`}>
-              {type === filter.PAYMENT ? "- " : "+ "}
+            <span
+              className={`finance__indicator ${
+                type === filter.PAYMENT ? 'indicator--down' : 'indicator--up'
+              }`}>
+              {type === filter.PAYMENT ? '- ' : '+ '}
             </span>
             {(value / ETH_DENOM).toFixed(4)} GNT
           </span>
           {transaction && (
-            <Tooltip html={<p>See on Etherscan</p>} position="bottom" trigger="mouseenter">
-              <a href={`${isMainNet ? mainEtherscan : testEtherscan}${transaction}`}>
+            <Tooltip
+              content={<p>See on Etherscan</p>}
+              placement="bottom"
+              trigger="mouseenter">
+              <a
+                href={`${
+                  isMainNet ? mainEtherscan : testEtherscan
+                }${transaction}`}>
                 <span className="icon-new-window" />
               </a>
             </Tooltip>
@@ -161,34 +176,62 @@ export class History extends React.Component {
   };
 
   render() {
-    const { isEngineOn, isMainNet, paymentHistory, toggleTransactionHistory } = this.props;
+    const {
+      isEngineOn,
+      isMainNet,
+      paymentHistory,
+      toggleTransactionHistory
+    } = this.props;
     const { activeTab } = this.state;
     const filteredList = paymentHistory(activeTab);
     return (
       <div className="content__history">
         <div id="historyTab" className="tab-panel tab--sticky" role="tablist">
-          <div className="tab__title active" value={null} onClick={this._handleTab} role="tab" tabIndex="0">
+          <div
+            className="tab__title active"
+            value={null}
+            onClick={this._handleTab}
+            role="tab"
+            tabIndex="0">
             All
           </div>
-          <div className="tab__title" value="income" onClick={this._handleTab} role="tab" tabIndex="0">
+          <div
+            className="tab__title"
+            value="income"
+            onClick={this._handleTab}
+            role="tab"
+            tabIndex="0">
             Incoming
           </div>
-          <div className="tab__title" value="payment" onClick={this._handleTab} role="tab" tabIndex="0">
+          <div
+            className="tab__title"
+            value="payment"
+            onClick={this._handleTab}
+            role="tab"
+            tabIndex="0">
             Outgoing
           </div>
-          { !isMainNet &&
-            <div className="tab__title" value="deposit" onClick={this._handleTab} role="tab" tabIndex="0">
+          {!isMainNet && (
+            <div
+              className="tab__title"
+              value="deposit"
+              onClick={this._handleTab}
+              role="tab"
+              tabIndex="0">
               Deposit
             </div>
-          }
+          )}
           <div className="tab__back">
-            <span onClick={toggleTransactionHistory}><span className="icon-back-up"/>Back</span>
+            <span onClick={toggleTransactionHistory}>
+              <span className="icon-back-up" />
+              Back
+            </span>
           </div>
         </div>
         <div>
           {paymentHistory && filteredList.length > 0 ? (
-            <div style={{ display: "flex" }}>
-              <div style={{ flex: "1 1 auto", height: "100%" }}>
+            <div style={{ display: 'flex' }}>
+              <div style={{ flex: '1 1 auto', height: '100%' }}>
                 <AutoSizer>
                   {({ width, height }) => {
                     return (
@@ -208,9 +251,10 @@ export class History extends React.Component {
           ) : (
             <div className="empty-list__history">
               <span>
-                You don’t have any {activeTab ? activeTab : "earnings or payment"} yet.
+                You don’t have any{' '}
+                {activeTab ? activeTab : 'earnings or payment'} yet.
                 <br />
-                {isEngineOn ? "" : "Start Golem below to generate some."}
+                {isEngineOn ? '' : 'Start Golem below to generate some.'}
               </span>
             </div>
           )}
@@ -220,4 +264,7 @@ export class History extends React.Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(History);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(History);

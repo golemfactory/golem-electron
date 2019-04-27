@@ -1,17 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react';
 
-import { Spring, config } from "react-spring";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
-import { taskStatus } from "./../../constants/statusDicts";
+import { Spring, config } from 'react-spring/renderprops.cjs';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
+import { taskStatus } from './../../constants/statusDicts';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 
-import Preview from "./Preview";
+import Preview from './Preview';
 
 const ETH_DENOM = 10 ** 18;
 
@@ -48,7 +48,7 @@ export class TaskItem extends React.Component {
     }
 
     _togglePreview({ id }, evt) {
-        evt.target.classList.toggle("icon--active");
+        evt.target.classList.toggle('icon--active');
         const prevList = this.state.toggledPreviewList;
         const prevToggle = this.state.toggledPreviewList[id];
 
@@ -73,7 +73,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -91,7 +91,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Preparing for computation...{" "}
+                            Preparing for computation...{' '}
                         </span>
                     </div>
                 );
@@ -102,7 +102,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Waiting for computation...{" "}
+                            Waiting for computation...{' '}
                         </span>
                     </div>
                 );
@@ -113,7 +113,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Creating the deposit...{" "}
+                            Creating the deposit...{' '}
                         </span>
                     </div>
                 );
@@ -122,7 +122,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -139,7 +139,7 @@ export class TaskItem extends React.Component {
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--computing">
-                            Computing...{" "}
+                            Computing...{' '}
                         </span>
                         <span className="bumper"> | </span>
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
@@ -150,7 +150,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
@@ -169,10 +169,10 @@ export class TaskItem extends React.Component {
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
                 ETH
             </span>
         );
@@ -214,7 +214,7 @@ export class TaskItem extends React.Component {
                                         ? `linear-gradient(90deg, #E3F3FF ${value.progress *
                                               100}%, transparent ${value.progress *
                                               100}%)`
-                                        : "transparent"
+                                        : 'transparent'
                             }}
                             onClick={e => _handleRowClick(e, item, index)}>
                             <div
@@ -237,53 +237,53 @@ export class TaskItem extends React.Component {
                                         <div className="info__task">
                                             <div>
                                                 <span>
-                                                    Frames:{" "}
+                                                    Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
-                                                    Resolution:{" "}
+                                                    {' '}
+                                                    Resolution:{' '}
                                                     {(options &&
                                                         options.resolution.join(
-                                                            "x"
+                                                            'x'
                                                         )) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    Cost:{" "}
+                                                    Cost:{' '}
                                                     {this._fetchCost(item)}
                                                 </span>
                                             </div>
                                             <div>
                                                 <span>
-                                                    Subtasks:{" "}
+                                                    Subtasks:{' '}
                                                     {item.subtasks_count || 0}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
+                                                    {' '}
                                                     Task timeout: {item.timeout}
                                                 </span>
                                                 <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
+                                                    {' '}
+                                                    |{' '}
                                                 </span>
                                                 <span>
-                                                    {" "}
-                                                    Subtask timeout:{" "}
+                                                    {' '}
+                                                    Subtask timeout:{' '}
                                                     {item.subtask_timeout}
                                                 </span>
                                             </div>
@@ -293,8 +293,8 @@ export class TaskItem extends React.Component {
                             </div>
                             <div className="control-panel__task">
                                 <Tooltip
-                                    html={<p>Preview</p>}
-                                    position="right"
+                                    content={<p>Preview</p>}
+                                    placement="right"
                                     trigger="mouseenter">
                                     <span
                                         className="icon-eye"
@@ -307,20 +307,15 @@ export class TaskItem extends React.Component {
                                     />
                                 </Tooltip>
                                 <Tooltip
-                                    html={<p>Task Details</p>}
-                                    position="right"
+                                    content={<p>Task Details</p>}
+                                    placement="right"
                                     trigger="mouseenter"
                                     className="task-details-icon">
-                                    <Link
-                                        to={`/task/${item && item.id}`}
-                                        tabIndex="0"
-                                        aria-label="Task Details">
-                                        <span className="icon-info-small" />
-                                    </Link>
+                                    <RefLink item={item} />
                                 </Tooltip>
                                 <Tooltip
-                                    html={<p>Restart</p>}
-                                    position="right"
+                                    content={<p>Restart</p>}
+                                    placement="right"
                                     trigger="mouseenter">
                                     <span
                                         className="icon-progress-clockwise"
@@ -340,8 +335,8 @@ export class TaskItem extends React.Component {
                                     />
                                 </Tooltip>
                                 <Tooltip
-                                    html={<p>Delete</p>}
-                                    position="right"
+                                    content={<p>Delete</p>}
+                                    placement="right"
                                     trigger="mouseenter">
                                     <span
                                         className="icon-trash"
@@ -370,3 +365,15 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(TaskItem);
+
+const RefLink = forwardRef((props, ref) => {
+    return (
+        <Link
+            innerRef={ref}
+            to={`/task/${props.item && props.item.id}`}
+            tabIndex="0"
+            aria-label="Task Details">
+            <span className="icon-info-small" />
+        </Link>
+    );
+});
