@@ -102,7 +102,7 @@ export default class TaskSummaryModal extends React.Component {
                             <span className="value">{minPerf * 100}</span>
                         </div>
                         <div className="summary__item">
-                            <span className="title">Total:</span>
+                            <span className="title">Task fee:</span>
                             <span className="value">
                                 {estimated_cost.GNT.toFixed(3)} GNT
                             </span>

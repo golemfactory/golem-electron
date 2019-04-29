@@ -1077,7 +1077,7 @@ export class TaskDetail extends React.Component {
                                     <div className="item-price">
                                         <InfoLabel 
                                             type="span" 
-                                            label="Total" 
+                                            label="Task fee" 
                                             info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
                                                 subtask amount and timeout settings. Fiat value may change during computation 
                                                 as well as gas price - 
