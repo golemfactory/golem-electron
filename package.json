@@ -280,7 +280,9 @@
             "<rootDir>/node_modules/react-addons-test-utils",
             "<rootDir>/__mocks__/EmptyModule.js"
         ],
-        "transform": { "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest" }
+        "transform": {
+            "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
+        }
     },
     "env": {
         "test": {
