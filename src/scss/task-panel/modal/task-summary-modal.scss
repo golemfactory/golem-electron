@@ -1,6 +1,5 @@
 .task-summary-modal {
     &__content {
-        top: 40px;
         margin: 0 10px;
         .summary {
             &__title{
@@ -29,8 +28,9 @@
 
     &__section-image{
             margin: 20px 0;
-            height: 15vh;
-            width: 40vw;
+            height: 20vh;
+            width: 35vw;
+            min-height: 150px;
         }
 
     &__action {

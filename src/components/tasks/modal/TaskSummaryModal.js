@@ -1,7 +1,7 @@
 import React from "react";
 import Lottie from "react-lottie";
 
-import animData from "./../../../assets/anims/Concent01";
+import animData from "./../../../assets/anims/task-settings";
 import { floatToHR } from "./../../../utils/time";
 
 const defaultOptions = {
@@ -29,6 +29,7 @@ export default class TaskSummaryModal extends React.Component {
         const {
             bid,
             compute_on,
+            concent,
             estimated_cost,
             format,
             frames,
@@ -89,6 +90,12 @@ export default class TaskSummaryModal extends React.Component {
                             </span>
                         </div>
                         <div className="summary__item">
+                            <span className="title">Using Concent:</span>
+                            <span className="value">
+                                {concent ? "Yes" : "No"}
+                            </span>
+                        </div>
+                        <div className="summary__item">
                             <span className="title">
                                 Minimum provider score:
                             </span>
@@ -106,6 +113,22 @@ export default class TaskSummaryModal extends React.Component {
                                 {estimated_cost.ETH.toFixed(4)} ETH
                             </span>
                         </div>
+                        {!!concent &&
+                            <div className="summary__item">
+                                <span className="title">Deposit fee:</span>
+                                <span className="value">
+                                    {estimated_cost.deposit.GNT_suggested.toFixed(4)} ETH
+                                </span>
+                            </div>
+                        }
+                        {!!concent &&
+                            <div className="summary__item">
+                                <span className="title">Deposit Tx fee:</span>
+                                <span className="value">
+                                    {estimated_cost.deposit.ETH.toFixed(4)} ETH
+                                </span>
+                            </div>
+                        }
                     </div>
                     <div className="task-summary-modal__action">
                         <span
