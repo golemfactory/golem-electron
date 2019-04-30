@@ -38,17 +38,17 @@ function directorySelector(data) {
                 files: unknownFiles
             });
         } else if (masterFiles.length > 0) {
-            mainProcess
-                .dirToJson(data, dominantFileType.replace('.', ''))
-                .then(item => {
-                    if (item) this.props.actions.setDirectoryTree(item);
-                });
             this.props.actions.createTask({
                 resources: mergedList.map(item => item.path),
                 taskName: masterFiles[0].name,
                 relativePath: data[0]
             });
-            navigate();
+            mainProcess
+                .dirToJson(data, dominantFileType.replace('.', ''))
+                .then(item => {
+                    if (item) this.props.actions.setDirectoryTree(item);
+                    navigate();
+                });
         } else {
             //TO DO change it as more generic
             alert(
