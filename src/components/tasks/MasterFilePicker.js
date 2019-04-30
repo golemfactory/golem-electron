@@ -1,10 +1,10 @@
-import React from "react";
-import uuid from "uuid/v4";
-import _ from "lodash-es";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as Actions from "../../actions";
+import React from 'react';
+import uuid from 'uuid/v4';
+import _ from 'lodash-es';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../../actions';
 
 const mapStateToProps = state => ({
     directoryTree: state.create.directoryTree
@@ -19,23 +19,26 @@ let NODE_DEEPNESS = 0;
 export class MasterFilePicker extends React.Component {
     constructor(props) {
         super(props);
-        console.log("props.directoryTree", props.directoryTree);
         this.state = {
             nodes: [props.directoryTree],
             filterByFileName: null,
-            selectedMasterNode: null
+            selectedMasterNode: null,
+            taskName: null,
+            type: props.match.params.type
         };
     }
 
     _handleNextButton = e => {
         e.preventDefault();
         this._nextStep = true;
-        const { selectedMasterNode } = this.state;
+        const { selectedMasterNode, taskName, type } = this.state;
+        console.log('taskName', taskName);
         this.props.actions.createTask({
-            masterFile: selectedMasterNode
+            main_scene_file: selectedMasterNode,
+            taskName
         });
         window.routerHistory.push({
-            pathname: `/add-task/type`,
+            pathname: `/add-task/type/${type || ''}`,
             query: { masterFile: true }
         });
     };
@@ -43,7 +46,7 @@ export class MasterFilePicker extends React.Component {
     _handleChange = nodes => this.setState({ nodes });
 
     _selectMasterFile = node =>
-        this.setState({ selectedMasterNode: node.path });
+        this.setState({ selectedMasterNode: node.path, taskName: node.name });
 
     _toggleExpandState = node => (node.state.expanded = !node.state.expanded);
 
@@ -89,11 +92,9 @@ export class MasterFilePicker extends React.Component {
                     className="directory-nodes__item">
                     {node.isDir ? (
                         <span
-                            className={
-                                node.state.expanded
-                                    ? "icon-arrow-down"
-                                    : "icon-arrow-right"
-                            }
+                            className={`icon-arrow-${
+                                node.state.expanded ? 'down' : 'right'
+                            }`}
                             onClick={e => {
                                 node.state.expanded = !node.state.expanded;
                                 this.setState({
@@ -105,24 +106,27 @@ export class MasterFilePicker extends React.Component {
                     ) : (
                         <span className="icon-file-menu" />
                     )}
-                    {
-                        node.isDir
-                        ? <span> {node.name} </span>
-                        : <span>
+                    {node.isDir ? (
+                        <span> {node.name} </span>
+                    ) : (
+                        <span>
                             <input
                                 type="radio"
                                 name="masterFile"
                                 className="master-file-picker__radio"
                                 id={`btnControl-${node.id}`}
                             />
-                            <label 
-                                className="btn" 
+                            <label
+                                className="btn"
                                 htmlFor={`btnControl-${node.id}`}
-                                onClick={this._selectMasterFile.bind(null, node)}>
+                                onClick={this._selectMasterFile.bind(
+                                    null,
+                                    node
+                                )}>
                                 {node.name}
                             </label>
                         </span>
-                    }
+                    )}
                     {node.isDir &&
                         node.state.expanded &&
                         this._loadNodes(node.children, deepness + 1)}

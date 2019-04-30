@@ -59,7 +59,7 @@ const routes = (
                 )}
             />
             <Route path="/task/:id" component={TaskDetail} />
-            <Route path="/add-task/master-file" component={MasterFilePicker} />
+            <Route path="/add-task/master-file/:type?" component={MasterFilePicker} />
             <Route path="/add-task/type/:type?" component={NewTask} />
             <Route path="/add-task/settings" component={TaskDetail} />
             <Route component={NotFound} status={404} />
