@@ -148,7 +148,7 @@ export class Register extends React.Component {
                                     or print it, as there is no password
                                     recovery option.
                                     <br />
-                                    <a href="https://golem.network/documentation/02-risks/">
+                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-wallet">
                                         Learn more
                                     </a>
                                 </span>

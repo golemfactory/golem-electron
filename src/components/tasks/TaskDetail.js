@@ -886,7 +886,7 @@ export class TaskDetail extends React.Component {
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -995,7 +995,7 @@ export class TaskDetail extends React.Component {
                                         type="span" 
                                         label="Task Timeout" 
                                         info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time<br/>you will wait for a task to
-                                            be accepted by the network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                            be accepted by the network. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                             Learn more
                                             </a></p>} 
                                         cls="title" 
@@ -1008,7 +1008,7 @@ export class TaskDetail extends React.Component {
                                         type="span" 
                                         label="Subtask Amount" 
                                         info={<p className="tooltip_task">Tells the system how many subtasks to break a task into.<br/>If you are rendering 
-                                                a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                                a number of frames you should set subtasks to the same number. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                 Learn more
                                                 </a>
                                                 </p>} 
@@ -1089,7 +1089,7 @@ export class TaskDetail extends React.Component {
                                             info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
                                                 subtask amount and timeout settings. Fiat value may change during computation 
                                                 as well as gas price - 
-                                                <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
                                                 Learn more
                                                 </a>
                                                 </p>} 
