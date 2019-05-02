@@ -67,6 +67,10 @@ body {
     }
 }
 
+body{
+    background: #fff;
+}
+
 ::-webkit-scrollbar {
   -webkit-appearance: none;
   width: 7px;
@@ -103,6 +107,7 @@ span {
 input,
 button,
 select {
+    border-radius: 5px;
     &:disabled {
         cursor: not-allowed !important;
     }
@@ -116,7 +121,6 @@ a {
 button {
     height: 40px;
     padding: 0 25px;
-    border-radius: 5px;
     border: 1px solid $button-static-color;
     font-size: 12pt;
     font-weight: bold;
@@ -230,7 +234,6 @@ select {
     &--outline {
         background-color: transparent;
         color: $button-static-color;
-        border-radius: 2px;
         font-weight: 600;
         font-size: 10pt;
 

@@ -1,13 +1,11 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import networkPreview from './../../../assets/img/network-preview.png'
-import animData from './../../../assets/anims/onboarding/setup-ports.json'
-import SpotLight from '../../SpotLight'
+import animData from './../../../assets/anims/onboarding/provider.json';
 
 const defaultOptions = {
     loop: false,
-    autoplay: true, 
+    autoplay: true,
     animationData: animData,
     rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
@@ -15,7 +13,6 @@ const defaultOptions = {
 };
 
 export default class Step2 extends React.Component {
-
     constructor(props) {
         super(props);
     }
@@ -24,19 +21,22 @@ export default class Step2 extends React.Component {
         return (
             <div className="container-step__onboarding">
                 <div className="section-image__onboarding section__fixed">
-                    <Lottie options={defaultOptions}/>
+                    <Lottie options={defaultOptions} />
                 </div>
                 <div className="desc__onboarding">
-                    <h1>Connecting to network</h1>
+                    <h1>Start as a provider</h1>
                     <span>
-                        Please make sure that your computer has a public IP or forwarded ports 40102, 40103, 3282.
-                        Otherwise you may not be able to run Golem node properly.
-                        <br/>
-                        <br/>
-                        If you don't know how to do it please follow this <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">instructions</a>.
+                        If your Golem node was properly installed the only thing
+                        you need to do is allocate your desired amount of
+                        resources to share with the network.
+                        <br />
+                        <br />
+                        Keep in mind that network traffic varies so if you do
+                        not receive tasks right away, be patient and some will
+                        surely appear over time.
                     </span>
                 </div>
             </div>
-        )
+        );
     }
 }

@@ -1,15 +1,15 @@
-import React from "react";
-import Lottie from "react-lottie";
-import { Tooltip } from "react-tippy";
+import React from 'react';
+import Lottie from 'react-lottie';
+import Tooltip from '@tippy.js/react';
 
-import animData from "./../../../assets/anims/deposit-unlock";
+import animData from './../../../assets/anims/deposit-unlock';
 
 const defaultOptions = {
     loop: false,
     autoplay: true,
     animationData: animData,
     rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
+        preserveAspectRatio: 'xMidYMid slice'
     }
 };
 
@@ -71,7 +71,7 @@ export default class ConcentModal extends React.Component {
                         className="radio-group__concent-modal"
                         onChange={this._handleUnlockCheckbox}>
                         <Tooltip
-                            html={
+                            content={
                                 <p>
                                     By leaving the Deposit locked you can
                                     <br />
@@ -83,7 +83,7 @@ export default class ConcentModal extends React.Component {
                                     </a>
                                 </p>
                             }
-                            position="top"
+                            placement="top"
                             trigger="mouseenter"
                             distance={-10}
                             offset={-20}
@@ -106,7 +106,7 @@ export default class ConcentModal extends React.Component {
                             </div>
                         </Tooltip>
                         <Tooltip
-                            html={
+                            content={
                                 <p>
                                     Funds restore will take up to 48h.{" "}
                                     <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
@@ -114,7 +114,7 @@ export default class ConcentModal extends React.Component {
                                     </a>
                                 </p>
                             }
-                            position="bottom"
+                            placement="bottom"
                             trigger="mouseenter"
                             distance={-10}
                             offset={-20}

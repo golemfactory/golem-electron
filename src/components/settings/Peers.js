@@ -1,11 +1,11 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 const { clipboard } = window.electron;
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react';
 
-import * as Actions from "./../../actions";
+import * as Actions from './../../actions';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
@@ -48,14 +48,14 @@ export class Peers extends React.Component {
             <tr key={index.toString()}>
                 <td>
                     <Tooltip
-                        html={
+                        content={
                             <p>
                                 {isDataCopied
-                                    ? "Copied Succesfully!"
-                                    : "Click to copy <Adress:Port>"}
+                                    ? 'Copied Succesfully!'
+                                    : 'Click to copy <Adress:Port>'}
                             </p>
                         }
-                        position="bottom"
+                        placement="bottom"
                         trigger="mouseenter"
                         hideOnClick={false}>
                         <div
@@ -73,14 +73,14 @@ export class Peers extends React.Component {
                 </td>
                 <td>
                     <Tooltip
-                        html={
+                        content={
                             <p>
                                 {isDataCopied
-                                    ? "Copied Succesfully!"
-                                    : "Click to copy"}
+                                    ? 'Copied Succesfully!'
+                                    : 'Click to copy'}
                             </p>
                         }
-                        position="bottom"
+                        placement="bottom"
                         trigger="mouseenter"
                         hideOnClick={false}>
                         <div
@@ -89,7 +89,7 @@ export class Peers extends React.Component {
                                 this,
                                 node_name
                             )}>
-                            <span>{node_name || "Anonymous node"}</span>
+                            <span>{node_name || 'Anonymous node'}</span>
                         </div>
                     </Tooltip>
                 </td>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Tooltip} from 'react-tippy';
+import Tooltip from '@tippy.js/react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
@@ -157,12 +157,12 @@ export class FooterMain extends Component {
                 <div className="section__actions">
                     <div className="section__actions-status">
                         <Tooltip
-                          open={checkNested(status, 'client', 'status')
+                          isVisible={checkNested(status, 'client', 'status')
                                 && status.client.status === "Not Ready"
                                 && checkNested(passwordModal, 'status')
                                 && !passwordModal.status}
                           distance={17}
-                          html={
+                          content={
                             <div className="status__components">
                                 <div className="item__status">
                                     <span>Docker: </span>
@@ -194,8 +194,7 @@ export class FooterMain extends Component {
                                 </div>
                             </div>
                         }
-                          position="top"
-                          unmountHTMLWhenHide>
+                          placement="top">
                             <span className={`progress-status indicator-status indicator-status--${this.golemDotClass(status.client, connectionProblem)}`}/>
                         </Tooltip>
                         
