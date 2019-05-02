@@ -41,7 +41,6 @@ export default class Dropdown extends React.Component {
     clickOutside(parent, event) {
         var isClickInside =
             parent.contains(event.target) && !parent.isEqualNode(event.target);
-        // console.log(parent, event.target, parent.contains(event.target), !parent.isEqualNode(event.target))
         if (!isClickInside) {
             //the click was outside the parent, do something
             this.hide();

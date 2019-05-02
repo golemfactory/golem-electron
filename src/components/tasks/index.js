@@ -8,7 +8,6 @@ import * as Actions from "../../actions";
 
 import Table from "./Table";
 import Preview from "./Preview";
-import Frame from "./frame";
 import DropZone from "./../Dropzone";
 import TransactionTube from "../transaction";
 import History from "../History";

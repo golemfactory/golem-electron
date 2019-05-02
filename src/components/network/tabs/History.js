@@ -1,29 +1,29 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
-import { Transition, animated, config } from "react-spring";
-import { AutoSizer, List, defaultCellRangeRenderer } from "react-virtualized";
-const posed = require("react-pose");
+import Tooltip from '@tippy.js/react';
+import { Transition, animated, config } from 'react-spring/renderprops.cjs';
+import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+const posed = require('react-pose');
 const { PoseGroup } = posed;
 
-import * as Actions from "../../../actions";
-import { getFilteredPaymentHistory } from "../../../reducers";
-import { timeStampToHR } from "../../../utils/secsToHMS";
+import * as Actions from '../../../actions';
+import { getFilteredPaymentHistory } from '../../../reducers';
+import { timeStampToHR } from '../../../utils/secsToHMS';
 
 const { remote } = window.electron;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 const isWin = mainProcess.isWin();
 const isMac = mainProcess.isMac();
 
-const mainEtherscan = "https://etherscan.io/tx/0x";
-const testEtherscan = "https://rinkeby.etherscan.io/tx/0x";
+const mainEtherscan = 'https://etherscan.io/tx/0x';
+const testEtherscan = 'https://rinkeby.etherscan.io/tx/0x';
 const ETH_DENOM = 10 ** 18;
 
 const filter = {
-    PAYMENT: "payment",
-    INCOME: "income"
+    PAYMENT: 'payment',
+    INCOME: 'income'
 };
 
 const Item = posed.default.div({
@@ -53,11 +53,11 @@ export class History extends React.Component {
 
     componentDidMount() {
         this.updateDimensions();
-        window.addEventListener("resize", this.updateDimensions.bind(this));
+        window.addEventListener('resize', this.updateDimensions.bind(this));
     }
 
     componentWillUnmount() {
-        window.removeEventListener("resize", this.updateDimensions.bind(this));
+        window.removeEventListener('resize', this.updateDimensions.bind(this));
     }
 
     /**
@@ -66,14 +66,14 @@ export class History extends React.Component {
      * @param   {Object}     elm     [target element]
      */
     _handleTab = elm => {
-        const tabPanel = document.getElementById("historyTab");
+        const tabPanel = document.getElementById('historyTab');
         const tabTitles = tabPanel.childNodes;
         for (var i = 0; i < tabTitles.length; i++) {
-            tabTitles[i].classList.remove("active");
+            tabTitles[i].classList.remove('active');
         }
-        elm.currentTarget.classList.add("active");
+        elm.currentTarget.classList.add('active');
         this.setState({
-            activeTab: elm.target.getAttribute("value")
+            activeTab: elm.target.getAttribute('value')
         });
     };
 
@@ -164,17 +164,17 @@ export class History extends React.Component {
                         <span
                             className={`finance__indicator ${
                                 type === filter.INCOME
-                                    ? "indicator--up"
-                                    : "indicator--down"
+                                    ? 'indicator--up'
+                                    : 'indicator--down'
                             }`}>
-                            {type === filter.INCOME ? "+ " : "- "}
+                            {type === filter.INCOME ? '+ ' : '- '}
                         </span>
                         {(value / ETH_DENOM).toFixed(4)} GNT
                     </span>
                     {transaction && (
                         <Tooltip
-                            html={<p>See on Etherscan</p>}
-                            position="bottom"
+                            content={<p>See on Etherscan</p>}
+                            placement="bottom"
                             trigger="mouseenter">
                             <a
                                 href={`${
@@ -199,7 +199,7 @@ export class History extends React.Component {
         const w = window,
             d = document,
             documentElement = d.documentElement,
-            body = d.getElementsByTagName("body")[0],
+            body = d.getElementsByTagName('body')[0],
             width =
                 w.innerWidth || documentElement.clientWidth || body.clientWidth,
             height =
@@ -221,7 +221,7 @@ export class History extends React.Component {
             <div
                 className="content__history"
                 style={{
-                    height: winHeight - (isWin ? 414 : isMac ? 436 : 401) + "px"
+                    height: winHeight - (isWin ? 414 : isMac ? 436 : 401) + 'px'
                 }}>
                 <div
                     id="historyTab"
@@ -254,8 +254,8 @@ export class History extends React.Component {
                 </div>
                 <div>
                     {paymentHistory && filteredList.length > 0 ? (
-                        <div style={{ display: "flex" }}>
-                            <div style={{ flex: "1 1 auto", height: "100%" }}>
+                        <div style={{ display: 'flex' }}>
+                            <div style={{ flex: '1 1 auto', height: '100%' }}>
                                 <AutoSizer>
                                     {({ width, height }) => {
                                         return (
@@ -277,13 +277,13 @@ export class History extends React.Component {
                     ) : (
                         <div className="empty-list__history">
                             <span>
-                                You don’t have any{" "}
-                                {activeTab ? activeTab : "earnings or payment"}{" "}
+                                You don’t have any{' '}
+                                {activeTab ? activeTab : 'earnings or payment'}{' '}
                                 yet.
                                 <br />
                                 {isEngineOn
-                                    ? ""
-                                    : "Start Golem below to generate some."}
+                                    ? ''
+                                    : 'Start Golem below to generate some.'}
                             </span>
                         </div>
                     )}

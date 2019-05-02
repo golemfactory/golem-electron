@@ -2,7 +2,7 @@ import React from 'react'
 import uuid from 'uuid/v4'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { Spring } from 'react-spring'
+import { Spring } from 'react-spring/renderprops.cjs'
 
 import * as Actions from '../../actions'
 import golem_logo from './../../assets/img/golem-black.svg'
