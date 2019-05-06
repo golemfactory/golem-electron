@@ -32,7 +32,7 @@ export default class Step1 extends React.Component {
                         <br />
                         <br />
                         If you don't know how to do it please follow this{' '}
-                        <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
+                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
                             instructions
                         </a>
                         .
