@@ -205,7 +205,7 @@ export class Personal extends React.Component {
                         </span>
                     </Tooltip>
                     <span className="backup-info__personal">
-                        <a href="https://golem.network/documentation/11-backing-up-your-golem-app/">
+                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-app">
                             <u>
                                 Learn more how to <strong>backup Golem</strong>
                             </u>

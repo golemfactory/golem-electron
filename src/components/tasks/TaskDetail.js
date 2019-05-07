@@ -40,7 +40,7 @@ const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
-    LUXRENDER: 'LuxRender'
+    BLENDER_NVGPU: 'Blender_NVGPU'
 })
 
 const mockFormatList = [
@@ -59,12 +59,6 @@ const presetSchema = {
             format: yup.string(),
             output_path: yup.string(),
             compositing: yup.bool()
-        }),
-    LuxRender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            output_path: yup.string(),
-            format: yup.string(),
-            sample_per_pixel: yup.number().min(1).required(),
         })
 }
 
@@ -208,6 +202,7 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
+        
         if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.match.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
                 this._setTimeStamp()
@@ -237,15 +232,9 @@ export class TaskDetail extends React.Component {
                         concent: !!concent_enabled
                     })
 
-                    if ((type || this.state.type) === taskType.BLENDER) {
-                        // compositingRef.checked = options.compositing
-                        // this.setState({
-                        //     compositing: options.compositing
-                        // })
+                    if ((type || this.state.type).includes(taskType.BLENDER)) {
                         this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else if ((type || this.state.type) === taskType.LUXRENDER) {
-                        haltspp.value = options.haltspp
-                    }
+                    } 
 
                     if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
                         this.props.actions.getEstimatedCost({
@@ -356,7 +345,7 @@ export class TaskDetail extends React.Component {
         if(!y)
                 return; 
 
-        if (this.props.task.type === taskType.BLENDER) {
+        if (this.props.task.type.includes(taskType.BLENDER)) {
             if(!frames)
                 return; 
 
@@ -619,16 +608,17 @@ export class TaskDetail extends React.Component {
 
         outputPath.value = output_path
 
-        if (this.props.task.type === taskType.BLENDER) {
+        if (this.props.task.type.includes(taskType.BLENDER)) {
 
             framesRef.value = frames
             //compositingRef.checked = compositing
 
-        } else if (this.props.task.type === taskType.LUXRENDER) {
+        } 
+        // else if (this.props.task.type === taskType.LUXRENDER) {
 
-            haltspp.value = sample_per_pixel
+        //     haltspp.value = sample_per_pixel
 
-        }
+        // }
         this.setState({...preset.value, formatIndex})
     }
 
@@ -781,24 +771,25 @@ export class TaskDetail extends React.Component {
     }
 
     _createTaskAsync(){
-        const {resolution, frames, format, output_path, compute_on, timeout, subtasks_count, subtask_timeout, bid, compositing} = this.state
+        const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, subtasks_count, subtask_timeout, timeout} = this.state
         const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
             this.props.actions.createTask({
                 ...task,
+                bid,
                 compute_on,
-                timeout: floatToString(timeout),
+                concent_enabled: concent,
+                estimated_memory : (testStatus && testStatus.estimated_memory),
                 subtasks_count: Number(subtasks_count),
                 subtask_timeout: floatToString(subtask_timeout),
-                bid,
-                estimated_memory : (testStatus && testStatus.estimated_memory),
+                timeout: floatToString(timeout),
                 options: {
-                    resolution,
                     frames,
                     format,
                     compositing,
                     output_path,
+                    resolution,
                 }
             }, resolve, reject)
         })
@@ -891,10 +882,11 @@ export class TaskDetail extends React.Component {
 
         switch (type) {
         case taskType.BLENDER:
+        case taskType.BLENDER_NVGPU:
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://golem.network/documentation/07-submitting-a-task/#render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
                             <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
                          </div>
             })
@@ -912,15 +904,15 @@ export class TaskDetail extends React.Component {
             //             </div>
             // })
             break;
-        case taskType.LUXRENDER:
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
-                         </div>
-            })
-            break;
+        // case taskType.LUXRENDER:
+        //     formTemplate.push({
+        //         order: 5,
+        //         content: <div className="item-settings" key="5">
+        //                     <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
+        //                     <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
+        //                  </div>
+        //     })
+        //     break;
         }
 
         let sortByOrder = (a, b) => (a.order - b.order)
@@ -1003,7 +995,7 @@ export class TaskDetail extends React.Component {
                                         type="span" 
                                         label="Task Timeout" 
                                         info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time<br/>you will wait for a task to
-                                            be accepted by the network. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                            be accepted by the network. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                             Learn more
                                             </a></p>} 
                                         cls="title" 
@@ -1016,7 +1008,7 @@ export class TaskDetail extends React.Component {
                                         type="span" 
                                         label="Subtask Amount" 
                                         info={<p className="tooltip_task">Tells the system how many subtasks to break a task into.<br/>If you are rendering 
-                                                a number of frames you should set subtasks to the same number. <a href="https://golem.network/documentation/07-submitting-a-task/#task-and-subtask-timeouts">
+                                                a number of frames you should set subtasks to the same number. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                 Learn more
                                                 </a>
                                                 </p>} 
@@ -1050,7 +1042,7 @@ export class TaskDetail extends React.Component {
                             </div>
                             </div>
                             { !isMainNet
-                                && concentSwitch
+                                && (concentSwitch || isDetailPage)
                                 &&
                                 <div className="section-concent__task-detail">
                                     <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" />
@@ -1063,7 +1055,7 @@ export class TaskDetail extends React.Component {
                                         <div className="switch-box switch-box--green">
                                              <span className="switch-label switch-label--left">Off</span>
                                              <label className="switch">
-                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" defaultChecked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
+                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" checked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
                                                  <div className="switch-slider round"></div>
                                              </label>
                                              <span className="switch-label switch-label--right">On</span>
@@ -1097,7 +1089,7 @@ export class TaskDetail extends React.Component {
                                             info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
                                                 subtask amount and timeout settings. Fiat value may change during computation 
                                                 as well as gas price - 
-                                                <a href="https://golem.network/documentation/08-pricing-best-practices/#the-formula-for-calculating-the-estimated-cost-of-a-task">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
                                                 Learn more
                                                 </a>
                                                 </p>} 

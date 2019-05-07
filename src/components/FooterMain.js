@@ -120,28 +120,28 @@ export class FooterMain extends Component {
                     <a
                         href={
                             currentPlatform === "win32"
-                                ? "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-on-windows-10/"
-                                : "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-mac/"
+                                ? "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10"
+                                : "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos"
                         }>
                         <span className="icon-new-window" />
                     </a>
                 );
             case "Outdated hyperg version": //hyperg
                 return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#outdated-hyperg-version">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=outdated-hyperg-version">
                         <span className="icon-new-window" />
                     </a>
                 );
             case "Chain sync error": //sync
                 return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#sync">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=sync">
                         <span className="icon-new-window" />
                     </a>
                 );
                 break;
             case "Error connecting geth": //geth
                 return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#geth">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=geth">
                         <span className="icon-new-window" />
                     </a>
                 );
@@ -187,7 +187,7 @@ export class FooterMain extends Component {
             connectionProblem.issue == "PORT" ? (
                 <span key="infoPorts" className="info__ports">
                     problem with ports
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
                         <span className="icon-new-window" />
                     </a>
                 </span>
@@ -260,7 +260,7 @@ export class FooterMain extends Component {
                                     </span>
                                     {status && status[0] && (
                                         <span>
-                                            <a href="https://github.com/golemfactory/golem#installing-and-testing">
+                                            <a href="https://docs.golem.network/#/Products/Brass-Beta/Installation">
                                                 <span className="icon-new-window" />
                                             </a>
                                         </span>
