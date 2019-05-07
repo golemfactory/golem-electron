@@ -179,7 +179,7 @@ export class FooterMain extends Component {
                 status.client.message.length > 10 ? (
                     <br key="br" />
                 ) : (
-                    ""
+                    " "
                 )
             ) : (
                 <br key="br" />
@@ -196,7 +196,7 @@ export class FooterMain extends Component {
                     connection dropped
                 </span>
             ) : (
-                ""
+                " "
             )
         ];
     }
@@ -276,6 +276,7 @@ export class FooterMain extends Component {
                             </span>
                             <Transition
                               native
+                              initial={null}
                               items={!!Object.keys(stats).length}
                               from={{ position: 'absolute', opacity: 0, transform: 90}}
                               enter={{ position: 'initial', opacity: 1, transform: 0 }}
