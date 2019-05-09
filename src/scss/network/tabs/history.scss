@@ -121,10 +121,11 @@
         }
     }
     .icon-new-window {
+        position: relative;
         visibility: hidden;
-        font-size: 16pt;
+        font-size: 10pt;
         color: $color-primary;
-        padding-bottom: 7px;
+        bottom: -2px;
     }
     &:hover {
         background: $color-bg2;
