@@ -163,7 +163,7 @@ export class Personal extends React.Component {
                             trigger="mouseenter">
                             <span
                                 className={`toggle__edit-mode ${
-                                    editMode ? "icon-checkmark" : "icon-pencil"
+                                    editMode ? "icon-confirmation" : "icon-pencil"
                                 }`}
                                 onClick={() =>
                                     this.form.dispatchEvent(new Event("submit"))

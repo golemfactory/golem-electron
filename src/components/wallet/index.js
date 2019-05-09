@@ -264,7 +264,7 @@ export class Wallet extends Component {
                         />
                         <span
                             className={`icon-${
-                                addressCopied ? "checkmark" : "copy"
+                                addressCopied ? "confirmation" : "copy"
                             }`}
                             onClick={this._handleCopyToClipboard.bind(
                                 this,

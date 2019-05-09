@@ -38,20 +38,20 @@
 		.input__public-key {
 			padding-right: 40px;
 		}
-		.icon-checkmark,
+		.icon-confirmation,
 		.icon-copy {
 			position: absolute;
 			cursor: pointer;
 		}
 
 		.icon-copy {
-			font-size: 20pt;
-			bottom: 3px;
-			right: 5px;
+			font-size: 16pt;
+			bottom: 6px;
+			right: 6px;
 			color: $color-primary;
 		}
 
-		.icon-checkmark {
+		.icon-confirmation {
 			font-size: 12pt;
 			bottom: 8px;
 			right: 10px;
