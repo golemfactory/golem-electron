@@ -6,6 +6,7 @@
         }
         &:checked + label {
             font-weight: 500;
+            color: $color-primary;
         }
     }
     &__content{
@@ -16,12 +17,41 @@
         justify-content: space-between;
         box-sizing: border-box;
         background: $color-bg2;
+        
+        .icon-arrow-down,
+        .icon-arrow-right {
+            font-size: 9pt;
+        }
+
+        .icon-folder,
+        .icon-file,
+        .icon-blender {
+            margin: 0 5px;
+            font-size: 11pt;
+        }
+
+        .icon-blender {
+            background: #efefef;
+            border-radius: 50%;
+            padding: 3px;
+        }
     }
     &__container{
-        margin: 20px 0;
+        position: relative;
+        height: calc(100% - 90px);
     	.directory-nodes{
+            &__container{
+                margin: 20px 0;
+                .directory-tree {
+                    position: relative;
+                    height: calc(100% - 90px);
+                    overflow-y: overlay;
+                    box-sizing: border-box;
+                }
+            }
             &__item{
                 cursor: pointer;
+                margin: 10px 0;
             }
 
             &__filter-input{

@@ -312,7 +312,7 @@ export class DropZone extends React.Component {
                     {unlockDnD
                         ? [
                               <p key="1">
-                                  <span className="icon-upload" />
+                                  <span className="icon-file-upload" />
                               </p>,
                               <span key="2">
                                   Drop files here to create a new task

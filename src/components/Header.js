@@ -278,7 +278,7 @@ export class Header extends Component {
                                                 ['openFile']
                                             )}>
                                             <span
-                                                className="icon-file-menu"
+                                                className="icon-file"
                                                 role="menuitem"
                                                 tabIndex="0"
                                                 aria-label="Add file for task"
@@ -293,7 +293,7 @@ export class Header extends Component {
                                                 ['openDirectory']
                                             )}>
                                             <span
-                                                className="icon-folder-menu"
+                                                className="icon-folder"
                                                 role="menuitem"
                                                 tabIndex="0"
                                                 aria-label="New folder for task"

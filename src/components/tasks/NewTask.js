@@ -170,7 +170,7 @@ export class NewTask extends React.Component {
                         </div>
                         <div
                             ref="radioCloud"
-                            className="container-radio__new-task"
+                            className="container-radio__new-task radio-group"
                             onChange={this._handleTypeRadio}>
                             <div className="radio-item">
                                 <span className="icon-blender">
@@ -180,18 +180,17 @@ export class NewTask extends React.Component {
                                     <span className="path4" />
                                 </span>
                                 <input
-                                    id="taskTypeRadio1"
                                     type="radio"
-                                    name="taskType"
+                                    id="taskTypeRadio1"
                                     value="Blender"
+                                    name="taskTypeRadio1"
                                     checked={type === radioTypes.blend}
                                     readOnly
                                     required
                                 />
-                                <label
-                                    htmlFor="taskTypeRadio1"
-                                    className="radio-label-right">
-                                    Blender
+                                <label htmlFor="taskTypeRadio1">
+                                    <span>Blender</span>
+                                    <span className="overlay" />
                                 </label>
                             </div>
                             {true ? ( //disabled

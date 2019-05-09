@@ -75,7 +75,7 @@ export class MasterFilePicker extends React.Component {
                         }}
                     />
                 </div>
-                <div>
+                <div className="directory-tree">
                     {filteredNodes &&
                         this._loadNodes(filteredNodes, NODE_DEEPNESS)}
                 </div>
@@ -101,10 +101,22 @@ export class MasterFilePicker extends React.Component {
                                     // TODO find healty way to update state
                                     test: null
                                 });
-                            }}
-                        />
+                            }}>
+                            <span className="icon-folder" />
+                        </span>
                     ) : (
-                        <span className="icon-file-menu" />
+                        <span
+                            className={
+                                node.ext == this.state.type
+                                    ? 'icon-blender'
+                                    : 'icon-file'
+                            }
+                        >
+                            <span className="path1"/>
+                            <span className="path2"/>
+                            <span className="path3"/>
+                            <span className="path4"/>
+                        </span>
                     )}
                     {node.isDir ? (
                         <span> {node.name} </span>
