@@ -46,7 +46,7 @@ export default class ConcentModal extends React.Component {
     render() {
         const { type } = this.props;
         return (
-            <div className="container__modal container__concent-modal">
+            <div className="container__modal concent-modal__container">
                 <div className="content__modal">
                     <div className="icon-container">
                         <Lottie options={defaultOptions} />
@@ -56,7 +56,7 @@ export default class ConcentModal extends React.Component {
                         <br />
                         to use concent anymore?
                     </span>
-                    <div className="tips__conncent-modal">
+                    <div className="concent-modal__tips">
                         Any tasks that have been started with Concent will
                         <br />
                         still continue to use the Concent Service until they're
@@ -68,7 +68,7 @@ export default class ConcentModal extends React.Component {
                         Concent Service.
                     </div>
                     <div
-                        className="radio-group__concent-modal"
+                        className="radio-group"
                         onChange={this._handleUnlockCheckbox}>
                         <Tooltip
                             content={

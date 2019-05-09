@@ -36,7 +36,7 @@ export default class RestartModal extends React.Component {
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
                     <div>
-                        <span className="icon-progress-clockwise" />
+                        <span className="icon-refresh" />
                     </div>
                     <span className="title__restart-modal">
                         Task restart options

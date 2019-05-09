@@ -36,10 +36,12 @@
         line-height: 3.2em;
         height: 30px;
 
-        .icon-back-up {
+        .icon-back {
+            display: inline-block;
+            transform: rotateZ(90deg);
             position: relative;
-            font-size: 10pt;
-            bottom: -2px;
+            font-size: 8pt;
+            margin-right: 2px;
         }
     }
 
