@@ -5,8 +5,7 @@ const webpack = require('webpack');
 const HappyPack = require('happypack');
 const happyThreadPool = HappyPack.ThreadPool({ size: 5 });
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const CompressionPlugin = require("compression-webpack-plugin");
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
 const HtmlWebpackHarddiskPlugin = require('html-webpack-harddisk-plugin');
 
 const modes = {
@@ -89,17 +88,6 @@ module.exports = (env, argv) => ({
         }),
         new HtmlWebpackHarddiskPlugin(),
         /*In case of Lodash errors @see https://github.com/lodash/lodash-webpack-plugin*/
-        new LodashModuleReplacementPlugin({
-          'collections': true,
-          'exotics': true,
-          'cloning': true,
-          'currying': true,
-          'guards': true,
-          'metadata': true,
-          'paths': true,
-          'placeholders': true,
-          'shorthands': true
-        }),
         new HappyPack({
             id: 'jsx',
             loaders: [
@@ -117,8 +105,7 @@ module.exports = (env, argv) => ({
                             argv.mode === modes.DEV
                                 ? 'react-hot-loader/babel'
                                 : false,
-                            '@babel/plugin-proposal-class-properties',
-                            'lodash'
+                            '@babel/plugin-proposal-class-properties'
                         ].filter(Boolean),
                         presets: ['@babel/preset-react', '@babel/preset-env']
                     }

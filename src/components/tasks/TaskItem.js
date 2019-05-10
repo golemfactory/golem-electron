@@ -298,8 +298,8 @@ export class TaskItem extends React.Component {
                                                 (this.controlPanelRef = node)
                                             }>
                                             <Tooltip
-                                                html={<p>Preview</p>}
-                                                position="bottom"
+                                                content={<p>Preview</p>}
+                                                placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
@@ -315,8 +315,8 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </Tooltip>
                                             <Tooltip
-                                                html={<p>Task Details</p>}
-                                                position="bottom"
+                                                content={<p>Task Details</p>}
+                                                placement="bottom"
                                                 trigger="mouseenter"
                                                 className="task-details-icon">
                                                 <span
@@ -333,8 +333,8 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </Tooltip>
                                             <Tooltip
-                                                html={<p>Restart</p>}
-                                                position="bottom"
+                                                content={<p>Restart</p>}
+                                                placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
                                                     className="icon-progress-clockwise"
@@ -358,8 +358,8 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </Tooltip>
                                             <Tooltip
-                                                html={<p>Output</p>}
-                                                position="bottom"
+                                                content={<p>Output</p>}
+                                                placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
@@ -374,8 +374,8 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </Tooltip>
                                             <Tooltip
-                                                html={<p>Delete</p>}
-                                                position="bottom"
+                                                content={<p>Delete</p>}
+                                                placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
                                                     className="icon-trash"
