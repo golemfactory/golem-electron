@@ -106,10 +106,11 @@
                 margin: 0 7px 0 5px;
             }
 
-            .icon-preview,
-            .icon-refresh,
             .icon-delete,
-            .icon-details {
+            .icon-details,
+            .icon-folder,
+            .icon-preview,
+            .icon-refresh {
                 box-sizing: border-box;
                 font-size: 8pt;
                 color: $button-static-color;
@@ -128,6 +129,11 @@
                         color: $color-text3;
                     }
                 }
+            }
+
+            .icon-details,
+            .icon-folder{
+                font-size: 9pt;
             }
 
             &:hover .control-panel__task {

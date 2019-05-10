@@ -302,7 +302,7 @@ export class TaskItem extends React.Component {
                                                 placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
-                                                    className="icon-trash"
+                                                    className="icon-preview"
                                                     tabIndex="0"
                                                     aria-label="Preview"
                                                     onClick={this._togglePreview.bind(
@@ -320,7 +320,7 @@ export class TaskItem extends React.Component {
                                                 trigger="mouseenter"
                                                 className="task-details-icon">
                                                 <span
-                                                    className="icon-trash"
+                                                    className="icon-details"
                                                     tabIndex="0"
                                                     aria-label="Task Details"
                                                     onClick={this._toggleDetail.bind(
@@ -337,7 +337,7 @@ export class TaskItem extends React.Component {
                                                 placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
-                                                    className="icon-progress-clockwise"
+                                                    className="icon-refresh"
                                                     tabIndex="0"
                                                     aria-label="Restart Task"
                                                     onClick={
@@ -362,7 +362,7 @@ export class TaskItem extends React.Component {
                                                 placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
-                                                    className="icon-trash"
+                                                    className="icon-folder"
                                                     tabIndex="0"
                                                     aria-label="Open Delete Task Popup"
                                                     onClick={
@@ -378,7 +378,7 @@ export class TaskItem extends React.Component {
                                                 placement="bottom"
                                                 trigger="mouseenter">
                                                 <span
-                                                    className="icon-trash"
+                                                    className="icon-delete"
                                                     tabIndex="0"
                                                     aria-label="Open Delete Task Popup"
                                                     onClick={

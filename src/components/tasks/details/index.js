@@ -12,6 +12,7 @@ import GroupedStatus from './GroupedStatus';
 import SubtaskList from './SubtaskList';
 
 import every from 'lodash/every';
+import some from 'lodash/some';
 import size from 'lodash/size';
 
 const mapStateToProps = state => ({
@@ -28,7 +29,8 @@ export class Details extends React.PureComponent {
         super(props);
         this.state = {
             checkedItems: {},
-            isAllChecked: false
+            isAllChecked: false,
+            isAnyChecked: false
         };
     }
 
@@ -62,9 +64,20 @@ export class Details extends React.PureComponent {
                 nextState.checkedItems,
                 item => item === true
             );
-            if (nextState.checkedItems !== isAllChecked) {
+            const isAnyChecked = some(
+                nextState.checkedItems,
+                item => item === true
+            );
+
+            if (nextState.isAllChecked !== isAllChecked) {
                 this.setState({
                     isAllChecked
+                });
+            }
+
+            if (nextState.isAnyChecked !== isAnyChecked) {
+                this.setState({
+                    isAnyChecked
                 });
             }
         }
@@ -98,7 +111,7 @@ export class Details extends React.PureComponent {
 
     render() {
         const { id, fragments } = this.props;
-        const { checkedItems, isAllChecked } = this.state;
+        const { checkedItems, isAllChecked, isAnyChecked } = this.state;
         return (
             <div className="details__section">
                 <ConditionalRender showIf={fragments}>
@@ -108,7 +121,10 @@ export class Details extends React.PureComponent {
                             {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
                             Subtasks
                         </span>
-                        <span>Restart Selected</span>
+                        {   
+                            isAnyChecked
+                            && <span>Restart Selected</span>
+                        }
                     </div>
                     <SubtaskList
                         list={fragments}

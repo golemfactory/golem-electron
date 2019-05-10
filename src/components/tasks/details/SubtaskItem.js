@@ -27,7 +27,7 @@ class SubtaskItem extends React.PureComponent {
 		const recentInfo = item[item.length - 1];
 
 		return (
-			<li key={keyItem} className="container-checkbox__details">
+			<li key={keyItem} className="container-checkbox__details checkbox-group">
 				<div className="checkbox-item">
 					<input
 						id={`taskTypeRadio${keyItem}`}
@@ -50,6 +50,7 @@ class SubtaskItem extends React.PureComponent {
 					<label
 						htmlFor={`taskTypeRadio${keyItem}`}
 						className="checkbox-label-left">
+						<span className="overlay"/>
 						<b>Subtask number: </b> {keyItem}
 						<span className="bumper" />
 						<b>Progress: </b>{' '}
@@ -59,7 +60,7 @@ class SubtaskItem extends React.PureComponent {
 						{recentInfo ? recentInfo.status : 'Not started'}
 					</label>
 					<div className="checkbox-item__action">
-						<span className="icon-progress-clockwise" />
+						<span className="icon-refresh" />
 						<span
 							className="icon-arrow-down"
 							onClick={
