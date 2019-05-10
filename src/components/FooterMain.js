@@ -84,37 +84,25 @@ export class FooterMain extends Component {
 
     _loadErrorUrl = msg => {
         switch (msg) {
-            case "Error creating Docker VM": //docker
-                return (
-                    <a
-                        href={
-                            currentPlatform === "win32"
-                                ? "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-on-windows-10/"
-                                : "https://golem.network/documentation/09-common-issues-troubleshooting/docker-errors-mac/"
-                        }
-                    >
-                        <span className="icon-new-window" />
-                    </a>
-                );
-            case "Outdated hyperg version": //hyperg
-                return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#outdated-hyperg-version">
-                        <span className="icon-new-window" />
-                    </a>
-                );
-            case "Chain sync error": //sync
-                return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#sync">
-                        <span className="icon-new-window" />
-                    </a>
-                );
+            case "Error creating Docker VM":    //docker
+                return  <a href={currentPlatform === "win32" 
+                            ? "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10" 
+                            : "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos"}>
+                            <span className="icon-new-window"/>
+                        </a>
+            case "Outdated hyperg version":     //hyperg
+                return  <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=outdated-hyperg-version">
+                            <span className="icon-new-window"/>
+                        </a>
+            case "Chain sync error":            //sync
+                return  <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=sync">
+                            <span className="icon-new-window"/>
+                        </a>
                 break;
-            case "Error connecting geth": //geth
-                return (
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/other-common-errors/#geth">
-                        <span className="icon-new-window" />
-                    </a>
-                );
+            case "Error connecting geth":       //geth
+                return  <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=geth">
+                            <span className="icon-new-window"/>
+                        </a>
             default:
                 break;
         }
@@ -149,30 +137,24 @@ export class FooterMain extends Component {
 
     _loadConnectionError(status, connectionProblem) {
         return [
-            checkNested(status, "client", "message") ? (
-                status.client.message.length > 10 ? (
-                    <br key="br" />
-                ) : (
-                    ""
-                )
-            ) : (
-                <br key="br" />
-            ),
-            connectionProblem.issue == "PORT" ? (
-                <span key="infoPorts" className="info__ports">
-                    problem with ports
-                    <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
-                        <span className="icon-new-window" />
-                    </a>
-                </span>
-            ) : connectionProblem.issue == "WEBSOCKET" ? (
-                <span key="infoPorts" className="info__ports">
-                    connection dropped
-                </span>
-            ) : (
-                ""
-            )
-        ];
+            (checkNested(status, 'client', 'message')) 
+                ? status.client.message.length > 10
+                    ? <br key="br"/>
+                    : ""
+                : <br key="br"/>,
+            connectionProblem.issue == "PORT" 
+                ? <span key="infoPorts" className="info__ports">
+                        problem with ports
+                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
+                            <span className="icon-new-window"/>
+                        </a>
+                    </span> 
+                : connectionProblem.issue == "WEBSOCKET" 
+                    ? <span key="infoPorts" className="info__ports">
+                            connection dropped
+                        </span> 
+                    : ""
+        ]
     }
 
     render() {
@@ -262,12 +244,13 @@ export class FooterMain extends Component {
                                                     </span>
                                                 </span>
                                             </span>
-                                        )}
-                                    </span>
-                                    {status && status[0] && (
-                                        <span>
-                                            <a href="https://github.com/golemfactory/golem#installing-and-testing">
-                                                <span className="icon-new-window" />
+                                        }
+                                    </span> 
+                                    {status
+                                    && status[0]
+                                    &&  <span>
+                                            <a href="https://docs.golem.network/#/Products/Brass-Beta/Installation">
+                                                <span className="icon-new-window"/>
                                             </a>
                                         </span>
                                     )}

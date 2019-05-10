@@ -53,6 +53,7 @@
         .info__ports{
             font-size: 9pt;
             color: $color-text3;
+            margin-left: 5px;
         }
 
         .status-node{
@@ -79,6 +80,8 @@
         font-size: 7pt;
         border-top: 1px solid $color-border;
         box-sizing: border-box;
+        z-index: 99999;
+        background: white;
 
         .element__footer{
             @include flex;
@@ -87,7 +90,8 @@
         }
 
         [class^="icon-"], [class*=" icon-"] {
-            font-size: 14pt;
+            font-size: 10pt;
+            margin-right: 5px;
         }
     }
 

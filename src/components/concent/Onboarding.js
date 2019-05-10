@@ -109,7 +109,7 @@ export default class ConcentOnboarding extends React.Component {
                     ) : (
                         <div>
                             <span
-                                className="icon-arrow-left-small"
+                                className="icon-arrow-left"
                                 onClick={this._handlePrev}
                                 aria-label="Prev"
                                 tabIndex="0"
@@ -118,7 +118,7 @@ export default class ConcentOnboarding extends React.Component {
                                 {currentStep + 1} of 4
                             </span>
                             <span
-                                className="icon-arrow-right-small"
+                                className="icon-arrow-right"
                                 onClick={this._handleNext}
                                 aria-label="Next"
                                 tabIndex="0"

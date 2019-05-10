@@ -46,7 +46,7 @@ export default class ConcentModal extends React.Component {
     render() {
         const { type } = this.props;
         return (
-            <div className="container__modal container__concent-modal">
+            <div className="container__modal concent-modal__container">
                 <div className="content__modal">
                     <div className="icon-container">
                         <Lottie options={defaultOptions} />
@@ -56,7 +56,7 @@ export default class ConcentModal extends React.Component {
                         <br />
                         to use concent anymore?
                     </span>
-                    <div className="tips__conncent-modal">
+                    <div className="concent-modal__tips">
                         Any tasks that have been started with Concent will
                         <br />
                         still continue to use the Concent Service until they're
@@ -68,7 +68,7 @@ export default class ConcentModal extends React.Component {
                         Concent Service.
                     </div>
                     <div
-                        className="radio-group__concent-modal"
+                        className="radio-group"
                         onChange={this._handleUnlockCheckbox}>
                         <Tooltip
                             content={
@@ -77,8 +77,8 @@ export default class ConcentModal extends React.Component {
                                     <br />
                                     reduce future Deposit creation
                                     <br />
-                                    transaction fee.{' '}
-                                    <a href="https://golem.network/documentation/concent-service/#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                    transaction fee.{" "}
+                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                         Learn more
                                     </a>
                                 </p>
@@ -108,8 +108,8 @@ export default class ConcentModal extends React.Component {
                         <Tooltip
                             content={
                                 <p>
-                                    Funds restore will take up to 48h.{' '}
-                                    <a href="https://golem.network/documentation/concent-service/#can-i-withdraw-my-tokens-from-the-deposit">
+                                    Funds restore will take up to 48h.{" "}
+                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
                                         Learn more
                                     </a>
                                 </p>

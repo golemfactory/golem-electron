@@ -163,7 +163,7 @@ export class Personal extends React.Component {
                             trigger="mouseenter">
                             <span
                                 className={`toggle__edit-mode ${
-                                    editMode ? "icon-checkmark" : "icon-pencil"
+                                    editMode ? "icon-confirmation" : "icon-pencil"
                                 }`}
                                 onClick={() =>
                                     this.form.dispatchEvent(new Event("submit"))
@@ -205,7 +205,7 @@ export class Personal extends React.Component {
                         </span>
                     </Tooltip>
                     <span className="backup-info__personal">
-                        <a href="https://golem.network/documentation/11-backing-up-your-golem-app/">
+                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-app">
                             <u>
                                 Learn more how to <strong>backup Golem</strong>
                             </u>

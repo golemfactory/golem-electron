@@ -202,7 +202,7 @@ export class Resources extends React.Component {
                         onClick={this._toggleAdvanced.bind(null, max)}>
                         {toggleAdvanced ? (
                             <span>
-                                <span className="icon-settings-simplified" />
+                                <span className="icon-setting" />
                                 Simplified
                             </span>
                         ) : (

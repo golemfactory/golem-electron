@@ -442,7 +442,7 @@ const RefLink = forwardRef((props, ref) => {
             to={`/task/${props.item && props.item.id}`}
             tabIndex="0"
             aria-label="Task Details">
-            <span className="icon-info-small" />
+            <span className="icon-details" />
         </Link>
     );
 });

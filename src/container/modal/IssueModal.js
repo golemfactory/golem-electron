@@ -70,7 +70,7 @@ export class IssueModal extends React.Component {
                 return (
                     <div className="content__modal">
                         <div className="container-icon">
-                            <span className="icon-warning" />
+                            <span className="icon-warning-triangle" />
                         </div>
                         <span>
                             Golem is having trouble connecting. <br />
@@ -84,7 +84,7 @@ export class IssueModal extends React.Component {
                 return (
                     <div className="content__modal">
                         <div className="container-icon">
-                            <span className="icon-warning critical" />
+                            <span className="icon-warning-triangle critical" />
                         </div>
                         <span>
                             Golem is having trouble connecting. <br />

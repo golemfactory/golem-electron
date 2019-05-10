@@ -30,8 +30,8 @@
             .icon-blender,
             .icon-blender_nvgpu,
             .icon-blender_sgx {
-                font-size: 16pt;
-                padding: 11px 9px;
+                font-size: 24pt;
+                padding: 9px;
             }
             .icon-luxrender {
                 color: #f4ca1b;
@@ -75,7 +75,7 @@
                     font-weight: 400;
                 }
 
-                .info__task{
+                .info__task {
                     margin-top: 10px;
                     font-size: 7pt;
                     height: 30px;
@@ -105,11 +105,11 @@
                 color: $color-text;
                 margin: 0 7px 0 5px;
             }
-            
-            .icon-eye,
-            .icon-progress-clockwise,
-            .icon-trash,
-            .icon-info-small {
+
+            .icon-preview,
+            .icon-refresh,
+            .icon-delete,
+            .icon-details {
                 box-sizing: border-box;
                 font-size: 8pt;
                 color: $button-static-color;
@@ -124,8 +124,8 @@
 
                 &[disabled] {
                     cursor: not-allowed;
-                    &:hover { 
-                        color: $color-text3; 
+                    &:hover {
+                        color: $color-text3;
                     }
                 }
             }
@@ -140,20 +140,20 @@
                 display: none;
             }
 
-            .icon-progress-clockwise{
-                font-size: 9pt;
-                margin: 0 0 2px 0;
+            .icon-refresh {
+                font-size: 8.5pt;
+                margin: 2px 0 2px 0;
             }
 
-            .icon-eye{
+            .icon-delete {
                 font-size: 11pt;
             }
 
-            .icon-info-small{
-                font-size: 14pt;
+            .icon-preview {
+                font-size: 10pt;
             }
 
-            .icon--active{
+            .icon--active {
                 color: $color-text;
             }
 
