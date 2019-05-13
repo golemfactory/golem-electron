@@ -4,7 +4,7 @@ import map from 'lodash/map';
 
 import NodeRow from './NodeRow';
 
-const NodeTable = ({ list }) => {
+const NodeTable = ({ list, showBlockNodeModal }) => {
 	return (
 		<table className="fragment__node-table">
 			<thead>
@@ -22,6 +22,7 @@ const NodeTable = ({ list }) => {
 						item={item}
 						key={key.toString()}
 						keyItem={key.toString()}
+						showBlockNodeModal={showBlockNodeModal}
 					/>
 				))}
 			</tbody>

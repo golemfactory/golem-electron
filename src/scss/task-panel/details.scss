@@ -81,7 +81,7 @@
 		.icon-arrow-down{
 			margin-right: 0 !important;
 			transition: 0.5s transform;
-			transition-delay: 0.2s;
+			transition-delay: 0.1s;
 		}
 
 		.arrow-expand {
@@ -90,11 +90,30 @@
 	}
 
 	&__subtask-stats {
-		display: flex;
-		justify-content: space-around;
-		align-items: center;
-		height: 40px;
+		display: grid;
+		grid-template-columns: auto auto auto auto;
+  		grid-template-rows: 25px 25px;
+  		justify-items: center;
+  		align-items: center;
+  		text-align: left;
+		height: 50px;
 		font-size: 9pt;
+		margin: 10px 0;
+		padding: 0 24px;
+		font-size: 8pt;
+
+		& > span {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			width: 100%;
+		}
+
+		[class^="icon-"], 
+		[class*=" icon-"] {
+			margin-right: 5px;
+			font-size: 10pt;
+		}
 	}
 
 	&__subtask-action {

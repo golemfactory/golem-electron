@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import NodeTable from './NodeTable';
+import { ICONS } from './';
 
 import ConditionalRender from '../../hoc/ConditionalRender';
 
@@ -21,8 +22,16 @@ class SubtaskItem extends React.PureComponent {
 		});
 	};
 
+	/**
+     * [_handleRestartModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestartModal(id, status) {
+        this.props.restartModalHandler(id, status, this._handleRestart);
+    }
+
 	render() {
-		const { item, keyItem, checkedItems, toggleItems } = this.props;
+		const { item, keyItem, checkedItems, toggleItems, showBlockNodeModal } = this.props;
 		const { showNodeList } = this.state;
 		const recentInfo = item[item.length - 1];
 
@@ -33,10 +42,10 @@ class SubtaskItem extends React.PureComponent {
 						id={`taskTypeRadio${keyItem}`}
 						type="checkbox"
 						name="taskType"
-						value={recentInfo && recentInfo.subtask_id}
+						value={recentInfo?.subtask_id}
 						onChange={() =>
 							toggleItems.call(null, [
-								recentInfo && recentInfo.subtask_id
+								recentInfo?.subtask_id
 							])
 						}
 						checked={
@@ -54,13 +63,13 @@ class SubtaskItem extends React.PureComponent {
 						<b>Subtask number: </b> {keyItem}
 						<span className="bumper" />
 						<b>Progress: </b>{' '}
-						{recentInfo ? recentInfo.progress * 100 : 0}%
+						{recentInfo?.progress * 100 || 0}%
 						<span className="bumper" />
 						<b>State: </b>{' '}
-						{recentInfo ? recentInfo.status : 'Not started'}
+						{<span className={`icon-${ICONS[recentInfo?.status].name} ${ICONS[recentInfo?.status].color}`}/>|| 'Not started'}
 					</label>
 					<div className="checkbox-item__action">
-						<span className="icon-refresh" />
+						<span className="icon-refresh" onClick={this._handleRestartModal.bind(this, recentInfo?.subtask_id)}/>
 						<span
 							className="icon-arrow-down"
 							onClick={
@@ -72,7 +81,7 @@ class SubtaskItem extends React.PureComponent {
 					</div>
 				</div>
 				<ConditionalRender showIf={showNodeList && item.length > 0}>
-					<NodeTable list={item} />
+					<NodeTable list={item} showBlockNodeModal={showBlockNodeModal}/>
 				</ConditionalRender>
 			</li>
 		);

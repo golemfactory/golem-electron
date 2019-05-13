@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import map from 'lodash/map';
 import filter from 'lodash/filter';
@@ -10,6 +11,7 @@ import * as Actions from '../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
 import GroupedStatus from './GroupedStatus';
 import SubtaskList from './SubtaskList';
+import BlockNodeModal from '../modal/BlockNodeModal';
 
 import every from 'lodash/every';
 import some from 'lodash/some';
@@ -30,8 +32,15 @@ export class Details extends React.PureComponent {
         this.state = {
             checkedItems: {},
             isAllChecked: false,
-            isAnyChecked: false
+            isAnyChecked: false,
+            blockNodeModal: false,
+            nodeBlocked: false,
+            errMsg: null,
+            subtask2block: null
         };
+
+        this._showBlockNodeModal = this._showBlockNodeModal.bind(this);
+        this._closeBlockNodeModal = this._closeBlockNodeModal.bind(this);
     }
 
     componentWillMount() {
@@ -109,9 +118,51 @@ export class Details extends React.PureComponent {
         this._toggleItems(keyList, true);
     };
 
+    _lockScroll(isLocked) {
+        this.props.overflowRef.style.setProperty(
+            'overflow-y',
+            isLocked ? 'hidden' : 'overlay',
+            'important'
+        );
+    }
+
+    _showBlockNodeModal(subtask) {
+        this.setState(
+            {
+                blockNodeModal: true,
+                nodeBlocked: false,
+                errMsg: null,
+                subtask2block: subtask
+            });
+    }
+
+    _closeBlockNodeModal = () => {
+        this.setState({ blockNodeModal: false });
+    };
+
+    _blockNode = () => {
+        let node_id = subtask2block.node_id;
+        new Promise((resolve, reject) => {
+            actions.blockNode(node_id, resolve, reject);
+        }).then(([result, msg]) => {
+            this.setState({
+                nodeBlocked: result,
+                errMsg: msg
+            });
+        });
+    };
+
     render() {
         const { id, fragments } = this.props;
-        const { checkedItems, isAllChecked, isAnyChecked } = this.state;
+        const {
+            checkedItems,
+            isAllChecked,
+            isAnyChecked,
+            blockNodeModal,
+            errMsg,
+            nodeBlocked,
+            subtask2block
+        } = this.state;
         return (
             <div className="details__section">
                 <ConditionalRender showIf={fragments}>
@@ -121,17 +172,27 @@ export class Details extends React.PureComponent {
                             {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
                             Subtasks
                         </span>
-                        {   
-                            isAnyChecked
-                            && <span>Restart Selected</span>
-                        }
+                        {isAnyChecked && <span>Restart Selected</span>}
                     </div>
                     <SubtaskList
                         list={fragments}
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
+                        showBlockNodeModal={this._showBlockNodeModal}
                     />
                 </ConditionalRender>
+                {blockNodeModal &&
+                    ReactDOM.createPortal(
+                        <BlockNodeModal
+                            cancelAction={this._closeBlockNodeModal}
+                            blockAction={this._blockNode}
+                            nodeBlocked={nodeBlocked}
+                            errMsg={errMsg}
+                            subtask2block={subtask2block}
+                        />,
+                        document.getElementById('modalPortal')
+                    )
+                }
             </div>
         );
     }
@@ -141,3 +202,14 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Details);
+
+export const ICONS = {
+    Waiting: { name: 'subtask-awaiting', color: 'icon--color-yellow' },
+    Timeout: { name: 'timeout', color: 'icon--color-red' },
+    Failed: { name: 'failure', color: 'icon--color-red' },
+    Finished: { name: 'finished', color: 'icon--color-green' },
+    Negotiating: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
+    Verifying: { name: 'subtask-verifying', color: 'icon--color-gray' },
+    Downloading: { name: 'download', color: 'icon--color-blue' },
+    Restarted: { name: 'refresh', color: 'icon--color-blue' }
+};
