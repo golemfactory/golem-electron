@@ -40,7 +40,7 @@ const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
-    LUXRENDER: 'LuxRender'
+    BLENDER_NVGPU: 'Blender_NVGPU'
 })
 
 const mockFormatList = [
@@ -59,12 +59,6 @@ const presetSchema = {
             format: yup.string(),
             output_path: yup.string(),
             compositing: yup.bool()
-        }),
-    LuxRender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            output_path: yup.string(),
-            format: yup.string(),
-            sample_per_pixel: yup.number().min(1).required(),
         })
 }
 
@@ -237,14 +231,12 @@ export class TaskDetail extends React.Component {
                         concent: !!concent_enabled
                     })
 
-                    if ((type || this.state.type) === taskType.BLENDER) {
+                    if ((type || this.state.type).includes(taskType.BLENDER)) {
                         // compositingRef.checked = options.compositing
                         // this.setState({
                         //     compositing: options.compositing
                         // })
                         this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } else if ((type || this.state.type) === taskType.LUXRENDER) {
-                        haltspp.value = options.haltspp
                     }
 
                     if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
@@ -356,7 +348,7 @@ export class TaskDetail extends React.Component {
         if(!y)
                 return; 
 
-        if (this.props.task.type === taskType.BLENDER) {
+        if (this.props.task.type.includes(taskType.BLENDER)) {
             if(!frames)
                 return; 
 
@@ -619,14 +611,10 @@ export class TaskDetail extends React.Component {
 
         outputPath.value = output_path
 
-        if (this.props.task.type === taskType.BLENDER) {
+        if (this.props.task.type.includes(taskType.BLENDER)) {
 
             framesRef.value = frames
             //compositingRef.checked = compositing
-
-        } else if (this.props.task.type === taskType.LUXRENDER) {
-
-            haltspp.value = sample_per_pixel
 
         }
         this.setState({...preset.value, formatIndex})
@@ -892,6 +880,7 @@ export class TaskDetail extends React.Component {
 
         switch (type) {
         case taskType.BLENDER:
+        case taskType.BLENDER_NVGPU:
             formTemplate.push({
                 order: 2,
                 content: <div className="item-settings" key="2">
@@ -912,15 +901,6 @@ export class TaskDetail extends React.Component {
             //                 </div>
             //             </div>
             // })
-            break;
-        case taskType.LUXRENDER:
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
-                         </div>
-            })
             break;
         }
 
