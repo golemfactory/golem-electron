@@ -132,7 +132,7 @@ export class FooterMain extends Component {
             (checkNested(status, 'client', 'message')) 
                 ? status.client.message.length > 10
                     ? <br key="br"/>
-                    : ""
+                    : " "
                 : <br key="br"/>,
             connectionProblem.issue == "PORT" 
                 ? <span key="infoPorts" className="info__ports">
@@ -145,7 +145,7 @@ export class FooterMain extends Component {
                     ? <span key="infoPorts" className="info__ports">
                             connection dropped
                         </span> 
-                    : ""
+                    : " "
         ]
     }
 
