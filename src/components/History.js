@@ -223,7 +223,7 @@ export class History extends React.Component {
           )}
           <div className="tab__back">
             <span onClick={toggleTransactionHistory}>
-              <span className="icon-back-up" />
+              <span className="icon-back" />
               Back
             </span>
           </div>

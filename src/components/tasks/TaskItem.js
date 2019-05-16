@@ -297,7 +297,7 @@ export class TaskItem extends React.Component {
                                     placement="right"
                                     trigger="mouseenter">
                                     <span
-                                        className="icon-eye"
+                                        className="icon-preview"
                                         tabIndex="0"
                                         aria-label="Preview"
                                         onClick={this._togglePreview.bind(
@@ -310,7 +310,7 @@ export class TaskItem extends React.Component {
                                     content={<p>Task Details</p>}
                                     placement="right"
                                     trigger="mouseenter"
-                                    className="task-details-icon">
+                                    className="task-details">
                                     <RefLink item={item} />
                                 </Tooltip>
                                 <Tooltip
@@ -318,7 +318,7 @@ export class TaskItem extends React.Component {
                                     placement="right"
                                     trigger="mouseenter">
                                     <span
-                                        className="icon-progress-clockwise"
+                                        className="icon-refresh"
                                         tabIndex="0"
                                         aria-label="Restart Task"
                                         onClick={
@@ -339,7 +339,7 @@ export class TaskItem extends React.Component {
                                     placement="right"
                                     trigger="mouseenter">
                                     <span
-                                        className="icon-trash"
+                                        className="icon-delete"
                                         tabIndex="0"
                                         aria-label="Open Delete Task Popup"
                                         onClick={_handleDeleteModal}
@@ -373,7 +373,7 @@ const RefLink = forwardRef((props, ref) => {
             to={`/task/${props.item && props.item.id}`}
             tabIndex="0"
             aria-label="Task Details">
-            <span className="icon-info-small" />
+            <span className="icon-details" />
         </Link>
     );
 });

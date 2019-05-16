@@ -176,10 +176,9 @@ export default class CurrencyBox extends Component {
                                         : '-'}
                                 </span>
                                 <div>
-                                    <span
-                                        className={`icon-${
-                                            currencyIcons[suffix]
-                                        }`}
+                                    <img
+                                        src={currencyIcons[suffix]}
+                                        className="currency-logo"
                                     />
                                 </div>
                                 <div>
@@ -281,7 +280,7 @@ export default class CurrencyBox extends Component {
                                     <button
                                         className="btn--ghost wallet__btn-withdraw"
                                         onClick={() => this._toggleFlipper()}>
-                                        <span className="icon-info-small" />
+                                        <span className="icon-details" />
                                         Details
                                     </button>
                                     <button
@@ -298,7 +297,7 @@ export default class CurrencyBox extends Component {
                                             !isGolemReady(golemStatus) ||
                                             lockWithdraw
                                         }>
-                                        <span className="icon-withdraw" />
+                                        <span className="icon-download" />
                                         Withdraw
                                     </button>
                                 </div>
@@ -434,7 +433,7 @@ export default class CurrencyBox extends Component {
                                     <button
                                         className="btn--ghost wallet__btn-withdraw"
                                         onClick={() => this._toggleFlipper()}>
-                                        <span className="icon-back-up" />
+                                        <span className="icon-back" />
                                         Back
                                     </button>
                                 </div>

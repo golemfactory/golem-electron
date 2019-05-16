@@ -115,11 +115,12 @@
 			font-size: 14pt;
 		}
 
-		.icon-arrow-left-small,
-		.icon-arrow-right-small {
+		.icon-arrow-left,
+		.icon-arrow-right {
 			position: relative;
-			top: 11.5px;
-			font-size: 32pt;
+			top: 1px;
+			font-size: 14pt;
+			margin: 0 12px;
 			cursor: pointer;
 		}
 	}

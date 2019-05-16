@@ -9,7 +9,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: .5s all;
+            transition: 0.5s all;
             .info__task-item {
                 display: flex;
                 justify-content: space-between;
@@ -25,8 +25,8 @@
             .icon-blender,
             .icon-blender_nvgpu,
             .icon-blender_sgx {
-                font-size: 16pt;
-                padding: 11px 9px;
+                font-size: 24pt;
+                padding: 9px;
             }
             .icon-luxrender {
                 color: #f4ca1b;
@@ -70,7 +70,7 @@
                     font-weight: 400;
                 }
 
-                .info__task{
+                .info__task {
                     margin-top: 10px;
                     font-size: 7pt;
                 }
@@ -87,25 +87,24 @@
                 box-sizing: border-box;
             }*/
 
-            .control-panel__task{
+            .control-panel__task {
                 height: 100%;
-                display:flex;
+                display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
-
             }
-            
-            .icon-eye,
-            .icon-progress-clockwise,
-            .icon-trash,
-            .icon-info-small {
+
+            .icon-preview,
+            .icon-refresh,
+            .icon-delete,
+            .icon-details {
                 box-sizing: border-box;
                 font-size: 9pt;
                 color: $color-text3;
                 cursor: pointer;
                 visibility: hidden;
-                transition: .5s color;
+                transition: 0.5s color;
 
                 &:hover {
                     color: $color-text;
@@ -113,33 +112,33 @@
 
                 &[disabled] {
                     cursor: not-allowed;
-                    &:hover { 
-                        color: $color-text3; 
+                    &:hover {
+                        color: $color-text3;
                     }
                 }
             }
 
-            &:hover .icon-eye,
-            &:hover .icon-trash,
-            &:hover .icon-progress-clockwise,
-            &:hover .icon-info-small {
+            &:hover .icon-preview,
+            &:hover .icon-delete,
+            &:hover .icon-refresh,
+            &:hover .icon-details {
                 visibility: visible;
             }
 
-            .icon-progress-clockwise{
-                font-size: 9pt;
-                margin: 0 0 2px 0;
+            .icon-refresh {
+                font-size: 8.5pt;
+                margin: 2px 0 2px 0;
             }
 
-            .icon-eye{
+            .icon-delete {
                 font-size: 11pt;
             }
 
-            .icon-info-small{
-                font-size: 14pt;
+            .icon-preview {
+                font-size: 10pt;
             }
 
-            .icon--active{
+            .icon--active {
                 color: $color-text;
             }
 
@@ -147,11 +146,11 @@
                 border-left: 5px solid $button-static-color;
             }
 
-            .bumper{
+            .bumper {
                 margin: 0 3px;
             }
 
-            .task-details-icon{
+            .task-details-icon {
                 height: 16px;
                 margin-top: -4px;
             }

@@ -1,5 +1,18 @@
 import React from "react";
+import Lottie from "react-lottie";
+
+import animData from "./../../../assets/anims/restart-task";
+
 import { taskStatus } from "./../../../constants/statusDicts";
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
 
 export default class RestartModal extends React.Component {
     constructor(props) {
@@ -35,8 +48,8 @@ export default class RestartModal extends React.Component {
         return (
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
-                    <div>
-                        <span className="icon-progress-clockwise" />
+                    <div className="image-container">
+                        <Lottie options={defaultOptions} />
                     </div>
                     <span className="title__restart-modal">
                         Task restart options

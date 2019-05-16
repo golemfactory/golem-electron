@@ -126,7 +126,7 @@ export class Wallet extends Component {
                                         <br />
                                         for computations.
                                         <br />
-                                        <a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">
+                                        <a href="https://docs.golem.network/#/About/FAQ?id=why-do-i-need-gnt-and-eth">
                                             Learn more
                                         </a>
                                     </p>
@@ -137,7 +137,7 @@ export class Wallet extends Component {
                                         It is earned and/or paid for
                                         computations.
                                         <br />
-                                        <a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">
+                                        <a href="https://docs.golem.network/#/About/FAQ?id=can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-beta-stage">
                                             Learn more
                                         </a>
                                     </p>
@@ -189,7 +189,7 @@ export class Wallet extends Component {
                                         <br />
                                         transaction fees.
                                         <br />
-                                        <a href="https://golem.network/documentation/12-why-do-i-need-gnt-and-eth/#gnt">
+                                        <a href="https://docs.golem.network/#/About/FAQ?id=why-do-i-need-gnt-and-eth">
                                             Learn more
                                         </a>
                                     </p>
@@ -199,7 +199,7 @@ export class Wallet extends Component {
                                         <br />
                                         It is used for transaction fees.
                                         <br />
-                                        <a href="https://github.com/golemfactory/golem/wiki/FAQ#can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-alpha-test">
+                                        <a href="https://docs.golem.network/#/About/FAQ?id=can-i-deposit-and-withdraw-real-gnt-and-eth-during-the-beta-stage">
                                             Learn more
                                         </a>
                                     </p>
@@ -264,7 +264,7 @@ export class Wallet extends Component {
                         />
                         <span
                             className={`icon-${
-                                addressCopied ? "checkmark" : "copy"
+                                addressCopied ? "confirmation" : "copy"
                             }`}
                             onClick={this._handleCopyToClipboard.bind(
                                 this,
