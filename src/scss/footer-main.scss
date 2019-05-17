@@ -25,9 +25,9 @@
             margin-top: 40px;
 
             .item__status {
-                width: 210px;
-                @include flex;
-                justify-content: space-between;
+                width: 250px;
+                display: grid;
+                grid-template-columns: auto auto;
                 font-size: 8pt;
                 line-height: 1.8em;
             }
