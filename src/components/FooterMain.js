@@ -33,13 +33,13 @@ function isGolemConnected(gs) {
         !!gs.status &&
         !!gs.message &&
         gs.status === "Ready" &&
-        gs.message.toLowerCase().includes("node")
+        gs.message.includes("Connected")
     );
 }
 
 function isGolemConnecting(isEngineOn, status) {
     return (
-        checkNested(status, "client", "status") &&
+        status?.client?.status &&
         status.client.status !== "Ready" &&
         isEngineOn
     );
@@ -102,12 +102,12 @@ export class FooterMain extends Component {
     };
 
     //TODO re-write it cleaner
-    golemDotClass(_golemStatus, _connectionProblem) {
-        if (_golemStatus && isGolemConnected(_golemStatus)) {
-            return _connectionProblem && _connectionProblem.status
+    golemDotClass(status, connectionProblem) {
+        if (status && isGolemConnected(status)) {
+            return connectionProblem?.status
                 ? "yellow"
                 : "green";
-        } else if (_golemStatus && _golemStatus.status !== "Exception") {
+        } else if (status?.status !== "Exception") {
             return "yellow";
         }
         return "red";
@@ -157,7 +157,7 @@ export class FooterMain extends Component {
     _fetchState(stat) {
         if (stat) {
             let state = stat.status;
-            if (checkNested(stat, "environment")) {
+            if (stat?.environment) {
                 state += this._fetchEnvironment(stat.environment);
             }
             return state;
@@ -175,7 +175,7 @@ export class FooterMain extends Component {
 
     _loadConnectionError(status, connectionProblem) {
         return [
-            checkNested(status, "client", "message") ? (
+            status?.client?.message ? (
                 status.client.message.length > 10 ? (
                     <br key="br" />
                 ) : (
@@ -213,8 +213,7 @@ export class FooterMain extends Component {
             version
         } = this.props;
         const versionTemplate =
-            version &&
-            (version.error
+            (version?.error
                 ? version.message
                 : `${version.message}${version.number}`);
         return (
@@ -235,12 +234,24 @@ export class FooterMain extends Component {
                             <span>
                                 <span className="status-message">
                                     <span>
-                                        {checkNested(
-                                            status,
-                                            "client",
-                                            "message"
-                                        ) ? (
-                                            status.client.message
+                                        {status?.client?.message
+                                         ? (
+                                            isGolemConnecting(isEngineOn, status)
+                                            ? <span>
+                                                {status.client.message}
+                                                <Tooltip
+                                                    content={
+                                                        <p className="info__connection">
+                                                        The process may take a few seconds.<br/>
+                                                        When all connection statuses are green<br/>
+                                                        then app will properly connect.
+                                                        </p>}
+                                                    placement="top"
+                                                    trigger="mouseenter">
+                                                    <span className="icon-question-mark"/>
+                                                </Tooltip>
+                                            </span>
+                                            : status.client.message
                                         ) : (
                                             <span>
                                                 Loading
@@ -266,9 +277,10 @@ export class FooterMain extends Component {
                                         </span>
                                     )}
                                 </span>
-                                {status.client &&
-                                    checkNested(status, "client", "message") &&
-                                    this._loadErrorUrl(status.client.message)}
+                                {
+                                    status?.client?.message &&
+                                    this._loadErrorUrl(status.client.message)
+                                }
                                 {this._loadConnectionError(
                                     status,
                                     connectionProblem
@@ -321,64 +333,56 @@ export class FooterMain extends Component {
                                             position: props.position
                                         }}
                                         className="status-node__loading">
-                                    {checkNested(status, "client", "status") &&
-                                    status.client.status !== "Exception" ? (
+                                    {
+                                        status?.client?.status &&
+                                        status.client.status !== "Exception" ? (
                                         <div className="status__components">
                                             <div className="item__status">
                                                 <div>
-                                                    <span className="component-dot component-dot--blue" />
+                                                    <span className={`component-dot component-dot--${this.golemDotClass(
+                                                        status?.hyperdrive,
+                                                        connectionProblem
+                                                    )}`} />
                                                     <span>Hyperg: </span>
                                                 </div>
                                                 <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "hyperdrive",
-                                                        "message"
-                                                    ) &&
-                                                        status.hyperdrive
-                                                            .message}
+                                                    {status?.hyperdrive?.message}
                                                 </span>
                                             </div>
                                             <div className="item__status">
                                                 <div>
-                                                    <span className="component-dot component-dot--grey" />
+                                                    <span className={`component-dot component-dot--${this.golemDotClass(
+                                                        status?.hypervisor,
+                                                        connectionProblem
+                                                    )}`} />
                                                     <span>Hypervisor: </span>
                                                 </div>
                                                 <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "hypervisor",
-                                                        "message"
-                                                    ) &&
-                                                        status.hypervisor
-                                                            .message}
+                                                    {status?.hypervisor?.message}
                                                 </span>
                                             </div>
                                             <div className="item__status">
                                                 <div>
-                                                    <span className="component-dot component-dot--yellow" />
+                                                    <span className={`component-dot component-dot--${this.golemDotClass(
+                                                        status?.docker,
+                                                        connectionProblem
+                                                    )}`} />
                                                     <span>Docker: </span>
                                                 </div>
                                                 <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "docker",
-                                                        "message"
-                                                    ) && status.docker.message}
+                                                    {status?.docker?.message}
                                                 </span>
                                             </div>
                                             <div className="item__status">
                                                 <div>
-                                                    <span className="component-dot component-dot--green" />
+                                                    <span className={`component-dot component-dot--${this.golemDotClass(
+                                                        status?.ethereum,
+                                                        connectionProblem
+                                                    )}`} />
                                                     <span>Geth: </span>
                                                 </div>
                                                 <span>
-                                                    {checkNested(
-                                                        status,
-                                                        "ethereum",
-                                                        "message"
-                                                    ) &&
-                                                        status.ethereum.message}
+                                                    {status?.ethereum?.message}
                                                 </span>
                                             </div>
                                         </div>

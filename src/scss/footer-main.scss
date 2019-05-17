@@ -86,6 +86,13 @@
 
         .status-message {
             line-height: 1.5em;
+            .icon-question-mark {
+                position: relative;
+                font-size: 7pt;
+                color: $color-text3;
+                margin-left: 5px;
+                bottom: 5px;
+            }
         }
 
         .info__ports {
@@ -208,4 +215,8 @@
             display: block;
         }
     }
+}
+
+.info__connection {
+    font-size: 7pt;
 }
