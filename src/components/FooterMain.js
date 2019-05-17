@@ -214,8 +214,8 @@ export class FooterMain extends Component {
         } = this.props;
         const versionTemplate =
             (version?.error
-                ? version.message
-                : `${version.message}${version.number}`);
+                ? version?.message || ''
+                : `${version?.message || ''}${version?.number || ''}`);
         return (
             <div
                 className={`content__footer-main ${isGolemConnecting(
