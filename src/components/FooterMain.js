@@ -181,7 +181,7 @@ export class FooterMain extends Component {
         }
     }
 
-    _loadConnectionWarnings(status, connectionProblem, componentWarnings) {
+    _loadConnectionWarnings(status, connectionProblem, componentWarnings = []) {
         let warningMessage = "";
         const newLineBeforeWarning = 
             status?.client?.message.length > 10 
