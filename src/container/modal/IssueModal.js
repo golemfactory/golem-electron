@@ -38,9 +38,7 @@ export class IssueModal extends React.Component {
                 !parent.isEqualNode(event.target);
             if (!isClickInside) {
                 //the click was outside the parent, do something
-                if (connectionProblem.issue === knownIssues.PORT)
-                    this.props.actions.skipPortError();
-                else this.props.actions.setUpdateSeen();
+                this.props.actions.setUpdateSeen();
                 this._handleCancel();
             }
         }
@@ -66,20 +64,6 @@ export class IssueModal extends React.Component {
 
     showIssue(_report) {
         switch (_report.issue) {
-            case knownIssues.PORT:
-                return (
-                    <div className="content__modal">
-                        <div className="container-icon">
-                            <span className="icon-warning" />
-                        </div>
-                        <span>
-                            Golem is having trouble connecting. <br />
-                            You may need to check your router ports. <br />
-                            Please check the <a href={DOCLINK}>docs</a> for
-                            help.
-                        </span>
-                    </div>
-                );
             case knownIssues.WEBSOCKET:
                 return (
                     <div className="content__modal">

@@ -131,6 +131,7 @@ export let dict = Object.freeze({
     SET_CONCENT_TERMS_STATUS: 'SET_CONCENT_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
+    SET_COMPONENT_WARNING: 'SET_COMPONENT_WARNING',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
 })
 
@@ -253,6 +254,7 @@ const {
     SET_CONCENT_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM, 
+    SET_COMPONENT_WARNING,
     SET_FILE_CHECK} = dict
 
 export const updateNodeName = (payload) => ({
@@ -802,6 +804,11 @@ export const setConcentTermsStatus = (payload) => ({
 
 export const setConnectionProblem = (payload) => ({
     type: SET_CONNECTION_PROBLEM,
+    payload
+})
+
+export const setComponentWarning = (payload) => ({
+    type: SET_COMPONENT_WARNING,
     payload
 })
 

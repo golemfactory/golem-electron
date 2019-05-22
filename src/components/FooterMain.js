@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import Tooltip from '@tippy.js/react';
 import Lottie from 'react-lottie';
 import { Transition, animated, interpolate } from 'react-spring/renderprops.cjs';
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
 import * as Actions from "./../actions";
-import { getStatus, getPasswordModalStatus } from "./../reducers";
+import { getStatus, getPasswordModalStatus, getComponentWarnings } from "./../reducers";
 import animData from "./../assets/anims/wave.json";
 
 import LoaderBar from "./LoaderBar";
@@ -27,6 +28,7 @@ const defaultOptions = {
 };
 
 /*############# HELPER FUNCTIONS ############# */
+
 
 function isGolemConnected(gs) {
     return (
@@ -49,6 +51,7 @@ const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
     status: getStatus(state, "golemStatus"),
     passwordModal: getPasswordModalStatus(state, "passwordModal"),
+    componentWarnings: getComponentWarnings(state, 'componentWarnings'),
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
@@ -87,6 +90,10 @@ export class FooterMain extends Component {
         }
     }
 
+    shouldComponentUpdate(nextProps, nextState) {
+        return !(isEqual(nextProps, this.props) && isEqual(nextState, this.state))
+    }
+
     _golemize = () => {
         const {
             actions,
@@ -102,9 +109,10 @@ export class FooterMain extends Component {
     };
 
     //TODO re-write it cleaner
-    golemDotClass(status, connectionProblem) {
+    golemDotClass(status, connectionProblem, componentWarnings = []) {
         if (status && isGolemConnected(status)) {
-            return connectionProblem?.status
+            return (connectionProblem?.status ||
+                    componentWarnings.length > 0)
                 ? "yellow"
                 : "green";
         } else if (status?.status !== "Exception") {
@@ -173,37 +181,53 @@ export class FooterMain extends Component {
         }
     }
 
-    _loadConnectionError(status, connectionProblem) {
-        return [
-            status?.client?.message ? (
-                status.client.message.length > 10 ? (
-                    <br key="br" />
+    _loadConnectionWarnings(status, connectionProblem, componentWarnings) {
+        let warningMessage = "";
+        const newLineBeforeWarning = 
+            status?.client?.message.length > 10 
+                ? <br key="br" /> 
+                : (" ")
+
+        if(connectionProblem.status)
+             warningMessage = connectionProblem.issue == "WEBSOCKET" ? (
+                    <span key="warningWebsocket" className="info__warnings">
+                        connection dropped
+                    </span>
                 ) : (
                     " "
                 )
-            ) : (
-                <br key="br" />
-            ),
-            connectionProblem.issue == "PORT" ? (
-                <span key="infoPorts" className="info__ports">
-                    problem with ports
-                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
-                        <span className="icon-new-window" />
-                    </a>
-                </span>
-            ) : connectionProblem.issue == "WEBSOCKET" ? (
-                <span key="infoPorts" className="info__ports">
-                    connection dropped
-                </span>
-            ) : (
-                " "
-            )
-        ];
+        else if(componentWarnings.length > 0)
+            warningMessage = <span key="warningComponent" className="info__warnings">
+                                {componentWarnings.length} issues
+                                <Tooltip
+                                    interactive
+                                    className="tooltip__warning-component"
+                                    content={
+                                        <p className="info__connection">
+                                            {componentWarnings.map( (item, index) => 
+                                                <span key={index.toString()}>
+                                                    <span className="icon-status-dot"/>
+                                                    You don't have enough {item.issue}
+                                                    <span className="icon-new-window"/>
+                                                </span>
+                                            )}
+                                        </p>}
+                                    distance={status?.client?.message.length > 10 ? 40 : 30}
+                                    placement="top"
+                                    trigger="mouseenter"
+                                    theme="light"
+                                    showOnInit>
+                                    <span className="icon-warning-small"/>
+                                </Tooltip>
+                            </span>
+
+            return [newLineBeforeWarning, warningMessage];
     }
 
     render() {
         const {
             status,
+            componentWarnings,
             connectionProblem,
             isEngineOn,
             stats,
@@ -212,6 +236,7 @@ export class FooterMain extends Component {
             passwordModal,
             version
         } = this.props;
+
         const versionTemplate =
             (version?.error
                 ? version?.message || ''
@@ -227,7 +252,8 @@ export class FooterMain extends Component {
                         <span
                             className={`progress-status indicator-status indicator-status--${this.golemDotClass(
                                 status.client,
-                                connectionProblem
+                                connectionProblem,
+                                componentWarnings
                             )}`}
                         />
                         <div>
@@ -281,9 +307,10 @@ export class FooterMain extends Component {
                                     status?.client?.message &&
                                     this._loadErrorUrl(status.client.message)
                                 }
-                                {this._loadConnectionError(
+                                {this._loadConnectionWarnings(
                                     status,
-                                    connectionProblem
+                                    connectionProblem,
+                                    componentWarnings
                                 )}
                             </span>
                             <Transition

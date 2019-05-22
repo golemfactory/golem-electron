@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import createCachedSelector from 're-reselect';
+import { some } from 'lodash';
 import { dict } from './../actions';
 import checkNested from './../utils/checkNested';
 const { ipcRenderer, remote } = window.electron;
@@ -59,7 +60,8 @@ const password = {
 const statusDict = {
     READY: 'Ready',
     NOTREADY: 'Not Ready',
-    EXCEPTION: 'Exception'
+    EXCEPTION: 'Exception',
+    WARNING: 'Warning'
 };
 
 let badgeActive = false;
@@ -202,6 +204,12 @@ const messages = {
             post: 'Docker VM restored',
             exception: 'Error restoring Docker VM'
         },
+        'vm.setup': {
+            warning: ''
+        },
+        'vm.start': {
+            warning: ''
+        },
         'vm.stop': {
             pre: 'Creating Docker VM',
             post: 'Docker VM created',
@@ -300,6 +308,9 @@ function getGolemStatus(component, method, stage, data) {
         result.status = statusDict.EXCEPTION;
     } else if (stage == 'post') {
         result.status = statusDict.READY;
+    } else if (stage == 'warning') {
+        result.status = statusDict.WARNING;
+        result.data = data;
     } else
         try {
             result.status = statusDict.NOTREADY;
@@ -316,7 +327,6 @@ export const getStatusSelector = createCachedSelector(
     state => state.isEngineOn,
     (state, key) => key,
     (golemStatus, connectedPeers, isEngineOn, key) => {
-        console.log('golemStatus', golemStatus);
         let statusObj = objectMap(golemStatus[0], (status, component) =>
             getGolemStatus.apply(null, [component].concat(status))
         );
@@ -408,3 +418,36 @@ export const concentDepositStatusSelector = createCachedSelector(
 )(
     (state, key) => key // Cache selectors by type name
 );
+
+export const componentWarningSelector = createCachedSelector(
+    state => state,
+    state => state.componentWarnings,
+    (state, key) => key,
+    (state, componentWarnings, key) => {
+        const currentStatus = getStatusSelector(state, 'golemStatus');
+        const hypervisorData = currentStatus?.hypervisor?.data;
+        
+        addWarning(hypervisorData, 'smb_blocked', componentWarnings, 'PORT');
+        addWarning(hypervisorData, 'lowered_memory', componentWarnings, 'RAM');
+        addWarning(hypervisorData, 'low_diskspace', componentWarnings, 'DISK');
+
+        return componentWarnings;
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);
+
+function addWarning(data, title, componentWarnings, unit){
+            if (
+                data?.status == title &&
+                !some(componentWarnings, {
+                    status: true,
+                    issue: unit
+                })
+            ) {
+                componentWarnings.push({
+                    status: true,
+                    issue: unit
+                });
+            }
+        }

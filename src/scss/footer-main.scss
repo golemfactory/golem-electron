@@ -27,7 +27,7 @@
             .item__status {
                 width: 250px;
                 display: grid;
-                grid-template-columns: auto auto;
+                grid-template-columns: 90px auto;
                 font-size: 8pt;
                 line-height: 1.8em;
             }
@@ -95,10 +95,16 @@
             }
         }
 
-        .info__ports {
+        .info__warnings {
             font-size: 9pt;
             color: $color-text3;
-            margin-left: 5px;
+            .icon-warning-small{
+                position: relative;
+                font-size: 12pt;
+                color: $color-primary;
+                cursor: pointer;
+                bottom: -2px;
+            }
         }
 
         .status-node {
@@ -135,7 +141,7 @@
             height: 10px;
             border-radius: 50%;
             margin-bottom: -1px;
-            margin-left: -23px;
+            margin-left: -20px;
             margin-right: 13px;
 
             &--blue {
@@ -218,5 +224,25 @@
 }
 
 .info__connection {
-    font-size: 7pt;
+    font-size: 9pt;
 }
+
+.tooltip__warning-component {
+    width: 500px;
+    text-align: left;
+    .icon-status-dot {
+        position: relative;
+        bottom: -1px;
+        margin-left: 5px;
+        margin-right: 10px;
+        color: $color-accent2;
+    }
+    .icon-new-window {
+        position: relative;
+        bottom: -1px;
+        margin-left: 1px;
+        color: $color-primary;
+        font-size: 10pt;
+        cursor: pointer;
+    }
+}   
