@@ -19,7 +19,7 @@
 		display: none;
 	}
 
-	.last-update{
+	.last-update {
 		display: none;
 	}
 
@@ -29,33 +29,25 @@
 		font-size: 9pt;
 		line-height: 1.5;
 		text-align: left;
-
-		&:first-child {
-			font-weight: 500;
-			font-size: 11pt;
-		}
 	}
 
-	span[class^="icon"][class$="logo"] {
+	.amount:first-child {
+		font-weight: 500;
+		font-size: 11pt;
+	}
+
+	.currency-logo {
 		display: inline;
-		font-size: 28pt;
+		width: 40px;
+		background: $color-text4;
+		border: 0.5px solid $color-border;
+		box-sizing: border-box;
+
 		color: $color-text4;
 		border-radius: 50%;
-		padding: 1px;
+		padding: 5px;
 		transition: 0.8s all;
-		margin-right: 5px;
-	}
-
-	.icon-golem-logo {
-		background: $color-text4;
-		border: 0.5px solid $color-border;
-		box-sizing: border-box;
-	}
-
-	.icon-ethereum-logo {
-		background: $color-text4;
-		border: 0.5px solid $color-border;
-		box-sizing: border-box;
+		margin: 10px;
 	}
 
 	.locked-amount,
@@ -109,19 +101,19 @@
 		border: 1px solid $color-border;
 	}
 
-	span[class^="icon"][class$="logo"] {
+	.currency-logo {
 		display: block;
-		font-size: 36pt;
 		border: 0;
-		margin: 5px 0 0 0;
-		height: 55px;
+		margin: 15px 0 0 0;
+		height: 50px;
+		width: 50px;
 	}
 
 	span {
 		text-align: center;
 	}
 
-	.last-update{
+	.last-update {
 		display: block;
 		position: absolute;
 		left: 5px;
@@ -149,7 +141,7 @@
 		font-size: 7pt;
 		line-height: 0.8em;
 	}
-	
+
 	.locked-amount,
 	.unconverted-amount {
 		@include flex;
@@ -168,7 +160,7 @@
 		}
 	}
 
-	.unconverted-amount{
+	.unconverted-amount {
 		height: 10px;
 	}
 
@@ -221,7 +213,7 @@
 			transform: rotateY(0deg);
 			margin-left: 0;
 
-			.action-menu{
+			.action-menu {
 				margin-right: 10px;
 			}
 		}
@@ -245,12 +237,6 @@
 
 			.action-menu {
 				margin-bottom: 10px;
-
-				.icon-back-up{
-					transform: rotate(-90deg);
-					margin-left: 10px;
-					margin-top: 2px;
-				}
 			}
 		}
 	}
@@ -259,7 +245,7 @@
 		transform: rotateY(180deg);
 	}
 
-	.container__currency-box{
+	.container__currency-box {
 		height: auto;
 		margin-top: 0;
 	}
@@ -323,7 +309,6 @@
 		&:first-of-type {
 			margin-bottom: 4px;
 		}
-
 
 		.icon-question-mark {
 			position: relative;

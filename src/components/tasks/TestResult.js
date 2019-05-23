@@ -251,7 +251,7 @@ class TestResult extends Component {
                 {isDetailPage && (
                     <div className="panel-preview__task-detail">
                         <Link to="/tasks" aria-label="Back button to task list">
-                            <span className="icon-arrow-left-small" />
+                            <span className="icon-back" />
                             <span>Back</span>
                         </Link>
                     </div>
