@@ -10,7 +10,15 @@
 
         .amount {
           &__panel {
-            //todo check for double amount missing
+            @include flex;
+            width: 100%;
+          }
+
+          &__item {
+            width: 95%;
+            & + .amount__item {
+              margin-left: 5%;
+            }
           }
 
           &__missing {
@@ -43,33 +51,5 @@
         word-wrap: break-word;
         white-space: pre-wrap;
         width: 320px;
-    }
-
-@keyframes heartbeat
-    {
-      0%
-      {
-        transform: scale( 1 );
-      }
-      20%
-      {
-        transform: scale( 1 );
-      }
-      40%
-      {
-        transform: scale( .75 );
-      }
-      60%
-      {
-        transform: scale( 1 );
-      }
-      80%
-      {
-        transform: scale( .75 );
-      }
-      100%
-      {
-        transform: scale( 1 );
-      }
     }
 }

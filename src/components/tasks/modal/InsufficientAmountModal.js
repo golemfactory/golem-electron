@@ -32,6 +32,7 @@ export default class InsufficientAmountModal extends React.Component {
     render() {
         const { message } = this.props;
         const { error_details, error_msg, error_type } = message;
+        
         return (
             <div className="container__modal container__task-error-modal">
                 <div className="content__modal">
@@ -42,10 +43,10 @@ export default class InsufficientAmountModal extends React.Component {
                         You {error_details ? "don't have enough funds to" : "cannot"} send this task to the
                         network.
                     </span>
-                    <div>
+                    <div className="amount__panel">
                         {error_details ? (
                             error_details?.missing_funds.map(item => (
-                                <div className="amount__panel">
+                                <div className="amount__item" key={item.currency}>
                                     <div>
                                         <span className="amount__missing">
                                             {new BigNumber(item.required)
