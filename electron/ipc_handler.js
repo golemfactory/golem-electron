@@ -28,7 +28,7 @@ function ipcHandler(
     });
 
     ipcMain.on('open-file', (event, filePath, openParentFolder = false) => {
-        filePath = path.normalize(filePath.replace(/ /g, '\\ '));
+        filePath = path.normalize(filePath);
         openParentFolder
             ? shell.showItemInFolder(filePath)
             : shell.openItem(filePath);

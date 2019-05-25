@@ -207,7 +207,6 @@ export class TaskItem extends React.Component {
             psId
         } = this.props;
 
-        console.log('item', item);
         const { toggledList } = this.state;
         const { options } = item;
         return (

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-const { ipcRenderer, clipboard } = window.electron;
+const { ipcRenderer } = window.electron;
 
 const NodeRow = ({ item, showBlockNodeModal }) => {
 	const _handleOpenFile = (path, parentFolder) =>
