@@ -13,7 +13,7 @@ const NodeTable = ({ list, showBlockNodeModal }) => {
 					<th scope="col">Status</th>
 					<th scope="col">Node Name</th>
 					<th scope="col">Logs</th>
-					<th scope="col">Block/Unblock</th>
+					<th scope="col">Block</th>
 				</tr>
 			</thead>
 			<tbody>

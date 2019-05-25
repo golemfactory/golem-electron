@@ -66,7 +66,7 @@ class SubtaskItem extends React.PureComponent {
 						{recentInfo?.progress * 100 || 0}%
 						<span className="bumper" />
 						<b>State: </b>{' '}
-						{<span className={`icon-${ICONS[recentInfo?.status].name} ${ICONS[recentInfo?.status].color}`}/>|| 'Not started'}
+						{<span className={`icon-${ICONS[recentInfo?.status]?.name} ${ICONS[recentInfo?.status]?.color}`}/>|| 'Not started'}
 					</label>
 					<div className="checkbox-item__action">
 						<span className="icon-refresh" onClick={this._handleRestartModal.bind(this, recentInfo?.subtask_id)}/>

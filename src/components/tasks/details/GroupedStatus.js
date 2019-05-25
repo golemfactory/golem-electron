@@ -16,6 +16,13 @@ function addUniq(arr, object, key) {
 
 const fillRestGroups = function(gs) {
 	gs.forEach(item => {
+		if(item.status == 'Starting'){
+			item.status = 'Negotiating'
+		}
+		if(item.status == 'Not started'){
+			item.status = 'Waiting'
+		}
+		
 		addUniq(gs, item, 'status');
 	});
 
@@ -48,8 +55,8 @@ const GroupedStatus = ({ subtasksList }) => {
 				groupedStatuses.map((item, key) => (
 					<span key={key}>
 						<span
-							className={`icon-${ICONS[item.status].name} ${
-								ICONS[item.status].color
+							className={`icon-${ICONS[item.status]?.name} ${
+								ICONS[item.status]?.color
 							}`}
 						/>
 						{item.status}: {item.count}

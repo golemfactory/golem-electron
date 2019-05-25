@@ -488,6 +488,7 @@ input[type='number']::-webkit-inner-spin-button {
         margin: 0 5px;
         background-clip: content-box;
         cursor: pointer;
+        transition: .2s background-color;
     }
 
     .checkbox-item {

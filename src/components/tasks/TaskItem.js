@@ -14,6 +14,7 @@ import * as Actions from '../../actions';
 import Preview from './Preview';
 import Details from './details';
 import ConditionalRender from '../hoc/ConditionalRender';
+const { ipcRenderer } = window.electron;
 
 const ETH_DENOM = 10 ** 18;
 
@@ -75,6 +76,8 @@ export class TaskItem extends React.Component {
     _toggleDetail({ id }, evt) {
         this._toggle(id, evt, 'detail');
     }
+
+    _openLogs = path => ipcRenderer.send('open-file', path);
 
     /**
      * [_fetchStatus func. populate status of the task]
@@ -203,6 +206,8 @@ export class TaskItem extends React.Component {
             _handleDeleteModal,
             psId
         } = this.props;
+
+        console.log('item', item);
         const { toggledList } = this.state;
         const { options } = item;
         return (
@@ -365,8 +370,12 @@ export class TaskItem extends React.Component {
                                                     className="icon-folder"
                                                     tabIndex="0"
                                                     aria-label="Open Delete Task Popup"
-                                                    onClick={
-                                                        _handleDeleteModal
+                                                    onClick={this._openLogs.bind(
+                                                        null,
+                                                        options.output_path
+                                                    )}
+                                                    disabled={
+                                                        !options.output_path
                                                     }>
                                                     <span className="info-label">
                                                         Output
