@@ -151,9 +151,11 @@ class OnboardIndex extends React.Component {
     }
 
     componentDidMount() {
-        this._keypressListener = event => {
+        this._keydownListener = event => {
             if (
-                event.key === 'Enter' &&
+                (event.keyCode === 13 || //Enter keycode
+                //Arrow will be used to manage cursor in input in nodename step
+                (event.keyCode === 39 && this.state.currentStep !== steps.STEP4)) &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
                 this.state.currentStep !== steps.STEP4 &&
@@ -161,12 +163,24 @@ class OnboardIndex extends React.Component {
             ) {
                 this._handleNext.call(this);
             }
+
+            if (
+                (event.keyCode === 27 || //ESC keycode
+                //Arrow will be used to manage cursor in input in nodename step
+                (event.keyCode === 37 && this.state.currentStep !== steps.STEP4)) &&
+                this.state.currentStep !== steps.WELCOME &&
+                this.state.currentStep !== steps.REGISTER &&
+                this.state.currentStep !== steps.TERMS &&
+                this.props.isConnected
+            ) {
+                this._handlePrev.call(this);
+            }
         };
-        document.addEventListener('keypress', this._keypressListener);
+        document.addEventListener('keydown', this._keydownListener);
     }
 
     componentWillUnmount() {
-        document.removeEventListener('keypress', this._keypressListener);
+        document.removeEventListener('keydown', this._keydownListener);
         this.transitionTimeout && clearTimeout(this.transitionTimeout);
     }
 
