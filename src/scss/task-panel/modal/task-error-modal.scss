@@ -1,6 +1,6 @@
 .container__task-error-modal {
     .content__modal {
-        height: 420px;
+        height: auto;
         text-align: center;
         padding: 20px;
         .image-container {
@@ -12,6 +12,7 @@
           &__panel {
             @include flex;
             width: 100%;
+            margin: 30px 0;
           }
 
           &__item {
@@ -36,6 +37,10 @@
           margin-top: 10px;
           color: $color-text2;
         }
+
+        .radio-group{
+          padding: 0 !important;
+        }
     }
 
     .info{
@@ -45,7 +50,7 @@
 
     .message-from-server{
         box-sizing: border-box;
-        margin: 10px -20px;
+        margin: 20px -20px;
         padding: 10px;
         background: $color-bg;
         word-wrap: break-word;
