@@ -1186,7 +1186,7 @@ export class TaskDetail extends React.Component {
                 </form>
                 {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
-                {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
+                {!depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && 
