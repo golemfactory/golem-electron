@@ -9,15 +9,15 @@ export default class DepositTimeModal extends React.Component {
     }
 
     _toggleConcentTaskSwitch = () => {
-        this.setState({
-            isTaskWithoutConcent: !this.state.isTaskWithoutConcent
-        });
+        this.setState( prevState => ({
+            isTaskWithoutConcent: !prevState.isTaskWithoutConcent
+        }));
     };
 
     _handleCancel = () => this.props.closeModal("depositTimeModal");
 
     _handleApply = () => {
-        this.props.createTaskOnHighGas(!this.state.isTaskWithoutConcent);
+        this.props.createTaskOnHighGas(!this.state.isTaskWithoutConcent, true);
     };
 
     render() {

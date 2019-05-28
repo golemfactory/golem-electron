@@ -795,10 +795,10 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _createTaskOnHighGas = (isConcentOn) => {
+    _createTaskOnHighGas = (isConcentOn, depositTime) => {
         this.setState({
             concent: isConcentOn,
-            isDepositimeApplied: true
+            isDepositimeApplied: depositTime
         }, this._handleStartTaskButton)
     }
 
@@ -1183,7 +1183,12 @@ export class TaskDetail extends React.Component {
                 {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
-                {(insufficientAmountModal && insufficientAmountModal.result) && <InsufficientAmountModal message={insufficientAmountModal.message} closeModal={this._closeModal}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && 
+                    <InsufficientAmountModal 
+                        message={insufficientAmountModal.message} 
+                        closeModal={this._closeModal} 
+                        createTaskConditionally={this._createTaskOnHighGas}/>
+                }
             </div>
         );
     }

@@ -20,8 +20,8 @@ export default class InsufficientAmountModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            withConcent: false
-        }
+            withConcent: true
+        };
 
         this._initContent = this._initContent.bind(this);
     }
@@ -31,18 +31,24 @@ export default class InsufficientAmountModal extends React.Component {
      */
     _handleCancel = () => this.props.closeModal('insufficientAmountModal');
 
-    _handleTopUp = () => window.routerHistory.push('/');
+    _handleTopUp = () => window.routerHistory.push('/wallet');
 
-    _handleRetry = () => window.routerHistory.push('/tasks');
+    _handleApply = () => {
+        if (this.state.withConcent) {
+            this._handleTopUp();
+        } else {
+            this.props.createTaskConditionally(false, false);
+            this._handleCancel();
+        }
+    };
 
-    _handleStart = () => console.info('created!');
-
-    _handleConcentCheckbox = e => this.setState({withConcent: e.target.value});
+    _handleConcentCheckbox = e =>
+        this.setState({ withConcent: e.target.value == 'true' });
 
     _initContent(message) {
         const { error_details, error_msg, error_type } = message;
 
-        const createFundsInfo = (missing_funds) => {
+        const createFundsInfo = missing_funds => {
             const result = [
                 <div className="amount__panel" key="amountPanel">
                     {missing_funds.map(item => (
@@ -104,9 +110,9 @@ export default class InsufficientAmountModal extends React.Component {
                             </label>
                         </div>
                     </div>
-                    )
-            return result
-        }
+                );
+            return result;
+        };
 
         switch (error_type) {
             case 'NotEnoughFunds':
@@ -133,7 +139,7 @@ export default class InsufficientAmountModal extends React.Component {
                         <button
                             type="button"
                             className="btn--primary"
-                            onClick={this._handleStart}
+                            onClick={this._handleApply}
                             autoFocus>
                             Apply
                         </button>
@@ -149,7 +155,7 @@ export default class InsufficientAmountModal extends React.Component {
                         <button
                             type="button"
                             className="btn--primary"
-                            onClick={this._handleRetry}
+                            onClick={this._handleCancel}
                             autoFocus>
                             Retry
                         </button>
