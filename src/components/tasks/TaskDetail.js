@@ -123,7 +123,7 @@ export class TaskDetail extends React.Component {
             modalData: null,
             isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             isInPatient: false,
-            isDepositimeApplied: false,
+            isDepositTimeApplied: false,
             //INPUTS
             compositing: false,
             concent: props.concentSwitch,
@@ -725,9 +725,9 @@ export class TaskDetail extends React.Component {
      */
     _handleStartTaskButton = () => {
         const {gasInfo} = this.props
-        const {concent, depositTimeModal, isDepositimeApplied} = this.state
+        const {concent, depositTimeModal, isDepositTimeApplied} = this.state
 
-        if(!isDepositimeApplied
+        if(!isDepositTimeApplied
             &&concent
             && gasInfo 
             && gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)){
@@ -770,7 +770,7 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _createTaskAsync(){
+    _createTaskAsync() {
         const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, subtasks_count, subtask_timeout, timeout} = this.state
         const {task, testStatus} = this.props
 
@@ -795,10 +795,16 @@ export class TaskDetail extends React.Component {
         })
     }
 
-    _createTaskOnHighGas = (isConcentOn, depositTime) => {
+    _createTaskOnHighGas = (isConcentOn) => {
         this.setState({
             concent: isConcentOn,
-            isDepositimeApplied: depositTime
+            isDepositTimeApplied: true
+        }, this._handleStartTaskButton)
+    }
+
+    _createTaskConditionally = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn
         }, this._handleStartTaskButton)
     }
 
@@ -1187,7 +1193,7 @@ export class TaskDetail extends React.Component {
                     <InsufficientAmountModal 
                         message={insufficientAmountModal.message} 
                         closeModal={this._closeModal} 
-                        createTaskConditionally={this._createTaskOnHighGas}/>
+                        createTaskConditionally={this._createTaskConditionally}/>
                 }
             </div>
         );

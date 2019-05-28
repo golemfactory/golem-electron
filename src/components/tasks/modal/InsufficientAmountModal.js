@@ -20,7 +20,7 @@ export default class InsufficientAmountModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            withConcent: true
+            withConcent: false
         };
 
         this._initContent = this._initContent.bind(this);
@@ -37,7 +37,7 @@ export default class InsufficientAmountModal extends React.Component {
         if (this.state.withConcent) {
             this._handleTopUp();
         } else {
-            this.props.createTaskConditionally(false, false);
+            this.props.createTaskConditionally(false);
             this._handleCancel();
         }
     };

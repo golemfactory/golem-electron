@@ -12,13 +12,17 @@
             display: inline-block;
             color: $color-text4;
             background: $button-active-color;
-            font-size: 4em;
+            font-size: 3em;
             width: 1em;
             height: 1em;
             line-height: 0.9em;
-            padding: 3px;
+            padding: 10px;
             text-align: center;
             border-radius: 50%;
+        }
+
+        .checkbox-group {
+            padding: 0;
         }
 
         .checkbox-item{
