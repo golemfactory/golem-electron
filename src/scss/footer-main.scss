@@ -225,6 +225,10 @@
 
 .info__connection {
     font-size: 9pt;
+    &__item {
+        display: block;
+        line-height: 2em;
+    }
 }
 
 .tooltip__warning-component {

@@ -27,6 +27,24 @@ const defaultOptions = {
     }
 };
 
+const ISSUES = {
+    PORT: {
+        title: 'Problem with ports',
+        message: 'The ports are unreachable',
+        docs: ''
+    },
+    RAM: {
+        title: 'Not enough RAM',
+        message: "You don't have enough RAM",
+        docs: ''
+    },
+    DISK: {
+        title: 'Not enough DISK',
+        message: "You don't have enough DISK",
+        docs: ''
+    }
+}
+
 /*############# HELPER FUNCTIONS ############# */
 
 
@@ -196,22 +214,34 @@ export class FooterMain extends Component {
                 ) : (
                     " "
                 )
-        else if(componentWarnings.length > 0)
+        else if(componentWarnings.length > 0) {
             warningMessage = <span key="warningComponent" className="info__warnings">
-                                {componentWarnings.length} issues
+                                {componentWarnings.length > 1
+                                    ? `${componentWarnings.length} issues`
+                                    : componentWarnings[0].status 
+                                        && ISSUES[componentWarnings[0].issue].title
+                                }
                                 <Tooltip
                                     interactive
                                     className="tooltip__warning-component"
                                     content={
                                         <p className="info__connection">
-                                            {componentWarnings.map( (item, index) => 
-                                                <span key={index.toString()}>
-                                                    <span className="icon-status-dot"/>
-                                                    You don't have enough {item.issue}
-                                                    <span className="icon-new-window"/>
-                                                </span>
-                                            )}
-                                        </p>}
+                                            {
+                                                componentWarnings.map( (item, index) => {
+                                                    const {docs, message} = ISSUES[componentWarnings[index].issue]
+                                                    return <span 
+                                                        key={index.toString()} 
+                                                        className="info__connection__item">
+                                                            <span className="icon-status-dot"/>
+                                                            {message}
+                                                            <a href={docs}>
+                                                                <span className="icon-new-window"/>
+                                                            </a>
+                                                    </span>
+                                                })
+                                            }
+                                        </p>
+                                    }
                                     distance={status?.client?.message.length > 10 ? 40 : 30}
                                     placement="top"
                                     trigger="mouseenter"
@@ -220,6 +250,7 @@ export class FooterMain extends Component {
                                     <span className="icon-warning-small"/>
                                 </Tooltip>
                             </span>
+            }
 
             return [newLineBeforeWarning, warningMessage];
     }
