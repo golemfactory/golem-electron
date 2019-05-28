@@ -1,24 +1,11 @@
 .container__restart-modal {
     .content__modal {
-        height: 240px;
+        height: 320px;
         text-align: center;
         padding: 20px;
-        .icon-progress-clockwise {
-            display: inline-block;
-            color: $color-text;
-            background: $color-bg;
-            font-size: 2.6em;
-            width: 1em;
-            height: 1em;
-            line-height: 1.1em;
-            padding: 0.3em;
-            text-align: center;
-            border-radius: 50%;
-            // color: $color-accent2;
-            // font-size: 28pt;
-            // background: $color-bg2;
-            // border-radius: 50px;
-            // padding: 18px;
+        .image-container{
+            width: 160px;
+            height: 160px;
         }
 
         .title__restart-modal{

@@ -28,11 +28,31 @@
         font-size: 9pt;
     }
 
-    [class^="icon-"],
-    [class*=" icon-"] {
-        font-size: 24px;
-        margin-right: 5px;
+    .radio-item{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: white;
+        padding: 5px !important;
+
+        label{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 10pt;
+            margin-left: 0;
+        }
+
+        .overlay {
+            top: 0;
+            left: 10px;
+        }
     }
+
+    .icon-blender {
+        font-size: 40px !important;
+    }
+
     .icon-luxrender:before {
         color: #f4ca1b !important;
     }

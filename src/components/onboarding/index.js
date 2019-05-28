@@ -556,7 +556,7 @@ class OnboardIndex extends React.Component {
                             <span className="step-placeholder" />
                             <span>{_step - 6} of 4</span>
                             <span
-                                className="icon-arrow-right-small"
+                                className="icon-arrow-right"
                                 onClick={this._handleNext}
                                 aria-label="Next"
                                 tabIndex="0"
@@ -573,7 +573,7 @@ class OnboardIndex extends React.Component {
                 <div>
                     <div>
                         <span
-                            className="icon-arrow-left-small"
+                            className="icon-arrow-left"
                             onClick={this._handlePrev}
                             aria-label="Prev"
                             tabIndex="0"
@@ -597,14 +597,14 @@ class OnboardIndex extends React.Component {
                 <div>
                     <div>
                         <span
-                            className="icon-arrow-left-small"
+                            className="icon-arrow-left"
                             onClick={this._handlePrev}
                             aria-label="Prev"
                             tabIndex="0"
                         />
                         <span>{_step - 6} of 4</span>
                         <span
-                            className="icon-arrow-right-small"
+                            className="icon-arrow-right"
                             onClick={this._handleNext}
                             aria-label="Next"
                             tabIndex="0"
