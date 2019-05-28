@@ -70,7 +70,7 @@ export class Header extends Component {
     componentDidMount() {
         const index =
             HASHLIST[
-                window.routerHistory && window.routerHistory.location.pathname
+                window?.routerHistory?.location?.pathname
             ];
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');

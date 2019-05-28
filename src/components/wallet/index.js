@@ -36,7 +36,7 @@ export class Wallet extends Component {
     }
 
     componentDidMount() {
-        if (window.routerHistory.location.pathname == '/wallet')
+        if (window?.routerHistory?.location?.pathname == '/wallet')
             this.expandWalletTimeout = setTimeout(
                 () => this._handleExpandWallet(),
                 500
