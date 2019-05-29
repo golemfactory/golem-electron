@@ -98,12 +98,13 @@
         .info__warnings {
             font-size: 9pt;
             color: $color-text3;
-            .icon-warning-small{
+            .icon-warning-rounded {
                 position: relative;
-                font-size: 12pt;
+                font-size: 8pt;
+                margin-left: 3px; 
                 color: $color-primary;
                 cursor: pointer;
-                bottom: -2px;
+                bottom: -1px;
             }
         }
 
@@ -180,7 +181,12 @@
 
         [class^="icon-"],
         [class*=" icon-"] {
-            font-size: 14pt;
+            font-size: 10pt;
+            margin-right: 2px;
+        }
+
+        .icon-golem {
+            color: $color-golem;
         }
     }
 
@@ -232,7 +238,8 @@
 }
 
 .tooltip__warning-component {
-    width: 500px;
+    max-width: 432px !important;
+    width: 432px;
     text-align: left;
     .icon-status-dot {
         position: relative;
@@ -244,9 +251,9 @@
     .icon-new-window {
         position: relative;
         bottom: -1px;
-        margin-left: 1px;
+        margin-left: 3px;
         color: $color-primary;
         font-size: 10pt;
         cursor: pointer;
     }
-}   
+}

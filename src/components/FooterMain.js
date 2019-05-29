@@ -245,9 +245,8 @@ export class FooterMain extends Component {
                                     distance={status?.client?.message.length > 10 ? 40 : 30}
                                     placement="top"
                                     trigger="mouseenter"
-                                    theme="light"
-                                    showOnInit>
-                                    <span className="icon-warning-small"/>
+                                    theme="light">
+                                    <span className="icon-warning-rounded"/>
                                 </Tooltip>
                             </span>
             }
@@ -474,7 +473,7 @@ export class FooterMain extends Component {
                     <a
                         className="element__footer"
                         href="https://www.github.com/golemfactory">
-                        <span className="icon-golem-logo" />
+                        <span className="icon-golem" />
                         {versionTemplate}
                     </a>
                     <a
