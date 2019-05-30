@@ -130,7 +130,7 @@ export class TaskDetail extends React.Component {
             modalData: null,
             isDetailPage: props.match.params.id !== 'settings', //<-- HARDCODED
             isInPatient: false,
-            isDepositimeApplied: false,
+            isDepositTimeApplied: false,
             //INPUTS
             compositing: false,
             concent: props.concentSwitch,
@@ -965,15 +965,18 @@ export class TaskDetail extends React.Component {
         });
     }
 
-    _createTaskOnHighGas = isConcentOn => {
-        this.setState(
-            {
-                concent: isConcentOn,
-                isDepositimeApplied: true
-            },
-            this._handleStartTaskButton
-        );
-    };
+    _createTaskOnHighGas = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn,
+            isDepositTimeApplied: true
+        }, this._handleStartTaskButton)
+    }
+
+    _createTaskConditionally = (isConcentOn) => {
+        this.setState({
+            concent: isConcentOn
+        }, this._handleStartTaskButton)
+    }
 
     /**
      * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
@@ -1881,41 +1884,17 @@ export class TaskDetail extends React.Component {
                         </section>
                     )}
                 </form>
-                {presetModal && (
-                    <PresetModal
-                        closeModal={this._closeModal}
-                        saveCallback={this._handlePresetSave}
-                        {...modalData}
-                    />
-                )}
-                {managePresetModal && (
-                    <ManagePresetModal closeModal={this._closeModal} />
-                )}
-                {depositTimeModal && (
-                    <DepositTimeModal
-                        closeModal={this._closeModal}
-                        createTaskOnHighGas={this._createTaskOnHighGas}
-                    />
-                )}
-                {defaultSettingsModal && (
-                    <DefaultSettingsModal
-                        closeModal={this._closeModal}
-                        applyPreset={this._applyDefaultPreset}
-                    />
-                )}
-                {resolutionChangeModal && (
-                    <ResolutionChangeModal
-                        closeModal={this._closeModal}
-                        applyPreset={this._applyPresetOption}
-                        info={resolutionChangeInfo}
-                    />
-                )}
-                {insufficientAmountModal && insufficientAmountModal.result && (
-                    <InsufficientAmountModal
-                        message={insufficientAmountModal.message}
-                        closeModal={this._closeModal}
-                    />
-                )}
+                {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
+                {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
+                {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
+                {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
+                {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
+                {(insufficientAmountModal && insufficientAmountModal.result) && 
+                    <InsufficientAmountModal 
+                        message={insufficientAmountModal.message} 
+                        closeModal={this._closeModal} 
+                        createTaskConditionally={this._createTaskConditionally}/>
+                }
             </div>
         );
     }
