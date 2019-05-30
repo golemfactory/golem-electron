@@ -31,17 +31,17 @@ const ISSUES = {
     PORT: {
         title: 'Problem with ports',
         message: 'The ports are unreachable',
-        docs: ''
+        docs: 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
     },
     RAM: {
         title: 'Not enough RAM',
         message: "You don't have enough RAM",
-        docs: ''
+        docs: 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
     },
     DISK: {
         title: 'Not enough DISK',
         message: "You don't have enough DISK",
-        docs: ''
+        docs: 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=disk-space-warning'
     }
 }
 
