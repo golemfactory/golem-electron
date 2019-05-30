@@ -19,8 +19,11 @@ const fillRestGroups = function(gs) {
 		if(item.status == 'Starting'){
 			item.status = 'Negotiating'
 		}
-		if(item.status == 'Not started'){
+		if(item.status == 'Not Started'){
 			item.status = 'Waiting'
+		}
+		if(item.status == 'Restart'){
+			item.status = 'Restarted'
 		}
 		
 		addUniq(gs, item, 'status');
