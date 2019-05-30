@@ -120,7 +120,7 @@ export class Wallet extends Component {
                             description={
                                 isMainNet ? (
                                     <p className="tooltip__wallet">
-                                        Golem Network token
+                                        Golem Network Token
                                         <br />
                                         is earned and/or paid
                                         <br />
@@ -132,7 +132,7 @@ export class Wallet extends Component {
                                     </p>
                                 ) : (
                                     <p className="tooltip__wallet">
-                                        tGNT is testnet Golem Network token.
+                                        tGNT is testnet Golem Network Token.
                                         <br />
                                         It is earned and/or paid for
                                         computations.

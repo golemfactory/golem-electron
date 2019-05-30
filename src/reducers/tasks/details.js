@@ -48,16 +48,17 @@ const setTaskDetails = (state = initialState, action) => {
             });
 
         case SET_ESTIMATED_COST:
-            let { GNT, ETH, deposit } = action.payload;
-            if (!action.payload) {
-                (GNT = 0),
-                    (ETH = 0),
-                    (deposit = {
-                        GNT_suggested: 0,
-                        GNT_required: 0,
-                        ETH: 0
-                    });
-            }
+            const [result, error] = action?.payload || [{}, null];
+            let {
+                GNT = 0,
+                ETH = 0,
+                deposit = {
+                    GNT_suggested: 0,
+                    GNT_required: 0,
+                    ETH: 0
+                }
+            } = result;
+
             return Object.assign({}, state, {
                 estimated_cost: {
                     GNT: weiToETH(GNT),

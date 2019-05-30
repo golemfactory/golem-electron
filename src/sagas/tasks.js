@@ -188,11 +188,8 @@ export function getEstimatedCost(session, payload) {
             });
         }
 
-        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, [
-            payload.type,
-            payload.options
-        ]);
-    });
+        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, Object.values(payload))
+    })
 }
 
 export function* estimatedCostBase(session, { payload }) {
