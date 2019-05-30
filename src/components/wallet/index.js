@@ -1,14 +1,14 @@
-import React, { Component } from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { hashHistory } from "react-router";
-import { BigNumber } from "bignumber.js";
+import React, { Component } from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { hashHistory } from 'react-router';
+import { BigNumber } from 'bignumber.js';
 
-import * as Actions from "./../../actions";
-import { timeStampToHR } from "./../../utils/secsToHMS";
+import * as Actions from './../../actions';
+import { timeStampToHR } from './../../utils/secsToHMS';
 
-import { getStatus } from "../../reducers";
-import CurrencyBox from "./CurrencyBox";
+import { getStatus } from '../../reducers';
+import CurrencyBox from './CurrencyBox';
 
 const { clipboard } = window.electron;
 
@@ -18,7 +18,7 @@ const mapStateToProps = state => ({
     publicKey: state.account.publicKey,
     isDeveloperMode: state.input.developerMode,
     isMainNet: state.info.isMainNet,
-    status: getStatus(state, "golemStatus")
+    status: getStatus(state, 'golemStatus')
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -35,17 +35,29 @@ export class Wallet extends Component {
         };
     }
 
+    componentDidMount() {
+        if (window?.routerHistory?.location?.pathname == '/wallet')
+            this.expandWalletTimeout = setTimeout(
+                () => this._handleExpandWallet(),
+                500
+            );
+    }
+
     componentWillUnmount() {
         if (this.copyTimeout) {
             clearTimeout(this.copyTimeout);
         }
+
+        if (this.expandWalletTimeout) {
+            clearTimeout(this.expandWalletTimeout);
+        }
     }
 
     _handleExpandWallet = () => {
-        const element = document.getElementById("sectionWallet");
-        const expandButton = document.getElementById("expandWalletButton");
-        element.classList.toggle("expand__wallet");
-        expandButton.classList.toggle("arrow-expand");
+        const element = document.getElementById('sectionWallet');
+        const expandButton = document.getElementById('expandWalletButton');
+        element.classList.toggle('expand__wallet');
+        expandButton.classList.toggle('arrow-expand');
         this.setState({
             isWalletExpanded: !this.state.isWalletExpanded,
             expandedAmount: null
@@ -107,7 +119,10 @@ export class Wallet extends Component {
         } = this.props;
         const { addressCopied, isWalletExpanded, expandedAmount } = this.state;
         return (
-            <div id="sectionWallet" className="section__wallet">
+            <div
+                id="sectionWallet"
+                ref="sectionWallet"
+                className="section__wallet">
                 <div className="content__wallet">
                     <div className="panel_box">
                         <CurrencyBox
@@ -258,13 +273,13 @@ export class Wallet extends Component {
                             value={
                                 isMainNet
                                     ? publicKey
-                                    : "You cannot top up your TestNet account"
+                                    : 'You cannot top up your TestNet account'
                             }
                             readOnly
                         />
                         <span
                             className={`icon-${
-                                addressCopied ? "confirmation" : "copy"
+                                addressCopied ? 'confirmation' : 'copy'
                             }`}
                             onClick={this._handleCopyToClipboard.bind(
                                 this,
@@ -272,7 +287,7 @@ export class Wallet extends Component {
                                     ? publicKey
                                     : isDeveloperMode
                                     ? publicKey
-                                    : "You cannot top up your TestNet account"
+                                    : 'You cannot top up your TestNet account'
                             )}
                         />
                         {addressCopied && (

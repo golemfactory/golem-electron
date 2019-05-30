@@ -46,6 +46,13 @@ const routes = (
                 )} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/
             />
             <Route
+                exact
+                path="/wallet"
+                component={OnBoardingComponent(
+                    MainFragment
+                )} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/
+            />
+            <Route
                 path="/tasks"
                 component={OnBoardingComponent(
                     Tasks

@@ -3,22 +3,19 @@
     .content__modal {
         @include flex;
         top: 40px;
-        height: 380px;
+        height: auto;
         width: 300px;
         text-align: center;
         padding: 20px 30px;
 
-        .icon-locked {
-            display: inline-block;
-            color: $color-text4;
-            background: $button-active-color;
-            font-size: 4em;
-            width: 1em;
-            height: 1em;
-            line-height: 0.9em;
-            padding: 3px;
-            text-align: center;
-            border-radius: 50%;
+        .image-container {
+            width: 150px;
+            height: 150px;
+        }
+
+        .checkbox-group {
+            padding: 0;
+            margin: 20px 0;
         }
 
         .checkbox-item{
@@ -38,6 +35,7 @@
             &__desc{
                 font-size: 11pt;
                 font-weight: 400;
+                margin: 20px 0 5px 0;
             }
 
             &__tips{
