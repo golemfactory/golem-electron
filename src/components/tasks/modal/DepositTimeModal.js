@@ -1,32 +1,42 @@
 import React from "react";
+import Lottie from 'react-lottie';
+
+import animData from './../../../assets/anims/warning';
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: 'xMidYMid slice'
+    }
+};
 
 export default class DepositTimeModal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isTaskWithoutConcent: true
+            withConcent: true
         };
     }
 
     _toggleConcentTaskSwitch = () => {
-        this.setState({
-            isTaskWithoutConcent: !this.state.isTaskWithoutConcent
-        });
+        this.setState( prevState => ({
+            withConcent: !prevState.withConcent
+        }));
     };
 
     _handleCancel = () => this.props.closeModal("depositTimeModal");
 
-    _handleApply = () => {
-        this.props.createTaskOnHighGas(!this.state.isTaskWithoutConcent);
-    };
+    _handleApply = () => this.props.createTaskOnHighGas(this.state.withConcent);
 
     render() {
-        const { isTaskWithoutConcent } = this.state;
+        const { withConcent } = this.state;
         return (
             <div className="container__modal container__deposit-time-modal">
                 <div className="content__modal">
-                    <div>
-                        <span className="icon-locked" />
+                    <div className="image-container">
+                        <Lottie options={defaultOptions} />
                     </div>
                     <div className="deposit-time__desc">
                         <span>
@@ -41,20 +51,24 @@ export default class DepositTimeModal extends React.Component {
                             Service wait for the gas price to normalize.
                         </span>
                     </div>
-                    <div className="checkbox-item">
-                        <input
-                            id="concentTaskCheckbox"
-                            type="checkbox"
-                            name="concentForTask"
-                            defaultChecked={true}
-                            onChange={this._toggleConcentTaskSwitch}
-                        />
-                        <label
-                            htmlFor="concentTaskCheckbox"
-                            className="checkbox-label-left">
-                            Compute this task with
-                            {!isTaskWithoutConcent ? "" : "out"} concent.
-                        </label>
+                    <div className="checkbox-group">
+                        <div
+                            className="checkbox-item"
+                            onChange={this._toggleConcentTaskSwitch}>
+                            <input
+                                id="concentTaskCheckbox"
+                                type="checkbox"
+                                name="concentForTask"
+                                defaultChecked={true}
+                                onChange={this._toggleConcentTaskSwitch}
+                            />
+                            <label
+                                htmlFor="concentTaskCheckbox">
+                                <span className="overlay"/>
+                                Compute this task with
+                                {withConcent ? "" : "out"} concent.
+                            </label>
+                        </div>
                     </div>
                     <div className="deposit-time__action">
                         <span

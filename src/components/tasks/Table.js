@@ -149,13 +149,14 @@ export class Table extends React.Component {
      * [_handleRestartModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestartModal(id, status) {
-        this.props.restartModalHandler(id, status, this._handleRestart);
+    _handleRestartModal(item) {
+        this.props.restartModalHandler(item, this._handleRestart);
     }
 
     /**
      * [_handleDeleteModal sends information of the clicked task as callback]
-     * @param  {Any}        id      [Id of the selected task]
+     * @param  {Any}        id              [Id of the selected task]
+     * @param  {Boolean}    isTimedOutOnly  [Restart task partially for timed out subtasks]
      */
     _handleRestart = (id, isTimedOutOnly) => {
         this._restartAsync(id, isTimedOutOnly).then(_result => {
@@ -246,8 +247,7 @@ export class Table extends React.Component {
                 _handleRowClick={this._handleRowClick.bind(this)}
                 _handleRestartModal={this._handleRestartModal.bind(
                     this,
-                    item.id,
-                    item.status
+                    item
                 )}
                 _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
                 _toggleWalletTray={toggleWalletTray}
