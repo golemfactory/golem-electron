@@ -16,23 +16,58 @@
 
     .container {
       &__restart-options {
-        text-align: center;
-        display: flex;
+        @include flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
       }
       &__estimation {
         margin: 30px 0 10px 0;
+        width: 100%;
         span {
           font-size: 10pt;
           font-weight: 400;
         }
         .summary {
+          @include flex;
+          flex-direction: column;
+          margin-bottom: 20px;
+          &-currency {
+            font-weight: 300;
+            h4 {
+              display: inline;
+            }
+          }
           &-item {
-            margin: 30px 0;
+            @include flex;
+            width: 100%;
+            margin: 5px 0;
+            
+            h4 {
+              margin: 0;
+            }
+
             sub {
               font-size: 8pt;
             }
+
+            &.deposit {
+              margin: 2px 0;
+              font-size: 7pt;
+              color: $color-text2 !important;
+            }
+          }
+
+          &-title {
+            display: block;
+            border-bottom: 1px dashed $color-border;
+            color: $color-primary;
+            width: 100%;
+            text-align: left;
+            font-size: 8pt;
+            padding: 5px 0;
+            margin-top: 15px;
+            font-weight: 300;
           }
         }
       }

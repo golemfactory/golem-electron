@@ -58,6 +58,8 @@ export class Table extends React.Component {
                 message: null
             }
         };
+
+        this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(this);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -151,6 +153,14 @@ export class Table extends React.Component {
      */
     _handleRestartModal(item) {
         this.props.restartModalHandler(item, this._handleRestart);
+    }
+
+    /**
+     * [_handleRestartModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestartSubtasksModal(list) {
+        this.props.restartModalHandler(list, this._handleRestart, true);
     }
 
     /**
@@ -249,6 +259,7 @@ export class Table extends React.Component {
                     this,
                     item
                 )}
+                _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
                 _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
                 _toggleWalletTray={toggleWalletTray}
             />

@@ -1,7 +1,7 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import RestartOptions from './steps/Options';
+import TaskOptions from './steps/TaskOptions';
 import Estimation from './steps/Estimation';
 
 import animData from './../../../../assets/anims/restart-task';
@@ -42,19 +42,9 @@ export default class RestartModal extends React.Component {
         const { isTimedOutOnly, nextStep } = this.state;
         const { restartCallback, item } = this.props;
         if (!nextStep) {
-            this.setState(
-                {
-                    nextStep: true
-                },
-                () => {
-                    this.props.actions.getEstimatedCost({
-                        type: item.type,
-                        options: item.options,
-                        id: item.id,
-                        partial: isTimedOutOnly
-                    });
-                }
-            );
+            this.setState({
+                nextStep: true
+            });
             return;
         }
         restartCallback(item.id, isTimedOutOnly);
@@ -63,24 +53,23 @@ export default class RestartModal extends React.Component {
 
     render() {
         const { isTimedOutOnly, nextStep } = this.state;
-        const { balance, currency, item, estimatedCost } = this.props;
+        const {
+            isSubtask,
+            item,
+        } = this.props;
         return (
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
                     <div className="image-container">
                         <Lottie options={defaultOptions} />
                     </div>
-                    {!nextStep ? (
-                        <RestartOptions
+                    {!nextStep && !isSubtask ? (
+                        <TaskOptions
                             handleOptionChange={this._handleRestartOptionChange}
                             status={item.status}
                         />
                     ) : (
-                        <Estimation 
-                            balance={balance}
-                            currency={currency}
-                            estimatedCost={estimatedCost} 
-                            isPartial={isTimedOutOnly}/>
+                        <Estimation isPartial={isTimedOutOnly} {...this.props} />
                     )}
 
                     <div className="action__modal">

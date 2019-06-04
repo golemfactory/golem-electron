@@ -102,12 +102,13 @@ export class TaskPanel extends React.Component {
      * @param  {[type]} restartId       [Id of selected task]
      * @param  {[type]} restartCallback
      */
-    _handleRestartModal = (item, restartCallback) => {
+    _handleRestartModal = (item, restartCallback, isSubtask) => {
         this.setState({
             restartModal: true,
             restartProps: {
                 item,
-                restartCallback
+                restartCallback,
+                isSubtask
             }
         });
     };
@@ -204,10 +205,6 @@ export class TaskPanel extends React.Component {
                     ReactDOM.createPortal(
                         <RestartModal
                             closeModal={this._closeModal}
-                            actions={actions}
-                            estimatedCost={estimatedCost}
-                            balance={balance}
-                            currency={currency}
                             {...restartProps}
                         />,
                         document.getElementById('modalPortal')

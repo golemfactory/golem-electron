@@ -13,9 +13,9 @@ import GroupedStatus from './GroupedStatus';
 import SubtaskList from './SubtaskList';
 import BlockNodeModal from '../modal/BlockNodeModal';
 
+import isEqual from 'lodash/isEqual';
 import every from 'lodash/every';
 import some from 'lodash/some';
-import size from 'lodash/size';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
@@ -44,13 +44,13 @@ export class Details extends React.PureComponent {
     }
 
     componentWillMount() {
-        const { actions, id, updateIf } = this.props;
+        const { actions, item, updateIf } = this.props;
         let interval = () => {
-            actions.getFragments(id);
+            actions.getFragments(item.id);
             return interval;
         };
         if (updateIf) this.liveSubList = setInterval(interval(), 2000);
-        else actions.getFragments(id);
+        else actions.getFragments(item.id);
     }
 
     componentWillUnmount() {
@@ -58,16 +58,9 @@ export class Details extends React.PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
+
         if (
-            nextState.checkedItems !== this.state.checkedItems &&
-            size(
-                filter(
-                    nextProps.fragments,
-                    item =>
-                        item[item.length - 1] &&
-                        item[item.length - 1].subtask_id
-                )
-            ) === size(nextState.checkedItems)
+            !isEqual(nextState.checkedItems, this.state.checkedItems)
         ) {
             const isAllChecked = every(
                 nextState.checkedItems,
@@ -110,12 +103,22 @@ export class Details extends React.PureComponent {
     };
 
     _toggleAll = () => {
-        const { id, fragments } = this.props;
+        const { fragments } = this.props;
         const keyList = map(
             fragments,
             item => item[item.length - 1] && item[item.length - 1].subtask_id
         );
         this._toggleItems(keyList, true);
+    };
+
+    _restartSubtasks = () => {
+        const { item } = this.props;
+        const restartList = map(
+            this.state.checkedItems,
+            (item, key) => !!item && key
+        ).filter(Boolean);
+
+        this.props.restartSubtasksModalHandler({...item, id: restartList})
     };
 
     _lockScroll(isLocked) {
@@ -127,13 +130,12 @@ export class Details extends React.PureComponent {
     }
 
     _showBlockNodeModal(subtask) {
-        this.setState(
-            {
-                blockNodeModal: true,
-                nodeBlocked: false,
-                errMsg: null,
-                subtask2block: subtask
-            });
+        this.setState({
+            blockNodeModal: true,
+            nodeBlocked: false,
+            errMsg: null,
+            subtask2block: subtask
+        });
     }
 
     _closeBlockNodeModal = () => {
@@ -153,7 +155,7 @@ export class Details extends React.PureComponent {
     };
 
     render() {
-        const { id, fragments } = this.props;
+        const { item, fragments } = this.props;
         const {
             checkedItems,
             isAllChecked,
@@ -172,7 +174,11 @@ export class Details extends React.PureComponent {
                             {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
                             Subtasks
                         </span>
-                        {isAnyChecked && <span>Restart Selected</span>}
+                        {isAnyChecked && (
+                            <span onClick={this._restartSubtasks}>
+                                Restart Selected
+                            </span>
+                        )}
                     </div>
                     <SubtaskList
                         list={fragments}
@@ -191,8 +197,7 @@ export class Details extends React.PureComponent {
                             subtask2block={subtask2block}
                         />,
                         document.getElementById('modalPortal')
-                    )
-                }
+                    )}
             </div>
         );
     }

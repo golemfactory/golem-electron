@@ -203,6 +203,7 @@ export class TaskItem extends React.Component {
             index,
             _handleRowClick,
             _handleRestartModal,
+            _handleRestartSubtasksModal,
             _handleDeleteModal,
             psId
         } = this.props;
@@ -421,7 +422,7 @@ export class TaskItem extends React.Component {
                                 toggledList[psId].detail
                             }>
                             <Details
-                                id={item.id}
+                                item={item}
                                 updateIf={
                                     !(
                                         item.status === taskStatus.RESTART ||
@@ -429,6 +430,7 @@ export class TaskItem extends React.Component {
                                         item.status === taskStatus.FINISHED
                                     )
                                 }
+                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
                             />
                         </ConditionalRender>
                     </div>
