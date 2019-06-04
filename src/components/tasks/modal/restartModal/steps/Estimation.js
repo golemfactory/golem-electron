@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { BigNumber } from 'bignumber.js';
 import { bindActionCreators } from 'redux';
@@ -27,6 +27,8 @@ const Estimation = ({
 	isPartial,
 	item
 }) => {
+	const [isConcentOn, setConcent] = useState(item.concent_enabled);
+
 	let { GNT, ETH, deposit } = estimatedCost;
 	let { GNT_suggested, GNT_required, ETH: ETH_deposit } = deposit
 	GNT = new BigNumber(GNT);
@@ -42,6 +44,10 @@ const Estimation = ({
 		partial: isPartial
 	});
 
+	function _handleConcentCheckbox(e){
+		setConcent(e.target.checked)
+	}
+
 	return (
 		<div className="container__estimation">
 			<span>
@@ -50,6 +56,23 @@ const Estimation = ({
 					: 'Restarting whole task as a new one'}
 			</span>
 			<SubtaskInfo />
+			<ConditionalRender showIf={item.concent_enabled}>
+				<div className="switch-box switch-box--green">
+		            <label className="switch">
+		                <input
+		                    type="checkbox"
+		                    aria-label="Task Based Concent Checkbox"
+		                    tabIndex="0"
+		                    checked={isConcentOn}
+                            onChange={_handleConcentCheckbox}
+		                />
+		                <div className="switch-slider round" />
+		            </label>
+		            <span className="switch-label switch-label--right">
+			            Restart with Concent Service
+		            </span>
+		        </div>
+	        </ConditionalRender>
 			<span className="summary-title">You have</span>
 			<div className="summary">
 				<div className="summary-item">
@@ -88,7 +111,7 @@ const Estimation = ({
 				</div>
 				<ConditionalRender showIf={item.concent_enabled}>
 					<div className="summary-item deposit">
-						<sub>Deposit required}</sub>
+						<sub>Deposit required</sub>
 						<span className="summary-currency">
 							<h4>{GNT_required.toFixed(4)}</h4> GNT
 						</span>
