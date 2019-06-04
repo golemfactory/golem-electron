@@ -15,7 +15,7 @@ const defaultOptions = {
     }
 };
 
-export default class RestartModal extends React.Component {
+export default class RestartModal extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -57,6 +57,7 @@ export default class RestartModal extends React.Component {
             isSubtask,
             item,
         } = this.props;
+
         return (
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
@@ -69,7 +70,7 @@ export default class RestartModal extends React.Component {
                             status={item.status}
                         />
                     ) : (
-                        <Estimation isPartial={isTimedOutOnly} {...this.props} />
+                        <Estimation isPartial={isTimedOutOnly} item={item} />
                     )}
 
                     <div className="action__modal">
