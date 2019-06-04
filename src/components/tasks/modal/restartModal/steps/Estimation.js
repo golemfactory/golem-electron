@@ -109,7 +109,7 @@ const Estimation = ({
 						<h4>{ETH.toFixed(4)}</h4> ETH
 					</span>
 				</div>
-				<ConditionalRender showIf={item.concent_enabled}>
+				<ConditionalRender showIf={item.concent_enabled && isConcentOn}>
 					<div className="summary-item deposit">
 						<sub>Deposit required</sub>
 						<span className="summary-currency">
