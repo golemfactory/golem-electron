@@ -188,8 +188,20 @@ export function getEstimatedCost(session, payload) {
             });
         }
 
-        _handleRPC(on_estimated_cost, session, config.GET_ESTIMATED_COST_RPC, Object.values(payload))
-    })
+        Array.isArray(payload?.subtask_ids)
+            ? _handleRPC(
+                  on_estimated_cost,
+                  session,
+                  config.GET_SUBTASK_ESTIMATED_COSTS_RPC,
+                  [payload.id, payload.subtask_ids]
+              )
+            : _handleRPC(
+                  on_estimated_cost,
+                  session,
+                  config.GET_ESTIMATED_COST_RPC,
+                  Object.values(payload)
+              );
+    });
 }
 
 export function* estimatedCostBase(session, { payload }) {

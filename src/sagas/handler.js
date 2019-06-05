@@ -58,6 +58,7 @@ export let config = Object.freeze({
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
+    GET_SUBTASK_ESTIMATED_COSTS_RPC: 'comp.task.subtasks.estimated.cost',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
     GET_GAS_PRICE_RPC: 'pay.gas_price',
     //Files management

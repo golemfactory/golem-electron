@@ -56,6 +56,7 @@ class Estimation extends Component {
 			type: item.type,
 			options: item.options,
 			id: item.id,
+			subtask_ids: item?.subtask_ids,
 			partial: isPartial
 		});
 	}

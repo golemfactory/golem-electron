@@ -118,7 +118,7 @@ export class Details extends React.PureComponent {
             (item, key) => !!item && key
         ).filter(Boolean);
 
-        this.props.restartSubtasksModalHandler({...item, id: restartList})
+        this.props.restartSubtasksModalHandler({...item, subtask_ids: restartList})
     };
 
     _lockScroll(isLocked) {
