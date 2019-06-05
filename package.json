@@ -245,7 +245,7 @@
         "yup": "^0.23.0"
     },
     "dependencies": {
-        "axios": "0.18.0",
+        "axios": "^0.19.0",
         "chalk": "2.4.1",
         "dirtree2json": "git+https://github.com/mdtanrikulu/dirtree2json.git",
         "electron-store": "2.0.0",
