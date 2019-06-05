@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from '@tippy.js/react';
 
 import { Spring, config } from 'react-spring/renderprops.cjs';
-import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 import { taskStatus } from './../../constants/statusDicts';
 
 import * as Actions from '../../actions';

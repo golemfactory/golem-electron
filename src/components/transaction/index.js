@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import * as Actions from "../../actions";
 import { getFilteredPaymentHistory, getStatus } from "../../reducers";
-import { timeStampToHR } from "../../utils/secsToHMS";
+import { timeStampToHR } from "../../utils/time";
 import checkNested from '../../utils/checkNested'
 
 const filter = {

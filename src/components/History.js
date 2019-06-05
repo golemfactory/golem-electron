@@ -10,7 +10,7 @@ const { PoseGroup } = posed;
 
 import * as Actions from '../actions';
 import { getFilteredPaymentHistory } from '../reducers';
-import { timeStampToHR } from '../utils/secsToHMS';
+import { timeStampToHR } from '../utils/time';
 
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import * as Actions from './../../actions';
 import { getConcentDepositStatus } from './../../reducers';
-import { timeStampToHR } from './../../utils/secsToHMS';
+import { timeStampToHR } from './../../utils/time';
 
 const ETH_DENOM = 10 ** 18;
 
