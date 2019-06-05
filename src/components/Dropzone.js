@@ -1,19 +1,19 @@
-import React from "react";
+import React from 'react';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "./../actions";
-import directorySelector from "./../utils/directorySelector";
+import * as Actions from './../actions';
+import directorySelector from './../utils/directorySelector';
 
 const { remote } = window.electron;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 
-const ADD_TASK_NEXT_STEP = "/add-task/type";
+const ADD_TASK_NEXT_STEP = '/add-task/type';
 
 const classDict = Object.freeze({
-    SHOW: "drop-zone--show",
-    HIDE: "drop-zone--hide"
+    SHOW: 'drop-zone--show',
+    HIDE: 'drop-zone--hide'
 });
 
 const mapStateToProps = state => ({
@@ -67,13 +67,13 @@ export class DropZone extends React.Component {
         const { dropzone, dragbox } = this.refs;
         const { connectedPeers, isEngineOn } = this.props;
 
-        dropzone.addEventListener("mouseup", this._onDragLeave);
-        dropzone.addEventListener("dragenter", this._onDragEnter);
-        dropzone.addEventListener("dragover", this._onDragOver);
+        dropzone.addEventListener('mouseup', this._onDragLeave);
+        dropzone.addEventListener('dragenter', this._onDragEnter);
+        dropzone.addEventListener('dragover', this._onDragOver);
 
-        dragbox.addEventListener("dragleave", this._onDragLeave);
+        dragbox.addEventListener('dragleave', this._onDragLeave);
         dropzone.addEventListener(
-            "drop",
+            'drop',
             this._onDrop.bind(this._onDrop, true)
         );
 
@@ -83,11 +83,11 @@ export class DropZone extends React.Component {
     componentWillUnmount() {
         const { dropzone, dragbox } = this.refs;
 
-        dropzone.removeEventListener("mouseup", this._onDragLeave);
-        dropzone.removeEventListener("dragenter", this._onDragEnter);
-        dropzone.removeEventListener("dragover", this._onDragOver);
-        dropzone.removeEventListener("drop", this._onDrop);
-        dragbox.removeEventListener("dragleave", this._onDragLeave);
+        dropzone.removeEventListener('mouseup', this._onDragLeave);
+        dropzone.removeEventListener('dragenter', this._onDragEnter);
+        dropzone.removeEventListener('dragover', this._onDragOver);
+        dropzone.removeEventListener('drop', this._onDrop);
+        dragbox.removeEventListener('dragleave', this._onDragLeave);
     }
 
     _verifyDnD(peers, engine) {
@@ -106,23 +106,23 @@ export class DropZone extends React.Component {
             },
             () => {
                 if (_state) {
-                    dropzone.addEventListener("mouseup", this._onDragLeave);
-                    dropzone.addEventListener("dragover", this._onDragOver);
+                    dropzone.addEventListener('mouseup', this._onDragLeave);
+                    dropzone.addEventListener('dragover', this._onDragOver);
                     dropzone.addEventListener(
-                        "drop",
+                        'drop',
                         this._onDrop.bind(this._onDrop, false)
                     );
                 } else {
-                    dropzone.removeEventListener("mouseup", this._onDragLeave);
-                    dropzone.removeEventListener("dragover", this._onDragOver);
+                    dropzone.removeEventListener('mouseup', this._onDragLeave);
+                    dropzone.removeEventListener('dragover', this._onDragOver);
                     dropzone.addEventListener(
-                        "drop",
+                        'drop',
                         this._onDrop.bind(this._onDrop, true)
                     );
                 }
             }
         );
-    }
+    };
 
     /**
      * [_onDragEnter function]
@@ -135,7 +135,7 @@ export class DropZone extends React.Component {
         });
         if (this.props.overflowRef) {
             this.props.overflowRef.scrollTop = 0;
-            this.props.overflowRef.style.setProperty("overflow-y", "hidden");
+            this.props.overflowRef.style.setProperty('overflow-y', 'hidden');
         }
         e.stopPropagation();
         e.preventDefault();
@@ -165,9 +165,9 @@ export class DropZone extends React.Component {
         });
         if (this.props.overflowRef) {
             this.props.overflowRef.style.setProperty(
-                "overflow-y",
-                "overlay",
-                "important"
+                'overflow-y',
+                'overlay',
+                'important'
             );
         }
         e.stopPropagation();
@@ -196,9 +196,9 @@ export class DropZone extends React.Component {
             });
             if (this.props.overflowRef) {
                 this.props.overflowRef.style.setProperty(
-                    "overflow-y",
-                    "overlay",
-                    "important"
+                    'overflow-y',
+                    'overlay',
+                    'important'
                 );
             }
 
@@ -264,7 +264,7 @@ export class DropZone extends React.Component {
      */
     traverseFileTree = (item, path) => {
         const { actions } = this.props;
-        path = path || "";
+        path = path || '';
         if (item.isFile) {
             // Get file
             item.file(function(file) {
@@ -293,7 +293,7 @@ export class DropZone extends React.Component {
             let readFiles = dirReader.readEntries.bind(dirReader, entries => {
                 //console.log('Entries length: ', entries.length)
                 for (var i = 0; i < entries.length; i++) {
-                    this.traverseFileTree(entries[i], path + item.name + "/");
+                    this.traverseFileTree(entries[i], path + item.name + '/');
                 }
                 if (entries.length > 0) {
                     readFiles(); // TODO we need to add a file length limit here cuz right now users can drag infinitve numbers of files.
