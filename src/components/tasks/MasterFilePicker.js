@@ -32,7 +32,6 @@ export class MasterFilePicker extends React.Component {
         e.preventDefault();
         this._nextStep = true;
         const { selectedMasterNode, taskName, type } = this.state;
-        console.log('taskName', taskName);
         this.props.actions.createTask({
             main_scene_file: selectedMasterNode,
             taskName

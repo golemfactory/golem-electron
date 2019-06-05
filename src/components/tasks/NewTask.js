@@ -31,9 +31,6 @@ export class NewTask extends React.Component {
             name: this._normalizeName(props.taskName, props.match.params.type),
             type: radioTypes[props.match.params.type] || null
         };
-        if (!props.location.query)
-            //check if there is no previous step, like: master file selection
-            props.actions.clearTaskPlain(); //clear previous test status
     }
 
     componentWillUpdate(nextProps, nextState) {

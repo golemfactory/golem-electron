@@ -22,6 +22,7 @@ const checkDominantType = function(files) {
 };
 
 function directorySelector(data) {
+    this.props.actions.clearTaskPlain(); 
     //React Context, header and dropzone
     mainProcess.selectDirectory(data, this.props.isMainNet).then(item => {
         let mergedList = [].concat.apply([], item);
