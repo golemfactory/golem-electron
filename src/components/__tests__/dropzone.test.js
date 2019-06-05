@@ -35,7 +35,8 @@ describe('<DropZone />', () => {
     }
 
     const actions = {
-        uploadFile: jest.fn()
+        uploadFile: jest.fn(),
+        clearTaskPlain: jest.fn()
     }
 
     it('renders one drop-zone div', () => {

@@ -1,0 +1,86 @@
+.master-file-picker{
+    &__radio{
+        display: none;
+        & + label {
+            cursor: pointer;
+        }
+        &:checked + label {
+            font-weight: 500;
+            color: $color-primary;
+        }
+    }
+    &__content{
+        position: relative;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-sizing: border-box;
+        background: $color-bg2;
+        
+        .icon-arrow-down,
+        .icon-arrow-right {
+            font-size: 9pt;
+        }
+
+        .icon-folder,
+        .icon-file,
+        .icon-blender {
+            margin: 0 5px;
+            font-size: 11pt;
+        }
+
+        .icon-blender {
+            background: #efefef;
+            border-radius: 50%;
+            padding: 3px;
+        }
+    }
+    &__container{
+        position: relative;
+        height: calc(100% - 90px);
+    	.directory-nodes{
+            &__container{
+                margin: 20px 0;
+                .directory-tree {
+                    position: relative;
+                    height: calc(100% - 90px);
+                    overflow-y: overlay;
+                    box-sizing: border-box;
+                }
+            }
+            &__item{
+                cursor: pointer;
+                margin: 10px 0;
+            }
+
+            &__filter-input{
+                width: 100%;
+                height: 30px;
+                margin-bottom: 20px;
+                padding: 0 5px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+
+                &:focus{
+                    border: 1px solid $button-static-color;
+                }
+            }
+        }
+    }
+
+    &__container-action{
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        width: 100%;
+        box-sizing: border-box;
+        z-index: 2;
+        flex: 0 0 90px;
+        background: $color-text4;
+        z-index: 999;
+        span {
+            margin-right: 20px;
+        }
+    }
+}
