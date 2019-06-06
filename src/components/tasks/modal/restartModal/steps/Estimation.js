@@ -23,7 +23,6 @@ class Estimation extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			isConcentOn: props?.item?.concent_enabled,
 			GNT: new BigNumber(0),
 			ETH: new BigNumber(0),
 			GNT_suggested: new BigNumber(0),
@@ -62,22 +61,21 @@ class Estimation extends Component {
 	}
 
 	shouldComponentUpdate(nextProps, nextState) {
-		if (!this.state.GNT.isEqualTo(nextProps.estimatedCost.GNT) ||
-			nextState.isConcentOn !== this.state.isConcentOn) {
+		if (
+			!this.state.GNT.isEqualTo(nextProps.estimatedCost.GNT) ||
+			nextProps.isConcentOn !== this.props.isConcentOn
+		) {
 			return true;
 		}
 		return !isEqual(nextProps.balance, this.props.balance);
 	}
 
 	_handleConcentCheckbox(e) {
-		this.setState({
-			isConcentOn: e.target.checked
-		});
+		this.props._handleConcentCheckbox(e.target.checked);
 	}
 
 	render() {
 		const {
-			isConcentOn,
 			GNT,
 			ETH,
 			GNT_suggested,
@@ -90,37 +88,38 @@ class Estimation extends Component {
 			concentBalance,
 			currency,
 			estimatedCost,
+			isConcentOn,
 			isPartial,
 			item
 		} = this.props;
 		return (
 			<div className="container__estimation">
 				<span>
-					{isPartial
-						? <span>
-							Restarting only timed out subtasks
-						</span>
-						: <span>
-							Restarting whole task as a new one
-						</span>
-					}
+					{isPartial ? (
+						<span>Restarting only timed out subtasks</span>
+					) : (
+						<span>Restarting whole task as a new one</span>
+					)}
 				</span>
 				<SubtaskInfo />
-				<div className="switch-box switch-box--green">
-					<label className="switch">
-						<input
-							type="checkbox"
-							aria-label="Task Based Concent Checkbox"
-							tabIndex="0"
-							checked={isConcentOn}
-							onChange={this._handleConcentCheckbox}
-						/>
-						<div className="switch-slider round" />
-					</label>
-					<span className="switch-label switch-label--right">
-						Restart with Concent Service
-					</span>
-				</div>
+				<ConditionalRender showIf={item.concent_enabled}>
+					<div className="switch-box switch-box--green">
+						<label className="switch">
+							<input
+								type="checkbox"
+								aria-label="Task Based Concent Checkbox"
+								tabIndex="0"
+								checked={isConcentOn}
+								onChange={this._handleConcentCheckbox}
+							/>
+							<div className="switch-slider round" />
+						</label>
+						<span className="switch-label switch-label--right">
+							Restart with{isConcentOn ? '' : 'out'} Concent
+							Service
+						</span>
+					</div>
+				</ConditionalRender>
 				<span className="summary-title">You have</span>
 				<div className="summary">
 					<div className="summary-item">
@@ -162,7 +161,7 @@ class Estimation extends Component {
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled || isConcentOn}>
+						showIf={item.concent_enabled && isConcentOn}>
 						<div className="summary-item deposit">
 							<sub>Deposit required</sub>
 							<span className="summary-currency">

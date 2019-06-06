@@ -166,10 +166,10 @@ export class Table extends React.Component {
     /**
      * [_handleDeleteModal sends information of the clicked task as callback]
      * @param  {Any}        id              [Id of the selected task]
-     * @param  {Boolean}    isTimedOutOnly  [Restart task partially for timed out subtasks]
+     * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
      */
-    _handleRestart = (id, isTimedOutOnly) => {
-        this._restartAsync(id, isTimedOutOnly).then(_result => {
+    _handleRestart = (id, isPartial, isConcentOn) => {
+        this._restartAsync(id, isPartial, isConcentOn).then(_result => {
             if (_result && !_result[0] && _result[1].includes('Not enough')) {
                 console.warn('Task restart failed!');
 
@@ -183,9 +183,9 @@ export class Table extends React.Component {
         });
     };
 
-    _restartAsync(id, isTimedOutOnly) {
+    _restartAsync(id, isPartial, isConcentOn) {
         return new Promise((resolve, reject) => {
-            this.props.actions.restartTask(id, isTimedOutOnly, resolve, reject);
+            this.props.actions.restartTask({id, isPartial, isConcentOn}, resolve, reject);
         });
     }
 

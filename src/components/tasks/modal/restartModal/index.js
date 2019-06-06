@@ -19,6 +19,7 @@ export default class RestartModal extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            isConcentOn: props?.item?.concent_enabled,
             isTimedOutOnly: false,
             nextStep: false
         };
@@ -35,11 +36,17 @@ export default class RestartModal extends React.PureComponent {
         });
     };
 
+    _handleConcentCheckbox = value => {
+        this.setState({
+            isConcentOn: value
+        });
+    }
+
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
     _handleRestart = () => {
-        const { isTimedOutOnly, nextStep } = this.state;
+        const { isConcentOn, isTimedOutOnly, nextStep } = this.state;
         const { restartCallback, item } = this.props;
         if (!nextStep) {
             this.setState({
@@ -47,12 +54,12 @@ export default class RestartModal extends React.PureComponent {
             });
             return;
         }
-        restartCallback(item.id, isTimedOutOnly);
+        restartCallback(item.id, isTimedOutOnly, isConcentOn);
         this.props.closeModal();
     };
 
     render() {
-        const { isTimedOutOnly, nextStep } = this.state;
+        const { isConcentOn, isTimedOutOnly, nextStep } = this.state;
         const {
             isSubtask,
             item,
@@ -70,7 +77,11 @@ export default class RestartModal extends React.PureComponent {
                             status={item.status}
                         />
                     ) : (
-                        <Estimation isPartial={isTimedOutOnly} item={item} />
+                        <Estimation 
+                            isConcentOn={isConcentOn} 
+                            isPartial={isTimedOutOnly} 
+                            item={item}
+                            _handleConcentCheckbox={this._handleConcentCheckbox}/>
                     )}
 
                     <div className="action__modal">

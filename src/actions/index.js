@@ -653,10 +653,9 @@ export const addMissingFiles = payload => ({
     payload
 });
 
-export const restartTask = (payload, isTimedOutOnly, _resolve, _reject) => ({
+export const restartTask = (payload, _resolve, _reject) => ({
     type: RESTART_TASK,
     payload,
-    isTimedOutOnly,
     _resolve,
     _reject
 });

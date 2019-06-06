@@ -438,38 +438,37 @@ export function* testTaskFlow(session) {
 
 export function callRestartTask(
     session,
-    payload,
-    isTimedOutOnly,
+    { id, isPartial, isConcentOn },
     _resolve,
     _reject
 ) {
+
     function on_restart_task(args) {
         var restart_task = args[0];
         _resolve(restart_task);
     }
-    if (isTimedOutOnly)
+    if (isPartial)
         _handleRPC(
             on_restart_task,
             session,
-            config.RESTART_TIMEDOUT_SUBTASKS_RPC,
-            [payload, []]
+            config.RESTART_SUBTASKS_RPC,
+            [id, [], true, !isConcentOn]
         );
     else
         _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [
-            payload
+            id, true
         ]);
 }
 
 export function* restartTaskBase(
     session,
-    { type, payload, isTimedOutOnly, _resolve, _reject }
+    { payload, _resolve, _reject }
 ) {
     if (payload) {
         yield call(
             callRestartTask,
             session,
             payload,
-            isTimedOutOnly,
             _resolve,
             _reject
         );
