@@ -177,7 +177,10 @@ export function* subtaskList(session, payload) {
     }
 }
 
-export function getEstimatedCost(session, payload) {
+export function getEstimatedCost(
+    session,
+    { type, options, id = null, subtask_ids = null, partial = false }
+) {
     //console.info('Estimated cost requested!')
     return new Promise((resolve, reject) => {
         function on_estimated_cost(args) {
@@ -188,18 +191,18 @@ export function getEstimatedCost(session, payload) {
             });
         }
 
-        Array.isArray(payload?.subtask_ids)
+        Array.isArray(subtask_ids)
             ? _handleRPC(
                   on_estimated_cost,
                   session,
                   config.GET_SUBTASK_ESTIMATED_COSTS_RPC,
-                  [payload.id, payload.subtask_ids]
+                  [id, subtask_ids]
               )
             : _handleRPC(
                   on_estimated_cost,
                   session,
                   config.GET_ESTIMATED_COST_RPC,
-                  Object.values(payload)
+                  [type, options, id, partial]
               );
     });
 }

@@ -93,32 +93,34 @@ class Estimation extends Component {
 			isPartial,
 			item
 		} = this.props;
-		
 		return (
 			<div className="container__estimation">
 				<span>
 					{isPartial
-						? 'Restarting only timed out subtasks'
-						: 'Restarting whole task as a new one'}
+						? <span>
+							Restarting only timed out subtasks
+						</span>
+						: <span>
+							Restarting whole task as a new one
+						</span>
+					}
 				</span>
 				<SubtaskInfo />
-				<ConditionalRender showIf={item.concent_enabled}>
-					<div className="switch-box switch-box--green">
-						<label className="switch">
-							<input
-								type="checkbox"
-								aria-label="Task Based Concent Checkbox"
-								tabIndex="0"
-								checked={isConcentOn}
-								onChange={this._handleConcentCheckbox}
-							/>
-							<div className="switch-slider round" />
-						</label>
-						<span className="switch-label switch-label--right">
-							Restart with Concent Service
-						</span>
-					</div>
-				</ConditionalRender>
+				<div className="switch-box switch-box--green">
+					<label className="switch">
+						<input
+							type="checkbox"
+							aria-label="Task Based Concent Checkbox"
+							tabIndex="0"
+							checked={isConcentOn}
+							onChange={this._handleConcentCheckbox}
+						/>
+						<div className="switch-slider round" />
+					</label>
+					<span className="switch-label switch-label--right">
+						Restart with Concent Service
+					</span>
+				</div>
 				<span className="summary-title">You have</span>
 				<div className="summary">
 					<div className="summary-item">
@@ -160,7 +162,7 @@ class Estimation extends Component {
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled && isConcentOn}>
+						showIf={item.concent_enabled || isConcentOn}>
 						<div className="summary-item deposit">
 							<sub>Deposit required</sub>
 							<span className="summary-currency">
