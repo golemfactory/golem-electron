@@ -7,6 +7,7 @@
 @import 'modal/deposit-time-modal';
 @import 'modal/block-node-modal';
 @import 'modal/resolution-change-modal';
+@import 'modal/task-summary-modal';
 @import 'modal/task-error-modal';
 @import "table";
 @import "task-item";
@@ -14,6 +15,7 @@
 @import "details";
 @import "task-detail";
 @import "new-task";
+@import "master-file-picker";
 .content__task-panel {
     height: 100%;
     display: flex;

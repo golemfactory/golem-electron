@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as Actions from '../../actions';
+import * as Actions from "../../actions";
 import { ETH_DENOM } from '../../constants/variables';
-import { getFilteredPaymentHistory, getStatus } from '../../reducers';
-import { timeStampToHR } from '../../utils/secsToHMS';
-import checkNested from '../../utils/checkNested';
+import { getFilteredPaymentHistory, getStatus } from "../../reducers";
+import { timeStampToHR } from "../../utils/time";
+import checkNested from '../../utils/checkNested'
 
 const filter = {
     PAYMENT: 'payment',

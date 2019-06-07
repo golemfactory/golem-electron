@@ -48,6 +48,7 @@ export let dict = Object.freeze({
     SET_FOOTER_INFO: 'SET_FOOTER_INFO',
     GET_TASK_GAS_PRICE: 'GET_TASK_GAS_PRICE',
     SET_TASK_GAS_PRICE: 'SET_TASK_GAS_PRICE',
+    SET_DIRECTORY_TREE: 'SET_DIRECTORY_TREE',
     GET_FRAGMENTS: 'GET_FRAGMENTS',
     SET_FRAGMENTS: 'SET_FRAGMENTS',
     //SETTINGS
@@ -133,6 +134,7 @@ export let dict = Object.freeze({
     SET_CONCENT_TERMS_STATUS: 'SET_CONCENT_TERMS_STATUS',
     //ERROR
     SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
+    SET_COMPONENT_WARNING: 'SET_COMPONENT_WARNING',
     SET_FILE_CHECK: 'SET_FILE_CHECK'
 });
 
@@ -183,6 +185,7 @@ const {
     SET_FOOTER_INFO,
     GET_TASK_GAS_PRICE,
     GET_FRAGMENTS,
+    SET_DIRECTORY_TREE,
     //SETTINGS
     SET_FILE_LOCATION,
     SET_LOCAL_GETH,
@@ -256,6 +259,7 @@ const {
     SET_CONCENT_TERMS_STATUS,
     //ERROR
     SET_CONNECTION_PROBLEM,
+    SET_COMPONENT_WARNING,
     SET_FILE_CHECK
 } = dict;
 
@@ -733,6 +737,11 @@ export const getTaskGasPrice = () => ({
     type: GET_TASK_GAS_PRICE
 });
 
+export const setDirectoryTree = payload => ({
+    type: SET_DIRECTORY_TREE,
+    payload
+});
+
 export const setPreviewRadio = payload => ({
     type: SET_PREVIEW_RADIO,
     payload
@@ -811,6 +820,11 @@ export const setConcentTermsStatus = payload => ({
 
 export const setConnectionProblem = payload => ({
     type: SET_CONNECTION_PROBLEM,
+    payload
+});
+
+export const setComponentWarning = payload => ({
+    type: SET_COMPONENT_WARNING,
     payload
 });
 

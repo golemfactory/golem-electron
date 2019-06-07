@@ -1,43 +1,45 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import TimeSelection from 'timepoint-selection';
-import isEqual from 'lodash.isequal';
-import { BigNumber } from 'bignumber.js';
-const { remote } = window.electron;
-const mainProcess = remote.require('./index');
+import { Link } from 'react-router-dom'
+import TimeSelection from 'timepoint-selection'
+import {isEqual, isNumber} from 'lodash';
+import { BigNumber } from "bignumber.js";
+const {remote} = window.electron;
+const mainProcess = remote.require('./index')
 
-import yup from 'yup';
+import yup from 'yup'
 
-import TestResult from './TestResult';
-import NodeList from './NodeList';
-import PresetModal from './modal/PresetModal';
-import DepositTimeModal from './modal/DepositTimeModal';
-import ManagePresetModal from './modal/ManagePresetModal';
-import DefaultSettingsModal from './modal/DefaultSettingsModal';
-import ResolutionChangeModal from './modal/ResolutionChangeModal';
-import InsufficientAmountModal from './modal/InsufficientAmountModal';
+import TestResult from './TestResult'
+import NodeList from './NodeList'
+import PresetModal from './modal/PresetModal'
+import DepositTimeModal from './modal/DepositTimeModal'
+import TaskSummaryModal from './modal/TaskSummaryModal'
+import ManagePresetModal from './modal/ManagePresetModal'
+import DefaultSettingsModal from './modal/DefaultSettingsModal'
+import ResolutionChangeModal from './modal/ResolutionChangeModal'
+import InsufficientAmountModal from './modal/InsufficientAmountModal'
 
-import Dropdown from './../Dropdown';
-import InfoLabel from './../InfoLabel';
+import Dropdown from './../Dropdown'
+import InfoLabel from './../InfoLabel'
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 
-const { dialog } = remote;
+const {dialog} = remote
 
-import * as Actions from './../../actions';
-import { once } from './../../utils/once';
-import zipObject from './../../utils/zipObject';
-import isObjectEmpty from './../../utils/isObjectEmpty';
+import * as Actions from './../../actions'
+import {once} from './../../utils/once'
+import zipObject from './../../utils/zipObject'
+import isObjectEmpty from './../../utils/isObjectEmpty'
 import { ETH_DENOM } from './../../constants/variables';
-import { testStatusDict } from './../../constants/statusDicts';
-import calculateFrameAmount from './../../utils/calculateFrameAmount';
+import {testStatusDict} from './../../constants/statusDicts'
+import { getTimeAsFloat, floatToHR } from './../../utils/time'
+import calculateFrameAmount from './../../utils/calculateFrameAmount'
+    
+import whoaImg from './../../assets/img/whoa.png'
 
-import whoaImg from './../../assets/img/whoa.png';
+const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
 
-const TIME_VALIDITY_NOTE = 'Time should be minimum 1 minute.';
-
-const editMode = 'settings';
+const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
     BLENDER_NVGPU: 'Blender_NVGPU'
@@ -78,29 +80,6 @@ const hints = {
     ]
 };
 
-/*############# HELPER FUNCTIONS ############# */
-
-function getTimeAsFloat(time) {
-    let result = 0;
-    time = time.split(':');
-    result += Number(time[0]) * 3600;
-    result += Number(time[1]) * 60;
-    result += Number(time[2]);
-    return result / 3600;
-}
-
-function floatToString(timeFloat) {
-    let time = timeFloat * 3600;
-    let date = new Date(1970, 0, 1); //time travel :)
-    let startDay = date.getDate();
-    date.setSeconds(time);
-
-    let endDay = date.getDate();
-    let day = endDay - startDay;
-    let hours = date.getHours() + day * 24;
-    return hours + ':' + date.toTimeString().replace(/.*(\d{2}:\d{2}).*/, '$1');
-}
-
 const mapStateToProps = state => ({
     currency: state.currency,
     estimated_cost: state.details.estimated_cost,
@@ -115,8 +94,9 @@ const mapStateToProps = state => ({
     taskInfo: state.details.detail,
     testStatus: state.details.test_status,
     gasInfo: state.details.gasInfo,
-    concentSwitch: state.concent.concentSwitch
-});
+    concentSwitch: state.concent.concentSwitch,
+    minPerf: state.performance.multiplier
+})
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
@@ -140,7 +120,7 @@ export class TaskDetail extends React.Component {
             formatIndex: 0,
             output_path: props.location,
             compute_on: 'cpu',
-            sample_per_pixel: 0,
+            samples: 0,
             timeout: '',
             subtasks_count: 1,
             maxSubtasks: 0,
@@ -151,6 +131,7 @@ export class TaskDetail extends React.Component {
             presetList: [],
             savePresetLock: true,
             presetModal: false,
+            taskSummaryModal: false,
             depositTimeModal: false,
             managePresetModal: false,
             defaultSettingsModal: false,
@@ -226,134 +207,75 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (
-            Object.keys(nextProps.taskInfo).length > 0 &&
-            nextProps.match.params.id !== editMode
-        ) {
+        
+        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.match.params.id !== editMode) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
-                this._setTimeStamp();
+                this._setTimeStamp()
             }
-            this.setState(
-                {
-                    type: nextProps.taskInfo.type
-                },
-                () => {
-                    const {
-                        type,
-                        timeout,
-                        subtasks_count,
-                        subtask_timeout,
+            this.setState({
+                type: nextProps.taskInfo.type
+            }, () => {
+
+                const {type, timeout, subtasks_count, subtask_timeout, compute_on, concent_enabled, options, bid} = nextProps.taskInfo
+                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, concentRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
+                this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
+                subtaskCount.value = subtasks_count || 0
+                this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
+                bidRef.value = bid || 0
+                if (options) {
+                    resolutionW.value = options.resolution[0]
+                    resolutionH.value = options.resolution[1]
+                    outputPath.value = options.output_path
+                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
+                    
+                    /*Apply concent option only on testnet*/
+                    if(!this.props.isMainNet && nextProps.concentSwitch) concentRef.checked = concent_enabled
+
+                    this.setState({
+                        formatIndex,
                         compute_on,
-                        concent_enabled,
-                        options,
-                        bid
-                    } = nextProps.taskInfo;
-                    const {
-                        resolutionW,
-                        resolutionH,
-                        formatRef,
-                        outputPath,
-                        compositingRef,
-                        concentRef,
-                        haltspp,
-                        taskTimeout,
-                        subtaskCount,
-                        subtaskTimeout,
-                        bidRef
-                    } = this.refs;
-                    this.taskTimeoutInput.setValue(
-                        getTimeAsFloat(timeout) * 3600 || 0
-                    );
-                    subtaskCount.value = subtasks_count || 0;
-                    this.subtaskTaskTimeoutInput.setValue(
-                        getTimeAsFloat(subtask_timeout) * 3600 || 0
-                    );
-                    bidRef.value = bid || 0;
-                    if (options) {
-                        resolutionW.value = options.resolution[0];
-                        resolutionH.value = options.resolution[1];
-                        outputPath.value = options.output_path;
-                        let formatIndex = mockFormatList
-                            .map(item => item.name)
-                            .indexOf(options.format);
-
-                        /*Apply concent option only on testnet*/
-                        if (!this.props.isMainNet && nextProps.concentSwitch)
-                            concentRef.checked = concent_enabled;
-
-                        this.setState({
-                            formatIndex,
-                            compute_on,
-                            concent: !!concent_enabled
-                        });
-
-                        if (
-                            (type || this.state.type).includes(taskType.BLENDER)
-                        ) {
-                            this.refs.framesRef.value = options.frames
-                                ? options.frames
-                                : 1;
-                        }
-
-                        if (
-                            nextProps.estimated_cost &&
-                            nextProps.estimated_cost.GNT == 0
-                        )
-                            this.props.actions.getEstimatedCost({
-                                type: type,
-                                options: {
-                                    price: new BigNumber(bid)
-                                        .multipliedBy(ETH_DENOM)
-                                        .toString(), //wei
-                                    subtasks_count: Number(subtasks_count),
-                                    subtask_timeout: subtask_timeout
-                                }
-                            });
-                    }
+                        concent: !!concent_enabled
+                    })
+                  
+                    if ((type || this.state.type).includes(taskType.BLENDER)) {
+                        this.refs.framesRef.value = options.frames ? options.frames : 1
+                    } 
+                  
+                    if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
+                        this.props.actions.getEstimatedCost({
+                            type: type,
+                            options: {
+                                price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
+                                subtasks_count: Number(subtasks_count),
+                                subtask_timeout: subtask_timeout
+                            }
+                        })
                 }
-            );
+            })
         }
 
         if (nextProps.presets !== this.props.presets) {
-            this.parsePresets(nextProps.presets);
+            this.parsePresets(nextProps.presets)
         }
 
-        if (
-            !isEqual(nextProps.testStatus, this.props.testStatus) &&
-            !isObjectEmpty(nextProps.testStatus.more) &&
-            !this.state.defaultSettingsModal
-        ) {
+        if(!isEqual(nextProps.testStatus, this.props.testStatus) && 
+                !isObjectEmpty(nextProps.testStatus.more) && 
+                !this.state.defaultSettingsModal)
+        {
             this.setState({
                 defaultSettingsModal: true
-            });
+            })
         }
 
-        if (nextProps.task.resources !== this.props.task.resources) {
+        if(nextProps.task.resources !== this.props.task.resources){
             setTimeout(() => this._handleLocalRender(), 2000);
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {
-            subtasks_count,
-            subtask_timeout,
-            bid,
-            isDetailPage,
-            savePresetLock,
-            resolution,
-            maxSubtasks,
-            frames,
-            sample_per_pixel
-        } = this.state;
-        const { actions, task } = this.props;
-        if (
-            !!nextState.subtasks_count &&
-            !!nextState.subtask_timeout &&
-            !!nextState.bid &&
-            (nextState.subtasks_count !== subtasks_count ||
-                nextState.subtask_timeout !== subtask_timeout ||
-                nextState.bid !== bid)
-        ) {
+        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, samples} = this.state
+        const {actions, task} = this.props
+        if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
@@ -361,7 +283,7 @@ export class TaskDetail extends React.Component {
                         .multipliedBy(ETH_DENOM)
                         .toString(), //wei
                     subtasks_count: Number(nextState.subtasks_count),
-                    subtask_timeout: floatToString(nextState.subtask_timeout)
+                    subtask_timeout: floatToHR(nextState.subtask_timeout)
                 }
             });
         }
@@ -397,10 +319,7 @@ export class TaskDetail extends React.Component {
             this.refs.subtaskCount.value = result ? result : 1; // subtask cannot be 0
         }
 
-        if (
-            nextState.frames !== frames ||
-            nextState.sample_per_pixel !== sample_per_pixel
-        ) {
+        if(nextState.frames !== frames || nextState.samples !== samples){
             this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
@@ -703,7 +622,7 @@ export class TaskDetail extends React.Component {
             frames,
             output_path,
             resolution,
-            sample_per_pixel
+            samples
         } = preset.value; //compositing,
         const {
             resolutionW,
@@ -742,16 +661,14 @@ export class TaskDetail extends React.Component {
         outputPath.value = output_path;
 
         if (this.props.task.type.includes(taskType.BLENDER)) {
-            framesRef.value = frames;
+
+            framesRef.value = frames
+            haltspp.value = samples
             //compositingRef.checked = compositing
         }
-        // else if (this.props.task.type === taskType.LUXRENDER) {
 
-        //     haltspp.value = sample_per_pixel
-
-        // }
-        this.setState({ ...preset.value, formatIndex });
-    };
+        this.setState({...preset.value, formatIndex})
+    }
 
     /**
      * [_handleFormatOptionChange func.  updates format dropdown changes]
@@ -778,14 +695,7 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal = () => {
-        const {
-            resolution,
-            frames,
-            format,
-            output_path,
-            compositing,
-            sample_per_pixel
-        } = this.state;
+        const {resolution, frames, format, output_path, compositing, samples} = this.state
         this.setState({
             presetModal: true,
             modalData: {
@@ -793,7 +703,7 @@ export class TaskDetail extends React.Component {
                 frames,
                 format,
                 output_path,
-                sample_per_pixel,
+                samples,
                 compositing,
                 task_type: this.props.task.type
             }
@@ -872,6 +782,12 @@ export class TaskDetail extends React.Component {
         );
     };
 
+    _handleConfirmationModal = () => {
+        this.setState({
+            taskSummaryModal: true
+        })
+    }
+
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
@@ -923,46 +839,30 @@ export class TaskDetail extends React.Component {
             subtasks_count: 1 // <--- HARDCODED
         });
     };
-
-    _createTaskAsync() {
-        const {
-            bid,
-            compositing,
-            compute_on,
-            concent,
-            frames,
-            format,
-            output_path,
-            resolution,
-            subtasks_count,
-            subtask_timeout,
-            timeout
-        } = this.state;
-        const { task, testStatus } = this.props;
+    _createTaskAsync(){
+        const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, samples, subtasks_count, subtask_timeout, timeout} = this.state
+        const {task, testStatus} = this.props
 
         return new Promise((resolve, reject) => {
-            this.props.actions.createTask(
-                {
-                    ...task,
-                    bid,
-                    compute_on,
-                    concent_enabled: concent,
-                    estimated_memory: testStatus && testStatus.estimated_memory,
-                    subtasks_count: Number(subtasks_count),
-                    subtask_timeout: floatToString(subtask_timeout),
-                    timeout: floatToString(timeout),
-                    options: {
-                        frames,
-                        format,
-                        compositing,
-                        output_path,
-                        resolution
-                    }
-                },
-                resolve,
-                reject
-            );
-        });
+            this.props.actions.createTask({
+                ...task,
+                bid,
+                compute_on,
+                concent_enabled: concent,
+                estimated_memory : (testStatus && testStatus.estimated_memory),
+                subtasks_count: Number(subtasks_count),
+                subtask_timeout: floatToHR(subtask_timeout),
+                timeout: floatToHR(timeout),
+                options: {
+                    frames,
+                    format,
+                    compositing,
+                    output_path,
+                    resolution,
+                    samples: Number(samples)
+                }
+            }, resolve, reject)
+        })
     }
 
     _createTaskOnHighGas = (isConcentOn) => {
@@ -1004,21 +904,9 @@ export class TaskDetail extends React.Component {
     }
 
     isPresetFieldsFilled(nextState) {
-        if (this.props.match.params.id === editMode) {
-            const {
-                resolution,
-                frames,
-                sample_per_pixel,
-                compositing,
-                format
-            } = nextState;
-            return presetSchema[this.props.task.type].isValid({
-                resolution,
-                frames,
-                sample_per_pixel,
-                compositing,
-                format
-            });
+        if(this.props.match.params.id === editMode){
+            const {resolution, frames, samples, compositing, format} = nextState;
+            return presetSchema[this.props.task.type].isValid({resolution, frames, samples, compositing, format})
         }
         return new Promise(res => res(false));
     }
@@ -1200,71 +1088,36 @@ export class TaskDetail extends React.Component {
         ];
 
         switch (type) {
-            case taskType.BLENDER:
-            case taskType.BLENDER_NVGPU:
-                formTemplate.push({
-                    order: 2,
-                    content: (
-                        <div className="item-settings" key="2">
-                            <InfoLabel
-                                type="span"
-                                label="Frame Range"
-                                info={
-                                    <p className="tooltip_task">
-                                        Define frames to render. You can
-                                        separate frame numbers
-                                        <br />
-                                        with ;, eg. 1;4;7 will define frame 1, 4
-                                        and 7. You can also define frames ranges
-                                        with -{' '}
-                                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
-                                            Learn more
-                                        </a>
-                                    </p>
-                                }
-                                cls="title"
-                                infoHidden={true}
-                                interactive={true}
-                            />
-                            <input
-                                ref="framesRef"
-                                type="text"
-                                aria-label="Frame Range"
-                                placeholder={hints.frame[this.frameHintNum]}
-                                pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$"
-                                onChange={this._handleFormInputs.bind(
-                                    this,
-                                    'frames'
-                                )}
-                                required={!isDetailPage}
-                                disabled={isDetailPage}
-                            />
-                        </div>
-                    )
-                });
-                // formTemplate.push({
-                //     order: 5,
-                //     content: <div className="item-settings" key="5">
-                //                 <span className="title">Blender Compositing</span>
-                //                 <div className="switch-box switch-box--green">
-                //                     <span>{compositing ? 'On' : 'Off'}</span>
-                //                     <label className="switch">
-                //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
-                //                         <div className="switch-slider round"></div>
-                //                     </label>
-                //                 </div>
-                //             </div>
-                // })
-                break;
-            // case taskType.LUXRENDER:
-            //     formTemplate.push({
-            //         order: 5,
-            //         content: <div className="item-settings" key="5">
-            //                     <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-            //                     <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'sample_per_pixel')} required={!isDetailPage} disabled={isDetailPage}/>
-            //                  </div>
-            //     })
-            //     break;
+        case taskType.BLENDER:
+        case taskType.BLENDER_NVGPU:
+            formTemplate.push({
+                order: 2,
+                content: <div className="item-settings" key="2">
+                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
+                            <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+            formTemplate.push({
+                order: 5,
+                content: <div className="item-settings" key="5">
+                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
+                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'samples')} required={!isDetailPage} disabled={isDetailPage}/>
+                         </div>
+            })
+            // formTemplate.push({
+            //     order: 5,
+            //     content: <div className="item-settings" key="5">
+            //                 <span className="title">Blender Compositing</span>
+            //                 <div className="switch-box switch-box--green">
+            //                     <span>{compositing ? 'On' : 'Off'}</span>
+            //                     <label className="switch">
+            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
+            //                         <div className="switch-slider round"></div>
+            //                     </label>
+            //                 </div>
+            //             </div>
+            // })
+            break;
         }
 
         let sortByOrder = (a, b) => a.order - b.order;
@@ -1310,7 +1163,8 @@ export class TaskDetail extends React.Component {
             maxSubtasks,
             modalData,
             presetModal,
-            depositTimeModal,
+            taskSummaryModal,
+            depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
             testLock
@@ -1323,6 +1177,7 @@ export class TaskDetail extends React.Component {
             estimated_cost,
             isDeveloperMode,
             isMainNet,
+            minPerf,
             subtasksList,
             hasSubtasksLoaded,
             task,
@@ -1330,12 +1185,9 @@ export class TaskDetail extends React.Component {
         } = this.props;
         return (
             <div>
-                <form
-                    id="taskForm"
-                    onSubmit={this._handleStartTaskButton}
-                    className="content__task-detail">
-                    <TestResult
-                        testStatus={testStatus}
+                <form id="taskForm" onSubmit={this._handleConfirmationModal} className="content__task-detail">
+                    <TestResult 
+                        testStatus={testStatus} 
                         isDetailPage={isDetailPage}
                         task={task}
                         actions={actions}
@@ -1661,29 +1513,19 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="estimated-price__panel">
                                     <div className="item-price">
-                                        <InfoLabel
-                                            type="span"
-                                            label="Total"
-                                            info={
-                                                <p className="tooltip_task">
-                                                    The estimated price that
-                                                    you’ll have to pay to render
-                                                    the task is based on
-                                                    <br />
-                                                    Your bid, subtask amount and
-                                                    timeout settings. Fiat value
-                                                    may change during
-                                                    computation as well as gas
-                                                    price -
-                                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
-                                                        Learn more
-                                                    </a>
-                                                </p>
-                                            }
-                                            cls="title"
-                                            infoHidden={true}
-                                            interactive={true}
-                                        />
+                                        <InfoLabel 
+                                            type="span" 
+                                            label="Task fee" 
+                                            info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
+                                                subtask amount and timeout settings. Fiat value may change during computation 
+                                                as well as gas price - 
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
+                                                Learn more
+                                                </a>
+                                                </p>} 
+                                            cls="title" 
+                                            infoHidden={true} 
+                                            interactive={true}/>
                                         <div className="estimated_cost">
                                             {this._convertPriceAsHR(
                                                 estimated_cost.GNT,
@@ -1888,6 +1730,7 @@ export class TaskDetail extends React.Component {
                 {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
                 {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
                 {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
+                {taskSummaryModal && <TaskSummaryModal closeModal={this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} estimated_cost={estimated_cost} minPerf={minPerf} {...this.state}/>}
                 {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
                 {(insufficientAmountModal && insufficientAmountModal.result) && 
                     <InsufficientAmountModal 

@@ -101,7 +101,7 @@ if (remote.getGlobal('process').platform === 'win32') {
         /* Send the RPC call */
         evt.returnValue = false;
         store.dispatch({
-            type: 'APP_QUIT',
+            type: "APP_QUIT",
             _cb
         });
     });

@@ -372,7 +372,7 @@ export class Resources extends React.Component {
                                     <input
                                         type="checkbox"
                                         onChange={
-                                            ::this._handleGPUProviderSwitch
+                                            this._handleGPUProviderSwitch
                                         }
                                         checked={
                                             gpuEnvironment &&
@@ -429,7 +429,7 @@ export class Resources extends React.Component {
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        onChange={::this._handleProviderSwitch}
+                                        onChange={this._handleProviderSwitch}
                                         checked={!isNodeProvider}
                                         aria-label="Trust switch providing/requesting"
                                         tabIndex="0"

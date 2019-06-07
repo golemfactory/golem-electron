@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 
 import SingleFrame from './Single';
-import { timeStampToHR } from './../../utils/secsToHMS';
+import { timeStampToHR } from './../../utils/time';
 
 const statusDict = Object.freeze({
     WAITINGFORPEER: 'waiting for peer',
