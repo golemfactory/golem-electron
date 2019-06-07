@@ -131,8 +131,9 @@ export let dict = Object.freeze({
     ACCEPT_CONCENT_TERMS: "ACCEPT_CONCENT_TERMS",
     SET_CONCENT_TERMS_STATUS: "SET_CONCENT_TERMS_STATUS",
     //ERROR
-    SET_CONNECTION_PROBLEM: "SET_CONNECTION_PROBLEM",
-    SET_FILE_CHECK: "SET_FILE_CHECK"
+    SET_CONNECTION_PROBLEM: 'SET_CONNECTION_PROBLEM',
+    SET_COMPONENT_WARNING: 'SET_COMPONENT_WARNING',
+    SET_FILE_CHECK: 'SET_FILE_CHECK'
 });
 
 const {
@@ -254,7 +255,8 @@ const {
     ACCEPT_CONCENT_TERMS,
     SET_CONCENT_TERMS_STATUS,
     //ERROR
-    SET_CONNECTION_PROBLEM,
+    SET_CONNECTION_PROBLEM, 
+    SET_COMPONENT_WARNING,
     SET_FILE_CHECK
 } = dict;
 
@@ -814,7 +816,12 @@ export const setConnectionProblem = payload => ({
     payload
 });
 
-export const setFileCheck = payload => ({
+export const setComponentWarning = (payload) => ({
+    type: SET_COMPONENT_WARNING,
+    payload
+})
+
+export const setFileCheck = (payload) => ({
     type: SET_FILE_CHECK,
     payload
 });
