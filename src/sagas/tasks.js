@@ -456,7 +456,7 @@ export function callRestartTask(
         );
     else
         _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [
-            id, true
+            id, true, !isConcentOn
         ]);
 }
 
