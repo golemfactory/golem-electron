@@ -419,6 +419,7 @@ export const concentDepositStatusSelector = createCachedSelector(
     (state, key) => key // Cache selectors by type name
 );
 
+const warningCollector = [];
 export const componentWarningSelector = createCachedSelector(
     state => state,
     state => state.componentWarnings,
@@ -426,28 +427,28 @@ export const componentWarningSelector = createCachedSelector(
     (state, componentWarnings, key) => {
         const currentStatus = getStatusSelector(state, 'golemStatus');
         const hypervisorData = currentStatus?.hypervisor?.data;
-        
-        addWarning(hypervisorData, 'smb_blocked', componentWarnings, 'PORT');
-        addWarning(hypervisorData, 'lowered_memory', componentWarnings, 'RAM');
-        addWarning(hypervisorData, 'low_diskspace', componentWarnings, 'DISK');
 
-        return componentWarnings;
+        addWarning(hypervisorData, 'smb_blocked', 'PORT');
+        addWarning(hypervisorData, 'lowered_memory', 'RAM');
+        addWarning(hypervisorData, 'low_diskspace', 'DISK');
+
+        return componentWarnings.concat(warningCollector);
     }
 )(
     (state, key) => key // Cache selectors by type name
 );
 
-function addWarning(data, title, componentWarnings, unit){
-            if (
-                data?.status == title &&
-                !some(componentWarnings, {
-                    status: true,
-                    issue: unit
-                })
-            ) {
-                componentWarnings.push({
-                    status: true,
-                    issue: unit
-                });
-            }
-        }
+function addWarning(data, title, unit) {
+    if (
+        data?.status == title &&
+        !some(warningCollector, {
+            status: true,
+            issue: unit
+        })
+    ) {
+        warningCollector.push({
+            status: true,
+            issue: unit
+        });
+    }
+}
