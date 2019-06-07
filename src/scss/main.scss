@@ -16,7 +16,7 @@
 @import 'onboarding/index';
 @import 'spot-light';
 @import 'network/index';
-@import 'task-panel/index';
+@import 'tasks/index';
 @import 'settings/index';
 @import 'concent/index';
 @import 'transaction/index';
@@ -286,6 +286,7 @@ input[type='password'] {
     background: white;
     border: 1px solid $color-border;
     height: 32px;
+    border-radius: 5px;
 
     &:disabled {
         background: $color-input;
@@ -656,6 +657,7 @@ input[type='number']::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -677,10 +679,12 @@ input[type='number']::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,
@@ -697,6 +701,7 @@ input[type='number']::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -718,10 +723,12 @@ input[type='number']::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,
@@ -738,6 +745,7 @@ input[type='number']::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -759,10 +767,12 @@ input[type='number']::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,

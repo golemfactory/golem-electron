@@ -39,7 +39,7 @@ export default class ConcentModal extends React.Component {
 
     _handleUnlockCheckbox = evt => {
         this.setState({
-            toggleConcentLock: evt.target.value
+            toggleConcentLock: (evt.target.value == 'true')
         });
     };
 

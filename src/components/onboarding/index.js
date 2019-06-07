@@ -202,15 +202,15 @@ class OnboardIndex extends React.Component {
     _handleDecline = () => this.setState({ isTermsDeclined: true });
 
     _handleSentryRadio = e => {
-        this.setState({
-            isSentryAccepted: !this.state.isSentryAccepted
-        });
+        this.setState( prevState => ({
+            isSentryAccepted: !prevState.isSentryAccepted
+        }));
     };
 
     _handleMonitorRadio = () => {
-        this.setState({
-            isMonitorAccepted: !this.state.isMonitorAccepted
-        });
+        this.setState( prevState => ({
+            isMonitorAccepted: !prevState.isMonitorAccepted
+        }));
     };
 
     _handlePasswordValidation = _result => {
