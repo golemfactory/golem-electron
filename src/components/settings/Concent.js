@@ -3,10 +3,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as Actions from './../../actions';
+import { ETH_DENOM } from './../../constants/variables';
 import { getConcentDepositStatus } from './../../reducers';
 import { timeStampToHR } from './../../utils/time';
-
-const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,

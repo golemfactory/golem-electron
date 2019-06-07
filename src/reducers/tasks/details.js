@@ -14,7 +14,8 @@ const {
     SET_TASK_TEST_STATUS,
     SET_TASK_GAS_PRICE,
     CLEAR_TASK_PLAIN,
-    SET_HEALTHY_NODE_NUMBER
+    SET_HEALTHY_NODE_NUMBER,
+    SET_FRAGMENTS
 } = dict;
 
 const initialState = {
@@ -31,7 +32,8 @@ const initialState = {
     },
     test_status: {},
     nodeNumber: {},
-    gasInfo: {}
+    gasInfo: {},
+    fragments: []
 };
 const setTaskDetails = (state = initialState, action) => {
     switch (action.type) {
@@ -56,6 +58,7 @@ const setTaskDetails = (state = initialState, action) => {
                     ETH: 0
                 }
             } = result;
+
             return Object.assign({}, state, {
                 estimated_cost: {
                     GNT: weiToETH(GNT),
@@ -96,6 +99,10 @@ const setTaskDetails = (state = initialState, action) => {
                     ...state.nodeNumber,
                     ...action.payload
                 }
+            });
+        case SET_FRAGMENTS:
+            return Object.assign({}, state, {
+                fragments: action.payload
             });
 
         default:

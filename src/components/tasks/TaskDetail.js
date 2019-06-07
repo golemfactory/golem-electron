@@ -30,20 +30,20 @@ import * as Actions from './../../actions'
 import {once} from './../../utils/once'
 import zipObject from './../../utils/zipObject'
 import isObjectEmpty from './../../utils/isObjectEmpty'
+import { ETH_DENOM } from './../../constants/variables';
 import {testStatusDict} from './../../constants/statusDicts'
 import { getTimeAsFloat, floatToHR } from './../../utils/time'
 import calculateFrameAmount from './../../utils/calculateFrameAmount'
     
 import whoaImg from './../../assets/img/whoa.png'
 
-const ETH_DENOM = 10 ** 18;
 const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
 
 const editMode = "settings"
 const taskType = Object.freeze({
     BLENDER: 'Blender',
     BLENDER_NVGPU: 'Blender_NVGPU'
-})
+});
 
 const mockFormatList = [
     {
@@ -52,25 +52,33 @@ const mockFormatList = [
     {
         name: 'EXR'
     }
-]
+];
 
 const presetSchema = {
     Blender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            frames: yup.string().required(),
-            format: yup.string(),
-            output_path: yup.string(),
-            compositing: yup.bool()
-        })
-}
+        resolution: yup
+            .array()
+            .of(
+                yup
+                    .number()
+                    .min(100)
+                    .max(8000)
+            )
+            .required(),
+        frames: yup.string().required(),
+        format: yup.string(),
+        output_path: yup.string(),
+        compositing: yup.bool()
+    })
+};
 
 const hints = {
     frame: [
-        "Hint: To use consecutive frames, e.g. \"1-6\".",
-        "Hint: To pick random frames, e.g. \"2;6;7\".",
-        "Hint: To use common diff. e.g. \"1-7,2\"."
+        'Hint: To use consecutive frames, e.g. "1-6".',
+        'Hint: To pick random frames, e.g. "2;6;7".',
+        'Hint: To use common diff. e.g. "1-7,2".'
     ]
-}
+};
 
 const mapStateToProps = state => ({
     currency: state.currency,
@@ -92,22 +100,21 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-})
+});
 
 export class TaskDetail extends React.Component {
-
     constructor(props) {
         super(props);
         this.state = {
             isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
+            isDetailPage: props.match.params.id !== 'settings', //<-- HARDCODED
             isInPatient: false,
             isDepositTimeApplied: false,
             //INPUTS
             compositing: false,
             concent: props.concentSwitch,
-            resolution: [NaN,NaN],
+            resolution: [NaN, NaN],
             frames: '',
             format: '',
             formatIndex: 0,
@@ -135,50 +142,67 @@ export class TaskDetail extends React.Component {
             resolutionChangeModal: false,
             resolutionChangeInfo: [],
             loadingTaskIndicator: false
-        }
+        };
     }
 
     componentDidMount() {
-        const {match, actions, task, presets, location, isDeveloperMode, requestorMaxPrice} = this.props
+        const {
+            match,
+            actions,
+            task,
+            presets,
+            location,
+            isDeveloperMode,
+            requestorMaxPrice
+        } = this.props;
 
-        actions.setEstimatedCost(0)
+        actions.setEstimatedCost(0);
         if (match.params.id !== editMode) {
-            actions.getTaskDetails(match.params.id)
+            actions.getTaskDetails(match.params.id);
         } else {
-            actions.getTaskPresets(task.type)
-            this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM
+            actions.getTaskPresets(task.type);
+            this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM;
         }
 
         if (!!this.refs.taskTimeout && !!this.refs.subtaskTimeout) {
-            this._setTimeStamp()
+            this._setTimeStamp();
         }
 
         if (!this.state.isDetailPage) {
-            this.refs.outputPath.value = location
-            this._handleLocalRender()
+            this.refs.outputPath.value = location;
+            this._handleLocalRender();
         }
 
-        this.frameHintNum = Math.floor(Math.random()* hints.frame.length)
+        this.frameHintNum = Math.floor(Math.random() * hints.frame.length);
 
-        var elements = document.getElementsByTagName("input")
-        var ariaKeys = Array.from(elements).map(elm => elm.getAttribute("aria-label"));
-        this.interactedInputObject = zipObject(ariaKeys, new Array(ariaKeys.length).fill(false));
+        var elements = document.getElementsByTagName('input');
+        var ariaKeys = Array.from(elements).map(elm =>
+            elm.getAttribute('aria-label')
+        );
+        this.interactedInputObject = zipObject(
+            ariaKeys,
+            new Array(ariaKeys.length).fill(false)
+        );
 
-        if(match.params.id === editMode)
-            document.getElementById("taskFormSubmit").addEventListener("click", ()=>{
-                Object.keys(this.interactedInputObject).map(keys => this.interactedInputObject[keys] = true)
-            })
+        if (match.params.id === editMode)
+            document
+                .getElementById('taskFormSubmit')
+                .addEventListener('click', () => {
+                    Object.keys(this.interactedInputObject).map(
+                        keys => (this.interactedInputObject[keys] = true)
+                    );
+                });
 
-        actions.getTaskGasPrice()
+        actions.getTaskGasPrice();
     }
 
     componentWillUnmount() {
-        this.props.actions.clearTaskPlain()
+        this.props.actions.clearTaskPlain();
         this.liveSubList && clearInterval(this.liveSubList);
-        this.interactedInputObject = {}
+        this.interactedInputObject = {};
 
-        if(this.props.testStatus){
-            this.props.actions.abortTestTask()
+        if (this.props.testStatus) {
+            this.props.actions.abortTestTask();
         }
     }
 
@@ -255,36 +279,44 @@ export class TaskDetail extends React.Component {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
-                    price: new BigNumber(nextState.bid).multipliedBy(ETH_DENOM).toString(), //wei
+                    price: new BigNumber(nextState.bid)
+                        .multipliedBy(ETH_DENOM)
+                        .toString(), //wei
                     subtasks_count: Number(nextState.subtasks_count),
                     subtask_timeout: floatToHR(nextState.subtask_timeout)
                 }
-            })
+            });
         }
 
-        if(nextProps.isDeveloperMode && !this.liveSubList && isDetailPage){
-
-            let interval = ()=> {
-                actions.fetchSubtasksList(nextProps.match.params.id)
-                return interval
-            }
-            this.liveSubList = setInterval(interval(), 2000)
-
-        } else if(!nextProps.isDeveloperMode && this.liveSubList && isDetailPage) {
-
-            clearInterval(this.liveSubList)
+        if (nextProps.isDeveloperMode && !this.liveSubList && isDetailPage) {
+            let interval = () => {
+                actions.fetchSubtasksList(nextProps.match.params.id);
+                return interval;
+            };
+            this.liveSubList = setInterval(interval(), 2000);
+        } else if (
+            !nextProps.isDeveloperMode &&
+            this.liveSubList &&
+            isDetailPage
+        ) {
+            clearInterval(this.liveSubList);
             this.liveSubList = false;
-            
         }
 
-        if(nextState.resolution !== resolution){
+        if (nextState.resolution !== resolution) {
             this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        if(nextState.maxSubtasks !== maxSubtasks || nextState.subtasks_count !== subtasks_count){
-            const result = Math.min(nextState.maxSubtasks, nextState.subtasks_count);
-            this.refs.subtaskCount.value = result ? result : 1 // subtask cannot be 0
+        if (
+            nextState.maxSubtasks !== maxSubtasks ||
+            nextState.subtasks_count !== subtasks_count
+        ) {
+            const result = Math.min(
+                nextState.maxSubtasks,
+                nextState.subtasks_count
+            );
+            this.refs.subtaskCount.value = result ? result : 1; // subtask cannot be 0
         }
 
         if(nextState.frames !== frames || nextState.samples !== samples){
@@ -292,23 +324,30 @@ export class TaskDetail extends React.Component {
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        var elements = document.getElementsByTagName("input")
+        var elements = document.getElementsByTagName('input');
         Array.from(elements).forEach(element => {
             element.checkValidity();
-            if (element.validity.valid)
-                element.classList.remove("invalid");
-            return element.validity.valid
-        })
+            if (element.validity.valid) element.classList.remove('invalid');
+            return element.validity.valid;
+        });
 
-        once(this._activateValidation())
+        once(this._activateValidation());
     }
 
-    _activateValidation(){
+    _activateValidation() {
         if (document.addEventListener) {
-            document.addEventListener('invalid', e => {
-                if(this.interactedInputObject[e.target.getAttribute("aria-label")])
-                    e.target.classList.add("invalid")
-            }, true);
+            document.addEventListener(
+                'invalid',
+                e => {
+                    if (
+                        this.interactedInputObject[
+                            e.target.getAttribute('aria-label')
+                        ]
+                    )
+                        e.target.classList.add('invalid');
+                },
+                true
+            );
         }
     }
 
@@ -318,74 +357,86 @@ export class TaskDetail extends React.Component {
      * @param  {String}     frame   [frame pattern of the task]
      * @return {Number}             [maximum subtask amount]
      */
-    _calcMaxSubtaskAmount(nextState){
-        const {resolution, frames} = nextState
+    _calcMaxSubtaskAmount(nextState) {
+        const { resolution, frames } = nextState;
         const y = resolution[1];
         let maxSubtasks;
 
-        if(!y)
-                return; 
+        if (!y) return;
 
         if (this.props.task.type.includes(taskType.BLENDER)) {
-            if(!frames)
-                return; 
+            if (!frames) return;
 
             const frameAmount = calculateFrameAmount(frames);
-            maxSubtasks = Math.floor(y / Math.max((y / 100) * 3, 8 + ((y / 100) * 2))) * frameAmount;
-            
+            maxSubtasks =
+                Math.floor(y / Math.max((y / 100) * 3, 8 + (y / 100) * 2)) *
+                frameAmount;
         } else {
-            maxSubtasks = 100 
+            maxSubtasks = 100;
         }
 
-        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks_count)
+        const subtaskValue = Math.min(maxSubtasks, this.state.subtasks_count);
 
         this.setState({
-                maxSubtasks,
-                subtasks_count: subtaskValue
-            })
+            maxSubtasks,
+            subtasks_count: subtaskValue
+        });
 
-        this.refs.subtaskCount.value = subtaskValue
+        this.refs.subtaskCount.value = subtaskValue;
     }
 
     _convertPriceAsHR(price = 0, suffix, fixTo = 2, font_size) {
-        let priceLength = parseInt(price).toString().length
-        let fontSize = price.toFixed(fixTo).toString().length > 4 ? (font_size/1.7)+'pt' : font_size+'pt';
+        let priceLength = parseInt(price).toString().length;
+        let fontSize =
+            price.toFixed(fixTo).toString().length > 4
+                ? font_size / 1.7 + 'pt'
+                : font_size + 'pt';
 
         if (priceLength < 5) {
-            return <span 
-                className={`estimated-price ${suffix}`} 
-                style={{'fontSize': fontSize}}>
+            return (
+                <span
+                    className={`estimated-price ${suffix}`}
+                    style={{ fontSize: fontSize }}>
                     {price.toFixed(fixTo)}
                 </span>
+            );
         }
-        let firstDigit = parseInt(price) / (10 ** (priceLength - 1))
-        let firstDigitLength = firstDigit.toString().length
-        return <span 
+        let firstDigit = parseInt(price) / 10 ** (priceLength - 1);
+        let firstDigitLength = firstDigit.toString().length;
+        return (
+            <span
                 className={`estimated-price ${suffix}`}
-                style={{'fontSize': fontSize}}>
-                {firstDigitLength > 3 ? "~" + firstDigit.toFixed(2) : firstDigit}
+                style={{ fontSize: fontSize }}>
+                {firstDigitLength > 3
+                    ? '~' + firstDigit.toFixed(2)
+                    : firstDigit}
                 <small>x</small>
                 10
                 <sup>{priceLength - 1}</sup>
             </span>
+        );
     }
 
     _setTimeStamp() {
         const options = Object.freeze({
-            'durationFormat': 'dd:hh:mm:ss',
-            'max': 60 * 60 * 24 * 2,
-            'value': 0, // initial value of input in seconds.
-            'useAbbr': true, // configure the separator to not be ':'
-            'abbr': { // pass in custom separator (with trailing space if desired)
-                'dd': 'days ',
-                'hh': 'h ',
-                'mm': 'm ',
-                'ss': 's'
+            durationFormat: 'dd:hh:mm:ss',
+            max: 60 * 60 * 24 * 2,
+            value: 0, // initial value of input in seconds.
+            useAbbr: true, // configure the separator to not be ':'
+            abbr: {
+                // pass in custom separator (with trailing space if desired)
+                dd: 'days ',
+                hh: 'h ',
+                mm: 'm ',
+                ss: 's'
             }
-        })
+        });
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
         this.refs.taskTimeout.setCustomValidity(TIME_VALIDITY_NOTE);
-        this.subtaskTaskTimeoutInput = TimeSelection(this.refs.subtaskTimeout, options);
+        this.subtaskTaskTimeoutInput = TimeSelection(
+            this.refs.subtaskTimeout,
+            options
+        );
         this.refs.subtaskTimeout.setCustomValidity(TIME_VALIDITY_NOTE);
         this.refs.subtaskTimeout.disabled = true;
     }
@@ -395,27 +446,27 @@ export class TaskDetail extends React.Component {
      * @param  {Object}     presets     [Task preset object]
      */
     parsePresets(presets) {
-        let presetList = []
+        let presetList = [];
         Object.keys(presets).forEach(item => {
             presetList.push({
                 name: item,
                 value: presets[item]
-            })
-        })
+            });
+        });
         this.setState({
             presetList
-        })
+        });
     }
 
     /**
      * [changePresetLock func. enables\disables save preset button]
      * @param  {boolean} result [form validity result]
      */
-    changePresetLock = (result) => {
+    changePresetLock = result => {
         this.setState({
             savePresetLock: !result
-        })
-    }
+        });
+    };
 
     /**
      * [checkInputValidity func. checks if given input valid]
@@ -423,9 +474,8 @@ export class TaskDetail extends React.Component {
      */
     checkInputValidity(e) {
         e.target.checkValidity();
-        if (e.target.validity.valid)
-            e.target.classList.remove("invalid");
-        return e.target.validity.valid
+        if (e.target.validity.valid) e.target.classList.remove('invalid');
+        return e.target.validity.valid;
     }
 
     /**
@@ -434,13 +484,13 @@ export class TaskDetail extends React.Component {
      * @param  {Event}      e
      */
     _handleResolution(index, e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
-        let res = this.state.resolution
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        let res = this.state.resolution;
         let newRes = [...res]; //keep state immutable
         newRes[index] = parseInt(e.target.value);
         this.setState({
             resolution: newRes
-        })
+        });
     }
 
     /**
@@ -448,10 +498,10 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         this.setState({
             compositing: e.target.checked
-        })
+        });
     }
 
     /**
@@ -459,49 +509,49 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleConcentCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         this.setState({
             concent: e.target.checked
-        })
+        });
     }
 
     /**
      * [_handleTimeoutInputs func. updtes timeout values form inputs]
      * @param  {[type]} state [Name of the state]
-     * @param  {[type]} e     
+     * @param  {[type]} e
      */
     _handleTimeoutInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         const timeoutList = Object.freeze({
-            'timeout': this.taskTimeoutInput,
-            'subtask_timeout': this.subtaskTaskTimeoutInput
-        })
+            timeout: this.taskTimeoutInput,
+            subtask_timeout: this.subtaskTaskTimeoutInput
+        });
 
         /*Input will be invalid if given time is lesser than 1 min*/
-        const inputTime = e.target.classList
-        if(timeoutList[state].getValue() < 60){
-            inputTime.add("invalid");
+        const inputTime = e.target.classList;
+        if (timeoutList[state].getValue() < 60) {
+            inputTime.add('invalid');
             e.target.setCustomValidity(TIME_VALIDITY_NOTE);
         } else {
-            inputTime.remove("invalid");
-            e.target.setCustomValidity("");
+            inputTime.remove('invalid');
+            e.target.setCustomValidity('');
         }
 
-        if(state === 'timeout'){
-            const taskTimeoutValue = this.taskTimeoutInput.getValue()
-            const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue()
+        if (state === 'timeout') {
+            const taskTimeoutValue = this.taskTimeoutInput.getValue();
+            const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue();
 
-            if(subtaskTimeoutValue > taskTimeoutValue){
-                this.subtaskTaskTimeoutInput.setValue(taskTimeoutValue)
+            if (subtaskTimeoutValue > taskTimeoutValue) {
+                this.subtaskTaskTimeoutInput.setValue(taskTimeoutValue);
             }
 
-            this.subtaskTaskTimeoutInput.max = taskTimeoutValue + 1 // including value itself
+            this.subtaskTaskTimeoutInput.max = taskTimeoutValue + 1; // including value itself
             this.refs.subtaskTimeout.disabled = !(taskTimeoutValue > 0);
         }
-        
+
         this.setState({
             [state]: timeoutList[state].getValue() / 3600
-        })
+        });
     }
 
     /**
@@ -510,20 +560,21 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
-        if(this.checkInputValidity(e)){
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        if (this.checkInputValidity(e)) {
             this.setState({
                 [state]: e.target.value
-            })
-        } else if(!this.state.savePresetLock && 
-                    (state === "frames" || state === "samples") 
-                    && !this.checkInputValidity(e)){
+            });
+        } else if (
+            !this.state.savePresetLock &&
+            (state === 'frames' || state === 'sample_per_pixel') &&
+            !this.checkInputValidity(e)
+        ) {
             this.setState({
                 [state]: null,
                 savePresetLock: true
-            })
+            });
         }
-        
     }
 
     /**
@@ -532,62 +583,82 @@ export class TaskDetail extends React.Component {
      * @param  {String}     name    [Name of selected preset]
      */
     _handlePresetOptionChange(list, name) {
+        const result = list.filter((item, index) => item.name == name)[0];
+        const preset = { ...result, value: { ...result.value } }; // immutable
 
-        const result = list.filter((item, index) => item.name == name)[0]
-        const preset = {...result, value: {...result.value}} // immutable
+        if (!preset) return;
 
-        if (!preset)
-            return;
-
-        const {resolution} = preset.value
-        const {resolutionW, resolutionH} = this.refs
-        if(this.state.isDefaultResolutionApplied && !this._isArrayEqual([resolutionW.value, resolutionH.value], resolution))
-            this._askForNewResolutionChange(preset)
-        else
-            this._applyPresetOption(preset, true, false)
+        const { resolution } = preset.value;
+        const { resolutionW, resolutionH } = this.refs;
+        if (
+            this.state.isDefaultResolutionApplied &&
+            !this._isArrayEqual(
+                [resolutionW.value, resolutionH.value],
+                resolution
+            )
+        )
+            this._askForNewResolutionChange(preset);
+        else this._applyPresetOption(preset, true, false);
     }
 
-    _askForNewResolutionChange(preset){
+    _askForNewResolutionChange(preset) {
         this.setState({
             resolutionChangeModal: true,
             resolutionChangeInfo: preset
-        })
+        });
     }
 
-    _isArrayEqual(arr1, arr2){
-        return arr1.toString() === arr2.toString() //String representation hack
+    _isArrayEqual(arr1, arr2) {
+        return arr1.toString() === arr2.toString(); //String representation hack
     }
 
-    _applyPresetOption = (preset, isResolutionIncluded = true, applyStates = true) => {
+    _applyPresetOption = (
+        preset,
+        isResolutionIncluded = true,
+        applyStates = true
+    ) => {
+        const {
+            format,
+            frames,
+            output_path,
+            resolution,
+            samples
+        } = preset.value; //compositing,
+        const {
+            resolutionW,
+            resolutionH,
+            framesRef,
+            formatRef,
+            outputPath,
+            haltspp
+        } = this.refs; //compositingRef,
 
-        const { format, frames, output_path, resolution, samples} = preset.value //compositing,
-        const {resolutionW, resolutionH, framesRef, formatRef, outputPath, haltspp} = this.refs //compositingRef,
-        
-        if(isResolutionIncluded){
+        if (isResolutionIncluded) {
             resolutionW.value = resolution[0];
             resolutionH.value = resolution[1];
 
-            if(applyStates)
+            if (applyStates)
                 this.setState({
                     isDefaultResolutionApplied: false,
                     resolutionChangeInfo: []
-                })
-
+                });
         } else {
-            delete preset.value.resolution
+            delete preset.value.resolution;
         }
 
         // If  file format from preset list is not available on mockFormatList, use first element as default
-        const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
+        const pickFormatIndex = mockFormatList
+            .map(item => item.name)
+            .indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
 
-        if(pickFormatIndex > -1){
-            formatRef.value = format
+        if (pickFormatIndex > -1) {
+            formatRef.value = format;
         } else {
-            preset.value.format = formatRef.value = mockFormatList[0].name
+            preset.value.format = formatRef.value = mockFormatList[0].name;
         }
 
-        outputPath.value = output_path
+        outputPath.value = output_path;
 
         if (this.props.task.type.includes(taskType.BLENDER)) {
 
@@ -606,17 +677,19 @@ export class TaskDetail extends React.Component {
      */
     _handleFormatOptionChange(list, formatName, index) {
         let result = list.filter((item, index) => item.name === formatName)[0];
-        (result && result.name) && this.setState({
-            format: result.name,
-            formatIndex: index
-        })
+        result &&
+            result.name &&
+            this.setState({
+                format: result.name,
+                formatIndex: index
+            });
     }
 
     _handleComputeOnOptionChange = e => {
         this.setState({
-            compute_on: e.target.value,
-        })
-    }
+            compute_on: e.target.value
+        });
+    };
 
     /**
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
@@ -634,8 +707,8 @@ export class TaskDetail extends React.Component {
                 compositing,
                 task_type: this.props.task.type
             }
-        })
-    }
+        });
+    };
 
     /**
      * [_handlePresetSave func.]
@@ -647,36 +720,42 @@ export class TaskDetail extends React.Component {
             preset_name,
             task_type: this.props.task.type,
             data
-        })
-    }
+        });
+    };
 
     _applyDefaultPreset = () => {
-        const {resolution, file_format} = this.props.testStatus.more.after_test_data
-        const {resolutionW, resolutionH, formatRef} = this.refs
-        const format = file_format.replace(".", "").toUpperCase()
+        const {
+            resolution,
+            file_format
+        } = this.props.testStatus.more.after_test_data;
+        const { resolutionW, resolutionH, formatRef } = this.refs;
+        const format = file_format.replace('.', '').toUpperCase();
 
         // If taken file format from input file is not available on mockFormatList, use first element as default
-        const pickFormatIndex = mockFormatList.map(item => item.name).indexOf(format);
+        const pickFormatIndex = mockFormatList
+            .map(item => item.name)
+            .indexOf(format);
         const formatIndex = pickFormatIndex > -1 ? pickFormatIndex : 0;
 
-        resolutionW.value = resolution[0]
-        resolutionH.value = resolution[1]
-        formatRef.value = pickFormatIndex > -1 ? format : mockFormatList[0].name
+        resolutionW.value = resolution[0];
+        resolutionH.value = resolution[1];
+        formatRef.value =
+            pickFormatIndex > -1 ? format : mockFormatList[0].name;
 
         this.setState({
             resolution,
             format: formatRef.value,
             formatIndex,
             isDefaultResolutionApplied: true
-        })
+        });
 
-        this._closeModal('defaultSettingsModal')
-    }
+        this._closeModal('defaultSettingsModal');
+    };
 
     /**
      * [_closeModal func. closes all modals]
      */
-    _closeModal = _modal => this.setState({ [_modal]: false })
+    _closeModal = _modal => this.setState({ [_modal]: false });
 
     /**
      * [_handleOutputPath func. opens file chooser dialog and updates output path of that task]
@@ -684,18 +763,24 @@ export class TaskDetail extends React.Component {
     _handleOutputPath = () => {
         let onFolderHandler = data => {
             if (data) {
-                this.setState({
-                    output_path: data[0]
-                }, () => {
-                    this.refs.outputPath.value = data[0]
-                })
+                this.setState(
+                    {
+                        output_path: data[0]
+                    },
+                    () => {
+                        this.refs.outputPath.value = data[0];
+                    }
+                );
             }
-        }
+        };
 
-        dialog.showOpenDialog({
-            properties: ['openDirectory']
-        }, onFolderHandler)
-    }
+        dialog.showOpenDialog(
+            {
+                properties: ['openDirectory']
+            },
+            onFolderHandler
+        );
+    };
 
     _handleConfirmationModal = () => {
         this.setState({
@@ -707,52 +792,53 @@ export class TaskDetail extends React.Component {
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
      */
     _handleStartTaskButton = () => {
-        const {gasInfo} = this.props
-        const {concent, depositTimeModal, isDepositTimeApplied} = this.state
+        const { gasInfo } = this.props;
+        const { concent, depositTimeModal, isDepositimeApplied } = this.state;
 
-        if(!isDepositTimeApplied
-            &&concent
-            && gasInfo 
-            && gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)){
+        if (
+            !isDepositimeApplied &&
+            concent &&
+            gasInfo &&
+            gasInfo.current_gas_price.isGreaterThan(gasInfo.gas_price_limit)
+        ) {
             this.setState({
                 depositTimeModal: true
-            })
-            return false
+            });
+            return false;
         }
 
-        this._nextStep = true
+        this._nextStep = true;
         this.setState({
             loadingTaskIndicator: true
-        })
+        });
         this._createTaskAsync().then(result => {
-            if(result && !result[1]){
+            if (result && !result[1]) {
                 window.routerHistory.push('/tasks');
             } else {
-                console.log("Task creation failed!")
+                console.log('Task creation failed!');
                 this.setState({
                     insufficientAmountModal: {
                         result: !!result[1],
                         message: result[1]
                     },
                     loadingTaskIndicator: false
-                })
+                });
             }
-        })
-    }
+        });
+    };
 
     _handleLocalRender = () => {
-        const {actions, task} = this.props;
-        const {compute_on} = this.state;
-        const {resources, type, name} = task
+        const { actions, task } = this.props;
+        const { compute_on } = this.state;
+        const { resources, type, name } = task;
         actions.runTestTask({
             name,
             resources,
             compute_on,
             type,
             subtasks_count: 1 // <--- HARDCODED
-        })
-    }
-
+        });
+    };
     _createTaskAsync(){
         const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, samples, subtasks_count, subtask_timeout, timeout} = this.state
         const {task, testStatus} = this.props
@@ -793,28 +879,28 @@ export class TaskDetail extends React.Component {
     }
 
     /**
-    * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
-    */
+     * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
+     */
     _handleManagePresetModal = () => {
         this.setState({
             managePresetModal: true
-        })
-    }
+        });
+    };
 
-    _toggleLoadingHint(){
+    _toggleLoadingHint() {
         this.setState({
             isInPatient: true
-        })
+        });
     }
 
     _toggleTestLock = result => {
         this.setState({
             testLock: result
-        })
-    }
+        });
+    };
 
-    _getPanelClass(testStatus){
-        return this._checkTestStatus(testStatus)
+    _getPanelClass(testStatus) {
+        return this._checkTestStatus(testStatus);
     }
 
     isPresetFieldsFilled(nextState) {
@@ -822,53 +908,184 @@ export class TaskDetail extends React.Component {
             const {resolution, frames, samples, compositing, format} = nextState;
             return presetSchema[this.props.task.type].isValid({resolution, frames, samples, compositing, format})
         }
-        return new Promise(res => res(false))
+        return new Promise(res => res(false));
     }
 
     _handleFormByType(type, isDetail) {
-        const {modalData, isDetailPage, resolution, frames, formatIndex, output_path, timeout, subtasks_count, maxSubtasks, subtask_timeout, bid, compositing, presetList, savePresetLock, presetModal, managePresetModal} = this.state
-        const {testStatus} = this.props;
+        const {
+            modalData,
+            isDetailPage,
+            resolution,
+            frames,
+            formatIndex,
+            output_path,
+            timeout,
+            subtasks_count,
+            maxSubtasks,
+            subtask_timeout,
+            bid,
+            compositing,
+            presetList,
+            savePresetLock,
+            presetModal,
+            managePresetModal
+        } = this.state;
+        const { testStatus } = this.props;
         let formTemplate = [
             {
                 order: 0,
                 detailContent: false,
-                content: <div className="item-settings" key="0">
-                            <InfoLabel type="span" label="Preset" info={<p className="tooltip_task">Create and manage a number of presets to simplify the process of rendering with Golem.<br/>Create presets for commonly used sizes, frame ranges.</p>} cls="title" infoHidden={true}/>
-                            <Dropdown list={presetList} handleChange={this._handlePresetOptionChange.bind(this, presetList)} disabled={isDetailPage} manageHandler={this._handleManagePresetModal}  presetManager/> 
-                        </div>
+                content: (
+                    <div className="item-settings" key="0">
+                        <InfoLabel
+                            type="span"
+                            label="Preset"
+                            info={
+                                <p className="tooltip_task">
+                                    Create and manage a number of presets to
+                                    simplify the process of rendering with
+                                    Golem.
+                                    <br />
+                                    Create presets for commonly used sizes,
+                                    frame ranges.
+                                </p>
+                            }
+                            cls="title"
+                            infoHidden={true}
+                        />
+                        <Dropdown
+                            list={presetList}
+                            handleChange={this._handlePresetOptionChange.bind(
+                                this,
+                                presetList
+                            )}
+                            disabled={isDetailPage}
+                            manageHandler={this._handleManagePresetModal}
+                            presetManager
+                        />
+                    </div>
+                )
             },
             {
                 order: 1,
-                content: <div className="item-settings" key="1">
-                                <InfoLabel type="span" label="Resolution" info={<p className="tooltip_task">Set width & height of your scene</p>} cls="title" infoHidden={true}/>
-                                <input ref="resolutionW" type="number" min="100" max="8000" aria-label="Dimension (width)" onChange={this._handleResolution.bind(this, 0)} required={!isDetailPage} disabled={isDetailPage}/>
-                                <span className="icon-cross"/>
-                                <input ref="resolutionH" type="number" min="100" max="8000" aria-label="Dimension (height)" onChange={this._handleResolution.bind(this, 1)} required={!isDetailPage} disabled={isDetailPage}/>
-                            </div>
+                content: (
+                    <div className="item-settings" key="1">
+                        <InfoLabel
+                            type="span"
+                            label="Resolution"
+                            info={
+                                <p className="tooltip_task">
+                                    Set width & height of your scene
+                                </p>
+                            }
+                            cls="title"
+                            infoHidden={true}
+                        />
+                        <input
+                            ref="resolutionW"
+                            type="number"
+                            min="100"
+                            max="8000"
+                            aria-label="Dimension (width)"
+                            onChange={this._handleResolution.bind(this, 0)}
+                            required={!isDetailPage}
+                            disabled={isDetailPage}
+                        />
+                        <span className="icon-cross" />
+                        <input
+                            ref="resolutionH"
+                            type="number"
+                            min="100"
+                            max="8000"
+                            aria-label="Dimension (height)"
+                            onChange={this._handleResolution.bind(this, 1)}
+                            required={!isDetailPage}
+                            disabled={isDetailPage}
+                        />
+                    </div>
+                )
             },
             {
                 order: 3,
-                content: <div className="item-settings" key="3">
-                                <InfoLabel type="span" label="Format" info={<p className="tooltip_task">For Blender supported formats are .png, .tga, .exr, .jpeg and .bmp</p>} cls="title" infoHidden={true}/>
-                                <Dropdown ref="formatRef" list={mockFormatList} selected={formatIndex} handleChange={this._handleFormatOptionChange.bind(this, mockFormatList)} disabled={isDetailPage}/> 
-                         </div>
+                content: (
+                    <div className="item-settings" key="3">
+                        <InfoLabel
+                            type="span"
+                            label="Format"
+                            info={
+                                <p className="tooltip_task">
+                                    For Blender supported formats are .png,
+                                    .tga, .exr, .jpeg and .bmp
+                                </p>
+                            }
+                            cls="title"
+                            infoHidden={true}
+                        />
+                        <Dropdown
+                            ref="formatRef"
+                            list={mockFormatList}
+                            selected={formatIndex}
+                            handleChange={this._handleFormatOptionChange.bind(
+                                this,
+                                mockFormatList
+                            )}
+                            disabled={isDetailPage}
+                        />
+                    </div>
+                )
             },
             {
                 order: 4,
-                content: <div className="item-settings" key="4">
-                                <InfoLabel type="span" label="Output to" info={<p className="tooltip_task">If you define output as: ~/project/output_file_####.png<br/>then frames ~/project/output_file_0001.png, etc. will be created.</p>} cls="title" infoHidden={true}/>
-                                <input ref="outputPath" type="text" placeholder="…Docs/Golem/Output" aria-label="Output path" disabled/>
-                                <button type="button" className="btn--outline" onClick={this._handleOutputPath} disabled={isDetailPage}>Change</button>
-                          </div>
+                content: (
+                    <div className="item-settings" key="4">
+                        <InfoLabel
+                            type="span"
+                            label="Output to"
+                            info={
+                                <p className="tooltip_task">
+                                    If you define output as:
+                                    ~/project/output_file_####.png
+                                    <br />
+                                    then frames ~/project/output_file_0001.png,
+                                    etc. will be created.
+                                </p>
+                            }
+                            cls="title"
+                            infoHidden={true}
+                        />
+                        <input
+                            ref="outputPath"
+                            type="text"
+                            placeholder="…Docs/Golem/Output"
+                            aria-label="Output path"
+                            disabled
+                        />
+                        <button
+                            type="button"
+                            className="btn--outline"
+                            onClick={this._handleOutputPath}
+                            disabled={isDetailPage}>
+                            Change
+                        </button>
+                    </div>
+                )
             },
             {
                 order: 6,
                 detailContent: false,
-                content: <div className="item-settings item__preset-button" key="6">
-                                <button type="button" className="btn--outline" onClick={this._handleSavePresetModal} disabled={savePresetLock}>Save as preset</button>
-                            </div>
+                content: (
+                    <div className="item-settings item__preset-button" key="6">
+                        <button
+                            type="button"
+                            className="btn--outline"
+                            onClick={this._handleSavePresetModal}
+                            disabled={savePresetLock}>
+                            Save as preset
+                        </button>
+                    </div>
+                )
             }
-        ]
+        ];
 
         switch (type) {
         case taskType.BLENDER:
@@ -903,60 +1120,66 @@ export class TaskDetail extends React.Component {
             break;
         }
 
-        let sortByOrder = (a, b) => (a.order - b.order)
+        let sortByOrder = (a, b) => a.order - b.order;
 
         return formTemplate
             .sort(sortByOrder)
-            .filter(item => item.detailContent === undefined || item.detailContent === isDetail)
-            .map(item => item.content)
+            .filter(
+                item =>
+                    item.detailContent === undefined ||
+                    item.detailContent === isDetail
+            )
+            .map(item => item.content);
     }
 
-    _fetchRadioOptions = (type) => {
+    _fetchRadioOptions = type => {
         let computeOnRadioOptions = {};
 
-        if(this.state.isDetailPage) {
+        if (this.state.isDetailPage) {
             computeOnRadioOptions['readOnly'] = true;
             computeOnRadioOptions['checked'] = this.state.compute_on === type;
         } else {
-            computeOnRadioOptions['onChange'] = this._handleComputeOnOptionChange;
-            computeOnRadioOptions['defaultChecked'] = this.state.compute_on === type;
+            computeOnRadioOptions[
+                'onChange'
+            ] = this._handleComputeOnOptionChange;
+            computeOnRadioOptions['defaultChecked'] =
+                this.state.compute_on === type;
         }
 
-        return computeOnRadioOptions
-    }
+        return computeOnRadioOptions;
+    };
 
     render() {
-
         const {
-            bid, 
+            bid,
             compute_on,
             concent,
-            defaultSettingsModal, 
-            insufficientAmountModal, 
-            isDetailPage, 
+            defaultSettingsModal,
+            insufficientAmountModal,
+            isDetailPage,
             isInPatient,
             loadingTaskIndicator,
-            managePresetModal, 
+            managePresetModal,
             maxSubtasks,
-            modalData, 
+            modalData,
             presetModal,
             taskSummaryModal,
             depositTimeModal, 
             resolutionChangeInfo,
             resolutionChangeModal,
             testLock
-        } = this.state
+        } = this.state;
 
         const {
             actions,
             currency,
             concentSwitch, //from settings
-            estimated_cost, 
+            estimated_cost,
             isDeveloperMode,
             isMainNet,
             minPerf,
             subtasksList,
-            hasSubtasksLoaded, 
+            hasSubtasksLoaded,
             task,
             testStatus
         } = this.props;
@@ -969,106 +1192,323 @@ export class TaskDetail extends React.Component {
                         task={task}
                         actions={actions}
                         toggleTestLock={this._toggleTestLock}
-                        />
+                    />
                     <section className="section-details__task-detail">
-                        <div ref={node => this.overflowTaskDetail = node} className="container__task-detail">
-                            { (isDetailPage && isDeveloperMode) && <NodeList subtasksList={subtasksList} hasSubtasksLoaded={hasSubtasksLoaded} overflowRef={this.overflowTaskDetail} actions={actions}/>}
+                        <div
+                            ref={node => (this.overflowTaskDetail = node)}
+                            className="container__task-detail">
+                            {isDetailPage && isDeveloperMode && (
+                                <NodeList
+                                    subtasksList={subtasksList}
+                                    hasSubtasksLoaded={hasSubtasksLoaded}
+                                    overflowRef={this.overflowTaskDetail}
+                                    actions={actions}
+                                />
+                            )}
                             <div className="section-settings__task-detail">
-                                    <InfoLabel type="h4" label=" File Settings" info={<p className="tooltip_task">Set your file settings, and if you<br/>have any questions just hover over<br/>specific label to find some help</p>} />
-                                    {!isDetailPage && <div className="source-path">{task.relativePath}</div>}
-                                    {this._handleFormByType(this.state.type || this.props.task.type, isDetailPage)}
+                                <InfoLabel
+                                    type="h4"
+                                    label=" File Settings"
+                                    info={
+                                        <p className="tooltip_task">
+                                            Set your file settings, and if you
+                                            <br />
+                                            have any questions just hover over
+                                            <br />
+                                            specific label to find some help
+                                        </p>
+                                    }
+                                />
+                                {!isDetailPage && (
+                                    <div className="source-path">
+                                        {task.relativePath}
+                                    </div>
+                                )}
+                                {this._handleFormByType(
+                                    this.state.type || this.props.task.type,
+                                    isDetailPage
+                                )}
                             </div>
                             <div className="section-task__task-detail">
-                                <InfoLabel type="h4" label=" Task Settings" info={<p className="tooltip_task">Depending on your settings related to price and trust,<br/>it may take a while for your task to be accepted by the network.</p>} />
+                                <InfoLabel
+                                    type="h4"
+                                    label=" Task Settings"
+                                    info={
+                                        <p className="tooltip_task">
+                                            Depending on your settings related
+                                            to price and trust,
+                                            <br />
+                                            it may take a while for your task to
+                                            be accepted by the network.
+                                        </p>
+                                    }
+                                />
                                 <div className="item-settings">
-                                    <InfoLabel 
-                                        type="span" 
-                                        label="Task Timeout" 
-                                        info={<p className="tooltip_task">Setting a time limit here will let Golem know the maximum time<br/>you will wait for a task to
-                                            be accepted by the network. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
-                                            Learn more
-                                            </a></p>} 
-                                        cls="title" 
-                                        infoHidden={true} 
-                                        interactive={true}/>
-                                    <input ref="taskTimeout" type="text" aria-label="Task Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'timeout')} required={!isDetailPage} disabled={isDetailPage}/>
-                                </div>
-                                <div className="item-settings">
-                                    <InfoLabel 
-                                        type="span" 
-                                        label="Subtask Amount" 
-                                        info={<p className="tooltip_task">Tells the system how many subtasks to break a task into.<br/>If you are rendering 
-                                                a number of frames you should set subtasks to the same number. <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
-                                                Learn more
+                                    <InfoLabel
+                                        type="span"
+                                        label="Task Timeout"
+                                        info={
+                                            <p className="tooltip_task">
+                                                Setting a time limit here will
+                                                let Golem know the maximum time
+                                                <br />
+                                                you will wait for a task to be
+                                                accepted by the network.{' '}
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
+                                                    Learn more
                                                 </a>
-                                                </p>} 
-                                            cls="title" 
-                                            infoHidden={true} 
-                                            interactive={true}/>
-                                    <input ref="subtaskCount" type="number" min="1" max={maxSubtasks} placeholder="Type a number" aria-label="Subtask amount" onChange={this._handleFormInputs.bind(this, 'subtasks_count')} required={!isDetailPage} disabled={isDetailPage || !maxSubtasks}/>
+                                            </p>
+                                        }
+                                        cls="title"
+                                        infoHidden={true}
+                                        interactive={true}
+                                    />
+                                    <input
+                                        ref="taskTimeout"
+                                        type="text"
+                                        aria-label="Task Timeout"
+                                        onKeyDown={this._handleTimeoutInputs.bind(
+                                            this,
+                                            'timeout'
+                                        )}
+                                        required={!isDetailPage}
+                                        disabled={isDetailPage}
+                                    />
                                 </div>
                                 <div className="item-settings">
-                                    <InfoLabel type="span" label="Subtask Timeout" info={<p className="tooltip_task">Set the maximum time you are prepared to wait for a subtask to complete.</p>} cls="title" infoHidden={true}/>
-                                    <input ref="subtaskTimeout" type="text" aria-label="Subtask Timeout" onKeyDown={this._handleTimeoutInputs.bind(this, 'subtask_timeout')} required={!isDetailPage} disabled={isDetailPage}/>
+                                    <InfoLabel
+                                        type="span"
+                                        label="Subtask Amount"
+                                        info={
+                                            <p className="tooltip_task">
+                                                Tells the system how many
+                                                subtasks to break a task into.
+                                                <br />
+                                                If you are rendering a number of
+                                                frames you should set subtasks
+                                                to the same number.{' '}
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
+                                                    Learn more
+                                                </a>
+                                            </p>
+                                        }
+                                        cls="title"
+                                        infoHidden={true}
+                                        interactive={true}
+                                    />
+                                    <input
+                                        ref="subtaskCount"
+                                        type="number"
+                                        min="1"
+                                        max={maxSubtasks}
+                                        placeholder="Type a number"
+                                        aria-label="Subtask amount"
+                                        onChange={this._handleFormInputs.bind(
+                                            this,
+                                            'subtasks_count'
+                                        )}
+                                        required={!isDetailPage}
+                                        disabled={isDetailPage || !maxSubtasks}
+                                    />
                                 </div>
                                 <div className="item-settings">
-                                <InfoLabel type="span" label="Render on" info={<p className="tooltip_task">Select if you want your task to be rendered on CPU or GPU of providers. GPU support is still in beta. Contact us if you find any issues with GPU rendering. <a href="https://golem.network/documentation/">Learn more</a></p>} cls="title" infoHidden={true}/>
-                                <div className="render-on__radio-group">
-                                    <div>
-                                        <input type="radio" id="cpu" value="cpu" name="compute_on" {...this._fetchRadioOptions('cpu')}/>
-                                        <label htmlFor="cpu">
-                                            <span className="overlay"/>
-                                            <span className="icon-cpu"/>CPU
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <input type="radio" id="gpu" value="gpu" name="compute_on" {...this._fetchRadioOptions('gpu')}/>
-                                        <label htmlFor="gpu">
-                                            <span className="overlay"/>
-                                            <span className="icon-gpu"/>GPU
-                                        </label>
+                                    <InfoLabel
+                                        type="span"
+                                        label="Subtask Timeout"
+                                        info={
+                                            <p className="tooltip_task">
+                                                Set the maximum time you are
+                                                prepared to wait for a subtask
+                                                to complete.
+                                            </p>
+                                        }
+                                        cls="title"
+                                        infoHidden={true}
+                                    />
+                                    <input
+                                        ref="subtaskTimeout"
+                                        type="text"
+                                        aria-label="Subtask Timeout"
+                                        onKeyDown={this._handleTimeoutInputs.bind(
+                                            this,
+                                            'subtask_timeout'
+                                        )}
+                                        required={!isDetailPage}
+                                        disabled={isDetailPage}
+                                    />
+                                </div>
+                                <div className="item-settings">
+                                    <InfoLabel
+                                        type="span"
+                                        label="Render on"
+                                        info={
+                                            <p className="tooltip_task">
+                                                Select if you want your task to
+                                                be rendered on CPU or GPU of
+                                                providers. GPU support is still
+                                                in beta. Contact us if you find
+                                                any issues with GPU rendering.{' '}
+                                                <a href="https://golem.network/documentation/">
+                                                    Learn more
+                                                </a>
+                                            </p>
+                                        }
+                                        cls="title"
+                                        infoHidden={true}
+                                    />
+                                    <div className="render-on__radio-group">
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id="cpu"
+                                                value="cpu"
+                                                name="compute_on"
+                                                {...this._fetchRadioOptions(
+                                                    'cpu'
+                                                )}
+                                            />
+                                            <label htmlFor="cpu">
+                                                <span className="overlay" />
+                                                <span className="icon-cpu" />
+                                                CPU
+                                            </label>
+                                        </div>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                id="gpu"
+                                                value="gpu"
+                                                name="compute_on"
+                                                {...this._fetchRadioOptions(
+                                                    'gpu'
+                                                )}
+                                            />
+                                            <label htmlFor="gpu">
+                                                <span className="overlay" />
+                                                <span className="icon-gpu" />
+                                                GPU
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            </div>
-                            { !isMainNet
-                                && (concentSwitch || isDetailPage)
-                                &&
+                            {!isMainNet && (concentSwitch || isDetailPage) && (
                                 <div className="section-concent__task-detail">
-                                    <InfoLabel type="h4" label="Concent" info={<p className="tooltip_task">If you set the switch to off this task<br/>will compute without Concent<br/>but only for this task. It will not<br/>turn Concent off for all tasks.</p>} cls="title-concent__task-detail" />
+                                    <InfoLabel
+                                        type="h4"
+                                        label="Concent"
+                                        info={
+                                            <p className="tooltip_task">
+                                                If you set the switch to off
+                                                this task
+                                                <br />
+                                                will compute without Concent
+                                                <br />
+                                                but only for this task. It will
+                                                not
+                                                <br />
+                                                turn Concent off for all tasks.
+                                            </p>
+                                        }
+                                        cls="title-concent__task-detail"
+                                    />
                                     <div className="item-concent">
-                                        <InfoLabel 
-                                            type="span" 
+                                        <InfoLabel
+                                            type="span"
                                             label="Set"
-                                            cls="title" 
-                                            infoHidden={true}/>
+                                            cls="title"
+                                            infoHidden={true}
+                                        />
                                         <div className="switch-box switch-box--green">
-                                             <span className="switch-label switch-label--left">Off</span>
-                                             <label className="switch">
-                                                 <input ref="concentRef" type="checkbox" aria-label="Task Based Concent Checkbox" tabIndex="0" checked={concent} onChange={this._handleConcentCheckbox.bind(this)} disabled={isDetailPage}/>
-                                                 <div className="switch-slider round"></div>
-                                             </label>
-                                             <span className="switch-label switch-label--right">On</span>
-                                         </div>
+                                            <span className="switch-label switch-label--left">
+                                                Off
+                                            </span>
+                                            <label className="switch">
+                                                <input
+                                                    ref="concentRef"
+                                                    type="checkbox"
+                                                    aria-label="Task Based Concent Checkbox"
+                                                    tabIndex="0"
+                                                    checked={concent}
+                                                    onChange={this._handleConcentCheckbox.bind(
+                                                        this
+                                                    )}
+                                                    disabled={isDetailPage}
+                                                />
+                                                <div className="switch-slider round" />
+                                            </label>
+                                            <span className="switch-label switch-label--right">
+                                                On
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
-                            }
+                            )}
                             <div className="section-price__task-detail">
-                                <InfoLabel type="h4" label="Price" info={<p className="tooltip_task">Set the amount<br/>of GNT that you<br/>are prepared to<br/>pay for this task.</p>} cls="title-price__task-detail" />
+                                <InfoLabel
+                                    type="h4"
+                                    label="Price"
+                                    info={
+                                        <p className="tooltip_task">
+                                            Set the amount
+                                            <br />
+                                            of GNT that you
+                                            <br />
+                                            are prepared to
+                                            <br />
+                                            pay for this task.
+                                        </p>
+                                    }
+                                    cls="title-price__task-detail"
+                                />
                                 <div className="item-price">
-                                    <InfoLabel 
-                                        type="span" 
-                                        label="Your bid" 
-                                        info={<p className="tooltip_task">Set the amount of GNT that you are prepared to pay for this task.<br/>This is a free market, 
-                                            and you should set the price as you will but we think that keeping close to 0.2$ is ok.</p>} 
-                                        cls="title" 
-                                        infoHidden={true}/>
+                                    <InfoLabel
+                                        type="span"
+                                        label="Your bid"
+                                        info={
+                                            <p className="tooltip_task">
+                                                Set the amount of GNT that you
+                                                are prepared to pay for this
+                                                task.
+                                                <br />
+                                                This is a free market, and you
+                                                should set the price as you will
+                                                but we think that keeping close
+                                                to 0.2$ is ok.
+                                            </p>
+                                        }
+                                        cls="title"
+                                        infoHidden={true}
+                                    />
                                     <div className="input__price-set">
-                                        <input ref="bidRef" type="number" min="0.01" max={Number.MAX_SAFE_INTEGER} step="0.01" aria-label="Your bid" onChange={this._handleFormInputs.bind(this, 'bid')} required={!isDetailPage} disabled={isDetailPage}/>
-                                        <span>{isMainNet ? "" : "t"} GNT/h</span>
+                                        <input
+                                            ref="bidRef"
+                                            type="number"
+                                            min="0.01"
+                                            max={Number.MAX_SAFE_INTEGER}
+                                            step="0.01"
+                                            aria-label="Your bid"
+                                            onChange={this._handleFormInputs.bind(
+                                                this,
+                                                'bid'
+                                            )}
+                                            required={!isDetailPage}
+                                            disabled={isDetailPage}
+                                        />
+                                        <span>
+                                            {isMainNet ? '' : 't'} GNT/h
+                                        </span>
                                     </div>
                                     <div className="estimated_usd">
-                                        <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR(bid * currency["GNT"], "USD", 2, 12)}</span>
+                                        <span>
+                                            est. {isMainNet ? '' : 't'}${' '}
+                                            {this._convertPriceAsHR(
+                                                bid * currency['GNT'],
+                                                'USD',
+                                                2,
+                                                12
+                                            )}
+                                        </span>
                                     </div>
                                 </div>
                                 <div className="estimated-price__panel">
@@ -1087,86 +1527,204 @@ export class TaskDetail extends React.Component {
                                             infoHidden={true} 
                                             interactive={true}/>
                                         <div className="estimated_cost">
-                                            {this._convertPriceAsHR(estimated_cost.GNT, "GNT", 3, 36)}
-                                            <span>{isMainNet ? "" : "t"} GNT</span>
+                                            {this._convertPriceAsHR(
+                                                estimated_cost.GNT,
+                                                'GNT',
+                                                3,
+                                                36
+                                            )}
+                                            <span>
+                                                {isMainNet ? '' : 't'} GNT
+                                            </span>
                                         </div>
                                         <div className="estimated_usd">
-                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.GNT || 0) * currency["GNT"], "USD", 4, 12)}</span>
+                                            <span>
+                                                est. {isMainNet ? '' : 't'}${' '}
+                                                {this._convertPriceAsHR(
+                                                    (estimated_cost.GNT || 0) *
+                                                        currency['GNT'],
+                                                    'USD',
+                                                    4,
+                                                    12
+                                                )}
+                                            </span>
                                         </div>
                                     </div>
                                     <div className="item-price">
-                                        <InfoLabel 
-                                            type="span" 
-                                            label="Tx Fee Lock" 
-                                            info={<p className="tooltip_task">Estimated ETH amount to be locked for this task to cover<br/>transaction costs. 
-                                                It may vary from what you will actually pay for<br/>this transaction 
-                                                as usually the final cost is much lower.</p>} 
-                                                cls="title" 
-                                                infoHidden={true}/>
+                                        <InfoLabel
+                                            type="span"
+                                            label="Tx Fee Lock"
+                                            info={
+                                                <p className="tooltip_task">
+                                                    Estimated ETH amount to be
+                                                    locked for this task to
+                                                    cover
+                                                    <br />
+                                                    transaction costs. It may
+                                                    vary from what you will
+                                                    actually pay for
+                                                    <br />
+                                                    this transaction as usually
+                                                    the final cost is much
+                                                    lower.
+                                                </p>
+                                            }
+                                            cls="title"
+                                            infoHidden={true}
+                                        />
                                         <div className="estimated_cost">
-                                            {this._convertPriceAsHR(estimated_cost.ETH, "ETH", 5, 18)}
-                                            <span>{isMainNet ? "" : "t"} ETH</span>
+                                            {this._convertPriceAsHR(
+                                                estimated_cost.ETH,
+                                                'ETH',
+                                                5,
+                                                18
+                                            )}
+                                            <span>
+                                                {isMainNet ? '' : 't'} ETH
+                                            </span>
                                         </div>
                                         <div className="estimated_usd">
-                                            <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.ETH || 0) * currency["ETH"], "USD", 4, 12)}</span>
+                                            <span>
+                                                est. {isMainNet ? '' : 't'}${' '}
+                                                {this._convertPriceAsHR(
+                                                    (estimated_cost.ETH || 0) *
+                                                        currency['ETH'],
+                                                    'USD',
+                                                    4,
+                                                    12
+                                                )}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
-                                { concent &&
+                                {concent && (
                                     <div className="estimated-deposit__panel">
                                         <div className="item-price">
-                                            <InfoLabel 
-                                                type="span" 
-                                                label="Deposit payment" 
-                                                info={<p className="tooltip_task">The deposit amount is higher than the cost of task to ensure that you 
-                                                    <br/>have enough funds to participate in the network. The real cost 
-                                                    <br/>of a task is unchanging. Providers using Concent Service will 
-                                                    <br/>check if requestors have no less than twice the amount 
-                                                    <br/>of funds in their Deposit for covering a task payment.
-                                                    </p>} 
-                                                cls="title" 
-                                                infoHidden={true} 
-                                                interactive={true}/>
+                                            <InfoLabel
+                                                type="span"
+                                                label="Deposit payment"
+                                                info={
+                                                    <p className="tooltip_task">
+                                                        The deposit amount is
+                                                        higher than the cost of
+                                                        task to ensure that you
+                                                        <br />
+                                                        have enough funds to
+                                                        participate in the
+                                                        network. The real cost
+                                                        <br />
+                                                        of a task is unchanging.
+                                                        Providers using Concent
+                                                        Service will
+                                                        <br />
+                                                        check if requestors have
+                                                        no less than twice the
+                                                        amount
+                                                        <br />
+                                                        of funds in their
+                                                        Deposit for covering a
+                                                        task payment.
+                                                    </p>
+                                                }
+                                                cls="title"
+                                                infoHidden={true}
+                                                interactive={true}
+                                            />
                                             <div className="estimated_cost">
-                                                {this._convertPriceAsHR(estimated_cost.deposit.GNT_suggested, "GNT", 3, 14)}
-                                                <span>{isMainNet ? "" : "t"} GNT</span>
+                                                {this._convertPriceAsHR(
+                                                    estimated_cost.deposit
+                                                        .GNT_suggested,
+                                                    'GNT',
+                                                    3,
+                                                    14
+                                                )}
+                                                <span>
+                                                    {isMainNet ? '' : 't'} GNT
+                                                </span>
                                             </div>
                                             <div className="estimated_usd">
-                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.GNT_suggested || 0) * currency["GNT"], "USD", 4, 14)}</span>
+                                                <span>
+                                                    est. {isMainNet ? '' : 't'}${' '}
+                                                    {this._convertPriceAsHR(
+                                                        (estimated_cost.deposit
+                                                            .GNT_suggested ||
+                                                            0) *
+                                                            currency['GNT'],
+                                                        'USD',
+                                                        4,
+                                                        14
+                                                    )}
+                                                </span>
                                             </div>
                                         </div>
                                         <div className="item-price">
-                                            <InfoLabel 
-                                                type="span" 
-                                                label="Deposit Tx fee" 
-                                                info={<p className="tooltip_task">You need small amount of ETH (used for gas) avaliable on your account 
-                                                    <br/>to submit a deposit to the Concent Service
-                                                    </p>} 
-                                                cls="title" 
-                                                infoHidden={true} 
-                                                interactive={true}/>
+                                            <InfoLabel
+                                                type="span"
+                                                label="Deposit Tx fee"
+                                                info={
+                                                    <p className="tooltip_task">
+                                                        You need small amount of
+                                                        ETH (used for gas)
+                                                        avaliable on your
+                                                        account
+                                                        <br />
+                                                        to submit a deposit to
+                                                        the Concent Service
+                                                    </p>
+                                                }
+                                                cls="title"
+                                                infoHidden={true}
+                                                interactive={true}
+                                            />
                                             <div className="estimated_cost">
-                                                {this._convertPriceAsHR(estimated_cost.deposit.ETH, "ETH", 5, 14)}
-                                                <span>{isMainNet ? "" : "t"} ETH</span>
+                                                {this._convertPriceAsHR(
+                                                    estimated_cost.deposit.ETH,
+                                                    'ETH',
+                                                    5,
+                                                    14
+                                                )}
+                                                <span>
+                                                    {isMainNet ? '' : 't'} ETH
+                                                </span>
                                             </div>
                                             <div className="estimated_usd">
-                                                <span>est. {isMainNet ? "" : "t"}$ {this._convertPriceAsHR((estimated_cost.deposit.ETH || 0) * currency["GNT"], "USD", 5, 14)}</span>
+                                                <span>
+                                                    est. {isMainNet ? '' : 't'}${' '}
+                                                    {this._convertPriceAsHR(
+                                                        (estimated_cost.deposit
+                                                            .ETH || 0) *
+                                                            currency['GNT'],
+                                                        'USD',
+                                                        5,
+                                                        14
+                                                    )}
+                                                </span>
                                             </div>
                                         </div>
                                     </div>
-                                }
+                                )}
                                 <span className="item-price tips__price">
-                                    You can accept the estimated price or you can bid higher if you would like to increase your chances of quicker processing.
-                                </span>  
+                                    You can accept the estimated price or you
+                                    can bid higher if you would like to increase
+                                    your chances of quicker processing.
+                                </span>
                             </div>
                         </div>
                     </section>
-                    {!isDetailPage && <section className="section-action__task-detail">
-                        <Link to="/tasks" aria-label="Cancel" tabIndex="0">
-                            <span >Cancel</span>
-                        </Link>
-                        <button id="taskFormSubmit" type="submit" className="btn--primary" disabled={testLock || loadingTaskIndicator}>Start Task</button>
-                    </section>}
+                    {!isDetailPage && (
+                        <section className="section-action__task-detail">
+                            <Link to="/tasks" aria-label="Cancel" tabIndex="0">
+                                <span>Cancel</span>
+                            </Link>
+                            <button
+                                id="taskFormSubmit"
+                                type="submit"
+                                className="btn--primary"
+                                disabled={testLock || loadingTaskIndicator}>
+                                Start Task
+                            </button>
+                        </section>
+                    )}
                 </form>
                 {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
                 {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
@@ -1194,12 +1752,12 @@ export class TaskDetail extends React.Component {
 // </div>}
 
 // LOADING SCREEN IN ADVANCE
-// { (testStatus 
+// { (testStatus
 //     && !isDetailPage
-//     && !(testStatus.status === testStatusDict.SUCCESS 
-//         || testStatus.status === testStatusDict.ERROR)) 
+//     && !(testStatus.status === testStatusDict.SUCCESS
+//         || testStatus.status === testStatusDict.ERROR))
 // &&  <div className="test_status__loading" style={{background: `rgba(255, 255, 255, ${isInPatient ? .9 : .7})`}} onClick={this._toggleLoadingHint}>
-//         { isInPatient 
+//         { isInPatient
 //             && <div className="loading--patient">
 //             <img src={whoaImg} alt="Please be patient"/>
 //             <span>
@@ -1209,4 +1767,7 @@ export class TaskDetail extends React.Component {
 //         </div>}
 //     </div>}
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskDetail)
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(TaskDetail);

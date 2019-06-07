@@ -47,7 +47,7 @@ export class ControlPanel extends React.Component {
                     placement="bottom"
                     trigger="mouseenter">
                     <span
-                        className="icon-arrow-left-small"
+                        className="icon-arrow-left"
                         role="button"
                         aria-label="Previous Frame"
                         tabIndex="0"
@@ -64,7 +64,7 @@ export class ControlPanel extends React.Component {
                     placement="bottom"
                     trigger="mouseenter">
                     <span
-                        className="icon-arrow-right-small"
+                        className="icon-arrow-right"
                         role="button"
                         aria-label="Next Frame"
                         tabIndex="0"

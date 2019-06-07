@@ -4,8 +4,7 @@ import Lottie from 'react-lottie';
 import Tooltip from '@tippy.js/react';
 
 import animData from './../../../assets/anims/warning';
-
-const ETH_DENOM = 10 ** 18;
+import { ETH_DENOM } from './../../../constants/variables';
 
 const defaultOptions = {
     loop: false,

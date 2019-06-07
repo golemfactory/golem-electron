@@ -1,6 +1,6 @@
-const {remote} = window.electron;
-const log = remote.require('./electron/debug_handler.js')
-const {CUSTOM_RPC} = remote.require('./electron/golem_config.js');
+const { remote } = window.electron;
+const log = remote.require('./electron/debug_handler.js');
+const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
@@ -49,14 +49,16 @@ export let config = Object.freeze({
     RESTART_TASK_RPC: 'comp.task.restart',
     GET_SUBTASKS_RPC: 'comp.task.subtasks',
     GET_SUBTASK_RPC: 'comp.task.subtask',
+    GET_FRAGMENTS_RPC: 'comp.task.rendering.task_fragments',
     GET_SUBTASKS_BORDER_RPC: 'comp.task.subtasks.borders',
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
-    RESTART_TIMEDOUT_SUBTASKS_RPC: 'comp.task.restart_subtasks',
+    RESTART_SUBTASKS_RPC: 'comp.task.subtasks.restart',
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
+    GET_SUBTASK_ESTIMATED_COSTS_RPC: 'comp.task.subtasks.estimated.cost',
     GET_PREVIEW_LIST_RPC: 'comp.task.preview',
     GET_GAS_PRICE_RPC: 'pay.gas_price',
     //Files management
@@ -115,15 +117,25 @@ export let config = Object.freeze({
     CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
     CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
-})
+});
 
-
-function errorCallback(topic, _eb, {error, details, argsList}) {
-            console.warn('SAGA > HANDLER', `Fetch ${topic} failed!`, error, details, Array.isArray(argsList) ? argsList.join() : argsList)
-            log.warn('SAGA > HANDLER', `Fetch ${topic} failed!`, error, details, Array.isArray(argsList) ? argsList.join(): argsList)
-            _eb && _eb(error, details, argsList)
-        }
-
+function errorCallback(topic, _eb, { error, details, argsList }) {
+    console.warn(
+        'SAGA > HANDLER',
+        `Fetch ${topic} failed!`,
+        error,
+        details,
+        Array.isArray(argsList) ? argsList.join() : argsList
+    );
+    log.warn(
+        'SAGA > HANDLER',
+        `Fetch ${topic} failed!`,
+        error,
+        details,
+        Array.isArray(argsList) ? argsList.join() : argsList
+    );
+    _eb && _eb(error, details, argsList);
+}
 
 /**
  * [_handleSUBPUB func. subscribe constructor for wamp ]
@@ -134,15 +146,15 @@ function errorCallback(topic, _eb, {error, details, argsList}) {
  */
 export let _handleSUBPUB = (_callback, _session, _channel, _eb) => {
     let cb = {
-        onEvent: (({argsList}) => _callback(argsList)),
+        onEvent: ({ argsList }) => _callback(argsList),
         onSuccess: function() {
             console.log(`subscribed to ${_channel} topic`);
         },
 
         onError: errorCallback.bind(null, _channel)
-    }
-    _session.subscribe(_channel, cb, _eb)
-}
+    };
+    _session.subscribe(_channel, cb, _eb);
+};
 
 /**
  * [_handleUNSUBPUB func. unsubscribe constructor for wamp ]
@@ -153,14 +165,14 @@ export let _handleSUBPUB = (_callback, _session, _channel, _eb) => {
  */
 export let _handleUNSUBPUB = (_callback, _session, _channel, _eb) => {
     let cb = {
-        onEvent: (({argsList}) => _callback(argsList)),
+        onEvent: ({ argsList }) => _callback(argsList),
         onSuccess: function() {
             console.log(`unsubscribed to ${_channel} topic`);
         },
         onError: errorCallback.bind(null, _channel)
-    }
-    _session.unsubscribe(_channel, cb, _eb)
-}
+    };
+    _session.unsubscribe(_channel, cb, _eb);
+};
 
 /**
  * [_handleRPC func. remote procedure call constructor for wamp ]
@@ -170,9 +182,15 @@ export let _handleUNSUBPUB = (_callback, _session, _channel, _eb) => {
  * @param   {Object}        _parameter      [RPC parameter (optional)]
  * @return nothing
  */
-export let _handleRPC = (_callback, _session, _rpc_address, _parameter = null, _eb) => {
+export let _handleRPC = (
+    _callback,
+    _session,
+    _rpc_address,
+    _parameter = null,
+    _eb
+) => {
     _session.call(_rpc_address, _parameter, {
-        onSuccess: (({argsList}) => _callback(argsList)),
+        onSuccess: ({ argsList }) => _callback(argsList),
         onError: errorCallback.bind(null, _rpc_address, _eb)
-    })
-}
+    });
+};

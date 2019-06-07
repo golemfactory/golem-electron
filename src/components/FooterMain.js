@@ -266,7 +266,6 @@ export class FooterMain extends Component {
             passwordModal,
             version
         } = this.props;
-
         const versionTemplate =
             (version?.error
                 ? version?.message || ''

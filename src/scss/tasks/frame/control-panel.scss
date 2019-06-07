@@ -34,15 +34,15 @@
     }
     .icon {
         &-arrow {
-            &-left-small,
-            &-right-small {
-                font-size: 22pt;
+            &-left,
+            &-right {
+                font-size: 12pt;
             }
-            &-left-small {
-                margin-right: -15px;
+            &-left {
+                margin-right: -25px;
             }
-            &-right-small {
-                margin-left: -15px;
+            &-right {
+                margin-left: -25px;
             }
         }
         &-zoom {

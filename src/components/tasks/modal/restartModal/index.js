@@ -1,7 +1,7 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import RestartOptions from './steps/Options';
+import TaskOptions from './steps/TaskOptions';
 import Estimation from './steps/Estimation';
 
 import animData from './../../../../assets/anims/restart-task';
@@ -15,10 +15,11 @@ const defaultOptions = {
     }
 };
 
-export default class RestartModal extends React.Component {
+export default class RestartModal extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            isConcentOn: props?.item?.concent_enabled,
             isTimedOutOnly: false,
             nextStep: false
         };
@@ -35,52 +36,53 @@ export default class RestartModal extends React.Component {
         });
     };
 
+    _handleConcentCheckbox = value => {
+        this.setState({
+            isConcentOn: value
+        });
+    }
+
     /**
      * [_handleDelete func. send information as callback and close modal]
      */
     _handleRestart = () => {
-        const { isTimedOutOnly, nextStep } = this.state;
+        const { isConcentOn, isTimedOutOnly, nextStep } = this.state;
         const { restartCallback, item } = this.props;
         if (!nextStep) {
-            this.setState(
-                {
-                    nextStep: true
-                },
-                () => {
-                    this.props.actions.getEstimatedCost({
-                        type: item.type,
-                        options: item.options,
-                        id: item.id,
-                        partial: isTimedOutOnly
-                    });
-                }
-            );
+            this.setState({
+                nextStep: true
+            });
             return;
         }
-        restartCallback(item.id, isTimedOutOnly);
+        restartCallback(item.id, isTimedOutOnly, isConcentOn);
         this.props.closeModal();
     };
 
     render() {
-        const { isTimedOutOnly, nextStep } = this.state;
-        const { balance, currency, item, estimatedCost } = this.props;
+        const { isConcentOn, isTimedOutOnly, nextStep } = this.state;
+        const {
+            isSubtask,
+            item,
+        } = this.props;
+
         return (
             <div className="container__modal container__restart-modal">
                 <div className="content__modal">
                     <div className="image-container">
                         <Lottie options={defaultOptions} />
                     </div>
-                    {!nextStep ? (
-                        <RestartOptions
+                    {!nextStep && !isSubtask ? (
+                        <TaskOptions
                             handleOptionChange={this._handleRestartOptionChange}
                             status={item.status}
                         />
                     ) : (
                         <Estimation 
-                            balance={balance}
-                            currency={currency}
-                            estimatedCost={estimatedCost} 
-                            isPartial={isTimedOutOnly}/>
+                            isConcentOn={isConcentOn} 
+                            isPartial={isTimedOutOnly} 
+                            isSubtask={isSubtask}
+                            item={item}
+                            _handleConcentCheckbox={this._handleConcentCheckbox}/>
                     )}
 
                     <div className="action__modal">

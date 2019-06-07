@@ -3,6 +3,7 @@
     height: auto;
     text-align: center;
     padding: 20px;
+    margin-top: -20%;
     .image-container {
       width: 160px;
       height: 160px;
@@ -16,24 +17,77 @@
 
     .container {
       &__restart-options {
-        text-align: center;
-        display: flex;
+        @include flex;
         flex-direction: column;
         align-items: center;
+        text-align: center;
       }
       &__estimation {
         margin: 30px 0 10px 0;
+        width: 100%;
         span {
           font-size: 10pt;
           font-weight: 400;
         }
+        .switch-box {
+          text-align: left;
+          margin: 20px 0;
+          .switch-label {
+            &.switch-label--right {
+              position: relative;
+              bottom: 2px;
+              margin-left: 10px;
+              font-size: 9pt;
+              color: $color-text2;
+            }
+          }
+        }
+
         .summary {
+          @include flex;
+          flex-direction: column;
+          margin-bottom: 20px;
+          &-currency {
+            font-weight: 300;
+            h4 {
+              display: inline;
+            }
+          }
           &-item {
-            margin: 30px 0;
+            @include flex;
+            width: 100%;
+            padding: 10px 0;
+            border-top: 1px dashed $color-border;
+
+            h4 {
+              margin: 0;
+            }
+
             sub {
               font-size: 8pt;
             }
+
+            &.deposit {
+              font-size: 7pt;
+              padding: 3px 0;
+              color: $color-text2 !important;
+            }
           }
+
+          &-title {
+            display: block;
+            color: $color-primary;
+            width: 100%;
+            text-align: left;
+            font-size: 8pt;
+            padding: 5px 0;
+            margin-top: 15px;
+            font-weight: 300;
+          }
+        }
+        &__title {
+          line-height: 1.5em;
+          margin-bottom: 30px;
         }
       }
     }

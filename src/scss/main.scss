@@ -438,7 +438,6 @@ input[type='number']::-webkit-inner-spin-button {
         position: relative;
         top: 0.5px;
     }
-
     input[type='radio'],
     input[type='checkbox'] {
         display: none;
@@ -490,6 +489,13 @@ input[type='number']::-webkit-inner-spin-button {
         margin: 0 5px;
         background-clip: content-box;
         cursor: pointer;
+        transition: .2s background-color;
+    }
+
+    input:disabled + label > .overlay {
+        border-color: rgba($color-primary, 0.3) !important;
+        background: rgba($color-border, 0.2);
+        cursor: not-allowed !important;
     }
 
     .checkbox-item {
@@ -575,6 +581,13 @@ input[type='number']::-webkit-inner-spin-button {
 
 .tippy-popper {
     max-width: 510px !important;
+}
+
+.bumper {
+    &:before{
+        content: "|";
+        margin: 0 6px;
+    }
 }
 
 .jumping-dots {

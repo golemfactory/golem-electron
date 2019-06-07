@@ -1,9 +1,8 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as Actions from "../../actions";
-
-const ETH_DENOM = 10 ** 18;
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../../actions';
+import { ETH_DENOM } from '../../constants/variables';
 
 const mapStateToProps = state => ({
     providerMinPrice: state.price.providerMinPrice,
@@ -59,7 +58,7 @@ export class Price extends React.Component {
                         aria-label="Provider minimum price"
                         disabled={isEngineOn}
                     />
-                    <span>{isMainNet ? "" : "t"}GNT per hour</span>
+                    <span>{isMainNet ? '' : 't'}GNT per hour</span>
                 </div>
                 <div className="section__price">
                     <span>Requestor Maximum</span>
@@ -72,7 +71,7 @@ export class Price extends React.Component {
                         aria-label="Requestor maximum price"
                         disabled={isEngineOn}
                     />
-                    <span>{isMainNet ? "" : "t"}GNT per hour</span>
+                    <span>{isMainNet ? '' : 't'}GNT per hour</span>
                 </div>
             </div>
         );

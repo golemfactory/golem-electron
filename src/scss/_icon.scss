@@ -597,3 +597,28 @@ $color_5: rgb(55, 196, 129);
     content: "\e96a";
   }
 }
+
+.icon{
+  &--color {
+    &-red {
+      color: $color-error;
+    }
+
+    &-yellow {
+      color: $color_3;
+    }
+
+    &-gray {
+      color: $color_4;
+    }
+    
+    &-blue {
+      color: $color_2;
+    }
+
+    &-green {
+      color: $color_5;
+    }
+
+  }
+}
