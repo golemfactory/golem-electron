@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
 
@@ -59,7 +60,9 @@ export class Table extends React.Component {
             }
         };
 
-        this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(this);
+        this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(
+            this
+        );
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -170,12 +173,12 @@ export class Table extends React.Component {
      */
     _handleRestart = (id, isPartial, isConcentOn) => {
         this._restartAsync(id, isPartial, isConcentOn).then(_result => {
-            if (_result && !_result[0] && _result[1].includes('Not enough')) {
+            if (_result && !!_result[1]) {
                 console.warn('Task restart failed!');
 
                 this.setState({
                     insufficientAmountModal: {
-                        result: !_result[0],
+                        result: !!_result[1],
                         message: _result[1]
                     }
                 });
@@ -185,7 +188,11 @@ export class Table extends React.Component {
 
     _restartAsync(id, isPartial, isConcentOn) {
         return new Promise((resolve, reject) => {
-            this.props.actions.restartTask({id, isPartial, isConcentOn}, resolve, reject);
+            this.props.actions.restartTask(
+                { id, isPartial, isConcentOn },
+                resolve,
+                reject
+            );
         });
     }
 
@@ -255,10 +262,7 @@ export class Table extends React.Component {
                 item={item}
                 index={index}
                 _handleRowClick={this._handleRowClick.bind(this)}
-                _handleRestartModal={this._handleRestartModal.bind(
-                    this,
-                    item
-                )}
+                _handleRestartModal={this._handleRestartModal.bind(this, item)}
                 _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
                 _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
                 _toggleWalletTray={toggleWalletTray}
@@ -274,12 +278,15 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal && insufficientAmountModal.result && (
-                    <InsufficientAmountModal
-                        message={insufficientAmountModal.message}
-                        closeModal={this._closeModal}
-                    />
-                )}
+                {insufficientAmountModal &&
+                    insufficientAmountModal.result &&
+                    ReactDOM.createPortal(
+                        <InsufficientAmountModal
+                            message={insufficientAmountModal.message}
+                            closeModal={this._closeModal}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
             </div>
         );
     }
