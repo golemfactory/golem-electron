@@ -74,6 +74,29 @@ class Estimation extends Component {
 		this.props._handleConcentCheckbox(e.target.checked);
 	}
 
+	_fetchTitle = (isConcentOn, isPartial, isSubtask, item) => {
+		if (isConcentOn) {
+			return (
+				<span>
+					You are restarting concent task.
+					<br />
+					Please confirm the amount that is required for toping up
+					your Concent Service deposit:
+				</span>
+			);
+		} else {
+			if (isPartial) {
+				return <span>Restarting only timed out subtasks</span>;
+			} else {
+				return isSubtask ? (
+					<SubtaskInfo item={item} />
+				) : (
+					<span>Restarting whole task as a new one</span>
+				);
+			}
+		}
+	};
+
 	render() {
 		const {
 			GNT,
@@ -95,14 +118,8 @@ class Estimation extends Component {
 		} = this.props;
 		return (
 			<div className="container__estimation">
-				<span>
-					{isPartial ? (
-						<span>Restarting only timed out subtasks</span>
-					) : (
-						isSubtask
-						? <SubtaskInfo item={item}/>
-						: <span>Restarting whole task as a new one</span>
-					)}
+				<span className="container__estimation__title">
+					{this._fetchTitle(isConcentOn, isPartial, isSubtask, item)}
 				</span>
 				<ConditionalRender showIf={item.concent_enabled}>
 					<div className="switch-box switch-box--green">

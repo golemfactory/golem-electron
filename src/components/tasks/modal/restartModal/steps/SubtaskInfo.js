@@ -6,7 +6,7 @@ const SubtaskInformation = ({ item }) => {
 	const num = item?.subtask_ids.length || 0; 
 	const denum = item?.subtasks_count || 0; 
 	return (
-		<div className="subtask-info">
+		<div>
 			<span>
 				Restarting selected subtasks:
 				<br/>

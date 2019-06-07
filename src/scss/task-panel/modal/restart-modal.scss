@@ -3,6 +3,7 @@
     height: auto;
     text-align: center;
     padding: 20px;
+    margin-top: -20%;
     .image-container {
       width: 160px;
       height: 160px;
@@ -84,7 +85,7 @@
             font-weight: 300;
           }
         }
-        .subtask-info {
+        &__title {
           line-height: 1.5em;
           margin-bottom: 30px;
         }
