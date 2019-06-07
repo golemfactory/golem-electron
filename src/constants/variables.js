@@ -6,4 +6,4 @@ const variables = Object.freeze({
 	mainEtherscanAddr: "https://etherscan.io/address"
 })
 
-export default variables
+module.exports = variables;
