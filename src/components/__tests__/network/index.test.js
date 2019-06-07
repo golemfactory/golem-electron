@@ -41,7 +41,8 @@ describe('<MainFragment />', () => {
             },
             info: {
                 connectionProblem: false,
-                isEngineOn: true
+                isEngineOn: true,
+                componentWarnings: []
             },
             advanced: {
                 chosenPreset: 'custom'
@@ -94,7 +95,8 @@ describe('<MainFragment />', () => {
             },
             info: {
                 connectionProblem: false,
-                isEngineOn: true
+                isEngineOn: true,
+                componentWarnings: []
             },
             advanced: {
                 chosenPreset: 'custom'
