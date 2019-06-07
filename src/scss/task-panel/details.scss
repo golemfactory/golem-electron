@@ -78,6 +78,14 @@
 				}
 			}
 		}
+		
+		.icon-arrow-down,
+		.icon-refresh{
+			&.disabled{
+				color: $color-text3 !important;
+				cursor: not-allowed !important;
+			}
+		}
 
 		.icon-arrow-down{
 			margin-right: 0 !important;

@@ -494,6 +494,7 @@ input[type='number']::-webkit-inner-spin-button {
     input:disabled + label > .overlay {
         border-color: rgba($color-primary, 0.3) !important;
         background: rgba($color-border, 0.2);
+        cursor: not-allowed !important;
     }
 
     .checkbox-item {

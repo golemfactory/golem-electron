@@ -8,7 +8,7 @@ const SubtaskInformation = ({ item }) => {
 	return (
 		<div>
 			<span>
-				Restarting selected subtasks:
+				Restarting selected subtask{num > 1 ? 's' : ''}:
 				<br/>
 				<b>Subtask amount: {num +'/'+ denum}</b>
 			</span>

@@ -4,7 +4,7 @@ import map from 'lodash/map';
 
 import SubtaskItem from './SubtaskItem';
 
-const SubtaskList = ({ lockCheckbox, list, checkedItems, toggleItems, showBlockNodeModal }) => {
+const SubtaskList = ({ lockCheckbox, list, checkedItems, toggleItems, showBlockNodeModal, restartSubtask }) => {
 	return (
 		<ul>
 			{map(list, (item, key) => (
@@ -15,6 +15,7 @@ const SubtaskList = ({ lockCheckbox, list, checkedItems, toggleItems, showBlockN
 					keyItem={key.toString()}
 					checkedItems={checkedItems}
 					toggleItems={toggleItems}
+					restartSubtask={restartSubtask}
 					showBlockNodeModal={showBlockNodeModal}
 				/>
 			))}

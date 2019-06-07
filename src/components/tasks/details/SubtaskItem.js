@@ -26,8 +26,8 @@ class SubtaskItem extends React.PureComponent {
 	 * [_handleRestartModal sends information of the clicked task as callback]
 	 * @param  {Any}        id      [Id of the selected task]
 	 */
-	_handleRestartModal(id, status) {
-		this.props.restartModalHandler(id, status, this._handleRestart);
+	_handleRestartModal(id) {
+		this.props.restartSubtask(id);
 	}
 
 	render() {
@@ -37,6 +37,7 @@ class SubtaskItem extends React.PureComponent {
 			keyItem,
 			checkedItems,
 			toggleItems,
+			restartSubtask,
 			showBlockNodeModal
 		} = this.props;
 		const { showNodeList } = this.state;
@@ -84,14 +85,18 @@ class SubtaskItem extends React.PureComponent {
 					</label>
 					<div className="checkbox-item__action">
 						<span
-							className="icon-refresh"
+							className={`icon-refresh ${
+								lockCheckbox ? 'disabled' : ''
+							}`}
 							onClick={this._handleRestartModal.bind(
 								this,
 								recentInfo?.subtask_id
 							)}
 						/>
 						<span
-							className="icon-arrow-down"
+							className={`icon-arrow-down ${
+								!recentInfo ? 'disabled' : ''
+							}`}
 							onClick={
 								item.length > 0
 									? this.toggleNodeList

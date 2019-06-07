@@ -127,6 +127,19 @@ export class Details extends React.PureComponent {
         });
     };
 
+    _restartSubtask = (id) => {
+        const { item } = this.props;
+
+        if (!this._checkRestartCondition(item) || !id) {
+            return;
+        }
+
+        this.props.restartSubtasksModalHandler({
+            ...item,
+            subtask_ids: [id]
+        });
+    }
+
     _lockScroll(isLocked) {
         this.props.overflowRef.style.setProperty(
             'overflow-y',
@@ -202,6 +215,7 @@ export class Details extends React.PureComponent {
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                         showBlockNodeModal={this._showBlockNodeModal}
+                        restartSubtask={this._restartSubtask}
                     />
                 </ConditionalRender>
                 {blockNodeModal &&
