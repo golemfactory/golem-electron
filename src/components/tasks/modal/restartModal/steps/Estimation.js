@@ -4,11 +4,11 @@ import isEqual from 'lodash/isEqual';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../../../../../actions';
+import { ETH_DENOM } from '../../../../../constants/variables';
 import ConditionalRender from '../../../../hoc/ConditionalRender';
 
 import SubtaskInfo from './SubtaskInfo';
 
-const ETH_DENOM = 10 ** 18;
 const mapStateToProps = state => ({
 	balance: state.realTime.balance,
 	currency: state.currency,
@@ -90,6 +90,7 @@ class Estimation extends Component {
 			estimatedCost,
 			isConcentOn,
 			isPartial,
+			isSubtask,
 			item
 		} = this.props;
 		return (
@@ -98,10 +99,11 @@ class Estimation extends Component {
 					{isPartial ? (
 						<span>Restarting only timed out subtasks</span>
 					) : (
-						<span>Restarting whole task as a new one</span>
+						isSubtask
+						? <SubtaskInfo item={item}/>
+						: <span>Restarting whole task as a new one</span>
 					)}
 				</span>
-				<SubtaskInfo />
 				<ConditionalRender showIf={item.concent_enabled}>
 					<div className="switch-box switch-box--green">
 						<label className="switch">

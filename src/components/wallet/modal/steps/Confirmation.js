@@ -1,12 +1,10 @@
-import React from "react";
-import { BigNumber } from "bignumber.js";
+import React from 'react';
+import { BigNumber } from 'bignumber.js';
 
-import { modals, currencyIcons } from "./../../../../constants";
+import { modals, currencyIcons, variables } from './../../../../constants';
 
 const { clipboard } = window.electron;
-const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
-const GWEI_DENOM = 10 ** 9;
-const mainEtherscan = "https://etherscan.io/address";
+const { ETH_DENOM, GWEI_DENOM, mainEtherscanAddr } = variables;
 
 export default class Confirmation extends React.Component {
     constructor(props) {
@@ -56,7 +54,7 @@ export default class Confirmation extends React.Component {
                         <span>{suffix}</span>
                         <br />
                         <span className="info-estimation">
-                            est. ${" "}
+                            est. ${' '}
                             {amount
                                 .dividedBy(ETH_DENOM)
                                 .multipliedBy(currency[suffix])
@@ -80,8 +78,8 @@ export default class Confirmation extends React.Component {
                     <span>ETH</span>
                     <br />
                     <span className="info-estimation">
-                        est. ${" "}
-                        {totalTXCost.multipliedBy(currency["ETH"]).toFixed(2)}
+                        est. ${' '}
+                        {totalTXCost.multipliedBy(currency['ETH']).toFixed(2)}
                     </span>
                 </div>
                 <div className="action__modal">

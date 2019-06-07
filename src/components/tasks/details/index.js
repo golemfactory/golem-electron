@@ -12,6 +12,7 @@ import ConditionalRender from '../../hoc/ConditionalRender';
 import GroupedStatus from './GroupedStatus';
 import SubtaskList from './SubtaskList';
 import BlockNodeModal from '../modal/BlockNodeModal';
+import { taskStatus } from '../../../constants/statusDicts';
 
 import isEqual from 'lodash/isEqual';
 import every from 'lodash/every';
@@ -58,10 +59,7 @@ export class Details extends React.PureComponent {
     }
 
     componentWillUpdate(nextProps, nextState) {
-
-        if (
-            !isEqual(nextState.checkedItems, this.state.checkedItems)
-        ) {
+        if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
             const isAllChecked = every(
                 nextState.checkedItems,
                 item => item === true
@@ -113,12 +111,20 @@ export class Details extends React.PureComponent {
 
     _restartSubtasks = () => {
         const { item } = this.props;
+
+        if (!this._checkRestartCondition(item)) {
+            return;
+        }
+
         const restartList = map(
             this.state.checkedItems,
             (item, key) => !!item && key
         ).filter(Boolean);
 
-        this.props.restartSubtasksModalHandler({...item, subtask_ids: restartList})
+        this.props.restartSubtasksModalHandler({
+            ...item,
+            subtask_ids: restartList
+        });
     };
 
     _lockScroll(isLocked) {
@@ -154,6 +160,14 @@ export class Details extends React.PureComponent {
         });
     };
 
+    _checkRestartCondition(item) {
+        return !(
+            item.status === taskStatus.TIMEOUT ||
+            item.status === taskStatus.RESTART ||
+            item.status === taskStatus.WAITING
+        );
+    }
+
     render() {
         const { item, fragments } = this.props;
         const {
@@ -169,18 +183,21 @@ export class Details extends React.PureComponent {
             <div className="details__section">
                 <ConditionalRender showIf={fragments}>
                     <GroupedStatus subtasksList={fragments} />
-                    <div className="details__subtask-action">
-                        <span onClick={this._toggleAll}>
-                            {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
-                            Subtasks
-                        </span>
-                        {isAnyChecked && (
-                            <span onClick={this._restartSubtasks}>
-                                Restart Selected
+                    <ConditionalRender showIf={this._checkRestartCondition(item)}>
+                        <div className="details__subtask-action">
+                            <span onClick={this._toggleAll}>
+                                {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
+                                Subtasks
                             </span>
-                        )}
-                    </div>
+                            {isAnyChecked && (
+                                <span onClick={this._restartSubtasks}>
+                                    Restart Selected
+                                </span>
+                            )}
+                        </div>
+                    </ConditionalRender>
                     <SubtaskList
+                        lockCheckbox={!this._checkRestartCondition(item)}
                         list={fragments}
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}

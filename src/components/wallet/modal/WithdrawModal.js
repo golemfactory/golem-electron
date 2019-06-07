@@ -9,10 +9,9 @@ import * as Actions from "../../../actions";
 import WithdrawForm from "./steps/Form";
 import Confirmation from "./steps/Confirmation";
 import Result from "./steps/Result";
-import { modals, currencyIcons } from "./../../../constants";
+import { modals, currencyIcons, variables } from "./../../../constants";
 
-const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
-const GWEI_DENOM = 10 ** 9;
+const { ETH_DENOM, GWEI_DENOM } = variables;
 
 const mapStateToProps = state => ({
     publicKey: state.account.publicKey

@@ -37,9 +37,8 @@ const setSingleFrames = (state = initialState, action) => {
         });
 
     case SET_SUBTASKS_LIST:
-        state.subtasksList[action.id] = action.payload
         return Object.assign({}, state, {
-            subtasksList: state.subtasksList,
+            subtasksList: action.payload,
             hasSubtasksLoaded: true
         });
 

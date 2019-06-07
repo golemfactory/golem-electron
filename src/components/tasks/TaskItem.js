@@ -7,6 +7,8 @@ import Tooltip from '@tippy.js/react';
 import map from 'lodash/fp/map';
 import { Spring, config } from 'react-spring/renderprops.cjs';
 import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+
+import { ETH_DENOM } from '../../constants/variables';
 import { taskStatus } from './../../constants/statusDicts';
 
 import * as Actions from '../../actions';
@@ -15,8 +17,6 @@ import Preview from './Preview';
 import Details from './details';
 import ConditionalRender from '../hoc/ConditionalRender';
 const { ipcRenderer } = window.electron;
-
-const ETH_DENOM = 10 ** 18;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,

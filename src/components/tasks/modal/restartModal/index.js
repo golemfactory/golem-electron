@@ -80,6 +80,7 @@ export default class RestartModal extends React.PureComponent {
                         <Estimation 
                             isConcentOn={isConcentOn} 
                             isPartial={isTimedOutOnly} 
+                            isSubtask={isSubtask}
                             item={item}
                             _handleConcentCheckbox={this._handleConcentCheckbox}/>
                     )}

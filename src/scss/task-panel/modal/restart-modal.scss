@@ -29,19 +29,19 @@
           font-weight: 400;
         }
         .switch-box {
-            text-align: left;
-            margin: 20px 0;
-            .switch-label {
-              &.switch-label--right {
-                position: relative;
-                bottom: 2px;
-                margin-left: 10px;
-                font-size: 9pt;
-                color: $color-text2;
-              }
+          text-align: left;
+          margin: 20px 0;
+          .switch-label {
+            &.switch-label--right {
+              position: relative;
+              bottom: 2px;
+              margin-left: 10px;
+              font-size: 9pt;
+              color: $color-text2;
             }
+          }
         }
-        
+
         .summary {
           @include flex;
           flex-direction: column;
@@ -57,7 +57,7 @@
             width: 100%;
             padding: 10px 0;
             border-top: 1px dashed $color-border;
-            
+
             h4 {
               margin: 0;
             }
@@ -83,6 +83,10 @@
             margin-top: 15px;
             font-weight: 300;
           }
+        }
+        .subtask-info {
+          line-height: 1.5em;
+          margin-bottom: 30px;
         }
       }
     }

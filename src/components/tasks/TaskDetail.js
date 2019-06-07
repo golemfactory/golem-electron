@@ -29,12 +29,12 @@ import * as Actions from './../../actions';
 import { once } from './../../utils/once';
 import zipObject from './../../utils/zipObject';
 import isObjectEmpty from './../../utils/isObjectEmpty';
+import { ETH_DENOM } from './../../constants/variables';
 import { testStatusDict } from './../../constants/statusDicts';
 import calculateFrameAmount from './../../utils/calculateFrameAmount';
 
 import whoaImg from './../../assets/img/whoa.png';
 
-const ETH_DENOM = 10 ** 18;
 const TIME_VALIDITY_NOTE = 'Time should be minimum 1 minute.';
 
 const editMode = 'settings';

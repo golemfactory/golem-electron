@@ -11,15 +11,16 @@ const { PoseGroup } = posed;
 import * as Actions from '../actions';
 import { getFilteredPaymentHistory } from '../reducers';
 import { timeStampToHR } from '../utils/secsToHMS';
+import {
+  ETH_DENOM,
+  mainEtherscanTx,
+  testEtherscanTx
+} from '../constants/variables';
 
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');
 const isWin = mainProcess.isWin();
 const isMac = mainProcess.isMac();
-
-const mainEtherscan = 'https://etherscan.io/tx/0x';
-const testEtherscan = 'https://rinkeby.etherscan.io/tx/0x';
-const ETH_DENOM = 10 ** 18;
 
 const filter = {
   PAYMENT: 'payment',
@@ -158,7 +159,7 @@ export class History extends React.Component {
               trigger="mouseenter">
               <a
                 href={`${
-                  isMainNet ? mainEtherscan : testEtherscan
+                  isMainNet ? mainEtherscanTx : testEtherscanTx
                 }${transaction}`}>
                 <span className="icon-new-window" />
               </a>

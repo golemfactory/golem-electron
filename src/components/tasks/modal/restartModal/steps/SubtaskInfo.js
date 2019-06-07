@@ -2,10 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { taskStatus } from "./../../../../../constants/statusDicts";
 
-const SubtaskInformation = ({ status }) => {
+const SubtaskInformation = ({ item }) => {
+	const num = item?.subtask_ids.length || 0; 
+	const denum = item?.subtasks_count || 0; 
 	return (
-		<div>
-			<span>Restart subtask</span>
+		<div className="subtask-info">
+			<span>
+				Restarting selected subtasks:
+				<br/>
+				<b>Subtask amount: {num +'/'+ denum}</b>
+			</span>
 		</div>
 	);
 };
@@ -13,7 +19,7 @@ const SubtaskInformation = ({ status }) => {
 SubtaskInformation.displayName = 'SubtaskInformation';
 
 SubtaskInformation.propTypes = {
-	status: PropTypes.string
+	item: PropTypes.object
 };
 
 export default SubtaskInformation;
