@@ -17,6 +17,7 @@ import { taskStatus } from '../../../constants/statusDicts';
 import isEqual from 'lodash/isEqual';
 import every from 'lodash/every';
 import some from 'lodash/some';
+import size from 'lodash/size';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
@@ -60,10 +61,10 @@ export class Details extends React.PureComponent {
 
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
-            const isAllChecked = every(
-                nextState.checkedItems,
-                item => item === true
-            );
+            const isAllChecked =
+                every(nextState.checkedItems, item => item === true) &&
+                size(nextState.checkedItems) === size(nextProps.fragments);
+
             const isAnyChecked = some(
                 nextState.checkedItems,
                 item => item === true
@@ -127,7 +128,7 @@ export class Details extends React.PureComponent {
         });
     };
 
-    _restartSubtask = (id) => {
+    _restartSubtask = id => {
         const { item } = this.props;
 
         if (!this._checkRestartCondition(item) || !id) {
@@ -138,7 +139,7 @@ export class Details extends React.PureComponent {
             ...item,
             subtask_ids: [id]
         });
-    }
+    };
 
     _lockScroll(isLocked) {
         this.props.overflowRef.style.setProperty(
@@ -196,7 +197,8 @@ export class Details extends React.PureComponent {
             <div className="details__section">
                 <ConditionalRender showIf={fragments}>
                     <GroupedStatus subtasksList={fragments} />
-                    <ConditionalRender showIf={this._checkRestartCondition(item)}>
+                    <ConditionalRender
+                        showIf={this._checkRestartCondition(item)}>
                         <div className="details__subtask-action">
                             <span onClick={this._toggleAll}>
                                 {isAllChecked ? 'Deselect All' : 'Select All'}{' '}
