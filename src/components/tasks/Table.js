@@ -56,7 +56,8 @@ export class Table extends React.Component {
         this.state = {
             insufficientAmountModal: {
                 result: false,
-                message: null
+                message: null,
+                restartData: []
             }
         };
 
@@ -179,7 +180,8 @@ export class Table extends React.Component {
                 this.setState({
                     insufficientAmountModal: {
                         result: !!_result[1],
-                        message: _result[1]
+                        message: _result[1],
+                        restartData: [id, isPartial]
                     }
                 });
             }
@@ -278,12 +280,15 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal &&
-                    insufficientAmountModal.result &&
+                {insufficientAmountModal?.result &&
                     ReactDOM.createPortal(
                         <InsufficientAmountModal
-                            message={insufficientAmountModal.message}
                             closeModal={this._closeModal}
+                            createTaskConditionally={this._handleRestart.bind(
+                                this,
+                                ...insufficientAmountModal?.restartData
+                            )}
+                            message={insufficientAmountModal?.message}
                         />,
                         document.getElementById('modalPortal')
                     )}
