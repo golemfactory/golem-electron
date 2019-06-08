@@ -1,3 +1,4 @@
+import { some } from 'lodash';
 import { dict } from './../actions';
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');
@@ -124,7 +125,9 @@ const setInfo = (state = initialState, action) => {
         }
 
         case SET_COMPONENT_WARNING: {
-            const { status, issue } = action.payload;
+            if(some(state.componentWarnings, action.payload)) {
+                return state;
+            }
             return Object.assign({}, state, {
                 componentWarnings: [...state.componentWarnings, action.payload]
             });
