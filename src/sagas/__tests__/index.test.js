@@ -175,9 +175,6 @@ describe("handleIO", () => {
             .fork(settingsInteractionFlow, connection)
 
             .next()
-            .takeLatest(action.portProblem.type, disablePortFlow)
-
-            .next()
             .call(subscribe, connection)
 
             .finish()

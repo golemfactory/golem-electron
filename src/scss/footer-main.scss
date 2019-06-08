@@ -96,7 +96,8 @@
         }
 
         .info__warnings {
-            font-size: 9pt;
+            font-size: 8pt;
+            font-style: italic;
             color: $color-text3;
             .icon-warning-rounded {
                 position: relative;

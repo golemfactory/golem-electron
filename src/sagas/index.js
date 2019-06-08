@@ -292,7 +292,6 @@ export function* handleIO(connection) {
         yield fork(termsFlow, connection);
         yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
-        yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 
         channel = yield call(subscribe, connection);
 
@@ -314,6 +313,7 @@ export function* handleIO(connection) {
                         issue: "PORT"
                     }
                 });
+                disablePortFlow();
             }
         }
     } finally {
