@@ -101,7 +101,8 @@
             }
 
             .info-label {
-                font-size: 8pt !important;
+                font-family: 'Roboto';
+                font-size: 7pt !important;
                 color: $color-text;
                 margin: 0 7px 0 5px;
             }
@@ -117,7 +118,7 @@
                 cursor: pointer;
                 transition: .5s color;
                 display: flex;
-                align-items: center; 
+                align-items: center;
 
                 &:hover {
                     color: $color-text;

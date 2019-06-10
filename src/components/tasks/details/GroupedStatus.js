@@ -15,28 +15,16 @@ function addUniq(arr, object, key) {
 }
 
 const fillRestGroups = function(gs) {
-	gs.forEach(item => {
-		if(item.status == 'Starting'){
-			item.status = 'Negotiating'
-		}
-		if(item.status == 'Not Started'){
-			item.status = 'Waiting'
-		}
-		if(item.status == 'Restart'){
-			item.status = 'Restarted'
-		}
-		
-		addUniq(gs, item, 'status');
-	});
+	gs.forEach(item => addUniq(gs, item, 'status'));
 
-	addUniq(gs, { status: 'Waiting', count: 0 }, 'status');
+	addUniq(gs, { status: 'Not Started', count: 0 }, 'status');
 	addUniq(gs, { status: 'Timeout', count: 0 }, 'status');
-	addUniq(gs, { status: 'Failed', count: 0 }, 'status');
+	addUniq(gs, { status: 'Failure', count: 0 }, 'status');
 	addUniq(gs, { status: 'Finished', count: 0 }, 'status');
-	addUniq(gs, { status: 'Negotiating', count: 0 }, 'status');
+	addUniq(gs, { status: 'Starting', count: 0 }, 'status');
 	addUniq(gs, { status: 'Verifying', count: 0 }, 'status');
 	addUniq(gs, { status: 'Downloading', count: 0 }, 'status');
-	addUniq(gs, { status: 'Restarted', count: 0 }, 'status');
+	addUniq(gs, { status: 'Restart', count: 0 }, 'status');
 
 	return gs;
 };

@@ -26,9 +26,26 @@
 				padding: 10px 25px;
 				line-height: 2.6em;
 
+				.info {
+					&-subtask-number {
+						display: inline-block;
+						width: 125px;
+					}
+					&-progress {
+						display: inline-block;
+						width: 85px;
+						&-number {
+							width: 30px;
+							display: inline-block;
+							text-align: center;
+						}
+					}
+				}
+
 				label,
 				.overlay {
 					margin-left: 0;
+					margin-right: 15px;
 				}
 
 				&__action {

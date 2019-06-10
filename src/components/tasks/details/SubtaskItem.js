@@ -68,9 +68,11 @@ class SubtaskItem extends React.PureComponent {
 						htmlFor={`taskTypeRadio${keyItem}`}
 						className="checkbox-label-left">
 						<span className="overlay" />
-						<b>Subtask number: </b> {keyItem}
+						<span className="info-subtask-number"><b>Subtask number: </b> {keyItem.padStart(4, '0')}</span>
 						<span className="bumper" />
-						<b>Progress: </b> {recentInfo?.progress * 100 || 0}%
+						<span className="info-progress"><b>Progress: </b>
+							<span className="info-progress-number">{recentInfo?.progress * 100 || 0}%</span>
+						</span>
 						<span className="bumper" />
 						<b>State: </b>{' '}
 						{recentInfo ? (
@@ -80,7 +82,7 @@ class SubtaskItem extends React.PureComponent {
 								} ${ICONS[(recentInfo?.status)]?.color}`}
 							/>
 						) : (
-							'Not started'
+							<span className="icon-subtask-awaiting icon--color-yellow"/>
 						)}
 					</label>
 					<div className="checkbox-item__action">

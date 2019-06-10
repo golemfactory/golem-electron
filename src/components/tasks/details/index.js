@@ -242,12 +242,12 @@ export default connect(
 )(Details);
 
 export const ICONS = {
-    Waiting: { name: 'subtask-awaiting', color: 'icon--color-yellow' },
+    'Not Started': { name: 'subtask-awaiting', color: 'icon--color-yellow' },
     Timeout: { name: 'timeout', color: 'icon--color-red' },
-    Failed: { name: 'failure', color: 'icon--color-red' },
+    Failure: { name: 'failure', color: 'icon--color-red' },
     Finished: { name: 'finished', color: 'icon--color-green' },
-    Negotiating: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
+    Starting: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
     Verifying: { name: 'subtask-verifying', color: 'icon--color-gray' },
     Downloading: { name: 'download', color: 'icon--color-blue' },
-    Restarted: { name: 'refresh', color: 'icon--color-blue' }
+    Restart: { name: 'refresh', color: 'icon--color-blue' }
 };
