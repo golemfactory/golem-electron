@@ -79,6 +79,14 @@
         flex: 0 0 90px;
         background: $color-text4;
         z-index: 999;
+
+        .btn--skip {
+            margin-right: auto !important;
+            color: $color-primary;
+            text-decoration:underline;
+            cursor: pointer;
+        }
+
         span {
             margin-right: 20px;
         }

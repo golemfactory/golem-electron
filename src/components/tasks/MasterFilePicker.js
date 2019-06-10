@@ -42,6 +42,13 @@ export class MasterFilePicker extends React.Component {
         });
     };
 
+    _handleSkip = e => {
+        const { taskName, type } = this.state;
+        window.routerHistory.push({
+            pathname: `/add-task/type/${type || ''}`
+        });
+    }
+
     _handleChange = nodes => this.setState({ nodes });
 
     _selectMasterFile = node =>
@@ -156,6 +163,13 @@ export class MasterFilePicker extends React.Component {
                     {this._filterableNodes(nodes)}
                 </div>
                 <div className="master-file-picker__container-action">
+                    <span 
+                        aria-label="Skip"
+                        className="btn--skip" 
+                        tabIndex="0" 
+                        onClick={this._handleSkip}>
+                            Skip
+                    </span>
                     <Link to="/tasks" aria-label="Cancel" tabIndex="0">
                         <span>Cancel</span>
                     </Link>
