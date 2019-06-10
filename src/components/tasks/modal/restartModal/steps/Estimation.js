@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { BigNumber } from 'bignumber.js';
+import Tooltip from '@tippy.js/react'
 import isEqual from 'lodash/isEqual';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -181,18 +182,33 @@ class Estimation extends Component {
 					</div>
 					<ConditionalRender
 						showIf={item.concent_enabled && isConcentOn}>
-						<div className="summary-item deposit">
-							<sub>Deposit required</sub>
-							<span className="summary-currency">
-								<h4>{GNT_required.toFixed(4)}</h4> GNT
-							</span>
-						</div>
-						<div className="summary-item deposit">
-							<sub>Deposit suggested</sub>
-							<span className="summary-currency">
-								<h4>{GNT_suggested.toFixed(4)}</h4> GNT
-							</span>
-						</div>
+						<Tooltip
+		                    content={
+		                    	<p>Minimum amount of GNT that is required (no less than twice the amount of funds in your Deposit for covering a task payment). <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">Learn more</a></p>}
+		                    placement="top"
+		                    size="small"
+		                    trigger="mouseenter"
+		                    interactive>
+		                    <div className="summary-item deposit">
+								<sub>Deposit required<span className="icon-question-mark"/></sub>
+								<span className="summary-currency">
+									<h4>{GNT_required.toFixed(4)}</h4> GNT
+								</span>
+							</div>
+		                </Tooltip>
+		                <Tooltip
+		                    content={<p>In order to save transaction fees cost of future tasks the Concent Service will try to update your Deposit with higher amount. <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=why-is-deposit-amount-higher-than-the-cost-of-task">Learn more</a></p>}
+		                    placement="top"
+		                    size="small"
+		                    trigger="mouseenter"
+		                    interactive>
+		                    <div className="summary-item deposit">
+								<sub>Deposit suggested<span className="icon-question-mark"/></sub>
+								<span className="summary-currency">
+									<h4>{GNT_suggested.toFixed(4)}</h4> GNT
+								</span>
+							</div>
+		                </Tooltip>
 						<div className="summary-item deposit">
 							<sub>Deposit tx fee</sub>
 							<span className="summary-currency">
