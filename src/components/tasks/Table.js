@@ -67,9 +67,6 @@ export class Table extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextProps.taskList !== this.props.taskList) {
-            this.updateFooterInfoBar(nextProps.taskList);
-        }
 
         //# avoid from updating state on render cycle, previewLock mechanism moved here
         if (nextProps.previewId !== this.props.previewId)
@@ -206,46 +203,6 @@ export class Table extends React.Component {
             }
         });
     };
-
-    /**
-     * [updateFooterInfoBar func. updates information about the task status on footer info bar]
-     * @param  {Array}    data    [JSON array of task list]
-     */
-    updateFooterInfoBar(data) {
-        const { actions, connectedPeers } = this.props;
-        let waiting = data.some(item => item.status == status.WAITING);
-        let computing = data.some(item => item.status == status.COMPUTING);
-        let timeout = data.some(item => item.status == status.TIMEOUT);
-
-        let info = connectedPeers
-            ? {
-                  status: status.READY,
-                  message: 'Golem is ready!',
-                  color: 'green'
-              }
-            : {
-                  status: status.WAITINGFORPEER,
-                  message: 'Waiting for peer...',
-                  color: 'yellow'
-              };
-        if (waiting) {
-            info.status = status.WAITING;
-            info.message = 'Task is preparing for computation';
-            info.color = 'yellow';
-        }
-        if (computing) {
-            info.status = status.COMPUTING;
-            info.message = 'Processing your task';
-            info.color = 'green';
-        }
-        if (timeout) {
-            info.status = status.TIMEOUT;
-            info.message = 'Your task has timed out';
-            info.color = 'red';
-        }
-
-        actions.setFooterInfo(info);
-    }
 
     /**
      * {listTasks function}

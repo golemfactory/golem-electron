@@ -56,21 +56,13 @@ const mockFormatList = [
 
 const presetSchema = {
     Blender: yup.object().shape({
-        resolution: yup
-            .array()
-            .of(
-                yup
-                    .number()
-                    .min(100)
-                    .max(8000)
-            )
-            .required(),
-        frames: yup.string().required(),
-        format: yup.string(),
-        output_path: yup.string(),
-        compositing: yup.bool()
-    })
-};
+            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
+            frames: yup.string().required(),
+            format: yup.string(),
+            output_path: yup.string(),
+            compositing: yup.bool()
+        })
+}
 
 const hints = {
     frame: [

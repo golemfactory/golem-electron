@@ -42,7 +42,11 @@ export class TaskItem extends React.Component {
             return interval;
         };
 
-        this.liveSubList = setInterval(interval(), 5000);
+        if (item.status == taskStatus.COMPUTING) {
+            this.liveSubList = setInterval(interval(), 5000);
+        } else {
+            actions.fetchHealthyNodeNumber(item.id);
+        }
     }
 
     componentWillUnmount() {
