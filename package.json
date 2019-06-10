@@ -204,7 +204,7 @@
         "html2pdf.js": "^0.9.0",
         "http": "0.0.0",
         "identity-obj-proxy": "^3.0.0",
-        "jest": "^23.6.0",
+        "jest": "^24.8.0",
         "jest-canvas-mock": "^1.1.0",
         "lodash-webpack-plugin": "^0.11.5",
         "mock-socket": "^6.0.4",
