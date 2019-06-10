@@ -89,3 +89,6 @@ export const getGPUEnvironment = (state, key) =>
     fromPerformance.getGPUEnvironmentSelector(state.performance, key);
 export const getConcentDepositStatus = (state, key) =>
     fromRealTime.concentDepositStatusSelector(state.realTime, key);
+
+export const getComponentWarnings = (state, key) =>
+    fromRealTime.componentWarningSelector({ ...state.realTime, ...state.info }, key);

@@ -5,15 +5,20 @@
             height: 65px;
             padding: 15px 20px;
             border-bottom: 1px solid $color-border;
+            border-left: 1px solid transparent;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            transition: 0.5s all;
+            transition: .5s all;
+            &__main{
+                width: 100%;
+            }
             .info__task-item {
                 display: flex;
-                justify-content: space-between;
+                justify-content: flex-start;
                 align-items: center;
+                flex: 1 1 100%;
             }
             .task-icon {
                 margin-right: 25px;
@@ -73,6 +78,7 @@
                 .info__task {
                     margin-top: 10px;
                     font-size: 7pt;
+                    height: 30px;
                 }
             }
             /*.badge {
@@ -87,24 +93,31 @@
                 box-sizing: border-box;
             }*/
 
-            .control-panel__task {
-                height: 100%;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
+            .control-panel__task{
+                width: 100%;
+                height: 30px;
+                display: none;
+                margin-top: 10px;
             }
 
-            .icon-preview,
-            .icon-refresh,
+            .info-label {
+                font-size: 8pt !important;
+                color: $color-text;
+                margin: 0 7px 0 5px;
+            }
+
             .icon-delete,
-            .icon-details {
+            .icon-details,
+            .icon-folder,
+            .icon-preview,
+            .icon-refresh {
                 box-sizing: border-box;
-                font-size: 9pt;
-                color: $color-text3;
+                font-size: 8pt;
+                color: $button-static-color;
                 cursor: pointer;
-                visibility: hidden;
-                transition: 0.5s color;
+                transition: .5s color;
+                display: flex;
+                align-items: center; 
 
                 &:hover {
                     color: $color-text;
@@ -118,11 +131,19 @@
                 }
             }
 
-            &:hover .icon-preview,
-            &:hover .icon-delete,
-            &:hover .icon-refresh,
-            &:hover .icon-details {
-                visibility: visible;
+            .icon-details,
+            .icon-folder{
+                font-size: 9pt;
+            }
+
+            &:hover .control-panel__task {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &:hover .info__task{
+                display: none;
             }
 
             .icon-refresh {
@@ -144,15 +165,7 @@
 
             &.active {
                 border-left: 5px solid $button-static-color;
-            }
-
-            .bumper {
-                margin: 0 3px;
-            }
-
-            .task-details-icon {
-                height: 16px;
-                margin-top: -4px;
+                padding-left: 16px;
             }
         }
     }

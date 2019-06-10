@@ -1,10 +1,45 @@
-.content__footer-main{
-	@include flex;
+.content__footer-main {
+    @include flex;
     flex-direction: column;
     justify-content: center;
     flex: 0 0 130px;
+    transition: 0.5s flex;
+    transition-delay: .5s;
 
-	.section__actions {
+    &__loading {
+        flex: 0 0 190px;
+
+        .section__actions {
+            flex: 0 0 160px !important;
+
+            .btn--primary {
+                display: none;
+            }
+        }
+
+        .status__components {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: space-between;
+            margin-top: 40px;
+
+            .item__status {
+                width: 250px;
+                display: grid;
+                grid-template-columns: 90px auto;
+                font-size: 8pt;
+                line-height: 1.8em;
+            }
+        }
+
+        .wave-loading {
+            height: 190px !important;
+        }
+    }
+
+    .section__actions {
+        position: relative;
         text-align: left;
         width: 100%;
 
@@ -14,6 +49,8 @@
         z-index: 2;
         background: $color-text4;
         flex: 0 0 100px;
+        transition: 0.5s flex;
+        transition-delay: .5s;
 
         &-status {
             @include flex;
@@ -24,53 +61,107 @@
             font-size: 11pt;
             font-weight: 400;
             width: 275px;
+            z-index: 2;
 
             .icon-status-dot {
                 margin-right: 8px;
                 font-size: 10pt;
 
                 &--active {
-                    color: #37C481;
+                    color: #37c481;
                 }
 
                 &--deactive {
-                    color: #F9FCFC;
+                    color: #f9fcfc;
                 }
 
                 &--warning {
                     color: $color-accent2;
                 }
                 &--error {
-                    color: #F65A23;
+                    color: #f65a23;
                 }
             }
         }
 
-        .status-message{
+        .status-message {
             line-height: 1.5em;
+            .icon-question-mark {
+                position: relative;
+                font-size: 7pt;
+                color: $color-text3;
+                margin-left: 5px;
+                bottom: 5px;
+            }
         }
 
-        .info__ports{
-            font-size: 9pt;
+        .info__warnings {
+            font-size: 8pt;
+            font-style: italic;
             color: $color-text3;
-            margin-left: 5px;
+            .icon-warning-rounded {
+                position: relative;
+                font-size: 9pt;
+                margin-left: 3px; 
+                color: $color-primary;
+                cursor: pointer;
+                bottom: -.5px;
+            }
         }
 
-        .status-node{
+        .status-node {
             margin-top: 5px;
             font-size: 8pt;
             color: $color-text2;
 
-            &__loading{
+            &__loading {
                 @include flex;
                 font-size: 8pt;
                 color: $color-text2;
                 height: 45px;
             }
         }
+
+        .btn--primary {
+            z-index: 2;
+        }
+
+        .wave-loading {
+            position: absolute;
+            margin-left: -24px;
+            bottom: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 1;
+            transition: 1.5s height linear;
+            transition-delay: .5s;
+        }
+
+        .component-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-bottom: -1px;
+            margin-left: -20px;
+            margin-right: 13px;
+
+            &--blue {
+                background-color: $button-static-color;
+            }
+            &--yellow {
+                background-color: $color-accent2;
+            }
+            &--green {
+                background-color: $color-accent1;
+            }
+            &--grey {
+                background-color: $color-text2;
+            }
+        }
     }
 
-    .content__footer-social{
+    .content__footer-social {
         @include flex;
         justify-content: space-between;
         align-items: center;
@@ -83,15 +174,20 @@
         z-index: 99999;
         background: white;
 
-        .element__footer{
+        .element__footer {
             @include flex;
             cursor: pointer;
             color: $color-text2;
         }
 
-        [class^="icon-"], [class*=" icon-"] {
+        [class^="icon-"],
+        [class*=" icon-"] {
             font-size: 10pt;
-            margin-right: 5px;
+            margin-right: 2px;
+        }
+
+        .icon-golem {
+            color: $color-golem;
         }
     }
 
@@ -105,7 +201,7 @@
         height: 0;
         background: rgba($color-text4, 0.7);
         border-radius: 50%;
-        transition: width 2s, height 2s, opacity .1s linear 2s;
+        transition: width 2s, height 2s, opacity 0.1s linear 2s;
         transform: translate(50%, 50%);
         opacity: 0;
 
@@ -113,39 +209,52 @@
             opacity: 1;
             width: 300vh;
             height: 300vh;
-            transition: width 2s, height 2s, opacity .1s linear 0s;
+            transition: width 2s, height 2s, opacity 0.1s linear 0s;
         }
-
     }
 
     .loading-icon {
-            position: absolute;
-            display: none;
-            left: 0;
-            right: 0;
-            top: 0;
-            bottom: 0;
-            margin: auto;
-            width: 120px;
-            z-index: 11;
+        position: absolute;
+        display: none;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 120px;
+        z-index: 11;
 
-            &.active{
-                display: block;
-            }
+        &.active {
+            display: block;
         }
+    }
 }
 
-.status__components{
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    justify-content: space-between;
+.info__connection {
+    font-size: 9pt;
+    &__item {
+        display: block;
+        line-height: 2em;
+    }
+}
 
-    .item__status{
-        width: 210px;
-        @include flex;
-        justify-content: space-between;
-
-        font-size: 8pt;
+.tooltip__warning-component {
+    max-width: 432px !important;
+    width: 432px;
+    text-align: left;
+    .icon-status-dot {
+        position: relative;
+        bottom: -1px;
+        margin-left: 5px;
+        margin-right: 10px;
+        color: $color-accent2;
+    }
+    .icon-new-window {
+        position: relative;
+        bottom: -1px;
+        margin-left: 3px;
+        color: $color-primary;
+        font-size: 10pt;
+        cursor: pointer;
     }
 }

@@ -87,6 +87,7 @@ module.exports = (env, argv) => ({
             template: 'template.html'
         }),
         new HtmlWebpackHarddiskPlugin(),
+        /*In case of Lodash errors @see https://github.com/lodash/lodash-webpack-plugin*/
         new HappyPack({
             id: 'jsx',
             loaders: [

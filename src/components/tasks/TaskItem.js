@@ -4,16 +4,18 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import Tooltip from '@tippy.js/react';
-
+import map from 'lodash/fp/map';
 import { Spring, config } from 'react-spring/renderprops.cjs';
-import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+import { ETH_DENOM } from '../../constants/variables';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 import { taskStatus } from './../../constants/statusDicts';
 
 import * as Actions from '../../actions';
 
 import Preview from './Preview';
-
-const ETH_DENOM = 10 ** 18;
+import Details from './details';
+import ConditionalRender from '../hoc/ConditionalRender';
+const { ipcRenderer } = window.electron;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
@@ -29,7 +31,7 @@ export class TaskItem extends React.Component {
         super(props);
 
         this.state = {
-            toggledPreviewList: []
+            toggledList: []
         };
     }
 
@@ -47,18 +49,34 @@ export class TaskItem extends React.Component {
         this.liveSubList && clearInterval(this.liveSubList);
     }
 
-    _togglePreview({ id }, evt) {
-        evt.target.classList.toggle('icon--active');
-        const prevList = this.state.toggledPreviewList;
-        const prevToggle = this.state.toggledPreviewList[id];
+    _toggle(id, evt, toggledAttribute) {
+        const prevList = this.state.toggledList;
+        const prevToggle = this.state.toggledList[id]
+            ? this.state.toggledList[id][toggledAttribute]
+            : false;
 
-        prevList[id] = !prevToggle;
-        this.props._toggleWalletTray(!prevToggle);
+        if (prevList[id]) {
+            prevList[id] = map(prevList[id], item => false);
+        } else {
+            prevList[id] = {};
+        }
+
+        prevList[id][toggledAttribute] = !prevToggle;
 
         this.setState({
-            toggledPreviewList: prevList
+            toggledList: prevList
         });
     }
+
+    _togglePreview({ id }, evt) {
+        this._toggle(id, evt, 'preview');
+    }
+
+    _toggleDetail({ id }, evt) {
+        this._toggle(id, evt, 'detail');
+    }
+
+    _openLogs = path => ipcRenderer.send('open-file', path);
 
     /**
      * [_fetchStatus func. populate status of the task]
@@ -79,7 +97,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--timeout">Timed out: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -89,7 +107,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--preparing">
                             Preparing for computation...{' '}
                         </span>
@@ -100,7 +118,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--preparing">
                             Waiting for computation...{' '}
                         </span>
@@ -128,7 +146,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--restarted">Restarted</span>
                     </div>
                 );
@@ -137,11 +155,11 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--computing">
                             Computing...{' '}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
                     </div>
                 );
@@ -156,7 +174,7 @@ export class TaskItem extends React.Component {
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--finished">Finished: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -184,10 +202,12 @@ export class TaskItem extends React.Component {
             index,
             _handleRowClick,
             _handleRestartModal,
+            _handleRestartSubtasksModal,
             _handleDeleteModal,
             psId
         } = this.props;
-        const { toggledPreviewList } = this.state;
+
+        const { toggledList } = this.state;
         const { options } = item;
         return (
             <Spring
@@ -230,7 +250,7 @@ export class TaskItem extends React.Component {
                                         <span className="path4" />
                                     </span>
                                 </div>
-                                <div>
+                                <div className="task-item__main">
                                     <h4>{item.name}</h4>
                                     <div className="duration">
                                         {this._fetchStatus(item)}
@@ -242,10 +262,7 @@ export class TaskItem extends React.Component {
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {' '}
-                                                    |{' '}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
                                                     {' '}
                                                     Resolution:{' '}
@@ -255,10 +272,7 @@ export class TaskItem extends React.Component {
                                                         )) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {' '}
-                                                    |{' '}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
                                                     Cost:{' '}
                                                     {this._fetchCost(item)}
@@ -269,18 +283,12 @@ export class TaskItem extends React.Component {
                                                     Subtasks:{' '}
                                                     {item.subtasks_count || 0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {' '}
-                                                    |{' '}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
                                                     {' '}
                                                     Task timeout: {item.timeout}
                                                 </span>
-                                                <span className="bumper">
-                                                    {' '}
-                                                    |{' '}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
                                                     {' '}
                                                     Subtask timeout:{' '}
@@ -288,72 +296,142 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </div>
                                         </div>
+                                        <div
+                                            className="control-panel__task"
+                                            ref={node =>
+                                                (this.controlPanelRef = node)
+                                            }>
+                                            <Tooltip
+                                                content={<p>Preview</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-preview"
+                                                    tabIndex="0"
+                                                    aria-label="Preview"
+                                                    onClick={this._togglePreview.bind(
+                                                        this,
+                                                        item
+                                                    )}>
+                                                    <span className="info-label">
+                                                        Preview
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Task Details</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter"
+                                                className="task-details-icon">
+                                                <span
+                                                    className="icon-details"
+                                                    tabIndex="0"
+                                                    aria-label="Task Details"
+                                                    onClick={this._toggleDetail.bind(
+                                                        this,
+                                                        item
+                                                    )}>
+                                                    <span className="info-label">
+                                                        Details
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Restart</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-refresh"
+                                                    tabIndex="0"
+                                                    aria-label="Restart Task"
+                                                    onClick={
+                                                        item.status !==
+                                                        taskStatus.RESTART
+                                                            ? _handleRestartModal
+                                                            : undefined
+                                                    }
+                                                    disabled={
+                                                        !(
+                                                            item.status !==
+                                                            taskStatus.RESTART
+                                                        )
+                                                    }>
+                                                    <span className="info-label">
+                                                        Restart
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Output</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-folder"
+                                                    tabIndex="0"
+                                                    aria-label="Open Delete Task Popup"
+                                                    onClick={this._openLogs.bind(
+                                                        null,
+                                                        options.output_path
+                                                    )}
+                                                    disabled={
+                                                        !options.output_path
+                                                    }>
+                                                    <span className="info-label">
+                                                        Output
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Delete</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-delete"
+                                                    tabIndex="0"
+                                                    aria-label="Open Delete Task Popup"
+                                                    onClick={
+                                                        _handleDeleteModal
+                                                    }>
+                                                    <span className="info-label">
+                                                        Delete
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="control-panel__task">
-                                <Tooltip
-                                    content={<p>Preview</p>}
-                                    placement="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-preview"
-                                        tabIndex="0"
-                                        aria-label="Preview"
-                                        onClick={this._togglePreview.bind(
-                                            this,
-                                            item
-                                        )}
-                                    />
-                                </Tooltip>
-                                <Tooltip
-                                    content={<p>Task Details</p>}
-                                    placement="right"
-                                    trigger="mouseenter"
-                                    className="task-details">
-                                    <RefLink item={item} />
-                                </Tooltip>
-                                <Tooltip
-                                    content={<p>Restart</p>}
-                                    placement="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-refresh"
-                                        tabIndex="0"
-                                        aria-label="Restart Task"
-                                        onClick={
-                                            item.status !== taskStatus.RESTART
-                                                ? _handleRestartModal
-                                                : undefined
-                                        }
-                                        disabled={
-                                            !(
-                                                item.status !==
-                                                taskStatus.RESTART
-                                            )
-                                        }
-                                    />
-                                </Tooltip>
-                                <Tooltip
-                                    content={<p>Delete</p>}
-                                    placement="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-delete"
-                                        tabIndex="0"
-                                        aria-label="Open Delete Task Popup"
-                                        onClick={_handleDeleteModal}
-                                    />
-                                </Tooltip>
-                            </div>
                         </div>
-                        {item.id === psId && toggledPreviewList[psId] && (
+                        <ConditionalRender
+                            showIf={
+                                item.id === psId &&
+                                toggledList[psId] &&
+                                toggledList[psId].preview
+                            }>
                             <Preview
                                 id={item.id}
                                 src={item.preview}
                                 progress={item.progress}
                             />
-                        )}
+                        </ConditionalRender>
+                        <ConditionalRender
+                            showIf={
+                                item.id === psId &&
+                                toggledList[psId] &&
+                                toggledList[psId].detail
+                            }>
+                            <Details
+                                item={item}
+                                updateIf={
+                                    !(
+                                        item.status === taskStatus.RESTART ||
+                                        item.status === taskStatus.TIMEOUT ||
+                                        item.status === taskStatus.FINISHED
+                                    )
+                                }
+                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
+                            />
+                        </ConditionalRender>
                     </div>
                 )}
             </Spring>

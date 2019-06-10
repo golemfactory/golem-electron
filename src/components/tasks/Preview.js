@@ -36,11 +36,10 @@ export class Preview extends React.Component {
     }
 
     render() {
-        const {id, frameCount, src, taskList, progress} = this.props
+        const {id, frameCount, src, taskList, progress, showIf} = this.props
         let task = !!id && taskList.filter((item) => item.id === id)[0]
         let preview = !!task && task.preview
         const {previewSRC} = this.state
-
         return (
             <div className="section__preview-black">
                 <div className="details__preview">

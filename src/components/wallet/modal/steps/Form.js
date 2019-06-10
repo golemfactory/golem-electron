@@ -3,12 +3,12 @@ import { BigNumber } from "bignumber.js";
 import yup from "yup";
 
 import Slider from "./../../../Slider.js";
-import { modals, currencyIcons } from "./../../../../constants";
+import { modals, currencyIcons, variables } from "./../../../../constants";
+
+const { ETH_DENOM, GWEI_DENOM } = variables;
 
 const { clipboard, remote } = window.electron;
 const mainProcess = remote.require("./index");
-const ETH_DENOM = 10 ** 18; //POW shorthand thanks to ES6
-const GWEI_DENOM = 10 ** 9;
 
 export default class WithdrawForm extends React.Component {
     constructor(props) {

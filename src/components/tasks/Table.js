@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
 
@@ -7,7 +8,7 @@ import { connect } from 'react-redux';
 
 import * as Actions from '../../actions';
 import blender_logo from './../../assets/img/blender_logo.png';
-import { convertSecsToHMS, timeStampToHR } from './../../utils/secsToHMS';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 
 import InsufficientAmountModal from './modal/InsufficientAmountModal';
 import TaskItem from './TaskItem';
@@ -55,9 +56,14 @@ export class Table extends React.Component {
         this.state = {
             insufficientAmountModal: {
                 result: false,
-                message: null
+                message: null,
+                restartData: []
             }
         };
+
+        this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(
+            this
+        );
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -154,28 +160,41 @@ export class Table extends React.Component {
     }
 
     /**
+     * [_handleRestartModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestartSubtasksModal(list) {
+        this.props.restartModalHandler(list, this._handleRestart, true);
+    }
+
+    /**
      * [_handleDeleteModal sends information of the clicked task as callback]
      * @param  {Any}        id              [Id of the selected task]
-     * @param  {Boolean}    isTimedOutOnly  [Restart task partially for timed out subtasks]
+     * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
      */
-    _handleRestart = (id, isTimedOutOnly) => {
-        this._restartAsync(id, isTimedOutOnly).then(_result => {
-            if (_result && !_result[0] && _result[1].includes('Not enough')) {
+    _handleRestart = (id, isPartial, isConcentOn) => {
+        this._restartAsync(id, isPartial, isConcentOn).then(_result => {
+            if (_result && !!_result[1]) {
                 console.warn('Task restart failed!');
 
                 this.setState({
                     insufficientAmountModal: {
-                        result: !_result[0],
-                        message: _result[1]
+                        result: !!_result[1],
+                        message: _result[1],
+                        restartData: [id, isPartial]
                     }
                 });
             }
         });
     };
 
-    _restartAsync(id, isTimedOutOnly) {
+    _restartAsync(id, isPartial, isConcentOn) {
         return new Promise((resolve, reject) => {
-            this.props.actions.restartTask(id, isTimedOutOnly, resolve, reject);
+            this.props.actions.restartTask(
+                { id, isPartial, isConcentOn },
+                resolve,
+                reject
+            );
         });
     }
 
@@ -245,10 +264,8 @@ export class Table extends React.Component {
                 item={item}
                 index={index}
                 _handleRowClick={this._handleRowClick.bind(this)}
-                _handleRestartModal={this._handleRestartModal.bind(
-                    this,
-                    item
-                )}
+                _handleRestartModal={this._handleRestartModal.bind(this, item)}
+                _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
                 _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
                 _toggleWalletTray={toggleWalletTray}
             />
@@ -263,12 +280,18 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal && insufficientAmountModal.result && (
-                    <InsufficientAmountModal
-                        message={insufficientAmountModal.message}
-                        closeModal={this._closeModal}
-                    />
-                )}
+                {insufficientAmountModal?.result &&
+                    ReactDOM.createPortal(
+                        <InsufficientAmountModal
+                            closeModal={this._closeModal}
+                            createTaskConditionally={this._handleRestart.bind(
+                                this,
+                                ...insufficientAmountModal?.restartData
+                            )}
+                            message={insufficientAmountModal?.message}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
             </div>
         );
     }
