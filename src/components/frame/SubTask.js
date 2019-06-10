@@ -240,7 +240,6 @@ export class SubTask extends React.Component {
         });
 
         function _taskStatus(status) {
-            console.log("status", status);
 
             switch (status) {
                 case statusDict.FINISHED:
@@ -401,7 +400,7 @@ export class SubTask extends React.Component {
                                 </div>
                             </div>
                         }
-                        placement="bottom"
+                        placement={index < path.length / 2 ? 'bottom' : 'top'}
                         trigger="mouseenter"
                         interactive={true}
                         hideOnClick={false}

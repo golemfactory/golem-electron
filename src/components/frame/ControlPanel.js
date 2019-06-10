@@ -44,7 +44,8 @@ export class ControlPanel extends React.Component {
             <div className="container__control-panel">
                 <Tooltip
                     content={<p>Previous Frame</p>}
-                    placement="bottom"
+                    placement="top"
+                    size="small"
                     trigger="mouseenter">
                     <span
                         className="icon-arrow-left"
@@ -61,7 +62,8 @@ export class ControlPanel extends React.Component {
                 </span>
                 <Tooltip
                     content={<p>Next Frame</p>}
-                    placement="bottom"
+                    placement="top"
+                    size="small"
                     trigger="mouseenter">
                     <span
                         className="icon-arrow-right"
@@ -73,7 +75,8 @@ export class ControlPanel extends React.Component {
                 </Tooltip>
                 <Tooltip
                     content={<p>Zoom Out</p>}
-                    placement="bottom"
+                    placement="top"
+                    size="small"
                     trigger="mouseenter">
                     <span
                         className="icon-zoom-out"
@@ -89,7 +92,8 @@ export class ControlPanel extends React.Component {
                 </span>
                 <Tooltip
                     content={<p>Zoom In</p>}
-                    placement="bottom"
+                    placement="top"
+                    size="small"
                     trigger="mouseenter">
                     <span
                         className="icon-zoom-in"
@@ -101,7 +105,8 @@ export class ControlPanel extends React.Component {
                 </Tooltip>
                 <Tooltip
                     content={<p>Show Subtasks</p>}
-                    placement="bottom"
+                    placement="top"
+                    size="small"
                     trigger="mouseenter">
                     <span
                         className="icon-show-subtasks"

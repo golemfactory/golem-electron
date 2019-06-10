@@ -207,7 +207,6 @@ export class History extends React.Component {
             toggleTransactionHistory
         } = this.props;
         const { activeTab, filteredList } = this.state;
-        console.log('filteredList', filteredList);
         return (
             <div className="content__history">
                 <div
