@@ -718,9 +718,11 @@ export class TaskDetail extends React.Component {
     _applyDefaultPreset = () => {
         const {
             resolution,
-            file_format
+            file_format,
+            samples
         } = this.props.testStatus.more.after_test_data;
-        const { resolutionW, resolutionH, formatRef } = this.refs;
+
+        const { resolutionW, resolutionH, formatRef, haltspp } = this.refs;
         const format = file_format.replace('.', '').toUpperCase();
 
         // If taken file format from input file is not available on mockFormatList, use first element as default
@@ -733,12 +735,14 @@ export class TaskDetail extends React.Component {
         resolutionH.value = resolution[1];
         formatRef.value =
             pickFormatIndex > -1 ? format : mockFormatList[0].name;
+        haltspp.value = samples;
 
         this.setState({
             resolution,
             format: formatRef.value,
             formatIndex,
-            isDefaultResolutionApplied: true
+            isDefaultResolutionApplied: true,
+            samples
         });
 
         this._closeModal('defaultSettingsModal');
@@ -851,7 +855,7 @@ export class TaskDetail extends React.Component {
                     compositing,
                     output_path,
                     resolution,
-                    samples: Number(samples)
+                    ...(samples > 0 && { samples: Number(samples)})
                 }
             }, resolve, reject)
         })
@@ -1093,7 +1097,7 @@ export class TaskDetail extends React.Component {
                 order: 5,
                 content: <div className="item-settings" key="5">
                             <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'samples')} required={!isDetailPage} disabled={isDetailPage}/>
+                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'samples')} disabled={isDetailPage}/>
                          </div>
             })
             // formTemplate.push({

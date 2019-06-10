@@ -28,6 +28,7 @@
 .container__task-panel {
     height: 100%;
     overflow-y: overlay;
+    overflow-x: hidden;
     box-sizing: border-box;
     transform: translateZ(0);
 }

@@ -24,7 +24,7 @@ export default class DefaultSettingsModal extends React.Component {
                         <span className="icon-settings" />
                     </div>
                     <span>
-                        Would you like to use default resolution from the file?
+                        Would you like to use default <b>resolution</b> and <b>sample per pixel</b> parameters from the file?
                     </span>
                     <div className="action__modal">
                         <span
