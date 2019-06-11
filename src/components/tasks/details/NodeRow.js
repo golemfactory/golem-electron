@@ -18,7 +18,7 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 				)}
 			</td>
 			<td align="center">{item.status}</td>
-			<td align="center">{item.node_name}</td>
+			<td align="center">{item.node_name || "Anonymous"}</td>
 			<td align="center">
 				<span
 					className="icon-logs"

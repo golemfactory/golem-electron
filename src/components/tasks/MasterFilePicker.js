@@ -44,8 +44,11 @@ export class MasterFilePicker extends React.Component {
 
     _handleChange = nodes => this.setState({ nodes });
 
-    _selectMasterFile = node =>
-        this.setState({ selectedMasterNode: node.path, taskName: node.name });
+    _selectMasterFile = node => 
+            this.setState({ 
+                selectedMasterNode: node.absolutePath, 
+                taskName: node.name 
+            });
 
     _toggleExpandState = node => (node.state.expanded = !node.state.expanded);
 

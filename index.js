@@ -343,6 +343,7 @@ exports.dirToJson = function(directory, ext) {
             },
             excludeEmptyFolders: true,
             includeId: true,
+            includeAbsolutePath: true,
             attributeName: {
                 child: "children"
             },
