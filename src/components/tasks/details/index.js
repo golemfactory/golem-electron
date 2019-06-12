@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
-import map from 'lodash/map';
-import filter from 'lodash/filter';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,10 +12,13 @@ import SubtaskList from './SubtaskList';
 import BlockNodeModal from '../modal/BlockNodeModal';
 import { taskStatus } from '../../../constants/statusDicts';
 
-import isEqual from 'lodash/isEqual';
 import every from 'lodash/every';
-import some from 'lodash/some';
+import filter from 'lodash/filter';
+import isEqual from 'lodash/isEqual';
+import map from 'lodash/map';
 import size from 'lodash/size';
+import some from 'lodash/some';
+import without from 'lodash/without';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
@@ -61,9 +62,12 @@ export class Details extends React.PureComponent {
 
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
+            const checkableFragments = filter(nextProps.fragments, item => {
+                return item[0]?.status && this._checkRestartCondition(item[0]);
+            }).filter(Boolean);
             const isAllChecked =
                 every(nextState.checkedItems, item => item === true) &&
-                size(nextState.checkedItems) === size(nextProps.fragments);
+                size(nextState.checkedItems) === size(checkableFragments);
 
             const isAnyChecked = some(
                 nextState.checkedItems,
