@@ -70,10 +70,6 @@ class SubtaskItem extends React.PureComponent {
 						<span className="overlay" />
 						<span className="info-subtask-number"><b>Subtask number: </b> {keyItem.padStart(4, '0')}</span>
 						<span className="bumper" />
-						<span className="info-progress"><b>Progress: </b>
-							<span className="info-progress-number">{recentInfo?.progress * 100 || 0}%</span>
-						</span>
-						<span className="bumper" />
 						<b>State: </b>{' '}
 						{recentInfo ? (
 							<span
