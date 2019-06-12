@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class TaskItem extends React.Component {
+export class TaskItem extends React.PureComponent {
     constructor(props) {
         super(props);
 
@@ -110,7 +110,7 @@ export class TaskItem extends React.Component {
             case taskStatus.NOTREADY:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Preparing for computation...{' '}
@@ -121,7 +121,7 @@ export class TaskItem extends React.Component {
             case taskStatus.WAITING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Waiting for computation...{' '}
@@ -132,7 +132,7 @@ export class TaskItem extends React.Component {
             case taskStatus.DEPOSIT:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
                             Creating the deposit...{' '}
@@ -158,7 +158,7 @@ export class TaskItem extends React.Component {
             case taskStatus.COMPUTING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
                         <span className="bumper" />
                         <span className="duration--computing">
                             Computing...{' '}

@@ -85,7 +85,8 @@ export class FooterMain extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            engineLoading: false
+            engineLoading: false,
+            stopAnim: false
         };
     }
 
@@ -93,11 +94,17 @@ export class FooterMain extends Component {
         const waveLoading = document.getElementById("waveLoading");
         waveLoading && waveLoading.addEventListener(
             "webkitTransitionEnd",
-            function(event) {
-                waveLoading.remove();
+            (event) => {
+                
             },
             false
         );
+
+        if(isGolemConnected(this.props?.status?.client)){
+            this.setState({
+                    stopAnim: true
+                }, () => waveLoading.remove());
+        }
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -460,7 +467,9 @@ export class FooterMain extends Component {
                     </button>
                     {
                         <div className="wave-loading" id="waveLoading">
-                            <Lottie width={"100%"} options={defaultOptions} />
+                            <Lottie 
+                            width={"100%"} 
+                                options={defaultOptions} isStopped={this.state.stopAnim} />
                         </div>
                     }
                 </div>
