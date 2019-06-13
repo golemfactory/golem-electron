@@ -3,6 +3,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { BigNumber } from 'bignumber.js';
+import { isEqual } from 'lodash';
 
 import * as Actions from "./../../actions";
 import { timeStampToHR } from "./../../utils/time";
@@ -51,6 +52,10 @@ export class Wallet extends Component {
         if (this.expandWalletTimeout) {
             clearTimeout(this.expandWalletTimeout);
         }
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return !(isEqual(nextProps, this.props) && isEqual(nextState, this.state))
     }
 
     _handleExpandWallet = () => {

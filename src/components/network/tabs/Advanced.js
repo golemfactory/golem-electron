@@ -29,7 +29,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class Advanced extends React.Component {
+export class Advanced extends React.PureComponent {
     constructor(props) {
         super(props);
     }

@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import { Spring } from 'react-spring/renderprops.cjs';
 import Tooltip from '@tippy.js/react';
 import { BigNumber } from 'bignumber.js';
+import { isEqual } from 'lodash';
 
 import { timeStampToHR } from './../../utils/time';
 import checkNested from './../../utils/checkNested';
@@ -19,7 +20,7 @@ function isGolemReady(golemStatus) {
     );
 }
 
-export default class CurrencyBox extends Component {
+export default class CurrencyBox extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {

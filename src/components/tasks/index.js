@@ -33,7 +33,7 @@ const mapDispatchToProps = dispatch => ({
  *
  * @class      TaskPanel (name)
  */
-export class TaskPanel extends React.Component {
+export class TaskPanel extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {

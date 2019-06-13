@@ -26,13 +26,9 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class TaskItem extends React.PureComponent {
+export class TaskItem extends React.Component {
     constructor(props) {
         super(props);
-
-        this.state = {
-            toggledList: []
-        };
     }
 
     componentDidMount() {
@@ -53,10 +49,11 @@ export class TaskItem extends React.PureComponent {
         this.liveSubList && clearInterval(this.liveSubList);
     }
 
-    _toggle(id, evt, toggledAttribute) {
-        const prevList = this.state.toggledList;
-        const prevToggle = this.state.toggledList[id]
-            ? this.state.toggledList[id][toggledAttribute]
+    _toggle = (id, evt, toggledAttribute) => {
+        const { toggledList } = this.props
+        const prevList = toggledList;
+        const prevToggle = toggledList[id]
+            ? toggledList[id][toggledAttribute]
             : false;
 
         if (prevList[id]) {
@@ -67,7 +64,7 @@ export class TaskItem extends React.PureComponent {
 
         prevList[id][toggledAttribute] = !prevToggle;
 
-        this.setState({
+        this.props.updateToggleList({
             toggledList: prevList
         });
     }
@@ -204,14 +201,13 @@ export class TaskItem extends React.PureComponent {
         const {
             item,
             index,
+            toggledList,
             _handleRowClick,
             _handleRestartModal,
             _handleRestartSubtasksModal,
             _handleDeleteModal,
             psId
         } = this.props;
-
-        const { toggledList } = this.state;
         const { options } = item;
         return (
             <Spring

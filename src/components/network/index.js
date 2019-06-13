@@ -42,7 +42,7 @@ const mapDispatchToProps = dispatch => ({
  *
  * @class      MainFragment (name)
  */
-export class MainFragment extends React.Component {
+export class MainFragment extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {

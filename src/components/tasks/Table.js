@@ -2,6 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { findDOMNode } from 'react-dom';
 import { Link } from 'react-router-dom';
+import { 
+    AutoSizer, 
+    List, 
+    defaultCellRangeRenderer, 
+    CellMeasurer, 
+    CellMeasurerCache 
+} from 'react-virtualized';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -50,7 +57,7 @@ function shouldPSEnabled(_item) {
  *
  * @class      Table (name)
  */
-export class Table extends React.Component {
+export class Table extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -58,12 +65,15 @@ export class Table extends React.Component {
                 result: false,
                 message: null,
                 restartData: []
-            }
+            },
+            toggledList: {}
         };
 
         this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(
             this
         );
+
+        this._cache = new CellMeasurerCache({ defaultHeight: 96, fixedWidth: true });
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -78,12 +88,15 @@ export class Table extends React.Component {
             this.selectedItem &&
             (nextProps.psEnabled !== shouldPSEnabled(this.selectedItem) ||
                 nextProps.previewId !== this.props.psId)
-        )
+        ){
             this.props.actions.updatePreviewLock({
                 id: this.selectedItem.id,
                 frameCount: this.selectedItem.options.frame_count,
                 enabled: shouldPSEnabled(this.selectedItem)
             });
+        }
+            
+
     }
 
     /**
@@ -114,6 +127,11 @@ export class Table extends React.Component {
             id: id,
             src: preview
         });
+
+        setTimeout(() => {
+            this._cache.clearAll();
+            this.list.recomputeRowHeights();
+        }, 50)
 
         return true;
     };
@@ -152,7 +170,7 @@ export class Table extends React.Component {
      * [_handleRestartModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestartModal(item) {
+    _handleRestartModal = (item) => {
         this.props.restartModalHandler(item, this._handleRestart);
     }
 
@@ -160,7 +178,7 @@ export class Table extends React.Component {
      * [_handleRestartModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestartSubtasksModal(list) {
+    _handleRestartSubtasksModal = (list) => {
         this.props.restartModalHandler(list, this._handleRestart, true);
     }
 
@@ -204,39 +222,68 @@ export class Table extends React.Component {
         });
     };
 
-    /**
-     * {listTasks function}
-     * @param  {Array}    data    [JSON array of task list]
-     * @return {Object}           [DOM of task list]
-     *
-     * @description [React-Spring]  https://github.com/drcmda/react-spring
-     * React spring provides animation ability to elements.
-     *
-     */
-    listTasks(data) {
-        const { toggleWalletTray } = this.props;
-        const listItems = data.map((item, index) => (
-            <TaskItem
-                key={index.toString()}
-                item={item}
-                index={index}
-                _handleRowClick={this._handleRowClick.bind(this)}
-                _handleRestartModal={this._handleRestartModal.bind(this, item)}
-                _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
-                _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
-                _toggleWalletTray={toggleWalletTray}
-            />
-        ));
+    _updateToggleList = state => this.setState(state);
 
-        return <div className="task-list">{data.length > 0 && listItems}</div>;
-    }
+    rowRenderer = ({
+        key, // Unique key within array of rows
+        index, // Index of row within collection
+        isScrolling, // The List is currently being scrolled
+        isVisible, // This row is visible within the List (eg it is not an overscanned row)
+        parent,
+        style // Style object to be applied to row (to position it)
+    }) => {
+        const item = this.props.taskList[index];
+        const { toggleWalletTray } = this.props;
+        const { toggledList } = this.state;
+
+        return (
+            <CellMeasurer
+              cache={this._cache}
+              columnIndex={0}
+              key={key}
+              parent={parent}
+              rowIndex={index}
+            >
+                    <div key={key} style={style}>
+                        <TaskItem
+                            key={index.toString()}
+                            item={item}
+                            index={index}
+                            toggledList={toggledList}
+                            updateToggleList={this._updateToggleList}
+                            _handleRowClick={this._handleRowClick}
+                            _handleRestartModal={this._handleRestartModal.bind(this, item)}
+                            _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
+                            _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
+                            _toggleWalletTray={toggleWalletTray}
+                    />
+                    </div>
+            </CellMeasurer>
+        );
+    };
 
     render() {
         const { taskList } = this.props;
         const { insufficientAmountModal } = this.state;
         return (
-            <div role="list">
-                {taskList && this.listTasks(taskList)}
+            <div style={{ height: '100%' }}>
+                <AutoSizer>
+                    {({ width, height }) => {
+                        return (
+                            <List
+                                deferredMeasurementCache={this._cache}
+                                overscanRowCount={1}
+                                ref={ ref => this.list = ref }
+                                width={width}
+                                height={height} //offset of height
+                                rowCount={taskList.length}
+                                rowHeight={this._cache.rowHeight}
+                                rowRenderer={this.rowRenderer}
+                                className="task-list"
+                            />
+                        );
+                    }}
+                </AutoSizer>
                 {insufficientAmountModal?.result &&
                     ReactDOM.createPortal(
                         <InsufficientAmountModal

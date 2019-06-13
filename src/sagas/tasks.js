@@ -530,7 +530,7 @@ export function* deleteTaskBase(session, { type, payload }) {
 // }
 
 export function subscribeTaskList(session) {
-    const interval = 1000;
+    const interval = 2000;
 
     return eventChannel(emit => {
         const fetchTaskList = () => {

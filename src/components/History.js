@@ -62,7 +62,9 @@ export class History extends React.Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return !(
-            isEqual(nextState, this.state)
+            isEqual(nextState, this.state) &&
+            isEqual(nextProps.isMainNet, this.props.isMainNet) &&
+            isEqual(nextProps.isEngineOn, this.props.isEngineOn)
         );
     }
 

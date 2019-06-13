@@ -1,6 +1,11 @@
 .section__table {
     width: 100%;
     .task-list {}
+
+    .ReactVirtualized__List{
+        overflow-y: overlay !important;
+        overflow-x: hidden !important;
+    }
 }
 
 
