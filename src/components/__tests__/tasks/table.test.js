@@ -89,7 +89,7 @@ describe('LoaderWrapper', () => {
     it('should render a table component', () => {
         const wrapper = shallow(
             <Provider store={ mockStore({})}>
-            <ConnectedTable/>
+            <ConnectedTable taskList={[]}/>
         </Provider>
         )
         expect(wrapper).toMatchSnapshot()
@@ -102,7 +102,7 @@ describe('LoaderWrapper', () => {
                 frame_count: 0
             }
         }, 'index']
-        let mockTable = TestUtils.renderIntoDocument(<Table previewHandler={() => {}}/>);
+        let mockTable = TestUtils.renderIntoDocument(<Table previewHandler={() => {}} taskList={[]}/>);
         expect(mockTable._handleRowClick(...mockData)).toBe(true)
     });
 
@@ -114,9 +114,10 @@ describe('LoaderWrapper', () => {
             duration: 271,
             price: 10
         }]
-        let mockTable = TestUtils.renderIntoDocument(<Table blender_data={mockData}/>);
+        let mockTable = TestUtils.renderIntoDocument(<Table taskList={mockData}/>);
+        let divElm = TestUtils.findRenderedDOMComponentWithClass(mockTable, 'task-list')
         
-        expect(mockTable.listTasks(mockData).props.className).toBe('task-list')
+        expect(divElm.className).toContain('task-list')
     });
 /*
     it('should call componentWillUpdate', () => {

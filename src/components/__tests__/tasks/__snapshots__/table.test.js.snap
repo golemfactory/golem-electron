@@ -35,6 +35,8 @@ exports[`LoaderWrapper should render a table component 1`] = `
     }
   }
 >
-  <ConnectFunction />
+  <ConnectFunction
+    taskList={Array []}
+  />
 </ContextProvider>
 `;
