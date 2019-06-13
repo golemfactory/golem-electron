@@ -14,7 +14,8 @@ const mapStateToProps = state => ({
 	balance: state.realTime.balance,
 	currency: state.currency,
 	estimatedCost: state.details.estimated_cost,
-	concentBalance: state.realTime.concentBalance
+	concentBalance: state.realTime.concentBalance,
+	concentSwitch: state.concent.concentSwitch,
 });
 const mapDispatchToProps = dispatch => ({
 	actions: bindActionCreators(Actions, dispatch)
@@ -72,7 +73,7 @@ class Estimation extends Component {
 	}
 
 	_handleConcentCheckbox(e) {
-		this.props._handleConcentCheckbox(e.target.checked);
+		this.props._handleConcentCheckbox(e.target.checked && this.props.concentSwitch);
 	}
 
 	_fetchTitle = (isConcentOn, isPartial, isSubtask, item) => {
@@ -110,6 +111,7 @@ class Estimation extends Component {
 			actions,
 			balance,
 			concentBalance,
+			concentSwitch,
 			currency,
 			estimatedCost,
 			isConcentOn,
@@ -122,14 +124,14 @@ class Estimation extends Component {
 				<span className="container__estimation__title">
 					{this._fetchTitle(isConcentOn, isPartial, isSubtask, item)}
 				</span>
-				<ConditionalRender showIf={item.concent_enabled}>
+				<ConditionalRender showIf={item.concent_enabled && concentSwitch}>
 					<div className="switch-box switch-box--green">
 						<label className="switch">
 							<input
 								type="checkbox"
 								aria-label="Task Based Concent Checkbox"
 								tabIndex="0"
-								checked={isConcentOn}
+								checked={isConcentOn && concentSwitch}
 								onChange={this._handleConcentCheckbox}
 							/>
 							<div className="switch-slider round" />
@@ -150,17 +152,19 @@ class Estimation extends Component {
 							<h4>{balance[1].toFixed(6)}</h4> ETH
 						</span>
 					</div>
-					<div className="summary-item">
-						<sub>Deposit balance</sub>
-						<sub>
-							<b>
-								{concentBalance.value
-									.dividedBy(ETH_DENOM)
-									.toFixed(4)}
-							</b>{' '}
-							GNT
-						</sub>
-					</div>
+					<ConditionalRender showIf={concentSwitch}>
+						<div className="summary-item">
+							<sub>Deposit balance</sub>
+							<sub>
+								<b>
+									{concentBalance.value
+										.dividedBy(ETH_DENOM)
+										.toFixed(4)}
+								</b>{' '}
+								GNT
+							</sub>
+						</div>
+					</ConditionalRender>
 				</div>
 				<span className="summary-title">Total</span>
 				<div className="summary">
@@ -181,7 +185,7 @@ class Estimation extends Component {
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled && isConcentOn}>
+						showIf={item.concent_enabled && isConcentOn && concentSwitch}>
 						<Tooltip
 		                    content={
 		                    	<p>Minimum amount of GNT that is required (no less than twice the amount of funds in your Deposit for covering a task payment). <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">Learn more</a></p>}
