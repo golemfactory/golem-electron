@@ -31,7 +31,8 @@ const notify = (state = initialState, action) => {
             console.warn(`${id} - ${title} already registered in notification center.`)
         } else {
             listAdd.push({id, title, content, date, seen: false})
-            setConfig(NOTIFICATION_CENTER, listAdd)
+            if(NOTIFICATION_CENTER)
+                setConfig(NOTIFICATION_CENTER, listAdd)
 
             return Object.assign({}, state, {
                 notificationList: listAdd
