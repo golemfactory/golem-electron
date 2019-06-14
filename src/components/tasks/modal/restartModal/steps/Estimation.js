@@ -159,7 +159,7 @@ class Estimation extends Component {
 							<sub>Deposit balance</sub>
 							<sub>
 								<b>
-									{concentBalance.value
+									{concentBalance?.value
 										.dividedBy(ETH_DENOM)
 										.toFixed(4)}
 								</b>{' '}

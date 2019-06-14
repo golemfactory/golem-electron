@@ -67,6 +67,10 @@ export class MasterFilePicker extends React.Component {
         return (
             <div className="directory-nodes__container" key="filteredContent">
                 <div>
+                    <span className="directory-info">
+                        There is more than one .blend file in your folder. 
+                        Please choose primary .blend file from your directory.
+                    </span>
                     <input
                         className="directory-nodes__filter-input"
                         placeholder="Search..."
