@@ -31,8 +31,7 @@ const notify = (state = initialState, action) => {
             console.warn(`${id} - ${title} already registered in notification center.`)
         } else {
             listAdd.push({id, title, content, date, seen: false})
-            if(NOTIFICATION_CENTER)
-                setConfig(NOTIFICATION_CENTER, listAdd)
+            setConfig(NOTIFICATION_CENTER, listAdd)
 
             return Object.assign({}, state, {
                 notificationList: listAdd
@@ -47,7 +46,6 @@ const notify = (state = initialState, action) => {
         
         if(isAlreadyIn(notificationList, notificationId)){
             const listRemove = notificationList.filter( item => item.id === notificationId)
-
             setConfig(NOTIFICATION_CENTER, listRemove)
 
             return Object.assign({}, state, {

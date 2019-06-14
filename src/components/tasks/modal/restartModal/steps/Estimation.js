@@ -16,6 +16,7 @@ const mapStateToProps = state => ({
 	estimatedCost: state.details.estimated_cost,
 	concentBalance: state.realTime.concentBalance,
 	concentSwitch: state.concent.concentSwitch,
+	isMainNet: state.info.isMainNet
 });
 const mapDispatchToProps = dispatch => ({
 	actions: bindActionCreators(Actions, dispatch)
@@ -115,6 +116,7 @@ class Estimation extends Component {
 			currency,
 			estimatedCost,
 			isConcentOn,
+			isMainNet,
 			isPartial,
 			isSubtask,
 			item
@@ -124,7 +126,7 @@ class Estimation extends Component {
 				<span className="container__estimation__title">
 					{this._fetchTitle(isConcentOn, isPartial, isSubtask, item)}
 				</span>
-				<ConditionalRender showIf={item.concent_enabled && concentSwitch}>
+				<ConditionalRender showIf={item.concent_enabled && concentSwitch && !isMainNet}>
 					<div className="switch-box switch-box--green">
 						<label className="switch">
 							<input
@@ -152,7 +154,7 @@ class Estimation extends Component {
 							<h4>{balance[1].toFixed(6)}</h4> ETH
 						</span>
 					</div>
-					<ConditionalRender showIf={concentSwitch}>
+					<ConditionalRender showIf={concentSwitch && !isMainNet}>
 						<div className="summary-item">
 							<sub>Deposit balance</sub>
 							<sub>
@@ -185,7 +187,7 @@ class Estimation extends Component {
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled && isConcentOn && concentSwitch}>
+						showIf={item.concent_enabled && isConcentOn && concentSwitch && !isMainNet}>
 						<Tooltip
 		                    content={
 		                    	<p>Minimum amount of GNT that is required (no less than twice the amount of funds in your Deposit for covering a task payment). <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">Learn more</a></p>}
