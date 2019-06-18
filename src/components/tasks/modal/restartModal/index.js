@@ -47,14 +47,15 @@ export default class RestartModal extends React.PureComponent {
      */
     _handleRestart = () => {
         const { isConcentOn, isTimedOutOnly, nextStep } = this.state;
-        const { restartCallback, item } = this.props;
+        const { restartCallback, item, isSubtask } = this.props;
         if (!nextStep) {
             this.setState({
                 nextStep: true
             });
             return;
         }
-        restartCallback(item.id, isTimedOutOnly, isConcentOn);
+        const isPartial = (isTimedOutOnly || isSubtask);
+        restartCallback(item.id, isPartial, isConcentOn, item.subtask_ids);
         this.props.closeModal();
     };
 

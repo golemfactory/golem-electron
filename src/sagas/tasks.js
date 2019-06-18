@@ -438,7 +438,7 @@ export function* testTaskFlow(session) {
 
 export function callRestartTask(
     session,
-    { id, isPartial, isConcentOn },
+    { id, isPartial, isConcentOn, subtaskList = [] },
     _resolve,
     _reject
 ) {
@@ -452,7 +452,7 @@ export function callRestartTask(
             on_restart_task,
             session,
             config.RESTART_SUBTASKS_RPC,
-            [id, [], true, !isConcentOn]
+            [id, subtaskList, true, !isConcentOn]
         );
     else
         _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [
