@@ -169,8 +169,8 @@ export class Table extends React.Component {
      * @param  {Any}        id              [Id of the selected task]
      * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
      */
-    _handleRestart = (id, isPartial, isConcentOn) => {
-        this._restartAsync(id, isPartial, isConcentOn).then(_result => {
+    _handleRestart = (id, isPartial, isConcentOn, subtaskList) => {
+        this._restartAsync(id, isPartial, isConcentOn, subtaskList).then(_result => {
             if (_result && !!_result[1]) {
                 console.warn('Task restart failed!');
 
@@ -185,10 +185,10 @@ export class Table extends React.Component {
         });
     };
 
-    _restartAsync(id, isPartial, isConcentOn) {
+    _restartAsync(id, isPartial, isConcentOn, subtaskList) {
         return new Promise((resolve, reject) => {
             this.props.actions.restartTask(
-                { id, isPartial, isConcentOn },
+                { id, isPartial, isConcentOn, subtaskList },
                 resolve,
                 reject
             );
