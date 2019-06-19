@@ -1,8 +1,9 @@
 import React from "react";
+import ConditionalRender from '../../hoc/ConditionalRender';
 
 const taskType = Object.freeze({
     BLENDER: "Blender",
-    LUXRENDER: "LuxRender"
+    BLENDER_NVGPU: 'Blender_NVGPU'
 });
 
 export default class PresetModal extends React.Component {
@@ -11,6 +12,17 @@ export default class PresetModal extends React.Component {
         this.state = {
             name: null
         };
+    }
+
+    componentDidMount() {
+        const presetNameInput = document.getElementById('nameInput');
+        if (presetNameInput) {
+            this.focusTimeout = setTimeout(() => presetNameInput.focus(), 600); //CSSTransition issue related
+        }
+    }
+
+    componentWillUnmount() {
+        this.focusTimeout && clearTimeout(this.focusTimeout)
     }
 
     /**
@@ -36,7 +48,7 @@ export default class PresetModal extends React.Component {
             format,
             output_path,
             compositing,
-            sample_per_pixel,
+            samples,
             task_type
         } = this.props;
         const { name } = this.state;
@@ -44,12 +56,14 @@ export default class PresetModal extends React.Component {
         function getPresentObject(type) {
             switch (type) {
                 case taskType.BLENDER:
+                case taskType.BLENDER_NVGPU:
                     return {
                         resolution,
                         frames,
                         format,
                         output_path,
-                        compositing
+                        compositing,
+                        samples
                     };
                 case taskType.LUXRENDER:
                     return {
@@ -73,7 +87,7 @@ export default class PresetModal extends React.Component {
             format,
             output_path,
             compositing,
-            sample_per_pixel,
+            samples,
             task_type
         } = this.props;
         return (
@@ -82,9 +96,9 @@ export default class PresetModal extends React.Component {
                     <section className="section__naming">
                         <h4>Name your Preset</h4>
                         <input
+                            id="nameInput"
                             type="text"
                             onChange={this._handleNameInput}
-                            autoFocus
                             required
                         />
                     </section>
@@ -94,24 +108,18 @@ export default class PresetModal extends React.Component {
                             {resolution && resolution[0]} x{" "}
                             {resolution && resolution[1]}
                         </span>
-                        {taskType.BLENDER == task_type && <h5>Frame Range</h5>}
-                        {taskType.BLENDER == task_type && <span>{frames}</span>}
+                        <ConditionalRender showIf={task_type.includes(taskType.BLENDER)}>
+                            <h5>Frame Range</h5>
+                            <span>{frames}</span>
+                        </ConditionalRender>
                         <h5>Format</h5>
                         <span>{format} File</span>
                         <h5>Output to</h5>
                         <span>{output_path}</span>
-                        {taskType.BLENDER == task_type && (
-                            <h5>Blender Compositing</h5>
-                        )}
-                        {taskType.BLENDER == task_type && (
-                            <span>{compositing ? "On" : "Off"}</span>
-                        )}
-                        {taskType.LUXRENDER == task_type && (
+                        <ConditionalRender showIf={task_type.includes(taskType.BLENDER)}>
                             <h5>Sample per pixel</h5>
-                        )}
-                        {taskType.LUXRENDER == task_type && (
-                            <span>{sample_per_pixel}</span>
-                        )}
+                            <span>{samples}</span>
+                        </ConditionalRender>
                     </section>
                     <div className="action__modal">
                         <span

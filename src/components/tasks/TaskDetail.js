@@ -629,6 +629,8 @@ export class TaskDetail extends React.Component {
             resolutionW.value = resolution[0];
             resolutionH.value = resolution[1];
 
+            haltspp.value = samples
+
             if (applyStates)
                 this.setState({
                     isDefaultResolutionApplied: false,
@@ -636,6 +638,7 @@ export class TaskDetail extends React.Component {
                 });
         } else {
             delete preset.value.resolution;
+            delete preset.value.samples;
         }
 
         // If  file format from preset list is not available on mockFormatList, use first element as default
@@ -653,9 +656,7 @@ export class TaskDetail extends React.Component {
         outputPath.value = output_path;
 
         if (this.props.task.type.includes(taskType.BLENDER)) {
-
             framesRef.value = frames
-            haltspp.value = samples
             //compositingRef.checked = compositing
         }
 
