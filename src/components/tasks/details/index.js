@@ -247,7 +247,7 @@ export default connect(
 
 export const ICONS = {
     'Not Started': { name: 'subtask-awaiting', color: 'icon--color-yellow' },
-    Timeout: { name: 'timeout', color: 'icon--color-red' },
+    Cancelled: { name: 'subtasks-failure', color: 'icon--color-red' },
     Failure: { name: 'failure', color: 'icon--color-red' },
     Finished: { name: 'finished', color: 'icon--color-green' },
     Starting: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },

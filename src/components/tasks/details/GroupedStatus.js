@@ -18,7 +18,7 @@ const fillRestGroups = function(gs) {
 	gs.forEach(item => addUniq(gs, item, 'status'));
 
 	addUniq(gs, { status: 'Not Started', count: 0 }, 'status');
-	addUniq(gs, { status: 'Timeout', count: 0 }, 'status');
+	addUniq(gs, { status: 'Cancelled', count: 0 }, 'status');
 	addUniq(gs, { status: 'Failure', count: 0 }, 'status');
 	addUniq(gs, { status: 'Finished', count: 0 }, 'status');
 	addUniq(gs, { status: 'Starting', count: 0 }, 'status');

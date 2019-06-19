@@ -21,7 +21,7 @@ export default class RestartModal extends React.PureComponent {
         this.state = {
             isConcentOn: props?.item?.concent_enabled,
             isTimedOutOnly: false,
-            nextStep: false
+            nextStep: props?.isSubtask
         };
     }
 

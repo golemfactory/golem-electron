@@ -26,7 +26,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class TaskItem extends React.PureComponent {
+export class TaskItem extends React.Component {
     constructor(props) {
         super(props);
 
