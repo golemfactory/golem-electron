@@ -1,17 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { findDOMNode } from 'react-dom';
-import { Link } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import { findDOMNode } from "react-dom";
+import { Link } from "react-router-dom";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-import * as Actions from '../../actions';
-import blender_logo from './../../assets/img/blender_logo.png';
-import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
+import * as Actions from "../../actions";
+import blender_logo from "./../../assets/img/blender_logo.png";
+import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
 
-import InsufficientAmountModal from './modal/InsufficientAmountModal';
-import TaskItem from './TaskItem';
+import InsufficientAmountModal from "./modal/InsufficientAmountModal";
+import TaskItem from "./TaskItem";
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
@@ -26,14 +26,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const status = Object.freeze({
-    WAITINGFORPEER: 'Waiting for peer',
-    NOTREADY: 'Not started',
-    READY: 'Ready',
-    WAITING: 'Waiting',
-    COMPUTING: 'Computing',
-    FINISHED: 'Finished',
-    TIMEOUT: 'Timeout',
-    RESTART: 'Restart'
+    WAITINGFORPEER: "Waiting for peer",
+    NOTREADY: "Not started",
+    READY: "Ready",
+    WAITING: "Waiting",
+    COMPUTING: "Computing",
+    FINISHED: "Finished",
+    TIMEOUT: "Timeout",
+    RESTART: "Restart"
 });
 
 function shouldPSEnabled(_item) {
@@ -67,7 +67,6 @@ export class Table extends React.Component {
     }
 
     componentWillUpdate(nextProps, nextState) {
-
         //# avoid from updating state on render cycle, previewLock mechanism moved here
         if (nextProps.previewId !== this.props.previewId)
             this.selectedItem = nextProps.taskList.filter(
@@ -91,12 +90,12 @@ export class Table extends React.Component {
      * @param  {Event}  evt
      */
     _navigateTo = evt => {
-        let taskItems = document.getElementsByClassName('task-item');
+        let taskItems = document.getElementsByClassName("task-item");
         [].map.call(taskItems, item => {
-            item.classList.remove('active');
+            item.classList.remove("active");
         });
 
-        evt && evt.currentTarget.classList.add('active');
+        evt && evt.currentTarget.classList.add("active");
     };
 
     /**
@@ -170,19 +169,24 @@ export class Table extends React.Component {
      * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
      */
     _handleRestart = (id, isPartial, isConcentOn, subtaskList) => {
-        this._restartAsync(id, isPartial, isConcentOn, subtaskList).then(_result => {
-            if (_result && !!_result[1]) {
-                console.warn('Task restart failed!');
-
-                this.setState({
-                    insufficientAmountModal: {
-                        result: !!_result[1],
-                        message: _result[1],
-                        restartData: [id, isPartial]
-                    }
-                });
+        this._restartAsync(id, isPartial, isConcentOn, subtaskList).then(
+            _result => {
+                const isResultObject =
+                    !(_result instanceof Array) &&
+                    _result instanceof Object &&
+                    _result !== null;
+                if (_result && (!!_result[1] || isResultObject)) {
+                    const message = _result[1] || _result;
+                    this.setState({
+                        insufficientAmountModal: {
+                            result: true,
+                            message,
+                            restartData: [id, isPartial]
+                        }
+                    });
+                }
             }
-        });
+        );
     };
 
     _restartAsync(id, isPartial, isConcentOn, subtaskList) {
@@ -247,7 +251,7 @@ export class Table extends React.Component {
                             )}
                             message={insufficientAmountModal?.message}
                         />,
-                        document.getElementById('modalPortal')
+                        document.getElementById("modalPortal")
                     )}
             </div>
         );
