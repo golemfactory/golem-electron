@@ -35,22 +35,21 @@ export class TaskItem extends React.Component {
         };
     }
 
-    componentDidMount() {
-        const { actions, item } = this.props;
-        let interval = () => {
-            actions.fetchHealthyNodeNumber(item.id);
-            return interval;
-        };
+    componentWillUpdate(nextProps, nextState) {
+        const { actions, item } = nextProps;
 
-        if (item.status == taskStatus.COMPUTING) {
-            this.liveSubList = setInterval(interval(), 5000);
-        } else {
-            actions.fetchHealthyNodeNumber(item.id);
+        if (item.status == taskStatus.COMPUTING && !this.liveSubList) {
+            this.liveSubList = setInterval(this._interval(actions, item), 5000);
         }
     }
 
     componentWillUnmount() {
         this.liveSubList && clearInterval(this.liveSubList);
+    }
+
+    _interval = (actions, item) => {
+        actions.fetchHealthyNodeNumber(item.id);
+        return this._interval.bind(null, actions, item);
     }
 
     _toggle(id, evt, toggledAttribute) {
@@ -133,7 +132,7 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--preparing">
                             Creating the deposit...{' '}
                         </span>
