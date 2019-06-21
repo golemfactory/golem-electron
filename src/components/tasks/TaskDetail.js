@@ -1,68 +1,76 @@
-import React from 'react';
-import { Link } from 'react-router-dom'
-import TimeSelection from 'timepoint-selection'
-import {isEqual, isNumber} from 'lodash';
+import React from "react";
+import { Link } from "react-router-dom";
+import TimeSelection from "timepoint-selection";
+import { isEqual, isNumber } from "lodash";
 import { BigNumber } from "bignumber.js";
-const {remote} = window.electron;
-const mainProcess = remote.require('./index')
+const { remote } = window.electron;
+const mainProcess = remote.require("./index");
 
-import yup from 'yup'
+import yup from "yup";
 
-import TestResult from './TestResult'
-import NodeList from './NodeList'
-import PresetModal from './modal/PresetModal'
-import DepositTimeModal from './modal/DepositTimeModal'
-import TaskSummaryModal from './modal/TaskSummaryModal'
-import ManagePresetModal from './modal/ManagePresetModal'
-import DefaultSettingsModal from './modal/DefaultSettingsModal'
-import ResolutionChangeModal from './modal/ResolutionChangeModal'
-import InsufficientAmountModal from './modal/InsufficientAmountModal'
+import TestResult from "./TestResult";
+import NodeList from "./NodeList";
+import PresetModal from "./modal/PresetModal";
+import DepositTimeModal from "./modal/DepositTimeModal";
+import TaskSummaryModal from "./modal/TaskSummaryModal";
+import ManagePresetModal from "./modal/ManagePresetModal";
+import DefaultSettingsModal from "./modal/DefaultSettingsModal";
+import ResolutionChangeModal from "./modal/ResolutionChangeModal";
+import InsufficientAmountModal from "./modal/InsufficientAmountModal";
 
-import Dropdown from './../Dropdown'
-import InfoLabel from './../InfoLabel'
+import Dropdown from "./../Dropdown";
+import InfoLabel from "./../InfoLabel";
 
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
 
-const {dialog} = remote
+const { dialog } = remote;
 
-import * as Actions from './../../actions'
-import {once} from './../../utils/once'
-import zipObject from './../../utils/zipObject'
-import isObjectEmpty from './../../utils/isObjectEmpty'
-import { ETH_DENOM } from './../../constants/variables';
-import {testStatusDict} from './../../constants/statusDicts'
-import { getTimeAsFloat, floatToHR } from './../../utils/time'
-import calculateFrameAmount from './../../utils/calculateFrameAmount'
-    
-import whoaImg from './../../assets/img/whoa.png'
+import * as Actions from "./../../actions";
+import { once } from "./../../utils/once";
+import zipObject from "./../../utils/zipObject";
+import isObjectEmpty from "./../../utils/isObjectEmpty";
+import { ETH_DENOM } from "./../../constants/variables";
+import { testStatusDict } from "./../../constants/statusDicts";
+import { getTimeAsFloat, floatToHR } from "./../../utils/time";
+import calculateFrameAmount from "./../../utils/calculateFrameAmount";
 
-const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute."
+import whoaImg from "./../../assets/img/whoa.png";
 
-const editMode = "settings"
+const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute.";
+const WAIT_INTERVAL = 500;
+const editMode = "settings";
 const taskType = Object.freeze({
-    BLENDER: 'Blender',
-    BLENDER_NVGPU: 'Blender_NVGPU'
+    BLENDER: "Blender",
+    BLENDER_NVGPU: "Blender_NVGPU"
 });
 
 const mockFormatList = [
     {
-        name: 'PNG'
+        name: "PNG"
     },
     {
-        name: 'EXR'
+        name: "EXR"
     }
 ];
 
 const presetSchema = {
     Blender: yup.object().shape({
-            resolution: yup.array().of(yup.number().min(100).max(8000)).required(),
-            frames: yup.string().required(),
-            format: yup.string(),
-            output_path: yup.string(),
-            compositing: yup.bool()
-        })
-}
+        resolution: yup
+            .array()
+            .of(
+                yup
+                    .number()
+                    .min(100)
+                    .max(8000)
+            )
+            .required(),
+        frames: yup.string().required(),
+        format: yup.string(),
+        output_path: yup.string(),
+        compositing: yup.bool()
+    })
+};
 
 const hints = {
     frame: [
@@ -88,7 +96,7 @@ const mapStateToProps = state => ({
     gasInfo: state.details.gasInfo,
     concentSwitch: state.concent.concentSwitch,
     minPerf: state.performance.multiplier
-})
+});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
@@ -100,23 +108,24 @@ export class TaskDetail extends React.Component {
         this.state = {
             isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.match.params.id !== 'settings', //<-- HARDCODED
+            isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
             isInPatient: false,
             isDepositTimeApplied: false,
             //INPUTS
             compositing: false,
             concent: props.concentSwitch,
             resolution: [NaN, NaN],
-            frames: '',
-            format: '',
+            frames: "",
+            format: "",
             formatIndex: 0,
             output_path: props.location,
-            compute_on: 'cpu',
+            compute_on: "cpu",
             samples: 0,
-            timeout: '',
+            timeout: "",
             subtasks_count: 1,
+            subtask_warning: null,
             maxSubtasks: 0,
-            subtask_timeout: '',
+            subtask_timeout: "",
             bid: props.requestorMaxPrice / ETH_DENOM,
             //CUSTOM
             testLock: false,
@@ -167,9 +176,9 @@ export class TaskDetail extends React.Component {
 
         this.frameHintNum = Math.floor(Math.random() * hints.frame.length);
 
-        var elements = document.getElementsByTagName('input');
+        var elements = document.getElementsByTagName("input");
         var ariaKeys = Array.from(elements).map(elm =>
-            elm.getAttribute('aria-label')
+            elm.getAttribute("aria-label")
         );
         this.interactedInputObject = zipObject(
             ariaKeys,
@@ -178,8 +187,8 @@ export class TaskDetail extends React.Component {
 
         if (match.params.id === editMode)
             document
-                .getElementById('taskFormSubmit')
-                .addEventListener('click', () => {
+                .getElementById("taskFormSubmit")
+                .addEventListener("click", () => {
                     Object.keys(this.interactedInputObject).map(
                         keys => (this.interactedInputObject[keys] = true)
                     );
@@ -191,6 +200,7 @@ export class TaskDetail extends React.Component {
     componentWillUnmount() {
         this.props.actions.clearTaskPlain();
         this.liveSubList && clearInterval(this.liveSubList);
+        this.interactionTimer && clearTimeout(this.interactionTimer);
         this.interactedInputObject = {};
 
         if (this.props.testStatus) {
@@ -199,75 +209,134 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillReceiveProps(nextProps) {
-        
-        if (Object.keys(nextProps.taskInfo).length > 0 && nextProps.match.params.id !== editMode) {
+        if (
+            Object.keys(nextProps.taskInfo).length > 0 &&
+            nextProps.match.params.id !== editMode
+        ) {
             if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
-                this._setTimeStamp()
+                this._setTimeStamp();
             }
-            this.setState({
-                type: nextProps.taskInfo.type
-            }, () => {
-
-                const {type, timeout, subtasks_count, subtask_timeout, compute_on, concent_enabled, options, bid} = nextProps.taskInfo
-                const {resolutionW, resolutionH, formatRef, outputPath, compositingRef, concentRef, haltspp, taskTimeout, subtaskCount, subtaskTimeout, bidRef} = this.refs
-                this.taskTimeoutInput.setValue((getTimeAsFloat(timeout) * 3600) || 0)
-                subtaskCount.value = subtasks_count || 0
-                this.subtaskTaskTimeoutInput.setValue((getTimeAsFloat(subtask_timeout) * 3600) || 0)
-                bidRef.value = bid || 0
-                if (options) {
-                    resolutionW.value = options.resolution[0]
-                    resolutionH.value = options.resolution[1]
-                    outputPath.value = options.output_path
-                    let formatIndex = mockFormatList.map(item => item.name).indexOf(options.format);
-                    
-                    /*Apply concent option only on testnet*/
-                    if(!this.props.isMainNet && nextProps.concentSwitch) concentRef.checked = concent_enabled
-
-                    this.setState({
-                        formatIndex,
+            this.setState(
+                {
+                    type: nextProps.taskInfo.type
+                },
+                () => {
+                    const {
+                        type,
+                        timeout,
+                        subtasks_count,
+                        subtask_timeout,
                         compute_on,
-                        concent: !!concent_enabled
-                    })
-                  
-                    if ((type || this.state.type).includes(taskType.BLENDER)) {
-                        this.refs.framesRef.value = options.frames ? options.frames : 1
-                    } 
-                  
-                    if(nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
-                        this.props.actions.getEstimatedCost({
-                            type: type,
-                            options: {
-                                price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
-                                subtasks_count: Number(subtasks_count),
-                                subtask_timeout: subtask_timeout
-                            }
-                        })
+                        concent_enabled,
+                        options,
+                        bid
+                    } = nextProps.taskInfo;
+                    const {
+                        resolutionW,
+                        resolutionH,
+                        formatRef,
+                        outputPath,
+                        compositingRef,
+                        concentRef,
+                        haltspp,
+                        taskTimeout,
+                        subtaskCount,
+                        subtaskTimeout,
+                        bidRef
+                    } = this.refs;
+                    this.taskTimeoutInput.setValue(
+                        getTimeAsFloat(timeout) * 3600 || 0
+                    );
+                    subtaskCount.value = subtasks_count || 0;
+                    this.subtaskTaskTimeoutInput.setValue(
+                        getTimeAsFloat(subtask_timeout) * 3600 || 0
+                    );
+                    bidRef.value = bid || 0;
+                    if (options) {
+                        resolutionW.value = options.resolution[0];
+                        resolutionH.value = options.resolution[1];
+                        outputPath.value = options.output_path;
+                        let formatIndex = mockFormatList
+                            .map(item => item.name)
+                            .indexOf(options.format);
+
+                        /*Apply concent option only on testnet*/
+                        if (!this.props.isMainNet && nextProps.concentSwitch)
+                            concentRef.checked = concent_enabled;
+
+                        this.setState({
+                            formatIndex,
+                            compute_on,
+                            concent: !!concent_enabled
+                        });
+
+                        if (
+                            (type || this.state.type).includes(taskType.BLENDER)
+                        ) {
+                            this.refs.framesRef.value = options.frames
+                                ? options.frames
+                                : 1;
+                        }
+
+                        if (
+                            nextProps.estimated_cost &&
+                            nextProps.estimated_cost.GNT == 0
+                        )
+                            this.props.actions.getEstimatedCost({
+                                type: type,
+                                options: {
+                                    price: new BigNumber(bid)
+                                        .multipliedBy(ETH_DENOM)
+                                        .toString(), //wei
+                                    subtasks_count: Number(subtasks_count),
+                                    subtask_timeout: subtask_timeout
+                                }
+                            });
+                    }
                 }
-            })
+            );
         }
 
         if (nextProps.presets !== this.props.presets) {
-            this.parsePresets(nextProps.presets)
+            this.parsePresets(nextProps.presets);
         }
 
-        if(!isEqual(nextProps.testStatus, this.props.testStatus) && 
-                !isObjectEmpty(nextProps.testStatus.more) && 
-                !this.state.defaultSettingsModal)
-        {
+        if (
+            !isEqual(nextProps.testStatus, this.props.testStatus) &&
+            !isObjectEmpty(nextProps.testStatus.more) &&
+            !this.state.defaultSettingsModal
+        ) {
             this.setState({
                 defaultSettingsModal: true
-            })
+            });
         }
 
-        if(nextProps.task.resources !== this.props.task.resources){
+        if (nextProps.task.resources !== this.props.task.resources) {
             setTimeout(() => this._handleLocalRender(), 2000);
         }
     }
 
     componentWillUpdate(nextProps, nextState) {
-        const {subtasks_count, subtask_timeout, bid, isDetailPage, savePresetLock, resolution, maxSubtasks, frames, samples} = this.state
-        const {actions, task} = this.props
-        if ((!!nextState.subtasks_count && !!nextState.subtask_timeout && !!nextState.bid) && (nextState.subtasks_count !== subtasks_count || nextState.subtask_timeout !== subtask_timeout || nextState.bid !== bid)) {
+        const {
+            subtasks_count,
+            subtask_timeout,
+            bid,
+            isDetailPage,
+            savePresetLock,
+            resolution,
+            maxSubtasks,
+            frames,
+            samples
+        } = this.state;
+        const { actions, task } = this.props;
+        if (
+            !!nextState.subtasks_count &&
+            !!nextState.subtask_timeout &&
+            !!nextState.bid &&
+            (nextState.subtasks_count !== subtasks_count ||
+                nextState.subtask_timeout !== subtask_timeout ||
+                nextState.bid !== bid)
+        ) {
             actions.getEstimatedCost({
                 type: task.type,
                 options: {
@@ -311,15 +380,15 @@ export class TaskDetail extends React.Component {
             this.refs.subtaskCount.value = result ? result : 1; // subtask cannot be 0
         }
 
-        if(nextState.frames !== frames || nextState.samples !== samples){
+        if (nextState.frames !== frames || nextState.samples !== samples) {
             this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        var elements = document.getElementsByTagName('input');
+        var elements = document.getElementsByTagName("input");
         Array.from(elements).forEach(element => {
             element.checkValidity();
-            if (element.validity.valid) element.classList.remove('invalid');
+            if (element.validity.valid) element.classList.remove("invalid");
             return element.validity.valid;
         });
 
@@ -329,14 +398,14 @@ export class TaskDetail extends React.Component {
     _activateValidation() {
         if (document.addEventListener) {
             document.addEventListener(
-                'invalid',
+                "invalid",
                 e => {
                     if (
                         this.interactedInputObject[
-                            e.target.getAttribute('aria-label')
+                            e.target.getAttribute("aria-label")
                         ]
                     )
-                        e.target.classList.add('invalid');
+                        e.target.classList.add("invalid");
                 },
                 true
             );
@@ -360,9 +429,11 @@ export class TaskDetail extends React.Component {
             if (!frames) return;
 
             const frameAmount = calculateFrameAmount(frames);
-            maxSubtasks =
+            maxSubtasks = Math.max(
                 Math.floor(y / Math.max((y / 100) * 3, 8 + (y / 100) * 2)) *
-                frameAmount;
+                    frameAmount,
+                1
+            );
         } else {
             maxSubtasks = 100;
         }
@@ -371,7 +442,8 @@ export class TaskDetail extends React.Component {
 
         this.setState({
             maxSubtasks,
-            subtasks_count: subtaskValue
+            subtasks_count: subtaskValue,
+            subtask_warning: `Max. subtask limit updated as ${maxSubtasks} based on resolution and frame amount`
         });
 
         this.refs.subtaskCount.value = subtaskValue;
@@ -381,14 +453,15 @@ export class TaskDetail extends React.Component {
         let priceLength = parseInt(price).toString().length;
         let fontSize =
             price.toFixed(fixTo).toString().length > 4
-                ? font_size / 1.7 + 'pt'
-                : font_size + 'pt';
+                ? font_size / 1.7 + "pt"
+                : font_size + "pt";
 
         if (priceLength < 5) {
             return (
                 <span
                     className={`estimated-price ${suffix}`}
-                    style={{ fontSize: fontSize }}>
+                    style={{ fontSize: fontSize }}
+                >
                     {price.toFixed(fixTo)}
                 </span>
             );
@@ -398,9 +471,10 @@ export class TaskDetail extends React.Component {
         return (
             <span
                 className={`estimated-price ${suffix}`}
-                style={{ fontSize: fontSize }}>
+                style={{ fontSize: fontSize }}
+            >
                 {firstDigitLength > 3
-                    ? '~' + firstDigit.toFixed(2)
+                    ? "~" + firstDigit.toFixed(2)
                     : firstDigit}
                 <small>x</small>
                 10
@@ -411,16 +485,16 @@ export class TaskDetail extends React.Component {
 
     _setTimeStamp() {
         const options = Object.freeze({
-            durationFormat: 'dd:hh:mm:ss',
+            durationFormat: "dd:hh:mm:ss",
             max: 60 * 60 * 24 * 2,
             value: 0, // initial value of input in seconds.
             useAbbr: true, // configure the separator to not be ':'
             abbr: {
                 // pass in custom separator (with trailing space if desired)
-                dd: 'days ',
-                hh: 'h ',
-                mm: 'm ',
-                ss: 's'
+                dd: "days ",
+                hh: "h ",
+                mm: "m ",
+                ss: "s"
             }
         });
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
@@ -466,7 +540,7 @@ export class TaskDetail extends React.Component {
      */
     checkInputValidity(e) {
         e.target.checkValidity();
-        if (e.target.validity.valid) e.target.classList.remove('invalid');
+        if (e.target.validity.valid) e.target.classList.remove("invalid");
         return e.target.validity.valid;
     }
 
@@ -476,13 +550,17 @@ export class TaskDetail extends React.Component {
      * @param  {Event}      e
      */
     _handleResolution(index, e) {
-        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        this.interactionTimer && clearTimeout(this.interactionTimer);
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         let res = this.state.resolution;
         let newRes = [...res]; //keep state immutable
         newRes[index] = parseInt(e.target.value);
-        this.setState({
-            resolution: newRes
-        });
+
+        this.interactionTimer = setTimeout(() => {
+            this.setState({
+                resolution: newRes
+            });
+        }, WAIT_INTERVAL);
     }
 
     /**
@@ -490,7 +568,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         this.setState({
             compositing: e.target.checked
         });
@@ -501,7 +579,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleConcentCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         this.setState({
             concent: e.target.checked
         });
@@ -513,7 +591,7 @@ export class TaskDetail extends React.Component {
      * @param  {[type]} e
      */
     _handleTimeoutInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         const timeoutList = Object.freeze({
             timeout: this.taskTimeoutInput,
             subtask_timeout: this.subtaskTaskTimeoutInput
@@ -522,14 +600,14 @@ export class TaskDetail extends React.Component {
         /*Input will be invalid if given time is lesser than 1 min*/
         const inputTime = e.target.classList;
         if (timeoutList[state].getValue() < 60) {
-            inputTime.add('invalid');
+            inputTime.add("invalid");
             e.target.setCustomValidity(TIME_VALIDITY_NOTE);
         } else {
-            inputTime.remove('invalid');
-            e.target.setCustomValidity('');
+            inputTime.remove("invalid");
+            e.target.setCustomValidity("");
         }
 
-        if (state === 'timeout') {
+        if (state === "timeout") {
             const taskTimeoutValue = this.taskTimeoutInput.getValue();
             const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue();
 
@@ -552,14 +630,14 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
+        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
         if (this.checkInputValidity(e)) {
             this.setState({
                 [state]: e.target.value
             });
         } else if (
             !this.state.savePresetLock &&
-            (state === 'frames' || state === 'sample_per_pixel') &&
+            (state === "frames" || state === "sample_per_pixel") &&
             !this.checkInputValidity(e)
         ) {
             this.setState({
@@ -629,7 +707,7 @@ export class TaskDetail extends React.Component {
             resolutionW.value = resolution[0];
             resolutionH.value = resolution[1];
 
-            haltspp.value = samples
+            haltspp.value = samples;
 
             if (applyStates)
                 this.setState({
@@ -656,12 +734,12 @@ export class TaskDetail extends React.Component {
         outputPath.value = output_path;
 
         if (this.props.task.type.includes(taskType.BLENDER)) {
-            framesRef.value = frames
+            framesRef.value = frames;
             //compositingRef.checked = compositing
         }
 
-        this.setState({...preset.value, formatIndex})
-    }
+        this.setState({ ...preset.value, formatIndex });
+    };
 
     /**
      * [_handleFormatOptionChange func.  updates format dropdown changes]
@@ -688,7 +766,14 @@ export class TaskDetail extends React.Component {
      * [_handleSavePresetModal func. sends custom preset data to modal and makes modal visible]
      */
     _handleSavePresetModal = () => {
-        const {resolution, frames, format, output_path, compositing, samples} = this.state
+        const {
+            resolution,
+            frames,
+            format,
+            output_path,
+            compositing,
+            samples
+        } = this.state;
         this.setState({
             presetModal: true,
             modalData: {
@@ -724,7 +809,7 @@ export class TaskDetail extends React.Component {
         } = this.props.testStatus.more.after_test_data;
 
         const { resolutionW, resolutionH, formatRef, haltspp } = this.refs;
-        const format = file_format.replace('.', '').toUpperCase();
+        const format = file_format.replace(".", "").toUpperCase();
 
         // If taken file format from input file is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList
@@ -746,7 +831,7 @@ export class TaskDetail extends React.Component {
             samples
         });
 
-        this._closeModal('defaultSettingsModal');
+        this._closeModal("defaultSettingsModal");
     };
 
     /**
@@ -773,7 +858,7 @@ export class TaskDetail extends React.Component {
 
         dialog.showOpenDialog(
             {
-                properties: ['openDirectory']
+                properties: ["openDirectory"]
             },
             onFolderHandler
         );
@@ -782,8 +867,8 @@ export class TaskDetail extends React.Component {
     _handleConfirmationModal = () => {
         this.setState({
             taskSummaryModal: true
-        })
-    }
+        });
+    };
 
     /**
      * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
@@ -810,9 +895,9 @@ export class TaskDetail extends React.Component {
         });
         this._createTaskAsync().then(result => {
             if (result && !result[1]) {
-                window.routerHistory.push('/tasks');
+                window.routerHistory.push("/tasks");
             } else {
-                console.log('Task creation failed!');
+                console.log("Task creation failed!");
                 this.setState({
                     insufficientAmountModal: {
                         result: !!result[1],
@@ -836,44 +921,67 @@ export class TaskDetail extends React.Component {
             subtasks_count: 1 // <--- HARDCODED
         });
     };
-    _createTaskAsync(){
-        const {bid, compositing, compute_on, concent, frames, format, output_path, resolution, samples, subtasks_count, subtask_timeout, timeout} = this.state
-        const {task, testStatus} = this.props
+    _createTaskAsync() {
+        const {
+            bid,
+            compositing,
+            compute_on,
+            concent,
+            frames,
+            format,
+            output_path,
+            resolution,
+            samples,
+            subtasks_count,
+            subtask_timeout,
+            timeout
+        } = this.state;
+        const { task, testStatus } = this.props;
 
         return new Promise((resolve, reject) => {
-            this.props.actions.createTask({
-                ...task,
-                bid,
-                compute_on,
-                concent_enabled: concent,
-                estimated_memory : (testStatus && testStatus.estimated_memory),
-                subtasks_count: Number(subtasks_count),
-                subtask_timeout: floatToHR(subtask_timeout),
-                timeout: floatToHR(timeout),
-                options: {
-                    frames,
-                    format,
-                    compositing,
-                    output_path,
-                    resolution,
-                    ...(samples > 0 && { samples: Number(samples)})
-                }
-            }, resolve, reject)
-        })
+            this.props.actions.createTask(
+                {
+                    ...task,
+                    bid,
+                    compute_on,
+                    concent_enabled: concent,
+                    estimated_memory: testStatus && testStatus.estimated_memory,
+                    subtasks_count: Number(subtasks_count),
+                    subtask_timeout: floatToHR(subtask_timeout),
+                    timeout: floatToHR(timeout),
+                    options: {
+                        frames,
+                        format,
+                        compositing,
+                        output_path,
+                        resolution,
+                        ...(samples > 0 && { samples: Number(samples) })
+                    }
+                },
+                resolve,
+                reject
+            );
+        });
     }
 
-    _createTaskOnHighGas = (isConcentOn) => {
-        this.setState({
-            concent: isConcentOn,
-            isDepositTimeApplied: true
-        }, this._handleStartTaskButton)
-    }
+    _createTaskOnHighGas = isConcentOn => {
+        this.setState(
+            {
+                concent: isConcentOn,
+                isDepositTimeApplied: true
+            },
+            this._handleStartTaskButton
+        );
+    };
 
-    _createTaskConditionally = (isConcentOn) => {
-        this.setState({
-            concent: isConcentOn
-        }, this._handleStartTaskButton)
-    }
+    _createTaskConditionally = isConcentOn => {
+        this.setState(
+            {
+                concent: isConcentOn
+            },
+            this._handleStartTaskButton
+        );
+    };
 
     /**
      * [_handleManagePresetModal func. will trigger managePresetModal state to make manage preset modal visible]
@@ -901,9 +1009,21 @@ export class TaskDetail extends React.Component {
     }
 
     isPresetFieldsFilled(nextState) {
-        if(this.props.match.params.id === editMode){
-            const {resolution, frames, samples, compositing, format} = nextState;
-            return presetSchema[this.props.task.type].isValid({resolution, frames, samples, compositing, format})
+        if (this.props.match.params.id === editMode) {
+            const {
+                resolution,
+                frames,
+                samples,
+                compositing,
+                format
+            } = nextState;
+            return presetSchema[this.props.task.type].isValid({
+                resolution,
+                frames,
+                samples,
+                compositing,
+                format
+            });
         }
         return new Promise(res => res(false));
     }
@@ -1061,7 +1181,8 @@ export class TaskDetail extends React.Component {
                             type="button"
                             className="btn--outline"
                             onClick={this._handleOutputPath}
-                            disabled={isDetailPage}>
+                            disabled={isDetailPage}
+                        >
                             Change
                         </button>
                     </div>
@@ -1076,7 +1197,8 @@ export class TaskDetail extends React.Component {
                             type="button"
                             className="btn--outline"
                             onClick={this._handleSavePresetModal}
-                            disabled={savePresetLock}>
+                            disabled={savePresetLock}
+                        >
                             Save as preset
                         </button>
                     </div>
@@ -1085,36 +1207,94 @@ export class TaskDetail extends React.Component {
         ];
 
         switch (type) {
-        case taskType.BLENDER:
-        case taskType.BLENDER_NVGPU:
-            formTemplate.push({
-                order: 2,
-                content: <div className="item-settings" key="2">
-                            <InfoLabel type="span" label="Frame Range" info={<p className="tooltip_task">Define frames to render. You can separate frame numbers<br/>with ;, eg. 1;4;7 will define frame 1, 4 and 7. You can also define frames ranges with - <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">Learn more</a></p>} cls="title" infoHidden={true} interactive={true}/>
-                            <input ref="framesRef" type="text" aria-label="Frame Range" placeholder={hints.frame[this.frameHintNum]} pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$" onChange={this._handleFormInputs.bind(this, 'frames')} required={!isDetailPage} disabled={isDetailPage}/>
-                         </div>
-            })
-            formTemplate.push({
-                order: 5,
-                content: <div className="item-settings" key="5">
-                            <InfoLabel type="span" label="Sample per pixel" info={<p className="tooltip_task">Set your file<br/> settings</p>} cls="title" infoHidden={true}/>
-                            <input ref="haltspp" type="number" placeholder="Type a number" min="1" max="2000" aria-label="Sample per pixel" onChange={this._handleFormInputs.bind(this, 'samples')} disabled={isDetailPage}/>
-                         </div>
-            })
-            // formTemplate.push({
-            //     order: 5,
-            //     content: <div className="item-settings" key="5">
-            //                 <span className="title">Blender Compositing</span>
-            //                 <div className="switch-box switch-box--green">
-            //                     <span>{compositing ? 'On' : 'Off'}</span>
-            //                     <label className="switch">
-            //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
-            //                         <div className="switch-slider round"></div>
-            //                     </label>
-            //                 </div>
-            //             </div>
-            // })
-            break;
+            case taskType.BLENDER:
+            case taskType.BLENDER_NVGPU:
+                formTemplate.push({
+                    order: 2,
+                    content: (
+                        <div className="item-settings" key="2">
+                            <InfoLabel
+                                type="span"
+                                label="Frame Range"
+                                info={
+                                    <p className="tooltip_task">
+                                        Define frames to render. You can
+                                        separate frame numbers
+                                        <br />
+                                        with ;, eg. 1;4;7 will define frame 1, 4
+                                        and 7. You can also define frames ranges
+                                        with -{" "}
+                                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
+                                            Learn more
+                                        </a>
+                                    </p>
+                                }
+                                cls="title"
+                                infoHidden={true}
+                                interactive={true}
+                            />
+                            <input
+                                ref="framesRef"
+                                type="text"
+                                aria-label="Frame Range"
+                                placeholder={hints.frame[this.frameHintNum]}
+                                pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$"
+                                onChange={this._handleFormInputs.bind(
+                                    this,
+                                    "frames"
+                                )}
+                                required={!isDetailPage}
+                                disabled={isDetailPage}
+                            />
+                        </div>
+                    )
+                });
+                formTemplate.push({
+                    order: 5,
+                    content: (
+                        <div className="item-settings" key="5">
+                            <InfoLabel
+                                type="span"
+                                label="Sample per pixel"
+                                info={
+                                    <p className="tooltip_task">
+                                        Set your file
+                                        <br /> settings
+                                    </p>
+                                }
+                                cls="title"
+                                infoHidden={true}
+                            />
+                            <input
+                                ref="haltspp"
+                                type="number"
+                                placeholder="Type a number"
+                                min="1"
+                                max="2000"
+                                aria-label="Sample per pixel"
+                                onChange={this._handleFormInputs.bind(
+                                    this,
+                                    "samples"
+                                )}
+                                disabled={isDetailPage}
+                            />
+                        </div>
+                    )
+                });
+                // formTemplate.push({
+                //     order: 5,
+                //     content: <div className="item-settings" key="5">
+                //                 <span className="title">Blender Compositing</span>
+                //                 <div className="switch-box switch-box--green">
+                //                     <span>{compositing ? 'On' : 'Off'}</span>
+                //                     <label className="switch">
+                //                         <input ref="compositingRef" type="checkbox" aria-label="Blender Compositing Checkbox" tabIndex="0" onChange={this._handleCheckbox.bind;(this)} disabled={isDetailPage}/>
+                //                         <div className="switch-slider round"></div>
+                //                     </label>
+                //                 </div>
+                //             </div>
+                // })
+                break;
         }
 
         let sortByOrder = (a, b) => a.order - b.order;
@@ -1133,13 +1313,13 @@ export class TaskDetail extends React.Component {
         let computeOnRadioOptions = {};
 
         if (this.state.isDetailPage) {
-            computeOnRadioOptions['readOnly'] = true;
-            computeOnRadioOptions['checked'] = this.state.compute_on === type;
+            computeOnRadioOptions["readOnly"] = true;
+            computeOnRadioOptions["checked"] = this.state.compute_on === type;
         } else {
             computeOnRadioOptions[
-                'onChange'
+                "onChange"
             ] = this._handleComputeOnOptionChange;
-            computeOnRadioOptions['defaultChecked'] =
+            computeOnRadioOptions["defaultChecked"] =
                 this.state.compute_on === type;
         }
 
@@ -1161,9 +1341,10 @@ export class TaskDetail extends React.Component {
             modalData,
             presetModal,
             taskSummaryModal,
-            depositTimeModal, 
+            depositTimeModal,
             resolutionChangeInfo,
             resolutionChangeModal,
+            subtask_warning,
             testLock
         } = this.state;
 
@@ -1182,9 +1363,13 @@ export class TaskDetail extends React.Component {
         } = this.props;
         return (
             <div>
-                <form id="taskForm" onSubmit={this._handleConfirmationModal} className="content__task-detail">
-                    <TestResult 
-                        testStatus={testStatus} 
+                <form
+                    id="taskForm"
+                    onSubmit={this._handleConfirmationModal}
+                    className="content__task-detail"
+                >
+                    <TestResult
+                        testStatus={testStatus}
                         isDetailPage={isDetailPage}
                         task={task}
                         actions={actions}
@@ -1193,7 +1378,8 @@ export class TaskDetail extends React.Component {
                     <section className="section-details__task-detail">
                         <div
                             ref={node => (this.overflowTaskDetail = node)}
-                            className="container__task-detail">
+                            className="container__task-detail"
+                        >
                             {isDetailPage && isDeveloperMode && (
                                 <NodeList
                                     subtasksList={subtasksList}
@@ -1250,7 +1436,7 @@ export class TaskDetail extends React.Component {
                                                 let Golem know the maximum time
                                                 <br />
                                                 you will wait for a task to be
-                                                accepted by the network.{' '}
+                                                accepted by the network.{" "}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                     Learn more
                                                 </a>
@@ -1266,7 +1452,7 @@ export class TaskDetail extends React.Component {
                                         aria-label="Task Timeout"
                                         onKeyDown={this._handleTimeoutInputs.bind(
                                             this,
-                                            'timeout'
+                                            "timeout"
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage}
@@ -1283,7 +1469,7 @@ export class TaskDetail extends React.Component {
                                                 <br />
                                                 If you are rendering a number of
                                                 frames you should set subtasks
-                                                to the same number.{' '}
+                                                to the same number.{" "}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                     Learn more
                                                 </a>
@@ -1302,11 +1488,16 @@ export class TaskDetail extends React.Component {
                                         aria-label="Subtask amount"
                                         onChange={this._handleFormInputs.bind(
                                             this,
-                                            'subtasks_count'
+                                            "subtasks_count"
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage || !maxSubtasks}
                                     />
+                                    {subtask_warning && (
+                                        <span className="warning">
+                                            {subtask_warning}
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="item-settings">
                                     <InfoLabel
@@ -1328,7 +1519,7 @@ export class TaskDetail extends React.Component {
                                         aria-label="Subtask Timeout"
                                         onKeyDown={this._handleTimeoutInputs.bind(
                                             this,
-                                            'subtask_timeout'
+                                            "subtask_timeout"
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage}
@@ -1344,7 +1535,7 @@ export class TaskDetail extends React.Component {
                                                 be rendered on CPU or GPU of
                                                 providers. GPU support is still
                                                 in beta. Contact us if you find
-                                                any issues with GPU rendering.{' '}
+                                                any issues with GPU rendering.{" "}
                                                 <a href="https://golem.network/documentation/">
                                                     Learn more
                                                 </a>
@@ -1361,7 +1552,7 @@ export class TaskDetail extends React.Component {
                                                 value="cpu"
                                                 name="compute_on"
                                                 {...this._fetchRadioOptions(
-                                                    'cpu'
+                                                    "cpu"
                                                 )}
                                             />
                                             <label htmlFor="cpu">
@@ -1377,7 +1568,7 @@ export class TaskDetail extends React.Component {
                                                 value="gpu"
                                                 name="compute_on"
                                                 {...this._fetchRadioOptions(
-                                                    'gpu'
+                                                    "gpu"
                                                 )}
                                             />
                                             <label htmlFor="gpu">
@@ -1487,21 +1678,21 @@ export class TaskDetail extends React.Component {
                                             aria-label="Your bid"
                                             onChange={this._handleFormInputs.bind(
                                                 this,
-                                                'bid'
+                                                "bid"
                                             )}
                                             required={!isDetailPage}
                                             disabled={isDetailPage}
                                         />
                                         <span>
-                                            {isMainNet ? '' : 't'} GNT/h
+                                            {isMainNet ? "" : "t"} GNT/h
                                         </span>
                                     </div>
                                     <div className="estimated_usd">
                                         <span>
-                                            est. {isMainNet ? '' : 't'}${' '}
+                                            est. {isMainNet ? "" : "t"}${" "}
                                             {this._convertPriceAsHR(
-                                                bid * currency['GNT'],
-                                                'USD',
+                                                bid * currency["GNT"],
+                                                "USD",
                                                 2,
                                                 12
                                             )}
@@ -1510,37 +1701,47 @@ export class TaskDetail extends React.Component {
                                 </div>
                                 <div className="estimated-price__panel">
                                     <div className="item-price">
-                                        <InfoLabel 
-                                            type="span" 
-                                            label="Task fee" 
-                                            info={<p className="tooltip_task">The estimated price that you’ll have to pay to render the task is based on<br/>Your bid, 
-                                                subtask amount and timeout settings. Fiat value may change during computation 
-                                                as well as gas price - 
-                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
-                                                Learn more
-                                                </a>
-                                                </p>} 
-                                            cls="title" 
-                                            infoHidden={true} 
-                                            interactive={true}/>
+                                        <InfoLabel
+                                            type="span"
+                                            label="Task fee"
+                                            info={
+                                                <p className="tooltip_task">
+                                                    The estimated price that
+                                                    you’ll have to pay to render
+                                                    the task is based on
+                                                    <br />
+                                                    Your bid, subtask amount and
+                                                    timeout settings. Fiat value
+                                                    may change during
+                                                    computation as well as gas
+                                                    price -
+                                                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
+                                                        Learn more
+                                                    </a>
+                                                </p>
+                                            }
+                                            cls="title"
+                                            infoHidden={true}
+                                            interactive={true}
+                                        />
                                         <div className="estimated_cost">
                                             {this._convertPriceAsHR(
                                                 estimated_cost.GNT,
-                                                'GNT',
+                                                "GNT",
                                                 3,
                                                 36
                                             )}
                                             <span>
-                                                {isMainNet ? '' : 't'} GNT
+                                                {isMainNet ? "" : "t"} GNT
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? '' : 't'}${' '}
+                                                est. {isMainNet ? "" : "t"}${" "}
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.GNT || 0) *
-                                                        currency['GNT'],
-                                                    'USD',
+                                                        currency["GNT"],
+                                                    "USD",
                                                     4,
                                                     12
                                                 )}
@@ -1572,21 +1773,21 @@ export class TaskDetail extends React.Component {
                                         <div className="estimated_cost">
                                             {this._convertPriceAsHR(
                                                 estimated_cost.ETH,
-                                                'ETH',
+                                                "ETH",
                                                 5,
                                                 18
                                             )}
                                             <span>
-                                                {isMainNet ? '' : 't'} ETH
+                                                {isMainNet ? "" : "t"} ETH
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? '' : 't'}${' '}
+                                                est. {isMainNet ? "" : "t"}${" "}
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.ETH || 0) *
-                                                        currency['ETH'],
-                                                    'USD',
+                                                        currency["ETH"],
+                                                    "USD",
                                                     4,
                                                     12
                                                 )}
@@ -1631,23 +1832,23 @@ export class TaskDetail extends React.Component {
                                                 {this._convertPriceAsHR(
                                                     estimated_cost.deposit
                                                         .GNT_suggested,
-                                                    'GNT',
+                                                    "GNT",
                                                     3,
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? '' : 't'} GNT
+                                                    {isMainNet ? "" : "t"} GNT
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? '' : 't'}${' '}
+                                                    est. {isMainNet ? "" : "t"}${" "}
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .GNT_suggested ||
                                                             0) *
-                                                            currency['GNT'],
-                                                        'USD',
+                                                            currency["GNT"],
+                                                        "USD",
                                                         4,
                                                         14
                                                     )}
@@ -1676,22 +1877,22 @@ export class TaskDetail extends React.Component {
                                             <div className="estimated_cost">
                                                 {this._convertPriceAsHR(
                                                     estimated_cost.deposit.ETH,
-                                                    'ETH',
+                                                    "ETH",
                                                     5,
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? '' : 't'} ETH
+                                                    {isMainNet ? "" : "t"} ETH
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? '' : 't'}${' '}
+                                                    est. {isMainNet ? "" : "t"}${" "}
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .ETH || 0) *
-                                                            currency['GNT'],
-                                                        'USD',
+                                                            currency["GNT"],
+                                                        "USD",
                                                         5,
                                                         14
                                                     )}
@@ -1717,24 +1918,58 @@ export class TaskDetail extends React.Component {
                                 id="taskFormSubmit"
                                 type="submit"
                                 className="btn--primary"
-                                disabled={testLock || loadingTaskIndicator}>
+                                disabled={testLock || loadingTaskIndicator}
+                            >
                                 Start Task
                             </button>
                         </section>
                     )}
                 </form>
-                {presetModal && <PresetModal closeModal={this._closeModal} saveCallback={this._handlePresetSave} {...modalData}/>}
-                {managePresetModal && <ManagePresetModal closeModal={this._closeModal}/>}
-                {depositTimeModal && <DepositTimeModal closeModal={this._closeModal} createTaskOnHighGas={this._createTaskOnHighGas}/> }
-                {defaultSettingsModal && <DefaultSettingsModal closeModal={this._closeModal} applyPreset={this._applyDefaultPreset}/>}
-                {taskSummaryModal && <TaskSummaryModal closeModal={this._closeModal} _handleStartTaskButton={this._handleStartTaskButton} estimated_cost={estimated_cost} minPerf={minPerf} {...this.state}/>}
-                {resolutionChangeModal && <ResolutionChangeModal closeModal={this._closeModal} applyPreset={this._applyPresetOption} info={resolutionChangeInfo}/>}
-                {(insufficientAmountModal && insufficientAmountModal.result) && 
-                    <InsufficientAmountModal 
-                        message={insufficientAmountModal.message} 
-                        closeModal={this._closeModal} 
-                        createTaskConditionally={this._createTaskConditionally}/>
-                }
+                {presetModal && (
+                    <PresetModal
+                        closeModal={this._closeModal}
+                        saveCallback={this._handlePresetSave}
+                        {...modalData}
+                    />
+                )}
+                {managePresetModal && (
+                    <ManagePresetModal closeModal={this._closeModal} />
+                )}
+                {depositTimeModal && (
+                    <DepositTimeModal
+                        closeModal={this._closeModal}
+                        createTaskOnHighGas={this._createTaskOnHighGas}
+                    />
+                )}
+                {defaultSettingsModal && (
+                    <DefaultSettingsModal
+                        closeModal={this._closeModal}
+                        applyPreset={this._applyDefaultPreset}
+                    />
+                )}
+                {taskSummaryModal && (
+                    <TaskSummaryModal
+                        closeModal={this._closeModal}
+                        _handleStartTaskButton={this._handleStartTaskButton}
+                        estimated_cost={estimated_cost}
+                        minPerf={minPerf}
+                        {...this.state}
+                    />
+                )}
+                {resolutionChangeModal && (
+                    <ResolutionChangeModal
+                        closeModal={this._closeModal}
+                        applyPreset={this._applyPresetOption}
+                        info={resolutionChangeInfo}
+                    />
+                )}
+                {insufficientAmountModal && insufficientAmountModal.result && (
+                    <InsufficientAmountModal
+                        message={insufficientAmountModal.message}
+                        closeModal={this._closeModal}
+                        createTaskConditionally={this._createTaskConditionally}
+                    />
+                )}
             </div>
         );
     }
