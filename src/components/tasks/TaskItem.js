@@ -221,7 +221,7 @@ export class TaskItem extends React.Component {
                     progress: item.progress
                 }}
                 config={{
-                    tension: 0,
+                    tension: 50,
                     friction: 2,
                     restDisplacementThreshold: 0.1
                 }}
