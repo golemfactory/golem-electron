@@ -198,9 +198,9 @@ export class TaskDetail extends React.Component {
     }
 
     componentWillUnmount() {
-        this.props.actions.clearTaskPlain();
         this.liveSubList && clearInterval(this.liveSubList);
         this.interactionTimer && clearTimeout(this.interactionTimer);
+        this.reTriggerTestTimeout && clearTimeout(this.reTriggerTestTimeout);
         this.interactedInputObject = {};
 
         if (this.props.testStatus) {
@@ -311,8 +311,15 @@ export class TaskDetail extends React.Component {
             });
         }
 
-        if (nextProps.task.resources !== this.props.task.resources) {
-            setTimeout(() => this._handleLocalRender(), 2000);
+        if (
+            !isEqual(nextProps.task.resources, this.props.task.resources) &&
+            nextProps.task.resources !== undefined &&
+            this.props.task.resources !== undefined
+        ) {
+            this.reTriggerTestTimeout = setTimeout(
+                () => this._handleLocalRender(),
+                2000
+            );
         }
     }
 
