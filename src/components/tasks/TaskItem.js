@@ -221,9 +221,8 @@ export class TaskItem extends React.Component {
                     progress: item.progress
                 }}
                 config={{
-                    tension: 50,
-                    friction: 2,
-                    restDisplacementThreshold: 0.1
+                    tension: 180,
+                    friction: 10
                 }}
                 role="listItem"
                 tabIndex="-1">
