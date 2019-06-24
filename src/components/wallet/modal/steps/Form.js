@@ -20,7 +20,7 @@ export default class WithdrawForm extends React.Component {
             isValid: false,
             isSubmitted: false,
             gasPriceOracle: {},
-            rpcError: {},
+            rpcError: null,
             adjustedGasPrice: new BigNumber(0), //GWEI
             gasLimit: new BigNumber(0) //WEI
         };
@@ -357,9 +357,9 @@ export default class WithdrawForm extends React.Component {
                             <div>
                                 <Slider
                                     inputId="gas_fee_slider"
-                                    value={20}
-                                    min={20}
-                                    max={20}
+                                    value={adjustedGasPrice.toNumber()}
+                                    min={Math.trunc(gasPriceOracle.safeLow)}
+                                    max={Math.trunc(gasPriceOracle.fastest)}
                                     step={0.1}
                                     mainColor={'#1c76e7'}
                                     aria-label="Adjust Gas Fee with Slider"
