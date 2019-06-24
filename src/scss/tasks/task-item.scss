@@ -44,6 +44,7 @@
                 line-height: 1.5em;
 
                 .icon-copy{
+                    display: none;
                     font-size: 9pt;
                     margin-left: 5px;
                     color: $color-primary;
@@ -160,6 +161,10 @@
 
             &:hover .info__task{
                 display: none;
+            }
+
+            &:hover h4 .icon-copy {
+                display: initial;
             }
 
             .icon-refresh {
