@@ -117,10 +117,15 @@
         }
     }
 
-    .loading__slider{
+    .loading__slider,
+    .error__slider {
         font-size: 9pt;
         line-height: 2em;
         text-align: center;
+    }
+
+    .error__slider {
+        color: $color-error;
     }
 
     .total-amount__info{
