@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import Tooltip from '@tippy.js/react';
 
 const { ipcRenderer, clipboard } = window.electron;
-let copyTimeout;
+let copyTimeoutList = [];
 
 const NodeRow = ({ item, showBlockNodeModal }) => {
-	const [isDataCopied, setCopyStatus] = useState({});
+	const [isNodeCopied, setCopyNodeStatus] = useState(false);
+	const [isSubtaskCopied, setCopySubtaskStatus] = useState(false);
 
 	useEffect(() => {
 		return () => {
-			copyTimeout && clearTimeout(copyTimeout);
+			copyTimeoutList.map( item => clearTimeout(item));
 		};
 	}, []);
 
@@ -19,23 +20,17 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 
 	const _showBlockNodeModal = subtask => showBlockNodeModal(subtask);
 
-	const _copyField = item => {
-		if (copyTimeout && isDataCopied[item]) return;
+	const _copyField = (item, isDataCopied, setDataCopy) => {
+		if (copyTimeoutList[item] && isDataCopied) return;
 
 		if (item) {
 			clipboard.writeText(item);
 
-			setCopyStatus(prevData => ({
-				...prevData,
-				[item]: true
-			}));
-			copyTimeout = setTimeout(() => {
-				setCopyStatus(prevData => ({
-					...prevData,
-					[item]: false
-				}));
-				clearTimeout(copyTimeout);
-				copyTimeout = null;
+			setDataCopy(prevData => !prevData);
+			copyTimeoutList[item] = setTimeout(() => {
+				setDataCopy(prevData => !prevData);
+				clearTimeout(copyTimeoutList[item]);
+				copyTimeoutList[item] = null;
 			}, 2000);
 		}
 	};
@@ -46,17 +41,18 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 				<Tooltip
 					content={
 						<p>
-							{isDataCopied[item.subtask_id]
+							{isSubtaskCopied
 								? 'Copied Succesfully!'
 								: 'Click to copy ID'}
 						</p>
 					}
 					placement="top"
 					trigger="mouseenter"
-					hideOnClick={false}>
+					hideOnClick={false}
+					size="small">
 					<span
 						className="id-info"
-						onClick={_copyField.bind(null, item.subtask_id)}>
+						onClick={_copyField.bind(null, item.subtask_id, isSubtaskCopied, setCopySubtaskStatus)}>
 						{item.subtask_id.replace(
 							new RegExp('^(.{0,12}).*(.{2})$', 'im'),
 							'$1...$2'
@@ -69,17 +65,18 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 				<Tooltip
 					content={
 						<p>
-							{isDataCopied[item.node_id]
+							{isNodeCopied
 								? 'Copied Succesfully!'
 								: 'Click to copy ID'}
 						</p>
 					}
 					placement="top"
 					trigger="mouseenter"
-					hideOnClick={false}>
+					hideOnClick={false}
+					size="small">
 					<span
 						className="id-info"
-						onClick={_copyField.bind(null, item.node_id)}>
+						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
 						{item.node_name || 'Anonymous'}
 					</span>
 				</Tooltip>

@@ -15,11 +15,12 @@ import * as Actions from '../../actions';
 import Preview from './Preview';
 import Details from './details';
 import ConditionalRender from '../hoc/ConditionalRender';
-const { ipcRenderer } = window.electron;
+const { ipcRenderer, clipboard } = window.electron;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
-    nodeNumbers: state.details.nodeNumber
+    nodeNumbers: state.details.nodeNumber,
+    isDeveloperMode: state.input.developerMode
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -31,8 +32,11 @@ export class TaskItem extends React.Component {
         super(props);
 
         this.state = {
-            toggledList: []
+            toggledList: [],
+            isDataCopied: false
         };
+
+        this.copyTimeout = false;
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -219,6 +223,25 @@ export class TaskItem extends React.Component {
         );
     }
 
+    _copyField = item => {
+        if (this.copyTimeout && this.state.isDataCopied) return;
+
+        if (item) {
+            clipboard.writeText(item);
+
+            this.setState(prevData => ({
+                isDataCopied: !prevData.isDataCopied
+            }));
+            this.copyTimeout = setTimeout(() => {
+                this.setState(prevData => ({
+                    isDataCopied: !prevData.isDataCopied
+                }));
+                clearTimeout(this.copyTimeout);
+                this.copyTimeout = null;
+            }, 2000);
+        }
+    };
+
     render() {
         const {
             item,
@@ -227,10 +250,11 @@ export class TaskItem extends React.Component {
             _handleRestartModal,
             _handleRestartSubtasksModal,
             _handleDeleteModal,
-            psId
+            psId,
+            isDeveloperMode
         } = this.props;
 
-        const { toggledList } = this.state;
+        const { toggledList, isDataCopied } = this.state;
         const { options } = item;
         return (
             <Spring
@@ -273,7 +297,31 @@ export class TaskItem extends React.Component {
                                     </span>
                                 </div>
                                 <div className="task-item__main">
-                                    <h4>{item.name}</h4>
+                                    <h4>
+                                        {item.name}
+                                        {isDeveloperMode && (
+                                            <Tooltip
+                                                content={
+                                                    <p>
+                                                        {isDataCopied
+                                                            ? 'Copied successfully!'
+                                                            : 'Copy task ID'}
+                                                    </p>
+                                                }
+                                                placement="right"
+                                                trigger="mouseenter"
+                                                size="small"
+                                                hideOnClick={false}>
+                                                <span
+                                                    className="icon-copy"
+                                                    onClick={this._copyField.bind(
+                                                        null,
+                                                        item.id
+                                                    )}
+                                                />
+                                            </Tooltip>
+                                        )}
+                                    </h4>
                                     <div className="duration">
                                         {this._fetchStatus(item)}
                                         <div className="info__task">
@@ -326,7 +374,8 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 content={<p>Preview</p>}
                                                 placement="bottom"
-                                                trigger="mouseenter">
+                                                trigger="mouseenter"
+                                                size="small">
                                                 <span
                                                     className="icon-preview"
                                                     tabIndex="0"
@@ -344,7 +393,8 @@ export class TaskItem extends React.Component {
                                                 content={<p>Task Details</p>}
                                                 placement="bottom"
                                                 trigger="mouseenter"
-                                                className="task-details-icon">
+                                                className="task-details-icon"
+                                                size="small">
                                                 <span
                                                     className="icon-details"
                                                     tabIndex="0"
@@ -361,7 +411,8 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 content={<p>Restart</p>}
                                                 placement="bottom"
-                                                trigger="mouseenter">
+                                                trigger="mouseenter"
+                                                size="small">
                                                 <span
                                                     className="icon-refresh"
                                                     tabIndex="0"
@@ -386,7 +437,8 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 content={<p>Output</p>}
                                                 placement="bottom"
-                                                trigger="mouseenter">
+                                                trigger="mouseenter"
+                                                size="small">
                                                 <span
                                                     className="icon-folder"
                                                     tabIndex="0"
@@ -406,7 +458,8 @@ export class TaskItem extends React.Component {
                                             <Tooltip
                                                 content={<p>Delete</p>}
                                                 placement="bottom"
-                                                trigger="mouseenter">
+                                                trigger="mouseenter"
+                                                size="small">
                                                 <span
                                                     className="icon-delete"
                                                     tabIndex="0"
@@ -451,7 +504,9 @@ export class TaskItem extends React.Component {
                                         item.status === taskStatus.FINISHED
                                     )
                                 }
-                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
+                                restartSubtasksModalHandler={
+                                    _handleRestartSubtasksModal
+                                }
                             />
                         </ConditionalRender>
                     </div>

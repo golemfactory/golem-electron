@@ -32,8 +32,8 @@ const APP_HEIGHT = 810; //589
 const APP_MIN_HEIGHT = 630;
 const PREVIEW_APP_WIDTH = 752;
 const PREVIEW_APP_HEIGHT = 572;
-const PREVIEW_APP_MIN_WIDTH = 500;
-const PREVIEW_APP_MIN_HEIGHT = 400;
+const PREVIEW_APP_MIN_WIDTH = 600;
+const PREVIEW_APP_MIN_HEIGHT = 530;
 
 let win;
 let previewWindow;

@@ -42,6 +42,21 @@
                 margin: 0;
                 font-size: 11pt !important;
                 line-height: 1.5em;
+
+                .icon-copy{
+                    font-size: 9pt;
+                    margin-left: 5px;
+                    color: $color-primary;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: $button-hover-color;
+                    }
+
+                    &:active {
+                        color: $button-hover-color;
+                    }
+                }
             }
             .duration {
                 font-size: 8.5pt;
