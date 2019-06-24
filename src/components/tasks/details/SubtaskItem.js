@@ -78,7 +78,7 @@ class SubtaskItem extends React.PureComponent {
 								} ${ICONS[(recentInfo?.status)]?.color}`}
 							/>
 						) : (
-							<span className="icon-subtask-awaiting icon--color-yellow"/>
+							<span className="icon-subtask-awaiting icon--color-gray"/>
 						)}
 					</label>
 					<div className="checkbox-item__action">

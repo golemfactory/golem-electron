@@ -63,7 +63,7 @@ function isGolemConnected(gs) {
         !!gs.status &&
         !!gs.message &&
         gs.status === "Ready" &&
-        gs.message.includes("Connected")
+        gs.message.includes("Node")
     );
 }
 

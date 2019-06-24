@@ -88,7 +88,9 @@ export class Details extends React.PureComponent {
         }
 
         if (this.liveSubList && !nextProps.updateIf) {
+            nextProps.actions.getFragments(nextProps.item.id);
             this.liveSubList && clearInterval(this.liveSubList);
+            this.liveSubList = null;
         }
     }
 

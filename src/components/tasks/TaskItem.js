@@ -50,7 +50,7 @@ export class TaskItem extends React.Component {
     _interval = (actions, item) => {
         actions.fetchHealthyNodeNumber(item.id);
         return this._interval.bind(null, actions, item);
-    }
+    };
 
     _toggle(id, evt, toggledAttribute) {
         const prevList = this.state.toggledList;
@@ -109,7 +109,12 @@ export class TaskItem extends React.Component {
             case taskStatus.NOTREADY:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Preparing for computation...{' '}
@@ -120,7 +125,12 @@ export class TaskItem extends React.Component {
             case taskStatus.WAITING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Waiting for computation...{' '}
@@ -131,7 +141,12 @@ export class TaskItem extends React.Component {
             case taskStatus.DEPOSIT:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Creating the deposit...{' '}
@@ -157,7 +172,12 @@ export class TaskItem extends React.Component {
             case taskStatus.COMPUTING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS((new Date() / 1000) - item.time_started)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--computing">
                             Computing...{' '}
@@ -431,7 +451,6 @@ export class TaskItem extends React.Component {
                                         item.status === taskStatus.FINISHED
                                     )
                                 }
-                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
                             />
                         </ConditionalRender>
                     </div>

@@ -1,14 +1,14 @@
-import React from "react";
-import { BigNumber } from "bignumber.js";
-import yup from "yup";
+import React from 'react';
+import { BigNumber } from 'bignumber.js';
+import yup from 'yup';
 
-import Slider from "./../../../Slider.js";
-import { modals, currencyIcons, variables } from "./../../../../constants";
+import Slider from './../../../Slider.js';
+import { modals, currencyIcons, variables } from './../../../../constants';
 
 const { ETH_DENOM, GWEI_DENOM } = variables;
 
 const { clipboard, remote } = window.electron;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 
 export default class WithdrawForm extends React.Component {
     constructor(props) {
@@ -16,10 +16,11 @@ export default class WithdrawForm extends React.Component {
         this.state = {
             amountCopied: false,
             amount: new BigNumber(0.2).multipliedBy(ETH_DENOM),
-            sendTo: "",
+            sendTo: '',
             isValid: false,
             isSubmitted: false,
             gasPriceOracle: {},
+            rpcError: {},
             adjustedGasPrice: new BigNumber(0), //GWEI
             gasLimit: new BigNumber(0) //WEI
         };
@@ -31,22 +32,29 @@ export default class WithdrawForm extends React.Component {
             GWEI_DENOM
         );
 
-        mainProcess.getEstimatedGasPrice().then(({ data }) => {
-            this._getGasCostAsync(
-                this.state.amount.toString(),
-                this.state.sendTo,
-                this.props.suffix
-            ).then(gasLimit => {
-                if (gasLimit)
-                    this.setState({
-                        gasPriceOracle: data,
-                        adjustedGasPrice: gasPriceInGWEI.isGreaterThan(0)
-                            ? gasPriceInGWEI
-                            : new BigNumber(data.standard),
-                        gasLimit: new BigNumber(gasLimit)
-                    });
+        mainProcess
+            .getEstimatedGasPrice()
+            .then(({ data }) => {
+                this._getGasCostAsync(
+                    this.state.amount.toString(),
+                    this.state.sendTo,
+                    this.props.suffix
+                ).then(gasLimit => {
+                    if (gasLimit)
+                        this.setState({
+                            gasPriceOracle: data,
+                            adjustedGasPrice: gasPriceInGWEI.isGreaterThan(0)
+                                ? gasPriceInGWEI
+                                : new BigNumber(data.standard),
+                            gasLimit: new BigNumber(gasLimit)
+                        });
+                });
+            })
+            .catch(({ error }) => {
+                this.setState({
+                    rpcError: error
+                });
             });
-        });
 
         this.inputSchema = {
             amount: yup.object().shape({
@@ -86,8 +94,8 @@ export default class WithdrawForm extends React.Component {
             });
         }
 
-        document.getElementById("sendToInput").addEventListener(
-            "contextmenu",
+        document.getElementById('sendToInput').addEventListener(
+            'contextmenu',
             ev => {
                 ev.preventDefault();
                 ev.target.value = clipboard.readText();
@@ -178,11 +186,11 @@ export default class WithdrawForm extends React.Component {
             this.setState({
                 amount: balance.multipliedBy(ETH_DENOM)
             });
-            const isValid = this.inputSchema["amount"].isValidSync({
+            const isValid = this.inputSchema['amount'].isValidSync({
                 amount: balance
             });
-            if (isValid) this.refs.amountInput.classList.remove("invalid");
-            else this.refs.amountInput.classList.add("invalid");
+            if (isValid) this.refs.amountInput.classList.remove('invalid');
+            else this.refs.amountInput.classList.add('invalid');
 
             this.setState(
                 {
@@ -203,21 +211,21 @@ export default class WithdrawForm extends React.Component {
         const isValid = this.inputSchema[type].isValidSync({
             [type]: e.target.value
         });
-        if (isValid) e.target.classList.remove("invalid");
-        else e.target.classList.add("invalid");
+        if (isValid) e.target.classList.remove('invalid');
+        else e.target.classList.add('invalid');
 
         return isValid;
     }
 
     _handleAmountChange = e => {
-        this.checkInputValidity(e, "amount");
+        this.checkInputValidity(e, 'amount');
         this.setState({
             amount: new BigNumber(e.target.value || 0).multipliedBy(ETH_DENOM)
         });
     };
 
     _handleSendToChange = e => {
-        this.checkInputValidity(e, "sendTo");
+        this.checkInputValidity(e, 'sendTo');
         this.setState({
             sendTo: e.target.value
         });
@@ -235,7 +243,7 @@ export default class WithdrawForm extends React.Component {
      * @param  {[type]} e [event]
      */
     _preventTypeAfterLimit = e => {
-        const usdEstimation = document.getElementById("amountEstimatedUSD");
+        const usdEstimation = document.getElementById('amountEstimatedUSD');
 
         if (parseFloat(e.currentTarget.value) >= 10 ** 7 - 1) {
             //9999999
@@ -273,7 +281,8 @@ export default class WithdrawForm extends React.Component {
             isSubmitted,
             gasPriceOracle,
             adjustedGasPrice,
-            gasLimit
+            gasLimit,
+            rpcError
         } = this.state;
         const adjustedGasPriceInETH = adjustedGasPrice
             .multipliedBy(gasLimit)
@@ -294,7 +303,7 @@ export default class WithdrawForm extends React.Component {
                         <strong>{balance.toFixed(8)}...</strong>
                         <br />
                         <span className="label-estimation">
-                            est. ${" "}
+                            est. ${' '}
                             {balance.multipliedBy(currency[suffix]).toFixed(2)}
                             ...
                         </span>
@@ -314,9 +323,9 @@ export default class WithdrawForm extends React.Component {
                     />
                     <span className="currency">{suffix}</span>
                     <span
-                        className={`${amountCopied ? "checkmark" : "copy"}`}
+                        className={`${amountCopied ? 'checkmark' : 'copy'}`}
                         onClick={this._handleCopyToClipboard}>
-                        {amountCopied ? "balance copied" : "copy balance"}
+                        {amountCopied ? 'balance copied' : 'copy balance'}
                     </span>
                     {amountCopied && (
                         <span className="status-copy">balance copied</span>
@@ -324,7 +333,7 @@ export default class WithdrawForm extends React.Component {
                     <span
                         id="amountEstimatedUSD"
                         className="amount__estimation">
-                        est. ${" "}
+                        est. ${' '}
                         {amount
                             .dividedBy(ETH_DENOM)
                             .multipliedBy(currency[suffix])
@@ -336,10 +345,10 @@ export default class WithdrawForm extends React.Component {
                     <label>
                         Adjust transaction fee
                         <span className="average-cost">
-                            {" "}
-                            | standard transfer cost:{" "}
+                            {' '}
+                            | standard transfer cost:{' '}
                             {gasPriceOracle.standard > 0 &&
-                                Number(gasPriceOracle.standard).toFixed(1)}{" "}
+                                Number(gasPriceOracle.standard).toFixed(1)}{' '}
                             gwei
                         </span>
                     </label>
@@ -348,11 +357,11 @@ export default class WithdrawForm extends React.Component {
                             <div>
                                 <Slider
                                     inputId="gas_fee_slider"
-                                    value={adjustedGasPrice.toNumber()}
-                                    min={Math.trunc(gasPriceOracle.safeLow)}
-                                    max={Math.trunc(gasPriceOracle.fastest)}
+                                    value={20}
+                                    min={20}
+                                    max={20}
                                     step={0.1}
-                                    mainColor={"#1c76e7"}
+                                    mainColor={'#1c76e7'}
                                     aria-label="Adjust Gas Fee with Slider"
                                     callback={this._handleGasFeeSlider}
                                     warn={false}
@@ -363,6 +372,10 @@ export default class WithdrawForm extends React.Component {
                                 <span className="slider__info-gas slider__info-gas--fast">
                                     Faster
                                 </span>
+                            </div>
+                        ) : rpcError ? (
+                            <div className="error__slider">
+                                <span>Error while fetching gas price, please try again.</span>
                             </div>
                         ) : (
                             <div className="loading__slider">
@@ -397,7 +410,7 @@ export default class WithdrawForm extends React.Component {
                         type="submit"
                         className="btn--primary"
                         autoFocus
-                        disabled={!isValid || isSubmitted}>
+                        disabled={!isValid || isSubmitted || rpcError}>
                         Apply
                     </button>
                 </div>

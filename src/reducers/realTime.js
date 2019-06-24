@@ -281,9 +281,8 @@ function objectMap(object, mapFn) {
 
 function nodesString(num) {
     if (num < 1) return 'No Nodes Connected';
-    // const postfix = num != 1 ? 's' : '';
-    // return `${num} Node${postfix}`;
-    return 'Connected';
+    const postfix = num != 1 ? 's' : '';
+    return `${num} Node${postfix}`;
 }
 
 function dig(src, ...rest) {
