@@ -32,6 +32,8 @@ const APP_HEIGHT = 810; //589
 const APP_MIN_HEIGHT = 630;
 const PREVIEW_APP_WIDTH = 752;
 const PREVIEW_APP_HEIGHT = 572;
+const PREVIEW_APP_MIN_WIDTH = 500;
+const PREVIEW_APP_MIN_HEIGHT = 400;
 
 let win;
 let previewWindow;
@@ -243,9 +245,12 @@ function createPreviewWindow(id, frameCount) {
             title: APP_NAME,
             width: PREVIEW_APP_WIDTH,
             height: PREVIEW_APP_HEIGHT,
+            minWidth: PREVIEW_APP_MIN_WIDTH,
+            minHeight: PREVIEW_APP_MIN_HEIGHT,
             titleBarStyle: "hiddenInset",
             //frame: false,
-            resizable: false,
+            resizable: true,
+
             center: true,
             show: true,
             backgroundColor: "#fff",

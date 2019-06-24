@@ -451,6 +451,7 @@ export class TaskItem extends React.Component {
                                         item.status === taskStatus.FINISHED
                                     )
                                 }
+                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
                             />
                         </ConditionalRender>
                     </div>
