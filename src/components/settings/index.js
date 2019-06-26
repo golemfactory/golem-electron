@@ -208,6 +208,25 @@ export class Settings extends React.Component {
 
         return (
             <div className="content__settings">
+                <nav className="nav">
+                    <ul className="nav__list" role="menu">
+                        <li
+                            className="nav__item active"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Settings">
+                            Settings
+                        </li>
+                        <li
+                            className="nav__item"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="Node statistic">
+                            Node statistic
+                        </li>
+                        <span className="selector" />
+                    </ul>
+                </nav>
                 <Personal />
                 <div className="tab__accordion" id="tabAcordion">
                     {this.loadAccordionMenu(accordionItems)}

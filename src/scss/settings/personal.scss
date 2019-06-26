@@ -44,30 +44,11 @@
 
 .indicator-panel__personal {
     @include flex;
-    justify-content: space-around;
+    justify-content: space-between;
     box-sizing: border-box;
     margin-bottom: 30px;
     transition: .8s all;
-}
-
-.indicator__personal {
-    position: relative;
-    width: 75px;
-    transition: 1s all;
-    span {
-        line-height: 1.5;
-        color: $color-text2;
-        font-size: 10pt;
-    }
-    // .icon-question-mark {
-    //     line-height: 0.1;
-    //     color: $color-text3;
-    //     font-size: 16pt;
-    //     cursor: help;
-    //     &:hover {
-    //         color: $color-text;
-    //     }
-    // }
+    text-align: left;
 }
 
 .user-name__personal {
@@ -131,10 +112,11 @@
     position: relative;
 }
 
-.image__personal {
+.image__personal,
+.qrcode-container img {
     position: relative;
-    width: 15vh;
-    height: 15vh;
+    width: 8vh;
+    height: 8vh;
     max-height: 161px;
     max-width: 161px;
     transition: .8s all;
@@ -143,11 +125,11 @@
     &--border{
         position: absolute;
         top: 0;
-        width: 15vh;
-        height: 15vh;
+        width: 8vh;
+        height: 8vh;
         max-height: 161px;
         max-width: 161px;
-        border: 10px solid rgba(white, 0.5);
+        border: 5px solid rgba(white, 0.5);
         box-sizing: border-box;
         border-radius: 30%;
         transition: .8s all;

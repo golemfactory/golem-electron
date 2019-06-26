@@ -26,10 +26,103 @@ $item__accordion-height: 78.7px;
     .arrow-expand{
         transform: rotate(180deg);
     }
+
+    .nav {
+        z-index: 4;
+        height: 50px;
+        line-height: 42px;
+        box-sizing: border-box;
+        width: 100%;
+        font-family: $font-family-primary;
+        font-weight: bold;
+        border-bottom: 1px solid $color-border;
+        padding: 0 24px;
+
+    }
+
+    .nav__list {
+        position: relative;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .nav__item {
+        position: relative;
+        display: inline-block;
+        margin-top: 8px;
+        box-sizing: border-box;
+        color: $color-text3;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        z-index: 999;
+        -webkit-app-region: no-drag;
+
+        & + .nav__item {
+            margin-left: 20px;
+        }
+
+        &:hover {
+            color: $color-text;
+        }
+
+        &:active,
+        &:hover {
+            outline: 0;
+        }
+    }
+
+    .nav__item {
+
+        &:hover {
+            span {
+                background-color: $color-text;
+            }
+        }
+
+        & + .nav__item {
+            margin-right: 20px;
+        }
+    }
+
+    .selector {
+        position: absolute;
+        bottom: -1px;
+        display: block;
+        height: 2px;
+        box-sizing: border-box;
+        background: $button-static-color;
+    }
+
+    ul li,
+    span {
+        -webkit-transition: all 0.4s ease;
+        -moz-transition: all 0.4s ease;
+        -o-transition: all 0.4s ease;
+        transition: all 0.4s ease;
+        position: relative;
+    }
+
+    .active {
+        color: $color-text;
+    }
+
+    // .nav__item:nth-child(2):hover ~ .selector
+    .active:nth-child(1) ~ .selector {
+        left: 0px;
+        width: 60px;
+    }
+
+    // .nav__item:nth-child(3):hover ~ .selector
+    .active:nth-child(2) ~ .selector {
+        left: 79px;
+        width: 99px;
+    }
+
 }
 
 .section__personal {
-    flex: 0 0 300px;
     transition: .8s all;
 }
 
