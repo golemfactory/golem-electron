@@ -1,0 +1,33 @@
+@import "frame/index";
+@import 'modal/delete-modal';
+@import 'modal/restart-modal';
+@import 'modal/preset-modal';
+@import 'modal/file-check-modal';
+@import 'modal/default-settings-modal';
+@import 'modal/deposit-time-modal';
+@import 'modal/block-node-modal';
+@import 'modal/resolution-change-modal';
+@import 'modal/task-summary-modal';
+@import 'modal/task-error-modal';
+@import "table";
+@import "task-item";
+@import "preview";
+@import "details";
+@import "task-detail";
+@import "new-task";
+@import "master-file-picker";
+.content__task-panel {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    overflow-y: hidden;
+}
+
+.container__task-panel {
+    height: 100%;
+    overflow-y: overlay;
+    box-sizing: border-box;
+    transform: translateZ(0);
+}

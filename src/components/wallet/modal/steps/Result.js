@@ -56,7 +56,10 @@ export default class WithdrawResult extends React.Component {
         return _txList.map(id => {
             return (
                 <div key={id.toString()}>
-                    <a href={`https://etherscan.io/tx/${id}`}>Etherscan</a>
+                    <a href={`https://etherscan.io/tx/${id}`}>
+                        Etherscan
+                        <span className="icon-new-window"/>
+                    </a>
                 </div>
             );
         });

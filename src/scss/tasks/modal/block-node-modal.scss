@@ -1,0 +1,45 @@
+.container__block-node-modal{
+    z-index: 10 !important;
+    .content__modal {
+        height: 300px;
+        width: 300px;
+        text-align: center;
+        padding: 20px;
+
+        .image-container{
+            width: 120px;
+            height: 120px;
+        }
+
+        .icon-blocked {
+            &:before {
+                content: "\e927";
+                padding-left: 30px;
+                padding-right: 10px;
+            }
+            display: inline-block;
+            color: $color-text4;
+            background: #f33333;
+            font-size: 3em;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 50%;
+        }
+        .icon-checkmark {
+            padding: 30px 30px;
+            display: inline-block;
+            border-radius: 50%;
+            box-shadow: 0px 0px 0px 3px rgb(100, 193, 134);
+            color: rgb(100, 193, 134);
+            font-size: 1.5em;
+            text-align: center;
+        }
+    }
+}
+
+.node_id_span {
+    display: block;
+    font-size: 8.5pt;
+    color: #888;
+    margin-top: 5px;
+}

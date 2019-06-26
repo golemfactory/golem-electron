@@ -1,0 +1,63 @@
+.container__deposit-time-modal{
+    z-index: 9 !important;
+    .content__modal {
+        @include flex;
+        top: 40px;
+        height: auto;
+        width: 300px;
+        text-align: center;
+        padding: 20px 30px;
+
+        .image-container {
+            width: 150px;
+            height: 150px;
+        }
+
+        .checkbox-group {
+            padding: 0;
+            margin: 20px 0;
+        }
+
+        .checkbox-item{
+            text-align: center;
+            font-size: 9pt;
+            margin: 0;
+            .checkbox-label-left{
+                width: 100%;
+                &:before {
+                    margin-right: .5em;
+                    top: -2px;
+                }
+            }
+        }
+
+        .deposit-time{
+            &__desc{
+                font-size: 11pt;
+                font-weight: 400;
+                margin: 20px 0 5px 0;
+            }
+
+            &__tips{
+                color: $color-text2;
+                font-size: 9pt;
+                line-height: 1.5em;
+            }
+
+            &__action{
+                padding: 15px 35px;
+                justify-content: flex-end;
+                font-size: 11pt;
+                span {
+                    padding-right: 30px;
+                }
+                .btn--primary {
+                    padding: 0;
+                    width: 95px;
+                    height: 32px;
+                }
+            }
+        }
+        
+    }
+}

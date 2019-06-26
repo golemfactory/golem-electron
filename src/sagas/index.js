@@ -34,6 +34,7 @@ import { virtualizationFlow } from "./virtualization";
 
 const {
     SET_CONNECTION_PROBLEM,
+    SET_COMPONENT_WARNING,
     SET_GOLEM_STATUS,
     SET_CONNECTED_PEERS,
     LOGIN,
@@ -291,7 +292,6 @@ export function* handleIO(connection) {
         yield fork(termsFlow, connection);
         yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
-        yield takeLatest(CONTINUE_WITH_PROBLEM, disablePortFlow);
 
         channel = yield call(subscribe, connection);
 
@@ -299,12 +299,6 @@ export function* handleIO(connection) {
             let status = yield take(channel);
             if (status && !taskApi) {
                 taskApi = yield fork(apiFlow, connection);
-                yield put({
-                    type: SET_CONNECTION_PROBLEM,
-                    payload: {
-                        issue: null
-                    }
-                });
             } else if (!status && taskApi) {
                 console.info("SHUT_DOWN");
                 if (taskApi) yield cancel(taskApi);
@@ -313,12 +307,13 @@ export function* handleIO(connection) {
 
             if (!status) {
                 yield put({
-                    type: SET_CONNECTION_PROBLEM,
+                    type: SET_COMPONENT_WARNING,
                     payload: {
                         status: true,
                         issue: "PORT"
                     }
                 });
+                disablePortFlow();
             }
         }
     } finally {

@@ -1,0 +1,60 @@
+.container__task-error-modal {
+    .content__modal {
+        height: auto;
+        text-align: center;
+        padding: 20px;
+        .image-container {
+            width: 150px;
+            height: 150px;
+        }
+
+        .amount {
+          &__panel {
+            @include flex;
+            width: 100%;
+            margin: 30px 0;
+          }
+
+          &__item {
+            width: 95%;
+            & + .amount__item {
+              margin-left: 5%;
+            }
+          }
+
+          &__missing {
+              font-weight: 600;
+          }
+
+          &__available {
+            font-size: 8pt;
+            color: $color-text2;
+          }
+        }
+
+        center {
+          font-size: 8pt;
+          margin-top: 10px;
+          color: $color-text2;
+        }
+
+        .radio-group{
+          padding: 0 !important;
+        }
+    }
+
+    .info{
+        margin-top: 20px;
+        font-size: 11pt;
+    }
+
+    .message-from-server{
+        box-sizing: border-box;
+        margin: 20px -20px;
+        padding: 10px;
+        background: $color-bg;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        width: 320px;
+    }
+}

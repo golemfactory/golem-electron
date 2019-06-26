@@ -41,12 +41,13 @@ describe('<MainFragment />', () => {
             },
             info: {
                 connectionProblem: false,
-                isEngineOn: true
+                isEngineOn: true,
+                componentWarnings: []
             },
             advanced: {
                 chosenPreset: 'custom'
             },
-            history: {
+            txHistory: {
                 historyList: []
             },
             resources: {
@@ -94,12 +95,13 @@ describe('<MainFragment />', () => {
             },
             info: {
                 connectionProblem: false,
-                isEngineOn: true
+                isEngineOn: true,
+                componentWarnings: []
             },
             advanced: {
                 chosenPreset: 'custom'
             },
-            history: {
+            txHistory: {
                 historyList: []
             },
             resources: {
@@ -155,7 +157,7 @@ describe('<MainFragment />', () => {
         beforeEach(function() {
             actions.endLoading.mockClear();
         });
-        jest.runAllTimers()
+        jest.runOnlyPendingTimers()
         expect(actions.endLoading).toBeCalled();
     });
 })

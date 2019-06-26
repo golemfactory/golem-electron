@@ -61,35 +61,39 @@ export default class Terms extends React.Component {
                         </a>
                         .
                     </span>
-                    <div
-                        className="radio-item"
-                        onChange={this.props.handleSentryRadio}>
-                        <input
-                            id="optIn1"
-                            type="checkbox"
-                            name="optIn1"
-                            checked={isSentryAccepted}
-                            readOnly
-                            required
-                        />
-                        <label htmlFor="optIn1" className="radio-label-left">
-                            I want to help Golem by sending my logs.
-                        </label>
-                    </div>
-                    <div
-                        className="radio-item"
-                        onChange={this.props.handleMonitorRadio}>
-                        <input
-                            id="optIn2"
-                            type="checkbox"
-                            name="optIn2"
-                            checked={isMonitorAccepted}
-                            readOnly
-                            required
-                        />
-                        <label htmlFor="optIn2" className="radio-label-left">
-                            I want to help Golem by sending my statistics.
-                        </label>
+                    <div className="checkbox-group">
+                        <div
+                            className="checkbox-item"
+                            onChange={this.props.handleSentryRadio}>
+                            <input
+                                id="optIn1"
+                                type="checkbox"
+                                name="optIn1"
+                                checked={isSentryAccepted}
+                                readOnly
+                                required
+                            />
+                            <label htmlFor="optIn1">
+                                <span className="overlay"/>
+                                I want to help Golem by sending my logs.
+                            </label>
+                        </div>
+                        <div
+                            className="checkbox-item"
+                            onChange={this.props.handleMonitorRadio}>
+                            <input
+                                id="optIn2"
+                                type="checkbox"
+                                name="optIn2"
+                                checked={isMonitorAccepted}
+                                readOnly
+                                required
+                            />
+                            <label htmlFor="optIn2">
+                                <span className="overlay"/>
+                                I want to help Golem by sending my statistics.
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

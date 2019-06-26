@@ -1,30 +1,30 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { CSSTransitionGroup } from "react-transition-group";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { Transition, animated } from 'react-spring/renderprops.cjs';
 
-import Handlebars from "handlebars";
-import qrcode from "qrcode-generator";
-import html2pdf from "html2pdf.js";
+import Handlebars from 'handlebars';
+import qrcode from 'qrcode-generator';
+import html2pdf from 'html2pdf.js';
 
-import * as Actions from "../../actions";
-import { getPasswordModalStatus } from "../../reducers";
-import Onboarding from "./../onboarding";
+import * as Actions from '../../actions';
+import { getPasswordModalStatus } from '../../reducers';
+import Onboarding from './../onboarding';
 
-import Welcome from "./steps/Welcome";
-import VirtualisationInfo from "./steps/VirtualisationInfo";
-import Terms from "./steps/Terms";
-import Type from "./steps/Type";
-import Register from "./steps/Register";
-import Print from "./steps/Print";
-import Step2 from "./steps/Step2";
-import Step3 from "./steps/Step3";
-import Step4 from "./steps/Step4";
-import Step5 from "./steps/Step5";
-import Decline from "./steps/Decline";
+import Welcome from './steps/Welcome';
+import VirtualisationInfo from './steps/VirtualisationInfo';
+import Terms from './steps/Terms';
+import Type from './steps/Type';
+import Register from './steps/Register';
+import Print from './steps/Print';
+import Step1 from './steps/Step1';
+import Step2 from './steps/Step2';
+import Step3 from './steps/Step3';
+import Step4 from './steps/Step4';
+import Decline from './steps/Decline';
 //import Step6 from './steps/Step6'
 
-import golem_logo from "./../../assets/img/golem-black.svg";
+import golem_logo from './../../assets/img/golem-black.svg';
 
 const { remote, shell } = window.electron;
 const { app } = remote;
@@ -43,7 +43,7 @@ const steps = Object.freeze({
 });
 
 function printPage(template) {
-    var iframe = document.createElement("iframe"); // create the element
+    var iframe = document.createElement('iframe'); // create the element
     document.body.appendChild(iframe); // insert the element to the DOM
     iframe.contentWindow.document.write(template); // write the HTML to be printed
     setTimeout(() => {
@@ -102,7 +102,7 @@ const someAsyncFunction = function(callback) {
 
 const mapStateToProps = state => ({
     isConnected: state.info.isConnected,
-    passwordModal: getPasswordModalStatus(state, "passwordModal"),
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
     isTermsAccepted: state.info.isTermsAccepted,
     terms: state.info.terms,
     isMainNet: state.info.isMainNet,
@@ -121,7 +121,7 @@ class OnboardIndex extends React.Component {
             currentStep: 1,
             nodeName: null,
             isNext: true,
-            password: "",
+            password: '',
             isPasswordValid: false,
             loadingIndicator: false,
             isRegisterRequired: false,
@@ -131,16 +131,29 @@ class OnboardIndex extends React.Component {
             isMonitorAccepted: true,
             isPrinted: false,
             isSkippingPrint: false,
-            printInfo: "",
+            printInfo: '',
             closeInformationBand: false,
             isSlideBlocked: false
+        };
+
+        this.enterStyle = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            transform: 'translate3d(100%,0,0)'
+        };
+        this.leaveStyle = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            transform: 'translate3d(-100%,0,0)'
         };
     }
 
     componentDidMount() {
         this._keypressListener = event => {
             if (
-                event.key === "Enter" &&
+                event.key === 'Enter' &&
                 this.state.currentStep !== steps.REGISTER &&
                 this.state.currentStep !== steps.TERMS &&
                 this.state.currentStep !== steps.STEP4 &&
@@ -149,11 +162,12 @@ class OnboardIndex extends React.Component {
                 this._handleNext.call(this);
             }
         };
-        document.addEventListener("keypress", this._keypressListener);
+        document.addEventListener('keypress', this._keypressListener);
     }
 
     componentWillUnmount() {
-        document.removeEventListener("keypress", this._keypressListener);
+        document.removeEventListener('keypress', this._keypressListener);
+        this.transitionTimeout && clearTimeout(this.transitionTimeout);
     }
 
     _setNodeName = name => this.setState({ nodeName: name });
@@ -168,13 +182,13 @@ class OnboardIndex extends React.Component {
                 isSlideBlocked: true
             },
             () =>
-                setTimeout(
+                (this.transitionTimeout = setTimeout(
                     _ =>
                         this.setState({
                             isSlideBlocked: false
                         }),
                     600
-                )
+                ))
         );
     }
 
@@ -188,15 +202,15 @@ class OnboardIndex extends React.Component {
     _handleDecline = () => this.setState({ isTermsDeclined: true });
 
     _handleSentryRadio = e => {
-        this.setState({
-            isSentryAccepted: !this.state.isSentryAccepted
-        });
+        this.setState( prevState => ({
+            isSentryAccepted: !prevState.isSentryAccepted
+        }));
     };
 
     _handleMonitorRadio = () => {
-        this.setState({
-            isMonitorAccepted: !this.state.isMonitorAccepted
-        });
+        this.setState( prevState => ({
+            isMonitorAccepted: !prevState.isMonitorAccepted
+        }));
     };
 
     _handlePasswordValidation = _result => {
@@ -210,103 +224,6 @@ class OnboardIndex extends React.Component {
         this.setState({
             printInfo: _info
         });
-    };
-
-    /**
-     * [shownStep func. will redirect user to relevant Step]
-     * @param  {Number}     id      [Id of the step]
-     * @return {DOM}                [Step element]
-     */
-    shownStep = id => {
-        const { terms, passwordModal, isMainNet, actions } = this.props;
-        const {
-            isTermsDeclined,
-            isMonitorAccepted,
-            isSentryAccepted,
-            isPrinted,
-            isSkippingPrint,
-            nodeName,
-            loadingIndicator,
-            isPasswordValid
-        } = this.state;
-
-        let step;
-        let key = Symbol(id).toString();
-        switch (id) {
-            case steps.WELCOME:
-                step = <Welcome key={key} isMainNet={isMainNet} />;
-                break;
-            case steps.VIRTUALISATION:
-                step = <VirtualisationInfo />;
-                break;
-            case steps.TERMS:
-                step = isTermsDeclined ? (
-                    <Decline />
-                ) : (
-                    <Terms
-                        key={key}
-                        terms={terms}
-                        handleLock={this._handleLock}
-                        isMonitorAccepted={isMonitorAccepted}
-                        isSentryAccepted={isSentryAccepted}
-                        handleMonitorRadio={this._handleMonitorRadio}
-                        handleSentryRadio={this._handleSentryRadio}
-                    />
-                );
-                break;
-            case steps.TYPE:
-                step = <Type key={key} />;
-                break;
-            case steps.REGISTER:
-                step = (
-                    <Register
-                        key={key}
-                        passwordModal={passwordModal}
-                        isPasswordValid={isPasswordValid}
-                        loadingIndicator={loadingIndicator}
-                        handlePasswordValidation={
-                            this._handlePasswordValidation
-                        }
-                        handleLoading={this._handleLoadingIndicator}
-                        printInfo={this._printInfo}
-                    />
-                );
-                break;
-            case steps.PRINT:
-                step = (
-                    <Print
-                        isPrinted={isPrinted}
-                        isSkippingPrint={isSkippingPrint}
-                    />
-                );
-                break;
-            case steps.STEP1:
-                step = <Step2 key={key} />;
-                break;
-            case steps.STEP2:
-                step = <Step3 key={key} />;
-                break;
-            case steps.STEP3:
-                step = <Step4 key={key} />;
-                break;
-            case steps.STEP4:
-                step = (
-                    <Step5
-                        key={key}
-                        ref={ref => (this.stepNickname = ref)}
-                        nodeName={nodeName}
-                        setNodeName={this._setNodeName}
-                        key={key}
-                        handleNext={this._handleNext}
-                    />
-                );
-                break;
-            // case 6:
-            //     step = <Step6/>
-            //     break;
-        }
-
-        return step;
     };
 
     /**
@@ -341,7 +258,7 @@ class OnboardIndex extends React.Component {
         const { currentStep, nodeName, isRegisterRequired } = this.state;
         if (currentStep === steps.STEP4) {
             const queuedTask = {
-                action: "updateNodeName",
+                action: 'updateNodeName',
                 arguments: [nodeName]
             };
             actions.addQueue(queuedTask);
@@ -427,9 +344,9 @@ class OnboardIndex extends React.Component {
 
     _handlePrint = () => {
         someAsyncFunction(template => {
-            Handlebars.registerHelper("qrcode", data => {
+            Handlebars.registerHelper('qrcode', data => {
                 var typeNumber = 4;
-                var errorCorrectionLevel = "L";
+                var errorCorrectionLevel = 'L';
                 var qr = qrcode(typeNumber, errorCorrectionLevel);
                 qr.addData(data);
                 qr.make();
@@ -442,10 +359,10 @@ class OnboardIndex extends React.Component {
             });
             html2pdf(temp, {
                 margin: 0,
-                filename: "password.pdf",
-                image: { type: "jpeg", quality: 1 },
+                filename: 'password.pdf',
+                image: { type: 'jpeg', quality: 1 },
                 html2canvas: { dpi: 192, letterRendering: true },
-                jsPDF: { unit: "in", format: "letter", orientation: "portrait" }
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
             });
 
             printPage(temp);
@@ -459,11 +376,15 @@ class OnboardIndex extends React.Component {
     _handleNextPrint = () => {
         if (!this.state.isPrinted && !this.state.isSkippingPrint) {
             this.setState({
-                isSkippingPrint: true,
-                printInfo: ""
-            })
+                isSkippingPrint: true
+            });
         } else {
-            this._handleNext();
+            this.setState(
+                {
+                    printInfo: ''
+                },
+                () => this._handleNext()
+            );
         }
     };
 
@@ -477,19 +398,19 @@ class OnboardIndex extends React.Component {
     _isInfoBandShown(_connectionProblem, _closeInformationBand) {
         if (
             _connectionProblem &&
-            (_connectionProblem.issue === "PORT" ||
-                _connectionProblem.issue === "WEBSOCKET") &&
+            (_connectionProblem.issue === 'PORT' ||
+                _connectionProblem.issue === 'WEBSOCKET') &&
             !_closeInformationBand
         )
             return (
                 <div className={`information-band__onboarding show`}>
                     <div className="content-information">
                         <span className="icon-warning" />
-                        {_connectionProblem.issue === "PORT" ? (
+                        {_connectionProblem.issue === 'PORT' ? (
                             <span>
                                 It looks like you don't have ports forwarded.
                                 Follow{" "}
-                                <a href="https://golem.network/documentation/09-common-issues-troubleshooting/port-forwarding-connection-errors/#getting-started">
+                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=port-forwarding-connection-errors">
                                     these steps.
                                 </a>
                             </span>
@@ -521,7 +442,7 @@ class OnboardIndex extends React.Component {
                         className="btn btn--primary"
                         onClick={this._handleNext}
                         disabled={!isConnected}>
-                        {isConnected ? "Get Started" : "Connecting..."}
+                        {isConnected ? 'Get Started' : 'Connecting...'}
                     </button>
                 </div>
             );
@@ -583,16 +504,16 @@ class OnboardIndex extends React.Component {
                             type="submit"
                             form="passwordForm"
                             className={`btn btn--primary ${loadingIndicator &&
-                                "btn--loading"}`}
+                                'btn--loading'}`}
                             disabled={
                                 loadingIndicator ||
                                 (passwordModal.register && !isPasswordValid)
                             }>
                             {loadingIndicator
-                                ? "Signing in"
+                                ? 'Signing in'
                                 : passwordModal.register
-                                ? "Register"
-                                : "Login"}
+                                ? 'Register'
+                                : 'Login'}
                             {loadingIndicator && (
                                 <span className="jumping-dots">
                                     <span className="dot-1">.</span>
@@ -616,7 +537,7 @@ class OnboardIndex extends React.Component {
                     <button
                         className="btn btn--outline btn--print"
                         onClick={this._handlePrint}>
-                        {!isPrinted ? "Print" : "Print again"}
+                        {!isPrinted ? 'Print' : 'Print again'}
                     </button>
                     <br />
                     <br />
@@ -635,7 +556,7 @@ class OnboardIndex extends React.Component {
                             <span className="step-placeholder" />
                             <span>{_step - 6} of 4</span>
                             <span
-                                className="icon-arrow-right-small"
+                                className="icon-arrow-right"
                                 onClick={this._handleNext}
                                 aria-label="Next"
                                 tabIndex="0"
@@ -652,7 +573,7 @@ class OnboardIndex extends React.Component {
                 <div>
                     <div>
                         <span
-                            className="icon-arrow-left-small"
+                            className="icon-arrow-left"
                             onClick={this._handlePrev}
                             aria-label="Prev"
                             tabIndex="0"
@@ -667,7 +588,7 @@ class OnboardIndex extends React.Component {
                             this.stepNickname.activityFormButton.click();
                         }}
                         disabled={!isConnected}>
-                        {isConnected ? "Get Started" : "Connecting..."}
+                        {isConnected ? 'Get Started' : 'Connecting...'}
                     </button>
                 </div>
             );
@@ -676,14 +597,14 @@ class OnboardIndex extends React.Component {
                 <div>
                     <div>
                         <span
-                            className="icon-arrow-left-small"
+                            className="icon-arrow-left"
                             onClick={this._handlePrev}
                             aria-label="Prev"
                             tabIndex="0"
                         />
                         <span>{_step - 6} of 4</span>
                         <span
-                            className="icon-arrow-right-small"
+                            className="icon-arrow-right"
                             onClick={this._handleNext}
                             aria-label="Next"
                             tabIndex="0"
@@ -697,17 +618,106 @@ class OnboardIndex extends React.Component {
         }
     };
 
+    shownStep = index => {
+        const { terms, passwordModal, isMainNet, actions } = this.props;
+        const {
+            isNext,
+            isTermsDeclined,
+            isMonitorAccepted,
+            isSentryAccepted,
+            isPrinted,
+            isSkippingPrint,
+            nodeName,
+            loadingIndicator,
+            isPasswordValid
+        } = this.state;
+
+        switch (index) {
+            case steps.WELCOME:
+                return <Welcome isMainNet={isMainNet} />;
+            case steps.VIRTUALISATION:
+                return <VirtualisationInfo />;
+            case steps.TERMS:
+                return isTermsDeclined ? (
+                    <Decline />
+                ) : (
+                    <Terms
+                        terms={terms}
+                        handleLock={this._handleLock}
+                        isMonitorAccepted={isMonitorAccepted}
+                        isSentryAccepted={isSentryAccepted}
+                        handleMonitorRadio={this._handleMonitorRadio}
+                        handleSentryRadio={this._handleSentryRadio}
+                    />
+                );
+            case steps.TYPE:
+                return <Type />;
+            case steps.REGISTER:
+                return (
+                    <Register
+                        passwordModal={passwordModal}
+                        isPasswordValid={isPasswordValid}
+                        loadingIndicator={loadingIndicator}
+                        handlePasswordValidation={
+                            this._handlePasswordValidation
+                        }
+                        handleLoading={this._handleLoadingIndicator}
+                        printInfo={this._printInfo}
+                    />
+                );
+            case steps.PRINT:
+                return (
+                    <Print
+                        isPrinted={isPrinted}
+                        isSkippingPrint={isSkippingPrint}
+                    />
+                );
+            case steps.STEP1:
+                return <Step1 />;
+            case steps.STEP2:
+                return <Step2 />;
+            case steps.STEP3:
+                return <Step3 />;
+            case steps.STEP4:
+                return (
+                    <Step4
+                        ref={ref => (this.stepNickname = ref)}
+                        nodeName={nodeName}
+                        setNodeName={this._setNodeName}
+                        handleNext={this._handleNext}
+                    />
+                );
+        }
+    };
+
+    wrapWithAnimated = (index, id = Symbol.toString()) => {
+        return style => (
+            <animated.div style={{ ...style }} key={id}>
+                {this.shownStep(index)}
+            </animated.div>
+        );
+    };
+
     render() {
-        const { currentStep, isNext, closeInformationBand } = this.state;
+        const { currentStep, closeInformationBand, isNext } = this.state;
         const { connectionProblem } = this.props;
         return (
             <div className="content__onboarding">
-                <CSSTransitionGroup
-                    transitionName={`${isNext ? "pageSwap" : "pageSwapBack"}`}
-                    transitionEnterTimeout={600}
-                    transitionLeaveTimeout={600}>
-                    {this.shownStep(currentStep)}
-                </CSSTransitionGroup>
+                <Transition
+                    native
+                    reset
+                    unique
+                    items={currentStep}
+                    from={isNext ? this.enterStyle : this.leaveStyle}
+                    enter={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        transform: 'translate3d(0,0,0)'
+                    }}
+                    leave={isNext ? this.leaveStyle : this.enterStyle}>
+                    {index => this.wrapWithAnimated(index)}
+                </Transition>
                 <div ref="stepControl" className="step-control__onboarding">
                     {this._initControl(currentStep)}
                 </div>

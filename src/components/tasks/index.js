@@ -1,27 +1,27 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 
-import Table from "./Table";
-import Preview from "./Preview";
-import Frame from "./frame";
-import DropZone from "./../Dropzone";
-import TransactionTube from "../transaction";
-import History from "../History";
-import Wallet from "../wallet";
-import DeleteModal from "./modal/DeleteModal";
-import RestartModal from "./modal/RestartModal";
-import FooterMain from "./../FooterMain";
+import Table from './Table';
+import Preview from './Preview';
+import DropZone from './../Dropzone';
+import TransactionTube from '../transaction';
+import History from '../History';
+import Wallet from '../wallet';
+import DeleteModal from './modal/DeleteModal';
+import RestartModal from './modal/restartModal';
+import FooterMain from './../FooterMain';
 
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
     currency: state.currency,
     preview: state.input.preview,
-    expandedPreview: state.input.expandedPreview
+    expandedPreview: state.input.expandedPreview,
+    estimatedCost: state.details.estimated_cost
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -53,12 +53,12 @@ export class TaskPanel extends React.Component {
     componentDidMount() {
         const { actions } = this.props;
         const endLoading = () => {
-            actions.endLoading("TASK_PANEL_LOADER");
+            actions.endLoading('TASK_PANEL_LOADER');
             /*Object.keys(require.cache).forEach(function(key) {
             delete require.cache[key]
         })*/
         };
-        actions.startLoading("TASK_PANEL_LOADER", "I am loading!");
+        actions.startLoading('TASK_PANEL_LOADER', 'I am loading!');
         setTimeout(endLoading, 3000);
     }
 
@@ -102,13 +102,13 @@ export class TaskPanel extends React.Component {
      * @param  {[type]} restartId       [Id of selected task]
      * @param  {[type]} restartCallback
      */
-    _handleRestartModal = (restartId, status, restartCallback) => {
+    _handleRestartModal = (item, restartCallback, isSubtask) => {
         this.setState({
             restartModal: true,
             restartProps: {
-                restartId,
-                status,
-                restartCallback
+                item,
+                restartCallback,
+                isSubtask
             }
         });
     };
@@ -139,22 +139,23 @@ export class TaskPanel extends React.Component {
     render() {
         const {
             deleteModal,
-            restartModal,
             deleteProps,
-            restartProps,
+            frameCount,
+            isWalletTray,
             previewId,
             previewSrc,
-            frameCount,
             psEnabled,
-            isWalletTray,
+            restartModal,
+            restartProps,
             toggleHistory
         } = this.state;
         const {
             actions,
-            preview,
-            expandedPreview,
             balance,
-            currency
+            currency,
+            estimatedCost,
+            expandedPreview,
+            preview
         } = this.props;
 
         return (
@@ -168,7 +169,7 @@ export class TaskPanel extends React.Component {
                 {!toggleHistory ? (
                     <div
                         className={`container__task-panel ${preview &&
-                            "container__task-panel--with-preview"}`}
+                            'container__task-panel--with-preview'}`}
                         ref={node => (this.overflowTaskList = node)}>
                         <DropZone overflowRef={this.overflowTaskList}>
                             <div className="section__table">
@@ -198,7 +199,7 @@ export class TaskPanel extends React.Component {
                             closeModal={this._closeModal}
                             {...deleteProps}
                         />,
-                        document.getElementById("modalPortal")
+                        document.getElementById('modalPortal')
                     )}
                 {restartModal &&
                     ReactDOM.createPortal(
@@ -206,7 +207,7 @@ export class TaskPanel extends React.Component {
                             closeModal={this._closeModal}
                             {...restartProps}
                         />,
-                        document.getElementById("modalPortal")
+                        document.getElementById('modalPortal')
                     )}
                 <FooterMain />
             </div>

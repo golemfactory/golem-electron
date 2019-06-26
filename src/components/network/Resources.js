@@ -1,17 +1,23 @@
-import React from "react";
-import { Spring, Transition, Keyframes, animated, config } from "react-spring";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { Tooltip } from "react-tippy";
+import React from 'react';
+import {
+    Spring,
+    Transition,
+    Keyframes,
+    animated,
+    config
+} from 'react-spring/renderprops.cjs';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import Tooltip from '@tippy.js/react';
 
-import * as Actions from "../../actions";
-import { getGPUEnvironment } from "../../reducers";
-import Slider from "./../Slider.js";
+import * as Actions from '../../actions';
+import { getGPUEnvironment } from '../../reducers';
+import Slider from './../Slider.js';
 
 const MEBI = 1 << 20;
 
 const preset = Object.freeze({
-    CUSTOM: "custom"
+    CUSTOM: 'custom'
 });
 
 // Creates a keyframed trail
@@ -27,7 +33,7 @@ const mapStateToProps = state => ({
     resource: state.resources.resource,
     presetList: state.advanced.presetList,
     systemInfo: state.advanced.systemInfo,
-    gpuEnvironment: getGPUEnvironment(state, "gpuEnv"),
+    gpuEnvironment: getGPUEnvironment(state, 'gpuEnv'),
     isNodeProvider: state.info.isNodeProvider
 });
 
@@ -102,7 +108,7 @@ export class Resources extends React.Component {
      */
     _handleGPUProviderSwitch = e => {
         const { actions } = this.props;
-        const gpuENV = "BLENDER_NVGPU";
+        const gpuENV = 'BLENDER_NVGPU';
         if (e.target.checked) actions.enableEnvironment(gpuENV);
         else actions.disableEnvironment(gpuENV);
     };
@@ -132,10 +138,10 @@ export class Resources extends React.Component {
      */
     _handleInputChange(key, value) {
         let val = Number(value);
-        if (["memory", "disk"].includes(key)) {
+        if (['memory', 'disk'].includes(key)) {
             val *= MEBI; // GiB to KiB
         }
-        if (key == "cpu_cores") {
+        if (key == 'cpu_cores') {
             val = ~~val; // round
         }
 
@@ -193,11 +199,10 @@ export class Resources extends React.Component {
                     <h5>Resources</h5>
                     <div
                         className="toggler-btn"
-                        onClick={this._toggleAdvanced.bind(null, max)}
-                    >
+                        onClick={this._toggleAdvanced.bind(null, max)}>
                         {toggleAdvanced ? (
                             <span>
-                                <span className="icon-settings-simplified" />
+                                <span className="icon-setting" />
                                 Simplified
                             </span>
                         ) : (
@@ -216,7 +221,7 @@ export class Resources extends React.Component {
                                       key={
                                           resource
                                               ? resource.toString()
-                                              : "resource_slider"
+                                              : 'resource_slider'
                                       }
                                       inputId="resource_slider"
                                       value={resource}
@@ -234,7 +239,7 @@ export class Resources extends React.Component {
                                       key={
                                           cpu_cores
                                               ? cpu_cores.toString()
-                                              : "cpu_slider"
+                                              : 'cpu_slider'
                                       }
                                       inputId="cpu_slider"
                                       value={cpu_cores}
@@ -243,7 +248,7 @@ export class Resources extends React.Component {
                                       textRight="Cores"
                                       callback={this._handleInputChange.bind(
                                           this,
-                                          "cpu_cores"
+                                          'cpu_cores'
                                       )}
                                       warn={true}
                                       warnStep={[
@@ -260,8 +265,7 @@ export class Resources extends React.Component {
                     initial={null}
                     from={{ opacity: 0, transform: 100 }}
                     enter={{ opacity: 1, transform: 0 }}
-                    leave={{ opacity: 0, transform: 100 }}
-                >
+                    leave={{ opacity: 0, transform: 100 }}>
                     {item => ({ opacity, transform }) => (
                         <animated.div
                             className="horizontal-transition-container"
@@ -270,13 +274,12 @@ export class Resources extends React.Component {
                                 transform: transform.interpolate(
                                     x => `translate3d(${x}%,0,0)`
                                 )
-                            }}
-                        >
+                            }}>
                             {item}
                         </animated.div>
                     )}
                 </Transition>
-                <div style={{ marginTop: "90px" }}>
+                <div style={{ marginTop: '90px' }}>
                     {max.memory ? (
                         <TrailEffect
                             native
@@ -285,7 +288,7 @@ export class Resources extends React.Component {
                                     key={
                                         memory
                                             ? memory.toString()
-                                            : "ram_slider"
+                                            : 'ram_slider'
                                     }
                                     inputId="ram_slider"
                                     value={memory}
@@ -294,7 +297,7 @@ export class Resources extends React.Component {
                                     textRight="GiB"
                                     callback={this._handleInputChange.bind(
                                         this,
-                                        "memory"
+                                        'memory'
                                     )}
                                     step={0.1}
                                     warn={true}
@@ -303,7 +306,7 @@ export class Resources extends React.Component {
                                     disabled={isEngineOn}
                                 />,
                                 <Slider
-                                    key={disk ? disk.toString() : "disk_slider"}
+                                    key={disk ? disk.toString() : 'disk_slider'}
                                     inputId="disk_slider"
                                     value={disk}
                                     max={parseFloat(max.disk).toFixed(1)}
@@ -311,7 +314,7 @@ export class Resources extends React.Component {
                                     textRight="GiB"
                                     callback={this._handleInputChange.bind(
                                         this,
-                                        "disk"
+                                        'disk'
                                     )}
                                     step={0.1}
                                     warn={true}
@@ -325,8 +328,7 @@ export class Resources extends React.Component {
                             ]}
                             keys={[1, 2, 3]}
                             reverse={false}
-                            state={toggleAdvanced ? "open" : "close"}
-                        >
+                            state={toggleAdvanced ? 'open' : 'close'}>
                             {(item, i) => ({ x, ...props }) => (
                                 <animated.div
                                     style={{
@@ -334,46 +336,43 @@ export class Resources extends React.Component {
                                             x => `translate3d(${x}%,0,0)`
                                         ),
                                         ...props
-                                    }}
-                                >
+                                    }}>
                                     {item}
                                 </animated.div>
                             )}
                         </TrailEffect>
                     ) : (
-                        <div style={{ height: "94px" }} />
+                        <div style={{ height: '94px' }} />
                     )}
                 </div>
                 <div
                     className={`resource-switch-panel ${
-                        toggleAdvanced ? "expand" : ""
-                    }`}
-                >
+                        toggleAdvanced ? 'expand' : ''
+                    }`}>
                     <div className="switch__gpu">
                         <div className={`switch-box`}>
                             <Tooltip
-                                html={
+                                content={
                                     <p>
                                         {gpuEnvironment.supported
-                                            ? "To change switch first stop Golem"
-                                            : "This feature only for Linux at the moment."}
+                                            ? 'To change switch first stop Golem'
+                                            : 'This feature only for Linux at the moment.'}
                                     </p>
                                 }
-                                position="top-end"
+                                placement="top-end"
                                 trigger="mouseenter"
                                 interactive={false}
                                 size="small"
-                                disabled={
-                                    !gpuEnvironment.supported
+                                isEnabled={
+                                    !(!gpuEnvironment.supported
                                         ? false
-                                        : !isEngineOn
-                                }
-                            >
+                                        : !isEngineOn)
+                                }>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
                                         onChange={
-                                            ::this._handleGPUProviderSwitch
+                                            this._handleGPUProviderSwitch
                                         }
                                         checked={
                                             gpuEnvironment &&
@@ -391,29 +390,27 @@ export class Resources extends React.Component {
                         <span
                             style={{
                                 color: gpuEnvironment.supported
-                                    ? "#4e4e4e"
-                                    : "#9b9b9b"
-                            }}
-                        >
+                                    ? '#4e4e4e'
+                                    : '#9b9b9b'
+                            }}>
                             Use my GPU as a resource. For Linux users with
                             Nvidia card.
                             <Tooltip
-                                html={
+                                content={
                                     <p className="info-gpu">
                                         For now there is no option to set the
                                         amount of shared resources
                                         <br /> with GPU.So Golem will take up to
                                         100% of your graphic card
-                                        <br /> during computation.{" "}
+                                        <br /> during computation.{' '}
                                         <a href="https://golem.network/documentation/faq/#why-am-i-not-able-to-select-the-amount-of-gpu-resources-in-golem">
                                             Learn more.
                                         </a>
                                     </p>
                                 }
-                                position="top"
+                                placement="top"
                                 trigger="mouseenter"
-                                interactive={true}
-                            >
+                                interactive={true}>
                                 <span className="icon-question-mark" />
                             </Tooltip>
                         </span>
@@ -421,17 +418,18 @@ export class Resources extends React.Component {
                     <div className="switch__trust">
                         <div className="switch-box switch-box--green">
                             <Tooltip
-                                html={<p>To change switch first stop Golem</p>}
-                                position="top-end"
+                                content={
+                                    <p>To change switch first stop Golem</p>
+                                }
+                                placement="top-end"
                                 trigger="mouseenter"
                                 interactive={false}
                                 size="small"
-                                disabled={!isEngineOn}
-                            >
+                                isEnabled={isEngineOn}>
                                 <label className="switch">
                                     <input
                                         type="checkbox"
-                                        onChange={::this._handleProviderSwitch}
+                                        onChange={this._handleProviderSwitch}
                                         checked={!isNodeProvider}
                                         aria-label="Trust switch providing/requesting"
                                         tabIndex="0"
@@ -443,9 +441,8 @@ export class Resources extends React.Component {
                         </div>
                         <span
                             style={{
-                                color: !isNodeProvider ? "#4e4e4e" : "#9b9b9b"
-                            }}
-                        >
+                                color: !isNodeProvider ? '#4e4e4e' : '#9b9b9b'
+                            }}>
                             I want to act only as a Requestor. Don't send tasks
                             to my node.
                         </span>

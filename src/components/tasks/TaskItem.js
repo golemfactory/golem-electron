@@ -1,19 +1,21 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React, { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { Tooltip } from "react-tippy";
+import Tooltip from '@tippy.js/react';
+import map from 'lodash/fp/map';
+import { Spring, config } from 'react-spring/renderprops.cjs';
+import { ETH_DENOM } from '../../constants/variables';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
+import { taskStatus } from './../../constants/statusDicts';
 
-import { Spring, config } from "react-spring";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
-import { taskStatus } from "./../../constants/statusDicts";
+import * as Actions from '../../actions';
 
-import * as Actions from "../../actions";
-
-import Preview from "./Preview";
-
-const ETH_DENOM = 10 ** 18;
+import Preview from './Preview';
+import Details from './details';
+import ConditionalRender from '../hoc/ConditionalRender';
+const { ipcRenderer } = window.electron;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
@@ -29,7 +31,7 @@ export class TaskItem extends React.Component {
         super(props);
 
         this.state = {
-            toggledPreviewList: []
+            toggledList: []
         };
     }
 
@@ -40,25 +42,45 @@ export class TaskItem extends React.Component {
             return interval;
         };
 
-        this.liveSubList = setInterval(interval(), 5000);
+        if (item.status == taskStatus.COMPUTING) {
+            this.liveSubList = setInterval(interval(), 5000);
+        } else {
+            actions.fetchHealthyNodeNumber(item.id);
+        }
     }
 
     componentWillUnmount() {
         this.liveSubList && clearInterval(this.liveSubList);
     }
 
-    _togglePreview({ id }, evt) {
-        evt.target.classList.toggle("icon--active");
-        const prevList = this.state.toggledPreviewList;
-        const prevToggle = this.state.toggledPreviewList[id];
+    _toggle(id, evt, toggledAttribute) {
+        const prevList = this.state.toggledList;
+        const prevToggle = this.state.toggledList[id]
+            ? this.state.toggledList[id][toggledAttribute]
+            : false;
 
-        prevList[id] = !prevToggle;
-        this.props._toggleWalletTray(!prevToggle);
+        if (prevList[id]) {
+            prevList[id] = map(prevList[id], item => false);
+        } else {
+            prevList[id] = {};
+        }
+
+        prevList[id][toggledAttribute] = !prevToggle;
 
         this.setState({
-            toggledPreviewList: prevList
+            toggledList: prevList
         });
     }
+
+    _togglePreview({ id }, evt) {
+        this._toggle(id, evt, 'preview');
+    }
+
+    _toggleDetail({ id }, evt) {
+        this._toggle(id, evt, 'detail');
+    }
+
+    _openLogs = path => ipcRenderer.send('open-file', path);
 
     /**
      * [_fetchStatus func. populate status of the task]
@@ -68,19 +90,18 @@ export class TaskItem extends React.Component {
     _fetchStatus = item => {
         const { options } = item;
         const { nodeNumbers } = this.props;
-
         switch (item.status) {
             case taskStatus.TIMEOUT:
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--timeout">Timed out: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -90,9 +111,9 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--preparing">
-                            Preparing for computation...{" "}
+                            Preparing for computation...{' '}
                         </span>
                     </div>
                 );
@@ -101,9 +122,20 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span className="bumper" />
+                        <span className="duration--preparing">
+                            Waiting for computation...{' '}
+                        </span>
+                    </div>
+                );
+
+            case taskStatus.DEPOSIT:
+                return (
+                    <div>
+                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
                         <span className="bumper"> | </span>
                         <span className="duration--preparing">
-                            Waiting for computation...{" "}
+                            Creating the deposit...{' '}
                         </span>
                     </div>
                 );
@@ -112,13 +144,13 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--restarted">Restarted</span>
                     </div>
                 );
@@ -127,11 +159,11 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--computing">
-                            Computing...{" "}
+                            Computing...{' '}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span>{nodeNumbers && nodeNumbers[item.id]} Nodes</span>
                     </div>
                 );
@@ -140,13 +172,13 @@ export class TaskItem extends React.Component {
                 return (
                     <div>
                         <span>
-                            Task time:{" "}
+                            Task time:{' '}
                             {timeStampToHR(
                                 item.last_updated - item.time_started,
                                 true
                             )}
                         </span>
-                        <span className="bumper"> | </span>
+                        <span className="bumper" />
                         <span className="duration--finished">Finished: </span>
                         <span>{timeStampToHR(item.last_updated)}</span>
                     </div>
@@ -159,10 +191,10 @@ export class TaskItem extends React.Component {
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{" "}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
                 ETH
             </span>
         );
@@ -174,10 +206,12 @@ export class TaskItem extends React.Component {
             index,
             _handleRowClick,
             _handleRestartModal,
+            _handleRestartSubtasksModal,
             _handleDeleteModal,
             psId
         } = this.props;
-        const { toggledPreviewList } = this.state;
+
+        const { toggledList } = this.state;
         const { options } = item;
         return (
             <Spring
@@ -204,7 +238,7 @@ export class TaskItem extends React.Component {
                                         ? `linear-gradient(90deg, #E3F3FF ${value.progress *
                                               100}%, transparent ${value.progress *
                                               100}%)`
-                                        : "transparent"
+                                        : 'transparent'
                             }}
                             onClick={e => _handleRowClick(e, item, index)}>
                             <div
@@ -220,135 +254,188 @@ export class TaskItem extends React.Component {
                                         <span className="path4" />
                                     </span>
                                 </div>
-                                <div>
+                                <div className="task-item__main">
                                     <h4>{item.name}</h4>
                                     <div className="duration">
                                         {this._fetchStatus(item)}
                                         <div className="info__task">
                                             <div>
                                                 <span>
-                                                    Frames:{" "}
+                                                    Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
-                                                    Resolution:{" "}
+                                                    {' '}
+                                                    Resolution:{' '}
                                                     {(options &&
                                                         options.resolution.join(
-                                                            "x"
+                                                            'x'
                                                         )) ||
                                                         0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
-                                                    Cost:{" "}
+                                                    Cost:{' '}
                                                     {this._fetchCost(item)}
                                                 </span>
                                             </div>
                                             <div>
                                                 <span>
-                                                    Subtasks:{" "}
+                                                    Subtasks:{' '}
                                                     {item.subtasks_count || 0}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
+                                                    {' '}
                                                     Task timeout: {item.timeout}
                                                 </span>
-                                                <span className="bumper">
-                                                    {" "}
-                                                    |{" "}
-                                                </span>
+                                                <span className="bumper" />
                                                 <span>
-                                                    {" "}
-                                                    Subtask timeout:{" "}
+                                                    {' '}
+                                                    Subtask timeout:{' '}
                                                     {item.subtask_timeout}
                                                 </span>
                                             </div>
                                         </div>
+                                        <div
+                                            className="control-panel__task"
+                                            ref={node =>
+                                                (this.controlPanelRef = node)
+                                            }>
+                                            <Tooltip
+                                                content={<p>Preview</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-preview"
+                                                    tabIndex="0"
+                                                    aria-label="Preview"
+                                                    onClick={this._togglePreview.bind(
+                                                        this,
+                                                        item
+                                                    )}>
+                                                    <span className="info-label">
+                                                        Preview
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Task Details</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter"
+                                                className="task-details-icon">
+                                                <span
+                                                    className="icon-details"
+                                                    tabIndex="0"
+                                                    aria-label="Task Details"
+                                                    onClick={this._toggleDetail.bind(
+                                                        this,
+                                                        item
+                                                    )}>
+                                                    <span className="info-label">
+                                                        Details
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Restart</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-refresh"
+                                                    tabIndex="0"
+                                                    aria-label="Restart Task"
+                                                    onClick={
+                                                        item.status !==
+                                                        taskStatus.RESTART
+                                                            ? _handleRestartModal
+                                                            : undefined
+                                                    }
+                                                    disabled={
+                                                        !(
+                                                            item.status !==
+                                                            taskStatus.RESTART
+                                                        )
+                                                    }>
+                                                    <span className="info-label">
+                                                        Restart
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Output</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-folder"
+                                                    tabIndex="0"
+                                                    aria-label="Open Delete Task Popup"
+                                                    onClick={this._openLogs.bind(
+                                                        null,
+                                                        options.output_path
+                                                    )}
+                                                    disabled={
+                                                        !options.output_path
+                                                    }>
+                                                    <span className="info-label">
+                                                        Output
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                            <Tooltip
+                                                content={<p>Delete</p>}
+                                                placement="bottom"
+                                                trigger="mouseenter">
+                                                <span
+                                                    className="icon-delete"
+                                                    tabIndex="0"
+                                                    aria-label="Open Delete Task Popup"
+                                                    onClick={
+                                                        _handleDeleteModal
+                                                    }>
+                                                    <span className="info-label">
+                                                        Delete
+                                                    </span>
+                                                </span>
+                                            </Tooltip>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div className="control-panel__task">
-                                <Tooltip
-                                    html={<p>Preview</p>}
-                                    position="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-eye"
-                                        tabIndex="0"
-                                        aria-label="Preview"
-                                        onClick={this._togglePreview.bind(
-                                            this,
-                                            item
-                                        )}
-                                    />
-                                </Tooltip>
-                                <Tooltip
-                                    html={<p>Task Details</p>}
-                                    position="right"
-                                    trigger="mouseenter"
-                                    className="task-details-icon">
-                                    <Link
-                                        to={`/task/${item && item.id}`}
-                                        tabIndex="0"
-                                        aria-label="Task Details">
-                                        <span className="icon-info-small" />
-                                    </Link>
-                                </Tooltip>
-                                <Tooltip
-                                    html={<p>Restart</p>}
-                                    position="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-progress-clockwise"
-                                        tabIndex="0"
-                                        aria-label="Restart Task"
-                                        onClick={
-                                            item.status !== taskStatus.RESTART
-                                                ? _handleRestartModal
-                                                : undefined
-                                        }
-                                        disabled={
-                                            !(
-                                                item.status !==
-                                                taskStatus.RESTART
-                                            )
-                                        }
-                                    />
-                                </Tooltip>
-                                <Tooltip
-                                    html={<p>Delete</p>}
-                                    position="right"
-                                    trigger="mouseenter">
-                                    <span
-                                        className="icon-trash"
-                                        tabIndex="0"
-                                        aria-label="Open Delete Task Popup"
-                                        onClick={_handleDeleteModal}
-                                    />
-                                </Tooltip>
-                            </div>
                         </div>
-                        {item.id === psId && toggledPreviewList[psId] && (
+                        <ConditionalRender
+                            showIf={
+                                item.id === psId &&
+                                toggledList[psId] &&
+                                toggledList[psId].preview
+                            }>
                             <Preview
                                 id={item.id}
                                 src={item.preview}
                                 progress={item.progress}
                             />
-                        )}
+                        </ConditionalRender>
+                        <ConditionalRender
+                            showIf={
+                                item.id === psId &&
+                                toggledList[psId] &&
+                                toggledList[psId].detail
+                            }>
+                            <Details
+                                item={item}
+                                updateIf={
+                                    !(
+                                        item.status === taskStatus.RESTART ||
+                                        item.status === taskStatus.TIMEOUT ||
+                                        item.status === taskStatus.FINISHED
+                                    )
+                                }
+                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
+                            />
+                        </ConditionalRender>
                     </div>
                 )}
             </Spring>
@@ -360,3 +447,15 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(TaskItem);
+
+const RefLink = forwardRef((props, ref) => {
+    return (
+        <Link
+            innerRef={ref}
+            to={`/task/${props.item && props.item.id}`}
+            tabIndex="0"
+            aria-label="Task Details">
+            <span className="icon-details" />
+        </Link>
+    );
+});

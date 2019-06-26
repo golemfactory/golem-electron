@@ -1,0 +1,49 @@
+.task-summary-modal {
+    &__content {
+        margin: 0 10px;
+        .summary {
+            &__title{
+                font-size: 11pt;
+                font-weight: 400;
+                margin: 10px 0;
+            }
+            &__list {
+                width: 70%;
+                margin-top: 15px; 
+            }
+
+            &__item {
+                display: flex;
+                justify-content: space-between;
+                font-weight: 500;
+                font-size: 9pt;
+                line-height: 1.5em;
+
+                .title {
+                    color: $color-text2;
+                }
+            }
+        }
+    }
+
+    &__section-image{
+            margin: 20px 0;
+            height: 20vh;
+            width: 35vw;
+            min-height: 150px;
+        }
+
+    &__action {
+        padding: 25px 35px;
+        justify-content: flex-end;
+        font-size: 11pt;
+        span {
+            padding-right: 30px;
+        }
+        .btn--primary {
+            padding: 0;
+            width: 95px;
+            height: 32px;
+        }
+    }
+}

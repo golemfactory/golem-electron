@@ -1,24 +1,24 @@
-import React, { Component } from "react";
-import ReactDOM from "react-dom";
-import { Tooltip } from "react-tippy";
+import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
+import Tooltip from '@tippy.js/react';
 
-import BlockNodeModal from "./modal/BlockNodeModal";
+import BlockNodeModal from './modal/BlockNodeModal';
 
 const { clipboard } = window.electron;
 
 function statusDot(status) {
     switch (status) {
-        case "Starting":
-            return "icon-status-dot--progress";
+        case 'Starting':
+            return 'icon-status-dot--progress';
 
-        case "Finished":
-            return "icon-status-dot--done";
+        case 'Finished':
+            return 'icon-status-dot--done';
 
-        case "Downloading":
-            return "icon-status-dot--download";
+        case 'Downloading':
+            return 'icon-status-dot--download';
 
-        case "Failure":
-            return "icon-status-dot--warning";
+        case 'Failure':
+            return 'icon-status-dot--warning';
     }
 }
 
@@ -40,9 +40,9 @@ class NodeList extends Component {
 
     _lockScroll(isLocked) {
         this.props.overflowRef.style.setProperty(
-            "overflow-y",
-            isLocked ? "hidden" : "overlay",
-            "important"
+            'overflow-y',
+            isLocked ? 'hidden' : 'overlay',
+            'important'
         );
     }
 
@@ -72,7 +72,7 @@ class NodeList extends Component {
             return result[0].map((item, index) => (
                 <span key={index.toString()} className="indicator__node-count">
                     <span className={`icon-status-dot ${statusDot(item)}`} />
-                    {result[1][index]}
+                    {" " + result[1][index]}
                 </span>
             ));
         return [];
@@ -82,24 +82,24 @@ class NodeList extends Component {
         const { isDataCopied } = this.state;
         return data.map(
             (
-                { subtask_id, status, node_name, node_ip_address, node_id },
+                { subtask_id, status, node_name, node_id },
                 index
             ) => (
                 <tr key={index.toString()}>
                     <td>
                         <Tooltip
-                            html={
+                            content={
                                 <p>
                                     {isDataCopied
-                                        ? "Copied Succesfully!"
-                                        : "Click to copy"}
+                                        ? 'Copied Succesfully!'
+                                        : 'Click to copy'}
                                 </p>
                             }
-                            position="bottom"
+                            placement="bottom"
                             trigger="mouseenter"
                             hideOnClick={false}>
                             <div
-                                className="clipboard-subtask-id"
+                                className="clipboard-subtask-item"
                                 onClick={this._handleCopyToClipboard.bind(
                                     this,
                                     subtask_id
@@ -110,8 +110,8 @@ class NodeList extends Component {
                     </td>
                     <td>
                         <Tooltip
-                            html={<p>{status}</p>}
-                            position="bottom"
+                            content={<p>{status}</p>}
+                            placement="bottom"
                             trigger="mouseenter">
                             <span
                                 className={`icon-status-dot ${statusDot(
@@ -122,23 +122,24 @@ class NodeList extends Component {
                     </td>
                     <td>
                         <Tooltip
-                            html={
+                            content={
                                 <p>
                                     {isDataCopied
                                         ? "Copied Succesfully!"
-                                        : "Click to copy IP Address"}
+                                        : "Click to copy"}
                                 </p>
                             }
-                            position="bottom-end"
+                            placement="bottom-end"
                             trigger="mouseenter"
                             hideOnClick={false}>
-                            <span
+                            <div
+                                className="clipboard-subtask-item"
                                 onClick={this._handleCopyToClipboard.bind(
                                     this,
-                                    node_ip_address
+                                    node_name
                                 )}>
-                                {node_name || "Anonymous node"}
-                            </span>
+                                <span>{node_name || "Anonymous node"}</span>
+                            </div>
                         </Tooltip>
                     </td>
                     <td>
@@ -218,10 +219,10 @@ class NodeList extends Component {
                 {hasSubtasksLoaded ? (
                     subtasksList && subtasksList.length > 0 ? (
                         [
-                            <div key={"countSubtasks"}>
+                            <div key={'countSubtasks'}>
                                 {this._countStatus(subtasksList)}
                             </div>,
-                            <table key={"fillNode"}>
+                            <table key={'fillNode'}>
                                 <thead>
                                     <tr>
                                         <th>Subtask</th>
@@ -261,7 +262,7 @@ class NodeList extends Component {
                             errMsg={errMsg}
                             subtask2block={subtask2block}
                         />,
-                        document.getElementById("modalPortal")
+                        document.getElementById('modalPortal')
                     )}
             </div>
         );

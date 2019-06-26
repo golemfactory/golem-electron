@@ -1,18 +1,17 @@
-import React from "react";
-import { findDOMNode } from "react-dom";
-import { Link } from "react-router-dom";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { findDOMNode } from 'react-dom';
+import { Link } from 'react-router-dom';
 
-import { Tooltip } from "react-tippy";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import * as Actions from '../../actions';
+import blender_logo from './../../assets/img/blender_logo.png';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 
-import * as Actions from "../../actions";
-import blender_logo from "./../../assets/img/blender_logo.png";
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
-
-import InsufficientAmountModal from "./modal/InsufficientAmountModal";
-import TaskItem from "./TaskItem";
+import InsufficientAmountModal from './modal/InsufficientAmountModal';
+import TaskItem from './TaskItem';
 
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
@@ -27,14 +26,14 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const status = Object.freeze({
-    WAITINGFORPEER: "Waiting for peer",
-    NOTREADY: "Not started",
-    READY: "Ready",
-    WAITING: "Waiting",
-    COMPUTING: "Computing",
-    FINISHED: "Finished",
-    TIMEOUT: "Timeout",
-    RESTART: "Restart"
+    WAITINGFORPEER: 'Waiting for peer',
+    NOTREADY: 'Not started',
+    READY: 'Ready',
+    WAITING: 'Waiting',
+    COMPUTING: 'Computing',
+    FINISHED: 'Finished',
+    TIMEOUT: 'Timeout',
+    RESTART: 'Restart'
 });
 
 function shouldPSEnabled(_item) {
@@ -57,15 +56,17 @@ export class Table extends React.Component {
         this.state = {
             insufficientAmountModal: {
                 result: false,
-                message: null
+                message: null,
+                restartData: []
             }
         };
+
+        this._handleRestartSubtasksModal = this._handleRestartSubtasksModal.bind(
+            this
+        );
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextProps.taskList !== this.props.taskList) {
-            this.updateFooterInfoBar(nextProps.taskList);
-        }
 
         //# avoid from updating state on render cycle, previewLock mechanism moved here
         if (nextProps.previewId !== this.props.previewId)
@@ -90,12 +91,12 @@ export class Table extends React.Component {
      * @param  {Event}  evt
      */
     _navigateTo = evt => {
-        let taskItems = document.getElementsByClassName("task-item");
+        let taskItems = document.getElementsByClassName('task-item');
         [].map.call(taskItems, item => {
-            item.classList.remove("active");
+            item.classList.remove('active');
         });
 
-        evt && evt.currentTarget.classList.add("active");
+        evt && evt.currentTarget.classList.add('active');
     };
 
     /**
@@ -151,32 +152,46 @@ export class Table extends React.Component {
      * [_handleRestartModal sends information of the clicked task as callback]
      * @param  {Any}        id      [Id of the selected task]
      */
-    _handleRestartModal(id, status) {
-        this.props.restartModalHandler(id, status, this._handleRestart);
+    _handleRestartModal(item) {
+        this.props.restartModalHandler(item, this._handleRestart);
+    }
+
+    /**
+     * [_handleRestartModal sends information of the clicked task as callback]
+     * @param  {Any}        id      [Id of the selected task]
+     */
+    _handleRestartSubtasksModal(list) {
+        this.props.restartModalHandler(list, this._handleRestart, true);
     }
 
     /**
      * [_handleDeleteModal sends information of the clicked task as callback]
-     * @param  {Any}        id      [Id of the selected task]
+     * @param  {Any}        id              [Id of the selected task]
+     * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
      */
-    _handleRestart = (id, isTimedOutOnly) => {
-        this._restartAsync(id, isTimedOutOnly).then(_result => {
-            if (_result && !_result[0] && _result[1].includes("Not enough")) {
-                console.warn("Task restart failed!");
+    _handleRestart = (id, isPartial, isConcentOn) => {
+        this._restartAsync(id, isPartial, isConcentOn).then(_result => {
+            if (_result && !!_result[1]) {
+                console.warn('Task restart failed!');
 
                 this.setState({
                     insufficientAmountModal: {
-                        result: !_result[0],
-                        message: _result[1]
+                        result: !!_result[1],
+                        message: _result[1],
+                        restartData: [id, isPartial]
                     }
                 });
             }
         });
     };
 
-    _restartAsync(id, isTimedOutOnly) {
+    _restartAsync(id, isPartial, isConcentOn) {
         return new Promise((resolve, reject) => {
-            this.props.actions.restartTask(id, isTimedOutOnly, resolve, reject);
+            this.props.actions.restartTask(
+                { id, isPartial, isConcentOn },
+                resolve,
+                reject
+            );
         });
     }
 
@@ -188,46 +203,6 @@ export class Table extends React.Component {
             }
         });
     };
-
-    /**
-     * [updateFooterInfoBar func. updates information about the task status on footer info bar]
-     * @param  {Array}    data    [JSON array of task list]
-     */
-    updateFooterInfoBar(data) {
-        const { actions, connectedPeers } = this.props;
-        let waiting = data.some(item => item.status == status.WAITING);
-        let computing = data.some(item => item.status == status.COMPUTING);
-        let timeout = data.some(item => item.status == status.TIMEOUT);
-
-        let info = connectedPeers
-            ? {
-                  status: status.READY,
-                  message: "Golem is ready!",
-                  color: "green"
-              }
-            : {
-                  status: status.WAITINGFORPEER,
-                  message: "Waiting for peer...",
-                  color: "yellow"
-              };
-        if (waiting) {
-            info.status = status.WAITING;
-            info.message = "Task is preparing for computation";
-            info.color = "yellow";
-        }
-        if (computing) {
-            info.status = status.COMPUTING;
-            info.message = "Processing your task";
-            info.color = "green";
-        }
-        if (timeout) {
-            info.status = status.TIMEOUT;
-            info.message = "Your task has timed out";
-            info.color = "red";
-        }
-
-        actions.setFooterInfo(info);
-    }
 
     /**
      * {listTasks function}
@@ -246,11 +221,8 @@ export class Table extends React.Component {
                 item={item}
                 index={index}
                 _handleRowClick={this._handleRowClick.bind(this)}
-                _handleRestartModal={this._handleRestartModal.bind(
-                    this,
-                    item.id,
-                    item.status
-                )}
+                _handleRestartModal={this._handleRestartModal.bind(this, item)}
+                _handleRestartSubtasksModal={this._handleRestartSubtasksModal}
                 _handleDeleteModal={this._handleDeleteModal.bind(this, item.id)}
                 _toggleWalletTray={toggleWalletTray}
             />
@@ -265,12 +237,18 @@ export class Table extends React.Component {
         return (
             <div role="list">
                 {taskList && this.listTasks(taskList)}
-                {insufficientAmountModal && insufficientAmountModal.result && (
-                    <InsufficientAmountModal
-                        message={insufficientAmountModal.message}
-                        closeModal={this._closeModal}
-                    />
-                )}
+                {insufficientAmountModal?.result &&
+                    ReactDOM.createPortal(
+                        <InsufficientAmountModal
+                            closeModal={this._closeModal}
+                            createTaskConditionally={this._handleRestart.bind(
+                                this,
+                                ...insufficientAmountModal?.restartData
+                            )}
+                            message={insufficientAmountModal?.message}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
             </div>
         );
     }

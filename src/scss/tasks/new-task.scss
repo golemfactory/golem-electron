@@ -1,0 +1,116 @@
+.content__new-task {
+    position: relative;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    box-sizing: border-box;
+    background: $color-bg2;
+
+    .label{
+        display: block;
+        margin: 0 24px;
+    }
+
+    input[type=text] {
+        width: 100%;
+        height: 159px;
+        background: $color-accent3;
+        border: 0 !important;
+        font-size: 14pt;
+        &:focus {
+            outline: 0;
+        }
+    }
+
+    .source-path{
+        margin: 10px 24px 40px 24px;
+        font-size: 9pt;
+    }
+
+    .radio-item{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: white;
+        padding: 5px !important;
+
+        label{
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            font-size: 10pt;
+            margin-left: 0;
+        }
+
+        .overlay {
+            top: 0;
+            left: 10px;
+        }
+    }
+
+    .icon-blender {
+        font-size: 40px !important;
+    }
+
+    .icon-luxrender:before {
+        color: #f4ca1b !important;
+    }
+
+    .radio-label-right{
+        font-size: 12pt;
+        font-weight: 400;
+    }
+
+    .hint__blender{
+        font-size: 9pt;
+        color: $color-text2;
+        text-align: center;
+        margin: 30px 24px;
+        line-height: 1.5em;
+    }
+}
+
+.container-name__new-task,
+.container-type__new-task {
+    position: relative;
+    flex-grow: 1;
+}
+
+.hint__task-name{
+    display: none;
+    position: absolute;
+    font-size: 9pt;
+    font-weight: 400;
+    color: $color-error;
+    padding: 20px 24px;
+}
+
+.container-type__new-task {
+    height: 400px;
+    overflow-y: overlay;
+    box-sizing: border-box;
+    border-top: 1px solid $color-border;
+}
+
+.container-action__new-task {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 2;
+    flex: 0 0 90px;
+    background: $color-text4;
+    z-index: 999;
+    span {
+        margin-right: 20px;
+    }
+}
+
+.container-radio__new-task {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+}

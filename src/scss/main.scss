@@ -4,37 +4,37 @@
 /* BASE - Base Variable file along with starting point Mixins and Placeholders.
 ========================================================================== */
 
-@import "_vars";
-@import "_typography";
-@import "_icon";
+@import '_vars';
+@import '_typography';
+@import '_icon';
 
 /* FRAMEWORK - Structure and layout files.
 ========================================================================== */
 
-@import "error-boundary";
-@import "header";
-@import "onboarding/index";
-@import "spot-light";
-@import "network/index";
-@import "task-panel/index";
-@import "settings/index";
-@import "concent/index";
-@import "transaction/index";
-@import "wallet/index";
-@import "search-box";
-@import "footer";
-@import "footer-main";
-@import "not-found";
-@import "loader";
-@import "dropzone";
-@import "radial-progress";
-@import "tooltip";
-@import "slider";
-@import "modal";
-@import "issue-modal";
-@import "password-modal";
-@import "dropdown";
-@import "info-label";
+@import 'error-boundary';
+@import 'header';
+@import 'onboarding/index';
+@import 'spot-light';
+@import 'network/index';
+@import 'tasks/index';
+@import 'settings/index';
+@import 'concent/index';
+@import 'transaction/index';
+@import 'wallet/index';
+@import 'search-box';
+@import 'footer';
+@import 'footer-main';
+@import 'not-found';
+@import 'loader';
+@import 'dropzone';
+@import 'radial-progress';
+@import 'tooltip';
+@import 'slider';
+@import 'modal';
+@import 'issue-modal';
+@import 'password-modal';
+@import 'dropdown';
+@import 'info-label';
 
 html {
     padding: 0;
@@ -67,16 +67,20 @@ body {
     }
 }
 
+body {
+    background: #fff;
+}
+
 ::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-  height: 7px;
-  background-color: rgba(0, 0, 0, .1);
+    -webkit-appearance: none;
+    width: 7px;
+    height: 7px;
+    background-color: rgba(0, 0, 0, 0.1);
 }
 ::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: rgba(0, 0, 0, .5);
-  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, 0.5);
+    -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }
 
 a,
@@ -103,6 +107,7 @@ span {
 input,
 button,
 select {
+    border-radius: 5px;
     &:disabled {
         cursor: not-allowed !important;
     }
@@ -116,7 +121,6 @@ a {
 button {
     height: 40px;
     padding: 0 25px;
-    border-radius: 5px;
     border: 1px solid $button-static-color;
     font-size: 12pt;
     font-weight: bold;
@@ -157,7 +161,7 @@ select {
     position: relative;
 
     &:after {
-        content: " ";
+        content: ' ';
         height: 0;
         width: 0;
         border-left: 4px solid transparent;
@@ -230,7 +234,6 @@ select {
     &--outline {
         background-color: transparent;
         color: $button-static-color;
-        border-radius: 2px;
         font-weight: 600;
         font-size: 10pt;
 
@@ -277,12 +280,13 @@ select {
     }
 }
 
-input[type="text"],
-input[type="number"],
-input[type="password"] {
+input[type='text'],
+input[type='number'],
+input[type='password'] {
     background: white;
     border: 1px solid $color-border;
     height: 32px;
+    border-radius: 5px;
 
     &:disabled {
         background: $color-input;
@@ -293,16 +297,17 @@ input.invalid {
     border-color: red !important;
 }
 
-input[type="number"] {
+input[type='number'] {
     width: 100%;
     position: relative;
     border-box: none;
     text-align: center;
 }
 
-input[type="number"]::-webkit-inner-spin-button {
+input[type='number']::-webkit-inner-spin-button {
     -webkit-appearance: none;
-    background: $color-bg2 url("../assets/img/number-adjust.svg") no-repeat center;
+    background: $color-bg2 url('../assets/img/number-adjust.svg') no-repeat
+        center;
     background-size: auto;
     width: 1.2em;
     border-left: 1px solid $color-text3;
@@ -357,7 +362,7 @@ input[type="number"]::-webkit-inner-spin-button {
 
     .switch-slider:before {
         position: absolute;
-        content: "";
+        content: '';
         height: 18px;
         width: 18px;
         margin-top: 1px;
@@ -417,166 +422,97 @@ input[type="number"]::-webkit-inner-spin-button {
     }
 }
 
-.checkbox-item,
-.radio-item {
-    margin: 0.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: $color-text4;
-    padding: 10px;
+.radio-group,
+.checkbox-group {
+    width: 100%;
+    color: grey;
+    text-align: left;
+    padding-left: 40px;
+    box-sizing: border-box;
+    margin-bottom: 30px;
 
-    input[type="checkbox"],
-    input[type="radio"] {
-        position: absolute;
-        opacity: 0;
+    [class^='icon-'],
+    [class*=' icon-'] {
+        margin-right: 5px;
+        font-size: 10pt;
+        position: relative;
+        top: 0.5px;
+    }
+    input[type='radio'],
+    input[type='checkbox'] {
+        display: none;
+        padding: 0 20px;
+        box-sizing: border-box;
+    }
 
-        + .radio-label-left,
-        + .radio-label-right {
-            position: relative;
-            margin: 0 !important;
-            padding: 0 10px !important;
-            color: $color-text2;
-            line-height: 1.6em;
-        }
-        
-        + .checkbox-label-left,
-        + .radio-label-left {
-            &:before {
-                content: "\E91C";
-                background: $color-text4;
-                border-radius: 100%;
-                display: inline-block;
-                position: relative;
-                top: 0.2em;
-                margin-right: 1em;
-                vertical-align: top;
-                cursor: pointer;
-                text-align: center;
-                transition: all 250ms ease;
-                font-family: "gcon" !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
+    /* changed style when checked */
+    input[type='radio']:checked + label,
+    input[type='checkbox']:checked + label  {
+        color: #000;
 
-                /* Better Font Rendering =========== */
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
-            }
+        & > .overlay {
+            background-color: $color-primary;
         }
-        
-        + .checkbox-label-right,
-        + .radio-label-right {
-            &:after {
-                content: "\E91C";
-                background: $color-text4;
-                border-radius: 100%;
-                display: inline-block;
-                position: relative;
-                top: 0.2em;
-                margin-left: 1em;
-                vertical-align: top;
-                cursor: pointer;
-                text-align: center;
-                transition: all 250ms ease;
-                font-family: "gcon" !important;
-                speak: none;
-                font-style: normal;
-                font-weight: normal;
-                font-variant: normal;
-                text-transform: none;
-                line-height: 1;
+    }
 
-                /* Better Font Rendering =========== */
-                -webkit-font-smoothing: antialiased;
-                -moz-osx-font-smoothing: grayscale;
-                font-size: 14pt;
-            }
-        }
+    label {
+        font-size: 9pt;
+        margin-left: 5px;
+        font-weight: 400;
+        cursor: pointer;
 
-        &:checked {
-            + .checkbox-label-left,
-            + .radio-label-left {
-                &:before {
-                    color: $color-accent1;
-                }
-            }
-            
-            + .checkbox-label-right,
-            + .radio-label-right {
-                &:after {
-                    color: $color-accent1;
-                }
-            }
+        .icon-question-mark {
+            display: inline;
+            font-size: 7pt;
+            margin-left: 2px;
+            top: -5px;
+            color: $color-text3;
         }
+    }
 
-        &:focus {
-            + .checkbox-label-left,
-            + .radio-label-left {
-                &:before {
-                    outline: none;
-                    border-color: $color-text3;
-                }
-            }
-            
-            + .checkbox-label-right,
-            + .radio-label-right {
-                &:after {
-                    outline: none;
-                    border-color: $color-text3;
-                }
-            }
-        }
+    .radio-item,
+    .checkbox-item {
+        margin: 15px 0;
+        padding: 0;
+    }
 
-        &:disabled {
-            + .checkbox-label-left,
-            + .radio-label-left {
-                &:before {
-                    box-shadow: inset 0 0 0 4px $color-text2;
-                    border-color: darken($color-text2, 25%);
-                    background: darken($color-text2, 25%);
-                    cursor: not-allowed;
-                }
-            }
-            
-            + .checkbox-label-right,
-            + .radio-label-right {
-                &:after {
-                    box-shadow: inset 0 0 0 4px $color-text2;
-                    border-color: darken($color-text2, 25%);
-                    background: darken($color-text2, 25%);
-                    cursor: not-allowed;
-                }
-            }
-        }
-        
-        + .checkbox-label-left,
-        + .radio-label-left {
-            &:empty {
-                &:before {
-                    margin-right: 0;
-                }
-            }
-        }
-        
-        + .checkbox-label-right,
-        + .radio-label-right {
-            &:empty {
-                &:after {
-                    margin-right: 0;
-                }
-            }
+    /* default radio button style: unchecked */
+    .overlay {
+        display: inline-block;
+        position: relative;
+        top: 0.25em;
+        height: 0.5em;
+        width: 0.5em;
+        border-radius: 50%;
+        border: 1px solid $color-primary;
+        padding: 4px;
+        margin: 0 5px;
+        background-clip: content-box;
+        cursor: pointer;
+        transition: .2s background-color;
+    }
+
+    input:disabled + label > .overlay {
+        border-color: rgba($color-primary, 0.3) !important;
+        background: rgba($color-border, 0.2);
+        cursor: not-allowed !important;
+    }
+
+    .checkbox-item {
+        .overlay {
+            top: 0.3em;
+            height: 0.4em;
+            width: 0.4em;
+            padding: 5px;
+            border-radius: 3px;
+            margin-right: 10px;
         }
     }
 }
 
 .indicator-status {
-    -webkit-mask: url("../assets/img/status.svg") no-repeat 100% 100%;
-    mask: url("../assets/img/status.svg") no-repeat 100% 100%;
+    -webkit-mask: url('../assets/img/status.svg') no-repeat 100% 100%;
+    mask: url('../assets/img/status.svg') no-repeat 100% 100%;
     -webkit-mask-size: cover;
     mask-size: cover;
     width: 20px;
@@ -590,8 +526,8 @@ input[type="number"]::-webkit-inner-spin-button {
     }
     &--green {
         background-color: $color-accent1;
-        -webkit-mask: url("../assets/img/status-stop.svg") no-repeat 100% 100%;
-        mask: url("../assets/img/status-stop.svg") no-repeat 100% 100%;
+        -webkit-mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
+        mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
     }
     &--blue {
         background-color: $button-static-color;
@@ -604,9 +540,9 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .progress-status {
     display: inline-block;
+    width: 25px;
     font-size: 15pt;
     font-weight: 500;
-    margin-right: 8px;
     vertical-align: middle;
     margin-bottom: 0.5px;
 }
@@ -645,6 +581,13 @@ input[type="number"]::-webkit-inner-spin-button {
 
 .tippy-popper {
     max-width: 510px !important;
+}
+
+.bumper {
+    &:before{
+        content: "|";
+        margin: 0 6px;
+    }
 }
 
 .jumping-dots {
@@ -727,6 +670,7 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -748,10 +692,12 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,
@@ -768,6 +714,7 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -789,10 +736,12 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,
@@ -809,6 +758,7 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__main,
     .content__task-panel,
     .container__frame,
+    .master-file-picker__content,
     .content__new-task,
     .content__task-detail,
     .content__settings {
@@ -830,10 +780,12 @@ input[type="number"]::-webkit-inner-spin-button {
     .content__geth,
     .content__peers,
     .content__stats,
+    .master-file-picker__container,
     .content__new-task label,
     .content__new-task input,
     .container-radio__new-task,
     .container-action__new-task,
+    .master-file-picker__container-action,
     .panel-preview__task-detail,
     .section-settings__task-detail,
     .section-task__task-detail,

@@ -1,6 +1,6 @@
 import React from "react";
-import { Spring } from "react-spring";
-import { timeStampToHR } from "./../../utils/secsToHMS";
+import { Spring } from 'react-spring/renderprops.cjs';
+import { timeStampToHR } from "./../../utils/time";
 const { remote } = window.electron;
 const { setConfig, getConfig, dictConfig } = remote.getGlobal("configStorage");
 const { INDICATOR_ID } = dictConfig;

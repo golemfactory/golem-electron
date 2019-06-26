@@ -34,7 +34,7 @@ export function restartSubtask(session, {id, taskId, isTimedOut}) {
             resolve(restarted_subtask)
         }
         if(isTimedOut){
-            _handleRPC(on_restart_subtask, session, config.RESTART_TIMEDOUT_SUBTASKS_RPC, [taskId, [id]])
+            _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASKS_RPC, [taskId, [id]])
         } else {
             _handleRPC(on_restart_subtask, session, config.RESTART_SUBTASK_RPC, [id])
         }

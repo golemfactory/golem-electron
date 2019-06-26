@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Spring } from 'react-spring'
+import { Spring } from 'react-spring/renderprops.cjs'
 
 /**
  * { Class for creating tutorials with pointing objects. }

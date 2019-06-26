@@ -1,13 +1,11 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { Tooltip } from "react-tippy";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "./../../actions";
-import { getConcentDepositStatus } from "./../../reducers";
-import { timeStampToHR } from "./../../utils/secsToHMS";
-
-const ETH_DENOM = 10 ** 18;
+import * as Actions from './../../actions';
+import { ETH_DENOM } from './../../constants/variables';
+import { getConcentDepositStatus } from './../../reducers';
+import { timeStampToHR } from './../../utils/time';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
@@ -16,7 +14,7 @@ const mapStateToProps = state => ({
     isOnboadingActive: !state.concent.hasOnboardingShown,
     showConcentToS: !state.info.isConcentTermsAccepted,
     nodeId: state.info.networkInfo.key,
-    depositStatus: getConcentDepositStatus(state, "concentDeposit"),
+    depositStatus: getConcentDepositStatus(state, 'concentDeposit'),
     isConcentWaiting: state.concent.isConcentWaiting
 });
 
@@ -85,15 +83,15 @@ export class Concent extends React.Component {
                     computations, and as a Requestor, you are assured to get
                     proper results.
                     <br />
-                    <a href="https://golem.network/documentation/concent-service">
+                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service">
                         Learn more
-                    </a>{" "}
+                    </a>{' '}
                     about Concent Service.
                 </span>
                 <div className="switch__concent">
                     <div
                         className={`switch-box ${
-                            !isConcentOn ? "switch-box--green" : ""
+                            !isConcentOn ? 'switch-box--green' : ''
                         }`}>
                         <label className="switch">
                             <input
@@ -109,9 +107,9 @@ export class Concent extends React.Component {
                     </div>
                     <span
                         style={{
-                            color: isConcentOn ? "#4e4e4e" : "#9b9b9b"
+                            color: isConcentOn ? '#4e4e4e' : '#9b9b9b'
                         }}>
-                        Concent Service turned {!isConcentOn ? "off" : "on"}.
+                        Concent Service turned {!isConcentOn ? 'off' : 'on'}.
                     </span>
                 </div>
 
@@ -125,20 +123,20 @@ export class Concent extends React.Component {
                             <div>
                                 <div>
                                     <span>
-                                        Deposit amount:{" "}
+                                        Deposit amount:{' '}
                                         <b>
                                             {concentBalance
                                                 ? concentBalance.value
                                                       .dividedBy(ETH_DENOM)
                                                       .toFixed(4)
-                                                : "-"}{" "}
+                                                : '-'}{' '}
                                             GNT
                                         </b>
                                         <br />
                                         {statusCode === 2 ? (
                                             <span>
                                                 <br />
-                                                Your balance will be unlocked at{" "}
+                                                Your balance will be unlocked at{' '}
                                                 <span className="timelock__concent">
                                                     {timeStampToHR(time)}
                                                 </span>
@@ -148,7 +146,7 @@ export class Concent extends React.Component {
                                                 future deposit
                                                 <br />
                                                 creation transaction fees.{" "}
-                                                <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                     Learn more
                                                 </a>
                                             </span>
@@ -160,7 +158,7 @@ export class Concent extends React.Component {
                                                 <br />
                                                 transaction fees or you can
                                                 unlock it now.{" "}
-                                                <a href="https://golem.network/documentation/concent-service#can-i-withdraw-my-tokens-from-the-deposit">
+                                                <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
                                                     Learn more
                                                 </a>
                                             </span>
@@ -200,7 +198,7 @@ export class Concent extends React.Component {
                                             transaction
                                             <br />
                                             fee{" "}
-                                            <a href="https://golem.network/documentation/concent-service#how-much-can-i-save-by-not-unlocking-my-deposit">
+                                            <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                 Learn more
                                             </a>
                                         </span>

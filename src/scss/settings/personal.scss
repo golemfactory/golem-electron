@@ -18,8 +18,8 @@
     }
 
     .user-name__form{
-        & input + div .toggle__edit-mode,
-        &:hover > div .toggle__edit-mode {
+        & .input__node-name + .toggle__edit-mode,
+        &:hover > .toggle__edit-mode {
             display: inline;
         }
     }
@@ -34,7 +34,7 @@
 
     }
 
-    .icon-checkmark {
+    .icon-confirmation {
         margin-left: 5px;
         &:before{
             color: $color-accent1;

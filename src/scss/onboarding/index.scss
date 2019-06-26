@@ -21,44 +21,44 @@ mark {
     height: 100%;
     background: $color-text4;
     z-index: 99999 !important;
-    box-sizing:border-box;
+    box-sizing: border-box;
 
-    h1{
+    h1 {
         color: $color-primary;
         margin: 0 0 30px 0;
         font-size: 1.8em;
     }
 
-    .information-band__onboarding{
+    .information-band__onboarding {
         position: absolute;
         width: 100%;
         height: 40px;
-        line-height:40px;
+        line-height: 40px;
         font-size: 8pt;
         top: -50;
         z-index: 999;
         text-align: center;
-        background: #F5A623;
+        background: #f5a623;
         color: $color-text4;
-        transition: .5s all;
+        transition: 0.5s all;
         box-sizing: border-box;
         display: flex;
         justify-content: space-between;
-        
-        .content-information{
+
+        .content-information {
             display: flex;
             justify-content: flex-start;
             align-items: center;
         }
 
-        .icon-warning{
+        .icon-warning {
             display: inline;
             background: none;
             font-size: 18pt;
             width: 30px;
         }
 
-        .icon-close{
+        .icon-close {
             margin: 12px;
             font-size: 12pt;
             cursor: pointer;
@@ -73,7 +73,6 @@ mark {
 .container-step__onboarding {
     @include flex;
 
-
     .welcome-beta {
         justify-content: center;
     }
@@ -85,7 +84,7 @@ mark {
     height: 40vh;
     width: 100%;
     text-align: center;
-    transition: .5s all;
+    transition: 0.5s all;
 
     @include flex;
 
@@ -94,10 +93,9 @@ mark {
     .welcome-image,
     .chain-image {
         margin-bottom: 30px;
-        width:160px;
+        width: 160px;
         transition: 1s all;
     }
-
 
     .doc-image {
         width: 100%;
@@ -105,24 +103,23 @@ mark {
     }
 }
 
-
-.mark--chain{
+.mark--chain {
     font-size: 9pt;
     line-height: 1.6;
 }
 
-.info__print{
+.info__print {
     display: block;
     font-size: 10pt;
     line-height: 1.4;
     margin-top: 4vh;
 }
 
-.btn--print{
+.btn--print {
     width: 150px;
 }
 
-.btn__skip{
+.btn__skip {
     text-align: center;
     text-decoration: underline;
     font-size: 9pt;
@@ -130,7 +127,7 @@ mark {
     cursor: pointer;
 }
 
-.btn--last{
+.btn--last {
     margin-top: 4px;
 }
 
@@ -143,54 +140,54 @@ mark {
     text-align: left;
     line-height: 1.5em;
     box-sizing: border-box;
-    transition: .5s all;
+    transition: 0.5s all;
 
-    .radio-item{
-        label{
+    .radio-item {
+        label {
             position: relative;
             font-size: 8pt;
-            &:before{
-                top:-1px !important;
+            &:before {
+                top: -1px !important;
                 margin-right: 0.5em !important;
             }
         }
     }
 
-    .container__register{
+    .container__register {
         width: 100%;
     }
 
-    #passwordForm{
+    #passwordForm {
         margin-top: 0;
-        transition: .5s all;
+        transition: 0.5s all;
     }
 
-    .info__register{
+    .info__register {
         height: 14vh;
-        transition: .5s all;
+        transition: 0.5s all;
     }
 
-    form{
+    form {
         width: 100%;
 
-          label{
-            display:inline-block;
+        label {
+            display: inline-block;
             font-size: 12pt;
             margin-bottom: 10px;
-          }
+        }
 
-          input{
+        input {
             display: block;
-            width:100%;
+            width: 100%;
             padding: 0 10px;
             font-size: 18px;
-          }
+        }
 
-          input[type=text]{
+        input[type='text'] {
             font-size: 14px;
-          }
+        }
 
-          .icon-eye{
+        .icon-eye {
             position: absolute;
             right: 10px;
             bottom: 8px;
@@ -198,81 +195,82 @@ mark {
             z-index: 4;
             cursor: pointer;
             color: $color-text3;
-            &.active{
+            &.active {
                 color: $color-text;
             }
-          }
+        }
 
-          .container__field{
+        .container__field {
             position: relative;
             margin: 20px 0;
-          }
+        }
 
-          .error-info{
+        .error-info {
             position: absolute;
             right: 0;
             color: $color-error;
             font-size: 8pt;
-          }
         }
-        .ReactPasswordStrength{
-          border: 0 !important
+    }
+    .ReactPasswordStrength {
+        border: 0 !important;
+    }
+
+    .passwordField {
+        height: 34px;
+        input {
+            height: 32px;
         }
-
-        .passwordField{
-            height: 34px;
-            input{
-                height: 32px;
-            }
-            .ReactPasswordStrength-strength-desc{
-                width: 150px;
-                top:20px;
-                font-size: 9pt;
-                text-align: right;
-                padding-right: 0;
-                font-style: normal;
-
-            }
-
-            .ReactPasswordStrength-strength-bar{
-                top: -1
-            }
+        .ReactPasswordStrength-strength-desc {
+            width: 150px;
+            top: 20px;
+            font-size: 9pt;
+            text-align: right;
+            padding-right: 0;
+            font-style: normal;
         }
 
-        .password_confirmed{
-            border-bottom: 2px solid $color-accent1;
+        .ReactPasswordStrength-strength-bar {
+            top: -1;
         }
+    }
 
-        .password_not_confirmed{
-            border-bottom: 2px solid $color-error;
-        }
+    .password_confirmed {
+        border-bottom: 2px solid $color-accent1;
+    }
 
-        .container-icon {
-            padding: 25px 0;
-            flex: 0 0 40px;
-        }
+    .password_not_confirmed {
+        border-bottom: 2px solid $color-error;
+    }
 
-        .icon-lock {
-            display: inline-block;
-            color: $color-text4;
-            background: $color-accent2;
-            font-size: 2.6em;
-            width: 1em;
-            height: 1em;
-            line-height: 0.9em;
-            padding: 0.3em;
-            text-align: center;
-            border-radius: 50%; /* or 50% width & line-height */
-        }
+    .container-icon {
+        padding: 25px 0;
+        flex: 0 0 40px;
+    }
+
+    .icon-lock {
+        display: inline-block;
+        color: $color-text4;
+        background: $color-accent2;
+        font-size: 2.6em;
+        width: 1em;
+        height: 1em;
+        line-height: 0.9em;
+        padding: 0.3em;
+        text-align: center;
+        border-radius: 50%; /* or 50% width & line-height */
+    }
 }
 
-.desc__print{
-    transition: .5s all;
+.desc__print {
+    transition: 0.5s all;
     font-size: 14pt;
 }
 
 .step-control__onboarding {
     display: block;
+    position: absolute;
+    bottom: 0;
     width: 100%;
     font-size: 14pt;
     font-weight: 400;
@@ -281,31 +279,32 @@ mark {
 
     @include flex;
 
-    .step-placeholder{
+    .step-placeholder {
         display: inline-block;
         width: 42.66px;
     }
 
-    .icon-arrow-left-small,
-    .icon-arrow-right-small {
+    .icon-arrow-left,
+    .icon-arrow-right {
         position: relative;
-        top: 11.5px;
-        font-size: 32pt;
+        top: 1px;
+        font-size: 14pt;
+        margin: 0 12px;
         cursor: pointer;
     }
 
-    .btn{
+    .btn {
         position: relative;
         top: 10px;
         cursor: pointer;
     }
 
-    .btn--cancel{
+    .btn--cancel {
         position: relative;
-        top:10px;
+        top: 10px;
         font-size: 10pt;
         font-weight: 500;
-        padding:0 30px;
+        padding: 0 30px;
     }
 }
 
@@ -321,8 +320,8 @@ mark {
         text-align: left;
         height: 50px;
 
-        [class^="icon-"],
-        [class*=" icon-"] {
+        [class^='icon-'],
+        [class*=' icon-'] {
             font-size: 24pt;
         }
     }
@@ -332,74 +331,24 @@ mark {
     }
 }
 
-.pageSwap-leave {
-
-  transform: translate3d(0, 0, 0);
+.pageSwap-exit {
+    transform: translate3d(0, 0, 0);
 }
 
-.pageSwap-leave.pageSwap-leave-active {
-
-  transform: translate3d(-100%, 0, 0);
-  transition: all ease-out 600ms;
+.pageSwap-exit.pageSwap-exit-active {
+    transform: translate3d(-100%, 0, 0);
+    transition: all ease-out 600ms;
 }
-
-.pageSwap-enter {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  transform: translate3d(100%, 0, 0);
-}
-
-.pageSwap-enter.pageSwap-enter-active {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  transform: translate3d(0, 0, 0);
-  transition: all ease-out 600ms;
-
-}
-
-.pageSwapBack-leave {
-
-  transform: translate3d(0, 0, 0);
-}
-
-.pageSwapBack-leave.pageSwapBack-leave-active {
-
-  transform: translate3d(100%, 0, 0);
-  transition: all ease-out 600ms;
-}
-
-.pageSwapBack-enter {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  transform: translate3d(-100%, 0, 0);
-}
-
-.pageSwapBack-enter.pageSwapBack-enter-active {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  transform: translate3d(0, 0, 0);
-  transition: all ease-out 600ms;
-
-}
-
 
 /*MEDIA*/
 
-@media screen and (max-height: 720px)
-{
-    .section-image__onboarding{
-        
+@media screen and (max-height: 720px) {
+    .section-image__onboarding {
+        width: 80%;
+
         .welcome-image,
-        .chain-image{
-            width:120px;
+        .chain-image {
+            width: 120px;
         }
     }
 
@@ -409,26 +358,26 @@ mark {
         margin-top: 10vh;
     }
 
-    .info__register{
+    .info__register {
         margin-top: -20px;
-        font-size:0;
+        font-size: 0;
         height: 0.5vh !important;
         line-height: 1.2;
     }
 
-    #passwordForm{
+    #passwordForm {
         margin-top: 60px !important;
     }
 
-    .desc__print{
+    .desc__print {
         font-size: 10pt;
         line-height: 1.2;
     }
 }
 
- .mac,
- .linux{
-        .information-band__onboarding{
-            padding-left: 70px;
-        }
+.mac,
+.linux {
+    .information-band__onboarding {
+        padding-left: 70px;
     }
+}

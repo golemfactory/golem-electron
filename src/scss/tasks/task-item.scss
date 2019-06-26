@@ -1,0 +1,179 @@
+.section__table {
+    .task-list {
+        .task-item {
+            position: relative;
+            height: 65px;
+            padding: 15px 20px;
+            border-bottom: 1px solid $color-border;
+            border-left: 1px solid transparent;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: .5s all;
+            &__main{
+                width: 100%;
+            }
+            .info__task-item {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                flex: 1 1 100%;
+            }
+            .task-icon {
+                margin-right: 25px;
+                background: #f5f5f5;
+                padding: 8px;
+                border-radius: 50px;
+                font-size: 18pt;
+            }
+            .icon-blender,
+            .icon-blender_nvgpu,
+            .icon-blender_sgx {
+                font-size: 24pt;
+                padding: 9px;
+            }
+            .icon-luxrender {
+                color: #f4ca1b;
+                padding: 9px 10px;
+            }
+            h4 {
+                font-weight: 400;
+                margin: 0;
+                font-size: 11pt !important;
+                line-height: 1.5em;
+            }
+            .duration {
+                font-size: 8.5pt;
+                margin-top: 1px;
+                &--active {
+                    color: $button-static-color;
+                    font-weight: 400;
+                }
+                &--computing {
+                    color: $button-static-color;
+                    font-weight: 400;
+                }
+                &--done {
+                    color: $color-text3;
+                    font-weight: 400;
+                }
+                &--finished {
+                    color: $color-accent1;
+                    font-weight: 400;
+                }
+                &--preparing {
+                    color: $color-accent2;
+                    font-weight: 400;
+                }
+                &--restarted {
+                    color: $color-text3;
+                    font-weight: 400;
+                }
+                &--timeout {
+                    color: $color-error;
+                    font-weight: 400;
+                }
+
+                .info__task {
+                    margin-top: 10px;
+                    font-size: 7pt;
+                    height: 30px;
+                }
+            }
+            /*.badge {
+                float: right;
+                background: #ccc;
+                border-radius: 5px;
+                color: #444;
+                padding: 5px;
+                font-size: 8pt;
+                margin-top: -12px;
+                margin-right: 50px;
+                box-sizing: border-box;
+            }*/
+
+            .control-panel__task{
+                width: 100%;
+                height: 30px;
+                display: none;
+                margin-top: 10px;
+            }
+
+            .info-label {
+                font-size: 8pt !important;
+                color: $color-text;
+                margin: 0 7px 0 5px;
+            }
+
+            .icon-delete,
+            .icon-details,
+            .icon-folder,
+            .icon-preview,
+            .icon-refresh {
+                box-sizing: border-box;
+                font-size: 8pt;
+                color: $button-static-color;
+                cursor: pointer;
+                transition: .5s color;
+                display: flex;
+                align-items: center; 
+
+                &:hover {
+                    color: $color-text;
+                }
+
+                &[disabled] {
+                    cursor: not-allowed;
+                    &:hover {
+                        color: $color-text3;
+                    }
+                }
+            }
+
+            .icon-details,
+            .icon-folder{
+                font-size: 9pt;
+            }
+
+            &:hover .control-panel__task {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            &:hover .info__task{
+                display: none;
+            }
+
+            .icon-refresh {
+                font-size: 8.5pt;
+                margin: 2px 0 2px 0;
+            }
+
+            .icon-delete {
+                font-size: 11pt;
+            }
+
+            .icon-preview {
+                font-size: 10pt;
+            }
+
+            .icon--active {
+                color: $color-text;
+            }
+
+            &.active {
+                border-left: 5px solid $button-static-color;
+                padding-left: 16px;
+            }
+        }
+    }
+}
+
+.wrapper-task-item {
+    background: $color-text4;
+    &:hover {
+        background: $color-bg2;
+    }
+}
