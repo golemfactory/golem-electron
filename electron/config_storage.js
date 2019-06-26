@@ -51,6 +51,7 @@ const dictConfig = MAINNET ? {
  * @see https://github.com/sindresorhus/electron-config 
  */
 function setConfig(key, value) {
+    if(!key) return;
     store.set(key, value);
 }
 

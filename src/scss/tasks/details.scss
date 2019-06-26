@@ -26,9 +26,17 @@
 				padding: 10px 25px;
 				line-height: 2.6em;
 
+				.info {
+					&-subtask-number {
+						display: inline-block;
+						width: 122px;
+					}
+				}
+
 				label,
 				.overlay {
 					margin-left: 0;
+					margin-right: 15px;
 				}
 
 				&__action {
@@ -75,6 +83,9 @@
 					&-locked::before{
 						font-size: 14pt;
 					}
+				}
+				.id-info {
+					cursor: pointer;
 				}
 			}
 		}

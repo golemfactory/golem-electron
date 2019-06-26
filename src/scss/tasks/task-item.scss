@@ -42,6 +42,22 @@
                 margin: 0;
                 font-size: 11pt !important;
                 line-height: 1.5em;
+
+                .icon-copy{
+                    display: none;
+                    font-size: 9pt;
+                    margin-left: 5px;
+                    color: $color-primary;
+                    cursor: pointer;
+
+                    &:hover {
+                        color: $button-hover-color;
+                    }
+
+                    &:active {
+                        color: $button-hover-color;
+                    }
+                }
             }
             .duration {
                 font-size: 8.5pt;
@@ -101,7 +117,8 @@
             }
 
             .info-label {
-                font-size: 8pt !important;
+                font-family: 'Roboto';
+                font-size: 7pt !important;
                 color: $color-text;
                 margin: 0 7px 0 5px;
             }
@@ -117,7 +134,7 @@
                 cursor: pointer;
                 transition: .5s color;
                 display: flex;
-                align-items: center; 
+                align-items: center;
 
                 &:hover {
                     color: $color-text;
@@ -144,6 +161,10 @@
 
             &:hover .info__task{
                 display: none;
+            }
+
+            &:hover h4 .icon-copy {
+                display: initial;
             }
 
             .icon-refresh {

@@ -1,35 +1,22 @@
 const axios = require('axios');
 
 module.exports = async function getEstimatedGasPrice() {
-	try {
-		const {data} = await axios.get('https://www.etherchain.org/api/gasPriceOracle')
-    	return {data, error: false};
-	} catch (error) {
-		// Error
-        if (error.response) {
-        	return {
-        		data: null, 
-        		error: {
-        			data: error.response.data,
-        			status: error.response.status
-	        	}
-	        }
-        } else if (error.request) {
-            return {
-        		data: null, 
-        		error: {
-        			request: error.request
-	        	}
-	        }
-        } else {
-            // Something happened in setting up the request that triggered an Error
-            console.log('Error', error.message);
-            return {
-        		data: null, 
-        		error: {
-        			message: error.message
-	        	}
-	        }
-        }
-	}
-}
+    try {
+        const { data } = await axios.get(
+            'https://www.etherchain.org/api/gasPriceOracle',
+            {
+                timeout: 5000
+            }
+        );
+        return { data, error: false };
+    } catch (error) {
+        // Error
+        throw ({
+            data: null,
+            error: {
+                message: error.message,
+                code: error.code
+            }
+        }); 
+    }
+};

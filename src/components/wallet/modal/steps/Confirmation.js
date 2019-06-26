@@ -66,7 +66,7 @@ export default class Confirmation extends React.Component {
                     <strong className="info-label">to</strong>
                     <br />
                     <span className="info-address">
-                        <a href={`${mainEtherscan}/${sendTo}`}>{sendTo}</a>
+                        <a href={`${mainEtherscanAddr}/${sendTo}`}>{sendTo}</a>
                     </span>
                 </div>
                 <div className="info-gas__container">

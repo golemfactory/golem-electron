@@ -104,6 +104,7 @@ export class ImageZoom extends React.Component {
                 zoomInButton: 'zoom-in',
                 zoomOutButton: 'zoom-out',
                 homeButton: 'reset',
+                allowZoomToConstraintsOnResize: true,
                 //fullPageButton: 'full-page',
                 //wrapVertical: isVertical, <-- be careful while using this feature. cause of repeated image issue for higher than 35:24 ratio
                 nextButton: 'next',
@@ -130,19 +131,17 @@ export class ImageZoom extends React.Component {
                 }, this.props.isLoaderActive ? 5000 : 0)
             })
 
-            // let goHomeonDefault = () => {
-            //     return new Promise((resolve, reject) => {
-            //         this.viewer.viewport.goHome(true)
-            //         resolve(true)
-            //     })
-            // }
+            viewer.addHandler('resize', (item) => {
+                setTimeout(() => {
+                    this.viewer.viewport.goHome(true);
+                    this.props.fetchClientInfo(this.viewer.viewport._containerInnerSize, this.viewer.viewport.getCenter(true), this.viewer.viewport);
+                  }, 500); //MacOS maximize animation delay
+            })
 
-            // goHomeonDefault().then(() => {
             viewer.addHandler('zoom', (item) => {
                 !!this.props.isSubtaskShown && this.props.setSubtasksVisibility()
                 this.calculateZoomRatio.call(this, item.zoom)
             })
-        // })
         });
     }
 

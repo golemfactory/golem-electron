@@ -1,8 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
-import map from 'lodash/map';
-import filter from 'lodash/filter';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -14,10 +12,13 @@ import SubtaskList from './SubtaskList';
 import BlockNodeModal from '../modal/BlockNodeModal';
 import { taskStatus } from '../../../constants/statusDicts';
 
-import isEqual from 'lodash/isEqual';
 import every from 'lodash/every';
-import some from 'lodash/some';
+import filter from 'lodash/filter';
+import isEqual from 'lodash/isEqual';
+import map from 'lodash/map';
 import size from 'lodash/size';
+import some from 'lodash/some';
+import without from 'lodash/without';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
@@ -61,9 +62,12 @@ export class Details extends React.PureComponent {
 
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
+            const checkableFragments = filter(nextProps.fragments, item => {
+                return item[0]?.status && this._checkRestartCondition(item[0]);
+            }).filter(Boolean);
             const isAllChecked =
                 every(nextState.checkedItems, item => item === true) &&
-                size(nextState.checkedItems) === size(nextProps.fragments);
+                size(nextState.checkedItems) === size(checkableFragments);
 
             const isAnyChecked = some(
                 nextState.checkedItems,
@@ -84,7 +88,9 @@ export class Details extends React.PureComponent {
         }
 
         if (this.liveSubList && !nextProps.updateIf) {
+            nextProps.actions.getFragments(nextProps.item.id);
             this.liveSubList && clearInterval(this.liveSubList);
+            this.liveSubList = null;
         }
     }
 
@@ -242,12 +248,12 @@ export default connect(
 )(Details);
 
 export const ICONS = {
-    Waiting: { name: 'subtask-awaiting', color: 'icon--color-yellow' },
-    Timeout: { name: 'timeout', color: 'icon--color-red' },
-    Failed: { name: 'failure', color: 'icon--color-red' },
+    'Not Started': { name: 'subtask-awaiting', color: 'icon--color-gray' },
+    Cancelled: { name: 'subtasks-failure', color: 'icon--color-red' },
+    Failure: { name: 'failure', color: 'icon--color-red' },
     Finished: { name: 'finished', color: 'icon--color-green' },
-    Negotiating: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
-    Verifying: { name: 'subtask-verifying', color: 'icon--color-gray' },
+    Starting: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
+    Verifying: { name: 'subtask-verifying', color: 'icon--color-blue' },
     Downloading: { name: 'download', color: 'icon--color-blue' },
-    Restarted: { name: 'refresh', color: 'icon--color-blue' }
+    Restart: { name: 'refresh', color: 'icon--color-gray' }
 };
