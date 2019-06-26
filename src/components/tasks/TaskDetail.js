@@ -1500,11 +1500,6 @@ export class TaskDetail extends React.Component {
                                         required={!isDetailPage}
                                         disabled={isDetailPage || !maxSubtasks}
                                     />
-                                    {subtask_warning && (
-                                        <span className="warning">
-                                            {subtask_warning}
-                                        </span>
-                                    )}
                                 </div>
                                 <div className="item-settings">
                                     <InfoLabel
@@ -1981,6 +1976,12 @@ export class TaskDetail extends React.Component {
         );
     }
 }
+
+// {subtask_warning && (
+//     <span className="warning">
+//         {subtask_warning}
+//     </span>
+// )}
 
 // {<div>
 //     <input type="radio" id="sgx" value="sgx" name="compute_on"/>
