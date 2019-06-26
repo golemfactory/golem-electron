@@ -56,7 +56,7 @@ export let config = Object.freeze({
     RESTART_SUBTASKS_RPC: 'comp.task.subtasks.restart',
     RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
-    GET_OPTIMAL_SUBTASK_COUNT_RPC: 'comp.task.subtasks_count',
+    GET_OPTIMAL_SUBTASK_COUNT_RPC: 'comp.task.subtasks.count',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
     GET_SUBTASK_ESTIMATED_COSTS_RPC: 'comp.task.subtasks.estimated.cost',

@@ -447,20 +447,20 @@ export class TaskDetail extends React.Component {
 
         const subtaskValue = Math.min(maxSubtasks, this.state.subtasks_count);
 
-        this.setState({
-                maxSubtasks,
-                subtask_warning: `Optimal subtask number is ${data}`
-            });
-
         this._getAsyncOptimalSubtaskCount(
             [
-                this.state.maxSubtasks, //total_subtasks
+                null,                   //total_subtasks
                 true,                   //optimize_total
                 true,                   //use_frames
                 frames                  //frames
             ]
-            ).then((data) => 
-                this.refs.subtaskCount.setAttribute('placeholder', `Optimal subtask number is ${data}`))
+            ).then((data) => {
+                this.refs.subtaskCount.setAttribute('placeholder', `Optimal subtask number is ${data}`);
+                this.setState({
+                    maxSubtasks,
+                    subtask_warning: `Optimal subtask number is ${data}`
+                });
+            });
 
         // this.refs.subtaskCount.value = subtaskValue
     }
