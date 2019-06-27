@@ -96,15 +96,7 @@ export class Settings extends React.Component {
                     this.state.activeContent !== parseInt(index)
                         ? parseInt(index)
                         : null
-            },
-            () => {
-                if (!Number.isInteger(this.state.activeContent)) {
-                    this.headerEl.classList.remove("smaller");
-                } else {
-                    this.headerEl.classList.add("smaller");
-                }
-            }
-        );
+            });
     };
 
     /**
@@ -223,6 +215,13 @@ export class Settings extends React.Component {
                             tabIndex="0"
                             aria-label="Node statistic">
                             Node statistic
+                        </li>
+                        <li
+                            className="nav__item active"
+                            role="menuitem"
+                            tabIndex="0"
+                            aria-label="ACL">
+                            ACL
                         </li>
                         <span className="selector" />
                     </ul>

@@ -81,9 +81,6 @@ $item__accordion-height: 78.7px;
             }
         }
 
-        & + .nav__item {
-            margin-right: 20px;
-        }
     }
 
     .selector {
@@ -120,41 +117,18 @@ $item__accordion-height: 78.7px;
         width: 99px;
     }
 
+    // .nav__item:nth-child(3):hover ~ .selector
+    .active:nth-child(3) ~ .selector {
+        left: 198px;
+        width: 30px;
+    }
+
 }
 
 .section__personal {
+    flex: 0 0 130px;
     transition: .8s all;
 }
-
-.smaller{
-    flex: 0 0 42px;
-    margin: 0;
-    padding: 20px 0 !important;
-
-    .indicator-panel__personal{
-        margin: 0;
-
-        .indicator__personal{
-            margin: 0;
-        }
-    }
-
-    .image__personal{
-        max-height: 0;
-        max-width: 0;
-        &--border{
-            max-height: 0;
-            max-width: 0;
-            opacity: 0;
-            visibility: hidden;
-        }
-    }
-
-    .backup-info__personal{
-        font-size: 0;
-        margin: 0;
-    }
- }
 
 .tab__accordion {
     height: 100%;

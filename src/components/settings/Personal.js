@@ -102,12 +102,17 @@ export class Personal extends React.Component {
     }
 
     createQRCode(data){
+        const wrapper= document.createElement('div');
+        const qrCodeDOM = document.getElementById('qrCode')
         const typeNumber = 0;
         const errorCorrectionLevel = 'L';
         const qr = qrcode(typeNumber, errorCorrectionLevel);
         qr.addData(data);
         qr.make();
-        document.getElementById('qrCode').innerHTML = qr.createImgTag();
+        wrapper.innerHTML = qr.createImgTag();
+        const element = wrapper.firstChild;
+        element.classList.add("personal__qrcode");
+        qrCodeDOM.insertBefore(element, qrCodeDOM.firstChild);
     }
 
     // <RadialProgress pct={requestorTrust} warn={false}/>
@@ -134,16 +139,18 @@ export class Personal extends React.Component {
             .toDataURL();
         return (
             <div className="section__personal" id="personal">
-                <div className="indicator-panel__personal">
+                <div className="personal__indicator-panel">
                     <div className="avatar-container">
-                        <img
-                            className="image__personal"
-                            src={avatarImg}
-                            alt="avatar"
-                        />
-                        <div className="image__personal--border" />
+                        <div className="image-holder">
+                            <img
+                                className="personal__image"
+                                src={avatarImg}
+                                alt="avatar"
+                            />
+                            <div className="personal__image--border" />
+                        </div>
                     </div>
-                    <div>
+                    <div className="personal__information-panel">
                         <form
                             ref={node => (this.form = node)}
                             className="user-name__form"
@@ -170,7 +177,7 @@ export class Personal extends React.Component {
                                     required
                                 />
                             ) : (
-                                <span className="user-name__personal">
+                                <span className="personal__user-name">
                                     {nodeName ? nodeName : "Anonymous Golem"}
                                 </span>
                             )}
@@ -201,7 +208,7 @@ export class Personal extends React.Component {
                             trigger="mouseenter"
                             hideOnClick={false}>
                             <span
-                                className="user-id__personal"
+                                className="personal__user-id"
                                 onClick={this._handleCopyToClipboard.bind(
                                     this,
                                     nodeId
@@ -222,12 +229,14 @@ export class Personal extends React.Component {
                             </span>
                         </Tooltip>
                     </div>
-                    <div id="qrCode" className="qrcode-container">
-                        <div className="qrcode__personal--border" />
+                    <div className="qrcode-container">
+                        <div id="qrCode" className="qr-holder">
+                            <div className="personal__qrcode--border" />
+                        </div>
                     </div>
                 </div>
                 <div>
-                    <span className="backup-info__personal">
+                    <span className="personal__backup-info">
                         <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-app">
                             <u>
                                 Learn more how to <strong>backup Golem</strong>
