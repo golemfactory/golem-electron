@@ -15,6 +15,7 @@ import { taskStatus } from '../../../constants/statusDicts';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
 import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
@@ -227,8 +228,8 @@ export class Details extends React.PureComponent {
                         restartSubtask={this._restartSubtask}
                     />
                 </ConditionalRender>
-                <ConditionalRender showIf={!fragments}>
-                    <div >
+                <ConditionalRender showIf={isEmpty(fragments)}>
+                    <div className="details__loading">
                         <span>
                             Fetching subtask information
                             <span className="jumping-dots">
