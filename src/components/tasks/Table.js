@@ -16,6 +16,7 @@ import TaskItem from "./TaskItem";
 const mapStateToProps = state => ({
     taskList: state.realTime.taskList,
     isEngineOn: state.info.isEngineOn,
+    isMainNet: state.info.isMainNet,
     connectedPeers: state.realTime.connectedPeers,
     psEnabled: state.preview.ps.enabled,
     psId: state.preview.ps.id
@@ -236,7 +237,7 @@ export class Table extends React.Component {
     }
 
     render() {
-        const { taskList } = this.props;
+        const { taskList, isMainNet } = this.props;
         const { insufficientAmountModal } = this.state;
         return (
             <div role="list">
@@ -249,6 +250,7 @@ export class Table extends React.Component {
                                 this,
                                 ...insufficientAmountModal?.restartData
                             )}
+                            isMainNet={isMainNet}
                             message={insufficientAmountModal?.message}
                         />,
                         document.getElementById("modalPortal")

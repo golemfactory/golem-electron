@@ -73,7 +73,8 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 					placement="top"
 					trigger="mouseenter"
 					hideOnClick={false}
-					size="small">
+					size="small"
+					enabled={!!item?.node_name}>
 					<span
 						className="id-info"
 						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>

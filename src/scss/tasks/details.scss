@@ -107,6 +107,14 @@
 		.arrow-expand {
 			transform: rotate(180deg);
 		}
+
+		.details__loading{
+			text-align: center;
+			height: 30px;
+			line-height: 30px;
+			font-size: 10pt;
+			color: $color-text2;
+		}
 	}
 
 	&__subtask-stats {

@@ -10,7 +10,7 @@ import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
 import testNetLogo from './../assets/img/testnet-logo-small.svg';
 
 import NotificationCenter from './NotificationCenter';
-import directorySelector from "./../utils/directorySelector";
+import directorySelector from './../utils/directorySelector';
 
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
@@ -30,6 +30,17 @@ const getSiblings = function(elem) {
     return siblings;
 };
 
+const setActiveClass = function(allNav, path) {
+    const index = allNav.findIndex(
+        item => path === item.getAttribute('data-path')
+    );
+    Number.isInteger(index) &&
+        index >= 0 &&
+        allNav &&
+        allNav.length > 0 &&
+        allNav[index].classList.add('active');
+};
+
 /**
  * Helper function
  */
@@ -46,11 +57,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const DOCLINK = 'https://docs.golem.network/';
-const HASHLIST = {
-    '/': 0,
-    '/tasks': 1,
-    '/settings': 4
-};
 
 /**
  * { Class for header component with navigation. }
@@ -66,17 +72,11 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index =
-            HASHLIST[
-                window?.routerHistory?.location?.pathname
-            ];
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
-        Number.isInteger(index) &&
-            allNav &&
-            allNav.length > 0 &&
-            allNav[index].classList.add('active');
+
+        setActiveClass(allNav, location.hash.replace('#', ''));
 
         /*EXPRIMENTAL*/
         // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
@@ -88,13 +88,8 @@ export class Header extends Component {
                 [].map.call(allNav, item => {
                     item.classList.remove('active');
                 });
-
-                const index = HASHLIST[location.pathname];
-                Number.isInteger(index) &&
-                    allNav &&
-                    allNav.length > 0 &&
-                    allNav[index].classList.add('active');
-            });
+                setActiveClass(allNav, location.pathname);
+            }); 
     }
 
     /**
@@ -148,7 +143,7 @@ export class Header extends Component {
      * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
      */
     _onFileDialog(dialogRules = []) {
-        const onFileHandler = (data) => {
+        const onFileHandler = data => {
             //console.log(data)
             if (data) {
                 directorySelector.call(this, data);
@@ -369,6 +364,7 @@ export class Header extends Component {
                                         '/settings'
                                     )}
                                     role="menuitem"
+                                    data-path="/settings"
                                     tabIndex="0"
                                     aria-label="Settings">
                                     <span className="icon-settings" />
@@ -434,6 +430,7 @@ export class Header extends Component {
                                     className="nav__item"
                                     onClick={this._navigateTo.bind(this, '/')}
                                     role="menuitem"
+                                    data-path="/"
                                     tabIndex="0"
                                     aria-label="Network">
                                     Network
@@ -447,6 +444,7 @@ export class Header extends Component {
                                         '/tasks'
                                     )}
                                     role="menuitem"
+                                    data-path="/tasks"
                                     tabIndex="0"
                                     aria-label="Tasks">
                                     Tasks

@@ -58,6 +58,7 @@ export class Details extends React.PureComponent {
 
     componentWillUnmount() {
         this.liveSubList && clearInterval(this.liveSubList);
+        this.props.actions.clearFragments();
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -225,6 +226,18 @@ export class Details extends React.PureComponent {
                         showBlockNodeModal={this._showBlockNodeModal}
                         restartSubtask={this._restartSubtask}
                     />
+                </ConditionalRender>
+                <ConditionalRender showIf={!fragments}>
+                    <div >
+                        <span>
+                            Fetching subtask information
+                            <span className="jumping-dots">
+                                <span className="dot-1">.</span>
+                                <span className="dot-2">.</span>
+                                <span className="dot-3">.</span>
+                            </span>
+                        </span>
+                    </div>
                 </ConditionalRender>
                 {blockNodeModal &&
                     ReactDOM.createPortal(

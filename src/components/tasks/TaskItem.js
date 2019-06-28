@@ -20,7 +20,8 @@ const { ipcRenderer, clipboard } = window.electron;
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
     nodeNumbers: state.details.nodeNumber,
-    isDeveloperMode: state.input.developerMode
+    isDeveloperMode: state.input.developerMode,
+    isMainNet: state.info.isMainNet
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -49,6 +50,7 @@ export class TaskItem extends React.Component {
 
     componentWillUnmount() {
         this.liveSubList && clearInterval(this.liveSubList);
+        this.copyTimeout && clearTimeout(this.copyTimeout);
     }
 
     _interval = (actions, item) => {
@@ -211,13 +213,14 @@ export class TaskItem extends React.Component {
 
     _fetchCost(item) {
         const fixedTo = 4;
+        const { isMainNet } = this.props;
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{isMainNet ? ' ' : ' t'}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{isMainNet ? ' ' : ' t'}
                 ETH
             </span>
         );
