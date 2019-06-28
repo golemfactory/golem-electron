@@ -72,7 +72,7 @@ function isGolemConnecting(isEngineOn, status) {
         status?.client?.status &&
         (status.client.message === "Logged In" ||
             status.client.status !== "Ready") &&
-        isEngineOn
+        !status.client.message.includes('configuration')
     );
 }
 

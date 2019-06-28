@@ -148,10 +148,10 @@ class Estimation extends Component {
 				<div className="summary">
 					<div className="summary-item">
 						<span className="summary-currency">
-							<h4>{balance[0].toFixed(6)}</h4> GNT
+							<h4>{balance[0].toFixed(6)}</h4> {isMainNet ? '' : 't'}GNT
 						</span>
 						<span className="summary-currency">
-							<h4>{balance[1].toFixed(6)}</h4> ETH
+							<h4>{balance[1].toFixed(6)}</h4> {isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
 					<ConditionalRender showIf={concentSwitch && !isMainNet}>
@@ -162,7 +162,7 @@ class Estimation extends Component {
 									{concentBalance?.value
 										.dividedBy(ETH_DENOM)
 										.toFixed(4)}
-								</b>{' '}
+								</b>{isMainNet ? ' ' : ' t'}
 								GNT
 							</sub>
 						</div>
@@ -172,18 +172,18 @@ class Estimation extends Component {
 				<div className="summary">
 					<div className="summary-item">
 						<sub>
-							est. ${GNT.multipliedBy(currency.GNT).toFixed(4)}
+							est. {isMainNet ? '' : 't'}${GNT.multipliedBy(currency.GNT).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
-							<h4>{GNT.toFixed(4)}</h4> GNT
+							<h4>{GNT.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 						</span>
 					</div>
 					<div className="summary-item">
 						<sub>
-							est. ${ETH.multipliedBy(currency.ETH).toFixed(4)}
+							est. {isMainNet ? '' : 't'}${ETH.multipliedBy(currency.ETH).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
-							<h4>{ETH.toFixed(4)}</h4> ETH
+							<h4>{ETH.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
 					<ConditionalRender
@@ -198,7 +198,7 @@ class Estimation extends Component {
 		                    <div className="summary-item deposit">
 								<sub>Deposit required<span className="icon-question-mark"/></sub>
 								<span className="summary-currency">
-									<h4>{GNT_required.toFixed(4)}</h4> GNT
+									<h4>{GNT_required.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
 		                </Tooltip>
@@ -211,14 +211,14 @@ class Estimation extends Component {
 		                    <div className="summary-item deposit">
 								<sub>Deposit suggested<span className="icon-question-mark"/></sub>
 								<span className="summary-currency">
-									<h4>{GNT_suggested.toFixed(4)}</h4> GNT
+									<h4>{GNT_suggested.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
 		                </Tooltip>
 						<div className="summary-item deposit">
 							<sub>Deposit tx fee</sub>
 							<span className="summary-currency">
-								<h4>{ETH_deposit.toFixed(4)}</h4> ETH
+								<h4>{ETH_deposit.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
 							</span>
 						</div>
 					</ConditionalRender>

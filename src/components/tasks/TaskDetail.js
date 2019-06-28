@@ -1686,12 +1686,12 @@ export class TaskDetail extends React.Component {
                                             disabled={isDetailPage}
                                         />
                                         <span>
-                                            {isMainNet ? "" : "t"} GNT/h
+                                            {isMainNet ? " " : " t"}GNT/h
                                         </span>
                                     </div>
                                     <div className="estimated_usd">
                                         <span>
-                                            est. {isMainNet ? "" : "t"}${" "}
+                                            est. {isMainNet ? "" : "t"}$
                                             {this._convertPriceAsHR(
                                                 bid * currency["GNT"],
                                                 "USD",
@@ -1734,12 +1734,12 @@ export class TaskDetail extends React.Component {
                                                 36
                                             )}
                                             <span>
-                                                {isMainNet ? "" : "t"} GNT
+                                                {isMainNet ? " " : " t"}GNT
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? "" : "t"}${" "}
+                                                est. {isMainNet ? "" : "t"}$
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.GNT || 0) *
                                                         currency["GNT"],
@@ -1780,12 +1780,12 @@ export class TaskDetail extends React.Component {
                                                 18
                                             )}
                                             <span>
-                                                {isMainNet ? "" : "t"} ETH
+                                                {isMainNet ? " " : " t"}ETH
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? "" : "t"}${" "}
+                                                est. {isMainNet ? "" : "t"}$
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.ETH || 0) *
                                                         currency["ETH"],
@@ -1839,12 +1839,12 @@ export class TaskDetail extends React.Component {
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? "" : "t"} GNT
+                                                    {isMainNet ? " " : " t"}GNT
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? "" : "t"}${" "}
+                                                    est. {isMainNet ? "" : "t"}$
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .GNT_suggested ||
@@ -1884,12 +1884,12 @@ export class TaskDetail extends React.Component {
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? "" : "t"} ETH
+                                                    {isMainNet ? " " : " t"}ETH
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? "" : "t"}${" "}
+                                                    est. {isMainNet ? "" : "t"}$
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .ETH || 0) *
@@ -1955,6 +1955,7 @@ export class TaskDetail extends React.Component {
                         _handleStartTaskButton={this._handleStartTaskButton}
                         estimated_cost={estimated_cost}
                         minPerf={minPerf}
+                        isMainNet={isMainNet}
                         {...this.state}
                     />
                 )}
@@ -1969,6 +1970,7 @@ export class TaskDetail extends React.Component {
                     <InsufficientAmountModal
                         message={insufficientAmountModal.message}
                         closeModal={this._closeModal}
+                        isMainNet={isMainNet}
                         createTaskConditionally={this._createTaskConditionally}
                     />
                 )}

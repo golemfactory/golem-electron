@@ -34,6 +34,7 @@ export default class TaskSummaryModal extends React.Component {
             estimated_cost,
             format,
             frames,
+            isMainNet,
             minPerf,
             resolution,
             samples,
@@ -107,26 +108,26 @@ export default class TaskSummaryModal extends React.Component {
                         <div className="summary__item">
                             <span className="title">Task fee:</span>
                             <span className="value">
-                                {estimated_cost.GNT.toFixed(3)} GNT
+                                {estimated_cost.GNT.toFixed(3)} {isMainNet ? '' : 't'}GNT
                             </span>
                         </div>
                         <div className="summary__item">
                             <span className="title">Tx fee lock:</span>
                             <span className="value">
-                                {estimated_cost.ETH.toFixed(4)} ETH
+                                {estimated_cost.ETH.toFixed(4)} {isMainNet ? '' : 't'}ETH
                             </span>
                         </div>
                         <ConditionalRender showIf={!!concent}>
                             <div className="summary__item">
                                 <span className="title">Deposit fee:</span>
                                 <span className="value">
-                                    {estimated_cost.deposit.GNT_suggested.toFixed(4)} ETH
+                                    {estimated_cost.deposit.GNT_suggested.toFixed(4)} {isMainNet ? '' : 't'}ETH
                                 </span>
                             </div>
                             <div className="summary__item">
                                 <span className="title">Deposit Tx fee:</span>
                                 <span className="value">
-                                    {estimated_cost.deposit.ETH.toFixed(4)} ETH
+                                    {estimated_cost.deposit.ETH.toFixed(4)} {isMainNet ? '' : 't'}ETH
                                 </span>
                             </div>
                         </ConditionalRender>
