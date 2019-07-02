@@ -1,29 +1,29 @@
-import React, { Component } from "react";
-import Tooltip from "@tippy.js/react";
-import Lottie from "react-lottie";
+import React, { Component } from 'react';
+import Tooltip from '@tippy.js/react';
+import Lottie from 'react-lottie';
 import {
     Transition,
     animated,
     interpolate
-} from "react-spring/renderprops.cjs";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { isEqual } from "lodash";
+} from 'react-spring/renderprops.cjs';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import { isEqual } from 'lodash';
 
-import * as Actions from "./../actions";
+import * as Actions from './../actions';
 import {
     getStatus,
     getPasswordModalStatus,
     getComponentWarnings
-} from "./../reducers";
-import animData from "./../assets/anims/wave.json";
+} from './../reducers';
+import animData from './../assets/anims/wave.json';
 
-import LoaderBar from "./LoaderBar";
-import checkNested from "./../utils/checkNested";
-import golem_loading from "./../assets/img/golem-loading.svg";
+import LoaderBar from './LoaderBar';
+import checkNested from './../utils/checkNested';
+import golem_loading from './../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
-const currentPlatform = remote.getGlobal("process").platform;
+const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
 const defaultOptions = {
@@ -31,28 +31,28 @@ const defaultOptions = {
     autoplay: true,
     animationData: animData,
     rendererSettings: {
-        preserveAspectRatio: "xMidYMid slice"
+        preserveAspectRatio: 'xMidYMid slice'
     }
 };
 
 const ISSUES = {
     PORT: {
-        title: "Problem with ports",
-        message: "The ports are unreachable",
+        title: 'Problem with ports',
+        message: 'The ports are unreachable',
         docs:
-            "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable"
+            'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
     },
     RAM: {
-        title: "Not enough RAM",
+        title: 'Not enough RAM',
         message: "You don't have enough RAM",
         docs:
-            "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning"
+            'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
     },
     DISK: {
-        title: "Not enough DISK",
+        title: 'Not enough DISK',
         message: "You don't have enough DISK",
         docs:
-            "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=disk-space-warning"
+            'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=disk-space-warning'
     }
 };
 
@@ -60,27 +60,27 @@ const ISSUES = {
 
 function isGolemConnected(gs) {
     return (
-        !!gs.status &&
-        !!gs.message &&
-        gs.status === "Ready" &&
-        gs.message.includes("Node")
+        !!gs?.status &&
+        !!gs?.message &&
+        gs?.status === 'Ready' &&
+        gs?.message.includes('Node')
     );
 }
 
 function isGolemConnecting(isEngineOn, status) {
     return (
         status?.client?.status &&
-        (status.client.message === "Logged In" ||
-            status.client.status !== "Ready") &&
+        (status.client.message === 'Logged In' ||
+            status.client.status !== 'Ready') &&
         !status.client.message.includes('configuration')
     );
 }
 
 const mapStateToProps = state => ({
     connectionProblem: state.info.connectionProblem,
-    status: getStatus(state, "golemStatus"),
-    passwordModal: getPasswordModalStatus(state, "passwordModal"),
-    componentWarnings: getComponentWarnings(state, "componentWarnings"),
+    status: getStatus(state, 'golemStatus'),
+    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
+    componentWarnings: getComponentWarnings(state, 'componentWarnings'),
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats,
@@ -102,10 +102,10 @@ export class FooterMain extends Component {
     }
 
     componentDidMount() {
-        const waveLoading = document.getElementById("waveLoading");
+        const waveLoading = document.getElementById('waveLoading');
         waveLoading &&
             waveLoading.addEventListener(
-                "webkitTransitionEnd",
+                'webkitTransitionEnd',
                 event => {},
                 false
             );
@@ -152,42 +152,41 @@ export class FooterMain extends Component {
     golemDotClass(status, connectionProblem, componentWarnings = []) {
         if (status && isGolemConnected(status)) {
             return connectionProblem?.status || componentWarnings.length > 0
-                ? "yellow"
-                : "green";
-        } else if (status?.status !== "Exception") {
-            return "yellow";
+                ? 'yellow'
+                : 'green';
+        } else if (status?.status !== 'Exception') {
+            return 'yellow';
         }
-        return "red";
+        return 'red';
     }
 
     _loadErrorUrl = msg => {
         switch (msg) {
-            case "Error creating Docker VM": //docker
+            case 'Error creating Docker VM': //docker
                 return (
                     <a
                         href={
-                            currentPlatform === "win32"
-                                ? "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10"
-                                : "https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos"
-                        }
-                    >
+                            currentPlatform === 'win32'
+                                ? 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10'
+                                : 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos'
+                        }>
                         <span className="icon-new-window" />
                     </a>
                 );
-            case "Outdated hyperg version": //hyperg
+            case 'Outdated hyperg version': //hyperg
                 return (
                     <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=outdated-hyperg-version">
                         <span className="icon-new-window" />
                     </a>
                 );
-            case "Chain sync error": //sync
+            case 'Chain sync error': //sync
                 return (
                     <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=sync">
                         <span className="icon-new-window" />
                     </a>
                 );
                 break;
-            case "Error connecting geth": //geth
+            case 'Error connecting geth': //geth
                 return (
                     <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=geth">
                         <span className="icon-new-window" />
@@ -199,7 +198,7 @@ export class FooterMain extends Component {
     };
 
     _openLogs = () => {
-        ipcRenderer.send("open-logs");
+        ipcRenderer.send('open-logs');
     };
 
     _fetchState(stat) {
@@ -222,18 +221,18 @@ export class FooterMain extends Component {
     }
 
     _loadConnectionWarnings(status, connectionProblem, componentWarnings = []) {
-        let warningMessage = "";
+        let warningMessage = '';
         const newLineBeforeWarning =
-            status?.client?.message.length > 10 ? <br key="br" /> : " ";
+            status?.client?.message.length > 10 ? <br key="br" /> : ' ';
 
         if (connectionProblem.status)
             warningMessage =
-                connectionProblem.issue == "WEBSOCKET" ? (
+                connectionProblem.issue == 'WEBSOCKET' ? (
                     <span key="warningWebsocket" className="info__warnings">
                         connection dropped
                     </span>
                 ) : (
-                    " "
+                    ' '
                 );
         else if (componentWarnings.length > 0) {
             warningMessage = (
@@ -254,8 +253,7 @@ export class FooterMain extends Component {
                                     return (
                                         <span
                                             key={index.toString()}
-                                            className="info__connection__item"
-                                        >
+                                            className="info__connection__item">
                                             <span className="icon-status-dot" />
                                             {message}
                                             <a href={docs}>
@@ -269,8 +267,7 @@ export class FooterMain extends Component {
                         distance={status?.client?.message.length > 10 ? 40 : 30}
                         placement="top"
                         trigger="mouseenter"
-                        theme="light"
-                    >
+                        theme="light">
                         <span className="icon-warning-rounded" />
                     </Tooltip>
                 </span>
@@ -293,15 +290,14 @@ export class FooterMain extends Component {
             version
         } = this.props;
         const versionTemplate = version?.error
-            ? version?.message || ""
-            : `${version?.message || ""}${version?.number || ""}`;
+            ? version?.message || ''
+            : `${version?.message || ''}${version?.number || ''}`;
         return (
             <div
                 className={`content__footer-main ${isGolemConnecting(
                     isEngineOn,
                     status
-                ) && "content__footer-main__loading"}`}
-            >
+                ) && 'content__footer-main__loading'}`}>
                 <div className="section__actions">
                     <div className="section__actions-status">
                         <span
@@ -340,8 +336,7 @@ export class FooterMain extends Component {
                                                             </p>
                                                         }
                                                         placement="top"
-                                                        trigger="mouseenter"
-                                                    >
+                                                        trigger="mouseenter">
                                                         <span className="icon-question-mark" />
                                                     </Tooltip>
                                                 </span>
@@ -384,23 +379,27 @@ export class FooterMain extends Component {
                             <Transition
                                 native
                                 initial={null}
-                                items={!!Object.keys(stats).length}
+                                items={
+                                    !!Object.keys(stats).length ||
+                                    status?.client?.message.includes(
+                                        'configuration'
+                                    )
+                                }
                                 from={{
-                                    position: "absolute",
+                                    position: 'absolute',
                                     opacity: 0,
                                     transform: 90
                                 }}
                                 enter={{
-                                    position: "initial",
+                                    position: 'initial',
                                     opacity: 1,
                                     transform: 0
                                 }}
                                 leave={{
-                                    position: "absolute",
+                                    position: 'absolute',
                                     opacity: 0,
                                     transform: -180
-                                }}
-                            >
+                                }}>
                                 {toggle =>
                                     toggle
                                         ? props => (
@@ -415,17 +414,16 @@ export class FooterMain extends Component {
                                                       ),
                                                       position: props.position
                                                   }}
-                                                  className="status-node"
-                                              >
+                                                  className="status-node">
                                                   <span>
-                                                      Provider state:{" "}
+                                                      Provider state:{' '}
                                                       {this._fetchState(
                                                           stats.provider_state
                                                       )}
                                                   </span>
                                                   <br />
                                                   <span>
-                                                      Attempted:{" "}
+                                                      Attempted:{' '}
                                                       {stats.subtasks_computed &&
                                                           stats
                                                               .subtasks_computed[1] +
@@ -460,11 +458,10 @@ export class FooterMain extends Component {
                                                       ),
                                                       position: props.position
                                                   }}
-                                                  className="status-node__loading"
-                                              >
+                                                  className="status-node__loading">
                                                   {status?.client?.status &&
                                                   status.client.status !==
-                                                      "Exception" ? (
+                                                      'Exception' ? (
                                                       <div className="status__components">
                                                           <div className="item__status">
                                                               <div>
@@ -475,7 +472,7 @@ export class FooterMain extends Component {
                                                                       )}`}
                                                                   />
                                                                   <span>
-                                                                      Hyperg:{" "}
+                                                                      Hyperg:{' '}
                                                                   </span>
                                                               </div>
                                                               <span>
@@ -495,7 +492,7 @@ export class FooterMain extends Component {
                                                                       )}`}
                                                                   />
                                                                   <span>
-                                                                      Hypervisor:{" "}
+                                                                      Hypervisor:{' '}
                                                                   </span>
                                                               </div>
                                                               <span>
@@ -515,7 +512,7 @@ export class FooterMain extends Component {
                                                                       )}`}
                                                                   />
                                                                   <span>
-                                                                      Docker:{" "}
+                                                                      Docker:{' '}
                                                                   </span>
                                                               </div>
                                                               <span>
@@ -535,7 +532,7 @@ export class FooterMain extends Component {
                                                                       )}`}
                                                                   />
                                                                   <span>
-                                                                      Geth:{" "}
+                                                                      Geth:{' '}
                                                                   </span>
                                                               </div>
                                                               <span>
@@ -561,17 +558,16 @@ export class FooterMain extends Component {
                     </div>
                     <button
                         className={`btn--primary ${
-                            isEngineOn ? "btn--yellow" : ""
+                            isEngineOn ? 'btn--yellow' : ''
                         }`}
                         onClick={this._golemize}
-                        disabled={isGolemConnecting(isEngineOn, status)}
-                    >
-                        {isEngineOn ? "Stop" : "Start"} Golem
+                        disabled={isGolemConnecting(isEngineOn, status)}>
+                        {isEngineOn ? 'Stop' : 'Start'} Golem
                     </button>
                     {
                         <div className="wave-loading" id="waveLoading">
                             <Lottie
-                                width={"100%"}
+                                width={'100%'}
                                 options={defaultOptions}
                                 isStopped={this.state.stopAnim}
                             />
@@ -585,15 +581,13 @@ export class FooterMain extends Component {
                     </span>
                     <a
                         className="element__footer"
-                        href="https://www.github.com/golemfactory"
-                    >
+                        href="https://www.github.com/golemfactory">
                         <span className="icon-golem" />
                         {versionTemplate}
                     </a>
                     <a
                         className="element__footer"
-                        href="https://chat.golem.network"
-                    >
+                        href="https://chat.golem.network">
                         <span className="icon-chat" />
                         <u>golem chat</u>
                     </a>
@@ -601,12 +595,12 @@ export class FooterMain extends Component {
                 <div>
                     <div
                         className={`loading-indicator ${
-                            isEngineLoading ? "active" : ""
+                            isEngineLoading ? 'active' : ''
                         }`}
                     />
                     <object
                         className={`loading-icon ${
-                            isEngineLoading ? "active" : ""
+                            isEngineLoading ? 'active' : ''
                         }`}
                         type="image/svg+xml"
                         data={golem_loading}

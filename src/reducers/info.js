@@ -23,6 +23,7 @@ const {
     SET_CONCENT_TERMS_STATUS,
     SET_CONCENT_TERMS,
     SET_CHAIN_INFO,
+    SET_PASSWORD_MODAL,
     SET_VIRTUALIZATION_STATUS
 } = dict;
 
@@ -125,7 +126,7 @@ const setInfo = (state = initialState, action) => {
         }
 
         case SET_COMPONENT_WARNING: {
-            if(some(state.componentWarnings, action.payload)) {
+            if (some(state.componentWarnings, action.payload)) {
                 return state;
             }
             return Object.assign({}, state, {
@@ -193,6 +194,12 @@ const setInfo = (state = initialState, action) => {
         case SET_VIRTUALIZATION_STATUS:
             return Object.assign({}, state, {
                 isVirtualizationExist: action.payload
+            });
+
+        case SET_PASSWORD_MODAL:
+            if (!state.isEngineOn) setConfig(GOLEM_STARTER, true);
+            return Object.assign({}, state, {
+                isEngineOn: true
             });
 
         default:
