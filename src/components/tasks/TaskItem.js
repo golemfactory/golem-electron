@@ -28,6 +28,11 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
+const taskType = Object.freeze({
+    BLENDER: "Blender",
+    BLENDER_NVGPU: "Blender_NVGPU"
+});
+
 export class TaskItem extends React.Component {
     constructor(props) {
         super(props);
@@ -259,6 +264,7 @@ export class TaskItem extends React.Component {
 
         const { toggledList, isDataCopied } = this.state;
         const { options } = item;
+        const isSupportedTaskType = Object.values(taskType).indexOf(item.type) >= 0;
         return (
             <Spring
                 from={{
@@ -328,29 +334,30 @@ export class TaskItem extends React.Component {
                                     <div className="duration">
                                         {this._fetchStatus(item)}
                                         <div className="info__task">
-                                            <div>
+                                            <ConditionalRender
+                                                showIf={ isSupportedTaskType }>
                                                 <span>
                                                     Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
-                                                        0}
+                                                    0}
                                                 </span>
                                                 <span className="bumper" />
                                                 <span>
                                                     {' '}
                                                     Resolution:{' '}
-                                                    {(options &&
+                                                    {(options && options.resolution &&
                                                         options.resolution.join(
                                                             'x'
                                                         )) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper" />
-                                                <span>
+                                            </ConditionalRender>
+                                            <span>
                                                     Cost:{' '}
-                                                    {this._fetchCost(item)}
-                                                </span>
-                                            </div>
+                                                {this._fetchCost(item)}
+                                            </span>
                                             <div>
                                                 <span>
                                                     Subtasks:{' '}
@@ -369,16 +376,17 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div
-                                            className="control-panel__task"
-                                            ref={node =>
-                                                (this.controlPanelRef = node)
-                                            }>
-                                            <Tooltip
-                                                content={<p>Preview</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                size="small">
+                                        <ConditionalRender showIf={isSupportedTaskType}>
+                                            <div
+                                                className="control-panel__task"
+                                                ref={node =>
+                                                    (this.controlPanelRef = node)
+                                                }>
+                                                <Tooltip
+                                                    content={<p>Preview</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-preview"
                                                     tabIndex="0"
@@ -391,13 +399,13 @@ export class TaskItem extends React.Component {
                                                         Preview
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Task Details</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                className="task-details-icon"
-                                                size="small">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Task Details</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    className="task-details-icon"
+                                                    size="small">
                                                 <span
                                                     className="icon-details"
                                                     tabIndex="0"
@@ -410,12 +418,12 @@ export class TaskItem extends React.Component {
                                                         Details
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Restart</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                size="small">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Restart</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-refresh"
                                                     tabIndex="0"
@@ -436,12 +444,12 @@ export class TaskItem extends React.Component {
                                                         Restart
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Output</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                size="small">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Output</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-folder"
                                                     tabIndex="0"
@@ -457,12 +465,12 @@ export class TaskItem extends React.Component {
                                                         Output
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Delete</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                size="small">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Delete</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-delete"
                                                     tabIndex="0"
@@ -474,8 +482,9 @@ export class TaskItem extends React.Component {
                                                         Delete
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                        </div>
+                                                </Tooltip>
+                                            </div>
+                                        </ConditionalRender>
                                     </div>
                                 </div>
                             </div>
