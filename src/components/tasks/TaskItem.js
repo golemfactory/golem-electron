@@ -298,7 +298,8 @@ export class TaskItem extends React.Component {
                                 aria-label="Task Preview">
                                 <div>
                                     <span
-                                        className={`task-icon icon-${item.type.toLowerCase()}`}>
+                                        className={`task-icon
+                                            icon-${isSupportedTaskType ? item.type.toLowerCase() : 'default-task'}`}>
                                         <span className="path1" />
                                         <span className="path2" />
                                         <span className="path3" />
@@ -483,6 +484,13 @@ export class TaskItem extends React.Component {
                                                     </span>
                                                 </span>
                                                 </Tooltip>
+                                            </div>
+                                        </ConditionalRender>
+                                        <ConditionalRender showIf={!isSupportedTaskType}>
+                                            <div className="info-task-unsupported">
+                                                <span>
+                                                    Functionality for task type: {item.type} is available from CLI.
+                                                </span>
                                             </div>
                                         </ConditionalRender>
                                     </div>
