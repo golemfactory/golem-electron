@@ -111,10 +111,12 @@ export class Details extends React.PureComponent {
 
     _toggleAll = () => {
         const { fragments } = this.props;
-        const keyList = map(
-            fragments,
-            item => item[item.length - 1] && item[item.length - 1].subtask_id
-        );
+        const keyList = map(fragments, item => {
+            const subtask = item[item.length - 1];
+            return (
+                subtask?.status !== taskStatus.RESTART && subtask?.subtask_id
+            );
+        });
         this._toggleItems(keyList, true);
     };
 
