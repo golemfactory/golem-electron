@@ -442,12 +442,14 @@ function addWarning(data, title, unit) {
         data?.status == title &&
         !some(warningCollector, {
             status: true,
-            issue: unit
+            issue: unit,
+            ...(data?.value && {value: data?.value})
         })
     ) {
         warningCollector.push({
             status: true,
-            issue: unit
+            issue: unit,
+            ...(data?.value && {value: data?.value})
         });
     }
 }

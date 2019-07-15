@@ -246,12 +246,19 @@
     max-width: 432px !important;
     width: 432px;
     text-align: left;
+    .info__connection__item{
+        margin-left: 25px;
+    }
     .icon-status-dot {
         position: relative;
         bottom: -1px;
-        margin-left: 5px;
+        margin-left: -23px;
         margin-right: 10px;
         color: $color-accent2;
+
+        &--info {
+            color: $color-primary;
+        }
     }
     .icon-new-window {
         position: relative;
