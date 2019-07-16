@@ -271,10 +271,10 @@ export class FooterMain extends Component {
                                                 'RAM' &&
                                                 componentWarnings[index]
                                                     ?.value &&
-                                                `${Math.trunc(
+                                                `${
                                                     componentWarnings[index]
-                                                        ?.value / 1024
-                                                )} GiB`}
+                                                        ?.value
+                                                } GiB`}
                                             <a href={docs}>
                                                 <span className="icon-new-window" />
                                             </a>

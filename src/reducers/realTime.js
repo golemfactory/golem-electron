@@ -1,6 +1,6 @@
 import { BigNumber } from 'bignumber.js';
 import createCachedSelector from 're-reselect';
-import { some } from 'lodash';
+import { find, some } from 'lodash';
 import { dict } from './../actions';
 import checkNested from './../utils/checkNested';
 const { ipcRenderer, remote } = window.electron;
@@ -438,18 +438,38 @@ export const componentWarningSelector = createCachedSelector(
 );
 
 function addWarning(data, title, unit) {
-    if (
-        data?.status == title &&
-        !some(warningCollector, {
-            status: true,
-            issue: unit,
-            ...(data?.value && {value: data?.value})
-        })
-    ) {
-        warningCollector.push({
-            status: true,
-            issue: unit,
-            ...(data?.value && {value: data?.value})
-        });
+    if (data?.status == title) {
+        // 0 unnecesarry
+        const _value = data?.value ? (data.value / 1024).toFixedDown(1) : 0;
+        if (
+            !some(warningCollector, {
+                status: true,
+                issue: unit
+            })
+        ) {
+            warningCollector.push({
+                status: true,
+                issue: unit,
+                ...(_value && { value: _value })
+            });
+        } else if (
+            !some(warningCollector, {
+                status: true,
+                issue: unit,
+                ...(_value && { value: _value })
+            })
+        ) {
+            const updateObj = find(warningCollector, {
+                status: true,
+                issue: unit
+            });
+            updateObj.value = _value;
+        }
     }
 }
+
+Number.prototype.toFixedDown = function(digits) {
+    var re = new RegExp('(\\d+\\.\\d{' + digits + '})(\\d)'),
+        m = this.toString().match(re);
+    return m ? parseFloat(m[1]) : this.valueOf();
+};
