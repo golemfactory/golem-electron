@@ -45,7 +45,7 @@ const ISSUES = {
     RAM: {
         title: 'RAM allocation lowered',
         message:
-            'There was insufficient memory available on your machine thus Golem started with less RAM then configured ',
+            'Golem could not allocate the configured amount of RAM on your machine. Allocation adjusted to ',
         docs:
             'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
     },
@@ -271,10 +271,10 @@ export class FooterMain extends Component {
                                                 'RAM' &&
                                                 componentWarnings[index]
                                                     ?.value &&
-                                                `(${Math.trunc(
+                                                `${Math.trunc(
                                                     componentWarnings[index]
                                                         ?.value / 1024
-                                                )} GiB)`}
+                                                )} GiB`}
                                             <a href={docs}>
                                                 <span className="icon-new-window" />
                                             </a>
