@@ -92,24 +92,13 @@ export class Settings extends React.Component {
     };
 
     /**
-     * [_handleTab func. will make selected tab visible in accordion tab system]
+     * [_handleTab func. will make selected tab visible in tab system]
      * @param  {DOM}        elm         [Clicked DOM Element]
      */
     _handleTab = elm => {
         let target = elm.currentTarget;
         let targetRoot = target.parentElement;
         let index = targetRoot.getAttribute('value');
-        let accordionItems = document.getElementsByClassName('item__accordion');
-        for (var i = 0; i < accordionItems.length; i++) {
-            if (i !== parseInt(index)) {
-                accordionItems[i].classList.remove('active');
-                accordionItems[i].children[0].children[1].classList.remove(
-                    'arrow-expand'
-                );
-            }
-        }
-        targetRoot.classList.toggle('active');
-        target.children[1].classList.toggle('arrow-expand');
         this.setState({
             activeContent:
                 this.state.activeContent !== parseInt(index)
@@ -125,11 +114,11 @@ export class Settings extends React.Component {
     };
 
     /**
-     * [loadAccordionMenu func. will  populate accordion list with given items.]
-     * @param  {Array}      data        [List of accordion items]
-     * @return {DOM}                    [Elements of accordion list]
+     * [loadTabItems func. will  populate list with given items.]
+     * @param  {Array}      data        [List of items]
+     * @return {DOM}                    [Elements of list]
      */
-    loadAccordionMenu(data) {
+    loadTabItems(data) {
         const { isDeveloperMode, isMainNet } = this.props;
         return data
             .filter((_, index) => isDeveloperMode || index < 6)
@@ -188,7 +177,7 @@ export class Settings extends React.Component {
     render() {
         const { version } = this.props;
         const { concentModal, activeContent } = this.state;
-        const accordionItems = [
+        const tabItems = [
             {
                 title: 'Performance',
                 content: <Performance />
@@ -216,10 +205,6 @@ export class Settings extends React.Component {
             {
                 title: 'Peers',
                 content: <Peers />
-            },
-            {
-                title: 'Stats',
-                content: <Stats />
             }
         ];
 
@@ -260,8 +245,8 @@ export class Settings extends React.Component {
                             !Number.isInteger(activeContent)
                                 ? [
                                       <div className="settings-tab" id="tabs">
-                                          {this.loadAccordionMenu(
-                                              accordionItems
+                                          {this.loadTabItems(
+                                              tabItems
                                           )}
                                       </div>
                                   ]
@@ -281,7 +266,7 @@ export class Settings extends React.Component {
                                               Back
                                           </div>
                                           {
-                                              accordionItems[activeContent]
+                                              tabItems[activeContent]
                                                   ?.content
                                           }
                                       </div>
