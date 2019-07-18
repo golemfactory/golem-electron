@@ -3,6 +3,10 @@ import ReactDOM from "react-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as Actions from "../../actions";
+import {
+    Transition,
+    animated
+} from 'react-spring/renderprops.cjs';
 
 import Personal from "./Personal";
 import Performance from "./Performance";
@@ -99,6 +103,12 @@ export class Settings extends React.Component {
             });
     };
 
+    _backToTabs = elm => {
+        this.setState({
+            activeContent: null
+        })
+    }
+
     /**
      * [loadAccordionMenu func. will  populate accordion list with given items.]
      * @param  {Array}      data        [List of accordion items]
@@ -113,22 +123,19 @@ export class Settings extends React.Component {
             )
             .map((item, index) => (
                 <div
-                    className="item__accordion"
+                    className="settings-tab-item"
                     key={index.toString()}
                     value={index}>
                     <div
-                        className="item-title__accordion"
+                        className="tab-item-title"
                         onClick={this._handleTab}
                         role="tab"
                         tabIndex="0">
                         <span>{item.title}</span>
                         <span
-                            className="icon-arrow-down"
+                            className="icon-arrow-right"
                             aria-label="Expand Tab"
                         />
-                    </div>
-                    <div className="item-content__accordion" role="tabpanel">
-                        {item.content}
                     </div>
                 </div>
             ));
@@ -160,9 +167,12 @@ export class Settings extends React.Component {
         );
     };
 
+    _enterStyle = () => ({ transform: 100});
+    _leaveStyle = () => ({ transform: -100 });
+
     render() {
         const { version } = this.props;
-        const { concentModal } = this.state;
+        const { concentModal, activeContent } = this.state;
         const accordionItems = [
             {
                 title: "Performance",
@@ -217,7 +227,7 @@ export class Settings extends React.Component {
                             Node statistic
                         </li>
                         <li
-                            className="nav__item active"
+                            className="nav__item"
                             role="menuitem"
                             tabIndex="0"
                             aria-label="ACL">
@@ -227,8 +237,49 @@ export class Settings extends React.Component {
                     </ul>
                 </nav>
                 <Personal />
-                <div className="tab__accordion" id="tabAcordion">
-                    {this.loadAccordionMenu(accordionItems)}
+                <div className="settings-transition-container">
+                    <Transition
+                    items={
+                        !Number.isInteger(activeContent)
+                            ? [
+                                <div className="settings-tab" id="tabs">
+                                    {this.loadAccordionMenu(accordionItems)}
+                                </div>
+                              ]
+                            : [
+
+                                <div className="tab-item-content" role="tabpanel" id="tabContent">
+                                    <div 
+                                        className="back-btn"
+                                        onClick={this._backToTabs}>
+                                        <span
+                                            className="icon-arrow-left"
+                                            aria-label="Back to Tabs"
+                                        />
+                                        Back
+                                    </div>
+                                    {accordionItems[activeContent]?.content}
+                                </div>
+                              ]
+                    }
+                    keys={item => item.props.id}
+                    native
+                    initial={null}
+                    from={Number.isInteger(activeContent) ? this._enterStyle : this._leaveStyle}
+                    enter={{ transform: 0 }}
+                    leave={!Number.isInteger(activeContent) ? this._enterStyle : this._leaveStyle}>
+                    {item => ({ transform }) => (
+                        <animated.div
+                            className="horizontal-transition-container"
+                            style={{
+                                transform: transform.interpolate(
+                                    x => `translate3d(${x}%,0,0)`
+                                )
+                            }}>
+                            {item}
+                        </animated.div>
+                    )}
+                </Transition>
                 </div>
                 {concentModal &&
                     ReactDOM.createPortal(

@@ -72,7 +72,7 @@ export class Concent extends React.Component {
         return (
             <div
                 className="content__concent"
-                style={{ height: isConcentOn ? 200 : 360 }}>
+                style={{ height: isConcentOn ? 250 : 360 }}>
                 <span>
                     Concent is service of the Golem network, which aims to
                     improve the integrity

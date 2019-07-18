@@ -1,15 +1,15 @@
-@import "personal";
-@import "performance";
-@import "price";
-@import "concent";
-@import "modal/concent-modal";
-@import "trust";
-@import "file-location";
-@import "geth";
-@import "peers";
-@import "stats";
+@import 'personal';
+@import 'performance';
+@import 'price';
+@import 'concent';
+@import 'modal/concent-modal';
+@import 'trust';
+@import 'file-location';
+@import 'geth';
+@import 'peers';
+@import 'stats';
 
-$item__accordion-height: 78.7px;
+$tab-item-height: 78.7px;
 
 .content__settings {
     height: 100%;
@@ -17,13 +17,16 @@ $item__accordion-height: 78.7px;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
-    
-    .icon-arrow-down{
-        transition: .5s transform;
-        transition-delay: .5s;
+
+    .icon-arrow-down {
+        transition: 0.5s transform;
+        transition-delay: 0.5s;
     }
 
-    .arrow-expand{
+    .arrow-expand {
+        position: absolute;
+        left: 5px;
+        top: 5px;
         transform: rotate(180deg);
     }
 
@@ -37,7 +40,6 @@ $item__accordion-height: 78.7px;
         font-weight: bold;
         border-bottom: 1px solid $color-border;
         padding: 0 24px;
-
     }
 
     .nav__list {
@@ -74,13 +76,11 @@ $item__accordion-height: 78.7px;
     }
 
     .nav__item {
-
         &:hover {
             span {
                 background-color: $color-text;
             }
         }
-
     }
 
     .selector {
@@ -123,65 +123,61 @@ $item__accordion-height: 78.7px;
         width: 30px;
     }
 
+    .horizontal-transition-container{
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: overlay;
+    }
+
+    .back-btn {
+        margin: 20px 20px;
+        display: flex;
+        align-items: center;
+        font-weight: 500;
+        cursor: pointer;
+    }
 }
 
 .section__personal {
     flex: 0 0 130px;
-    transition: .8s all;
+    transition: 0.8s all;
 }
 
-.tab__accordion {
-    height: 100%;
+.settings-transition-container {
     position: relative;
-    overflow-y: overlay;
+    height: 100%;
+}
+
+.settings-tab {
+    height: 100%;
+    width: 100%;
+    position: absolute;
     overflow-x: hidden;
-    transform: translateZ(0);
-}
 
-.item__accordion {
-    max-height: 800px;
-    transition: .8s max-height;
+    &-item {
+        .tab-item-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: $tab-item-height;
+            cursor: pointer;
 
-    &.active {
-        & > .item-content__accordion {
-            opacity: 1;
-            max-height: 800px;
-            overflow: overlay;
+            & > span {
+                display: block;
+                font-weight: 600;
+            }
+        }
+
+        & + .settings-tab-item {
+            border-top: 1px solid $color-border;
         }
     }
 
-    &:not(.active){
-        max-height: $item__accordion-height;
-        transition: .8s max-height;
+    &-item:last-child {
+        border-bottom: 1px solid $color-border;
     }
-
-    .item-title__accordion {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        height: $item__accordion-height;
-        cursor: pointer;
-
-        & > span {
-            display: block;
-            font-weight: 600;
-        }
-    }
-
-    .item-content__accordion {
-        max-height: 0;
-        overflow: hidden;
-        opacity: 0;
-        transition: .5s all;
-    }
-
-    & + .item__accordion {
-        border-top: 1px solid $color-border;
-    }
-}
-
-.item__accordion:last-child {
-    border-bottom: 1px solid $color-border;
 }
 
 .footer__settings {
@@ -201,19 +197,19 @@ $item__accordion-height: 78.7px;
 ============================= */
 
 .win {
-    .item__accordion > div > span {
+    .settings-tab-item > div > span {
         margin: 0 $padding-windows;
     }
 }
 
 .mac {
-    .item__accordion > div > span {
+    .settings-tab-item > div > span {
         margin: 0 $padding-mac;
     }
 }
 
 .linux {
-    .item__accordion > div > span {
+    .settings-tab-item > div > span {
         margin: 0 $padding-linux;
     }
 }
