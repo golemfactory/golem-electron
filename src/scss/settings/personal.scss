@@ -10,6 +10,9 @@
         padding-bottom: 20px;
         border-bottom: 1px solid $color-border;
 
+        &-expanded {
+        }
+
         input {
             width: 200px;
             height: 22px !important;
@@ -61,8 +64,8 @@
         .qr-holder {
             display: block;
             position: relative;
-            width: 8vh;
-            height: 8vh;
+            width: 60px;
+            height: 60px;
         }
     }
 
@@ -130,8 +133,8 @@
     &__image,
     &__qrcode {
         position: relative;
-        width: 8vh;
-        height: 8vh;
+        width: 64px;
+        height: 64px;
         max-height: 161px;
         max-width: 161px;
         transition: 0.8s all;
@@ -142,8 +145,8 @@
         &--border {
             position: absolute;
             top: 0;
-            width: 8vh;
-            height: 8vh;
+            width: 64px;
+            height: 64px;
             max-height: 161px;
             max-width: 161px;
             border: 5px solid rgb(white, 0.5);
