@@ -137,11 +137,15 @@ $tab-item-height: 78.7px;
         align-items: center;
         font-weight: 500;
         cursor: pointer;
+
+        .icon-arrow-left {
+            margin-right: 5px;
+        }
     }
 }
 
 .section__personal {
-    flex: 0 0 130px;
+    flex: 0 0 94px;
     transition: 0.8s all;
 }
 

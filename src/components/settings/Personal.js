@@ -235,15 +235,6 @@ export class Personal extends React.Component {
                         </div>
                     </div>
                 </div>
-                <div>
-                    <span className="personal__backup-info">
-                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-app">
-                            <u>
-                                Learn more how to <strong>backup Golem</strong>
-                            </u>
-                        </a>
-                    </span>
-                </div>
             </div>
         );
     }

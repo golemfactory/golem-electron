@@ -223,8 +223,8 @@ export class Settings extends React.Component {
                             className="nav__item"
                             role="menuitem"
                             tabIndex="0"
-                            aria-label="Node statistic">
-                            Node statistic
+                            aria-label="Node statistics">
+                            Node statistics
                         </li>
                         <li
                             className="nav__item"
