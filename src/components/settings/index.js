@@ -6,6 +6,7 @@ import * as Actions from '../../actions';
 
 import SettingsList from './SettingsList';
 import Stats from './stats';
+import ACL from './acl';
 import { APP_VERSION } from './../../main';
 
 const { remote } = window.electron;
@@ -46,7 +47,7 @@ export class Settings extends React.Component {
         });
     };
 
-    mainContentList = [<SettingsList />, <Stats />];
+    mainContentList = [<SettingsList />, <Stats />, <ACL/>];
 
     render() {
         const { version } = this.props;
