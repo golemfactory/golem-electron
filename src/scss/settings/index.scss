@@ -18,6 +18,9 @@ $tab-item-height: 78.7px;
     justify-content: space-between;
     box-sizing: border-box;
 
+    .settings__main-content {
+    }
+
     .icon-arrow-down {
         transition: 0.5s transform;
         transition-delay: 0.5s;
@@ -105,22 +108,35 @@ $tab-item-height: 78.7px;
         color: $color-text;
     }
 
-    // .nav__item:nth-child(2):hover ~ .selector
-    .active:nth-child(1) ~ .selector {
-        left: 0px;
-        width: 60px;
+    .settings-main-tab-item {
+        &.active:nth-child(1) ~ .selector {
+            left: 0px;
+            width: 60px;
+        }
+        &.active:nth-child(2) ~ .selector {
+            left: 79px;
+            width: 110px;
+        }
+        &.active:nth-child(3) ~ .selector {
+            left: 207px;
+            width: 30px;
+        }
     }
 
-    // .nav__item:nth-child(3):hover ~ .selector
-    .active:nth-child(2) ~ .selector {
-        left: 79px;
-        width: 99px;
+    .stats-nav {
+        padding: 0;
     }
 
-    // .nav__item:nth-child(3):hover ~ .selector
-    .active:nth-child(3) ~ .selector {
-        left: 198px;
-        width: 30px;
+    .stats-tab-item {
+        font-size: 9pt;
+        &.active:nth-child(1) ~ .selector {
+            left: 0px;
+            width: 98px;
+        }
+        &.active:nth-child(2) ~ .selector {
+            left: 118px;
+            width: 108px;
+        }
     }
 
     .horizontal-transition-container{
@@ -194,7 +210,9 @@ $tab-item-height: 78.7px;
     text-align: center;
     border-top: 1px solid $color-border;
     color: $color-text2;
+    background: white;
     font-size: 9pt;
+    z-index: 2;
 }
 
 /*      OS DIFFERENCES
