@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 
 import SettingsList from './SettingsList';
-import Stats from './Stats';
+import Stats from './stats';
 import { APP_VERSION } from './../../main';
 
 const { remote } = window.electron;

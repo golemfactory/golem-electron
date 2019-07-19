@@ -13,7 +13,6 @@ import ConcentModal from './modal/ConcentModal';
 import Trust from './Trust';
 import FileLocation from './FileLocation';
 import Geth from './Geth';
-import Stats from './Stats';
 import Peers from './Peers';
 
 import * as Actions from './../../actions';
