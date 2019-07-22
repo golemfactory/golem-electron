@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import ProviderStats from './Provider'
 import RequestorStats from './Requestor'
 
-export default class Stats extends React.Component {
+export default class Stats extends React.PureComponent {
 
     state = {
         statisticTabIndex: 0

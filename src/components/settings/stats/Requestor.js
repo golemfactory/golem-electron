@@ -13,7 +13,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 })
 
-export class RequestorStats extends React.Component {
+export class RequestorStats extends React.PureComponent {
 
     render() {
         const {isEngineOn, stats} = this.props

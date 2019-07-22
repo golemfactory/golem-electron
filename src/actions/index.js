@@ -67,6 +67,7 @@ export let dict = Object.freeze({
     SET_PROVIDING: 'SET_PROVIDING',
     SET_GPU_PROVIDING: 'SET_GPU_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
+    SET_UNSUPPORTED_TASK_STATS: 'SET_UNSUPPORTED_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
     SET_MULTIPLIER: 'SET_MULTIPLIER',
     UPDATE_MULTIPLIER: 'UPDATE_MULTIPLIER',
@@ -202,6 +203,7 @@ const {
     SET_PROVIDING,
     SET_GPU_PROVIDING,
     SET_TASK_STATS,
+    SET_UNSUPPORTED_TASK_STATS,
     UPDATE_MULTIPLIER,
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
@@ -486,6 +488,11 @@ export const setNetworkRequestorTrust = payload => ({
 
 export const setTaskStats = payload => ({
     type: SET_TASK_STATS,
+    payload
+});
+
+export const setUnsupportedTaskStats = payload => ({
+    type: SET_UNSUPPORTED_TASK_STATS,
     payload
 });
 

@@ -39,6 +39,7 @@ export let config = Object.freeze({
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
+    GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
     REMOVE_TASK_HEADER_RPC: 'comp.tasks.known.delete',
     GET_TASK_RPC: 'comp.task',
