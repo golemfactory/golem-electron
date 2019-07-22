@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import NodeTable from './NodeTable';
 import { ICONS } from './';
 
+import { taskStatus } from '../../../constants/statusDicts';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
 class SubtaskItem extends React.PureComponent {
@@ -60,7 +61,11 @@ class SubtaskItem extends React.PureComponent {
 							checkedItems[recentInfo && recentInfo.subtask_id] ||
 							false
 						}
-						disabled={!recentInfo || lockCheckbox}
+						disabled={
+							!recentInfo ||
+							lockCheckbox ||
+							recentInfo?.status === taskStatus.RESTART
+						}
 						readOnly
 						required
 					/>
@@ -68,7 +73,9 @@ class SubtaskItem extends React.PureComponent {
 						htmlFor={`taskTypeRadio${keyItem}`}
 						className="checkbox-label-left">
 						<span className="overlay" />
-						<span className="info-subtask-number"><b>Subtask number: </b> {keyItem.padStart(4, '0')}</span>
+						<span className="info-subtask-number">
+							<b>Subtask number: </b> {keyItem.padStart(4, '0')}
+						</span>
 						<span className="bumper" />
 						<b>State: </b>{' '}
 						{recentInfo ? (
@@ -78,7 +85,7 @@ class SubtaskItem extends React.PureComponent {
 								} ${ICONS[(recentInfo?.status)]?.color}`}
 							/>
 						) : (
-							<span className="icon-subtask-awaiting icon--color-gray"/>
+							<span className="icon-subtask-awaiting icon--color-gray" />
 						)}
 					</label>
 					<div className="checkbox-item__action">

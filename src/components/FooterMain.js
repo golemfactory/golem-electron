@@ -43,8 +43,9 @@ const ISSUES = {
             'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
     },
     RAM: {
-        title: 'Not enough RAM',
-        message: "You don't have enough RAM",
+        title: 'RAM allocation lowered',
+        message:
+            'Golem could not allocate the configured amount of RAM on your machine. Allocation adjusted to ',
         docs:
             'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
     },
@@ -152,7 +153,10 @@ export class FooterMain extends Component {
     golemDotClass(status, connectionProblem, componentWarnings = []) {
         if (status && isGolemConnected(status)) {
             return connectionProblem?.status || componentWarnings.length > 0
-                ? 'yellow'
+                ? componentWarnings.length === 1 &&
+                  componentWarnings[0].issue === 'RAM'
+                    ? 'blue'
+                    : 'yellow'
                 : 'green';
         } else if (status?.status !== 'Exception') {
             return 'yellow';
@@ -254,8 +258,23 @@ export class FooterMain extends Component {
                                         <span
                                             key={index.toString()}
                                             className="info__connection__item">
-                                            <span className="icon-status-dot" />
+                                            <span
+                                                className={`icon-status-dot ${
+                                                    componentWarnings[index]
+                                                        .issue === 'RAM'
+                                                        ? 'icon-status-dot--info'
+                                                        : ''
+                                                }`}
+                                            />
                                             {message}
+                                            {componentWarnings[index].issue ===
+                                                'RAM' &&
+                                                componentWarnings[index]
+                                                    ?.value &&
+                                                `${
+                                                    componentWarnings[index]
+                                                        ?.value
+                                                } GiB`}
                                             <a href={docs}>
                                                 <span className="icon-new-window" />
                                             </a>
