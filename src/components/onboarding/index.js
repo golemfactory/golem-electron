@@ -358,7 +358,6 @@ class OnboardIndex extends React.Component {
                 message: this.state.printInfo
             });
             html2pdf(temp, {
-                margin: 0,
                 filename: 'password.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { dpi: 192, letterRendering: true },

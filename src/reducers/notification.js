@@ -46,7 +46,6 @@ const notify = (state = initialState, action) => {
         
         if(isAlreadyIn(notificationList, notificationId)){
             const listRemove = notificationList.filter( item => item.id === notificationId)
-
             setConfig(NOTIFICATION_CENTER, listRemove)
 
             return Object.assign({}, state, {

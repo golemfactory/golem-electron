@@ -51,6 +51,7 @@ export let dict = Object.freeze({
     SET_DIRECTORY_TREE: 'SET_DIRECTORY_TREE',
     GET_FRAGMENTS: 'GET_FRAGMENTS',
     SET_FRAGMENTS: 'SET_FRAGMENTS',
+    CLEAR_FRAGMENTS: 'CLEAR_FRAGMENTS',
     //SETTINGS
     SET_FILE_LOCATION: 'SET_FILE_LOCATION',
     SET_LOCAL_GETH: 'SET_LOCAL_GETH',
@@ -185,6 +186,7 @@ const {
     SET_FOOTER_INFO,
     GET_TASK_GAS_PRICE,
     GET_FRAGMENTS,
+    CLEAR_FRAGMENTS,
     SET_DIRECTORY_TREE,
     //SETTINGS
     SET_FILE_LOCATION,
@@ -731,6 +733,10 @@ export const setFooterInfo = payload => ({
 export const getFragments = payload => ({
     type: GET_FRAGMENTS,
     payload
+});
+
+export const clearFragments = () => ({
+    type: CLEAR_FRAGMENTS
 });
 
 export const getTaskGasPrice = () => ({

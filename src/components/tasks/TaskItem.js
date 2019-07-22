@@ -15,15 +15,22 @@ import * as Actions from '../../actions';
 import Preview from './Preview';
 import Details from './details';
 import ConditionalRender from '../hoc/ConditionalRender';
-const { ipcRenderer } = window.electron;
+const { ipcRenderer, clipboard } = window.electron;
 
 const mapStateToProps = state => ({
     psId: state.preview.ps.id,
-    nodeNumbers: state.details.nodeNumber
+    nodeNumbers: state.details.nodeNumber,
+    isDeveloperMode: state.input.developerMode,
+    isMainNet: state.info.isMainNet
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
+});
+
+const taskType = Object.freeze({
+    BLENDER: "Blender",
+    BLENDER_NVGPU: "Blender_NVGPU"
 });
 
 export class TaskItem extends React.Component {
@@ -31,27 +38,30 @@ export class TaskItem extends React.Component {
         super(props);
 
         this.state = {
-            toggledList: []
+            toggledList: [],
+            isDataCopied: false
         };
+
+        this.copyTimeout = false;
     }
 
-    componentDidMount() {
-        const { actions, item } = this.props;
-        let interval = () => {
-            actions.fetchHealthyNodeNumber(item.id);
-            return interval;
-        };
+    componentWillUpdate(nextProps, nextState) {
+        const { actions, item } = nextProps;
 
-        if (item.status == taskStatus.COMPUTING) {
-            this.liveSubList = setInterval(interval(), 5000);
-        } else {
-            actions.fetchHealthyNodeNumber(item.id);
+        if (item.status == taskStatus.COMPUTING && !this.liveSubList) {
+            this.liveSubList = setInterval(this._interval(actions, item), 5000);
         }
     }
 
     componentWillUnmount() {
         this.liveSubList && clearInterval(this.liveSubList);
+        this.copyTimeout && clearTimeout(this.copyTimeout);
     }
+
+    _interval = (actions, item) => {
+        actions.fetchHealthyNodeNumber(item.id);
+        return this._interval.bind(null, actions, item);
+    };
 
     _toggle(id, evt, toggledAttribute) {
         const prevList = this.state.toggledList;
@@ -110,7 +120,12 @@ export class TaskItem extends React.Component {
             case taskStatus.NOTREADY:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Preparing for computation...{' '}
@@ -121,7 +136,12 @@ export class TaskItem extends React.Component {
             case taskStatus.WAITING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--preparing">
                             Waiting for computation...{' '}
@@ -132,8 +152,13 @@ export class TaskItem extends React.Component {
             case taskStatus.DEPOSIT:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
-                        <span className="bumper"> | </span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
+                        <span className="bumper" />
                         <span className="duration--preparing">
                             Creating the deposit...{' '}
                         </span>
@@ -158,7 +183,12 @@ export class TaskItem extends React.Component {
             case taskStatus.COMPUTING:
                 return (
                     <div>
-                        <span>Duration: {convertSecsToHMS(item.duration)}</span>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
                         <span className="bumper" />
                         <span className="duration--computing">
                             Computing...{' '}
@@ -188,17 +218,37 @@ export class TaskItem extends React.Component {
 
     _fetchCost(item) {
         const fixedTo = 4;
+        const { isMainNet } = this.props;
         return (
             <span>
                 {(item.cost && (item.cost / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{' '}
+                    (item.estimated_cost / ETH_DENOM).toFixed(fixedTo)}{isMainNet ? ' ' : ' t'}
                 GNT/
                 {(item.fee && (item.fee / ETH_DENOM).toFixed(fixedTo)) ||
-                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{' '}
+                    (item.estimated_fee / ETH_DENOM).toFixed(fixedTo)}{isMainNet ? ' ' : ' t'}
                 ETH
             </span>
         );
     }
+
+    _copyField = item => {
+        if (this.copyTimeout && this.state.isDataCopied) return;
+
+        if (item) {
+            clipboard.writeText(item);
+
+            this.setState(prevData => ({
+                isDataCopied: !prevData.isDataCopied
+            }));
+            this.copyTimeout = setTimeout(() => {
+                this.setState(prevData => ({
+                    isDataCopied: !prevData.isDataCopied
+                }));
+                clearTimeout(this.copyTimeout);
+                this.copyTimeout = null;
+            }, 2000);
+        }
+    };
 
     render() {
         const {
@@ -208,11 +258,13 @@ export class TaskItem extends React.Component {
             _handleRestartModal,
             _handleRestartSubtasksModal,
             _handleDeleteModal,
-            psId
+            psId,
+            isDeveloperMode
         } = this.props;
 
-        const { toggledList } = this.state;
+        const { toggledList, isDataCopied } = this.state;
         const { options } = item;
+        const isSupportedTaskType = Object.values(taskType).indexOf(item.type) >= 0;
         return (
             <Spring
                 from={{
@@ -222,9 +274,8 @@ export class TaskItem extends React.Component {
                     progress: item.progress
                 }}
                 config={{
-                    tension: 0,
-                    friction: 2,
-                    restDisplacementThreshold: 0.1
+                    tension: 180,
+                    friction: 10
                 }}
                 role="listItem"
                 tabIndex="-1">
@@ -247,7 +298,8 @@ export class TaskItem extends React.Component {
                                 aria-label="Task Preview">
                                 <div>
                                     <span
-                                        className={`task-icon icon-${item.type.toLowerCase()}`}>
+                                        className={`task-icon
+                                            icon-${isSupportedTaskType ? item.type.toLowerCase() : 'default-task'}`}>
                                         <span className="path1" />
                                         <span className="path2" />
                                         <span className="path3" />
@@ -255,33 +307,58 @@ export class TaskItem extends React.Component {
                                     </span>
                                 </div>
                                 <div className="task-item__main">
-                                    <h4>{item.name}</h4>
+                                    <h4>
+                                        {item.name}
+                                        {isDeveloperMode && (
+                                            <Tooltip
+                                                content={
+                                                    <p>
+                                                        {isDataCopied
+                                                            ? 'Copied successfully!'
+                                                            : 'Copy task ID'}
+                                                    </p>
+                                                }
+                                                placement="right"
+                                                trigger="mouseenter"
+                                                size="small"
+                                                hideOnClick={false}>
+                                                <span
+                                                    className="icon-copy"
+                                                    onClick={this._copyField.bind(
+                                                        null,
+                                                        item.id
+                                                    )}
+                                                />
+                                            </Tooltip>
+                                        )}
+                                    </h4>
                                     <div className="duration">
                                         {this._fetchStatus(item)}
                                         <div className="info__task">
-                                            <div>
+                                            <ConditionalRender
+                                                showIf={ isSupportedTaskType }>
                                                 <span>
                                                     Frames:{' '}
                                                     {(options &&
                                                         options.frame_count) ||
-                                                        0}
+                                                    0}
                                                 </span>
                                                 <span className="bumper" />
                                                 <span>
                                                     {' '}
                                                     Resolution:{' '}
-                                                    {(options &&
+                                                    {(options && options.resolution &&
                                                         options.resolution.join(
                                                             'x'
                                                         )) ||
                                                         0}
                                                 </span>
                                                 <span className="bumper" />
-                                                <span>
+                                            </ConditionalRender>
+                                            <span>
                                                     Cost:{' '}
-                                                    {this._fetchCost(item)}
-                                                </span>
-                                            </div>
+                                                {this._fetchCost(item)}
+                                            </span>
                                             <div>
                                                 <span>
                                                     Subtasks:{' '}
@@ -300,15 +377,17 @@ export class TaskItem extends React.Component {
                                                 </span>
                                             </div>
                                         </div>
-                                        <div
-                                            className="control-panel__task"
-                                            ref={node =>
-                                                (this.controlPanelRef = node)
-                                            }>
-                                            <Tooltip
-                                                content={<p>Preview</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter">
+                                        <ConditionalRender showIf={isSupportedTaskType}>
+                                            <div
+                                                className="control-panel__task"
+                                                ref={node =>
+                                                    (this.controlPanelRef = node)
+                                                }>
+                                                <Tooltip
+                                                    content={<p>Preview</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-preview"
                                                     tabIndex="0"
@@ -321,12 +400,13 @@ export class TaskItem extends React.Component {
                                                         Preview
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Task Details</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter"
-                                                className="task-details-icon">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Task Details</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    className="task-details-icon"
+                                                    size="small">
                                                 <span
                                                     className="icon-details"
                                                     tabIndex="0"
@@ -339,11 +419,12 @@ export class TaskItem extends React.Component {
                                                         Details
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Restart</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Restart</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-refresh"
                                                     tabIndex="0"
@@ -364,11 +445,12 @@ export class TaskItem extends React.Component {
                                                         Restart
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Output</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Output</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-folder"
                                                     tabIndex="0"
@@ -384,11 +466,12 @@ export class TaskItem extends React.Component {
                                                         Output
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                            <Tooltip
-                                                content={<p>Delete</p>}
-                                                placement="bottom"
-                                                trigger="mouseenter">
+                                                </Tooltip>
+                                                <Tooltip
+                                                    content={<p>Delete</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
                                                 <span
                                                     className="icon-delete"
                                                     tabIndex="0"
@@ -400,8 +483,16 @@ export class TaskItem extends React.Component {
                                                         Delete
                                                     </span>
                                                 </span>
-                                            </Tooltip>
-                                        </div>
+                                                </Tooltip>
+                                            </div>
+                                        </ConditionalRender>
+                                        <ConditionalRender showIf={!isSupportedTaskType}>
+                                            <div className="info-task-unsupported">
+                                                <span>
+                                                    Functionality for task type: {item.type} is available from CLI.
+                                                </span>
+                                            </div>
+                                        </ConditionalRender>
                                     </div>
                                 </div>
                             </div>
@@ -433,7 +524,9 @@ export class TaskItem extends React.Component {
                                         item.status === taskStatus.FINISHED
                                     )
                                 }
-                                restartSubtasksModalHandler={_handleRestartSubtasksModal}
+                                restartSubtasksModalHandler={
+                                    _handleRestartSubtasksModal
+                                }
                             />
                         </ConditionalRender>
                     </div>

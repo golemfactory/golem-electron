@@ -15,7 +15,8 @@ const {
     SET_TASK_GAS_PRICE,
     CLEAR_TASK_PLAIN,
     SET_HEALTHY_NODE_NUMBER,
-    SET_FRAGMENTS
+    SET_FRAGMENTS,
+    CLEAR_FRAGMENTS
 } = dict;
 
 const initialState = {
@@ -103,6 +104,11 @@ const setTaskDetails = (state = initialState, action) => {
         case SET_FRAGMENTS:
             return Object.assign({}, state, {
                 fragments: action.payload
+            });
+
+        case CLEAR_FRAGMENTS:
+            return Object.assign({}, state, {
+                fragments: []
             });
 
         default:

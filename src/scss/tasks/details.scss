@@ -26,9 +26,17 @@
 				padding: 10px 25px;
 				line-height: 2.6em;
 
+				.info {
+					&-subtask-number {
+						display: inline-block;
+						width: 122px;
+					}
+				}
+
 				label,
 				.overlay {
 					margin-left: 0;
+					margin-right: 15px;
 				}
 
 				&__action {
@@ -76,6 +84,9 @@
 						font-size: 14pt;
 					}
 				}
+				.id-info {
+					cursor: pointer;
+				}
 			}
 		}
 		
@@ -95,6 +106,14 @@
 
 		.arrow-expand {
 			transform: rotate(180deg);
+		}
+
+		.details__loading{
+			text-align: center;
+			height: 30px;
+			line-height: 30px;
+			font-size: 10pt;
+			color: $color-text2;
 		}
 	}
 

@@ -4,7 +4,7 @@
     justify-content: center;
     flex: 0 0 130px;
     transition: 0.5s flex;
-    transition-delay: .5s;
+    transition-delay: 0.5s;
 
     &__loading {
         flex: 0 0 190px;
@@ -50,7 +50,7 @@
         background: $color-text4;
         flex: 0 0 100px;
         transition: 0.5s flex;
-        transition-delay: .5s;
+        transition-delay: 0.5s;
 
         &-status {
             @include flex;
@@ -102,10 +102,10 @@
             .icon-warning-rounded {
                 position: relative;
                 font-size: 9pt;
-                margin-left: 3px; 
+                margin-left: 3px;
                 color: $color-primary;
                 cursor: pointer;
-                bottom: -.5px;
+                bottom: -0.5px;
             }
         }
 
@@ -128,13 +128,14 @@
 
         .wave-loading {
             position: absolute;
+            width: 100%;
             margin-left: -24px;
             bottom: 0;
             height: 0;
             pointer-events: none;
             z-index: 1;
             transition: 1.5s height linear;
-            transition-delay: .5s;
+            transition-delay: 0.5s;
         }
 
         .component-dot {
@@ -157,6 +158,9 @@
             }
             &--grey {
                 background-color: $color-text2;
+            }
+            &--red {
+                background-color: $color-error;
             }
         }
     }
