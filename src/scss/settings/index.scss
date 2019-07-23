@@ -125,7 +125,12 @@ $tab-item-height: 78.7px;
     }
 
     .stats-nav {
-        padding: 0;
+        position: sticky;
+        top: 0;
+        background: white;
+        margin: 0 -24px;
+        padding: 0 24px;
+        width: calc(100% + 48px);
     }
 
     .stats-tab-item {
