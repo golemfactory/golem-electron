@@ -32,6 +32,8 @@ const APP_HEIGHT = 810; //589
 const APP_MIN_HEIGHT = 630;
 const PREVIEW_APP_WIDTH = 752;
 const PREVIEW_APP_HEIGHT = 572;
+const PREVIEW_APP_MIN_WIDTH = 600;
+const PREVIEW_APP_MIN_HEIGHT = 530;
 
 let win;
 let previewWindow;
@@ -127,17 +129,6 @@ function createWindow() {
             webSecurity: false
         }
     });
-
-    var shouldQuit = app.makeSingleInstance(function(
-        commandLine,
-        workingDirectory
-    ) {
-        // Someone tried to run a second instance, we should focus our primary window.
-        if (win) {
-            if (win.isMinimized()) win.restore();
-            win.focus();
-        }
-    })
 
     const instanceLock = app.requestSingleInstanceLock();
     app.on('second-instance', function(commandLine, workingDirectory) {   
@@ -254,9 +245,12 @@ function createPreviewWindow(id, frameCount) {
             title: APP_NAME,
             width: PREVIEW_APP_WIDTH,
             height: PREVIEW_APP_HEIGHT,
+            minWidth: PREVIEW_APP_MIN_WIDTH,
+            minHeight: PREVIEW_APP_MIN_HEIGHT,
             titleBarStyle: "hiddenInset",
             //frame: false,
-            resizable: false,
+            resizable: true,
+
             center: true,
             show: true,
             backgroundColor: "#fff",
@@ -343,6 +337,7 @@ exports.dirToJson = function(directory, ext) {
             },
             excludeEmptyFolders: true,
             includeId: true,
+            includeAbsolutePath: true,
             attributeName: {
                 child: "children"
             },

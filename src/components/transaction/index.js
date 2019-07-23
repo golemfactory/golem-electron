@@ -16,6 +16,7 @@ const filter = {
 const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
+    isMainNet: state.info.isMainNet,
     paymentHistory: getFilteredPaymentHistory.bind(null, state),
     networkInfo: state.info.networkInfo
 });
@@ -54,7 +55,7 @@ class TransactionTube extends Component {
 
     _fetchLastTransaction = list => {
         const { created, type, value } = list.length > 0 && list[0].data;
-        const { concentBalance, concentSwitch } = this.props;
+        const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
         return (
             <div className="content__tube">
@@ -79,7 +80,7 @@ class TransactionTube extends Component {
                                     }`}>
                                     {type === filter.INCOME ? '+ ' : '- '}
                                 </span>
-                                <b>{(value / ETH_DENOM).toFixed(4)} GNT</b>
+                                <b>{(value / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT</b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>
                             <div
@@ -116,7 +117,7 @@ class TransactionTube extends Component {
                                         ? concentBalance.value
                                               .dividedBy(ETH_DENOM)
                                               .toFixed(4)
-                                        : '-'}{' '}
+                                        : '-'}{isMainNet ? ' ' : ' t'}
                                     GNT
                                 </b>
                             </span>

@@ -14,7 +14,9 @@ const mapStateToProps = state => ({
 	balance: state.realTime.balance,
 	currency: state.currency,
 	estimatedCost: state.details.estimated_cost,
-	concentBalance: state.realTime.concentBalance
+	concentBalance: state.realTime.concentBalance,
+	concentSwitch: state.concent.concentSwitch,
+	isMainNet: state.info.isMainNet
 });
 const mapDispatchToProps = dispatch => ({
 	actions: bindActionCreators(Actions, dispatch)
@@ -72,7 +74,7 @@ class Estimation extends Component {
 	}
 
 	_handleConcentCheckbox(e) {
-		this.props._handleConcentCheckbox(e.target.checked);
+		this.props._handleConcentCheckbox(e.target.checked && this.props.concentSwitch);
 	}
 
 	_fetchTitle = (isConcentOn, isPartial, isSubtask, item) => {
@@ -110,9 +112,11 @@ class Estimation extends Component {
 			actions,
 			balance,
 			concentBalance,
+			concentSwitch,
 			currency,
 			estimatedCost,
 			isConcentOn,
+			isMainNet,
 			isPartial,
 			isSubtask,
 			item
@@ -122,14 +126,14 @@ class Estimation extends Component {
 				<span className="container__estimation__title">
 					{this._fetchTitle(isConcentOn, isPartial, isSubtask, item)}
 				</span>
-				<ConditionalRender showIf={item.concent_enabled}>
+				<ConditionalRender showIf={item.concent_enabled && concentSwitch && !isMainNet}>
 					<div className="switch-box switch-box--green">
 						<label className="switch">
 							<input
 								type="checkbox"
 								aria-label="Task Based Concent Checkbox"
 								tabIndex="0"
-								checked={isConcentOn}
+								checked={isConcentOn && concentSwitch}
 								onChange={this._handleConcentCheckbox}
 							/>
 							<div className="switch-slider round" />
@@ -144,44 +148,46 @@ class Estimation extends Component {
 				<div className="summary">
 					<div className="summary-item">
 						<span className="summary-currency">
-							<h4>{balance[0].toFixed(6)}</h4> GNT
+							<h4>{balance[0].toFixed(6)}</h4> {isMainNet ? '' : 't'}GNT
 						</span>
 						<span className="summary-currency">
-							<h4>{balance[1].toFixed(6)}</h4> ETH
+							<h4>{balance[1].toFixed(6)}</h4> {isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
-					<div className="summary-item">
-						<sub>Deposit balance</sub>
-						<sub>
-							<b>
-								{concentBalance.value
-									.dividedBy(ETH_DENOM)
-									.toFixed(4)}
-							</b>{' '}
-							GNT
-						</sub>
-					</div>
+					<ConditionalRender showIf={concentSwitch && !isMainNet}>
+						<div className="summary-item">
+							<sub>Deposit balance</sub>
+							<sub>
+								<b>
+									{concentBalance?.value
+										.dividedBy(ETH_DENOM)
+										.toFixed(4)}
+								</b>{isMainNet ? ' ' : ' t'}
+								GNT
+							</sub>
+						</div>
+					</ConditionalRender>
 				</div>
 				<span className="summary-title">Total</span>
 				<div className="summary">
 					<div className="summary-item">
 						<sub>
-							est. ${GNT.multipliedBy(currency.GNT).toFixed(4)}
+							est. {isMainNet ? '' : 't'}${GNT.multipliedBy(currency.GNT).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
-							<h4>{GNT.toFixed(4)}</h4> GNT
+							<h4>{GNT.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 						</span>
 					</div>
 					<div className="summary-item">
 						<sub>
-							est. ${ETH.multipliedBy(currency.ETH).toFixed(4)}
+							est. {isMainNet ? '' : 't'}${ETH.multipliedBy(currency.ETH).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
-							<h4>{ETH.toFixed(4)}</h4> ETH
+							<h4>{ETH.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled && isConcentOn}>
+						showIf={item.concent_enabled && isConcentOn && concentSwitch && !isMainNet}>
 						<Tooltip
 		                    content={
 		                    	<p>Minimum amount of GNT that is required (no less than twice the amount of funds in your Deposit for covering a task payment). <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">Learn more</a></p>}
@@ -192,7 +198,7 @@ class Estimation extends Component {
 		                    <div className="summary-item deposit">
 								<sub>Deposit required<span className="icon-question-mark"/></sub>
 								<span className="summary-currency">
-									<h4>{GNT_required.toFixed(4)}</h4> GNT
+									<h4>{GNT_required.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
 		                </Tooltip>
@@ -205,14 +211,14 @@ class Estimation extends Component {
 		                    <div className="summary-item deposit">
 								<sub>Deposit suggested<span className="icon-question-mark"/></sub>
 								<span className="summary-currency">
-									<h4>{GNT_suggested.toFixed(4)}</h4> GNT
+									<h4>{GNT_suggested.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
 		                </Tooltip>
 						<div className="summary-item deposit">
 							<sub>Deposit tx fee</sub>
 							<span className="summary-currency">
-								<h4>{ETH_deposit.toFixed(4)}</h4> ETH
+								<h4>{ETH_deposit.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
 							</span>
 						</div>
 					</ConditionalRender>

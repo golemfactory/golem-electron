@@ -8,7 +8,7 @@ function convertSecsToHMS(sec) {
         return "Unknown";
     }
     let minutes = Math.trunc(sec / 60);
-    let seconds = (sec % 60).toFixed(0);
+    let seconds =  parseInt((sec % 60), 10);
     let hours = Math.trunc(minutes / 60);
 
     minutes = minutes % 60;

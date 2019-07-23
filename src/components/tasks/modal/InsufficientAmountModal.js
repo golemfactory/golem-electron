@@ -45,6 +45,7 @@ export default class InsufficientAmountModal extends React.Component {
         this.setState({ withConcent: e.target.value == 'true' });
 
     _initContent(message) {
+        const { isMainNet } = this.props
         const { error_details, error_msg, error_type } = message;
 
         const createFundsInfo = missing_funds => {
@@ -56,7 +57,7 @@ export default class InsufficientAmountModal extends React.Component {
                                 <span className="amount__missing">
                                     {new BigNumber(item.required)
                                         .dividedBy(ETH_DENOM)
-                                        .toFixed(4)}{' '}
+                                        .toFixed(4)}{isMainNet ? ' ' : ' t'}
                                     {item.currency}
                                 </span>
                             </div>
@@ -67,7 +68,7 @@ export default class InsufficientAmountModal extends React.Component {
                                         {new BigNumber(item.available)
                                             .dividedBy(ETH_DENOM)
                                             .toFixed(8)}
-                                    </b>{' '}
+                                    </b>{isMainNet ? ' ' : ' t'}
                                     {item.currency}
                                 </span>
                             </div>

@@ -1,6 +1,7 @@
 import React from "react";
 import Lottie from "react-lottie";
 
+import ConditionalRender from '../../hoc/ConditionalRender';
 import animData from "./../../../assets/anims/task-settings";
 import { floatToHR } from "./../../../utils/time";
 
@@ -33,6 +34,7 @@ export default class TaskSummaryModal extends React.Component {
             estimated_cost,
             format,
             frames,
+            isMainNet,
             minPerf,
             resolution,
             samples,
@@ -61,10 +63,12 @@ export default class TaskSummaryModal extends React.Component {
                             <span className="title">Frames:</span>
                             <span className="value">{frames}</span>
                         </div>
-                        <div className="summary__item">
-                            <span className="title">Samples:</span>
-                            <span className="value">{samples}</span>
-                        </div>
+                        <ConditionalRender showIf={samples > 0}>
+                            <div className="summary__item">
+                                <span className="title">Samples:</span>
+                                <span className="value">{samples}</span>
+                            </div>
+                        </ConditionalRender>
                         <div className="summary__item">
                             <span className="title">Format:</span>
                             <span className="value">{format}</span>
@@ -104,31 +108,29 @@ export default class TaskSummaryModal extends React.Component {
                         <div className="summary__item">
                             <span className="title">Task fee:</span>
                             <span className="value">
-                                {estimated_cost.GNT.toFixed(3)} GNT
+                                {estimated_cost.GNT.toFixed(3)} {isMainNet ? '' : 't'}GNT
                             </span>
                         </div>
                         <div className="summary__item">
                             <span className="title">Tx fee lock:</span>
                             <span className="value">
-                                {estimated_cost.ETH.toFixed(4)} ETH
+                                {estimated_cost.ETH.toFixed(4)} {isMainNet ? '' : 't'}ETH
                             </span>
                         </div>
-                        {!!concent &&
+                        <ConditionalRender showIf={!!concent}>
                             <div className="summary__item">
                                 <span className="title">Deposit fee:</span>
                                 <span className="value">
-                                    {estimated_cost.deposit.GNT_suggested.toFixed(4)} ETH
+                                    {estimated_cost.deposit.GNT_suggested.toFixed(4)} {isMainNet ? '' : 't'}ETH
                                 </span>
                             </div>
-                        }
-                        {!!concent &&
                             <div className="summary__item">
                                 <span className="title">Deposit Tx fee:</span>
                                 <span className="value">
-                                    {estimated_cost.deposit.ETH.toFixed(4)} ETH
+                                    {estimated_cost.deposit.ETH.toFixed(4)} {isMainNet ? '' : 't'}ETH
                                 </span>
                             </div>
-                        }
+                        </ConditionalRender>
                     </div>
                     <div className="task-summary-modal__action">
                         <span

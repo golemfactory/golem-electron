@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.20",
+    "version": "0.2.1",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -173,7 +173,6 @@
         "@hot-loader/react-dom": "^16.8.4",
         "@redux-saga/testing-utils": "^1.0.2",
         "@tippy.js/react": "^2.1.2",
-        "app-module-path": "1.1.0",
         "babel-core": "^7.0.0-bridge.0",
         "babel-jest": "^24.7.1",
         "babel-loader": "^8.0.0",
@@ -189,7 +188,6 @@
         "electron-builder": "20.41.0",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
-        "electron-reload": "^1.4.0",
         "enzyme": "3.8.0",
         "enzyme-adapter-react-16": "1.12.1",
         "enzyme-to-json": "3.3.5",
@@ -202,7 +200,6 @@
         "html-webpack-harddisk-plugin": "1.0.1",
         "html-webpack-plugin": "4.0.0-beta.5",
         "html2pdf.js": "^0.9.0",
-        "http": "0.0.0",
         "identity-obj-proxy": "^3.0.0",
         "jest": "^24.8.0",
         "jest-canvas-mock": "^1.1.0",

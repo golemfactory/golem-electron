@@ -173,7 +173,7 @@ export class History extends React.Component {
                             }`}>
                             {type === filter.PAYMENT ? '- ' : '+ '}
                         </span>
-                        {(value / ETH_DENOM).toFixed(4)} GNT
+                        {(value / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT
                     </span>
                     {transaction && (
                         <Tooltip

@@ -17,6 +17,7 @@
 @import 'spot-light';
 @import 'network/index';
 @import 'tasks/index';
+@import "frame/index";
 @import 'settings/index';
 @import 'concent/index';
 @import 'transaction/index';
@@ -500,10 +501,10 @@ input[type='number']::-webkit-inner-spin-button {
 
     .checkbox-item {
         .overlay {
-            top: 0.3em;
-            height: 0.4em;
-            width: 0.4em;
-            padding: 5px;
+            top: 0.25em;
+            height: 0.7em;
+            width: 0.7em;
+            padding: 2px;
             border-radius: 3px;
             margin-right: 10px;
         }
@@ -531,6 +532,8 @@ input[type='number']::-webkit-inner-spin-button {
     }
     &--blue {
         background-color: $button-static-color;
+        -webkit-mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
+        mask: url('../assets/img/status-stop.svg') no-repeat 100% 100%;
     }
 }
 
@@ -663,9 +666,6 @@ input[type='number']::-webkit-inner-spin-button {
 }
 
 .win {
-    body {
-        border: 1px solid $color-border;
-    }
 
     .content__main,
     .content__task-panel,

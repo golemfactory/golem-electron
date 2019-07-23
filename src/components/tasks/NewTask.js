@@ -46,12 +46,6 @@ export class NewTask extends React.Component {
             return (taskName && taskName.substring(0, 24)) || 'Golem Task'
     }
 
-    componentWillUnmount() {
-        if (!this._nextStep) {
-            this.props.actions.clearTaskPlain();
-        }
-    }
-
     /**
      * [_closeModal funcs. closes modals]
      */

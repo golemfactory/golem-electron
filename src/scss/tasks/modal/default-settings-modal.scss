@@ -1,24 +1,21 @@
-.container__default-settings-modal{
-    .content__modal {
-        height: 220px;
-        text-align: center;
-        padding: 20px;
-        .icon-settings {
-            display: inline-block;
-            color: $color-text4;
-            background: $color-accent2;
-            font-size: 2.6em;
-            width: 1em;
-            height: 1em;
-            line-height: 1em;
-            padding: 0.3em;
+.default-settings-modal {
+    &__container {
+        .content__modal {
+            height: 320px;
             text-align: center;
-            border-radius: 50%;
-            // color: $color-accent2;
-            // font-size: 28pt;
-            // background: $color-bg2;
-            // border-radius: 50px;
-            // padding: 18px;
+            padding: 20px;
+        }
+
+        .resolution-change-img {
+            height: 23vh;
+            width: 35vw;
         }
     }
+
+    &__section-image {
+        height: 20vh;
+        width: 35vw;
+        min-height: 150px;
+    }
+
 }

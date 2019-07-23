@@ -11,6 +11,7 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
+    isMainNet: state.info.isMainNet,
     isOnboadingActive: !state.concent.hasOnboardingShown,
     showConcentToS: !state.info.isConcentTermsAccepted,
     nodeId: state.info.networkInfo.key,
@@ -63,6 +64,7 @@ export class Concent extends React.Component {
         const {
             concentBalance,
             depositStatus,
+            isMainNet,
             isEngineOn,
             nodeId,
             isConcentWaiting
@@ -129,7 +131,7 @@ export class Concent extends React.Component {
                                                 ? concentBalance.value
                                                       .dividedBy(ETH_DENOM)
                                                       .toFixed(4)
-                                                : '-'}{' '}
+                                                : '-'}{isMainNet ? ' ' : ' t'}
                                             GNT
                                         </b>
                                         <br />
