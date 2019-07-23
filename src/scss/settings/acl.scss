@@ -1,6 +1,8 @@
 .content__acl{
 	height: 100%;
     font-size: 10pt;
+    padding-top: 37px !important;
+    overflow-y: overlay;
 
     h4 {
     	margin: 20px 0;
@@ -12,4 +14,110 @@
         margin-top: 20px;
         text-align: center;
     }
-}
+
+    .switch-box {
+        display: flex;
+        align-items: center;
+        line-height: 1.5em;
+        .switch {
+            margin: 0 10px;
+        }
+        //switch between two options
+        input:not(:checked) {
+            & + .switch-slider {
+                background-color: #2196f3;
+            }
+        }
+
+        .switch-label {
+            font-size: 9pt;
+            font-weight: 500;
+            color: $color-text3;
+
+            &.active {
+                color: $color-primary;
+            }
+        }
+    }
+
+    .description {
+        margin-top: 20px;
+        font-size: 8pt;
+        line-height: 2em;
+        color: $color-text2;
+    }
+
+    .acl__action {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        height: 25px;
+        margin-top: 30px;
+        font-size: 8pt;
+        color: $color-primary;
+        &-item {
+            width: 120px;
+            cursor: pointer;
+            margin-right: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        &__add-node {
+            display: flex;
+            align-items: center;
+            width: auto !important;
+            margin-left: auto;
+            margin-right: 0 !important;
+            text-transform: none;
+            span{
+                margin-right: 5px;
+            }
+        }
+    }
+
+    .fragment__node {
+        &-table {
+            width: 100%;
+            font-size: 8pt;
+            line-height: 2em;
+            padding: 15px 0;
+            border-top: 1px solid $color-border;
+            padding-right: 20px;
+
+            thead tr{
+                height: 50px;
+            }
+        }
+        &-row{
+            color: $color-text !important;
+            .checkbox-item {
+                height: 20px;
+                margin: 5px 0;
+            }
+            .icon{
+                &-delete,
+                &-locked{
+                    top: -2.5px;
+                    color: $color-primary;
+                    cursor: pointer;
+                    &::before{
+                        font-size: 14pt;
+                    }
+                }
+            }
+            .info {
+                &__id,
+                &__name {
+                    cursor: pointer;
+                }
+                
+                &__name{
+                    color: $color-primary;
+                    &--restricted {
+                        color: $color-error;
+                    }
+                }
+            }
+        }
+    }
+}   
