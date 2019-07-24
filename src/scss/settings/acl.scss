@@ -103,6 +103,10 @@
                     &::before{
                         font-size: 14pt;
                     }
+
+                    &:hover::before {
+                        content: '\e960';
+                    }
                 }
             }
             .info {
@@ -112,9 +116,9 @@
                 }
                 
                 &__name{
-                    color: $color-primary;
+                    color: $color-error;
                     &--restricted {
-                        color: $color-error;
+                        color: $color-primary;
                     }
                 }
             }

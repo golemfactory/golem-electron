@@ -20,6 +20,7 @@ const NodeTable = ({ aclRestrictedMode, list, checkedItems, toggleItems, showBlo
 					<NodeRow
 						item={item}
 						key={key.toString()}
+						isChecked={!!checkedItems[item?.node_id]}
 						keyItem={key.toString()}
 						toggleItems={toggleItems}
 						aclRestrictedMode={aclRestrictedMode}

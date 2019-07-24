@@ -7,6 +7,12 @@ import NodeTable from './NodeTable';
 import * as Actions from './../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
+import map from 'lodash/map';
+import size from 'lodash/size';
+import some from 'lodash/some';
+import every from 'lodash/every';
+import isEqual from 'lodash/isEqual';
+
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats
@@ -16,8 +22,25 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class ACL extends React.Component {
+const mockNodeList = {
+    test: {
+        subtask_id: 'subtask 1',
+        node_id: 'node 1',
+        node_name: 'node name'
+    },
+    test1: {
+        subtask_id: 'subtask 2',
+        node_id: 'node 2',
+        node_name: 'node name2'
+    },
+    test2: {
+        subtask_id: 'subtask 3',
+        node_id: 'node 3',
+        node_name: 'node name3'
+    }
+};
 
+export class ACL extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -32,7 +55,34 @@ export class ACL extends React.Component {
         };
     }
 
-    _handleACLCheckbox = e => this.setState({aclRestrictedMode: e.target.checked});
+    componentWillUpdate(nextProps, nextState) {
+        if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
+            const isAllChecked = every(
+                nextState.checkedItems,
+                item => item === true
+            );
+
+            const isAnyChecked = some(
+                nextState.checkedItems,
+                item => item === true
+            );
+
+            if (nextState.isAllChecked !== isAllChecked) {
+                this.setState({
+                    isAllChecked
+                });
+            }
+
+            if (nextState.isAnyChecked !== isAnyChecked) {
+                this.setState({
+                    isAnyChecked
+                });
+            }
+        }
+    }
+
+    _handleACLCheckbox = e =>
+        this.setState({ aclRestrictedMode: e.target.checked });
 
     _toggleAll = e => {};
 
@@ -51,13 +101,25 @@ export class ACL extends React.Component {
         });
     };
 
+    _toggleAll = () => {
+        const keyList = map(mockNodeList, item => item.node_id);
+        this._toggleItems(keyList, true);
+    };
+
     render() {
-        const { aclRestrictedMode, checkedItems } = this.state;
+        const {
+            aclRestrictedMode,
+            checkedItems,
+            isAllChecked,
+            isAnyChecked
+        } = this.state;
         return (
             <div className="content__acl">
-                {false && <div className="no-data">No available data.</div>}
                 <div className="switch-box">
-                    <span className={`switch-label switch-label--left ${!aclRestrictedMode ? 'active' : ''}`}>
+                    <span
+                        className={`switch-label switch-label--left ${
+                            !aclRestrictedMode ? 'active' : ''
+                        }`}>
                         Open mode
                     </span>
                     <label className="switch">
@@ -71,7 +133,10 @@ export class ACL extends React.Component {
                         />
                         <div className="switch-slider round" />
                     </label>
-                    <span className={`switch-label switch-label--right ${aclRestrictedMode ? 'active' : ''}`}>
+                    <span
+                        className={`switch-label switch-label--right ${
+                            aclRestrictedMode ? 'active' : ''
+                        }`}>
                         Restricted mode
                     </span>
                 </div>
@@ -89,18 +154,20 @@ export class ACL extends React.Component {
                     </span>
                 </div>
                 <div className="acl__action">
-                    <span
-                        onClick={this._toggleAll}
-                        className="acl__action-item">
-                        {false ? 'Deselect All' : 'Select All'} Nodes
-                    </span>
-                    {true && (
+                    <ConditionalRender showIf={size(mockNodeList) > 0}>
+                        <span
+                            onClick={this._toggleAll}
+                            className="acl__action-item">
+                            {isAllChecked ? 'Deselect All' : 'Select All'} Nodes
+                        </span>
+                    </ConditionalRender>
+                    <ConditionalRender showIf={isAnyChecked}>
                         <span
                             onClick={this._unlockNodes}
                             className="acl__action-item">
-                            {aclRestrictedMode ? "Remove" : "Unlock"} Selected
+                            {aclRestrictedMode ? 'Remove' : 'Unlock'} Selected
                         </span>
-                    )}
+                    </ConditionalRender>
                     <span
                         onClick={this._unlockNodes}
                         className="acl__action-item acl__action__add-node">
@@ -108,29 +175,16 @@ export class ACL extends React.Component {
                         Add Node
                     </span>
                 </div>
-                <ConditionalRender showIf={true}>
+                <ConditionalRender showIf={size(mockNodeList) > 0}>
                     <NodeTable
-                        list={{
-                            test: {
-                                subtask_id: 'subtask 1',
-                                node_id: 'node 1',
-                                node_name: 'node name'
-                            },
-                            test1: {
-                                subtask_id: 'subtask 2',
-                                node_id: 'node 2',
-                                node_name: 'node name2'
-                            },
-                            test2: {
-                                subtask_id: 'subtask 3',
-                                node_id: 'node 3',
-                                node_name: 'node name3'
-                            }
-                        }}
+                        list={mockNodeList}
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                         aclRestrictedMode={aclRestrictedMode}
                     />
+                </ConditionalRender>
+                <ConditionalRender showIf={size(mockNodeList) < 1}>
+                    <div className="no-data">No available data.</div>
                 </ConditionalRender>
             </div>
         );

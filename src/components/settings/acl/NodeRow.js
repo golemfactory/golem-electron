@@ -5,7 +5,7 @@ import Tooltip from '@tippy.js/react';
 const { ipcRenderer, clipboard } = window.electron;
 let copyTimeoutList = [];
 
-const NodeRow = ({ aclRestrictedMode, item, keyItem, toggleItems, showBlockNodeModal }) => {
+const NodeRow = ({ aclRestrictedMode, isChecked, item, keyItem, toggleItems, showBlockNodeModal }) => {
 	const [isNodeCopied, setCopyNodeStatus] = useState(false);
 	const [isSubtaskCopied, setCopySubtaskStatus] = useState(false);
 
@@ -41,6 +41,7 @@ const NodeRow = ({ aclRestrictedMode, item, keyItem, toggleItems, showBlockNodeM
 						type="checkbox"
 						name="taskType"
 						value={item?.node_id}
+						checked={isChecked}
 						onChange={() =>
 							toggleItems.call(null, [item?.node_id])
 						}
