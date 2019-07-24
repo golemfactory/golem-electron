@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@tippy.js/react';
 
+import ConditionalRender from '../../hoc/ConditionalRender';
+
 const { ipcRenderer, clipboard } = window.electron;
 let copyTimeoutList = [];
 
-const NodeRow = ({ aclRestrictedMode, isChecked, item, keyItem, toggleItems, showBlockNodeModal }) => {
+const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, toggleItems, showBlockNodeModal }) => {
 	const [isNodeCopied, setCopyNodeStatus] = useState(false);
 	const [isSubtaskCopied, setCopySubtaskStatus] = useState(false);
 
@@ -79,6 +81,20 @@ const NodeRow = ({ aclRestrictedMode, isChecked, item, keyItem, toggleItems, sho
 					</span>
 				</Tooltip>
 			</td>
+			<ConditionalRender showIf={isBlockTable}>
+				<td align="center">
+					<span
+						className="info__id">
+						{item.ip_address}
+					</span>
+				</td>
+				<td align="center">
+					<span
+						className="info__id">
+						{item.port}
+					</span>
+				</td>
+			</ConditionalRender>
 			<td align="center">
 				<Tooltip
 					content={

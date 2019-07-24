@@ -47,6 +47,13 @@
         color: $color-text2;
     }
 
+    .input__search-node {
+        width: 100%;
+        padding: 0 10px;
+        margin: 15px 0;
+        background-color: $color-input;
+    }
+
     .acl__action {
         display: flex;
         justify-content: flex-start;
@@ -82,7 +89,6 @@
             line-height: 2em;
             padding: 15px 0;
             border-top: 1px solid $color-border;
-            padding-right: 20px;
 
             thead tr{
                 height: 50px;
@@ -103,7 +109,8 @@
                     &::before{
                         font-size: 14pt;
                     }
-
+                }
+                &-locked {
                     &:hover::before {
                         content: '\e960';
                     }
