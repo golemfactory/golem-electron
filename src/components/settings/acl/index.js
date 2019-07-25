@@ -73,7 +73,17 @@ export default class ACL extends React.PureComponent {
         };
     }
 
-    _handleACLCheckbox = value => this.setState({ aclRestrictedMode: value });
+    _handleACLCheckbox = value => {
+        new Promise((resolve, reject) => {
+            this.props.actions.setACLMode(
+                [!!value ? 'deny' : 'allow', []],
+                resolve,
+                reject
+            );
+        }).then(result => {
+            this.setState({ aclRestrictedMode: value });
+        });
+    };
 
     _addNode = e => {
         this.setState(prevState => ({

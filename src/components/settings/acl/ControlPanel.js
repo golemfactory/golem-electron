@@ -14,7 +14,8 @@ import every from 'lodash/every';
 import isEqual from 'lodash/isEqual';
 
 const mapStateToProps = state => ({
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    nodeListACL: state.acl.nodeListACL
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -88,7 +89,8 @@ export class ControlPanel extends React.Component {
 
     render() {
         const { checkedItems, isAllChecked, isAnyChecked } = this.state;
-        const { list, addNode, aclRestrictedMode } = this.props;
+        const { list, addNode, aclRestrictedMode, nodeListACL } = this.props;
+        const { rules = [] } = nodeListACL;
         return (
             <Fragment>
                 <div className="switch-box">
@@ -130,7 +132,7 @@ export class ControlPanel extends React.Component {
                     </span>
                 </div>
                 <div className="acl__action">
-                    <ConditionalRender showIf={size(list) > 0}>
+                    <ConditionalRender showIf={size(rules) > 0}>
                         <span
                             onClick={this._toggleAll}
                             className="acl__action-item">
@@ -151,15 +153,15 @@ export class ControlPanel extends React.Component {
                         Add Node
                     </span>
                 </div>
-                <ConditionalRender showIf={size(list) > 0}>
+                <ConditionalRender showIf={size(rules) > 0}>
                     <NodeTable
-                        list={list}
+                        list={rules}
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                         aclRestrictedMode={aclRestrictedMode}
                     />
                 </ConditionalRender>
-                <ConditionalRender showIf={size(list) < 1}>
+                <ConditionalRender showIf={size(rules) < 1}>
                     <div className="no-data">No available data.</div>
                 </ConditionalRender>
             </Fragment>

@@ -47,7 +47,7 @@ export class Settings extends React.Component {
         });
     };
 
-    mainContentList = [<SettingsList />, <Stats />, <ACL/>];
+    mainContentList = [<SettingsList />, <Stats />, <ACL actions={this.props.actions}/>];
 
     render() {
         const { version } = this.props;

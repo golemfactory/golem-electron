@@ -18,6 +18,8 @@ export let dict = Object.freeze({
     SET_ADVANCED_CHART: 'SET_ADVANCED_CHART',
     SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     SET_ADVANCED_MANUALLY: 'SET_ADVANCED_MANUALLY',
+    SET_ACL_MODE: 'SET_ACL_MODE',
+    SET_ACL_NODE_LIST: 'SET_ACL_NODE_LIST',
     BLOCK_NODE: 'BLOCK_NODE',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
@@ -159,6 +161,8 @@ const {
     SET_ADVANCED_CHART,
     SET_CHOSEN_HARDWARE_PRESET,
     SET_ADVANCED_MANUALLY,
+    SET_ACL_MODE,
+    SET_ACL_NODE_LIST,
     BLOCK_NODE,
     //TASKS
     SET_TASKLIST,
@@ -395,6 +399,13 @@ export const setChosenPreset = (payload, init) => ({
 export const setAdvancedManually = payload => ({
     type: SET_ADVANCED_MANUALLY,
     payload
+});
+
+export const setACLMode = (payload, _resolve, _reject) => ({
+    type: SET_ACL_MODE,
+    payload,
+    _resolve,
+    _reject
 });
 
 export const blockNode = (payload, _resolve, _reject) => ({

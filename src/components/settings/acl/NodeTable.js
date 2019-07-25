@@ -41,7 +41,7 @@ const NodeTable = ({ aclRestrictedMode = false, list, checkedItems, toggleItems,
 NodeTable.displayName = 'NodeTable';
 
 NodeTable.propTypes = {
-	list: PropTypes.object.isRequired,
+	list: PropTypes.array.isRequired,
 	checkedItems: PropTypes.object.isRequired,
 	toggleItems: PropTypes.func.isRequired
 };
