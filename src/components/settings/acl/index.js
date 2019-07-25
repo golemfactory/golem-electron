@@ -105,7 +105,6 @@ export default class ACL extends React.PureComponent {
                 </ConditionalRender>
                 <ConditionalRender showIf={addNodeModal && !aclRestrictedMode}>
                     <SelectNodePanel
-                        list={mockNodeList}
                         addNode={this._addNode}
                         aclRestrictedMode={aclRestrictedMode}
                     />

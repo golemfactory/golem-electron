@@ -1,9 +1,10 @@
 import { dict } from './../../actions'
 
-const { SET_ACL_NODE_LIST } = dict
+const { SET_ACL_NODE_LIST, SET_KNOWN_PEERS } = dict
 
 const initialState = {
-    nodeListACL: {}
+    nodeListACL: {},
+    knownPeers: []
 }
 const setACL = (state = initialState, action) => {
     switch (action.type) {
@@ -11,6 +12,11 @@ const setACL = (state = initialState, action) => {
     case SET_ACL_NODE_LIST:
         return Object.assign({}, state, {
             nodeListACL: action.payload
+        });
+
+    case SET_KNOWN_PEERS:
+        return Object.assign({}, state, {
+            knownPeers: action.payload
         });
 
     default:

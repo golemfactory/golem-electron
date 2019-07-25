@@ -19,7 +19,8 @@ import includes from 'lodash/fp/includes';
 const WAIT_INTERVAL = 500;
 
 const mapStateToProps = state => ({
-    isEngineOn: state.info.isEngineOn
+    isEngineOn: state.info.isEngineOn,
+    knownPeers: state.acl.knownPeers
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -38,7 +39,7 @@ export class SelectNodePanel extends React.Component {
             nodeBlocked: false,
             errMsg: null,
             subtask2block: null,
-            filteredList: props.list
+            filteredList: props.knownPeers
         };
     }
 
@@ -78,14 +79,14 @@ export class SelectNodePanel extends React.Component {
 
     _filterList = e => {
         this.interactionTimer && clearTimeout(this.interactionTimer);
-        const { list } = this.props
+        const { knownPeers } = this.props
         if(!e.target.value) {
-            this.setState({ filteredList: list });
+            this.setState({ filteredList: knownPeers });
             return;
         }
 
         const filteredList = pickBy(
-            list,
+            knownPeers,
             includesValue(e.target.value)
         );
 
@@ -96,7 +97,7 @@ export class SelectNodePanel extends React.Component {
 
     render() {
         const { checkedItems, isAnyChecked, filteredList } = this.state;
-        const { list, addNode } = this.props;
+        const { addNode, knownPeers } = this.props;
         return (
             <Fragment>
                 <div className="description">
@@ -135,7 +136,7 @@ export class SelectNodePanel extends React.Component {
                         Back
                     </span>
                 </div>
-                <ConditionalRender showIf={size(list) > 0}>
+                <ConditionalRender showIf={size(knownPeers) > 0}>
                     <NodeTable
                         list={filteredList}
                         checkedItems={checkedItems}
