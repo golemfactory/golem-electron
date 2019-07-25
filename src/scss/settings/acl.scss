@@ -47,6 +47,14 @@
         color: $color-text2;
     }
 
+    .input-field__add-node {
+        margin-top: 30px;
+        label {
+            font-weight: 400;
+        }
+    }
+    
+    .input__add-node,
     .input__search-node {
         width: 100%;
         padding: 0 10px;
@@ -62,6 +70,16 @@
         margin-top: 30px;
         font-size: 8pt;
         color: $color-primary;
+        &--center {
+            justify-content: center;
+            cursor: pointer;
+            span{
+                font-size: 10pt;
+            }
+            span + button {
+                margin-left: 30px;
+            }
+        }
         &-item {
             width: 120px;
             cursor: pointer;

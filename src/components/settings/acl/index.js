@@ -2,6 +2,7 @@ import React from 'react';
 
 import ControlPanel from './ControlPanel';
 import AddNodePanel from './AddNodePanel';
+import SelectNodePanel from './SelectNodePanel';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
 const mockNodeList = {
@@ -92,7 +93,14 @@ export default class ACL extends React.PureComponent {
                         handleACLCheckbox={this._handleACLCheckbox}
                     />
                 </ConditionalRender>
-                <ConditionalRender showIf={addNodeModal}>
+                <ConditionalRender showIf={addNodeModal && !aclRestrictedMode}>
+                    <SelectNodePanel
+                        list={mockNodeList}
+                        addNode={this._addNode}
+                        aclRestrictedMode={aclRestrictedMode}
+                    />
+                </ConditionalRender>
+                <ConditionalRender showIf={addNodeModal && aclRestrictedMode}>
                     <AddNodePanel
                         list={mockNodeList}
                         addNode={this._addNode}
