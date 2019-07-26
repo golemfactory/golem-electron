@@ -121,7 +121,9 @@ export let config = Object.freeze({
     CONCENT_UNLOCK: 'pay.deposit.unlock',
     CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
-    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch',
+    CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
+    CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
 
 function errorCallback(topic, _eb, { error, details, argsList }) {

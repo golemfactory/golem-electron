@@ -4,7 +4,8 @@ const {setConfig, getConfig, dictConfig} = remote.getGlobal('configStorage')
 
 const {CONCENT_BALANCE_STATE, CONCENT_ONBOARDING, UNLOCK_DEPOSIT_STATE} = dictConfig
 const {
-    SET_CONCENT_SWITCH, 
+    SET_CONCENT_SWITCH,
+    SET_CONCENT_REQUIRED_SWITCH,
     SET_CONCENT_DEPOSIT_BALANCE, 
     SET_CONCENT_ONBOARDING_SHOWN, 
     TOGGLE_CONCENT, 
@@ -29,6 +30,11 @@ const setConcentSwitch = (state = initialState, action) => {
     case SET_CONCENT_SWITCH:
         return Object.assign({}, state, {
             concentSwitch: action.payload
+        });
+
+    case SET_CONCENT_REQUIRED_SWITCH:
+        return Object.assign({}, state, {
+            concentRequiredSwitch: action.payload
         });
 
     case SET_CONCENT_ONBOARDING_SHOWN:

@@ -6,11 +6,13 @@ import * as Actions from './../../actions';
 import { ETH_DENOM } from './../../constants/variables';
 import { getConcentDepositStatus } from './../../reducers';
 import { timeStampToHR } from './../../utils/time';
+import ConditionalRender from '../hoc/ConditionalRender';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
+    concentRequiredSwitch: state.concent.concentRequiredSwitch,
     isMainNet: state.info.isMainNet,
     isOnboadingActive: !state.concent.hasOnboardingShown,
     showConcentToS: !state.info.isConcentTermsAccepted,
@@ -27,7 +29,8 @@ export class Concent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            isConcentOn: props.concentSwitch
+            isConcentOn: props.concentSwitch,
+            isConcentRequiredOn: props.concentRequiredSwitch
         };
     }
 
@@ -56,6 +59,19 @@ export class Concent extends React.Component {
         );
     };
 
+    _toggleConcentRequiredSwitch = () => {
+        const { actions } = this.props;
+        this.setState(
+            {
+                isConcentRequiredOn: !this.state.isConcentRequiredOn
+            },
+            () => {
+                if (this.state.isConcentRequiredOn)
+                    actions.toggleConcentRequired(this.state.isConcentOn);
+            }
+        );
+    };
+
     _handleUnlockDeposit = () => {
         this.props.actions.unlockConcentDeposit();
     };
@@ -70,12 +86,12 @@ export class Concent extends React.Component {
             isConcentWaiting
         } = this.props;
         const { time, statusCode } = depositStatus;
-        const { isConcentOn } = this.state;
+        const { isConcentOn, isConcentRequiredOn } = this.state;
         return (
             <div
                 className="content__concent"
-                style={{ height: isConcentOn ? 250 : 360 }}>
-                <span>
+                style={{ height: isConcentOn ? 200 : 360 }}>
+                <span className="content__concent__info">
                     Concent is service of the Golem network, which aims to
                     improve the integrity
                     <br />
@@ -114,8 +130,36 @@ export class Concent extends React.Component {
                         Concent Service turned {!isConcentOn ? 'off' : 'on'}.
                     </span>
                 </div>
-
-                {!isConcentOn && statusCode !== 1 && (
+                <ConditionalRender showIf={isConcentOn}>
+                    <div className="switch__concent">
+                        <div
+                            className={`switch-box ${
+                                !isConcentRequiredOn ? 'switch-box--green' : ''
+                            }`}>
+                            <label className="switch">
+                                <input
+                                    type="checkbox"
+                                    onChange={this._toggleConcentRequiredSwitch}
+                                    checked={isConcentRequiredOn}
+                                    aria-label="Concent switch on/off"
+                                    tabIndex="0"
+                                    disabled={!nodeId}
+                                />
+                                <div className="switch-slider round" />
+                            </label>
+                        </div>
+                        <span
+                            style={{
+                                color: isConcentRequiredOn
+                                    ? '#4e4e4e'
+                                    : '#9b9b9b'
+                            }}>
+                            {!isConcentRequiredOn ? 'Allow' : 'Deny'} computing
+                            non concent tasks.
+                        </span>
+                    </div>
+                </ConditionalRender>
+                <ConditionalRender showIf={!isConcentOn && statusCode !== 1}>
                     <div className="deposit-info__concent">
                         {isConcentWaiting ? (
                             <div className="waiting-response">
@@ -131,7 +175,8 @@ export class Concent extends React.Component {
                                                 ? concentBalance.value
                                                       .dividedBy(ETH_DENOM)
                                                       .toFixed(4)
-                                                : '-'}{isMainNet ? ' ' : ' t'}
+                                                : '-'}
+                                            {isMainNet ? ' ' : ' t'}
                                             GNT
                                         </b>
                                         <br />
@@ -147,7 +192,7 @@ export class Concent extends React.Component {
                                                 date will reduce potential
                                                 future deposit
                                                 <br />
-                                                creation transaction fees.{" "}
+                                                creation transaction fees.{' '}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                     Learn more
                                                 </a>
@@ -159,7 +204,7 @@ export class Concent extends React.Component {
                                                 additional transaction fees,
                                                 <br />
                                                 transaction fees or you can
-                                                unlock it now.{" "}
+                                                unlock it now.{' '}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=can-i-withdraw-my-tokens-from-the-deposit">
                                                     Learn more
                                                 </a>
@@ -199,7 +244,7 @@ export class Concent extends React.Component {
                                             reduce future Deposit creation
                                             transaction
                                             <br />
-                                            fee{" "}
+                                            fee{' '}
                                             <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-much-can-i-save-by-not-unlocking-my-deposit">
                                                 Learn more
                                             </a>
@@ -209,7 +254,7 @@ export class Concent extends React.Component {
                             </div>
                         )}
                     </div>
-                )}
+                </ConditionalRender>
             </div>
         );
     }
