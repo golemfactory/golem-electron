@@ -56,21 +56,50 @@ export function* setupACLBase(session, {payload, _resolve, _reject}) {
 }
 
 export function getKnownPeers(session) {
-	return new Promise((resolve, reject) => {
-		function on_info(args) {
-			let info = args[0];
-			resolve({
-				type: SET_KNOWN_PEERS,
-				payload: info
-			})
-		}
-		_handleRPC(on_info, session, config.GET_KNOWN_PEERS_RPC);
-	});
+	const interval = 2000
+
+    return eventChannel(emit => {
+
+        const fetchUnsupportedStats = () => {
+            
+            function on_stats(args) {
+                let stats = args[0];
+                console.log("stats", stats);
+                emit({
+					type: SET_KNOWN_PEERS,
+					payload: info
+				})
+            }
+
+            _handleRPC(on_stats, session, config.GET_KNOWN_PEERS_RPC)
+        }
+
+        const fetchOnStartup = () => {
+                fetchUnsupportedStats()
+
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
+
+        return () => {
+            console.log('negative')
+            clearInterval(channelInterval);
+        }
+    })
 }
 
 export function* knownPeersBase(session) {
-	const action = yield call(getKnownPeers, session);
-	yield put(action);
+	const channel = yield call(getKnownPeers, session)
+    try {
+        while (true) {
+            let action = yield take(channel)
+            yield put(action)
+        }
+    } finally {
+        console.info('yield cancelled!')
+        channel.close()
+    }
 }
 
 /**
