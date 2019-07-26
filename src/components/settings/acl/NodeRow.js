@@ -42,10 +42,10 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 						id={`taskTypeRadio${keyItem}`}
 						type="checkbox"
 						name="taskType"
-						value={item?.node_id}
+						value={item?.key}
 						checked={isChecked}
 						onChange={() =>
-							toggleItems.call(null, [item?.node_id])
+							toggleItems.call(null, [item?.key])
 						}
 						readOnly
 						required
@@ -62,7 +62,7 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 				<Tooltip
 					content={
 						<p>
-							{isSubtaskCopied
+							{isNodeCopied
 								? 'Copied Succesfully!'
 								: 'Click to copy ID'}
 						</p>
@@ -73,9 +73,9 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 					size="small">
 					<span
 						className="info__id"
-						onClick={_copyField.bind(null, item.subtask_id, isSubtaskCopied, setCopySubtaskStatus)}>
-						{item.node_id.replace(
-							new RegExp('^(.{0,12}).*(.{2})$', 'im'),
+						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
+						{item?.key.replace(
+							new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 							'$1...$2'
 						)}
 					</span>
@@ -85,13 +85,13 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 				<td align="center">
 					<span
 						className="info__id">
-						{item.ip_address}
+						{item.pub_addr}
 					</span>
 				</td>
 				<td align="center">
 					<span
 						className="info__id">
-						{item.port}
+						{item.p2p_pub_port}
 					</span>
 				</td>
 			</ConditionalRender>

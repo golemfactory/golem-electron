@@ -63,11 +63,10 @@ export function getKnownPeers(session) {
         const fetchUnsupportedStats = () => {
             
             function on_stats(args) {
-                let stats = args[0];
-                console.log("stats", stats);
+                let peers = args[0];
                 emit({
 					type: SET_KNOWN_PEERS,
-					payload: info
+					payload: peers
 				})
             }
 

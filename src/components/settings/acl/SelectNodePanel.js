@@ -12,7 +12,7 @@ import size from 'lodash/size';
 import some from 'lodash/some';
 import someFP from 'lodash/fp/some';
 import every from 'lodash/every';
-import pickBy from 'lodash/pickBy';
+import filter from 'lodash/filter';
 import isEqual from 'lodash/isEqual';
 import includes from 'lodash/fp/includes';
 
@@ -72,6 +72,8 @@ export class SelectNodePanel extends React.Component {
                 (tempObj[key] =
                     val !== null ? !this.state.isAllChecked : !tempObj[key])
         );
+
+        console.log("tempObj", tempObj);
         this.setState({
             checkedItems: tempObj
         });
@@ -85,7 +87,7 @@ export class SelectNodePanel extends React.Component {
             return;
         }
 
-        const filteredList = pickBy(
+        const filteredList = filter(
             knownPeers,
             includesValue(e.target.value)
         );
