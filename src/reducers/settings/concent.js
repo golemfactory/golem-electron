@@ -34,7 +34,6 @@ const setConcentSwitch = (state = initialState, action) => {
         });
 
     case SET_CONCENT_REQUIRED_SWITCH:
-        console.log("action.payload", action.payload);
         return Object.assign({}, state, {
             concentRequiredSwitch: action.payload
         });

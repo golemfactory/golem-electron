@@ -11,7 +11,6 @@ export function fetchConcentRequiredStatus(session) {
 
         function on_info(args) {
             let info = args[0];
-            console.log("fetchConcentRequiredStatus info", info);
             response({
                 type: SET_CONCENT_REQUIRED_SWITCH,
                 payload: info
