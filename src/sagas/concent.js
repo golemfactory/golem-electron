@@ -4,9 +4,34 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {TOGGLE_CONCENT, TOGGLE_CONCENT_REQUIRED, UNLOCK_CONCENT_DEPOSIT, SET_CONCENT_SWITCH, SET_CONCENT_SWITCH_REQUIRED} = dict
+const {TOGGLE_CONCENT, TOGGLE_CONCENT_REQUIRED, UNLOCK_CONCENT_DEPOSIT, SET_CONCENT_SWITCH, SET_CONCENT_REQUIRED_SWITCH} = dict
 
-export function fectConcentRequiredStatus(session) {
+export function fetchConcentRequiredStatus(session) {
+    return new Promise((response, reject) => {
+
+        function on_info(args) {
+            let info = args[0];
+            console.log("fetchConcentRequiredStatus info", info);
+            response({
+                type: SET_CONCENT_REQUIRED_SWITCH,
+                payload: info
+            })
+        }
+        
+        _handleRPC(on_info, session, config.CONCENT_REQUIRED_SWITCH_STATUS_RPC)
+    })
+}
+
+/**
+ * [*fetchConcentStatusBase generator to  get soft switch information]
+ * @param {[type]} session       [Session of the wamp connection]
+ */
+export function* fetchConcentRequiredStatusBase(session) {
+    const action = yield call(fetchConcentRequiredStatus, session);
+    yield action && put(action)
+}
+
+export function fetchConcentStatus(session) {
     return new Promise((response, reject) => {
 
         function on_info(args) {
@@ -25,32 +50,8 @@ export function fectConcentRequiredStatus(session) {
  * [*fetchConcentStatusBase generator to  get soft switch information]
  * @param {[type]} session       [Session of the wamp connection]
  */
-export function* fetchConcentRequiredStatusBase(session) {
-    const action = yield call(fectConcentRequiredStatus, session);
-    yield action && put(action)
-}
-
-export function fectConcentStatus(session) {
-    return new Promise((response, reject) => {
-
-        function on_info(args) {
-            let info = args[0];
-            response({
-                type: SET_CONCENT_REQUIRED_SWITCH,
-                payload: info
-            })
-        }
-        
-        _handleRPC(on_info, session, config.CONCENT_REQUIRED_SWITCH_STATUS_RPC)
-    })
-}
-
-/**
- * [*fetchConcentStatusBase generator to  get soft switch information]
- * @param {[type]} session       [Session of the wamp connection]
- */
 export function* fetchConcentStatusBase(session) {
-    const action = yield call(fectConcentStatus, session);
+    const action = yield call(fetchConcentStatus, session);
     yield action && put(action)
 }
 
@@ -59,7 +60,6 @@ export function unlockDepositConcent(session) {
 
         function on_unlock(args) {
             let info = args[0];
-            console.log("info", info)
         }
         _handleRPC(on_unlock, session, config.CONCENT_UNLOCK)
     })
@@ -77,13 +77,12 @@ export function toggleConcentRequired(session, {isSwitchOn}) {
     return new Promise((response, reject) => {
         function on_info(args) {
             let info = args[0]
-            console.log("info", info);
             response({
-                type: SET_CONCENT_SWITCH_REQUIRED,
+                type: SET_CONCENT_REQUIRED_SWITCH,
                 payload: info
             })
         }
-        _handleRPC(on_info, session, config.CONCENT_SWITCH_REQUIRED_RPC)
+        _handleRPC(on_info, session, config.CONCENT_REQUIRED_SWITCH_RPC, [isSwitchOn])
     });
 }
 
@@ -94,6 +93,8 @@ export function toggleConcentRequired(session, {isSwitchOn}) {
 export function* toggleConcentRequiredBase(session, payload) {
     const action = yield call(toggleConcentRequired, session, payload);
     yield action && put(action)
+    const status = yield call(fetchConcentRequiredStatus, session);
+    yield status && put(status)
 }
 
 export function toggleConcent(session, {isSwitchOn, informRPC, toggleLock = false}) {

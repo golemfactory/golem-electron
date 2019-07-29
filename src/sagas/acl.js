@@ -64,7 +64,6 @@ export function getKnownPeers(session) {
             
             function on_stats(args) {
                 let stats = args[0];
-                console.log("stats", stats);
                 emit({
 					type: SET_KNOWN_PEERS,
 					payload: info

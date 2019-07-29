@@ -62,13 +62,10 @@ export class Concent extends React.Component {
     _toggleConcentRequiredSwitch = () => {
         const { actions } = this.props;
         this.setState(
-            {
-                isConcentRequiredOn: !this.state.isConcentRequiredOn
-            },
-            () => {
-                if (this.state.isConcentRequiredOn)
-                    actions.toggleConcentRequired(this.state.isConcentOn);
-            }
+            prevState => ({
+                isConcentRequiredOn: !prevState.isConcentRequiredOn
+            }),
+            () => actions.toggleConcentRequired(this.state.isConcentRequiredOn)
         );
     };
 
@@ -140,7 +137,7 @@ export class Concent extends React.Component {
                                 <input
                                     type="checkbox"
                                     onChange={this._toggleConcentRequiredSwitch}
-                                    checked={isConcentRequiredOn}
+                                    checked={!isConcentRequiredOn}
                                     aria-label="Concent switch on/off"
                                     tabIndex="0"
                                     disabled={!nodeId}
@@ -150,11 +147,11 @@ export class Concent extends React.Component {
                         </div>
                         <span
                             style={{
-                                color: isConcentRequiredOn
+                                color: !isConcentRequiredOn
                                     ? '#4e4e4e'
                                     : '#9b9b9b'
                             }}>
-                            {!isConcentRequiredOn ? 'Allow' : 'Deny'} computing
+                            Allow computing
                             non concent tasks.
                         </span>
                     </div>
