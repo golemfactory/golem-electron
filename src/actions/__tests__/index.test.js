@@ -510,15 +510,6 @@ describe('actions', () => {
         expect(actions.restartTask(payload)).toEqual(expectedAction);
     });
 
-    it('should create an action to restartFrame', () => {
-        const payload = { id: 0 };
-        const expectedAction = {
-            type: actions.dict.RESTART_FRAME,
-            payload
-        };
-        expect(actions.restartFrame(payload)).toEqual(expectedAction);
-    });
-
     it('should create an action to restartSubtask', () => {
         const payload = { id: 0 };
         const expectedAction = {
