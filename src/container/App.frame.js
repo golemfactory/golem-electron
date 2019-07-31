@@ -55,6 +55,7 @@ export class App extends Component {
                 <ConnectedRouter history={history}>
                     { routes }
                 </ConnectedRouter>
+                <div id="modalPortal" className="modal-portal" />
             </div>
         );
     }

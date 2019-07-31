@@ -121,6 +121,7 @@ class Estimation extends Component {
 			isSubtask,
 			item
 		} = this.props;
+			console.log("item", item, concentSwitch);
 		return (
 			<div className="container__estimation">
 				<span className="container__estimation__title">
