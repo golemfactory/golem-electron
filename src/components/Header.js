@@ -106,6 +106,7 @@ export class Header extends Component {
      * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
      */
     _onClose() {
+        //this.props.actions.gracefulQuit(); //TO DO popup quit modal
         let win = BrowserWindow.getFocusedWindow();
         win.close();
     }

@@ -97,6 +97,7 @@ export let dict = Object.freeze({
     PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
     APP_QUIT: 'APP_QUIT',
+    APP_QUIT_GRACEFUL: 'APP_QUIT_GRACEFUL',
     SET_CONNECTION: 'SET_CONNECTION',
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     SET_CHAIN_INFO: 'SET_CHAIN_INFO',
@@ -228,6 +229,7 @@ const {
     PREVIOUS_FRAME,
     //GENERAL
     APP_QUIT,
+    APP_QUIT_GRACEFUL,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -563,6 +565,11 @@ export const updatePreviewLock = payload => ({
 
 export const setOnboard = payload => ({
     type: ONBOARDING,
+    payload
+});
+
+export const gracefulQuit= payload => ({
+    type: APP_QUIT_GRACEFUL,
     payload
 });
 
