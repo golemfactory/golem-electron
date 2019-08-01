@@ -8,6 +8,8 @@ import {
     put
 } from 'redux-saga/effects';
 import { dict } from '../../actions';
+import { balanceFlow } from "../balance";
+import { estimatedCostBase, restartTaskBase } from "../tasks";
 import { concentFlow } from "../concent";
 
 import { config, _handleRPC } from './../handler';
@@ -16,11 +18,13 @@ const {
     SET_TASK_DETAILS,
     SET_SUBTASKS_BORDER,
     GET_SUBTASKS_BORDER,
+    GET_ESTIMATED_COST,
+    SET_ESTIMATED_COST,
     SET_PREVIEW_LIST,
     SET_SUBTASKS_LIST,
     FETCH_SUBTASKS_LIST,
     SET_ALL_FRAMES,
-    RESTART_FRAME,
+    RESTART_TASK,
     RESTART_SUBTASK,
     BLOCK_NODE
 } = dict;
@@ -230,12 +234,15 @@ export function* frameInfo(session, payload) {
  * @yield   {Object}            [Action object]
  */
 export function* frameBase(session, id) {
+    yield fork(balanceFlow, session);
     yield fork(frameInfo, session, id);
     yield fork(subtaskList, session, id);
     yield fork(frameList, session, id);
     yield fork(getPreviewBase, session, id);
     yield fork(concentFlow, session);
     yield takeEvery(GET_SUBTASKS_BORDER, subtasksBorder, session, id);
+    yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session);
+    yield takeLatest(RESTART_TASK, restartTaskBase, session);
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session);
     yield takeLatest(BLOCK_NODE, blockNodeBase, session);
 }
