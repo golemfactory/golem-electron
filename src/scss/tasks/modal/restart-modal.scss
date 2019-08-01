@@ -5,8 +5,14 @@
         text-align: center;
         padding: 20px;
         transition: .5s width ease;
-
-        @media screen and (max-height: 700px), (min-width: 778px) {
+        
+        @media screen and (max-height: 720px), (min-width: 778px) {
+            .image-container {
+                display: none;
+            }
+        }
+        
+        @media screen and (max-height: 600px), (min-width: 778px) { 
             position: relative;
             width: 80%;
             min-width: 550px;
@@ -15,6 +21,7 @@
             align-items: start;
 
             .image-container {
+                display: block;
                 position: relative;
                 width: 180px !important;
                 height: 180px !important;

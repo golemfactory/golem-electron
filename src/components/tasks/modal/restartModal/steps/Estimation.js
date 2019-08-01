@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { BigNumber } from 'bignumber.js';
-import Tooltip from '@tippy.js/react'
+import Tooltip from '@tippy.js/react';
 import isEqual from 'lodash/isEqual';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as Actions from '../../../../../actions';
 import { ETH_DENOM } from '../../../../../constants/variables';
+import { taskStatus } from '../../../../../constants/statusDicts';
 import ConditionalRender from '../../../../hoc/ConditionalRender';
 
 import SubtaskInfo from './SubtaskInfo';
@@ -74,7 +75,9 @@ class Estimation extends Component {
 	}
 
 	_handleConcentCheckbox(e) {
-		this.props._handleConcentCheckbox(e.target.checked && this.props.concentSwitch);
+		this.props._handleConcentCheckbox(
+			e.target.checked && this.props.concentSwitch
+		);
 	}
 
 	_fetchTitle = (isConcentOn, isPartial, isSubtask, item) => {
@@ -121,13 +124,19 @@ class Estimation extends Component {
 			isSubtask,
 			item
 		} = this.props;
-			console.log("item", item, concentSwitch);
 		return (
 			<div className="container__estimation">
 				<span className="container__estimation__title">
 					{this._fetchTitle(isConcentOn, isPartial, isSubtask, item)}
 				</span>
-				<ConditionalRender showIf={item.concent_enabled && concentSwitch && !isMainNet}>
+				<ConditionalRender
+					showIf={
+						item.concent_enabled &&
+						concentSwitch &&
+						!isMainNet &&
+						item.status !== taskStatus.COMPUTING &&
+						item.status !== taskStatus.WAITING
+					}>
 					<div className="switch-box switch-box--green">
 						<label className="switch">
 							<input
@@ -149,10 +158,12 @@ class Estimation extends Component {
 				<div className="summary">
 					<div className="summary-item">
 						<span className="summary-currency">
-							<h4>{balance[0].toFixed(6)}</h4> {isMainNet ? '' : 't'}GNT
+							<h4>{balance[0].toFixed(6)}</h4>{' '}
+							{isMainNet ? '' : 't'}GNT
 						</span>
 						<span className="summary-currency">
-							<h4>{balance[1].toFixed(6)}</h4> {isMainNet ? '' : 't'}ETH
+							<h4>{balance[1].toFixed(6)}</h4>{' '}
+							{isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
 					<ConditionalRender showIf={concentSwitch && !isMainNet}>
@@ -163,7 +174,8 @@ class Estimation extends Component {
 									{concentBalance?.value
 										.dividedBy(ETH_DENOM)
 										.toFixed(4)}
-								</b>{isMainNet ? ' ' : ' t'}
+								</b>
+								{isMainNet ? ' ' : ' t'}
 								GNT
 							</sub>
 						</div>
@@ -173,7 +185,8 @@ class Estimation extends Component {
 				<div className="summary">
 					<div className="summary-item">
 						<sub>
-							est. {isMainNet ? '' : 't'}${GNT.multipliedBy(currency.GNT).toFixed(4)}
+							est. {isMainNet ? '' : 't'}$
+							{GNT.multipliedBy(currency.GNT).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
 							<h4>{GNT.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
@@ -181,45 +194,78 @@ class Estimation extends Component {
 					</div>
 					<div className="summary-item">
 						<sub>
-							est. {isMainNet ? '' : 't'}${ETH.multipliedBy(currency.ETH).toFixed(4)}
+							est. {isMainNet ? '' : 't'}$
+							{ETH.multipliedBy(currency.ETH).toFixed(4)}
 						</sub>
 						<span className="summary-currency">
 							<h4>{ETH.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
 					<ConditionalRender
-						showIf={item.concent_enabled && isConcentOn && concentSwitch && !isMainNet}>
+						showIf={
+							item.concent_enabled &&
+							isConcentOn &&
+							concentSwitch &&
+							!isMainNet
+						}>
 						<Tooltip
-		                    content={
-		                    	<p>Minimum amount of GNT that is required (no less than twice the amount of funds in your Deposit for covering a task payment). <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">Learn more</a></p>}
-		                    placement="top"
-		                    size="small"
-		                    trigger="mouseenter"
-		                    interactive>
-		                    <div className="summary-item deposit">
-								<sub>Deposit required<span className="icon-question-mark"/></sub>
+							content={
+								<p>
+									Minimum amount of GNT that is required (no
+									less than twice the amount of funds in your
+									Deposit for covering a task payment). <br />
+									<a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">
+										Learn more
+									</a>
+								</p>
+							}
+							placement="top"
+							size="small"
+							trigger="mouseenter"
+							interactive>
+							<div className="summary-item deposit">
+								<sub>
+									Deposit required
+									<span className="icon-question-mark" />
+								</sub>
 								<span className="summary-currency">
-									<h4>{GNT_required.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
+									<h4>{GNT_required.toFixed(4)}</h4>{' '}
+									{isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
-		                </Tooltip>
-		                <Tooltip
-		                    content={<p>In order to save transaction fees cost of future tasks the Concent Service will try to update your Deposit with higher amount. <br/><a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=why-is-deposit-amount-higher-than-the-cost-of-task">Learn more</a></p>}
-		                    placement="top"
-		                    size="small"
-		                    trigger="mouseenter"
-		                    interactive>
-		                    <div className="summary-item deposit">
-								<sub>Deposit suggested<span className="icon-question-mark"/></sub>
+						</Tooltip>
+						<Tooltip
+							content={
+								<p>
+									In order to save transaction fees cost of
+									future tasks the Concent Service will try to
+									update your Deposit with higher amount.{' '}
+									<br />
+									<a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=why-is-deposit-amount-higher-than-the-cost-of-task">
+										Learn more
+									</a>
+								</p>
+							}
+							placement="top"
+							size="small"
+							trigger="mouseenter"
+							interactive>
+							<div className="summary-item deposit">
+								<sub>
+									Deposit suggested
+									<span className="icon-question-mark" />
+								</sub>
 								<span className="summary-currency">
-									<h4>{GNT_suggested.toFixed(4)}</h4> {isMainNet ? '' : 't'}GNT
+									<h4>{GNT_suggested.toFixed(4)}</h4>{' '}
+									{isMainNet ? '' : 't'}GNT
 								</span>
 							</div>
-		                </Tooltip>
+						</Tooltip>
 						<div className="summary-item deposit">
 							<sub>Deposit tx fee</sub>
 							<span className="summary-currency">
-								<h4>{ETH_deposit.toFixed(4)}</h4> {isMainNet ? '' : 't'}ETH
+								<h4>{ETH_deposit.toFixed(4)}</h4>{' '}
+								{isMainNet ? '' : 't'}ETH
 							</span>
 						</div>
 					</ConditionalRender>
