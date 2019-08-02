@@ -23,7 +23,14 @@
     	font-size: 8pt;
         font-weight: 400;
     	div {
-    		span + span {
+            
+            [class^="icon-"], 
+            [class*=" icon-"] {
+                font-size: 10pt;
+            }
+
+    		[class^="icon-"]  + span , 
+            [class*=" icon-"] + span {
     			margin-left: 5px;
     		}
     	}
