@@ -126,7 +126,8 @@ function createWindow() {
         show: false,
         backgroundColor: "#fff",
         webPreferences: {
-            webSecurity: false
+            webSecurity: false,
+            nodeIntegration: true
         }
     });
 
