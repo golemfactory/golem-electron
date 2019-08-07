@@ -181,7 +181,7 @@ export class Header extends Component {
     }
 
     _initNotificationCenter() {
-        const { connectedPeers, notificationList } = this.props;
+        const { connectedPeers, notificationList = [] } = this.props;
         const unreadNotificationAmount = notificationList.reduce(function(
             n,
             item
