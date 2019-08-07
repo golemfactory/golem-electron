@@ -1,11 +1,11 @@
-const electron = require("electron");
+const electron = require('electron');
 const { app, BrowserWindow, Menu, ipcMain, shell } = electron;
-const chalk = require("chalk");
-const fs = require("fs");
-const path = require("path");
-const mkdirp = require("mkdirp");
-const semver = require("semver");
-const dirtree2json = require("dirtree2json/lib");
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const semver = require('semver');
+const dirtree2json = require('dirtree2json/lib');
 
 //require('electron-debug')({showDevTools: true, enabled: true});
 
@@ -14,19 +14,19 @@ const dirtree2json = require("dirtree2json/lib");
  */
 //const createTray = require('./electron/tray_handler.js')
 
-const log = require("./electron/debug_handler.js");
-const menuHandler = require("./electron/menu_handler.js");
-const ipcHandler = require("./electron/ipc_handler.js");
-const golemHandler = require("./electron/golem_handler.js");
-const gethValidator = require("./electron/geth_validator.js");
-const ethChecksum = require("./electron/eth_checksum.js");
-const estimatedGas = require("./electron/gas_price_oracle.js");
+const log = require('./electron/debug_handler.js');
+const menuHandler = require('./electron/menu_handler.js');
+const ipcHandler = require('./electron/ipc_handler.js');
+const golemHandler = require('./electron/golem_handler.js');
+const gethValidator = require('./electron/geth_validator.js');
+const ethChecksum = require('./electron/eth_checksum.js');
+const estimatedGas = require('./electron/gas_price_oracle.js');
 
 function isDevelopment() {
-    return process.env.NODE_ENV === "development";
+    return process.env.NODE_ENV === 'development';
 }
 
-const APP_NAME = isDevelopment() ? "Golem (development)" : "Golem";
+const APP_NAME = isDevelopment() ? 'Golem (development)' : 'Golem';
 const APP_WIDTH = isWin() ? 478 : 460;
 const APP_HEIGHT = 810; //589
 const APP_MIN_HEIGHT = 630;
@@ -60,7 +60,7 @@ function onReady() {
 }
 
 function quit() {
-    if (app.golem && process.platform !== "win32")
+    if (app.golem && process.platform !== 'win32')
         app.golem.stopProcess().then(app.quit, app.quit);
     else app.quit();
 }
@@ -70,10 +70,10 @@ function quit() {
  * @return  {[Object]}   [Promise]
  */
 function installDevExtensions() {
-    const installExtension = require("electron-devtools-installer").default;
-    const REACT_DEVELOPER_TOOLS = require("electron-devtools-installer")
+    const installExtension = require('electron-devtools-installer').default;
+    const REACT_DEVELOPER_TOOLS = require('electron-devtools-installer')
         .REACT_DEVELOPER_TOOLS;
-    const REDUX_DEVTOOLS = require("electron-devtools-installer")
+    const REDUX_DEVTOOLS = require('electron-devtools-installer')
         .REDUX_DEVTOOLS;
 
     console.log(chalk.blue(`Installing DevTools extensions...`));
@@ -87,7 +87,7 @@ function installDevExtensions() {
                 resolve();
             })
             .catch(err => {
-                log.warn("MAIN_PROCESS > REACT_DEVELOPER_TOOLS", err);
+                log.warn('MAIN_PROCESS > REACT_DEVELOPER_TOOLS', err);
                 console.log(chalk.red(`An error occurred: ${err}`));
                 console.log();
                 reject();
@@ -99,7 +99,7 @@ function installDevExtensions() {
                 resolve();
             })
             .catch(err => {
-                log.warn("MAIN_PROCESS > REDUX_DEVTOOLS", err);
+                log.warn('MAIN_PROCESS > REDUX_DEVTOOLS', err);
                 console.log(chalk.red(`An error occurred: ${err}`));
                 console.log();
                 reject();
@@ -116,7 +116,7 @@ function createWindow() {
         title: APP_NAME,
         width: APP_WIDTH,
         height: APP_HEIGHT,
-        titleBarStyle: "hiddenInset",
+        titleBarStyle: 'hiddenInset',
         frame: true,
         resizable: true,
         minWidth: APP_WIDTH,
@@ -124,24 +124,24 @@ function createWindow() {
         maxWidth: APP_WIDTH,
         center: true,
         show: false,
-        backgroundColor: "#fff",
+        backgroundColor: '#fff',
         webPreferences: {
             webSecurity: false
         }
     });
 
     const instanceLock = app.requestSingleInstanceLock();
-    app.on('second-instance', function(commandLine, workingDirectory) {   
-      // Someone tried to run a second instance, we should focus our primary window.    
-      if (win) {
-        if (win.isMinimized()) win.restore();   
-        win.focus();    
-      }
+    app.on('second-instance', function(commandLine, workingDirectory) {
+        // Someone tried to run a second instance, we should focus our primary window.
+        if (win) {
+            if (win.isMinimized()) win.restore();
+            win.focus();
+        }
     });
 
-    if(!instanceLock){
-      setImmediate(() => app.exit(0))
-      return; 
+    if (!instanceLock) {
+        setImmediate(() => app.exit(0));
+        return;
     }
 
     /*
@@ -151,16 +151,16 @@ function createWindow() {
             }, 40);
         });
     */
-    win.webContents.on("will-navigate", (event, url) => {
+    win.webContents.on('will-navigate', (event, url) => {
         event.preventDefault();
         if (
-            url.includes("http") &&
-            (url.includes("etherscan") || url.includes("golem"))
+            url.includes('http') &&
+            (url.includes('etherscan') || url.includes('golem'))
         )
             shell.openExternal(url);
     });
 
-    win.once("ready-to-show", () => {
+    win.once('ready-to-show', () => {
         ipcHandler(app, tray, win, createPreviewWindow, APP_WIDTH, APP_HEIGHT);
         Menu.setApplicationMenu(menuHandler);
         win.show();
@@ -174,11 +174,11 @@ function createWindow() {
      * @description To see error codes meanings check url above.
      */
     win.webContents.on(
-        "did-fail-load",
+        'did-fail-load',
         (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
             log.warn(
-                "MAIN_PROCESS",
-                "MAIN LOAD FAILED",
+                'MAIN_PROCESS',
+                'MAIN LOAD FAILED',
                 errorCode,
                 errorDescription,
                 validatedURL,
@@ -203,15 +203,15 @@ function createWindow() {
     }
 
     // Do not update window title after loading pages
-    win.on("page-title-updated", event => event.preventDefault());
+    win.on('page-title-updated', event => event.preventDefault());
 
-    win.on("closed", () => {
+    win.on('closed', () => {
         win = null;
+        ipcHandler.ipcRemover();
     });
 
     win.on("close", () => {
         win = null;
-        ipcHandler.ipcRemover();
     });
 }
 
@@ -220,20 +220,20 @@ if (isLinux()) {
     app.disableHardwareAcceleration();
 }
 
-app.on("ready", onReady);
+app.on('ready', onReady);
 
-app.on("window-all-closed", () => {
-    if (process.platform != "darwin") quit();
+app.on('window-all-closed', () => {
+    if (process.platform != 'darwin') quit();
 });
-app.on("before-quit", () => {
-    if (process.platform == "darwin") quit();
+app.on('before-quit', () => {
+    if (process.platform == 'darwin') quit();
 });
 
-app.on("will-navigate", ev => {
+app.on('will-navigate', ev => {
     ev.preventDefault();
 });
 
-app.on("activate", () => {
+app.on('activate', () => {
     if (win === null) {
         createWindow();
     }
@@ -247,13 +247,13 @@ function createPreviewWindow(id, frameCount) {
             height: PREVIEW_APP_HEIGHT,
             minWidth: PREVIEW_APP_MIN_WIDTH,
             minHeight: PREVIEW_APP_MIN_HEIGHT,
-            titleBarStyle: "hiddenInset",
+            titleBarStyle: 'hiddenInset',
             //frame: false,
             resizable: true,
 
             center: true,
             show: true,
-            backgroundColor: "#fff",
+            backgroundColor: '#fff',
             webPreferences: {
                 webSecurity: false
             }
@@ -266,11 +266,11 @@ function createPreviewWindow(id, frameCount) {
                 }, 40);
             });
         */
-        previewWindow.once("ready-to-show", () => {
+        previewWindow.once('ready-to-show', () => {
             win.show();
         });
 
-        previewWindow.on("close", () => {
+        previewWindow.on('close', () => {
             previewWindow = null;
             ipcHandler.mapRemover(id);
         });
@@ -283,11 +283,11 @@ function createPreviewWindow(id, frameCount) {
          * @description To see error codes meanings check url above.
          */
         previewWindow.webContents.on(
-            "did-fail-load",
+            'did-fail-load',
             (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
                 log.warn(
-                    "MAIN_PROCESS",
-                    "PREVIEW LOAD FAILED",
+                    'MAIN_PROCESS',
+                    'PREVIEW LOAD FAILED',
                     errorCode,
                     errorDescription,
                     validatedURL,
@@ -299,14 +299,14 @@ function createPreviewWindow(id, frameCount) {
         if (isDevelopment()) {
             let previewURL = `http://localhost:${process.env.PORT ||
                 3002}/index.frame.html#/preview/${
-                frameCount > 1 ? "all" : "single"
+                frameCount > 1 ? 'all' : 'single'
             }/${id}`;
 
-            console.log("previewURL", previewURL);
+            console.log('previewURL', previewURL);
             previewWindow.loadURL(previewURL);
         } else {
             let previewURL = `file://${__dirname}/index.frame.html#/preview/${
-                frameCount > 1 ? "all" : "single"
+                frameCount > 1 ? 'all' : 'single'
             }/${id}`;
 
             previewWindow.loadURL(previewURL);
@@ -317,20 +317,20 @@ function createPreviewWindow(id, frameCount) {
 }
 
 function isWin() {
-    return process.platform === "win32";
+    return process.platform === 'win32';
 }
 
 function isMac() {
-    return process.platform === "darwin";
+    return process.platform === 'darwin';
 }
 
 function isLinux() {
-    return process.platform === "linux";
+    return process.platform === 'linux';
 }
 
 exports.dirToJson = function(directory, ext) {
     return new Promise((resolve, reject) => {
-        var regexp = new RegExp(ext, "i");
+        var regexp = new RegExp(ext, 'i');
         var options = {
             filter: {
                 fileExtension: regexp
@@ -339,7 +339,7 @@ exports.dirToJson = function(directory, ext) {
             includeId: true,
             includeAbsolutePath: true,
             attributeName: {
-                child: "children"
+                child: 'children'
             },
             state: {
                 expanded: true
@@ -358,72 +358,72 @@ exports.dirToJson = function(directory, ext) {
 
 exports.selectDirectory = function(directory, _isMainNet) {
     let blackList = [
-        "ACTION",
-        "APK",
-        "APP",
-        "BAT",
-        "BIN",
-        "CMD",
-        "COM",
-        "COMMAND",
-        "CPL",
-        "CSH",
-        "EXE",
-        "GADGET",
-        "INF",
-        "INS",
-        "INX",
-        "IPA",
-        "ISU",
-        "JOB",
-        "JSE",
-        "KSH",
-        "LNK",
-        "MSC",
-        "MSI",
-        "MSP",
-        "MST",
-        "OSX",
-        "OUT",
-        "PAF",
-        "PIF",
-        "PRG",
-        "REG",
-        "RGS",
-        "RUN",
-        "SCR",
-        "SCT",
-        "SHB",
-        "SHS",
-        "U3B",
-        "VB",
-        "VBE",
-        "VBS",
-        "VBSCRIPT",
-        "WORKFLOW",
-        "WS",
-        "WSF",
-        "WSH"
+        'ACTION',
+        'APK',
+        'APP',
+        'BAT',
+        'BIN',
+        'CMD',
+        'COM',
+        'COMMAND',
+        'CPL',
+        'CSH',
+        'EXE',
+        'GADGET',
+        'INF',
+        'INS',
+        'INX',
+        'IPA',
+        'ISU',
+        'JOB',
+        'JSE',
+        'KSH',
+        'LNK',
+        'MSC',
+        'MSI',
+        'MSP',
+        'MST',
+        'OSX',
+        'OUT',
+        'PAF',
+        'PIF',
+        'PRG',
+        'REG',
+        'RGS',
+        'RUN',
+        'SCR',
+        'SCT',
+        'SHB',
+        'SHS',
+        'U3B',
+        'VB',
+        'VBE',
+        'VBS',
+        'VBSCRIPT',
+        'WORKFLOW',
+        'WS',
+        'WSF',
+        'WSH'
     ];
 
-    let masterList = ["BLEND"];
+    let masterList = ['BLEND'];
 
     // if(!_isMainNet)
     //     masterList.push("LXS")
 
     let ignorePlaftormFiles = function(file) {
         return (
-            path.basename(file) !== ".DS_Store" && path.extname(file) !== null
+            path.basename(file) !== '.DS_Store' && path.extname(file) !== null
         );
     };
 
     let isBadFile = function(file) {
-        let correctExtension = file.replace(".", "").toUpperCase();
+        let correctExtension = file.replace('.', '').toUpperCase();
         return blackList.includes(correctExtension);
     };
 
     let isMasterFile = function(file) {
-        let correctExtension = file.replace(".", "").toUpperCase();
+        let correctExtension = file.replace('.', '').toUpperCase();
         return masterList.includes(correctExtension);
     };
 
@@ -498,7 +498,7 @@ exports.copyFiles = function(files, missingFiles, _taskPath) {
             if (matchedFile) {
                 const destination = path.join(
                     _taskPath,
-                    missingFile.dirName.replace("/golem/resources/", "")
+                    missingFile.dirName.replace('/golem/resources/', '')
                 );
 
                 return _copyAsync(matchedFile, destination);
@@ -516,8 +516,8 @@ exports.copyFiles = function(files, missingFiles, _taskPath) {
 
             function _copyFile(src, dest) {
                 let readStream = fs.createReadStream(src);
-                readStream.once("error", err => console.error);
-                readStream.once("end", () => resolve(dest));
+                readStream.once('error', err => console.error);
+                readStream.once('end', () => resolve(dest));
                 readStream.pipe(fs.createWriteStream(dest));
             }
         });
@@ -533,7 +533,7 @@ function createLocationPath(_dir) {
 exports.getDefaultLocation = function() {
     const _location = path.join(
         isWin() ? process.env.USERPROFILE : process.env.HOME,
-        "Documents"
+        'Documents'
     );
 
     if (!fs.existsSync(_location)) return createLocationPath(_location);

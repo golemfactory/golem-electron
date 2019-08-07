@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { findDOMNode } from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -11,6 +12,8 @@ import testNetLogo from './../assets/img/testnet-logo-small.svg';
 
 import NotificationCenter from './NotificationCenter';
 import directorySelector from './../utils/directorySelector';
+import ConditionalRender from './hoc/ConditionalRender';
+import QuitModal from '../container/modal/QuitModal';
 
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
@@ -67,7 +70,8 @@ export class Header extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            isMac: mainProcess.isMac()
+            isMac: mainProcess.isMac(),
+            quitModal: false
         };
     }
 
@@ -89,7 +93,12 @@ export class Header extends Component {
                     item.classList.remove('active');
                 });
                 setActiveClass(allNav, location.pathname);
-            }); 
+            });
+
+        window.onbeforeunload = e => {
+            this._toggleQuitModal();
+            if (this.state.quitModal) e.returnValue = true;
+        };
     }
 
     /**
@@ -102,14 +111,17 @@ export class Header extends Component {
             window.routerHistory.push(to);
     }
 
+    _toggleQuitModal = () =>
+        this.setState(prevState => ({ quitModal: !prevState.quitModal }));
+
     /**
      * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
      */
-    _onClose() {
+    _onClose = () => {
         //this.props.actions.gracefulQuit(); //TO DO popup quit modal
         let win = BrowserWindow.getFocusedWindow();
         win.close();
-    }
+    };
 
     _onMinimize() {
         let win = BrowserWindow.getFocusedWindow();
@@ -212,22 +224,8 @@ export class Header extends Component {
         );
     }
 
-    // <div className="top-titlebar">
-    //     <div style={styling} className="draggable draggable--win"></div>
-    //     <div>
-    //         <span>Golem</span>
-    //     </div>
-    //     <div className="os__menu" role="menu">
-    //         <span className="icon-minimize" onClick={this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
-    //         <span className="icon-close" onClick={this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
-    //     </div>
-    // </div>
-
-    //<span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add File" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
-    //<span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add Folder" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
-
     render() {
-        const { isMac } = this.state;
+        const { isMac, quitModal } = this.state;
         const {
             activeHeader,
             connectedPeers,
@@ -253,15 +251,13 @@ export class Header extends Component {
                         style={styling}
                         className="draggable draggable--other"
                     />
-                    {activeHeader === 'main' && (
+                    <ConditionalRender showIf={activeHeader === 'main'}>
                         <div className="nav__list">
                             <img
                                 src={isMainNet ? mainNetLogo : testNetLogo}
                                 className="logo__header"
                             />
                         </div>
-                    )}
-                    {activeHeader === 'main' && (
                         <ul className="menu" role="menu">
                             {!isMainNet && this._initNotificationCenter()}
                             <Tooltip
@@ -372,21 +368,21 @@ export class Header extends Component {
                                 </li>
                             </Tooltip>
                         </ul>
-                    )}
-                    {activeHeader === 'secondary' && (
+                    </ConditionalRender>
+                    <ConditionalRender showIf={activeHeader === 'secondary'}>
                         <div className="header__frame">
                             <div className="title">
-                                <span>{taskDetails.name}</span>
+                                <span>{taskDetails?.name}</span>
                             </div>
                             <div className="info">
                                 <span className="time">
-                                    {taskDetails.status}
+                                    {taskDetails?.status}
                                 </span>
                                 <span className="amount__frame">
-                                    {taskDetails.options &&
-                                        taskDetails.options.frame_count}{' '}
-                                    {taskDetails.options &&
-                                    taskDetails.options.frame_count > 1
+                                    {taskDetails?.options &&
+                                        taskDetails?.options.frame_count}{' '}
+                                    {taskDetails?.options &&
+                                    taskDetails?.options.frame_count > 1
                                         ? ' Frames'
                                         : ' Frame'}
                                 </span>
@@ -405,8 +401,8 @@ export class Header extends Component {
                                 </span>
                                 <span
                                     className={`menu__item ${
-                                        taskDetails.options &&
-                                        taskDetails.options.frame_count > 1
+                                        taskDetails?.options &&
+                                        taskDetails?.options.frame_count > 1
                                             ? 'active'
                                             : ''
                                     }`}
@@ -421,42 +417,38 @@ export class Header extends Component {
                                 </span>
                             </div>
                         </div>
-                    )}
+                    </ConditionalRender>
                 </nav>
-                {activeHeader === 'main' && (
+                <ConditionalRender showIf={activeHeader === 'main'}>
                     <nav className="nav">
                         <ul className="nav__list" role="menu">
-                            {activeHeader === 'main' && (
-                                <li
-                                    className="nav__item"
-                                    onClick={this._navigateTo.bind(this, '/')}
-                                    role="menuitem"
-                                    data-path="/"
-                                    tabIndex="0"
-                                    aria-label="Network">
-                                    Network
-                                </li>
-                            )}
-                            {activeHeader === 'main' && (
-                                <li
-                                    className="nav__item"
-                                    onClick={this._navigateTo.bind(
-                                        this,
-                                        '/tasks'
-                                    )}
-                                    role="menuitem"
-                                    data-path="/tasks"
-                                    tabIndex="0"
-                                    aria-label="Tasks">
-                                    Tasks
-                                </li>
-                            )}
-                            {activeHeader === 'main' && (
-                                <span className="selector" />
-                            )}
+                            <li
+                                className="nav__item"
+                                onClick={this._navigateTo.bind(this, '/')}
+                                role="menuitem"
+                                data-path="/"
+                                tabIndex="0"
+                                aria-label="Network">
+                                Network
+                            </li>
+                            <li
+                                className="nav__item"
+                                onClick={this._navigateTo.bind(this, '/tasks')}
+                                role="menuitem"
+                                data-path="/tasks"
+                                tabIndex="0"
+                                aria-label="Tasks">
+                                Tasks
+                            </li>
+                            <span className="selector" />
                         </ul>
                     </nav>
-                )}
+                </ConditionalRender>
+                {quitModal &&
+                    ReactDOM.createPortal(
+                        <QuitModal closeModal={this._onClose} />,
+                        document.getElementById('modalPortal')
+                    )}
             </header>
         );
     }
@@ -466,3 +458,17 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Header);
+
+// <div className="top-titlebar">
+//     <div style={styling} className="draggable draggable--win"></div>
+//     <div>
+//         <span>Golem</span>
+//     </div>
+//     <div className="os__menu" role="menu">
+//         <span className="icon-minimize" onClick={this._onMinimize} role="menuitem" tabIndex="0" aria-label="Close"/>
+//         <span className="icon-close" onClick={this._onClose} role="menuitem" tabIndex="0" aria-label="Minimize"/>
+//     </div>
+// </div>
+
+//<span className="icon-file-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add File" onClick={this._onFileDialog.bind(this, ["openFile"])}/>
+//<span className="icon-folder-menu" role="menuitem" tabIndex="0" aria-label="New Task"  title="Add Folder" onClick={this._onFileDialog.bind(this, ["openDirectory"])}/>
