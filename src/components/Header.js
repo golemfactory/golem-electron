@@ -52,7 +52,8 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     connectedPeers: state.realTime.connectedPeers,
     isMainNet: state.info.isMainNet,
-    notificationList: state.notification.notificationList
+    notificationList: state.notification.notificationList,
+    stats: state.stats.stats
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -96,8 +97,15 @@ export class Header extends Component {
             });
 
         window.onbeforeunload = e => {
-            this._toggleQuitModal();
-            if (this.state.quitModal) e.returnValue = true;
+            this._toggleQuitModal(cb);
+
+            function cb(state) {
+                if (
+                    this.state.quitModal &&
+                    this.props.stats?.provider_state?.status !== 'Idle'
+                )
+                    e.returnValue = true;
+            }
         };
     }
 
@@ -111,8 +119,10 @@ export class Header extends Component {
             window.routerHistory.push(to);
     }
 
-    _toggleQuitModal = () =>
-        this.setState(prevState => ({ quitModal: !prevState.quitModal }));
+    _toggleQuitModal = cb =>
+        this.setState(prevState => ({ quitModal: !prevState.quitModal }), cb);
+
+    _gracefulShutdown = () => this.props.actions.gracefulQuit();
 
     /**
      * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
@@ -446,7 +456,11 @@ export class Header extends Component {
                 </ConditionalRender>
                 {quitModal &&
                     ReactDOM.createPortal(
-                        <QuitModal closeModal={this._onClose} />,
+                        <QuitModal
+                            closeModal={this._toggleQuitModal}
+                            forceQuit={this._onClose}
+                            gracefulShutdown={this._gracefulShutdown}
+                        />,
                         document.getElementById('modalPortal')
                     )}
             </header>

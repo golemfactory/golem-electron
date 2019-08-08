@@ -25,9 +25,17 @@ export default class QuitModal extends React.Component {
     };
 
     /**
-     * [_handleCancel func. triggers graceful shutdown]
+     * [_handleForceQuit func. triggers forced shutdown]
      */
-    _handleQuit = () => {
+    _handleForceQuit = () => {
+        this.props.forceQuit();
+    };
+
+    /**
+     * [_handleGracefulQuit func. triggers graceful shutdown]
+     */
+    _handleGracefulQuit = () => {
+        this.props.gracefulShutdown();
         this.props.closeModal();
     };
 
@@ -48,13 +56,13 @@ export default class QuitModal extends React.Component {
                     <div className="action__modal">
                         <span
                             className="btn--cancel"
-                            onClick={this._handleCancel}>
+                            onClick={this._handleForceQuit}>
                             Force quit
                         </span>
                         <button
                             type="button"
                             className="btn--primary"
-                            onClick={this._handleQuit}
+                            onClick={this._handleGracefulQuit}
                             autoFocus>
                             Graceful shutdown
                         </button>

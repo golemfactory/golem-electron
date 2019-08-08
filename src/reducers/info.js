@@ -7,6 +7,7 @@ const { setConfig, getConfig, dictConfig, configStore } = remote.getGlobal(
 );
 
 const {
+    APP_QUIT_GRACEFUL,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -64,7 +65,8 @@ const initialState = {
     concentTerms: '',
     isConcentTermsAccepted: false,
     isNodeProvider: true,
-    isVirtualizationExist: false
+    isVirtualizationExist: false,
+    isGracefulShutdownEnabled: false
 };
 
 function isNewVersion(_old, _new) {
@@ -194,6 +196,11 @@ const setInfo = (state = initialState, action) => {
         case SET_VIRTUALIZATION_STATUS:
             return Object.assign({}, state, {
                 isVirtualizationExist: action.payload
+            });
+
+        case APP_QUIT_GRACEFUL:
+            return Object.assign({}, state, {
+                isGracefulShutdownEnabled: action.payload
             });
 
         case SET_PASSWORD_MODAL:

@@ -61,7 +61,8 @@ const statusDict = {
     READY: 'Ready',
     NOTREADY: 'Not Ready',
     EXCEPTION: 'Exception',
-    WARNING: 'Warning'
+    WARNING: 'Warning',
+    SHUTDOWN: 'Shutdown'
 };
 
 let badgeActive = false;
@@ -268,7 +269,8 @@ const messages = {
             pre: 'Terminating Golem',
             post: 'Golem terminated',
             exception: 'Error terminating Golem'
-        }
+        },
+        shutdown: {}
     }
 };
 
@@ -303,7 +305,9 @@ function getGolemStatus(component, method, stage, data) {
         );
     }
 
-    if (stage == 'exception') {
+    if (method == 'shutdown') {
+        result.status = statusDict.SHUTDOWN;
+    } else if (stage == 'exception') {
         result.status = statusDict.EXCEPTION;
     } else if (stage == 'post') {
         result.status = statusDict.READY;
@@ -341,6 +345,8 @@ export const getStatusSelector = createCachedSelector(
                     status: statusDict.EXCEPTION,
                     message: 'Outdated version'
                 };
+            } else if (statusObj?.client?.status === statusDict.SHUTDOWN) {
+                statusObj.client.message = 'Closing';
             } else if (isEngineOn && Number.isInteger(connectedPeers)) {
                 statusObj.client = {
                     status: statusDict.READY,
