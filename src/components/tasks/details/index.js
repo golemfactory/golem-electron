@@ -173,9 +173,9 @@ export class Details extends React.PureComponent {
     };
 
     _blockNode = () => {
-        let node_id = subtask2block.node_id;
+        const node_id = this.state.subtask2block?.node_id;
         new Promise((resolve, reject) => {
-            actions.blockNode(node_id, resolve, reject);
+            this.props.actions.blockNode(node_id, resolve, reject);
         }).then(([result, msg]) => {
             this.setState({
                 nodeBlocked: result,
