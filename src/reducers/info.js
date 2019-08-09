@@ -25,12 +25,14 @@ const {
     SET_CONCENT_TERMS,
     SET_CHAIN_INFO,
     SET_PASSWORD_MODAL,
-    SET_VIRTUALIZATION_STATUS
+    SET_VIRTUALIZATION_STATUS,
+    TOGGLE_FORCE_QUIT
 } = dict;
 
 const { GOLEM_STARTER, HIDE_ONBOARD } = dictConfig;
 
 const initialState = {
+    forceQuit: false,
     version: {
         number: '',
         message: 'Connection is not established yet.',
@@ -76,6 +78,12 @@ function isNewVersion(_old, _new) {
 //console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
+        case TOGGLE_FORCE_QUIT: {
+            return Object.assign({}, state, {
+                forceQuit: !state.forceQuit
+            });
+        }
+
         case SET_GOLEM_VERSION:
             return Object.assign({}, state, {
                 version: {

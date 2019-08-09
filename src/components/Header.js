@@ -53,7 +53,8 @@ const mapStateToProps = state => ({
     connectedPeers: state.realTime.connectedPeers,
     isMainNet: state.info.isMainNet,
     notificationList: state.notification.notificationList,
-    stats: state.stats.stats
+    stats: state.stats.stats,
+    forceQuit: state.info.forceQuit
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -97,14 +98,12 @@ export class Header extends Component {
             });
 
         window.onbeforeunload = e => {
-            this._toggleQuitModal(cb);
+            const { stats, forceQuit } = this.props;
+            if (stats?.provider_state?.status !== 'Idle' && !forceQuit)
+                this._toggleQuitModal(cb);
 
             function cb(state) {
-                if (
-                    this.state.quitModal &&
-                    this.props.stats?.provider_state?.status !== 'Idle'
-                )
-                    e.returnValue = true;
+                if (this.state.quitModal) e.returnValue = true;
             }
         };
     }
@@ -122,24 +121,24 @@ export class Header extends Component {
     _toggleQuitModal = cb =>
         this.setState(prevState => ({ quitModal: !prevState.quitModal }), cb);
 
-    _gracefulShutdown = () => this.props.actions.gracefulQuit();
+    _gracefulShutdown = () => this.props.actions.gracefulShutdown();
 
     /**
      * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
      */
     _onClose = () => {
         //this.props.actions.gracefulQuit(); //TO DO popup quit modal
-        let win = BrowserWindow.getFocusedWindow();
+        const win = BrowserWindow.getFocusedWindow();
         win.close();
     };
 
     _onMinimize() {
-        let win = BrowserWindow.getFocusedWindow();
+        const win = BrowserWindow.getFocusedWindow();
         win.minimize();
     }
 
     _onMaximize() {
-        let win = BrowserWindow.getFocusedWindow();
+        const win = BrowserWindow.getFocusedWindow();
         win.isMaximized() ? win.unmaximize() : win.maximize();
     }
 

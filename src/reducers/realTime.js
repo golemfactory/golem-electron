@@ -346,7 +346,7 @@ export const getStatusSelector = createCachedSelector(
                     message: 'Outdated version'
                 };
             } else if (statusObj?.client?.status === statusDict.SHUTDOWN) {
-                statusObj.client.message = 'Closing';
+                statusObj.client.message = 'Shutting down...';
             } else if (isEngineOn && Number.isInteger(connectedPeers)) {
                 statusObj.client = {
                     status: statusDict.READY,

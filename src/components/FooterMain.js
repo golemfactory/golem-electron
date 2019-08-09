@@ -23,6 +23,7 @@ import checkNested from './../utils/checkNested';
 import golem_loading from './../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
+const { BrowserWindow } = remote;
 const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
@@ -72,7 +73,8 @@ function isGolemConnecting(isEngineOn, status) {
     return (
         status?.client?.status &&
         (status.client.message === 'Logged In' ||
-            status.client.status !== 'Ready') &&
+            (status.client.status !== 'Ready' &&
+                status.client.status !== 'Shutdown')) &&
         !status.client.message.includes('configuration')
     );
 }
@@ -203,6 +205,13 @@ export class FooterMain extends Component {
 
     _openLogs = () => {
         ipcRenderer.send('open-logs');
+    };
+
+    _cancelShutdown = () => this.props.actions.gracefulShutdown();
+
+    _forceQuit = () => {
+        const win = BrowserWindow.getFocusedWindow();
+        win.close();
     };
 
     _fetchState(stat) {
@@ -441,28 +450,54 @@ export class FooterMain extends Component {
                                                       )}
                                                   </span>
                                                   <br />
-                                                  <span>
-                                                      Attempted:{' '}
-                                                      {stats.subtasks_computed &&
-                                                          stats
-                                                              .subtasks_computed[1] +
-                                                              stats
-                                                                  .subtasks_with_timeout[1] +
-                                                              stats
-                                                                  .subtasks_with_errors[1]}
-                                                  </span>
-                                                  <br />
-                                                  <span>
-                                                      {stats.subtasks_with_errors &&
-                                                          `${
-                                                              stats
-                                                                  .subtasks_with_errors[1]
-                                                          } error | ${stats.subtasks_with_timeout &&
-                                                              stats
-                                                                  .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
-                                                              stats
-                                                                  .subtasks_accepted[1]} success`}
-                                                  </span>
+                                                  {status?.client?.status ===
+                                                  'Shutdown' ? (
+                                                      <div className="action__graceful-shutdown">
+                                                          <div 
+                                                            className="action__graceful-shutdown-item" 
+                                                            onClick={this._cancelShutdown}>
+                                                              <span className="icon-failure" />
+                                                              <span>
+                                                                  Cancel
+                                                                  shutdown
+                                                              </span>
+                                                          </div>
+                                                          <div 
+                                                            className="action__graceful-shutdown-item" 
+                                                            onClick={this._forceQuit}>
+                                                              <span className="icon-close" />
+                                                              <span>
+                                                                  Force quit
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                  ) : (
+                                                      [
+                                                          <span key="stats_01">
+                                                              Attempted:{' '}
+                                                              {stats.subtasks_computed &&
+                                                                  stats
+                                                                      .subtasks_computed[1] +
+                                                                      stats
+                                                                          .subtasks_with_timeout[1] +
+                                                                      stats
+                                                                          .subtasks_with_errors[1]}
+                                                          </span>,
+                                                          <br key="stats_02" />,
+                                                          <span key="stats_03">
+                                                              ,
+                                                              {stats.subtasks_with_errors &&
+                                                                  `${
+                                                                      stats
+                                                                          .subtasks_with_errors[1]
+                                                                  } error | ${stats.subtasks_with_timeout &&
+                                                                      stats
+                                                                          .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
+                                                                      stats
+                                                                          .subtasks_accepted[1]} success`}
+                                                          </span>
+                                                      ]
+                                                  )}
                                               </animated.div>
                                           )
                                         : props => (

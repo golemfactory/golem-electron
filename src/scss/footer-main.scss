@@ -109,6 +109,25 @@
             }
         }
 
+        .action__graceful-shutdown {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            &-item {
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+                font-size: 7pt;
+                font-weight: 500;
+                cursor: pointer;
+                color: $color-primary;
+                [class^="icon-"], [class*=" icon-"] {
+                    margin-right: 2px;
+                    font-size: 10pt;
+                }
+            }
+        }
+
         .status-node {
             margin-top: 5px;
             font-size: 8pt;
