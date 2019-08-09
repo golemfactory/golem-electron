@@ -17,7 +17,16 @@ const taskStatus = Object.freeze({
     FAILURE: 'Failure'
 })
 
+const componentStatus = Object.freeze({
+    READY: 'Ready',
+    NOTREADY: 'Not Ready',
+    EXCEPTION: 'Exception',
+    WARNING: 'Warning',
+    SHUTDOWN: 'Shutdown'
+})
+
 module.exports = {
+    taskStatus,
     testStatusDict,
-    taskStatus
+    componentStatus
 }

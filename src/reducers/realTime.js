@@ -3,6 +3,7 @@ import createCachedSelector from 're-reselect';
 import { find, some } from 'lodash';
 import { dict } from './../actions';
 import checkNested from './../utils/checkNested';
+import { componentStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
 const log = remote.require('./electron/debug_handler.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
@@ -55,14 +56,6 @@ const initialState = {
 const password = {
     REGISTER: 'Requires new password',
     LOGIN: 'Requires password'
-};
-
-const statusDict = {
-    READY: 'Ready',
-    NOTREADY: 'Not Ready',
-    EXCEPTION: 'Exception',
-    WARNING: 'Warning',
-    SHUTDOWN: 'Shutdown'
 };
 
 let badgeActive = false;
@@ -306,17 +299,17 @@ function getGolemStatus(component, method, stage, data) {
     }
 
     if (method == 'shutdown') {
-        result.status = statusDict.SHUTDOWN;
+        result.status = componentStatus.SHUTDOWN;
     } else if (stage == 'exception') {
-        result.status = statusDict.EXCEPTION;
+        result.status = componentStatus.EXCEPTION;
     } else if (stage == 'post') {
-        result.status = statusDict.READY;
+        result.status = componentStatus.READY;
     } else if (stage == 'warning') {
-        result.status = statusDict.WARNING;
+        result.status = componentStatus.WARNING;
         result.data = data;
     } else
         try {
-            result.status = statusDict.NOTREADY;
+            result.status = componentStatus.NOTREADY;
         } catch (e) {
             log.warn('SAGA > GOLEM', e);
         }
@@ -337,19 +330,19 @@ export const getStatusSelector = createCachedSelector(
         if (
             statusObj &&
             !Object.keys(statusObj).some(
-                key => statusObj[key].status === statusDict.EXCEPTION
+                key => statusObj[key].status === componentStatus.EXCEPTION
             )
         ) {
             if (statusObj[0]) {
                 statusObj.client = {
-                    status: statusDict.EXCEPTION,
+                    status: componentStatus.EXCEPTION,
                     message: 'Outdated version'
                 };
-            } else if (statusObj?.client?.status === statusDict.SHUTDOWN) {
+            } else if (statusObj?.client?.status === componentStatus.SHUTDOWN) {
                 statusObj.client.message = 'Shutting down...';
             } else if (isEngineOn && Number.isInteger(connectedPeers)) {
                 statusObj.client = {
-                    status: statusDict.READY,
+                    status: componentStatus.READY,
                     message: nodesString(connectedPeers)
                 };
             } else if (
@@ -360,7 +353,7 @@ export const getStatusSelector = createCachedSelector(
                 )
             ) {
                 statusObj.client = {
-                    status: statusDict.NOTREADY,
+                    status: componentStatus.NOTREADY,
                     message: isEngineOn
                         ? statusObj.client.message || 'Starting Golem'
                         : 'Waiting for configuration'

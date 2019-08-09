@@ -20,6 +20,7 @@ import animData from './../assets/anims/wave.json';
 
 import LoaderBar from './LoaderBar';
 import checkNested from './../utils/checkNested';
+import { componentStatus } from './../constants/statusDicts';
 import golem_loading from './../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
@@ -64,7 +65,7 @@ function isGolemConnected(gs) {
     return (
         !!gs?.status &&
         !!gs?.message &&
-        gs?.status === 'Ready' &&
+        gs?.status === componentStatus.READY &&
         gs?.message.includes('Node')
     );
 }
@@ -73,8 +74,8 @@ function isGolemConnecting(isEngineOn, status) {
     return (
         status?.client?.status &&
         (status.client.message === 'Logged In' ||
-            (status.client.status !== 'Ready' &&
-                status.client.status !== 'Shutdown')) &&
+            (status.client.status !== componentStatus.READY &&
+                status.client.status !== componentStatus.SHUTDOWN)) &&
         !status.client.message.includes('configuration')
     );
 }
@@ -160,7 +161,7 @@ export class FooterMain extends Component {
                     ? 'blue'
                     : 'yellow'
                 : 'green';
-        } else if (status?.status !== 'Exception') {
+        } else if (status?.status !== componentStatus.EXCEPTION) {
             return 'yellow';
         }
         return 'red';
@@ -411,7 +412,9 @@ export class FooterMain extends Component {
                                     !!Object.keys(stats).length ||
                                     status?.client?.message.includes(
                                         'configuration'
-                                    )
+                                    ) ||
+                                    status?.client?.status ===
+                                        componentStatus.SHUTDOWN
                                 }
                                 from={{
                                     position: 'absolute',
@@ -451,20 +454,26 @@ export class FooterMain extends Component {
                                                   </span>
                                                   <br />
                                                   {status?.client?.status ===
-                                                  'Shutdown' ? (
+                                                  componentStatus.SHUTDOWN ? (
                                                       <div className="action__graceful-shutdown">
-                                                          <div 
-                                                            className="action__graceful-shutdown-item" 
-                                                            onClick={this._cancelShutdown}>
+                                                          <div
+                                                              className="action__graceful-shutdown-item"
+                                                              onClick={
+                                                                  this
+                                                                      ._cancelShutdown
+                                                              }>
                                                               <span className="icon-failure" />
                                                               <span>
                                                                   Cancel
                                                                   shutdown
                                                               </span>
                                                           </div>
-                                                          <div 
-                                                            className="action__graceful-shutdown-item" 
-                                                            onClick={this._forceQuit}>
+                                                          <div
+                                                              className="action__graceful-shutdown-item"
+                                                              onClick={
+                                                                  this
+                                                                      ._forceQuit
+                                                              }>
                                                               <span className="icon-close" />
                                                               <span>
                                                                   Force quit
@@ -515,7 +524,7 @@ export class FooterMain extends Component {
                                                   className="status-node__loading">
                                                   {status?.client?.status &&
                                                   status.client.status !==
-                                                      'Exception' ? (
+                                                      componentStatus.EXCEPTION ? (
                                                       <div className="status__components">
                                                           <div className="item__status">
                                                               <div>
