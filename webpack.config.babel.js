@@ -64,9 +64,7 @@ module.exports = (env, argv) => ({
         new webpack.DefinePlugin({
             // <-- key to reducing React's size
             'process.env': {
-                NODE_ENV: JSON.stringify(
-                    argv.mode === modes.PROD ? 'production' : 'development'
-                )
+                NODE_ENV: JSON.stringify(argv.mode || 'development')
             },
             __VERSION__: JSON.stringify(gitVersion)
         }),
