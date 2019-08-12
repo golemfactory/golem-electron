@@ -14,7 +14,7 @@ const modes = {
 };
 
 let gitVersion = require('child_process')
-    .execSync('git describe')
+    .execSync('git describe --tags')
     .toString();
 
 module.exports = (env, argv) => ({
