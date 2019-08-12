@@ -1,3 +1,12 @@
+import { eventChannel, buffers } from 'redux-saga';
+import {
+    fork,
+    takeEvery,
+    takeLatest,
+    take,
+    call,
+    put
+} from 'redux-saga/effects';
 const { remote } = window.electron;
 const log = remote.require('./electron/debug_handler.js');
 const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
@@ -118,6 +127,56 @@ export let config = Object.freeze({
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
     CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
 });
+
+export function eventWrapper(
+    session,
+    rpc,
+    payload,
+    dispatch_type,
+    interval = 1000
+) {
+    return eventChannel(emit => {
+        const fetchStats = () => {
+            function on_info(args) {
+                let info = args[0];
+                emit({
+                    type: dispatch_type,
+                    payload: info
+                });
+            }
+
+            _handleRPC(on_info, session, rpc, [payload]);
+        };
+
+        const fetchOnStartup = () => {
+            fetchStats();
+
+            return fetchOnStartup;
+        };
+
+        const channelInterval = setInterval(fetchOnStartup(), interval);
+
+        return () => {
+            console.log('negative');
+            clearInterval(channelInterval);
+        };
+    });
+}
+
+export function* eventEmitter(wrapper, session, payload, cancelCB) {
+    if (payload) {
+        const channel = yield call(wrapper, session, payload);
+        try {
+            while (true) {
+                let action = yield take(channel);
+                yield put(action);
+                if (cancelCB) cancelCB(channel, action);
+            }
+        } finally {
+            console.info('yield cancelled!');
+        }
+    }
+}
 
 function errorCallback(topic, _eb, { error, details, argsList }) {
     console.warn(
