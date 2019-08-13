@@ -183,6 +183,7 @@ export class Single extends React.Component {
                 <div className="section__image" ref="containerImage">
                     {previewLink && (
                         <ImageZoom
+                            details={details}
                             image={`file://${previewLink}`}
                             fetchClientInfo={this._setClientInfo}
                             isSubtaskShown={isSubtaskShown}
