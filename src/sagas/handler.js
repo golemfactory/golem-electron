@@ -80,6 +80,7 @@ export let config = Object.freeze({
     PAYMENTS_RPC: 'pay.payments',
     PAYMENT_ADDRESS_RPC: 'pay.ident',
     INCOME_RPC: 'pay.incomes',
+    PAYMENT_HISTORY_RPC: 'pay.operations',
     DEPOSIT_RPC: 'pay.deposit_payments',
     BALANCE_CH: 'evt.pay.balance',
     CONCENT_DEPOSIT_BALANCE_RPC: 'pay.deposit_balance',
