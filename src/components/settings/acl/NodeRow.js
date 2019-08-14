@@ -74,7 +74,7 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 					<span
 						className="info__id"
 						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
-						{item?.key.replace(
+						{item?.key?.replace(
 							new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 							'$1...$2'
 						)}
