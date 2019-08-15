@@ -19,7 +19,7 @@
     right: 0;
     bottom: 0;
     flex: 1;
-    padding-top: 100px;
+    padding-top: 50px;
     align-items: center;
     text-align: center;
     font-size: 12pt;
@@ -34,7 +34,7 @@
     .icon-file-upload,
     .icon-no-connection{
         color: $color-text3;
-        font-size: 30pt;
+        font-size: 50pt;
         font-weight: 200;
         pointer-events: none;
     }

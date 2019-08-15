@@ -10,13 +10,13 @@ const NodeTable = ({ aclRestrictedMode = false, list, checkedItems, toggleItems,
 		<table className="fragment__node-table">
 			<thead>
 				<tr>
-					<th scope="col" width="15%"></th>
+					<th scope="col" width="10%"></th>
 					<th scope="col" >Node ID</th>
 					<ConditionalRender showIf={isBlockTable}>
 						<th scope="col" >Node IP</th>
 						<th scope="col" >PORT</th>
 					</ConditionalRender>
-					<th scope="col" >Node Name</th>
+					<th scope="col" width="25%">Node Name</th>
 					<th scope="col" width="50px">{aclRestrictedMode ? 'Delete' : 'Unlock'}</th>
 				</tr>
 			</thead>
@@ -26,7 +26,7 @@ const NodeTable = ({ aclRestrictedMode = false, list, checkedItems, toggleItems,
 						item={item}
 						key={key.toString()}
 						isBlockTable={isBlockTable}
-						isChecked={!!checkedItems[item?.node_id]}
+						isChecked={!!checkedItems[item?.key]}
 						keyItem={key.toString()}
 						toggleItems={toggleItems}
 						aclRestrictedMode={aclRestrictedMode}
