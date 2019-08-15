@@ -40,6 +40,14 @@ export class Concent extends React.Component {
                 isConcentOn: nextProps.concentSwitch
             });
         }
+
+        if (
+            nextProps.concentRequiredSwitch !== this.props.concentRequiredSwitch
+        ) {
+            this.setState({
+                isConcentRequiredOn: nextProps.concentRequiredSwitch
+            });
+        }
     }
 
     _toggleConcentSwitch = () => {
@@ -49,12 +57,12 @@ export class Concent extends React.Component {
                 isConcentOn: !this.state.isConcentOn
             },
             () => {
-                if (this.state.isConcentOn)
-                    actions.toggleConcent(
-                        this.state.isConcentOn,
-                        !isOnboadingActive && !showConcentToS
-                    );
-                else actions.toggleConcent(this.state.isConcentOn, false);
+                actions.toggleConcent(
+                    this.state.isConcentOn,
+                    this.state.isConcentOn &&
+                        !isOnboadingActive &&
+                        !showConcentToS
+                );
             }
         );
     };
@@ -62,9 +70,9 @@ export class Concent extends React.Component {
     _toggleConcentRequiredSwitch = () => {
         const { actions } = this.props;
         this.setState(
-            prevState => ({
-                isConcentRequiredOn: !prevState.isConcentRequiredOn
-            }),
+            {
+                isConcentRequiredOn: !this.state.isConcentRequiredOn
+            },
             () => actions.toggleConcentRequired(this.state.isConcentRequiredOn)
         );
     };
@@ -151,8 +159,7 @@ export class Concent extends React.Component {
                                     ? '#4e4e4e'
                                     : '#9b9b9b'
                             }}>
-                            Allow computing
-                            non concent tasks.
+                            Allow computing non concent tasks.
                         </span>
                     </div>
                 </ConditionalRender>
