@@ -6,8 +6,7 @@ import Tooltip from '@tippy.js/react';
 import * as Actions from './../../../actions';
 
 const mapStateToProps = state => ({
-    isEngineOn: state.info.isEngineOn,
-    stats: state.stats.stats,
+    stats: state.stats.stats.provider,
     unsupported_stats: state.stats.unsupported_stats
 });
 
@@ -91,7 +90,7 @@ export class ProviderStats extends React.PureComponent {
         ));
 
     render() {
-        const { isEngineOn, stats, unsupported_stats } = this.props;
+        const { stats, unsupported_stats } = this.props;
         return (
             <div>
                 <div>
