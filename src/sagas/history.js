@@ -19,13 +19,14 @@ export function subscribeHistory(session) {
             (function fetchHistory() {
                 function on_history(args) {
                     let history = args[0];
+                    console.log("history", history);
                     emit({
                         type: SET_HISTORY,
                         payload: history
                     });
                 }
 
-                _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC);
+                _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [null]);
             })(),
             interval
         );

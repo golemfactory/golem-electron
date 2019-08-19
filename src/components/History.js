@@ -24,8 +24,8 @@ const isWin = mainProcess.isWin();
 const isMac = mainProcess.isMac();
 
 const filter = {
-    PAYMENT: 'payment',
-    INCOME: 'income',
+    PAYMENT: 'outgoing',
+    INCOME: 'incoming',
     DEPOSIT: 'deposit'
 };
 
@@ -151,8 +151,8 @@ export class History extends React.Component {
             payer,
             created,
             status,
-            value,
-            type,
+            amount,
+            direction,
             transaction
         } = tx.data;
 
@@ -167,13 +167,13 @@ export class History extends React.Component {
                     <span className="amount__history">
                         <span
                             className={`finance__indicator ${
-                                type === filter.PAYMENT
+                                direction === filter.PAYMENT
                                     ? 'indicator--down'
                                     : 'indicator--up'
                             }`}>
-                            {type === filter.PAYMENT ? '- ' : '+ '}
+                            {direction === filter.PAYMENT ? '- ' : '+ '}
                         </span>
-                        {(value / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT
+                        {(amount / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT
                     </span>
                     {transaction && (
                         <Tooltip
@@ -223,7 +223,7 @@ export class History extends React.Component {
                     </div>
                     <div
                         className="tab__title"
-                        value="income"
+                        value={filter.INCOME}
                         onClick={this._handleTab}
                         role="tab"
                         tabIndex="0">
@@ -231,7 +231,7 @@ export class History extends React.Component {
                     </div>
                     <div
                         className="tab__title"
-                        value="payment"
+                        value={filter.PAYMENT}
                         onClick={this._handleTab}
                         role="tab"
                         tabIndex="0">
@@ -240,7 +240,7 @@ export class History extends React.Component {
                     {!isMainNet && (
                         <div
                             className="tab__title"
-                            value="deposit"
+                            value={filter.DEPOSIT}
                             onClick={this._handleTab}
                             role="tab"
                             tabIndex="0">
