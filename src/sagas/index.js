@@ -26,6 +26,7 @@ import { performanceFlow } from "./performance";
 import { quitFlow } from "./quit";
 import { settingsFlow, settingsInteractionFlow } from "./userSettings";
 import { statsFlow } from "./stats";
+import { aclFlow } from "./acl";
 import { trustFlow } from "./trust";
 import { tasksFlow } from "./tasks";
 import { termsFlow } from "./terms";
@@ -257,6 +258,7 @@ export function* apiFlow(connection) {
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
     yield fork(statsFlow, connection);
+    yield fork(aclFlow, connection);
     yield fork(versionFlow, connection);
 
     yield fork(performanceFlow, connection);

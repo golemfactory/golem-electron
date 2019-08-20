@@ -18,6 +18,9 @@ export let dict = Object.freeze({
     SET_ADVANCED_CHART: 'SET_ADVANCED_CHART',
     SET_CHOSEN_HARDWARE_PRESET: 'SET_CHOSEN_HARDWARE_PRESET',
     SET_ADVANCED_MANUALLY: 'SET_ADVANCED_MANUALLY',
+    SET_KNOWN_PEERS: 'SET_KNOWN_PEERS',
+    SET_ACL_MODE: 'SET_ACL_MODE',
+    SET_ACL_NODE_LIST: 'SET_ACL_NODE_LIST',
     BLOCK_NODE: 'BLOCK_NODE',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
@@ -68,6 +71,7 @@ export let dict = Object.freeze({
     SET_PROVIDING: 'SET_PROVIDING',
     SET_GPU_PROVIDING: 'SET_GPU_PROVIDING',
     SET_TASK_STATS: 'SET_TASK_STATS',
+    SET_UNSUPPORTED_TASK_STATS: 'SET_UNSUPPORTED_TASK_STATS',
     IS_NODE_PROVIDER: 'IS_NODE_PROVIDER',
     SET_MULTIPLIER: 'SET_MULTIPLIER',
     UPDATE_MULTIPLIER: 'UPDATE_MULTIPLIER',
@@ -75,8 +79,10 @@ export let dict = Object.freeze({
     ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
     DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
     TOGGLE_CONCENT: 'TOGGLE_CONCENT',
+    TOGGLE_CONCENT_REQUIRED: 'TOGGLE_CONCENT_REQUIRED',
     UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
-    SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    SET_CONCENT_SWITCH: 'SET_CONCENT_SWITCH',
+    SET_CONCENT_REQUIRED_SWITCH: 'SET_CONCENT_REQUIRED_SWITCH',
     SET_CONCENT_ONBOARDING_SHOWN: 'SET_CONCENT_ONBOARDING_SHOWN',
     //NOTIFICATION_CENTER
     PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
@@ -160,6 +166,9 @@ const {
     SET_ADVANCED_CHART,
     SET_CHOSEN_HARDWARE_PRESET,
     SET_ADVANCED_MANUALLY,
+    SET_KNOWN_PEERS,
+    SET_ACL_MODE,
+    SET_ACL_NODE_LIST,
     BLOCK_NODE,
     //TASKS
     SET_TASKLIST,
@@ -206,10 +215,14 @@ const {
     SET_PROVIDING,
     SET_GPU_PROVIDING,
     SET_TASK_STATS,
+    SET_UNSUPPORTED_TASK_STATS,
     UPDATE_MULTIPLIER,
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
     TOGGLE_CONCENT,
+    TOGGLE_CONCENT_REQUIRED,
+    SET_CONCENT_SWITCH,
+    SET_CONCENT_REQUIRED_SWITCH,
     UNLOCK_CONCENT_DEPOSIT,
     SET_CONCENT_ONBOARDING_SHOWN,
     //NOTIFICATION CENTER
@@ -399,6 +412,13 @@ export const setAdvancedManually = payload => ({
     payload
 });
 
+export const setACLMode = (payload, _resolve, _reject) => ({
+    type: SET_ACL_MODE,
+    payload,
+    _resolve,
+    _reject
+});
+
 export const blockNode = (payload, _resolve, _reject) => ({
     type: BLOCK_NODE,
     payload,
@@ -495,6 +515,11 @@ export const setTaskStats = payload => ({
     payload
 });
 
+export const setUnsupportedTaskStats = payload => ({
+    type: SET_UNSUPPORTED_TASK_STATS,
+    payload
+});
+
 export const updateMultiplier = payload => ({
     type: UPDATE_MULTIPLIER,
     payload
@@ -515,6 +540,11 @@ export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     isSwitchOn,
     informRPC,
     toggleLock
+});
+
+export const toggleConcentRequired = (isSwitchOn) => ({
+    type: TOGGLE_CONCENT_REQUIRED,
+    isSwitchOn
 });
 
 export const unlockConcentDeposit = payload => ({

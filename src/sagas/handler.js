@@ -25,7 +25,11 @@ export let config = Object.freeze({
     GET_NODE_KEY_RPC: 'net.ident.key',
     GET_KNOWN_PEERS_RPC: 'net.peers.known',
     GET_CONNECTED_PEERS_RPC: 'net.peers.connected',
+    SETUP_ACL_RPC: 'net.peer.acl.new',
     BLOCK_NODE_RPC: 'net.peer.block',
+    BLOCK_NODE_IP_RPC: 'net.peer.block_ip',
+    GET_ACL_STATUS_RPC: 'net.peer.acl',
+    GET_ACL_IP_STATUS_RPC: 'net.peer.acl_ip',
     CONNECTION_CH: 'evt.net.connection',
     GET_P2P_PORT_RPC: 'net.p2p.port',
     GET_TASK_SERVER_PORT_RPC: 'net.tasks.port',
@@ -39,6 +43,7 @@ export let config = Object.freeze({
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
+    GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
     REMOVE_TASK_HEADER_RPC: 'comp.tasks.known.delete',
     GET_TASK_RPC: 'comp.task',
@@ -117,7 +122,9 @@ export let config = Object.freeze({
     CONCENT_UNLOCK: 'pay.deposit.unlock',
     CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
-    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch',
+    CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
+    CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
 
 function errorCallback(topic, _eb, { error, details, argsList }) {
