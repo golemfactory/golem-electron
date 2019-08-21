@@ -41,16 +41,17 @@ export default class QuitModal extends React.Component {
 
     render() {
         return (
-            <div className="container__modal container__file-check-modal">
+            <div className="container__modal container__quit-modal">
                 <div className="content__modal">
+                    <span className="icon-close" onClick={this._handleCancel}/>
                     <div className="image-container">
                         <Lottie options={defaultOptions} />
                     </div>
-                    <span>
+                    <span className="description">
                         <b>Your node is still working.</b><br/>
-                        You can <b>close it safely</b> and let your node finish
-                        its jobs in the background with a{' '}
-                        <b>graceful shutdown.</b>
+                        You can <b>close it safely</b> and let your node<br/>finish
+                        its jobs in the background<br/>with a{' '}
+                        <b>graceful shutdown.</b><br/>
                         Or <b>force quit</b> (may affect your reputation)
                     </span>
                     <div className="action__modal">

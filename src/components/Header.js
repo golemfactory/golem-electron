@@ -99,11 +99,12 @@ export class Header extends Component {
 
         window.onbeforeunload = e => {
             const { stats, forceQuit } = this.props;
-            if (stats?.provider_state?.status !== 'Idle' && !forceQuit)
+
+            if (stats?.provider?.provider_state?.status !== 'Idle' && !forceQuit)
                 this._toggleQuitModal(cb);
 
             function cb(state) {
-                if (this.state.quitModal) e.returnValue = true;
+                if (state.quitModal) e.returnValue = true;
             }
         };
     }

@@ -12,6 +12,11 @@ $color_11: rgb(20, 20, 20);
 $color_12: rgb(57, 57, 57);
 $color_13: rgb(155, 155, 155);
 
+.icon-force-quit{
+  &:before {
+    content: "\e9b6";
+  }
+}
 .icon-high-five {
   &:before {
     content: "\e9b0";

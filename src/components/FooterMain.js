@@ -409,7 +409,7 @@ export class FooterMain extends Component {
                                 native
                                 initial={null}
                                 items={
-                                    !!Object.keys(stats).length ||
+                                    (stats && !!Object.keys(stats).length) ||
                                     status?.client?.message.includes(
                                         'configuration'
                                     ) ||
@@ -474,7 +474,7 @@ export class FooterMain extends Component {
                                                                   this
                                                                       ._forceQuit
                                                               }>
-                                                              <span className="icon-close" />
+                                                              <span className="icon-force-quit" />
                                                               <span>
                                                                   Force quit
                                                               </span>
