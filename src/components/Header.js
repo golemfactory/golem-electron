@@ -102,8 +102,6 @@ export class Header extends Component {
 
             if (stats?.provider?.provider_state?.status !== 'Idle' && !forceQuit)
                 this._toggleQuitModal(cb);
-            else 
-                e.returnValue = false;
 
             function cb(quitModal) {
                 if (quitModal) {
