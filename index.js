@@ -209,10 +209,6 @@ function createWindow() {
         win = null;
         ipcHandler.ipcRemover();
     });
-
-    win.on("close", () => {
-        win = null;
-    });
 }
 
 // Hardware acceleration is disabled for Linux machines as work around, electron apps hangs mostly on Linux 18.04

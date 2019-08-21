@@ -102,9 +102,13 @@ export class Header extends Component {
 
             if (stats?.provider?.provider_state?.status !== 'Idle' && !forceQuit)
                 this._toggleQuitModal(cb);
+            else 
+                e.returnValue = false;
 
-            function cb(state) {
-                if (state.quitModal) e.returnValue = true;
+            function cb(quitModal) {
+                if (quitModal) {
+                    e.returnValue = true;
+                }
             }
         };
     }
@@ -120,7 +124,10 @@ export class Header extends Component {
     }
 
     _toggleQuitModal = cb =>
-        this.setState(prevState => ({ quitModal: !prevState.quitModal }), cb);
+        this.setState(
+            prevState => ({ quitModal: !prevState.quitModal }),
+            () => cb && cb(this.state.quitModal)
+        );
 
     _gracefulShutdown = () => this.props.actions.gracefulShutdown();
 
