@@ -103,6 +103,7 @@ export class TaskPanel extends React.Component {
      * @param  {[type]} restartCallback
      */
     _handleRestartModal = (item, restartCallback, isSubtask) => {
+        console.log("item", item);
         this.setState({
             restartModal: true,
             restartProps: {

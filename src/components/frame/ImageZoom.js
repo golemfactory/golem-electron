@@ -139,7 +139,7 @@ export class ImageZoom extends React.Component {
             })
 
             viewer.addHandler('zoom', (item) => {
-                !!this.props.isSubtaskShown && this.props.setSubtasksVisibility()
+                !!this.props.isSubtaskShown && this.props.getSubtasksBorder()
                 this.calculateZoomRatio.call(this, item.zoom)
             })
         });
