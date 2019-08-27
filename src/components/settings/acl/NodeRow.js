@@ -7,13 +7,21 @@ import ConditionalRender from '../../hoc/ConditionalRender';
 const { ipcRenderer, clipboard } = window.electron;
 let copyTimeoutList = [];
 
-const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, toggleItems, showBlockNodeModal }) => {
+const NodeRow = ({
+	aclRestrictedMode,
+	isBlockTable,
+	isChecked,
+	item,
+	keyItem,
+	toggleItems,
+	showBlockNodeModal
+}) => {
 	const [isNodeCopied, setCopyNodeStatus] = useState(false);
 	const [isSubtaskCopied, setCopySubtaskStatus] = useState(false);
 
 	useEffect(() => {
 		return () => {
-			copyTimeoutList.map( item => clearTimeout(item));
+			copyTimeoutList.map(item => clearTimeout(item));
 		};
 	}, []);
 
@@ -44,9 +52,7 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 						name="taskType"
 						value={item?.key}
 						checked={isChecked}
-						onChange={() =>
-							toggleItems.call(null, [item?.key])
-						}
+						onChange={() => toggleItems.call(null, [item?.key])}
 						readOnly
 						required
 					/>
@@ -54,7 +60,7 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 						htmlFor={`taskTypeRadio${keyItem}`}
 						className="checkbox-label-left">
 						<span className="overlay" />
-						<span></span>
+						<span />
 					</label>
 				</div>
 			</td>
@@ -73,7 +79,12 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 					size="small">
 					<span
 						className="info__id"
-						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
+						onClick={_copyField.bind(
+							null,
+							item.node_id,
+							isNodeCopied,
+							setCopyNodeStatus
+						)}>
 						{item?.key?.replace(
 							new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 							'$1...$2'
@@ -83,16 +94,10 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 			</td>
 			<ConditionalRender showIf={isBlockTable}>
 				<td align="center">
-					<span
-						className="info__id">
-						{item.pub_addr}
-					</span>
+					<span className="info__id">{item.pub_addr}</span>
 				</td>
 				<td align="center">
-					<span
-						className="info__id">
-						{item.p2p_pub_port}
-					</span>
+					<span className="info__id">{item.p2p_pub_port}</span>
 				</td>
 			</ConditionalRender>
 			<td align="center">
@@ -110,15 +115,24 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 					size="small"
 					isEnabled={!!item?.node_name}>
 					<span
-						className={`info__name ${aclRestrictedMode ? "info__name--restricted" : ""}`}
-						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
+						className={`info__name ${
+							aclRestrictedMode ? 'info__name--restricted' : ''
+						}`}
+						onClick={_copyField.bind(
+							null,
+							item.node_id,
+							isNodeCopied,
+							setCopyNodeStatus
+						)}>
 						{item.node_name || 'Anonymous'}
 					</span>
 				</Tooltip>
 			</td>
 			<td align="center">
 				<span
-					className={aclRestrictedMode ? "icon-delete" : "icon-locked"}
+					className={
+						aclRestrictedMode ? 'icon-delete' : 'icon-locked'
+					}
 					onClick={_showBlockNodeModal.bind(null, item)}
 				/>
 			</td>
@@ -129,7 +143,10 @@ const NodeRow = ({ aclRestrictedMode, isBlockTable, isChecked, item, keyItem, to
 NodeRow.displayName = 'NodeRow';
 
 NodeRow.propTypes = {
-	item: PropTypes.object.isRequired
+	item: PropTypes.oneOfType([
+		PropTypes.object.isRequired,
+		PropTypes.array.isRequired
+	])
 };
 
 export default NodeRow;
