@@ -131,8 +131,9 @@ export class All extends React.Component {
                     _result instanceof Object &&
                     _result !== null;
                 if (_result && (!!_result[1] || isResultObject)) {
-                    const message = _result[1] || _result;
-                    this._closeModal('restartModal');
+                    const message = Array.isArray(_result)
+                        ? _result[1]
+                        : _result;
                     this.setState({
                         insufficientAmountModal: {
                             result: true,
@@ -141,6 +142,8 @@ export class All extends React.Component {
                         }
                     });
                 }
+
+                this._closeModal('restartModal');
             }
         );
     };
