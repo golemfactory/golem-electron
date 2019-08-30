@@ -1953,6 +1953,7 @@ export class TaskDetail extends React.Component {
                     <TaskSummaryModal
                         closeModal={this._closeModal}
                         _handleStartTaskButton={this._handleStartTaskButton}
+                        loadingTaskIndicator={loadingTaskIndicator}
                         estimated_cost={estimated_cost}
                         minPerf={minPerf}
                         isMainNet={isMainNet}
