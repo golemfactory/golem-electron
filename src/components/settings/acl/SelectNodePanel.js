@@ -13,6 +13,7 @@ import some from 'lodash/some';
 import someFP from 'lodash/fp/some';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
+import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
 import includes from 'lodash/fp/includes';
 
@@ -62,7 +63,12 @@ export class SelectNodePanel extends React.Component {
         }
     }
 
-    _blockNodes = e => {};
+    _blockNodes = () => {
+        const selectedNodes = Object.keys(
+            pickBy(this.state.checkedItems, item => !!item)
+        );
+        this.props.actions.blockNodes(selectedNodes);
+    };
 
     _toggleItems = (keys, val = null) => {
         const tempObj = { ...this.state.checkedItems };
@@ -73,7 +79,6 @@ export class SelectNodePanel extends React.Component {
                     val !== null ? !this.state.isAllChecked : !tempObj[key])
         );
 
-        console.log("tempObj", tempObj);
         this.setState({
             checkedItems: tempObj
         });
@@ -81,16 +86,13 @@ export class SelectNodePanel extends React.Component {
 
     _filterList = e => {
         this.interactionTimer && clearTimeout(this.interactionTimer);
-        const { knownPeers } = this.props
-        if(!e.target.value) {
+        const { knownPeers } = this.props;
+        if (!e.target.value) {
             this.setState({ filteredList: knownPeers });
             return;
         }
 
-        const filteredList = filter(
-            knownPeers,
-            includesValue(e.target.value)
-        );
+        const filteredList = filter(knownPeers, includesValue(e.target.value));
 
         this.interactionTimer = setTimeout(() => {
             this.setState({ filteredList });

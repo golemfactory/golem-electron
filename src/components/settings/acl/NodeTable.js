@@ -5,19 +5,34 @@ import map from 'lodash/map';
 import NodeRow from './NodeRow';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
-const NodeTable = ({ aclRestrictedMode = false, list, checkedItems, toggleItems, showBlockNodeModal, isBlockTable = false }) => {
+const NodeTable = ({
+	aclRestrictedMode = false,
+	list,
+	checkedItems,
+	toggleItems,
+	showBlockNodeModal,
+	isBlockTable = false
+}) => {
 	return (
 		<table className="fragment__node-table">
 			<thead>
 				<tr>
-					<th scope="col" width="10%"></th>
-					<th scope="col" >Node ID</th>
+					<th scope="col" width="10%" />
+					<th scope="col">Node ID</th>
 					<ConditionalRender showIf={isBlockTable}>
-						<th scope="col" >Node IP</th>
-						<th scope="col" >PORT</th>
+						<th scope="col">Node IP</th>
+						<th scope="col">PORT</th>
 					</ConditionalRender>
-					<th scope="col" width="25%">Node Name</th>
-					<th scope="col" width="50px">{aclRestrictedMode ? 'Delete' : 'Unlock'}</th>
+					<th scope="col" width="25%">
+						Node Name
+					</th>
+					<th scope="col" width="50px">
+						{aclRestrictedMode
+							? 'Delete'
+							: isBlockTable
+							? 'Block'
+							: 'Unlock'}
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -26,7 +41,7 @@ const NodeTable = ({ aclRestrictedMode = false, list, checkedItems, toggleItems,
 						item={item}
 						key={key.toString()}
 						isBlockTable={isBlockTable}
-						isChecked={!!checkedItems[item?.key]}
+						isChecked={!!checkedItems[(item?.key)]}
 						keyItem={key.toString()}
 						toggleItems={toggleItems}
 						aclRestrictedMode={aclRestrictedMode}

@@ -68,6 +68,8 @@ export class ControlPanel extends React.Component {
 
     _unlockNodes = e => {};
 
+    _blockNodes = e => console.log(this.state.checkedItems);
+
     _toggleItems = (keys, val = null) => {
         const tempObj = { ...this.state.checkedItems };
         keys.forEach(
@@ -141,7 +143,11 @@ export class ControlPanel extends React.Component {
                     </ConditionalRender>
                     <ConditionalRender showIf={isAnyChecked}>
                         <span
-                            onClick={this._unlockNodes}
+                            onClick={
+                                aclRestrictedMode
+                                    ? this._unlockNodes
+                                    : this._blockNodes
+                            }
                             className="acl__action-item">
                             {aclRestrictedMode ? 'Remove' : 'Unlock'} Selected
                         </span>

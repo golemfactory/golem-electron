@@ -22,6 +22,8 @@ export let dict = Object.freeze({
     SET_ACL_MODE: 'SET_ACL_MODE',
     SET_ACL_NODE_LIST: 'SET_ACL_NODE_LIST',
     BLOCK_NODE: 'BLOCK_NODE',
+    BLOCKED_NODES: 'BLOCKED_NODES',
+    TRUSTED_NODE: 'TRUSTED_NODE',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
@@ -168,6 +170,8 @@ const {
     SET_ACL_MODE,
     SET_ACL_NODE_LIST,
     BLOCK_NODE,
+    BLOCKED_NODES,
+    TRUSTED_NODE,
     //TASKS
     SET_TASKLIST,
     SET_TASK_DETAILS,
@@ -422,6 +426,16 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 });
 
+export const blockNodes = payload => ({
+    type: BLOCKED_NODES,
+    payload
+});
+
+export const trustNode = payload => ({
+    type: TRUSTED_NODE,
+    payload
+});
+
 export const setHistory = payload => ({
     type: SET_HISTORY,
     payload
@@ -538,7 +552,7 @@ export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     toggleLock
 });
 
-export const toggleConcentRequired = (isSwitchOn) => ({
+export const toggleConcentRequired = isSwitchOn => ({
     type: TOGGLE_CONCENT_REQUIRED,
     isSwitchOn
 });

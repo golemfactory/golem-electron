@@ -27,6 +27,7 @@ export let config = Object.freeze({
     GET_CONNECTED_PEERS_RPC: 'net.peers.connected',
     SETUP_ACL_RPC: 'net.peer.acl.new',
     BLOCK_NODE_RPC: 'net.peer.block',
+    TRUST_NODE_RPC: 'net.peer.allow',
     BLOCK_NODE_IP_RPC: 'net.peer.block_ip',
     GET_ACL_STATUS_RPC: 'net.peer.acl',
     GET_ACL_IP_STATUS_RPC: 'net.peer.acl_ip',

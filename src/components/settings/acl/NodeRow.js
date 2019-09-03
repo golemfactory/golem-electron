@@ -85,7 +85,7 @@ const NodeRow = ({
 							isNodeCopied,
 							setCopyNodeStatus
 						)}>
-						{item?.key?.replace(
+						{(item?.key || item.node_id)?.replace(
 							new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 							'$1...$2'
 						)}
@@ -131,7 +131,11 @@ const NodeRow = ({
 			<td align="center">
 				<span
 					className={
-						aclRestrictedMode ? 'icon-delete' : 'icon-locked'
+						aclRestrictedMode
+							? 'icon-delete'
+							: isBlockTable
+							? 'icon-unlocked'
+							: 'icon-locked'
 					}
 					onClick={_showBlockNodeModal.bind(null, item)}
 				/>

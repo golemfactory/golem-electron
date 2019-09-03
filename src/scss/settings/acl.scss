@@ -1,15 +1,15 @@
-.content__acl{
-	height: 100%;
+.content__acl {
+    height: 100%;
     font-size: 10pt;
     padding-top: 37px !important;
     overflow-y: overlay;
     overflow-x: hidden;
 
     h4 {
-    	margin: 20px 0;
+        margin: 20px 0;
     }
 
-	.no-data {
+    .no-data {
         width: 100%;
         height: 70px;
         margin-top: 20px;
@@ -54,7 +54,7 @@
             font-weight: 400;
         }
     }
-    
+
     .input__add-node,
     .input__search-node {
         width: 100%;
@@ -74,7 +74,7 @@
         &--center {
             justify-content: center;
             cursor: pointer;
-            span{
+            span {
                 font-size: 10pt;
             }
             span + button {
@@ -95,7 +95,7 @@
             margin-left: auto;
             margin-right: 0 !important;
             text-transform: none;
-            span{
+            span {
                 margin-right: 5px;
             }
         }
@@ -109,23 +109,24 @@
             padding: 15px 0;
             border-top: 1px solid $color-border;
 
-            thead tr{
+            thead tr {
                 height: 50px;
             }
         }
-        &-row{
+        &-row {
             color: $color-text !important;
             .checkbox-item {
                 height: 20px;
                 margin: 5px 0;
             }
-            .icon{
+            .icon {
                 &-delete,
-                &-locked{
+                &-locked,
+                &-unlocked {
                     top: -2.5px;
                     color: $color-primary;
                     cursor: pointer;
-                    &::before{
+                    &::before {
                         font-size: 14pt;
                     }
                 }
@@ -134,21 +135,26 @@
                         content: '\e95f';
                     }
                 }
+                &-unlocked {
+                    &:hover::before {
+                        content: '\e928';
+                    }
+                }
             }
             .info {
                 &__id,
                 &__name {
                     cursor: pointer;
                 }
-                
-                &__name{
+
+                &__name {
                     display: block;
-                    white-space:nowrap;
+                    white-space: nowrap;
                     overflow-x: overlay;
                     width: 90px;
                     color: $color-error;
-                    &::-webkit-scrollbar { 
-                        display: none;  // Safari and Chrome
+                    &::-webkit-scrollbar {
+                        display: none; // Safari and Chrome
                     }
                     &--restricted {
                         color: $color-primary;
@@ -157,4 +163,4 @@
             }
         }
     }
-}   
+}

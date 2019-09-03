@@ -4,7 +4,44 @@ import { dict } from '../actions';
 
 import { config, _handleRPC } from './handler';
 
-const { SET_ACL_MODE, SET_ACL_NODE_LIST, SET_KNOWN_PEERS } = dict;
+const {
+	SET_ACL_MODE,
+	SET_ACL_NODE_LIST,
+	SET_KNOWN_PEERS,
+	BLOCKED_NODES,
+	TRUSTED_NODE
+} = dict;
+
+export function trustNode(session, payload) {
+	return new Promise((resolve, reject) => {
+		function on_info(args) {
+			let info = args[0];
+		}
+		_handleRPC(on_info, session, config.TRUST_NODE_RPC, [payload]);
+	});
+}
+
+export function* trustNodeBase(session, { payload }) {
+	const action = yield call(trustNode, session, payload);
+	yield put(action);
+}
+
+export function blockNodes(session, payload) {
+	console.log('payload', payload);
+	return new Promise((resolve, reject) => {
+		function on_info(args) {
+			let info = args[0];
+			resolve();
+		}
+		_handleRPC(on_info, session, config.BLOCK_NODE_RPC, [payload]);
+	});
+}
+
+export function* blockNodesBase(session, { payload }) {
+	yield call(blockNodes, session, payload);
+	const nodeList = yield call(getNodesACL, session);
+	yield put(nodeList);
+}
 
 export function getIPsACL(session) {
 	return new Promise((resolve, reject) => {
@@ -24,10 +61,11 @@ export function getNodesACL(session) {
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];
+			console.log('info', info);
 			resolve({
-                type: SET_ACL_NODE_LIST,
-                payload: info
-            })
+				type: SET_ACL_NODE_LIST,
+				payload: info
+			});
 		}
 		_handleRPC(on_info, session, config.GET_ACL_STATUS_RPC);
 	});
@@ -42,13 +80,14 @@ export function setupACL(session, payload) {
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];
-			resolve(info)
+			console.log('info', info);
+			resolve(info);
 		}
 		_handleRPC(on_info, session, config.SETUP_ACL_RPC, [...payload]);
 	});
 }
 
-export function* setupACLBase(session, {payload, _resolve, _reject}) {
+export function* setupACLBase(session, { payload, _resolve, _reject }) {
 	const action = yield call(setupACL, session, payload);
 	const actionNodes = yield call(getNodesACL, session);
 	yield put(actionNodes);
@@ -56,49 +95,47 @@ export function* setupACLBase(session, {payload, _resolve, _reject}) {
 }
 
 export function getKnownPeers(session) {
-	const interval = 2000
+	const interval = 2000;
 
-    return eventChannel(emit => {
-
-        const fetchUnsupportedStats = () => {
-            
-            function on_stats(args) {
-                let peers = args[0];
-                emit({
+	return eventChannel(emit => {
+		const fetchUnsupportedStats = () => {
+			function on_stats(args) {
+				let peers = args[0];
+				emit({
 					type: SET_KNOWN_PEERS,
 					payload: peers
-				})
-            }
+				});
+			}
 
-            _handleRPC(on_stats, session, config.GET_KNOWN_PEERS_RPC)
-        }
+			_handleRPC(on_stats, session, config.GET_KNOWN_PEERS_RPC);
+		};
 
-        const fetchOnStartup = () => {
-                fetchUnsupportedStats()
+		const fetchOnStartup = () => {
+			fetchUnsupportedStats();
 
-            return fetchOnStartup
-        }
+			return fetchOnStartup;
+		};
 
-        const channelInterval = setInterval(fetchOnStartup(), interval)
+		const channelInterval = setInterval(fetchOnStartup(), interval);
 
-        return () => {
-            console.log('negative')
-            clearInterval(channelInterval);
-        }
-    })
+		return () => {
+			console.log('negative');
+			clearInterval(channelInterval);
+		};
+	});
 }
 
 export function* knownPeersBase(session) {
-	const channel = yield call(getKnownPeers, session)
-    try {
-        while (true) {
-            let action = yield take(channel)
-            yield put(action)
-        }
-    } finally {
-        console.info('yield cancelled!')
-        channel.close()
-    }
+	const channel = yield call(getKnownPeers, session);
+	try {
+		while (true) {
+			let action = yield take(channel);
+			yield put(action);
+		}
+	} finally {
+		console.info('yield cancelled!');
+		channel.close();
+	}
 }
 
 /**
@@ -111,4 +148,6 @@ export function* aclFlow(session) {
 	yield fork(nodeListBase, session);
 	yield fork(ipListBase, session);
 	yield takeLatest(SET_ACL_MODE, setupACLBase, session);
+	yield takeLatest(BLOCKED_NODES, blockNodesBase, session);
+	yield takeLatest(TRUSTED_NODE, trustNodeBase, session);
 }
