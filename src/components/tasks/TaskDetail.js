@@ -1099,7 +1099,7 @@ export class TaskDetail extends React.Component {
                             label="Resolution"
                             info={
                                 <p className="tooltip_task">
-                                    Set width & height of your scene
+                                    Set width & height of your scene.
                                 </p>
                             }
                             cls="title"
@@ -1139,7 +1139,7 @@ export class TaskDetail extends React.Component {
                             info={
                                 <p className="tooltip_task">
                                     For Blender supported formats are .png,
-                                    .tga, .exr, .jpeg and .bmp
+                                    .tga, .exr, .jpeg and .bmp.
                                 </p>
                             }
                             cls="title"
@@ -1228,9 +1228,9 @@ export class TaskDetail extends React.Component {
                                         Define frames to render. You can
                                         separate frame numbers
                                         <br />
-                                        with ;, eg. 1;4;7 will define frame 1, 4
+                                        with ; e.g. 1;4;7 will define frame 1, 4
                                         and 7. You can also define frames ranges
-                                        with -{" "}
+                                        with {" "}.
                                         <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
                                             Learn more
                                         </a>
@@ -1266,7 +1266,7 @@ export class TaskDetail extends React.Component {
                                 info={
                                     <p className="tooltip_task">
                                         Set your file
-                                        <br /> settings
+                                        <br /> settings.
                                     </p>
                                 }
                                 cls="title"
@@ -1405,7 +1405,7 @@ export class TaskDetail extends React.Component {
                                             <br />
                                             have any questions just hover over
                                             <br />
-                                            specific label to find some help
+                                            specific label to find some help.
                                         </p>
                                     }
                                 />
@@ -1664,7 +1664,7 @@ export class TaskDetail extends React.Component {
                                                 This is a free market, and you
                                                 should set the price as you will
                                                 but we think that keeping close
-                                                to 0.2$ is ok.
+                                                to 0.2$ is OK.
                                             </p>
                                         }
                                         cls="title"
@@ -1716,7 +1716,7 @@ export class TaskDetail extends React.Component {
                                                     timeout settings. Fiat value
                                                     may change during
                                                     computation as well as gas
-                                                    price -
+                                                    price.
                                                     <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
                                                         Learn more
                                                     </a>
