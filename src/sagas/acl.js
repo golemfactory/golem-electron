@@ -16,18 +16,19 @@ export function trustNode(session, payload) {
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];
+			resolve();
 		}
 		_handleRPC(on_info, session, config.TRUST_NODE_RPC, [payload]);
 	});
 }
 
 export function* trustNodeBase(session, { payload }) {
-	const action = yield call(trustNode, session, payload);
-	yield put(action);
+	yield call(trustNode, session, payload);
+	const nodeList = yield call(getNodesACL, session);
+	yield put(nodeList);
 }
 
 export function blockNodes(session, payload) {
-	console.log('payload', payload);
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];

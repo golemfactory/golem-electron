@@ -39,12 +39,12 @@ export class Personal extends React.Component {
     }
 
     componentDidMount() {
-        this.props.nodeId && this.createQRCode(this.props.nodeId)
+        this.props.nodeId && this.createQRCode(this.props.publicKey)
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if(nextProps.nodeId !== this.props.nodeId) {
-            this.createQRCode(nextProps.nodeId)
+        if(nextProps.publicKey !== this.props.publicKey) {
+            this.createQRCode(nextProps.publicKey)
         }
     }
 

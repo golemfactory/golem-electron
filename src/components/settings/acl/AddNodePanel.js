@@ -20,8 +20,7 @@ const mapDispatchToProps = dispatch => ({
 export class AddNodePanel extends React.Component {
     
     state = {
-        node: null,
-        errMsg: null,
+        node: null
     };
 
     componentWillUnmount() {
@@ -36,8 +35,13 @@ export class AddNodePanel extends React.Component {
         }, WAIT_INTERVAL);
     };
 
+    _handleAdd = () => {
+        this.props.actions.trustNode(this.state.node);
+        this.props.addNodePanelToggle();
+    }
+
     render() {
-        const { addNode } = this.props;
+        const { addNodePanelToggle } = this.props;
         return (
             <Fragment>
                 <div className="description">
@@ -56,8 +60,8 @@ export class AddNodePanel extends React.Component {
                     />
                 </div>
                 <div className="acl__action acl__action--center">
-                    <span onClick={addNode}>Cancel</span>
-                    <button onClick={() => console.log('clicked')} className="btn btn--primary">Add</button>
+                    <span onClick={addNodePanelToggle}>Cancel</span>
+                    <button onClick={this._handleAdd} className="btn btn--primary">Add</button>
                 </div>
             </Fragment>
         );

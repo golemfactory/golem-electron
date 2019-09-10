@@ -50,9 +50,9 @@ const NodeRow = ({
 						id={`taskTypeRadio${keyItem}`}
 						type="checkbox"
 						name="taskType"
-						value={item?.key}
+						value={item?.key || item.node_id}
 						checked={isChecked}
-						onChange={() => toggleItems.call(null, [item?.key])}
+						onChange={() => toggleItems.call(null, [item?.key || item.node_id])}
 						readOnly
 						required
 					/>
@@ -81,7 +81,7 @@ const NodeRow = ({
 						className="info__id"
 						onClick={_copyField.bind(
 							null,
-							item.node_id,
+							item.key || item.node_id,
 							isNodeCopied,
 							setCopyNodeStatus
 						)}>
@@ -120,7 +120,7 @@ const NodeRow = ({
 						}`}
 						onClick={_copyField.bind(
 							null,
-							item.node_id,
+							item.key || item.node_id,
 							isNodeCopied,
 							setCopyNodeStatus
 						)}>

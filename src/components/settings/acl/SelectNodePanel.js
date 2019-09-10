@@ -68,6 +68,7 @@ export class SelectNodePanel extends React.Component {
             pickBy(this.state.checkedItems, item => !!item)
         );
         this.props.actions.blockNodes(selectedNodes);
+        this.props.addNodePanelToggle();
     };
 
     _toggleItems = (keys, val = null) => {
@@ -101,7 +102,7 @@ export class SelectNodePanel extends React.Component {
 
     render() {
         const { checkedItems, isAnyChecked, filteredList } = this.state;
-        const { addNode, knownPeers } = this.props;
+        const { addNodePanelToggle, knownPeers } = this.props;
         return (
             <Fragment>
                 <div className="description">
@@ -128,7 +129,7 @@ export class SelectNodePanel extends React.Component {
                         </span>
                     </ConditionalRender>
                     <span
-                        onClick={addNode}
+                        onClick={addNodePanelToggle}
                         className="acl__action-item acl__action__add-node">
                         <span
                             className="icon-back"

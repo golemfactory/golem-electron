@@ -84,14 +84,19 @@ export class ControlPanel extends React.Component {
     };
 
     _toggleAll = () => {
-        const { list } = this.props;
-        const keyList = map(list, item => item.node_id);
+        const { nodeListACL } = this.props;
+        const keyList = map(nodeListACL?.rules, item => item.node_id);
         this._toggleItems(keyList, true);
     };
 
     render() {
         const { checkedItems, isAllChecked, isAnyChecked } = this.state;
-        const { list, addNode, aclRestrictedMode, nodeListACL } = this.props;
+        const {
+            list,
+            addNodePanelToggle,
+            aclRestrictedMode,
+            nodeListACL
+        } = this.props;
         const { rules = [] } = nodeListACL;
         return (
             <Fragment>
@@ -145,15 +150,15 @@ export class ControlPanel extends React.Component {
                         <span
                             onClick={
                                 aclRestrictedMode
-                                    ? this._unlockNodes
-                                    : this._blockNodes
+                                    ? this._blockNodes
+                                    : this._unlockNodes
                             }
                             className="acl__action-item">
                             {aclRestrictedMode ? 'Remove' : 'Unlock'} Selected
                         </span>
                     </ConditionalRender>
                     <span
-                        onClick={addNode}
+                        onClick={addNodePanelToggle}
                         className="acl__action-item acl__action__add-node">
                         <span className="icon-add" />
                         Add Node

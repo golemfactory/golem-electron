@@ -1,17 +1,50 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+
+import * as Actions from './../../../actions';
 
 import ControlPanel from './ControlPanel';
 import AddNodePanel from './AddNodePanel';
 import SelectNodePanel from './SelectNodePanel';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
-export default class ACL extends React.PureComponent {
+const mapStateToProps = state => ({
+    nodeListACL: state.acl.nodeListACL
+});
+
+const mapDispatchToProps = dispatch => ({
+    actions: bindActionCreators(Actions, dispatch)
+});
+
+function isRuleSwitchOn(props) {
+    return props.nodeListACL?.default_rule !== 'allow';
+}
+
+export class ACL extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
             addNodeModal: false,
-            aclRestrictedMode: false
+            aclRestrictedMode: isRuleSwitchOn(props)
         };
+    }
+
+    componentDidMount() {
+        this.setState({
+            aclRestrictedMode: isRuleSwitchOn(this.props)
+        })
+    }
+
+    componentWillReceiveProps(nextProps) {
+        if (
+            nextProps.nodeListACL?.default_rule !==
+            this.props.nodeListACL?.default_rule
+        ) {
+            this.setState({
+                aclRestrictedMode: isRuleSwitchOn(nextProps)
+            });
+        }
     }
 
     _handleACLCheckbox = value => {
@@ -26,7 +59,7 @@ export default class ACL extends React.PureComponent {
         });
     };
 
-    _addNode = e => {
+    _addNodePanelToggle = e => {
         this.setState(prevState => ({
             addNodeModal: !prevState.addNodeModal
         }));
@@ -38,20 +71,20 @@ export default class ACL extends React.PureComponent {
             <div className="content__acl">
                 <ConditionalRender showIf={!addNodeModal}>
                     <ControlPanel
-                        addNode={this._addNode}
+                        addNodePanelToggle={this._addNodePanelToggle}
                         aclRestrictedMode={aclRestrictedMode}
                         handleACLCheckbox={this._handleACLCheckbox}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={addNodeModal && !aclRestrictedMode}>
                     <SelectNodePanel
-                        addNode={this._addNode}
+                        addNodePanelToggle={this._addNodePanelToggle}
                         aclRestrictedMode={aclRestrictedMode}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={addNodeModal && aclRestrictedMode}>
                     <AddNodePanel
-                        addNode={this._addNode}
+                        addNodePanelToggle={this._addNodePanelToggle}
                         aclRestrictedMode={aclRestrictedMode}
                     />
                 </ConditionalRender>
@@ -59,3 +92,8 @@ export default class ACL extends React.PureComponent {
         );
     }
 }
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(ACL);
