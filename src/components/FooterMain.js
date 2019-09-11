@@ -220,7 +220,7 @@ export class FooterMain extends Component {
             case "BLENDER":         return " (CPU - Blender)";
             case "BLENDER_NVGPU":   return " (GPU - Blender)";
             case "BLENDER_SGX":     return " (SGX - Blender)";
-            case "WASM"             return " (CPU - gWasm)"
+            case "WASM":            return " (CPU - gWasm)"
             default:                return "";
         }
     }
