@@ -85,7 +85,7 @@ export class ControlPanel extends React.Component {
 
     _toggleAll = () => {
         const { nodeListACL } = this.props;
-        const keyList = map(nodeListACL?.rules, item => item.node_id);
+        const keyList = map(nodeListACL?.rules, item => item.identity);
         this._toggleItems(keyList, true);
     };
 
