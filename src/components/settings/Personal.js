@@ -178,7 +178,7 @@ export class Personal extends React.Component {
                                 />
                             ) : (
                                 <span className="personal__user-name">
-                                    {nodeName ? nodeName : "Anonymous Golem"}
+                                    {nodeName ? nodeName : "Unknown Golem"}
                                 </span>
                             )}
                             <Tooltip

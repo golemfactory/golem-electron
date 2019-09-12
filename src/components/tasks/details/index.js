@@ -40,7 +40,7 @@ export class Details extends React.PureComponent {
             blockNodeModal: false,
             nodeBlocked: false,
             errMsg: null,
-            subtask2block: null
+            node2block: null
         };
 
         this._showBlockNodeModal = this._showBlockNodeModal.bind(this);
@@ -164,7 +164,7 @@ export class Details extends React.PureComponent {
             blockNodeModal: true,
             nodeBlocked: false,
             errMsg: null,
-            subtask2block: subtask
+            node2block: subtask
         });
     }
 
@@ -173,7 +173,7 @@ export class Details extends React.PureComponent {
     };
 
     _blockNode = () => {
-        let node_id = subtask2block.node_id;
+        let node_id = node2block.node_id;
         new Promise((resolve, reject) => {
             actions.blockNode(node_id, resolve, reject);
         }).then(([result, msg]) => {
@@ -201,7 +201,7 @@ export class Details extends React.PureComponent {
             blockNodeModal,
             errMsg,
             nodeBlocked,
-            subtask2block
+            node2block
         } = this.state;
         return (
             <div className="details__section">
@@ -249,7 +249,7 @@ export class Details extends React.PureComponent {
                             blockAction={this._blockNode}
                             nodeBlocked={nodeBlocked}
                             errMsg={errMsg}
-                            subtask2block={subtask2block}
+                            node2block={node2block}
                         />,
                         document.getElementById('modalPortal')
                     )}

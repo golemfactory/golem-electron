@@ -62,7 +62,6 @@ export function getNodesACL(session) {
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];
-			console.log('info', info);
 			resolve({
 				type: SET_ACL_NODE_LIST,
 				payload: info
@@ -81,7 +80,6 @@ export function setupACL(session, payload) {
 	return new Promise((resolve, reject) => {
 		function on_info(args) {
 			let info = args[0];
-			console.log('info', info);
 			resolve(info);
 		}
 		_handleRPC(on_info, session, config.SETUP_ACL_RPC, [...payload]);

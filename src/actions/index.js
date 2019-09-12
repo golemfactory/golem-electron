@@ -431,7 +431,7 @@ export const blockNodes = payload => ({
     payload
 });
 
-export const trustNode = payload => ({
+export const trustNodes = payload => ({
     type: TRUSTED_NODE,
     payload
 });

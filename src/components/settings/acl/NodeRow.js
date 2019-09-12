@@ -25,7 +25,7 @@ const NodeRow = ({
 		};
 	}, []);
 
-	const _showBlockNodeModal = subtask => showBlockNodeModal(subtask);
+	const _showBlockNodeModal = node => showBlockNodeModal(node);
 
 	const _copyField = (item, isDataCopied, setDataCopy) => {
 		if (copyTimeoutList[item] && isDataCopied) return;
@@ -124,7 +124,7 @@ const NodeRow = ({
 							isNodeCopied,
 							setCopyNodeStatus
 						)}>
-						{item.node_name || 'Anonymous'}
+						{item.node_name || 'Unknown'}
 					</span>
 				</Tooltip>
 			</td>

@@ -89,7 +89,7 @@ export class Peers extends React.Component {
                                 this,
                                 node_name
                             )}>
-                            <span>{node_name || 'Anonymous node'}</span>
+                            <span>{node_name || 'Unknown node'}</span>
                         </div>
                     </Tooltip>
                 </td>
