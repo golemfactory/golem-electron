@@ -7,7 +7,8 @@ import { connect } from 'react-redux';
 import * as Actions from './../actions';
 
 const mapStateToProps = state => ({
-    notificationList: state.notification.notificationList
+    notificationList: state.notification.notificationList,
+    isMainNet: state.info.isMainNet
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -24,7 +25,9 @@ export class NotificationCenter extends Component {
     }
 
     componentDidMount() {
-        this.props.actions.setSeenNotification();
+        if(!this.props.isMainNet) {
+            this.props.actions.setSeenNotification();
+        }
     }
 
     /**

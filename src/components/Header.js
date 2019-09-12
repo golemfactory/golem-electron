@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { findDOMNode } from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import Tooltip from '@tippy.js/react';
 
 import * as Actions from '../actions';
 
@@ -9,11 +10,8 @@ import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
 import testNetLogo from './../assets/img/testnet-logo-small.svg';
 
 import NotificationCenter from './NotificationCenter';
+import directorySelector from './../utils/directorySelector';
 
-import Tooltip from '@tippy.js/react';
-/**
- * @see http://react-component.github.io/tooltip/
- */
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
 const mainProcess = remote.require('./index');
@@ -32,6 +30,17 @@ const getSiblings = function(elem) {
     return siblings;
 };
 
+const setActiveClass = function(allNav, path) {
+    const index = allNav.findIndex(
+        item => path === item.getAttribute('data-path')
+    );
+    Number.isInteger(index) &&
+        index >= 0 &&
+        allNav &&
+        allNav.length > 0 &&
+        allNav[index].classList.add('active');
+};
+
 /**
  * Helper function
  */
@@ -48,11 +57,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const DOCLINK = 'https://docs.golem.network/';
-const HASHLIST = {
-    '/': 0,
-    '/tasks': 1,
-    '/settings': 4
-};
 
 /**
  * { Class for header component with navigation. }
@@ -68,17 +72,11 @@ export class Header extends Component {
     }
 
     componentDidMount() {
-        const index =
-            HASHLIST[
-                window.routerHistory && window.routerHistory.location.pathname
-            ];
         let navItems = document.getElementsByClassName('nav__item');
         let menuItems = document.getElementsByClassName('menu__item');
         let allNav = [...navItems, ...menuItems];
-        Number.isInteger(index) &&
-            allNav &&
-            allNav.length > 0 &&
-            allNav[index].classList.add('active');
+
+        setActiveClass(allNav, location.hash.replace('#', ''));
 
         /*EXPRIMENTAL*/
         // window.require('electron').ipcRenderer.on('REDIRECT_FROM_TRAY', (event, message) => {
@@ -90,13 +88,8 @@ export class Header extends Component {
                 [].map.call(allNav, item => {
                     item.classList.remove('active');
                 });
-
-                const index = HASHLIST[location.pathname];
-                Number.isInteger(index) &&
-                    allNav &&
-                    allNav.length > 0 &&
-                    allNav[index].classList.add('active');
-            });
+                setActiveClass(allNav, location.pathname);
+            }); 
     }
 
     /**
@@ -150,70 +143,10 @@ export class Header extends Component {
      * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
      */
     _onFileDialog(dialogRules = []) {
-        const checkDominantType = function(files) {
-            const isBiggerThanOther = function(element, index, array) {
-                return element[1] !== array[0][1];
-            };
-            const tempFiles = [
-                ...files.reduce(
-                    (acc, s) => acc.set(s, (acc.get(s) || 0) + 1),
-                    new Map()
-                )
-            ];
-            const anyDominant = tempFiles.some(isBiggerThanOther);
-
-            if (!anyDominant && tempFiles.length > 1) {
-                return false;
-            } else {
-                return tempFiles.sort((a, b) => b[1] - a[1]).map(a => a[0])[0];
-            }
-        };
-
         const onFileHandler = data => {
             //console.log(data)
             if (data) {
-                mainProcess
-                    .selectDirectory(data, this.props.isMainNet)
-                    .then(item => {
-                        let mergedList = [].concat.apply([], item);
-                        let unknownFiles = mergedList.filter(
-                            ({ malicious }) => malicious
-                        );
-                        let masterFiles = mergedList.filter(
-                            ({ master }) => master
-                        );
-                        let dominantFileType = checkDominantType(
-                            masterFiles.map(file => file.extension)
-                        );
-
-                        (masterFiles.length > 0 || unknownFiles.length > 0) &&
-                            this._navigateTo(
-                                `/add-task/type${
-                                    !!dominantFileType
-                                        ? `/${dominantFileType.substring(1)}`
-                                        : ''
-                                }`,
-                                null
-                            );
-
-                        if (unknownFiles.length > 0) {
-                            this.props.actions.setFileCheck({
-                                status: true,
-                                files: unknownFiles
-                            });
-                        } else if (masterFiles.length > 0) {
-                            this.props.actions.createTask({
-                                resources: mergedList.map(item => item.path),
-                                taskName: masterFiles[0].name,
-                                relativePath: data[0]
-                            });
-                        } else {
-                            alert(
-                                "There's no main file!" +
-                                    'There should be at least one blender file.'
-                            );
-                        }
-                    });
+                directorySelector.call(this, data);
             }
         };
         /**
@@ -431,6 +364,7 @@ export class Header extends Component {
                                         '/settings'
                                     )}
                                     role="menuitem"
+                                    data-path="/settings"
                                     tabIndex="0"
                                     aria-label="Settings">
                                     <span className="icon-settings" />
@@ -496,6 +430,7 @@ export class Header extends Component {
                                     className="nav__item"
                                     onClick={this._navigateTo.bind(this, '/')}
                                     role="menuitem"
+                                    data-path="/"
                                     tabIndex="0"
                                     aria-label="Network">
                                     Network
@@ -509,6 +444,7 @@ export class Header extends Component {
                                         '/tasks'
                                     )}
                                     role="menuitem"
+                                    data-path="/tasks"
                                     tabIndex="0"
                                     aria-label="Tasks">
                                     Tasks

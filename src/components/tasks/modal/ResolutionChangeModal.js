@@ -1,4 +1,16 @@
 import React from "react";
+import Lottie from "react-lottie";
+
+import animData from "./../../../assets/anims/are-you-sure";
+
+const defaultOptions = {
+    loop: false,
+    autoplay: true,
+    animationData: animData,
+    rendererSettings: {
+        preserveAspectRatio: "xMidYMid slice"
+    }
+};
 
 export default class ResolutionChangeModal extends React.Component {
     constructor(props) {
@@ -24,13 +36,14 @@ export default class ResolutionChangeModal extends React.Component {
     render() {
         const { type } = this.props;
         return (
-            <div className="container__modal container__default-settings-modal">
+            <div className="container__modal default-settings-modal__container">
                 <div className="content__modal">
-                    <div>
-                        <span className="icon-warning" />
+                    <div className="default-settings-modal__section-image resolution-change-img">
+                        <Lottie options={defaultOptions} />
                     </div>
                     <span>
-                        This action will change your default resolution, would
+                        This action will change your default <b>resolution</b> and{" "}
+                        <b>sample per pixel</b> parameters, would
                         like to apply?
                     </span>
                     <div className="action__modal">

@@ -1,0 +1,199 @@
+.container__restart-modal {
+    .content__modal {
+        width: 300px;
+        height: auto;
+        text-align: center;
+        padding: 20px;
+        transition: .5s width ease;
+        
+        @media screen and (max-height: 720px), (min-width: 778px) {
+            .image-container {
+                display: none;
+            }
+        }
+        
+        @media screen and (max-height: 600px), (min-width: 778px) { 
+            position: relative;
+            width: 80%;
+            min-width: 550px;
+            max-width: 700px;
+            flex-direction: row;
+            align-items: start;
+
+            .image-container {
+                display: block;
+                position: relative;
+                width: 150px !important;
+                height: 150px !important;
+                top: 15px;
+                margin: 0 60px;
+            }
+
+            .container__estimation {
+                width: 50% !important;
+                margin: 30px 20px 64px 20px !important;
+
+                &__title {
+                    position: absolute;
+                    width: 200px;
+                    left: calc(11% - 18px);
+                    bottom: 100px;
+                    line-height: 1.5em !important;
+                }
+            }
+
+            .action__modal {
+                position: absolute;
+                width: 300px;
+                bottom: 30px;
+            }
+        }
+
+        .image-container {
+            width: 160px;
+            height: 160px;
+        }
+
+        .title__restart-modal {
+            margin-top: 20px;
+            font-weight: 400;
+            font-size: 10pt;
+        }
+
+        .container {
+            &__restart-options {
+                @include flex;
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+            &__estimation {
+                margin: 30px 0 10px 0;
+                width: 100%;
+                span {
+                    font-size: 10pt;
+                    font-weight: 400;
+                }
+                .switch-box {
+                    text-align: left;
+                    margin: 20px 0;
+                    .switch-label {
+                        &.switch-label--right {
+                            position: relative;
+                            bottom: 2px;
+                            margin-left: 10px;
+                            font-size: 9pt;
+                            color: $color-text2;
+                        }
+                    }
+                }
+
+                .summary {
+                    @include flex;
+                    flex-direction: column;
+                    margin-bottom: 20px;
+                    &-currency {
+                        font-weight: 300;
+                        h4 {
+                            display: inline;
+                        }
+                    }
+                    &-item {
+                        @include flex;
+                        width: 100%;
+                        padding: 10px 0;
+                        border-top: 1px dashed $color-border;
+
+                        h4 {
+                            margin: 0;
+                        }
+
+                        sub {
+                            font-size: 8pt;
+                        }
+
+                        &.deposit {
+                            font-size: 7pt;
+                            padding: 3px 0;
+                            color: $color-text2 !important;
+                        }
+                    }
+
+                    &-title {
+                        display: block;
+                        color: $color-primary;
+                        width: 100%;
+                        text-align: left;
+                        font-size: 8pt;
+                        padding: 5px 0;
+                        margin-top: 15px;
+                        font-weight: 300;
+                    }
+
+                    .icon-question-mark {
+                        position: relative;
+                        bottom: 5px;
+                        margin-left: 2px;
+                        font-size: 6pt;
+                    }
+                }
+                &__title {
+                    line-height: 1.5em;
+                }
+            }
+        }
+
+        .restart-task__radio-group {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin: 10px 0 20px 20%;
+
+            div {
+                margin: 2px 0;
+            }
+
+            input[type='radio'] {
+                display: none;
+                padding: 0 20px;
+                box-sizing: border-box;
+
+                /* changed style when checked */
+                &:checked + label > .overlay {
+                    background-color: $color-primary;
+                }
+
+                &:disabled + label {
+                    color: $color-text3;
+                }
+
+                &:disabled + label > .overlay {
+                    border: 1px solid $color-text3;
+                }
+            }
+            label {
+                font-size: 9pt;
+                margin-left: 5px;
+                margin-right: 50px;
+                font-weight: 400;
+                cursor: pointer;
+            }
+            /* default radio button style: unchecked */
+            .overlay {
+                display: inline-block;
+                position: relative;
+                top: 0.25em;
+                left: -1em; /* or whatever length you need here */
+                height: 0.5em;
+                width: 0.5em;
+                border-radius: 50%;
+                border: 1px solid $color-primary;
+                background-clip: border-box;
+                padding: 4px;
+                background-clip: content-box;
+                cursor: pointer;
+            }
+        }
+    }
+}

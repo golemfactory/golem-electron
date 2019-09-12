@@ -1,13 +1,12 @@
-import React from "react";
-import Tooltip from '@tippy.js/react'
+import React from 'react';
+import Tooltip from '@tippy.js/react';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as Actions from "../../actions";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../../actions';
 
-import BlockNodeModal from "../tasks/modal/BlockNodeModal";
-
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/secsToHMS";
+import BlockNodeModal from '../tasks/modal/BlockNodeModal';
+import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 
 const { ipcRenderer, clipboard } = window.electron;
 
@@ -43,7 +42,7 @@ function convertToSVGPoints(arr, offset) {
     return []
         .concat(...arr)
         .toString()
-        .replace(/(,[^,]*),/g, "$1 ");
+        .replace(/(,[^,]*),/g, '$1 ');
 }
 
 /**
@@ -106,7 +105,7 @@ function tooltipOffset(arr, isDirTop) {
 }
 
 const subTaskData = {
-    key: "0",
+    key: '0',
     data: {
         status: 0,
         duration: 1206
@@ -114,20 +113,20 @@ const subTaskData = {
 };
 
 const statusDict = Object.freeze({
-    STARTING: "Starting",
-    DOWNLOADING: "Downloading",
-    FINISHED: "Finished",
-    FAILURE: "Failure",
-    RESENT: "Failed - Resent",
-    TIMEOUT: "Timeout",
-    RESTARTED: "Restart"
+    STARTING: 'Starting',
+    DOWNLOADING: 'Downloading',
+    FINISHED: 'Finished',
+    FAILURE: 'Failure',
+    RESENT: 'Failed - Resent',
+    TIMEOUT: 'Timeout',
+    RESTARTED: 'Restart'
 });
 
 let statusClassDict = {
-    "Not started": "frame--undone",
-    Computing: "frame--progress",
-    Finished: "frame--done",
-    Aborted: "frame--error"
+    'Not started': 'frame--undone',
+    Computing: 'frame--progress',
+    Finished: 'frame--done',
+    Aborted: 'frame--error'
 };
 
 export class SubTask extends React.Component {
@@ -141,6 +140,7 @@ export class SubTask extends React.Component {
             errMsg: null,
             subtask2block: null
         };
+        this.copyTimeoutList = [];
     }
 
     componentDidMount() {
@@ -149,7 +149,7 @@ export class SubTask extends React.Component {
 
     componentWillUnmount() {
         this.resubmitTimeout && clearTimeout(this.resubmitTimeout);
-        this.copyTimeout && clearTimeout(this.copyTimeout);
+        this.copyTimeoutList.map(item => clearTimeout(item));
     }
 
     _handleResubmit(_id, isTimedOut) {
@@ -174,21 +174,27 @@ export class SubTask extends React.Component {
     }
 
     _handleOpenFile(path) {
-        ipcRenderer.send("open-file", path);
+        ipcRenderer.send('open-file', path);
     }
 
     _copySubtask(id) {
+        if (this.copyTimeoutList[id]) return;
         clipboard.writeText(id);
         this.setState(
-            {
-                subtaskIdCopied: { [id]: true }
-            },
+            prevState => ({
+                subtaskIdCopied: { ...prevState.subtaskIdCopied, [id]: true }
+            }),
             () => {
-                this.copyTimeout = setTimeout(() => {
-                    this.setState({
-                        subtaskIdCopied: { [id]: false }
-                    });
-                }, 5000);
+                this.copyTimeoutList[id] = setTimeout(() => {
+                    this.setState(prevState => ({
+                        subtaskIdCopied: {
+                            ...prevState.subtaskIdCopied,
+                            [id]: false
+                        }
+                    }));
+                    clearTimeout(this.copyTimeoutList[id]);
+                    this.copyTimeoutList[id] = null;
+                }, 2000);
             }
         );
     }
@@ -241,8 +247,6 @@ export class SubTask extends React.Component {
         });
 
         function _taskStatus(status) {
-            console.log("status", status);
-
             switch (status) {
                 case statusDict.FINISHED:
                     return <p className="status__tooltip">Completed</p>;
@@ -283,7 +287,7 @@ export class SubTask extends React.Component {
                         content={
                             <div
                                 className={`tooltip-frame ${
-                                    isDevMode ? "tooltip-dev" : ""
+                                    isDevMode ? 'tooltip-dev' : ''
                                 }`}>
                                 <div className="content__tooltip">
                                     <div className="developer_view__tooltip">
@@ -293,8 +297,8 @@ export class SubTask extends React.Component {
                                                 className={`time__tooltip ${
                                                     subtask.status ===
                                                     statusDict.FINISHED
-                                                        ? "time__tooltip--done"
-                                                        : ""
+                                                        ? 'time__tooltip--done'
+                                                        : ''
                                                 }`}>
                                                 {timeStampToHR(
                                                     subtask.time_started
@@ -308,7 +312,7 @@ export class SubTask extends React.Component {
                                             {isDevMode && (
                                                 <p className="node-name__tooltip">
                                                     {subtask.node_name ||
-                                                        "Anonymous"}
+                                                        'Anonymous'}
                                                 </p>
                                             )}
                                             {isDevMode && (
@@ -319,8 +323,8 @@ export class SubTask extends React.Component {
                                                             .subtaskIdCopied[
                                                             subtask.subtask_id
                                                         ]
-                                                            ? "#37c481"
-                                                            : "#9b9b9b"
+                                                            ? '#37c481'
+                                                            : '#9b9b9b'
                                                     }}
                                                     onClick={this._copySubtask.bind(
                                                         this,
@@ -331,8 +335,8 @@ export class SubTask extends React.Component {
                                                             .subtaskIdCopied[
                                                             subtask.subtask_id
                                                         ]
-                                                            ? "Subtask ID copied!"
-                                                            : "Click to copy Subtask ID!"}
+                                                            ? 'Subtask ID copied!'
+                                                            : 'Click to copy Subtask ID!'}
                                                     </b>
                                                 </p>
                                             )}
@@ -385,8 +389,8 @@ export class SubTask extends React.Component {
                                             {this.state.isTaskSubmitted[
                                                 subtask.subtask_id
                                             ]
-                                                ? "Resubmitted!"
-                                                : "Resubmit"}
+                                                ? 'Resubmitted!'
+                                                : 'Resubmit'}
                                         </button>
                                         {isDevMode && (
                                             <button
@@ -402,7 +406,7 @@ export class SubTask extends React.Component {
                                 </div>
                             </div>
                         }
-                        placement="bottom"
+                        placement={index < path.length / 2 ? 'bottom' : 'top'}
                         trigger="mouseenter"
                         interactive={true}
                         hideOnClick={false}
@@ -418,7 +422,7 @@ export class SubTask extends React.Component {
                         />
                     </Tooltip>
                 ) : (
-                    ""
+                    ''
                 );
             });
     }
@@ -432,12 +436,12 @@ export class SubTask extends React.Component {
         } = this.state;
         const { offset, isDeveloperMode } = this.props;
         let customStyle = {};
-        if (offset.direction === "y") {
+        if (offset.direction === 'y') {
             customStyle = {
                 index: 1,
                 value: offset.value
             };
-        } else if (offset.direction === "x") {
+        } else if (offset.direction === 'x') {
             customStyle = {
                 index: 0,
                 value: offset.value

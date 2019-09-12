@@ -84,7 +84,7 @@ export default class Slider extends React.Component {
                 indicator.style.fontSize = 10;
             }
 
-            slider.style.background = color;
+            slider.style.background = (min === max ) ? WARN : color;
             slider.style.backgroundImage = [
                 '-webkit-gradient(',
                 'linear, ',
@@ -103,7 +103,7 @@ export default class Slider extends React.Component {
             indicator.innerHTML = isFloat(val) ? val.toFixed(1) : val;
             indicator.style.color = color;
             indicator.style.left =
-                (val - min) * ((sliderWidth - 32) / (max - min)) +
+                (val - min) * ((sliderWidth - 32) / (Math.max((max - min), 1))) +
                 ((this.props.iconLeft || this.props.textLeft
                     ? (appWidth - sliderWidth) / 2
                     : 0) +
@@ -174,7 +174,7 @@ export default class Slider extends React.Component {
                             list="steplist"
                             onInput={this._handleFillLower.bind(this, disabled)}
                             role="slider"
-                            aria-label="Machine's Resource"
+                            aria-label="Slider"
                             onMouseUp={this._handleCallback}
                             disabled={disabled}
                         />

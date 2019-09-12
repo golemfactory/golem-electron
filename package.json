@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.1.19",
+    "version": "0.2.2",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -173,7 +173,6 @@
         "@hot-loader/react-dom": "^16.8.4",
         "@redux-saga/testing-utils": "^1.0.2",
         "@tippy.js/react": "^2.1.2",
-        "app-module-path": "1.1.0",
         "babel-core": "^7.0.0-bridge.0",
         "babel-jest": "^24.7.1",
         "babel-loader": "^8.0.0",
@@ -186,10 +185,9 @@
         "css-browser-selector": "^0.6.5",
         "css-loader": "2.1.0",
         "electron": "^3.1.8",
-        "electron-builder": "20.21.1",
+        "electron-builder": "20.41.0",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
-        "electron-reload": "^1.4.0",
         "enzyme": "3.8.0",
         "enzyme-adapter-react-16": "1.12.1",
         "enzyme-to-json": "3.3.5",
@@ -202,10 +200,10 @@
         "html-webpack-harddisk-plugin": "1.0.1",
         "html-webpack-plugin": "4.0.0-beta.5",
         "html2pdf.js": "^0.9.0",
-        "http": "0.0.0",
         "identity-obj-proxy": "^3.0.0",
-        "jest": "24.3.1",
+        "jest": "^24.8.0",
         "jest-canvas-mock": "^1.1.0",
+        "lodash-webpack-plugin": "^0.11.5",
         "mock-socket": "^6.0.4",
         "msgpack5": "^3.4.1",
         "openseadragon": "^2.3.1",
@@ -245,10 +243,11 @@
         "yup": "^0.23.0"
     },
     "dependencies": {
-        "axios": "0.18.0",
+        "axios": "^0.19.0",
         "chalk": "2.4.1",
+        "dirtree2json": "git+https://github.com/mdtanrikulu/dirtree2json.git",
         "electron-store": "2.0.0",
-        "lodash.isequal": "^4.5.0",
+        "lodash": "^4.17.15",
         "mkdirp": "^0.5.1",
         "semver": "^5.4.1",
         "wampy-cra": "^0.1.1",
@@ -270,7 +269,7 @@
             "^.*[.](png|PNG|svg|SVG)$": "<rootDir>/__mocks__/EmptyModule"
         },
         "transformIgnorePatterns": [
-            "/node_modules/"
+            "<rootDir>/node_modules/(?!lodash-es)"
         ],
         "unmockedModulePathPatterns": [
             "<rootDir>/node_modules/react",
@@ -278,7 +277,10 @@
             "<rootDir>/node_modules/fbjs",
             "<rootDir>/node_modules/react-addons-test-utils",
             "<rootDir>/__mocks__/EmptyModule.js"
-        ]
+        ],
+        "transform": {
+            "^.+\\.(js|jsx|mjs)$": "<rootDir>/node_modules/babel-jest"
+        }
     },
     "env": {
         "test": {

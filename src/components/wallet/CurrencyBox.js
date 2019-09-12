@@ -3,7 +3,7 @@ import { Spring } from 'react-spring/renderprops.cjs';
 import Tooltip from '@tippy.js/react';
 import { BigNumber } from 'bignumber.js';
 
-import { timeStampToHR } from './../../utils/secsToHMS';
+import { timeStampToHR } from './../../utils/time';
 import checkNested from './../../utils/checkNested';
 import { currencyIcons } from './../../constants';
 

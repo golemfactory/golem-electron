@@ -193,6 +193,7 @@ $color_5: rgb(55, 196, 129);
     content: "\e91e";
   }
 }
+.icon-default-task,
 .icon-file {
   &:before {
     content: "\e91f";
@@ -595,5 +596,30 @@ $color_5: rgb(55, 196, 129);
 .icon-zoom {
   &:before {
     content: "\e96a";
+  }
+}
+
+.icon{
+  &--color {
+    &-red {
+      color: $color-error;
+    }
+
+    &-yellow {
+      color: $color_3;
+    }
+
+    &-gray {
+      color: $color_4;
+    }
+    
+    &-blue {
+      color: $color_2;
+    }
+
+    &-green {
+      color: $color_5;
+    }
+
   }
 }

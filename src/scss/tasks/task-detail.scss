@@ -152,8 +152,10 @@
     }
 
     .icon-back {
-        font-size: 10pt;
-        margin-left: -13px;
+        position: relative;
+        font-size: 12pt;
+        margin-right: 5px;
+        font-weight: 900;
     }
 }
 
@@ -199,9 +201,19 @@
 
     .item-settings {
         display: flex;
+        position: relative;
         justify-content: space-between;
         align-items: center;
         height: 55px;
+
+        .warning {
+            position: absolute;
+            color: $color-accent2;
+            font-size: 8pt;
+            font-weight: 400;
+            bottom: -2px;
+            right: 0;
+        }
     }
 
     .item__preset-button {

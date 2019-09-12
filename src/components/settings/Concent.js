@@ -3,15 +3,15 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as Actions from './../../actions';
+import { ETH_DENOM } from './../../constants/variables';
 import { getConcentDepositStatus } from './../../reducers';
-import { timeStampToHR } from './../../utils/secsToHMS';
-
-const ETH_DENOM = 10 ** 18;
+import { timeStampToHR } from './../../utils/time';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
+    isMainNet: state.info.isMainNet,
     isOnboadingActive: !state.concent.hasOnboardingShown,
     showConcentToS: !state.info.isConcentTermsAccepted,
     nodeId: state.info.networkInfo.key,
@@ -64,6 +64,7 @@ export class Concent extends React.Component {
         const {
             concentBalance,
             depositStatus,
+            isMainNet,
             isEngineOn,
             nodeId,
             isConcentWaiting
@@ -130,7 +131,7 @@ export class Concent extends React.Component {
                                                 ? concentBalance.value
                                                       .dividedBy(ETH_DENOM)
                                                       .toFixed(4)
-                                                : '-'}{' '}
+                                                : '-'}{isMainNet ? ' ' : ' t'}
                                             GNT
                                         </b>
                                         <br />

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import isEqual from "lodash.isequal";
+import { isEqual } from "lodash";
 
 import checkNested from "./../../utils/checkNested";
 import isObjectEmpty from "./../../utils/isObjectEmpty";
@@ -136,7 +136,8 @@ class TestResult extends Component {
                                         this,
                                         more.after_test_data.warnings
                                             .missing_files
-                                    )}>
+                                    )}
+                                >
                                     Add files
                                 </button>
                             </div>
@@ -247,7 +248,8 @@ class TestResult extends Component {
             <section
                 className={`section-preview__task-detail ${this._getPanelClass(
                     testStatus
-                )}`}>
+                )}`}
+            >
                 {isDetailPage && (
                     <div className="panel-preview__task-detail">
                         <Link to="/tasks" aria-label="Back button to task list">

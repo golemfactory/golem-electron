@@ -1,0 +1,163 @@
+.details {
+	&__section {
+		ul {
+			padding: 0;
+			margin: 0;
+		}
+		.container-checkbox__details {
+			display: flex;
+			justify-content: flex-start;
+			align-items: center;
+			flex-wrap: wrap;
+			font-size: 8pt;
+			border-top: 1px solid $color-border;
+
+			&.checkbox-group {
+				margin-bottom: 0;
+				padding-left: 0;
+			}
+
+			.checkbox-item {
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				width: 100%;
+				margin: 0;
+				padding: 10px 25px;
+				line-height: 2.6em;
+
+				.info {
+					&-subtask-number {
+						display: inline-block;
+						width: 122px;
+					}
+				}
+
+				label,
+				.overlay {
+					margin-left: 0;
+					margin-right: 15px;
+				}
+
+				&__action {
+					display: none;
+					justify-content: space-around;
+					flex: 0 0 40px;
+					span {
+						cursor: pointer;
+						color: $color-primary;
+					}
+				}
+
+				&:hover {
+					.checkbox-item__action {
+						display: flex;
+					}
+				}
+			}
+
+			&:last-child {
+				border-bottom: 1px solid $color-border;
+			}
+		}
+
+		.fragment__node {
+			&-table {
+				width: 100%;
+				font-size: 8pt;
+				line-height: 2em;
+				padding: 15px 0;
+				border-top: 1px solid $color-border;
+				padding-right: 20px;
+			}
+			&-row{
+				.icon{
+					&-logs,
+					&-locked{
+						color: $color-primary;
+						cursor: pointer;
+					}
+					&-logs::before{
+						font-size: 12pt;
+					}
+					&-locked::before{
+						font-size: 14pt;
+					}
+				}
+				.id-info {
+					cursor: pointer;
+				}
+			}
+		}
+		
+		.icon-arrow-down,
+		.icon-refresh{
+			&.disabled{
+				color: $color-text3 !important;
+				cursor: not-allowed !important;
+			}
+		}
+
+		.icon-arrow-down{
+			margin-right: 0 !important;
+			transition: 0.5s transform;
+			transition-delay: 0.1s;
+		}
+
+		.arrow-expand {
+			transform: rotate(180deg);
+		}
+
+		.details__loading{
+			text-align: center;
+			height: 30px;
+			line-height: 30px;
+			font-size: 10pt;
+			color: $color-text2;
+		}
+	}
+
+	&__subtask-stats {
+		display: grid;
+		grid-template-columns: auto auto auto auto;
+  		grid-template-rows: 25px 25px;
+  		justify-items: center;
+  		align-items: center;
+  		text-align: left;
+		height: 50px;
+		font-size: 9pt;
+		margin: 10px 0;
+		padding: 0 24px;
+		font-size: 8pt;
+
+		& > span {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			width: 100%;
+		}
+
+		[class^="icon-"], 
+		[class*=" icon-"] {
+			margin-right: 5px;
+			font-size: 10pt;
+		}
+	}
+
+	&__subtask-action {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+		height: 25px;
+		font-size: 8pt;
+		padding-left: 15px;
+		color: $color-primary;
+		span {
+			width: 130px;
+			cursor: pointer;
+			margin: 0 10px;
+			font-weight: 600;
+			text-transform: uppercase;
+		}
+	}
+}

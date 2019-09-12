@@ -38,7 +38,6 @@ const { configStore, dictConfig } = remote.getGlobal('configStorage');
 
 const history = (window.routerHistory = createHashHistory());
 const routingMiddleware = routerMiddleware(history);
-const appEnv = remote.getGlobal('process').env.NODE_ENV;
 const sagaMiddleware = createSagaMiddleware();
 const enhancer = compose(
     // Middleware you want to use in development:
@@ -108,6 +107,7 @@ if (remote.getGlobal('process').platform === 'win32') {
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    ipcRenderer.on('redirect-wallet', () => window.routerHistory.push('/wallet'));
     window.applicationSurface = document.getElementById('mount');
     render(
         <Provider store={store}>

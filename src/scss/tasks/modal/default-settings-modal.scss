@@ -1,0 +1,21 @@
+.default-settings-modal {
+    &__container {
+        .content__modal {
+            height: 320px;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .resolution-change-img {
+            height: 23vh;
+            width: 35vw;
+        }
+    }
+
+    &__section-image {
+        height: 20vh;
+        width: 35vw;
+        min-height: 150px;
+    }
+
+}

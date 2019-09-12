@@ -216,15 +216,15 @@ class OnboardIndex extends React.Component {
     _handleDecline = () => this.setState({ isTermsDeclined: true });
 
     _handleSentryRadio = e => {
-        this.setState({
-            isSentryAccepted: !this.state.isSentryAccepted
-        });
+        this.setState( prevState => ({
+            isSentryAccepted: !prevState.isSentryAccepted
+        }));
     };
 
     _handleMonitorRadio = () => {
-        this.setState({
-            isMonitorAccepted: !this.state.isMonitorAccepted
-        });
+        this.setState( prevState => ({
+            isMonitorAccepted: !prevState.isMonitorAccepted
+        }));
     };
 
     _handlePasswordValidation = _result => {
@@ -372,7 +372,6 @@ class OnboardIndex extends React.Component {
                 message: this.state.printInfo
             });
             html2pdf(temp, {
-                margin: 0,
                 filename: 'password.pdf',
                 image: { type: 'jpeg', quality: 1 },
                 html2canvas: { dpi: 192, letterRendering: true },

@@ -37,6 +37,7 @@ export class PasswordModal extends React.Component {
             this.refs.errorInfo.textContent = "wrong password";
             setTimeout(() => {
                 container.classList.remove("modal-error");
+                this.refs.password.focus();
             }, 1000);
             if (this.refs.password) this.refs.password.value = "";
             this.setState({

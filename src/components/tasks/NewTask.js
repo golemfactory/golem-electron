@@ -1,12 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import { Link } from "react-router-dom";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { Link } from 'react-router-dom';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "../../actions";
-import FileCheckModal from "./modal/FileCheckModal";
-import InfoLabel from "./../InfoLabel";
+import * as Actions from '../../actions';
+import FileCheckModal from './modal/FileCheckModal';
+import InfoLabel from './../InfoLabel';
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal,
@@ -20,18 +20,17 @@ const mapDispatchToProps = dispatch => ({
 });
 
 const radioTypes = Object.freeze({
-    blend: "Blender",
-    lxs: "LuxRender"
+    blend: 'Blender',
+    lxs: 'LuxRender'
 });
 
 export class NewTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: props.taskName || "Golem Task",
-            type: radioTypes[this.props.match.params.type] || null
+            name: this._normalizeName(props.taskName, props.match.params.type),
+            type: radioTypes[props.match.params.type] || null
         };
-        props.actions.clearTaskPlain(); //clear previous test status
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -39,22 +38,12 @@ export class NewTask extends React.Component {
             this.setState({
                 type: radioTypes[nextProps.match.params.type] || null
             });
-
-        if (nextProps.taskName !== this.props.taskName) {
-            let taskName =
-                nextProps.taskName &&
-                nextProps.taskName.split("." + nextProps.match.params.type)[0];
-            taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, "");
-            this.setState({
-                name: (taskName && taskName.substring(0, 24)) || "Golem Task"
-            });
-        }
     }
 
-    componentWillUnmount() {
-        if (!this._nextStep) {
-            this.props.actions.clearTaskPlain();
-        }
+    _normalizeName = (name, type) => {
+        let taskName = (name && type) ? name.split('.' + type)[0] : name;
+            taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, '');
+            return (taskName && taskName.substring(0, 24)) || 'Golem Task'
     }
 
     /**
@@ -71,10 +60,10 @@ export class NewTask extends React.Component {
         const { taskNameHint, nextButton } = this.refs;
         e.target.checkValidity();
         if (e.target.validity.valid) {
-            taskNameHint.style.display = "none";
+            taskNameHint.style.display = 'none';
             nextButton.disabled = false;
         } else {
-            taskNameHint.style.display = "block";
+            taskNameHint.style.display = 'block';
             nextButton.disabled = true;
         }
     };
@@ -114,7 +103,7 @@ export class NewTask extends React.Component {
             name,
             type
         });
-        window.routerHistory.push("/task/settings");
+        window.routerHistory.push('/task/settings');
     };
 
     render() {
@@ -140,8 +129,8 @@ export class NewTask extends React.Component {
                         </div>
                         <span ref="taskNameHint" className="hint__task-name">
                             {name.length < 4
-                                ? "Task name should consists of at least 4 characters."
-                                : "Task name can contain; letter, number, space between characters, dot, dash and underscore."}
+                                ? 'Task name should consists of at least 4 characters.'
+                                : 'Task name can contain; letter, number, space between characters, dot, dash and underscore.'}
                         </span>
                         <input
                             type="text"
@@ -244,7 +233,7 @@ export class NewTask extends React.Component {
                             closeModal={this._closeModal}
                             unknownFiles={fileCheckModal.files}
                         />,
-                        document.getElementById("modalPortal")
+                        document.getElementById('modalPortal')
                     )}
             </div>
         );
