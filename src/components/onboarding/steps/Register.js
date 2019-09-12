@@ -289,7 +289,6 @@ export class Register extends React.Component {
 
     render() {
         const { passwordModal, loadingIndicator } = this.props;
-        console.log("passwordModal", passwordModal);
         defaultOptions.animationData = passwordModal.status
             ? loadingIndicator
                 ? animDataGenerating
