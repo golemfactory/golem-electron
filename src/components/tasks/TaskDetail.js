@@ -1230,7 +1230,7 @@ export class TaskDetail extends React.Component {
                                         <br />
                                         with ; e.g. 1;4;7 will define frame 1, 4
                                         and 7. You can also define frames ranges
-                                        with {" "}.
+                                        with.{" "}
                                         <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
                                             Learn more
                                         </a>
