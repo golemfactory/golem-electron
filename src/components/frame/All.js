@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 
 import * as Actions from '../../actions';
 import RestartModal from '../tasks/modal/restartModal';
+import InsufficientAmountModal from '../tasks/modal/InsufficientAmountModal';
 
 import SingleFrame from './Single';
 import { timeStampToHR } from './../../utils/time';
@@ -47,9 +48,10 @@ function sortById(a, b) {
 }
 
 const mapStateToProps = state => ({
+    borderList: state.single.borderList,
     details: state.details.detail,
     frameList: state.all.frameList,
-    borderList: state.single.borderList
+    isMainNet: state.info.isMainNet
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -63,7 +65,12 @@ export class All extends React.Component {
             items: [],
             restartModal: false,
             restartCallback: null,
-            restartProps: null
+            restartProps: null,
+            insufficientAmountModal: {
+                result: false,
+                message: null,
+                restartData: []
+            }
         };
     }
 
@@ -124,7 +131,9 @@ export class All extends React.Component {
                     _result instanceof Object &&
                     _result !== null;
                 if (_result && (!!_result[1] || isResultObject)) {
-                    const message = _result[1] || _result;
+                    const message = Array.isArray(_result)
+                        ? _result[1]
+                        : _result;
                     this.setState({
                         insufficientAmountModal: {
                             result: true,
@@ -133,6 +142,8 @@ export class All extends React.Component {
                         }
                     });
                 }
+
+                this._closeModal('restartModal');
             }
         );
     };
@@ -150,9 +161,9 @@ export class All extends React.Component {
     /**
      * [_closeModal funcs. closes modals.]
      */
-    _closeModal = () => {
+    _closeModal = modal => {
         this.setState({
-            restartModal: false
+            [modal]: false
         });
     };
 
@@ -220,8 +231,8 @@ export class All extends React.Component {
     }
     // show == 'complete' &&
     render() {
-        const { show, details, frameList, borderList } = this.props;
-        const { restartModal, restartProps } = this.state;
+        const { show, details, frameList, borderList, isMainNet } = this.props;
+        const { restartModal, restartProps, insufficientAmountModal } = this.state;
         const animatedList = this.getStyles();
         return (
             <div>
@@ -319,6 +330,20 @@ export class All extends React.Component {
                             {...restartProps}
                         />,
                         document.getElementById('modalPortal')
+                    )}
+                {insufficientAmountModal?.result &&
+                    ReactDOM.createPortal(
+                        <InsufficientAmountModal
+                            previewWindow={true}
+                            closeModal={this._closeModal}
+                            createTaskConditionally={this._handleRestart.bind(
+                                this,
+                                ...insufficientAmountModal?.restartData
+                            )}
+                            isMainNet={isMainNet}
+                            message={insufficientAmountModal?.message}
+                        />,
+                        document.getElementById("modalPortal")
                     )}
             </div>
         );

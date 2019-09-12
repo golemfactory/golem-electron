@@ -13,6 +13,10 @@ const modes = {
     PROD: 'production'
 };
 
+let gitVersion = require('child_process')
+    .execSync('git describe --tags')
+    .toString();
+
 module.exports = (env, argv) => ({
     devtool: argv.mode === modes.DEV ? 'cheap-module-eval-source-map' : false,
     entry: {
@@ -57,13 +61,13 @@ module.exports = (env, argv) => ({
         }
     },
     plugins: [
-        argv.mode === modes.PROD &&
-            new webpack.DefinePlugin({
-                // <-- key to reducing React's size
-                'process.env': {
-                    NODE_ENV: JSON.stringify('production')
-                }
-            }),
+        new webpack.DefinePlugin({
+            // <-- key to reducing React's size
+            'process.env': {
+                NODE_ENV: JSON.stringify(argv.mode || 'development')
+            },
+            __VERSION__: JSON.stringify(gitVersion)
+        }),
         new webpack.optimize.ModuleConcatenationPlugin(),
         new HtmlWebpackPlugin({
             alwaysWriteToDisk: true,
