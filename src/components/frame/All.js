@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 import * as Actions from '../../actions';
 import RestartModal from '../tasks/modal/restartModal';
-import InsufficientAmountModal from "../tasks/modal/InsufficientAmountModal";
+import InsufficientAmountModal from '../tasks/modal/InsufficientAmountModal';
 
 import SingleFrame from './Single';
 import { timeStampToHR } from './../../utils/time';
