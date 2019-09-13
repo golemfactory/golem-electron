@@ -63,6 +63,10 @@
             .duration {
                 font-size: 8.5pt;
                 margin-top: 1px;
+                &--aborted {
+                    color: $color-error;
+                    font-weight: 400;
+                }
                 &--active {
                     color: $button-static-color;
                     font-weight: 400;

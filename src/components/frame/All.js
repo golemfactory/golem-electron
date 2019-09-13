@@ -13,7 +13,6 @@ import SingleFrame from './Single';
 import { timeStampToHR } from './../../utils/time';
 
 const statusDict = Object.freeze({
-    WAITINGFORPEER: 'waiting for peer',
     NOTREADY: 'not started',
     READY: 'ready',
     WAITING: 'waiting',
