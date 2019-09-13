@@ -92,7 +92,7 @@ export default class HistoryItem extends Component {
 			sender_address,
 			recipient_address,
 			task_payment,
-			transaction
+			transaction_hash
 		} = tx.data;
 		return (
 			<div className="item__history">
@@ -183,7 +183,7 @@ export default class HistoryItem extends Component {
 						{(amount / ETH_DENOM).toFixed(4)}
 						{isMainNet ? ' ' : ' t'}GNT
 					</span>
-					{transaction && (
+					{transaction_hash && (
 						<Tooltip
 							content={<p>See on Etherscan</p>}
 							placement="bottom"
@@ -193,7 +193,7 @@ export default class HistoryItem extends Component {
 									isMainNet
 										? mainEtherscanTx
 										: testEtherscanTx
-								}${transaction}`}>
+								}${transaction_hash}`}>
 								<span className="icon-new-window" />
 							</a>
 						</Tooltip>
