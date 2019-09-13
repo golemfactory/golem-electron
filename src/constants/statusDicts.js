@@ -17,7 +17,7 @@ const taskStatus = Object.freeze({
     FAILURE: 'Failure',
     ABORTED: "Aborted",
     CREATING: 'Creating',
-    ERRORCREATING: 'Error Creating'
+    ERRORCREATING: 'Error creating'
 })
 
 module.exports = {
