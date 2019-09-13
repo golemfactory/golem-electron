@@ -51,7 +51,7 @@ export class App extends Component {
         const {actions, status, search, history, details} = this.props
         return (
             <div>
-                <Header actions={ actions }  activeHeader={'secondary'} taskDetails={details}/>
+                <Header actions={ actions }  activeHeader="secondary" taskDetails={details}/>
                 <ConnectedRouter history={history}>
                     { routes }
                 </ConnectedRouter>

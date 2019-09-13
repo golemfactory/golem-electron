@@ -23,10 +23,10 @@
             .image-container {
                 display: block;
                 position: relative;
-                width: 180px !important;
-                height: 180px !important;
-                top: 45px;
-                margin: 0 40px;
+                width: 150px !important;
+                height: 150px !important;
+                top: 15px;
+                margin: 0 60px;
             }
 
             .container__estimation {
@@ -36,8 +36,8 @@
                 &__title {
                     position: absolute;
                     width: 200px;
-                    left: calc(11% - 15px);
-                    bottom: 75px;
+                    left: calc(11% - 18px);
+                    bottom: 100px;
                     line-height: 1.5em !important;
                 }
             }
@@ -139,7 +139,6 @@
                 }
                 &__title {
                     line-height: 1.5em;
-                    margin-bottom: 30px;
                 }
             }
         }

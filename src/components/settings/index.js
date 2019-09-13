@@ -18,7 +18,6 @@ import { APP_VERSION } from "./../../main";
 
 const { remote } = window.electron;
 const { dialog } = remote;
-const versionGUI = remote.app.getVersion();
 
 let activateContent;
 
@@ -228,7 +227,7 @@ export class Settings extends React.Component {
                     </span>
                     <br />
                     <span>
-                        {versionGUI && `Golem Interface v${versionGUI}`}
+                        {`Golem Interface v${__VERSION__}`}
                     </span>
                 </div>
             </div>

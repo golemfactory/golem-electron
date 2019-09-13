@@ -1,56 +1,56 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import TimeSelection from "timepoint-selection";
-import { isEqual, isNumber } from "lodash";
-import { BigNumber } from "bignumber.js";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import TimeSelection from 'timepoint-selection';
+import { isEqual, isNumber } from 'lodash';
+import { BigNumber } from 'bignumber.js';
 const { remote } = window.electron;
-const mainProcess = remote.require("./index");
+const mainProcess = remote.require('./index');
 
-import yup from "yup";
+import yup from 'yup';
 
-import TestResult from "./TestResult";
-import NodeList from "./NodeList";
-import PresetModal from "./modal/PresetModal";
-import DepositTimeModal from "./modal/DepositTimeModal";
-import TaskSummaryModal from "./modal/TaskSummaryModal";
-import ManagePresetModal from "./modal/ManagePresetModal";
-import DefaultSettingsModal from "./modal/DefaultSettingsModal";
-import ResolutionChangeModal from "./modal/ResolutionChangeModal";
-import InsufficientAmountModal from "./modal/InsufficientAmountModal";
+import TestResult from './TestResult';
+import NodeList from './NodeList';
+import PresetModal from './modal/PresetModal';
+import DepositTimeModal from './modal/DepositTimeModal';
+import TaskSummaryModal from './modal/TaskSummaryModal';
+import ManagePresetModal from './modal/ManagePresetModal';
+import DefaultSettingsModal from './modal/DefaultSettingsModal';
+import ResolutionChangeModal from './modal/ResolutionChangeModal';
+import InsufficientAmountModal from './modal/InsufficientAmountModal';
 
-import Dropdown from "./../Dropdown";
-import InfoLabel from "./../InfoLabel";
+import Dropdown from './../Dropdown';
+import InfoLabel from './../InfoLabel';
 
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 const { dialog } = remote;
 
-import * as Actions from "./../../actions";
-import { once } from "./../../utils/once";
-import zipObject from "./../../utils/zipObject";
-import isObjectEmpty from "./../../utils/isObjectEmpty";
-import { ETH_DENOM } from "./../../constants/variables";
-import { testStatusDict } from "./../../constants/statusDicts";
-import { getTimeAsFloat, floatToHR } from "./../../utils/time";
-import calculateFrameAmount from "./../../utils/calculateFrameAmount";
+import * as Actions from './../../actions';
+import { once } from './../../utils/once';
+import zipObject from './../../utils/zipObject';
+import isObjectEmpty from './../../utils/isObjectEmpty';
+import { ETH_DENOM } from './../../constants/variables';
+import { testStatusDict } from './../../constants/statusDicts';
+import { getTimeAsFloat, floatToHR } from './../../utils/time';
+import calculateFrameAmount from './../../utils/calculateFrameAmount';
 
-import whoaImg from "./../../assets/img/whoa.png";
+import whoaImg from './../../assets/img/whoa.png';
 
-const TIME_VALIDITY_NOTE = "Time should be minimum 1 minute.";
+const TIME_VALIDITY_NOTE = 'Time should be minimum 1 minute.';
 const WAIT_INTERVAL = 500;
-const editMode = "settings";
+const editMode = 'settings';
 const taskType = Object.freeze({
-    BLENDER: "Blender",
-    BLENDER_NVGPU: "Blender_NVGPU"
+    BLENDER: 'Blender',
+    BLENDER_NVGPU: 'Blender_NVGPU'
 });
 
 const mockFormatList = [
     {
-        name: "PNG"
+        name: 'PNG'
     },
     {
-        name: "EXR"
+        name: 'EXR'
     }
 ];
 
@@ -108,24 +108,24 @@ export class TaskDetail extends React.Component {
         this.state = {
             isDefaultResolutionApplied: false,
             modalData: null,
-            isDetailPage: props.match.params.id !== "settings", //<-- HARDCODED
+            isDetailPage: props.match.params.id !== 'settings', //<-- HARDCODED
             isInPatient: false,
             isDepositTimeApplied: false,
             //INPUTS
             compositing: false,
             concent: props.concentSwitch,
             resolution: [NaN, NaN],
-            frames: "",
-            format: "",
+            frames: '',
+            format: '',
             formatIndex: 0,
             output_path: props.location,
-            compute_on: "cpu",
+            compute_on: 'cpu',
             samples: 0,
-            timeout: "",
+            timeout: '',
             subtasks_count: 1,
             subtask_warning: null,
             maxSubtasks: 0,
-            subtask_timeout: "",
+            subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
             //CUSTOM
             testLock: false,
@@ -176,9 +176,9 @@ export class TaskDetail extends React.Component {
 
         this.frameHintNum = Math.floor(Math.random() * hints.frame.length);
 
-        var elements = document.getElementsByTagName("input");
+        var elements = document.getElementsByTagName('input');
         var ariaKeys = Array.from(elements).map(elm =>
-            elm.getAttribute("aria-label")
+            elm.getAttribute('aria-label')
         );
         this.interactedInputObject = zipObject(
             ariaKeys,
@@ -187,8 +187,8 @@ export class TaskDetail extends React.Component {
 
         if (match.params.id === editMode)
             document
-                .getElementById("taskFormSubmit")
-                .addEventListener("click", () => {
+                .getElementById('taskFormSubmit')
+                .addEventListener('click', () => {
                     Object.keys(this.interactedInputObject).map(
                         keys => (this.interactedInputObject[keys] = true)
                     );
@@ -392,10 +392,10 @@ export class TaskDetail extends React.Component {
             this._calcMaxSubtaskAmount.call(this, nextState);
         }
 
-        var elements = document.getElementsByTagName("input");
+        var elements = document.getElementsByTagName('input');
         Array.from(elements).forEach(element => {
             element.checkValidity();
-            if (element.validity.valid) element.classList.remove("invalid");
+            if (element.validity.valid) element.classList.remove('invalid');
             return element.validity.valid;
         });
 
@@ -405,14 +405,14 @@ export class TaskDetail extends React.Component {
     _activateValidation() {
         if (document.addEventListener) {
             document.addEventListener(
-                "invalid",
+                'invalid',
                 e => {
                     if (
                         this.interactedInputObject[
-                            e.target.getAttribute("aria-label")
+                            e.target.getAttribute('aria-label')
                         ]
                     )
-                        e.target.classList.add("invalid");
+                        e.target.classList.add('invalid');
                 },
                 true
             );
@@ -460,15 +460,14 @@ export class TaskDetail extends React.Component {
         let priceLength = parseInt(price).toString().length;
         let fontSize =
             price.toFixed(fixTo).toString().length > 4
-                ? font_size / 1.7 + "pt"
-                : font_size + "pt";
+                ? font_size / 1.7 + 'pt'
+                : font_size + 'pt';
 
         if (priceLength < 5) {
             return (
                 <span
                     className={`estimated-price ${suffix}`}
-                    style={{ fontSize: fontSize }}
-                >
+                    style={{ fontSize: fontSize }}>
                     {price.toFixed(fixTo)}
                 </span>
             );
@@ -478,10 +477,9 @@ export class TaskDetail extends React.Component {
         return (
             <span
                 className={`estimated-price ${suffix}`}
-                style={{ fontSize: fontSize }}
-            >
+                style={{ fontSize: fontSize }}>
                 {firstDigitLength > 3
-                    ? "~" + firstDigit.toFixed(2)
+                    ? '~' + firstDigit.toFixed(2)
                     : firstDigit}
                 <small>x</small>
                 10
@@ -492,16 +490,16 @@ export class TaskDetail extends React.Component {
 
     _setTimeStamp() {
         const options = Object.freeze({
-            durationFormat: "dd:hh:mm:ss",
+            durationFormat: 'dd:hh:mm:ss',
             max: 60 * 60 * 24 * 2,
             value: 0, // initial value of input in seconds.
             useAbbr: true, // configure the separator to not be ':'
             abbr: {
                 // pass in custom separator (with trailing space if desired)
-                dd: "days ",
-                hh: "h ",
-                mm: "m ",
-                ss: "s"
+                dd: 'days ',
+                hh: 'h ',
+                mm: 'm ',
+                ss: 's'
             }
         });
         this.taskTimeoutInput = TimeSelection(this.refs.taskTimeout, options);
@@ -547,7 +545,7 @@ export class TaskDetail extends React.Component {
      */
     checkInputValidity(e) {
         e.target.checkValidity();
-        if (e.target.validity.valid) e.target.classList.remove("invalid");
+        if (e.target.validity.valid) e.target.classList.remove('invalid');
         return e.target.validity.valid;
     }
 
@@ -558,7 +556,7 @@ export class TaskDetail extends React.Component {
      */
     _handleResolution(index, e) {
         this.interactionTimer && clearTimeout(this.interactionTimer);
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         let res = this.state.resolution;
         let newRes = [...res]; //keep state immutable
         newRes[index] = parseInt(e.target.value);
@@ -575,7 +573,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         this.setState({
             compositing: e.target.checked
         });
@@ -586,7 +584,7 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleConcentCheckbox(e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         this.setState({
             concent: e.target.checked
         });
@@ -598,7 +596,7 @@ export class TaskDetail extends React.Component {
      * @param  {[type]} e
      */
     _handleTimeoutInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         const timeoutList = Object.freeze({
             timeout: this.taskTimeoutInput,
             subtask_timeout: this.subtaskTaskTimeoutInput
@@ -607,14 +605,14 @@ export class TaskDetail extends React.Component {
         /*Input will be invalid if given time is lesser than 1 min*/
         const inputTime = e.target.classList;
         if (timeoutList[state].getValue() < 60) {
-            inputTime.add("invalid");
+            inputTime.add('invalid');
             e.target.setCustomValidity(TIME_VALIDITY_NOTE);
         } else {
-            inputTime.remove("invalid");
-            e.target.setCustomValidity("");
+            inputTime.remove('invalid');
+            e.target.setCustomValidity('');
         }
 
-        if (state === "timeout") {
+        if (state === 'timeout') {
             const taskTimeoutValue = this.taskTimeoutInput.getValue();
             const subtaskTimeoutValue = this.subtaskTaskTimeoutInput.getValue();
 
@@ -637,14 +635,14 @@ export class TaskDetail extends React.Component {
      * @param  {Event}  e
      */
     _handleFormInputs(state, e) {
-        this.interactedInputObject[e.target.getAttribute("aria-label")] = true;
+        this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
         if (this.checkInputValidity(e)) {
             this.setState({
                 [state]: e.target.value
             });
         } else if (
             !this.state.savePresetLock &&
-            (state === "frames" || state === "sample_per_pixel") &&
+            (state === 'frames' || state === 'sample_per_pixel') &&
             !this.checkInputValidity(e)
         ) {
             this.setState({
@@ -816,7 +814,7 @@ export class TaskDetail extends React.Component {
         } = this.props.testStatus.more.after_test_data;
 
         const { resolutionW, resolutionH, formatRef, haltspp } = this.refs;
-        const format = file_format.replace(".", "").toUpperCase();
+        const format = file_format.replace('.', '').toUpperCase();
 
         // If taken file format from input file is not available on mockFormatList, use first element as default
         const pickFormatIndex = mockFormatList
@@ -838,8 +836,10 @@ export class TaskDetail extends React.Component {
             samples
         });
 
-        this._closeModal("defaultSettingsModal");
+        this._closeModal('defaultSettingsModal');
     };
+
+    _handleBack = () => window.routerHistory.goBack();
 
     /**
      * [_closeModal func. closes all modals]
@@ -865,7 +865,7 @@ export class TaskDetail extends React.Component {
 
         dialog.showOpenDialog(
             {
-                properties: ["openDirectory"]
+                properties: ['openDirectory']
             },
             onFolderHandler
         );
@@ -902,9 +902,9 @@ export class TaskDetail extends React.Component {
         });
         this._createTaskAsync().then(result => {
             if (result && !result[1]) {
-                window.routerHistory.push("/tasks");
+                window.routerHistory.push('/tasks');
             } else {
-                console.log("Task creation failed!");
+                console.log('Task creation failed!');
                 this.setState({
                     insufficientAmountModal: {
                         result: !!result[1],
@@ -1188,8 +1188,7 @@ export class TaskDetail extends React.Component {
                             type="button"
                             className="btn--outline"
                             onClick={this._handleOutputPath}
-                            disabled={isDetailPage}
-                        >
+                            disabled={isDetailPage}>
                             Change
                         </button>
                     </div>
@@ -1204,8 +1203,7 @@ export class TaskDetail extends React.Component {
                             type="button"
                             className="btn--outline"
                             onClick={this._handleSavePresetModal}
-                            disabled={savePresetLock}
-                        >
+                            disabled={savePresetLock}>
                             Save as preset
                         </button>
                     </div>
@@ -1230,7 +1228,7 @@ export class TaskDetail extends React.Component {
                                         <br />
                                         with ; e.g. 1;4;7 will define frame 1, 4
                                         and 7. You can also define frames ranges
-                                        with "-" character.{" "}
+                                        with "-" character.{' '}
                                         <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
                                             Learn more
                                         </a>
@@ -1248,7 +1246,7 @@ export class TaskDetail extends React.Component {
                                 pattern="^[0-9]?(([0-9\s;,-]*)[0-9])$"
                                 onChange={this._handleFormInputs.bind(
                                     this,
-                                    "frames"
+                                    'frames'
                                 )}
                                 required={!isDetailPage}
                                 disabled={isDetailPage}
@@ -1281,7 +1279,7 @@ export class TaskDetail extends React.Component {
                                 aria-label="Sample per pixel"
                                 onChange={this._handleFormInputs.bind(
                                     this,
-                                    "samples"
+                                    'samples'
                                 )}
                                 disabled={isDetailPage}
                             />
@@ -1320,13 +1318,13 @@ export class TaskDetail extends React.Component {
         let computeOnRadioOptions = {};
 
         if (this.state.isDetailPage) {
-            computeOnRadioOptions["readOnly"] = true;
-            computeOnRadioOptions["checked"] = this.state.compute_on === type;
+            computeOnRadioOptions['readOnly'] = true;
+            computeOnRadioOptions['checked'] = this.state.compute_on === type;
         } else {
             computeOnRadioOptions[
-                "onChange"
+                'onChange'
             ] = this._handleComputeOnOptionChange;
-            computeOnRadioOptions["defaultChecked"] =
+            computeOnRadioOptions['defaultChecked'] =
                 this.state.compute_on === type;
         }
 
@@ -1373,8 +1371,7 @@ export class TaskDetail extends React.Component {
                 <form
                     id="taskForm"
                     onSubmit={this._handleConfirmationModal}
-                    className="content__task-detail"
-                >
+                    className="content__task-detail">
                     <TestResult
                         testStatus={testStatus}
                         isDetailPage={isDetailPage}
@@ -1385,8 +1382,7 @@ export class TaskDetail extends React.Component {
                     <section className="section-details__task-detail">
                         <div
                             ref={node => (this.overflowTaskDetail = node)}
-                            className="container__task-detail"
-                        >
+                            className="container__task-detail">
                             {isDetailPage && isDeveloperMode && (
                                 <NodeList
                                     subtasksList={subtasksList}
@@ -1411,7 +1407,22 @@ export class TaskDetail extends React.Component {
                                 />
                                 {!isDetailPage && (
                                     <div className="source-path">
-                                        {task.relativePath}
+                                        <b>Name: </b>
+                                        <span>
+                                            {task.name}
+                                            <span
+                                                className="action__edit-name"
+                                                onClick={this._handleBack}>
+                                                <span className="icon-pencil" />
+                                                Edit
+                                            </span>
+                                        </span>
+                                    </div>
+                                )}
+                                {!isDetailPage && (
+                                    <div className="source-path">
+                                        <b>Path: </b>
+                                        <span>{task.relativePath}</span>
                                     </div>
                                 )}
                                 {this._handleFormByType(
@@ -1443,7 +1454,7 @@ export class TaskDetail extends React.Component {
                                                 let Golem know the maximum time
                                                 <br />
                                                 you will wait for a task to be
-                                                accepted by the network.{" "}
+                                                accepted by the network.{' '}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                     Learn more
                                                 </a>
@@ -1459,7 +1470,7 @@ export class TaskDetail extends React.Component {
                                         aria-label="Task Timeout"
                                         onKeyDown={this._handleTimeoutInputs.bind(
                                             this,
-                                            "timeout"
+                                            'timeout'
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage}
@@ -1476,7 +1487,7 @@ export class TaskDetail extends React.Component {
                                                 <br />
                                                 If you are rendering a number of
                                                 frames you should set subtasks
-                                                to the same number.{" "}
+                                                to the same number.{' '}
                                                 <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                                                     Learn more
                                                 </a>
@@ -1495,7 +1506,7 @@ export class TaskDetail extends React.Component {
                                         aria-label="Subtask amount"
                                         onChange={this._handleFormInputs.bind(
                                             this,
-                                            "subtasks_count"
+                                            'subtasks_count'
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage || !maxSubtasks}
@@ -1521,7 +1532,7 @@ export class TaskDetail extends React.Component {
                                         aria-label="Subtask Timeout"
                                         onKeyDown={this._handleTimeoutInputs.bind(
                                             this,
-                                            "subtask_timeout"
+                                            'subtask_timeout'
                                         )}
                                         required={!isDetailPage}
                                         disabled={isDetailPage}
@@ -1537,7 +1548,7 @@ export class TaskDetail extends React.Component {
                                                 be rendered on CPU or GPU of
                                                 providers. GPU support is still
                                                 in beta. Contact us if you find
-                                                any issues with GPU rendering.{" "}
+                                                any issues with GPU rendering.{' '}
                                                 <a href="https://golem.network/documentation/">
                                                     Learn more
                                                 </a>
@@ -1554,7 +1565,7 @@ export class TaskDetail extends React.Component {
                                                 value="cpu"
                                                 name="compute_on"
                                                 {...this._fetchRadioOptions(
-                                                    "cpu"
+                                                    'cpu'
                                                 )}
                                             />
                                             <label htmlFor="cpu">
@@ -1570,7 +1581,7 @@ export class TaskDetail extends React.Component {
                                                 value="gpu"
                                                 name="compute_on"
                                                 {...this._fetchRadioOptions(
-                                                    "gpu"
+                                                    'gpu'
                                                 )}
                                             />
                                             <label htmlFor="gpu">
@@ -1680,21 +1691,21 @@ export class TaskDetail extends React.Component {
                                             aria-label="Your bid"
                                             onChange={this._handleFormInputs.bind(
                                                 this,
-                                                "bid"
+                                                'bid'
                                             )}
                                             required={!isDetailPage}
                                             disabled={isDetailPage}
                                         />
                                         <span>
-                                            {isMainNet ? " " : " t"}GNT/h
+                                            {isMainNet ? ' ' : ' t'}GNT/h
                                         </span>
                                     </div>
                                     <div className="estimated_usd">
                                         <span>
-                                            est. {isMainNet ? "" : "t"}$
+                                            est. {isMainNet ? '' : 't'}$
                                             {this._convertPriceAsHR(
-                                                bid * currency["GNT"],
-                                                "USD",
+                                                bid * currency['GNT'],
+                                                'USD',
                                                 2,
                                                 12
                                             )}
@@ -1729,21 +1740,21 @@ export class TaskDetail extends React.Component {
                                         <div className="estimated_cost">
                                             {this._convertPriceAsHR(
                                                 estimated_cost.GNT,
-                                                "GNT",
+                                                'GNT',
                                                 3,
                                                 36
                                             )}
                                             <span>
-                                                {isMainNet ? " " : " t"}GNT
+                                                {isMainNet ? ' ' : ' t'}GNT
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? "" : "t"}$
+                                                est. {isMainNet ? '' : 't'}$
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.GNT || 0) *
-                                                        currency["GNT"],
-                                                    "USD",
+                                                        currency['GNT'],
+                                                    'USD',
                                                     4,
                                                     12
                                                 )}
@@ -1775,21 +1786,21 @@ export class TaskDetail extends React.Component {
                                         <div className="estimated_cost">
                                             {this._convertPriceAsHR(
                                                 estimated_cost.ETH,
-                                                "ETH",
+                                                'ETH',
                                                 5,
                                                 18
                                             )}
                                             <span>
-                                                {isMainNet ? " " : " t"}ETH
+                                                {isMainNet ? ' ' : ' t'}ETH
                                             </span>
                                         </div>
                                         <div className="estimated_usd">
                                             <span>
-                                                est. {isMainNet ? "" : "t"}$
+                                                est. {isMainNet ? '' : 't'}$
                                                 {this._convertPriceAsHR(
                                                     (estimated_cost.ETH || 0) *
-                                                        currency["ETH"],
-                                                    "USD",
+                                                        currency['ETH'],
+                                                    'USD',
                                                     4,
                                                     12
                                                 )}
@@ -1834,23 +1845,23 @@ export class TaskDetail extends React.Component {
                                                 {this._convertPriceAsHR(
                                                     estimated_cost.deposit
                                                         .GNT_suggested,
-                                                    "GNT",
+                                                    'GNT',
                                                     3,
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? " " : " t"}GNT
+                                                    {isMainNet ? ' ' : ' t'}GNT
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? "" : "t"}$
+                                                    est. {isMainNet ? '' : 't'}$
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .GNT_suggested ||
                                                             0) *
-                                                            currency["GNT"],
-                                                        "USD",
+                                                            currency['GNT'],
+                                                        'USD',
                                                         4,
                                                         14
                                                     )}
@@ -1879,22 +1890,22 @@ export class TaskDetail extends React.Component {
                                             <div className="estimated_cost">
                                                 {this._convertPriceAsHR(
                                                     estimated_cost.deposit.ETH,
-                                                    "ETH",
+                                                    'ETH',
                                                     5,
                                                     14
                                                 )}
                                                 <span>
-                                                    {isMainNet ? " " : " t"}ETH
+                                                    {isMainNet ? ' ' : ' t'}ETH
                                                 </span>
                                             </div>
                                             <div className="estimated_usd">
                                                 <span>
-                                                    est. {isMainNet ? "" : "t"}$
+                                                    est. {isMainNet ? '' : 't'}$
                                                     {this._convertPriceAsHR(
                                                         (estimated_cost.deposit
                                                             .ETH || 0) *
-                                                            currency["GNT"],
-                                                        "USD",
+                                                            currency['GNT'],
+                                                        'USD',
                                                         5,
                                                         14
                                                     )}
@@ -1920,8 +1931,7 @@ export class TaskDetail extends React.Component {
                                 id="taskFormSubmit"
                                 type="submit"
                                 className="btn--primary"
-                                disabled={testLock || loadingTaskIndicator}
-                            >
+                                disabled={testLock || loadingTaskIndicator}>
                                 Start Task
                             </button>
                         </section>
@@ -1953,6 +1963,7 @@ export class TaskDetail extends React.Component {
                     <TaskSummaryModal
                         closeModal={this._closeModal}
                         _handleStartTaskButton={this._handleStartTaskButton}
+                        loadingTaskIndicator={loadingTaskIndicator}
                         estimated_cost={estimated_cost}
                         minPerf={minPerf}
                         isMainNet={isMainNet}

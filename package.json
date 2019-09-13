@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -247,7 +247,7 @@
         "chalk": "2.4.1",
         "dirtree2json": "git+https://github.com/mdtanrikulu/dirtree2json.git",
         "electron-store": "2.0.0",
-        "lodash": "^4.17.11",
+        "lodash": "^4.17.15",
         "mkdirp": "^0.5.1",
         "semver": "^5.4.1",
         "wampy-cra": "^0.1.1",
