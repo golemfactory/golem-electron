@@ -217,9 +217,10 @@ export class FooterMain extends Component {
 
     _fetchEnvironment(env) {
         switch (env) {
-            case "BLENDER":         return " (CPU)";
-            case "BLENDER_NVGPU":   return " (GPU)";
-            case "BLENDER_SGX":     return " (SGX)";
+            case "BLENDER":         return " (CPU - Blender)";
+            case "BLENDER_NVGPU":   return " (GPU - Blender)";
+            case "BLENDER_SGX":     return " (SGX - Blender)";
+            case "WASM":            return " (CPU - gWasm)"
             default:                return "";
         }
     }
