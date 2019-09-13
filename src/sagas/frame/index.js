@@ -131,6 +131,7 @@ export function* subtasksBorder(session, id, { payload }) {
     if (id) {
         let action = yield call(fetchSubtasksBorder, session, id, payload);
         yield put(action);
+
     }
 }
 

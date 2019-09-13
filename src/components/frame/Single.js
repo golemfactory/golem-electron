@@ -53,7 +53,7 @@ export class Single extends React.Component {
 
     componentWillUnmount() {
         const { isSubtaskShown, actions } = this.props;
-        !!isSubtaskShown && actions.setSubtasksVisibility();
+        !!isSubtaskShown && actions.getSubtasksBorder();
     }
 
     /**
@@ -95,7 +95,7 @@ export class Single extends React.Component {
      * @return  nothing
      */
     _showSubtask(id) {
-        this.props.actions.setSubtasksVisibility(id);
+        this.props.actions.getSubtasksBorder(id);
     }
 
     /**
@@ -187,8 +187,8 @@ export class Single extends React.Component {
                             image={`file://${previewLink}`}
                             fetchClientInfo={this._setClientInfo}
                             isSubtaskShown={isSubtaskShown}
-                            setSubtasksVisibility={
-                                actions.setSubtasksVisibility
+                            getSubtasksBorder={
+                                actions.getSubtasksBorder
                             }
                         />
                     )}
