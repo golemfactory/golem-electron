@@ -162,6 +162,7 @@
 .section-details__task-detail {
     display: flex;
     position: relative;
+    height: calc(100% - 150px);
 }
 
 .container__task-detail {
