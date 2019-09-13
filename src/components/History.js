@@ -9,19 +9,9 @@ import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
 const posed = require('react-pose');
 const { PoseGroup } = posed;
 
+import HistoryItem from './HistoryItem';
 import * as Actions from '../actions';
 import { getFilteredPaymentHistory } from '../reducers';
-import { timeStampToHR } from '../utils/time';
-import {
-  ETH_DENOM,
-  mainEtherscanTx,
-  testEtherscanTx
-} from '../constants/variables';
-
-const { remote } = window.electron;
-const mainProcess = remote.require('./index');
-const isWin = mainProcess.isWin();
-const isMac = mainProcess.isMac();
 
 const filter = {
     PAYMENT: 'outgoing',
@@ -51,6 +41,12 @@ export class History extends React.Component {
             activeTab: 0,
             filteredList: props.paymentHistory(0)
         };
+
+        this.copyTimeout = false;
+    }
+
+    componentWillUnmount() {
+        this.copyTimeout && clearTimeout(this.copyTimeout);
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -61,9 +57,7 @@ export class History extends React.Component {
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !(
-            isEqual(nextState, this.state)
-        );
+        return !isEqual(nextState, this.state);
     }
 
     /**
@@ -142,59 +136,11 @@ export class History extends React.Component {
         isVisible, // This row is visible within the List (eg it is not an overscanned row)
         style // Style object to be applied to row (to position it)
     }) => {
-        const { paymentHistory } = this.props;
         const { filteredList } = this.state;
-        const { isMainNet } = this.props;
         const tx = filteredList[index];
-        const {
-            payee,
-            payer,
-            created,
-            status,
-            amount,
-            direction,
-            transaction
-        } = tx.data;
-
-        const content = (
-            <div className="item__history">
-                <div className="info__history">
-                    <h5>{(payee || payer || '').substr(0, 24)}...</h5>
-                    <span>{timeStampToHR(created)}</span>
-                    <span className="status__history">{status}</span>
-                </div>
-                <div className="action__history">
-                    <span className="amount__history">
-                        <span
-                            className={`finance__indicator ${
-                                direction === filter.PAYMENT
-                                    ? 'indicator--down'
-                                    : 'indicator--up'
-                            }`}>
-                            {direction === filter.PAYMENT ? '- ' : '+ '}
-                        </span>
-                        {(amount / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT
-                    </span>
-                    {transaction && (
-                        <Tooltip
-                            content={<p>See on Etherscan</p>}
-                            placement="bottom"
-                            trigger="mouseenter">
-                            <a
-                                href={`${
-                                    isMainNet ? mainEtherscanTx : testEtherscanTx
-                                }${transaction}`}>
-                                <span className="icon-new-window" />
-                            </a>
-                        </Tooltip>
-                    )}
-                </div>
-            </div>
-        );
-
         return (
             <div key={key} style={style}>
-                {content}
+                <HistoryItem tx={tx} {...this.props} />
             </div>
         );
     };

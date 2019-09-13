@@ -19,7 +19,6 @@ export function subscribeHistory(session) {
             (function fetchHistory() {
                 function on_history(args) {
                     let history = args[0];
-                    console.log("history", history);
                     emit({
                         type: SET_HISTORY,
                         payload: history
