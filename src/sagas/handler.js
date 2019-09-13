@@ -27,6 +27,7 @@ export let config = Object.freeze({
     GET_CONNECTED_PEERS_RPC: 'net.peers.connected',
     SETUP_ACL_RPC: 'net.peer.acl.new',
     BLOCK_NODE_RPC: 'net.peer.block',
+    TRUST_NODE_RPC: 'net.peer.allow',
     BLOCK_NODE_IP_RPC: 'net.peer.block_ip',
     GET_ACL_STATUS_RPC: 'net.peer.acl',
     GET_ACL_IP_STATUS_RPC: 'net.peer.acl_ip',
@@ -121,7 +122,9 @@ export let config = Object.freeze({
     CONCENT_UNLOCK: 'pay.deposit.unlock',
     CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
-    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch',
+    CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
+    CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
 
 function errorCallback(topic, _eb, { error, details, argsList }) {

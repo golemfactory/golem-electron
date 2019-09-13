@@ -33,17 +33,18 @@ export class Personal extends React.Component {
         this.state = {
             nodeIdCopied: false,
             editMode: false,
+            expandPersonal: false,
             nodeName: null
         };
     }
 
     componentDidMount() {
-        this.props.nodeId && this.createQRCode(this.props.nodeId)
+        this.props.nodeId && this.createQRCode(this.props.publicKey)
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if(nextProps.nodeId !== this.props.nodeId) {
-            this.createQRCode(nextProps.nodeId)
+        if(nextProps.publicKey !== this.props.publicKey) {
+            this.createQRCode(nextProps.publicKey)
         }
     }
 
@@ -115,10 +116,8 @@ export class Personal extends React.Component {
         qrCodeDOM.insertBefore(element, qrCodeDOM.firstChild);
     }
 
-    // <RadialProgress pct={requestorTrust} warn={false}/>
-    // <span>Requestor</span>
-    // <RadialProgress pct={providerTrust} warn={false}/>
-    // <span>Provider</span>
+    _toggleExpand = e => this.setState( prevState => ({ expandPersonal: !prevState.expandPersonal}))
+
     render() {
         const {
             avatar,
@@ -129,7 +128,7 @@ export class Personal extends React.Component {
             providerTrust,
             publicKey
         } = this.props;
-        const { nodeIdCopied, editMode } = this.state;
+        const { nodeIdCopied, editMode, expandPersonal } = this.state;
         const avatarImg = blockies
             .createBlockie({
                 seed: publicKey.toLowerCase(),
@@ -138,9 +137,10 @@ export class Personal extends React.Component {
             })
             .toDataURL();
         return (
-            <div className="section__personal" id="personal">
+            <div className={`section__personal ${expandPersonal ? 'expanded' : ''}`} id="personal">
                 <div className="personal__indicator-panel">
-                    <div className="avatar-container">
+                    <span className="icon-close" onClick={this._toggleExpand}/>
+                    <div className="avatar-container" onClick={this._toggleExpand}>
                         <div className="image-holder">
                             <img
                                 className="personal__image"
@@ -178,7 +178,7 @@ export class Personal extends React.Component {
                                 />
                             ) : (
                                 <span className="personal__user-name">
-                                    {nodeName ? nodeName : "Anonymous Golem"}
+                                    {nodeName ? nodeName : "Unknown Golem"}
                                 </span>
                             )}
                             <Tooltip
@@ -229,7 +229,7 @@ export class Personal extends React.Component {
                             </span>
                         </Tooltip>
                     </div>
-                    <div className="qrcode-container">
+                    <div className="qrcode-container" onClick={this._toggleExpand}>
                         <div id="qrCode" className="qr-holder">
                             <div className="personal__qrcode--border" />
                         </div>
@@ -244,3 +244,8 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Personal);
+
+// <RadialProgress pct={requestorTrust} warn={false}/>
+// <span>Requestor</span>
+// <RadialProgress pct={providerTrust} warn={false}/>
+// <span>Provider</span>

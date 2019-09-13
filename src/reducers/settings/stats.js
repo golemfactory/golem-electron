@@ -3,7 +3,10 @@ import { dict } from './../../actions'
 const {SET_TASK_STATS, SET_UNSUPPORTED_TASK_STATS} = dict
 
 const initialState = {
-    stats: {},
+    stats: {
+        provider: {},
+        requestor: {}
+    },
     unsupported_stats: {}
 }
 const setStats = (state = initialState, action) => {

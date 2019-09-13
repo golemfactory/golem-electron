@@ -22,6 +22,8 @@ export let dict = Object.freeze({
     SET_ACL_MODE: 'SET_ACL_MODE',
     SET_ACL_NODE_LIST: 'SET_ACL_NODE_LIST',
     BLOCK_NODE: 'BLOCK_NODE',
+    BLOCKED_NODES: 'BLOCKED_NODES',
+    TRUSTED_NODE: 'TRUSTED_NODE',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
@@ -79,8 +81,10 @@ export let dict = Object.freeze({
     ENABLE_ENVIRONMENT: 'ENABLE_ENVIRONMENT',
     DISABLE_ENVIRONMENT: 'DISABLE_ENVIRONMENT',
     TOGGLE_CONCENT: 'TOGGLE_CONCENT',
+    TOGGLE_CONCENT_REQUIRED: 'TOGGLE_CONCENT_REQUIRED',
     UNLOCK_CONCENT_DEPOSIT: 'UNLOCK_CONCENT_DEPOSIT',
-    SET_CONCENT_SWITCH: 'SET_CONCENT_SWTICH',
+    SET_CONCENT_SWITCH: 'SET_CONCENT_SWITCH',
+    SET_CONCENT_REQUIRED_SWITCH: 'SET_CONCENT_REQUIRED_SWITCH',
     SET_CONCENT_ONBOARDING_SHOWN: 'SET_CONCENT_ONBOARDING_SHOWN',
     //NOTIFICATION_CENTER
     PUSH_NOTIFICATION: 'PUSH_NOTIFICATION',
@@ -166,6 +170,8 @@ const {
     SET_ACL_MODE,
     SET_ACL_NODE_LIST,
     BLOCK_NODE,
+    BLOCKED_NODES,
+    TRUSTED_NODE,
     //TASKS
     SET_TASKLIST,
     SET_TASK_DETAILS,
@@ -216,6 +222,9 @@ const {
     ENABLE_ENVIRONMENT,
     DISABLE_ENVIRONMENT,
     TOGGLE_CONCENT,
+    TOGGLE_CONCENT_REQUIRED,
+    SET_CONCENT_SWITCH,
+    SET_CONCENT_REQUIRED_SWITCH,
     UNLOCK_CONCENT_DEPOSIT,
     SET_CONCENT_ONBOARDING_SHOWN,
     //NOTIFICATION CENTER
@@ -417,6 +426,16 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 });
 
+export const blockNodes = payload => ({
+    type: BLOCKED_NODES,
+    payload
+});
+
+export const trustNodes = payload => ({
+    type: TRUSTED_NODE,
+    payload
+});
+
 export const setHistory = payload => ({
     type: SET_HISTORY,
     payload
@@ -531,6 +550,11 @@ export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     isSwitchOn,
     informRPC,
     toggleLock
+});
+
+export const toggleConcentRequired = isSwitchOn => ({
+    type: TOGGLE_CONCENT_REQUIRED,
+    isSwitchOn
 });
 
 export const unlockConcentDeposit = payload => ({

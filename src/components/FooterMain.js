@@ -84,7 +84,7 @@ const mapStateToProps = state => ({
     componentWarnings: getComponentWarnings(state, 'componentWarnings'),
     chosenPreset: state.advanced.chosenPreset,
     isEngineOn: state.info.isEngineOn,
-    stats: state.stats.stats,
+    stats: state.stats.stats.provider || state.stats.stats,
     isEngineLoading: state.info.isEngineLoading,
     version: state.info.version
 });
@@ -399,7 +399,7 @@ export class FooterMain extends Component {
                                 native
                                 initial={null}
                                 items={
-                                    !!Object.keys(stats).length ||
+                                    (stats && !!Object.keys(stats).length) ||
                                     status?.client?.message.includes(
                                         'configuration'
                                     )

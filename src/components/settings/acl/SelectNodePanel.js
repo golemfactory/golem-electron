@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -6,6 +7,7 @@ import NodeTable from './NodeTable';
 
 import * as Actions from './../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
+import BlockNodeModal from './../../tasks/modal/BlockNodeModal';
 
 import map from 'lodash/map';
 import size from 'lodash/size';
@@ -13,6 +15,7 @@ import some from 'lodash/some';
 import someFP from 'lodash/fp/some';
 import every from 'lodash/every';
 import filter from 'lodash/filter';
+import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
 import includes from 'lodash/fp/includes';
 
@@ -33,13 +36,13 @@ export class SelectNodePanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            checkedItems: {},
-            isAnyChecked: false,
             blockNodeModal: false,
-            nodeBlocked: false,
+            checkedItems: {},
             errMsg: null,
-            subtask2block: null,
-            filteredList: props.knownPeers
+            filteredList: props.knownPeers,
+            isAnyChecked: false,
+            nodeBlocked: false,
+            node2block: null
         };
     }
 
@@ -62,7 +65,38 @@ export class SelectNodePanel extends React.Component {
         }
     }
 
-    _blockNodes = e => {};
+    _showBlockNodeModal = node => {
+        this.setState({
+            blockNodeModal: true,
+            node2block: node,
+            nodeBlocked: false
+        });
+    };
+
+    _closeBlockNodeModal = () => this.setState({ blockNodeModal: false });
+
+    _blockNodes = () => {
+        const selectedNodes = Object.keys(
+            pickBy(this.state.checkedItems, item => !!item)
+        );
+        this.props.actions.blockNodes(selectedNodes);
+        this.props.addNodePanelToggle();
+    };
+
+    _blockNode = () => {
+        const { key } = this.state.node2block;
+        this.setState(
+            {
+                checkedItems: {},
+                nodeBlocked: true,
+                node2block: null
+            },
+            () => {
+                this.props.actions.blockNodes(key);
+                this.props.addNodePanelToggle();
+            }
+        );
+    };
 
     _toggleItems = (keys, val = null) => {
         const tempObj = { ...this.state.checkedItems };
@@ -73,7 +107,6 @@ export class SelectNodePanel extends React.Component {
                     val !== null ? !this.state.isAllChecked : !tempObj[key])
         );
 
-        console.log("tempObj", tempObj);
         this.setState({
             checkedItems: tempObj
         });
@@ -81,16 +114,13 @@ export class SelectNodePanel extends React.Component {
 
     _filterList = e => {
         this.interactionTimer && clearTimeout(this.interactionTimer);
-        const { knownPeers } = this.props
-        if(!e.target.value) {
+        const { knownPeers } = this.props;
+        if (!e.target.value) {
             this.setState({ filteredList: knownPeers });
             return;
         }
 
-        const filteredList = filter(
-            knownPeers,
-            includesValue(e.target.value)
-        );
+        const filteredList = filter(knownPeers, includesValue(e.target.value));
 
         this.interactionTimer = setTimeout(() => {
             this.setState({ filteredList });
@@ -98,8 +128,16 @@ export class SelectNodePanel extends React.Component {
     };
 
     render() {
-        const { checkedItems, isAnyChecked, filteredList } = this.state;
-        const { addNode, knownPeers } = this.props;
+        const {
+            blockNodeModal,
+            checkedItems,
+            errMsg,
+            filteredList,
+            isAnyChecked,
+            nodeBlocked,
+            node2block
+        } = this.state;
+        const { addNodePanelToggle, knownPeers } = this.props;
         return (
             <Fragment>
                 <div className="description">
@@ -126,7 +164,7 @@ export class SelectNodePanel extends React.Component {
                         </span>
                     </ConditionalRender>
                     <span
-                        onClick={addNode}
+                        onClick={addNodePanelToggle}
                         className="acl__action-item acl__action__add-node">
                         <span
                             className="icon-back"
@@ -144,11 +182,23 @@ export class SelectNodePanel extends React.Component {
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                         isBlockTable={true}
+                        showBlockNodeModal={this._showBlockNodeModal}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={size(filteredList) < 1}>
                     <div className="no-data">No available data.</div>
                 </ConditionalRender>
+                {blockNodeModal &&
+                    ReactDOM.createPortal(
+                        <BlockNodeModal
+                            cancelAction={this._closeBlockNodeModal}
+                            blockAction={this._blockNode}
+                            nodeBlocked={nodeBlocked}
+                            errMsg={errMsg}
+                            node2block={node2block}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
             </Fragment>
         );
     }

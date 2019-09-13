@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import ReactDOM from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -6,11 +7,13 @@ import NodeTable from './NodeTable';
 
 import * as Actions from './../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
+import BlockNodeModal from './../../tasks/modal/BlockNodeModal';
 
 import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
 import every from 'lodash/every';
+import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
 
 const mapStateToProps = state => ({
@@ -26,13 +29,13 @@ export class ControlPanel extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            blockNodeModal: false,
             checkedItems: {},
+            errMsg: null,
             isAllChecked: false,
             isAnyChecked: false,
-            blockNodeModal: false,
             nodeBlocked: false,
-            errMsg: null,
-            subtask2block: null
+            node2block: null
         };
     }
 
@@ -62,11 +65,43 @@ export class ControlPanel extends React.Component {
         }
     }
 
+    _showBlockNodeModal = node =>
+        this.setState({
+            blockNodeModal: true,
+            node2block: node,
+            nodeBlocked: false
+        });
+
+    _closeBlockNodeModal = () => this.setState({ blockNodeModal: false });
+
     _handleACLCheckbox = e => this.props.handleACLCheckbox(e.target.checked);
 
-    _toggleAll = e => {};
+    _unlockNodes = () => {
+        const selectedNodes = Object.keys(
+            pickBy(this.state.checkedItems, item => !!item)
+        );
+        this._toggleLockNode(null, selectedNodes);
+    };
 
-    _unlockNodes = e => {};
+    _blockNodes = () => {
+        const selectedNodes = Object.keys(
+            pickBy(this.state.checkedItems, item => !!item)
+        );
+        this._toggleLockNode(null, selectedNodes);
+    };
+
+    _toggleLockNode = (e, nodes) => {
+        const node = nodes || this.state?.node2block?.identity;
+        if(this.props.aclRestrictedMode) 
+            this.props.actions.blockNodes(node);
+        else
+            this.props.actions.trustNodes(node);
+        this.setState({
+            checkedItems: {},
+            nodeBlocked: true,
+            node2block: null
+        });
+    };
 
     _toggleItems = (keys, val = null) => {
         const tempObj = { ...this.state.checkedItems };
@@ -82,14 +117,27 @@ export class ControlPanel extends React.Component {
     };
 
     _toggleAll = () => {
-        const { list } = this.props;
-        const keyList = map(list, item => item.node_id);
+        const { nodeListACL } = this.props;
+        const keyList = map(nodeListACL?.rules, item => item.identity);
         this._toggleItems(keyList, true);
     };
 
     render() {
-        const { checkedItems, isAllChecked, isAnyChecked } = this.state;
-        const { list, addNode, aclRestrictedMode, nodeListACL } = this.props;
+        const {
+            blockNodeModal,
+            checkedItems,
+            errMsg,
+            isAllChecked,
+            isAnyChecked,
+            nodeBlocked,
+            node2block
+        } = this.state;
+        const {
+            list,
+            addNodePanelToggle,
+            aclRestrictedMode,
+            nodeListACL
+        } = this.props;
         const { rules = [] } = nodeListACL;
         return (
             <Fragment>
@@ -139,15 +187,19 @@ export class ControlPanel extends React.Component {
                             {isAllChecked ? 'Deselect All' : 'Select All'} Nodes
                         </span>
                     </ConditionalRender>
-                    <ConditionalRender showIf={isAnyChecked}>
+                    <ConditionalRender showIf={size(rules) > 0 && isAnyChecked}>
                         <span
-                            onClick={this._unlockNodes}
+                            onClick={
+                                aclRestrictedMode
+                                    ? this._blockNodes
+                                    : this._unlockNodes
+                            }
                             className="acl__action-item">
                             {aclRestrictedMode ? 'Remove' : 'Unlock'} Selected
                         </span>
                     </ConditionalRender>
                     <span
-                        onClick={addNode}
+                        onClick={addNodePanelToggle}
                         className="acl__action-item acl__action__add-node">
                         <span className="icon-add" />
                         Add Node
@@ -159,11 +211,24 @@ export class ControlPanel extends React.Component {
                         checkedItems={checkedItems}
                         toggleItems={this._toggleItems}
                         aclRestrictedMode={aclRestrictedMode}
+                        showBlockNodeModal={this._showBlockNodeModal}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={size(rules) < 1}>
                     <div className="no-data">No available data.</div>
                 </ConditionalRender>
+                {blockNodeModal &&
+                    ReactDOM.createPortal(
+                        <BlockNodeModal
+                            cancelAction={this._closeBlockNodeModal}
+                            blockAction={this._toggleLockNode}
+                            nodeBlocked={nodeBlocked}
+                            unlockMode={!aclRestrictedMode}
+                            errMsg={errMsg}
+                            node2block={node2block}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
             </Fragment>
         );
     }
