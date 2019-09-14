@@ -158,11 +158,10 @@ export class ImageZoom extends React.Component {
                 }, 500); //MacOS maximize animation delay
             });
 
-            viewer.addHandler('zoom', item => {
-                !!this.props.isSubtaskShown &&
-                    this.props.setSubtasksVisibility();
-                this.calculateZoomRatio.call(this, item.zoom);
-            });
+            viewer.addHandler('zoom', (item) => {
+                !!this.props.isSubtaskShown && this.props.getSubtasksBorder()
+                this.calculateZoomRatio.call(this, item.zoom)
+            })
         });
     }
 

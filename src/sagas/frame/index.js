@@ -1,3 +1,4 @@
+import { eventChannel, buffers } from 'redux-saga';
 import {
     fork,
     takeEvery,
@@ -7,6 +8,9 @@ import {
     put
 } from 'redux-saga/effects';
 import { dict } from '../../actions';
+import { balanceFlow } from "../balance";
+import { estimatedCostBase, restartTaskBase } from "../tasks";
+import { concentFlow } from "../concent";
 import { taskStatus } from '../../constants/statusDicts';
 
 import { config, _handleRPC, eventWrapper, eventEmitter } from './../handler';
@@ -14,12 +18,14 @@ import { config, _handleRPC, eventWrapper, eventEmitter } from './../handler';
 const {
     SET_TASK_DETAILS,
     SET_SUBTASKS_BORDER,
+    GET_SUBTASKS_BORDER,
+    GET_ESTIMATED_COST,
+    SET_ESTIMATED_COST,
     SET_PREVIEW_LIST,
     SET_SUBTASKS_LIST,
     FETCH_SUBTASKS_LIST,
-    SET_SUBTASKS_VISIBILITY,
     SET_ALL_FRAMES,
-    RESTART_FRAME,
+    RESTART_TASK,
     RESTART_SUBTASK,
     BLOCK_NODE
 } = dict;
@@ -75,33 +81,6 @@ export function* restartSubtaskBase(session, { payload }) {
 }
 
 /**
- * [restartFrame func. restarts related frame]
- * @param  {Object} session [Websocket connection session]
- * @param  {Object} payload [Subtask Id]
- * @return {Object}         [Promise]
- */
-export function restartFrame(session, id, payload) {
-    return new Promise((resolve, reject) => {
-        function on_restart_frame(args) {
-            var restarted_frame = args[0];
-            resolve(restarted_frame);
-        }
-        _handleRPC(on_restart_frame, session, config.RESTART_FRAME_RPC, [
-            id,
-            payload
-        ]);
-    });
-}
-
-export function* restartFrameBase(session, id, { payload }) {
-    if (payload) {
-        let action = yield call(restartFrame, session, id, payload);
-        //console.log("action", action);
-        //yield put(action)
-    }
-}
-
-/**
  * [fetchSubtasksBorder func. fetchs border of the subtasks related with given frame id]
  * @param   {Object}     session     [Websocket connection session]
  * @param   {Any}       payload     [id of task]
@@ -127,11 +106,20 @@ export function fetchSubtasksBorder(session, payload, frame_id = 0) {
     });
 }
 
-export function* subtasksBorder(session, id, { payload }) {
+export function* subtasksBorder(session, id, { payload, _resolve, _reject }) {
     if (id) {
-        let action = yield call(fetchSubtasksBorder, session, id, payload);
+        let action = yield call(
+            fetchSubtasksBorder,
+            session,
+            id,
+            payload,
+            _resolve,
+            _reject
+        );
         yield put(action);
-
+        _resolve && _resolve(action?.payload);
+    } else {
+        _reject && _reject('No id available!');
     }
 }
 
@@ -210,12 +198,15 @@ export function fetchFrameInfo(session, payload) {
  * @yield   {Object}            [Action object]
  */
 export function* frameBase(session, id) {
+    yield fork(balanceFlow, session);
     yield fork(eventEmitter, fetchFrameInfo, session, id, cancelFetchFrame);
     yield fork(eventEmitter, fetchSubtaskList, session, id);
     yield fork(eventEmitter, fetchFrameList, session, id);
     yield fork(eventEmitter, getPreviews, session, id);
-    yield takeEvery(SET_SUBTASKS_VISIBILITY, subtasksBorder, session, id);
-    yield takeLatest(RESTART_FRAME, restartFrameBase, session, id);
+    yield fork(concentFlow, session);
+    yield takeEvery(GET_SUBTASKS_BORDER, subtasksBorder, session, id);
+    yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session);
+    yield takeLatest(RESTART_TASK, restartTaskBase, session);
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session);
     yield takeLatest(BLOCK_NODE, blockNodeBase, session);
 }
