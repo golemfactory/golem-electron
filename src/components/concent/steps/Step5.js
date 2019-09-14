@@ -1,7 +1,7 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import animData from './../../../assets/anims/Concent04';
+import animData from './../../../assets/anims/Concent05';
 
 const defaultOptions = {
     loop: false,
@@ -12,7 +12,7 @@ const defaultOptions = {
     }
 };
 
-export default class Step4 extends React.Component {
+export default class Step5 extends React.Component {
 
     constructor(props) {
         super(props);
@@ -31,12 +31,12 @@ export default class Step4 extends React.Component {
                       isPaused={this.state.isPaused}/>
                 </div>
                 <div className="concent-onboarding__desc">
-                    <h2>More tasks in the network</h2>
+                    <h2>FAQ</h2>
                     <span className="concent-info">
-                        When acting as a Provider, by default your node will accept all the tasks within the network (those with Concent and those without it).
+                        If you have any more questions regarding Concent Service and it's usage, please head over to our <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service">docs</a>, where we try to answer most of the questions you might have.
                         <br/>
                         <br/>
-                        If you want to compute exclusively Concent tasks go to your Concent settings and set the switch that allows your node to take up all kinds of tasks to "OFF" position.
+                        You can also talk with us via <a href="https://chat.golem.network">chat</a>.
                     </span>
                 </div>  
             </div>
