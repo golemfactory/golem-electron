@@ -602,23 +602,23 @@ $color_5: rgb(55, 196, 129);
 .icon{
   &--color {
     &-red {
-      color: $color-error;
+      color: $color-error !important;
     }
 
     &-yellow {
-      color: $color_3;
+      color: $color_3 !important;
     }
 
     &-gray {
-      color: $color_4;
+      color: $color_4 !important;
     }
     
     &-blue {
-      color: $color_2;
+      color: $color_2 !important;
     }
 
     &-green {
-      color: $color_5;
+      color: $color_5 !important;
     }
 
   }

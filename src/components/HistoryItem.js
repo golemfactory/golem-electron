@@ -72,8 +72,8 @@ export default class HistoryItem extends Component {
 				if (direction == filter.INCOME) return 'Income for job';
 				if (direction == filter.DEPOSIT) return 'Deposit Payment';
 			case operation.DEPOSIT:
-				if (direction == filter.PAYMENT) return 'Job payment';
-				if (direction == filter.INCOME) return 'Income for job';
+				if (direction == filter.PAYMENT) return 'Deposit payment';
+				if (direction == filter.INCOME) return 'Deposit Withdraw';
 				if (direction == filter.DEPOSIT) return 'Deposit Payment';
 		}
 	};
@@ -99,7 +99,9 @@ export default class HistoryItem extends Component {
 				<div className="info__history">
 					<div>
 						<span>
-							<h5>{this._fetchTitle(operation_type, direction)}</h5>
+							<h5>
+								{this._fetchTitle(operation_type, direction)}
+							</h5>
 							{operation_type === operation.TASK_PAYMENT && (
 								<Tooltip
 									content={
@@ -114,13 +116,18 @@ export default class HistoryItem extends Component {
 									placement="bottom"
 									trigger="mouseenter"
 									size="small"
-									hideOnClick={false}>
+									hideOnClick={false}
+									isEnabled={!!task_payment}>
 									<span
-										className="icon-copy"
-										onClick={this._copyField.bind(
-											null,
-											task_payment?.subtask_id
-										)}
+										className={`icon-copy ${!!task_payment ? '' : 'icon--color-gray'}`}
+										onClick={
+											!!task_payment 
+											? this._copyField.bind(
+												null,
+												task_payment?.subtask_id
+											)
+											: undefined
+										}
 									/>
 								</Tooltip>
 							)}
