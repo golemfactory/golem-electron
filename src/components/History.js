@@ -5,7 +5,12 @@ import { isEqual } from 'lodash';
 
 import Tooltip from '@tippy.js/react';
 import { Transition, animated, config } from 'react-spring';
-import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+import {
+    AutoSizer,
+    InfiniteLoader,
+    List,
+    defaultCellRangeRenderer
+} from 'react-virtualized';
 const posed = require('react-pose');
 const { PoseGroup } = posed;
 
@@ -140,9 +145,20 @@ export class History extends React.Component {
         const tx = filteredList[index];
         return (
             <div key={key} style={style}>
-                <HistoryItem tx={tx} {...this.props} />
+                {tx ? <HistoryItem tx={tx} {...this.props} /> : "Loading"}
             </div>
         );
+    };
+
+    isRowLoaded = ({ index }) => {
+        return !!this.state.filteredList[index];
+    };
+
+    loadMoreRows = ({ startIndex, stopIndex }) => {
+        const { filteredList } = this.state;
+        this.setState({
+            filteredList: [...filteredList, ...filteredList]
+        });
     };
 
     render() {
@@ -202,26 +218,46 @@ export class History extends React.Component {
                 </div>
                 <div>
                     {paymentHistory && filteredList.length > 0 ? (
-                        <div style={{ display: 'flex' }}>
-                            <div style={{ flex: '1 1 auto', height: '100%' }}>
-                                <AutoSizer>
-                                    {({ width, height }) => {
-                                        return (
-                                            <List
-                                                width={width}
-                                                height={height - 48} //offset of height
-                                                cellRangeRenderer={
-                                                    this.cellRangeRenderer
-                                                }
-                                                rowCount={filteredList.length}
-                                                rowHeight={76}
-                                                rowRenderer={this.rowRenderer}
-                                            />
-                                        );
-                                    }}
-                                </AutoSizer>
-                            </div>
-                        </div>
+                        <InfiniteLoader
+                            isRowLoaded={this.isRowLoaded}
+                            loadMoreRows={this.loadMoreRows}
+                            rowCount={40}
+                            threshold={5}>
+                            {({ onRowsRendered, registerChild }) => (
+                                <div style={{ display: 'flex' }}>
+                                    <div
+                                        style={{
+                                            flex: '1 1 auto',
+                                            height: '100%'
+                                        }}>
+                                        <AutoSizer>
+                                            {({ width, height }) => {
+                                                return (
+                                                    <List
+                                                        ref={registerChild}
+                                                        width={width}
+                                                        height={height - 48} //offset of height
+                                                        onRowsRendered={
+                                                            onRowsRendered
+                                                        }
+                                                        cellRangeRenderer={
+                                                            this.cellRangeRenderer
+                                                        }
+                                                        rowHeight={76}
+                                                        rowCount={
+                                                            40
+                                                        }
+                                                        rowRenderer={
+                                                            this.rowRenderer
+                                                        }
+                                                    />
+                                                );
+                                            }}
+                                        </AutoSizer>
+                                    </div>
+                                </div>
+                            )}
+                        </InfiniteLoader>
                     ) : (
                         <div className="empty-list__history">
                             <span>
