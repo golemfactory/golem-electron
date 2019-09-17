@@ -78,7 +78,7 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 					<span
 						className="id-info"
 						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
-						{item.node_name || 'Anonymous'}
+						{item.node_name || 'Unknown'}
 					</span>
 				</Tooltip>
 			</td>

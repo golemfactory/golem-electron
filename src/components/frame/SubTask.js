@@ -312,7 +312,7 @@ export class SubTask extends React.Component {
                                             {isDevMode && (
                                                 <p className="node-name__tooltip">
                                                     {subtask.node_name ||
-                                                        'Anonymous'}
+                                                        'Unknown'}
                                                 </p>
                                             )}
                                             {isDevMode && (

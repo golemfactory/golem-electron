@@ -1,6 +1,7 @@
 import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import qrcode from 'qrcode-generator';
 
 import Tooltip from '@tippy.js/react';
 
@@ -32,8 +33,19 @@ export class Personal extends React.Component {
         this.state = {
             nodeIdCopied: false,
             editMode: false,
+            expandPersonal: false,
             nodeName: null
         };
+    }
+
+    componentDidMount() {
+        this.props.nodeId && this.createQRCode(this.props.publicKey)
+    }
+
+    componentWillUpdate(nextProps, nextState) {
+        if(nextProps.publicKey !== this.props.publicKey) {
+            this.createQRCode(nextProps.publicKey)
+        }
     }
 
     componentWillUnmount() {
@@ -90,10 +102,22 @@ export class Personal extends React.Component {
         return e.target.validity.valid;
     }
 
-    // <RadialProgress pct={requestorTrust} warn={false}/>
-    // <span>Requestor</span>
-    // <RadialProgress pct={providerTrust} warn={false}/>
-    // <span>Provider</span>
+    createQRCode(data){
+        const wrapper= document.createElement('div');
+        const qrCodeDOM = document.getElementById('qrCode')
+        const typeNumber = 0;
+        const errorCorrectionLevel = 'L';
+        const qr = qrcode(typeNumber, errorCorrectionLevel);
+        qr.addData(data);
+        qr.make();
+        wrapper.innerHTML = qr.createImgTag();
+        const element = wrapper.firstChild;
+        element.classList.add("personal__qrcode");
+        qrCodeDOM.insertBefore(element, qrCodeDOM.firstChild);
+    }
+
+    _toggleExpand = e => this.setState( prevState => ({ expandPersonal: !prevState.expandPersonal}))
+
     render() {
         const {
             avatar,
@@ -104,7 +128,7 @@ export class Personal extends React.Component {
             providerTrust,
             publicKey
         } = this.props;
-        const { nodeIdCopied, editMode } = this.state;
+        const { nodeIdCopied, editMode, expandPersonal } = this.state;
         const avatarImg = blockies
             .createBlockie({
                 seed: publicKey.toLowerCase(),
@@ -113,104 +137,103 @@ export class Personal extends React.Component {
             })
             .toDataURL();
         return (
-            <div className="section__personal" id="personal">
-                <div className="indicator-panel__personal">
-                    <div className="indicator__personal" />
-                    <div className="avatar-container">
-                        <img
-                            className="image__personal"
-                            src={avatarImg}
-                            alt="avatar"
-                        />
-                        <div className="image__personal--border" />
+            <div className={`section__personal ${expandPersonal ? 'expanded' : ''}`} id="personal">
+                <div className="personal__indicator-panel">
+                    <span className="icon-close" onClick={this._toggleExpand}/>
+                    <div className="avatar-container" onClick={this._toggleExpand}>
+                        <div className="image-holder">
+                            <img
+                                className="personal__image"
+                                src={avatarImg}
+                                alt="avatar"
+                            />
+                            <div className="personal__image--border" />
+                        </div>
                     </div>
-                    <div className="indicator__personal" />
-                </div>
-                <div>
-                    <form
-                        ref={node => (this.form = node)}
-                        className="user-name__form"
-                        onSubmit={this._toggleEditMode}>
-                        {editMode ? (
-                            <input
-                                className="input__node-name"
-                                pattern="^\S+(?: \S+)*$"
-                                title="Please write with English charaters and numbers"
-                                type="text"
-                                defaultValue={nodeName}
-                                onChange={this._setNodeName}
-                                onKeyDown={event => {
-                                    if (
-                                        this.checkInputValidity(event) &&
-                                        event.keyCode === 13
-                                    )
-                                        this.form.dispatchEvent(
-                                            new Event("submit")
-                                        );
-                                }}
-                                maxLength={16}
-                                autoFocus
-                                required
-                            />
-                        ) : (
-                            <span className="user-name__personal">
-                                {nodeName ? nodeName : "Anonymous Golem"}
-                            </span>
-                        )}
+                    <div className="personal__information-panel">
+                        <form
+                            ref={node => (this.form = node)}
+                            className="user-name__form"
+                            onSubmit={this._toggleEditMode}>
+                            {editMode ? (
+                                <input
+                                    className="input__node-name"
+                                    pattern="^\S+(?: \S+)*$"
+                                    title="Please write with English charaters and numbers"
+                                    type="text"
+                                    defaultValue={nodeName}
+                                    onChange={this._setNodeName}
+                                    onKeyDown={event => {
+                                        if (
+                                            this.checkInputValidity(event) &&
+                                            event.keyCode === 13
+                                        )
+                                            this.form.dispatchEvent(
+                                                new Event("submit")
+                                            );
+                                    }}
+                                    maxLength={16}
+                                    autoFocus
+                                    required
+                                />
+                            ) : (
+                                <span className="personal__user-name">
+                                    {nodeName ? nodeName : "Unknown Golem"}
+                                </span>
+                            )}
+                            <Tooltip
+                                content={<p>Edit</p>}
+                                placement="bottom"
+                                trigger="mouseenter">
+                                <span
+                                    className={`toggle__edit-mode ${
+                                        editMode ? "icon-confirmation" : "icon-pencil"
+                                    }`}
+                                    onClick={() =>
+                                        this.form.dispatchEvent(new Event("submit"))
+                                    }
+                                />
+                            </Tooltip>
+                            <p />
+                        </form>
                         <Tooltip
-                            content={<p>Edit</p>}
+                            content={
+                                <p>
+                                    {nodeIdCopied
+                                        ? "Copied Succesfully!"
+                                        : "Click to copy"}
+                                </p>
+                            }
                             placement="bottom"
-                            trigger="mouseenter">
+                            trigger="mouseenter"
+                            hideOnClick={false}>
                             <span
-                                className={`toggle__edit-mode ${
-                                    editMode ? "icon-confirmation" : "icon-pencil"
-                                }`}
-                                onClick={() =>
-                                    this.form.dispatchEvent(new Event("submit"))
-                                }
-                            />
+                                className="personal__user-id"
+                                onClick={this._handleCopyToClipboard.bind(
+                                    this,
+                                    nodeId
+                                )}>
+                                {nodeId
+                                    ? nodeId.replace(
+                                          new RegExp("^(.{0,4}).*(.{4})$", "im"),
+                                          "$1...$2"
+                                      )
+                                    : " will be here"}
+                                <span
+                                    className={
+                                        nodeIdCopied
+                                            ? "icon-confirmed-empty"
+                                            : undefined
+                                    }
+                                />
+                            </span>
                         </Tooltip>
-                        <p />
-                    </form>
-                    <Tooltip
-                        content={
-                            <p>
-                                {nodeIdCopied
-                                    ? "Copied Succesfully!"
-                                    : "Click to copy"}
-                            </p>
-                        }
-                        placement="bottom"
-                        trigger="mouseenter"
-                        hideOnClick={false}>
-                        <span
-                            className="user-id__personal"
-                            onClick={this._handleCopyToClipboard.bind(
-                                this,
-                                nodeId
-                            )}>
-                            {nodeId
-                                ? nodeId.replace(
-                                      new RegExp("^(.{0,4}).*(.{4})$", "im"),
-                                      "$1...$2"
-                                  )
-                                : " will be here"}
-                            <span
-                                className={
-                                    nodeIdCopied
-                                        ? "icon-confirmed-empty"
-                                        : undefined
-                                }
-                            />
-                        </span>
-                    </Tooltip>
-                    <span className="backup-info__personal">
-                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=backing-up-your-golem-app">
-                            <u>
-                                Learn more how to <strong>backup Golem</strong>
-                            </u>
-                        </a>
-                    </span>
+                    </div>
+                    <div className="qrcode-container" onClick={this._toggleExpand}>
+                        <div id="qrCode" className="qr-holder">
+                            <div className="personal__qrcode--border" />
+                        </div>
+                    </div>
                 </div>
             </div>
         );
@@ -221,3 +244,8 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps
 )(Personal);
+
+// <RadialProgress pct={requestorTrust} warn={false}/>
+// <span>Requestor</span>
+// <RadialProgress pct={providerTrust} warn={false}/>
+// <span>Provider</span>
