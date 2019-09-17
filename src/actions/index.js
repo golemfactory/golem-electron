@@ -426,14 +426,18 @@ export const blockNode = (payload, _resolve, _reject) => ({
     _reject
 });
 
-export const blockNodes = payload => ({
+export const blockNodes = (payload, _resolve, _reject) => ({
     type: BLOCKED_NODES,
-    payload
+    payload,
+    _resolve,
+    _reject
 });
 
-export const trustNodes = payload => ({
+export const trustNodes = (payload, _resolve, _reject) => ({
     type: TRUSTED_NODE,
-    payload
+    payload,
+    _resolve,
+    _reject
 });
 
 export const setHistory = payload => ({

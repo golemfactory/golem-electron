@@ -92,15 +92,23 @@ export class ControlPanel extends React.Component {
 
     _toggleLockNode = (e, nodes) => {
         const node = nodes || this.state?.node2block?.identity;
-        if(this.props.aclRestrictedMode) 
-            this.props.actions.blockNodes(node);
-        else
-            this.props.actions.trustNodes(node);
-        this.setState({
-            checkedItems: {},
-            nodeBlocked: true,
-            node2block: null
-        });
+        new Promise((resolve, reject) => {
+            if (this.props.aclRestrictedMode)
+                this.props.actions.blockNodes(node, resolve, reject);
+            else this.props.actions.trustNodes(node, resolve, reject);
+        })
+            .then(() => {
+                this.setState({
+                    checkedItems: {},
+                    nodeBlocked: true,
+                    node2block: null
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    nodeBlocked: false
+                });
+            });
     };
 
     _toggleItems = (keys, val = null) => {

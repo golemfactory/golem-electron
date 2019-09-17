@@ -79,23 +79,36 @@ export class SelectNodePanel extends React.Component {
         const selectedNodes = Object.keys(
             pickBy(this.state.checkedItems, item => !!item)
         );
-        this.props.actions.blockNodes(selectedNodes);
-        this.props.addNodePanelToggle();
+        this._blockFn(selectedNodes)
+            .then(() => {
+                this.props.addNodePanelToggle();
+            })
+            .catch(error => console.warn(error));
     };
 
     _blockNode = () => {
         const { key } = this.state.node2block;
-        this.setState(
-            {
-                checkedItems: {},
-                nodeBlocked: true,
-                node2block: null
-            },
-            () => {
-                this.props.actions.blockNodes(key);
+        this._blockFn(key)
+            .then(() => {
+                this.setState({
+                    checkedItems: {},
+                    nodeBlocked: true,
+                    node2block: null
+                });
                 this.props.addNodePanelToggle();
-            }
-        );
+            })
+            .catch(error => {
+                this.setState({
+                    nodeBlocked: false
+                });
+                console.warn(error);
+            });
+    };
+
+    _blockFn = keys => {
+        return new Promise((resolve, reject) => {
+            this.props.actions.blockNodes(keys, resolve, reject);
+        });
     };
 
     _toggleItems = (keys, val = null) => {

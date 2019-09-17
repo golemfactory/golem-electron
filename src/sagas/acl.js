@@ -12,34 +12,36 @@ const {
 	TRUSTED_NODE
 } = dict;
 
-export function trustNode(session, payload) {
-	return new Promise((resolve, reject) => {
-		function on_info(args) {
-			let info = args[0];
-			resolve();
-		}
-		_handleRPC(on_info, session, config.TRUST_NODE_RPC, [payload]);
-	});
+export function trustNode(session, payload, _resolve, _reject) {
+	function on_info(args) {
+		let info = args[0];
+		resolve(info);
+	}
+	function on_error(error) {
+		_reject(error);
+	}
+	_handleRPC(on_info, session, config.TRUST_NODE_RPC, [payload], on_error);
 }
 
-export function* trustNodeBase(session, { payload }) {
-	yield call(trustNode, session, payload);
+export function* trustNodeBase(session, { payload, _resolve, _reject }) {
+	yield call(trustNode, session, payload, _resolve, _reject);
 	const nodeList = yield call(getNodesACL, session);
 	yield put(nodeList);
 }
 
-export function blockNodes(session, payload) {
-	return new Promise((resolve, reject) => {
-		function on_info(args) {
-			let info = args[0];
-			resolve();
-		}
-		_handleRPC(on_info, session, config.BLOCK_NODE_RPC, [payload]);
-	});
+export function blockNodes(session, payload, _resolve, _reject) {
+	function on_info(args) {
+		let info = args[0];
+		_resolve(info);
+	}
+	function on_error(error) {
+		_reject(error);
+	}
+	_handleRPC(on_info, session, config.BLOCK_NODE_RPC, [payload], on_error);
 }
 
-export function* blockNodesBase(session, { payload }) {
-	yield call(blockNodes, session, payload);
+export function* blockNodesBase(session, { payload, _resolve, _reject }) {
+	yield call(blockNodes, session, payload, _resolve, _reject);
 	const nodeList = yield call(getNodesACL, session);
 	yield put(nodeList);
 }
