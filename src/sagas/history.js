@@ -1,11 +1,10 @@
-import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
-import { dict } from '../actions'
+import { eventChannel, buffers } from 'redux-saga';
+import { take, call, put } from 'redux-saga/effects';
+import { dict } from '../actions';
 
-import { config, _handleRPC } from './handler'
+import { config, _handleRPC } from './handler';
 
-
-const {SET_HISTORY} = dict
+const { SET_HISTORY } = dict;
 
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
@@ -13,57 +12,29 @@ const {SET_HISTORY} = dict
  * @return {Object}             [Action object]
  */
 export function subscribeHistory(session) {
-    const interval = 20000
+    const interval = 20000;
 
     return eventChannel(emit => {
-        const iv = setInterval(function fetchHistory() {
-            let incomeList;
-            let paymentList;
-            let allPayments = []
+        const iv = setInterval(
+            (function fetchHistory() {
+                function on_history(args) {
+                    let history = args[0];
+                    emit({
+                        type: SET_HISTORY,
+                        payload: history
+                    });
+                }
 
-            function on_history_deposits(args) {
-                let deposits = args[0];
-                deposits = deposits.map(deposit => {
-                    deposit.type = "deposit";
-                    return deposit
-                })
-                let allPayments = [...paymentList, ...incomeList, ...deposits];
-                emit({
-                    type: SET_HISTORY,
-                    payload: allPayments
-                })
-            }
-
-            function on_history_payments(args) {
-                let payments = args[0];
-                payments = payments.map(payment => {
-                    payment.type = "payment";
-                    return payment
-                })
-                paymentList = payments
-                _handleRPC(on_history_deposits, session, config.DEPOSIT_RPC)
-            }
-
-            function on_history_income(args) {
-                let incomes = args[0];
-                incomes = incomes.map(income => {
-                    income.type = "income";
-                    return income
-                })
-                incomeList = incomes
-                _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
-            }
-
-            _handleRPC(on_history_income, session, config.INCOME_RPC)
-            return fetchHistory
-        }(), interval)
-
+                _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [null]);
+            })(),
+            interval
+        );
 
         return () => {
-            console.log('negative')
-            clearInterval(iv)
-        }
-    })
+            console.log('negative');
+            clearInterval(iv);
+        };
+    });
 }
 
 /**
@@ -72,15 +43,15 @@ export function subscribeHistory(session) {
  * @yield   {Object}            [Action object]
  */
 export function* historyFlow(session) {
-    const channel = yield call(subscribeHistory, session)
+    const channel = yield call(subscribeHistory, session);
 
     try {
         while (true) {
-            let action = yield take(channel)
-            yield put(action)
+            let action = yield take(channel);
+            yield put(action);
         }
     } finally {
-        console.info('yield cancelled!')
-        channel.close()
+        console.info('yield cancelled!');
+        channel.close();
     }
 }

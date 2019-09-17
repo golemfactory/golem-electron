@@ -1,6 +1,6 @@
 {
     "name": "golem",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "Worldwide supercomputer",
     "private": true,
     "keywords": [
@@ -213,7 +213,7 @@
         "react-a11y": "1.1.0",
         "react-dom": "16.8.4",
         "react-hot-loader": "4.8.4",
-        "react-lottie": "^1.2.3",
+        "react-lottie": "git+https://github.com/mdtanrikulu/react-lottie.git",
         "react-password-strength": "^2.3.1",
         "react-pose": "4.0.8",
         "react-redux": "7.0.2",

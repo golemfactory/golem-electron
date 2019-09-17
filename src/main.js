@@ -100,13 +100,14 @@ if (remote.getGlobal('process').platform === 'win32') {
         /* Send the RPC call */
         evt.returnValue = false;
         store.dispatch({
-            type: "APP_QUIT",
+            type: 'APP_QUIT',
             _cb
         });
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    ipcRenderer.on('redirect-wallet', () => window.routerHistory.push('/wallet'));
     window.applicationSurface = document.getElementById('mount');
     render(
         <Provider store={store}>

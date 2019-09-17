@@ -410,8 +410,8 @@ export class SubTask extends React.Component {
                         trigger="mouseenter"
                         interactive={true}
                         hideOnClick={false}
-                        interactiveBorder="15"
-                        duration={[null, 200]}
+                        duration={[null, 100]}
+                        delay={[500, 0]}
                         distance="-15"
                         arrow={true}>
                         <polyline

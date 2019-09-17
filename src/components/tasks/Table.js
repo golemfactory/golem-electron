@@ -8,6 +8,7 @@ import { connect } from "react-redux";
 
 import * as Actions from "../../actions";
 import blender_logo from "./../../assets/img/blender_logo.png";
+import { taskStatus as status } from './../../constants/statusDicts'
 import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
 
 import InsufficientAmountModal from "./modal/InsufficientAmountModal";
@@ -24,17 +25,6 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
-});
-
-const status = Object.freeze({
-    WAITINGFORPEER: "Waiting for peer",
-    NOTREADY: "Not started",
-    READY: "Ready",
-    WAITING: "Waiting",
-    COMPUTING: "Computing",
-    FINISHED: "Finished",
-    TIMEOUT: "Timeout",
-    RESTART: "Restart"
 });
 
 function shouldPSEnabled(_item) {

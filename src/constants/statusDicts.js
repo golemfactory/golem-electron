@@ -5,16 +5,19 @@ const testStatusDict = Object.freeze({
 })
 
 const taskStatus = Object.freeze({
-    WAITINGFORPEER: 'Waiting for peer',
     DEPOSIT: 'Creating the deposit',
     NOTREADY: 'Not started',
+    SENDING: "Sending",
     READY: 'Ready',
     WAITING: 'Waiting',
     COMPUTING: 'Computing',
     FINISHED: 'Finished',
     TIMEOUT: 'Timeout',
     RESTART: 'Restart',
-    FAILURE: 'Failure'
+    FAILURE: 'Failure',
+    ABORTED: "Aborted",
+    CREATING: 'Creating',
+    ERRORCREATING: 'Error creating'
 })
 
 module.exports = {

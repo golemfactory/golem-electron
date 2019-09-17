@@ -542,7 +542,7 @@ export function subscribeTaskList(session) {
                 });
             }
 
-            _handleRPC(on_tasks, session, config.GET_TASKS_RPC);
+            _handleRPC(on_tasks, session, config.GET_TASKS_RPC, [null, true]);
         };
 
         const fetchOnStartup = () => {

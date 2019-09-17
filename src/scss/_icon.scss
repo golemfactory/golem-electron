@@ -1186,23 +1186,23 @@ $color_13: rgb(155, 155, 155);
 .icon{
   &--color {
     &-red {
-      color: $color-error;
+      color: $color-error !important;
     }
 
     &-yellow {
-      color: $color_7;
+      color: $color_7 !important;
     }
 
     &-gray {
-      color: $color_9;
+      color: $color_9 !important;
     }
     
     &-blue {
-      color: $color_2;
+      color: $color_2 !important;
     }
 
     &-green {
-      color: $color_4;
+      color: $color_4 !important;
     }
 
   }

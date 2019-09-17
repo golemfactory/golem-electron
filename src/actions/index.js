@@ -38,7 +38,6 @@ export let dict = Object.freeze({
     CREATE_TASK: 'CREATE_TASK',
     ADD_MISSING_TASK_FILES: 'ADD_MISSING_TASK_FILES',
     RESTART_TASK: 'RESTART_TASK',
-    RESTART_FRAME: 'RESTART_FRAME',
     RESTART_SUBTASK: 'RESTART_SUBTASK',
     RUN_TEST_TASK: 'RUN_TEST_TASK',
     ABORT_TEST_TASK: 'ABORT_TEST_TASK',
@@ -95,10 +94,10 @@ export let dict = Object.freeze({
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
     SET_CONNECTED_PEERS: 'SET_CONNECTED_PEERS',
     SET_SUBTASKS_BORDER: 'SET_SUBTASKS_BORDER',
+    GET_SUBTASKS_BORDER: 'GET_SUBTASKS_BORDER',
     SET_PREVIEW_LIST: 'SET_PREVIEW_LIST',
     SET_SUBTASKS_LIST: 'SET_SUBTASKS_LIST',
     FETCH_SUBTASKS_LIST: 'FETCH_SUBTASKS_LIST',
-    SET_SUBTASKS_VISIBILITY: 'SET_SUBTASKS_VISIBILITY',
     SET_FRAME_ID: 'SET_FRAME_ID',
     SET_FRAME_INDEX: 'SET_FRAME_INDEX',
     NEXT_FRAME: 'NEXT_FRAME',
@@ -184,7 +183,6 @@ const {
     CREATE_TASK,
     ADD_MISSING_TASK_FILES,
     RESTART_TASK,
-    RESTART_FRAME,
     RESTART_SUBTASK,
     RUN_TEST_TASK,
     ABORT_TEST_TASK,
@@ -235,10 +233,10 @@ const {
     SET_ALL_FRAMES,
     SET_FRAMES_WITH_SUBTASKS,
     SET_SUBTASKS_BORDER,
+    GET_SUBTASKS_BORDER,
     SET_PREVIEW_LIST,
     SET_SUBTASKS_LIST,
     FETCH_SUBTASKS_LIST,
-    SET_SUBTASKS_VISIBILITY,
     SET_FRAME_ID,
     SET_FRAME_INDEX,
     NEXT_FRAME,
@@ -329,6 +327,13 @@ export const setSubtasksBorder = payload => ({
     payload
 });
 
+export const getSubtasksBorder = (payload, _resolve, _reject) => ({
+    type: GET_SUBTASKS_BORDER,
+    payload,
+    _resolve, 
+    _reject
+});
+
 export const setPreviews = payload => ({
     type: SET_PREVIEW_LIST,
     payload
@@ -345,11 +350,6 @@ export const fetchSubtasksList = payload => {
         payload
     };
 };
-
-export const setSubtasksVisibility = payload => ({
-    type: SET_SUBTASKS_VISIBILITY,
-    payload
-});
 
 export const setFrameId = payload => ({
     type: SET_FRAME_ID,
@@ -712,11 +712,6 @@ export const restartTask = (payload, _resolve, _reject) => ({
     payload,
     _resolve,
     _reject
-});
-
-export const restartFrame = payload => ({
-    type: RESTART_FRAME,
-    payload
 });
 
 export const restartSubtask = payload => ({

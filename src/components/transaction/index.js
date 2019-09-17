@@ -54,7 +54,7 @@ class TransactionTube extends Component {
     };
 
     _fetchLastTransaction = list => {
-        const { created, type, value } = list.length > 0 && list[0].data;
+        const { created, type, amount } = list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
         return (
@@ -80,7 +80,7 @@ class TransactionTube extends Component {
                                     }`}>
                                     {type === filter.INCOME ? '+ ' : '- '}
                                 </span>
-                                <b>{(value / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT</b>
+                                <b>{(amount / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT</b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>
                             <div

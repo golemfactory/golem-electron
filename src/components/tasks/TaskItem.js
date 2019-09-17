@@ -101,6 +101,54 @@ export class TaskItem extends React.Component {
         const { options } = item;
         const { nodeNumbers } = this.props;
         switch (item.status) {
+            case taskStatus.CREATING:
+                return (
+                    <div>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
+                        <span className="bumper" />
+                        <span className="duration--preparing">
+                            Creating the task...{' '}
+                        </span>
+                    </div>
+                );
+
+            case taskStatus.ERRORCREATING:
+                return (
+                    <div>
+                        <span>
+                            Duration:{' '}
+                            {convertSecsToHMS(
+                                new Date() / 1000 - item.time_started
+                            )}
+                        </span>
+                        <span className="bumper" />
+                        <span className="duration--failure">
+                            {item?.status_message || "Error creating task"}
+                        </span>
+                    </div>
+                );
+
+            case taskStatus.ABORTED:
+                return (
+                    <div>
+                        <span>
+                            Task time:{' '}
+                            {timeStampToHR(
+                                item.last_updated - item.time_started,
+                                true
+                            )}
+                        </span>
+                        <span className="bumper" />
+                        <span className="duration--aborted">Aborted: </span>
+                        <span>{timeStampToHR(item.last_updated)}</span>
+                    </div>
+                );
+
             case taskStatus.TIMEOUT:
                 return (
                     <div>
@@ -521,7 +569,9 @@ export class TaskItem extends React.Component {
                                     !(
                                         item.status === taskStatus.RESTART ||
                                         item.status === taskStatus.TIMEOUT ||
-                                        item.status === taskStatus.FINISHED
+                                        item.status === taskStatus.FINISHED ||
+                                        item.status === taskStatus.ABORTED ||
+                                        item.status === taskStatus.ERRORCREATING 
                                     )
                                 }
                                 restartSubtasksModalHandler={

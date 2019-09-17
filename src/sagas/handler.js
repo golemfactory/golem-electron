@@ -1,3 +1,12 @@
+import { eventChannel, buffers } from 'redux-saga';
+import {
+    fork,
+    takeEvery,
+    takeLatest,
+    take,
+    call,
+    put
+} from 'redux-saga/effects';
 const { remote } = window.electron;
 const log = remote.require('./electron/debug_handler.js');
 const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
@@ -60,7 +69,6 @@ export let config = Object.freeze({
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RESTART_SUBTASKS_RPC: 'comp.task.subtasks.restart',
-    RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
@@ -86,6 +94,7 @@ export let config = Object.freeze({
     PAYMENTS_RPC: 'pay.payments',
     PAYMENT_ADDRESS_RPC: 'pay.ident',
     INCOME_RPC: 'pay.incomes',
+    PAYMENT_HISTORY_RPC: 'pay.operations',
     DEPOSIT_RPC: 'pay.deposit_payments',
     BALANCE_CH: 'evt.pay.balance',
     CONCENT_DEPOSIT_BALANCE_RPC: 'pay.deposit_balance',
@@ -126,6 +135,56 @@ export let config = Object.freeze({
     CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
     CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
+
+export function eventWrapper(
+    session,
+    rpc,
+    payload,
+    dispatch_type,
+    interval = 1000
+) {
+    return eventChannel(emit => {
+        const fetchStats = () => {
+            function on_info(args) {
+                let info = args[0];
+                emit({
+                    type: dispatch_type,
+                    payload: info
+                });
+            }
+
+            _handleRPC(on_info, session, rpc, [payload]);
+        };
+
+        const fetchOnStartup = () => {
+            fetchStats();
+
+            return fetchOnStartup;
+        };
+
+        const channelInterval = setInterval(fetchOnStartup(), interval);
+
+        return () => {
+            console.log('negative');
+            clearInterval(channelInterval);
+        };
+    });
+}
+
+export function* eventEmitter(wrapper, session, payload, cancelCB) {
+    if (payload) {
+        const channel = yield call(wrapper, session, payload);
+        try {
+            while (true) {
+                let action = yield take(channel);
+                yield put(action);
+                if (cancelCB) cancelCB(channel, action);
+            }
+        } finally {
+            console.info('yield cancelled!');
+        }
+    }
+}
 
 function errorCallback(topic, _eb, { error, details, argsList }) {
     console.warn(
