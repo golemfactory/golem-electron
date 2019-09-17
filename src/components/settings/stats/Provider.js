@@ -2,11 +2,12 @@ import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Tooltip from '@tippy.js/react';
+import isEmpty from 'lodash/isEmpty';
 
 import * as Actions from './../../../actions';
 
 const mapStateToProps = state => ({
-    stats: state.stats.stats.provider,
+    stats: state.stats.stats,
     unsupported_stats: state.stats.unsupported_stats
 });
 
@@ -95,7 +96,7 @@ export class ProviderStats extends React.PureComponent {
             <div>
                 <div>
                     <h4>Task Statistics</h4>
-                    {stats && Number.isInteger(stats.in_network) ? (
+                    {!isEmpty(stats) ? (
                         <div className="statistics__task">
                             <div>
                                 <span className="icon-tasks-all" />

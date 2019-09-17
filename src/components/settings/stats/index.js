@@ -46,10 +46,9 @@ export default class Stats extends React.PureComponent {
                             Provider statistics
                         </li>
                         <li
-                            className="nav__item stats-tab-item"
+                            className="nav__item stats-tab-item disabled"
                             role="menuitem"
                             tabIndex="0"
-                            onClick={this._handleTab}
                             aria-label="Requestor Statistics">
                             Requestor statistics
                         </li>

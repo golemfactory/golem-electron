@@ -143,6 +143,12 @@ $tab-item-height: 78.7px;
             left: 118px;
             width: 108px;
         }
+        &.disabled {
+            cursor: not-allowed;
+            &:hover {
+                color: $color-text2;
+            }
+        }
     }
 
     .horizontal-transition-container{
