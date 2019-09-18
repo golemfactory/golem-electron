@@ -15,7 +15,7 @@ const {
 export function trustNode(session, payload, _resolve, _reject) {
 	function on_info(args) {
 		let info = args[0];
-		resolve(info);
+		_resolve(info);
 	}
 	function on_error(error) {
 		_reject(error);

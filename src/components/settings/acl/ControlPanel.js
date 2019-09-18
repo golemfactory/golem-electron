@@ -13,8 +13,10 @@ import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
 import every from 'lodash/every';
+import keyBy from 'lodash/keyBy';
 import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
+import mapValues from 'lodash/mapValues';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
@@ -37,6 +39,12 @@ export class ControlPanel extends React.Component {
             nodeBlocked: false,
             node2block: null
         };
+    }
+
+    componentDidMount() {
+        const { rules } = this.props.nodeListACL;
+        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false)
+        this.setState({ checkedItems });
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -231,7 +239,8 @@ export class ControlPanel extends React.Component {
                             cancelAction={this._closeBlockNodeModal}
                             blockAction={this._toggleLockNode}
                             nodeBlocked={nodeBlocked}
-                            unlockMode={!aclRestrictedMode}
+                            unlockMode={true}
+                            aclMode={aclRestrictedMode}
                             errMsg={errMsg}
                             node2block={node2block}
                         />,
