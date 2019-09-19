@@ -73,6 +73,12 @@ export class Price extends React.Component {
                     />
                     <span>{isMainNet ? '' : 't'}GNT per hour</span>
                 </div>
+                <div className="tips">
+                    <span>
+                        Remember! To activate the settings please stop Golem
+                        first.
+                    </span>
+                </div>
             </div>
         );
     }

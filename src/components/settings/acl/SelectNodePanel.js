@@ -73,7 +73,8 @@ export class SelectNodePanel extends React.Component {
         });
     };
 
-    _closeBlockNodeModal = () => this.setState({ blockNodeModal: false });
+    _closeBlockNodeModal = () =>
+        this.setState({ blockNodeModal: false, node2block: null });
 
     _blockNodes = () => {
         const selectedNodes = Object.keys(
@@ -92,8 +93,7 @@ export class SelectNodePanel extends React.Component {
             .then(() => {
                 this.setState({
                     checkedItems: {},
-                    nodeBlocked: true,
-                    node2block: null
+                    nodeBlocked: true
                 });
                 this.props.addNodePanelToggle();
             })

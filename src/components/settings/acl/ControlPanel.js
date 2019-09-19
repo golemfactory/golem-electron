@@ -43,7 +43,7 @@ export class ControlPanel extends React.Component {
 
     componentDidMount() {
         const { rules } = this.props.nodeListACL;
-        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false)
+        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false);
         this.setState({ checkedItems });
     }
 
@@ -80,7 +80,8 @@ export class ControlPanel extends React.Component {
             nodeBlocked: false
         });
 
-    _closeBlockNodeModal = () => this.setState({ blockNodeModal: false });
+    _closeBlockNodeModal = () =>
+        this.setState({ blockNodeModal: false, node2block: null });
 
     _handleACLCheckbox = e => this.props.handleACLCheckbox(e.target.checked);
 
@@ -108,8 +109,7 @@ export class ControlPanel extends React.Component {
             .then(() => {
                 this.setState({
                     checkedItems: {},
-                    nodeBlocked: true,
-                    node2block: null
+                    nodeBlocked: true
                 });
             })
             .catch(error => {
