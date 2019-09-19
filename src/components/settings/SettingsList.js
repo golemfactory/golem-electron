@@ -218,7 +218,7 @@ export class SettingsList extends React.Component {
                                                   className="icon-arrow-left"
                                                   aria-label="Back to Tabs"
                                               />
-                                              Back
+                                              {filteredTabs[activeContent]?.title}
                                           </div>
                                           {filteredTabs[activeContent]?.content}
                                       </div>

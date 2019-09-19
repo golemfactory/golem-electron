@@ -4,7 +4,7 @@ import createCachedSelector from 're-reselect';
 const { SET_HISTORY } = dict;
 
 const initialState = {
-    historyList: []
+    historyList: [null , []]
 };
 const setHistory = (state = initialState, action) => {
     switch (action.type) {
@@ -32,13 +32,13 @@ const extractData = (historyList, filter, isDefault) =>
         .sort(newestToOldest)
         .map((item, index) => {
             return {
-                key: item.created.toString(),
+                key: item?.created?.toString(),
                 data: item
             };
         });
 
 export const getFilteredPaymentSelector = createCachedSelector(
-    state => state.historyList,
+    state => state.historyList[1],
     (state, filter) => filter,
     (state, filter, isDefault) => isDefault,
     (getHistoryList, filter, isDefault) =>

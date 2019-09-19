@@ -15,24 +15,29 @@ export function subscribeHistory(session) {
     const interval = 20000;
 
     return eventChannel(emit => {
-        const iv = setInterval(
-            (function fetchHistory() {
-                function on_history(args) {
-                    let history = args[0];
-                    emit({
-                        type: SET_HISTORY,
-                        payload: history
-                    });
-                }
+        const fetchHistory = () => {
+            function on_history(args) {
+                let history = args[0];
+                emit({
+                    type: SET_HISTORY,
+                    payload: history
+                });
+            }
 
-                _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [null]);
-            })(),
-            interval
-        );
+            _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [null]);
+        };
+
+        const fetchOnStartup = () => {
+            fetchHistory();
+
+            return fetchOnStartup;
+        };
+
+        const channelInterval = setInterval(fetchOnStartup(), interval);
 
         return () => {
             console.log('negative');
-            clearInterval(iv);
+            clearInterval(channelInterval);
         };
     });
 }
