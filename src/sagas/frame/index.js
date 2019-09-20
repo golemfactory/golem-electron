@@ -27,7 +27,7 @@ const {
     SET_ALL_FRAMES,
     RESTART_TASK,
     RESTART_SUBTASK,
-    BLOCK_NODE
+    BLOCKED_NODES
 } = dict;
 
 /**
