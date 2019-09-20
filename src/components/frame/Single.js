@@ -1,14 +1,14 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 
-import ControlPanel from "./ControlPanel";
-import ImageZoom from "./ImageZoom";
-import SubTask from "./SubTask";
+import ControlPanel from './ControlPanel';
+import ImageZoom from './ImageZoom';
+import SubTask from './SubTask';
 
-const CLOSE_BTN_PATH = "/preview/all";
+const CLOSE_BTN_PATH = '/preview/all';
 
 let tmpIndex = 0;
 
@@ -126,14 +126,14 @@ export class Single extends React.Component {
             let ratio = y / contentSize.y;
             let resizedPartX = contentSize.x * ratio;
             offset = {
-                direction: "x",
+                direction: 'x',
                 value: Math.trunc(Math.abs(x - resizedPartX) / 2)
             };
         } else {
             let ratio = x / contentSize.x;
             let resizedPartY = contentSize.y * ratio;
             offset = {
-                direction: "y",
+                direction: 'y',
                 value: Math.trunc(Math.abs(y - resizedPartY) / 2)
             };
         }
@@ -183,13 +183,12 @@ export class Single extends React.Component {
                 <div className="section__image" ref="containerImage">
                     {previewLink && (
                         <ImageZoom
+                            key={previewLink}
                             details={details}
                             image={`file://${previewLink}`}
                             fetchClientInfo={this._setClientInfo}
                             isSubtaskShown={isSubtaskShown}
-                            getSubtasksBorder={
-                                actions.getSubtasksBorder
-                            }
+                            getSubtasksBorder={actions.getSubtasksBorder}
                         />
                     )}
                     {isSubtaskShown && (

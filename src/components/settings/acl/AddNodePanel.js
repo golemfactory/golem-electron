@@ -7,6 +7,8 @@ import NodeTable from './NodeTable';
 import * as Actions from './../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
 
+const { clipboard } = window.electron;
+
 const WAIT_INTERVAL = 200;
 
 const mapStateToProps = state => ({
@@ -23,17 +25,34 @@ export class AddNodePanel extends React.Component {
         lockAddButton: false
     };
 
+    componentDidMount() {
+        document.getElementById('addNode').addEventListener(
+            'contextmenu',
+            ev => {
+                ev.preventDefault();
+                ev.target.value = clipboard.readText();
+                this._updateId.call(this, ev);
+                return false;
+            },
+            false
+        );
+    }
+
     componentWillUnmount() {
         this.interactionTimer && clearTimeout(this.interactionTimer);
     }
 
     _handleInput = e => {
         e.persist();
+        this._updateId.call(this, e);
+    };
+
+    _updateId = e => {
         this.interactionTimer && clearTimeout(this.interactionTimer);
         this.interactionTimer = setTimeout(() => {
             this.setState({ node: e.target.value });
         }, WAIT_INTERVAL);
-    };
+    }
 
     _handleAdd = () => {
         this.setState(
