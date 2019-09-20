@@ -1206,4 +1206,8 @@ $color_13: rgb(155, 155, 155);
     }
 
   }
+  &--disabled {
+    color: $color_9 !important;
+    cursor: not-allowed !important;
+  }
 }

@@ -208,5 +208,5 @@ export function* frameBase(session, id) {
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session);
     yield takeLatest(RESTART_TASK, restartTaskBase, session);
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session);
-    yield takeLatest(BLOCK_NODE, blockNodeBase, session);
+    yield takeLatest(BLOCKED_NODES, blockNodeBase, session);
 }

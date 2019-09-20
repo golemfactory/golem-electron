@@ -13,14 +13,7 @@ const {
 } = dict;
 
 export function trustNode(session, payload, _resolve, _reject) {
-	function on_info(args) {
-		let info = args[0];
-		_resolve(info);
-	}
-	function on_error(error) {
-		_reject(error);
-	}
-	_handleRPC(on_info, session, config.TRUST_NODE_RPC, [payload], on_error);
+	_handleRPC(_resolve, session, config.TRUST_NODE_RPC, [payload], _reject);
 }
 
 export function* trustNodeBase(session, { payload, _resolve, _reject }) {
@@ -30,14 +23,7 @@ export function* trustNodeBase(session, { payload, _resolve, _reject }) {
 }
 
 export function blockNodes(session, payload, _resolve, _reject) {
-	function on_info(args) {
-		let info = args[0];
-		_resolve(info);
-	}
-	function on_error(error) {
-		_reject(error);
-	}
-	_handleRPC(on_info, session, config.BLOCK_NODE_RPC, [payload], on_error);
+	_handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject);
 }
 
 export function* blockNodesBase(session, { payload, _resolve, _reject }) {
