@@ -16,6 +16,7 @@ import every from 'lodash/every';
 import keyBy from 'lodash/keyBy';
 import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
 import mapValues from 'lodash/mapValues';
 
 const mapStateToProps = state => ({
@@ -42,12 +43,16 @@ export class ControlPanel extends React.Component {
     }
 
     componentDidMount() {
-        const { rules } = this.props.nodeListACL;
-        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false);
-        this.setState({ checkedItems });
+        this._fillCheckedItemsIfEmpty(this.props);
     }
 
     componentWillUpdate(nextProps, nextState) {
+        if (
+            isEmpty(this.props.nodeListACL?.rules) &&
+            !isEmpty(nextProps.nodeListACL?.rules)
+        ) {
+            this._fillCheckedItemsIfEmpty(nextProps);
+        }
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
             const isAllChecked = every(
                 nextState.checkedItems,
@@ -72,6 +77,12 @@ export class ControlPanel extends React.Component {
             }
         }
     }
+
+    _fillCheckedItemsIfEmpty = props => {
+        const { rules } = props.nodeListACL;
+        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false);
+        this.setState({ checkedItems });
+    };
 
     _showBlockNodeModal = node =>
         this.setState({
@@ -108,7 +119,10 @@ export class ControlPanel extends React.Component {
         })
             .then(() => {
                 this.setState({
-                    checkedItems: {},
+                    checkedItems: pickBy(
+                        this.state.checkedItems,
+                        item => !item
+                    ),
                     nodeBlocked: true
                 });
             })

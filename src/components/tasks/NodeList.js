@@ -196,7 +196,7 @@ class NodeList extends Component {
     _blockNode = () => {
         let node_id = this.state.node2block.node_id;
         new Promise((resolve, reject) => {
-            this.props.actions.blockNode(node_id, resolve, reject);
+            this.props.actions.blockNodes(node_id, resolve, reject);
         }).then(([result, msg]) => {
             this.setState({
                 nodeBlocked: result,

@@ -419,13 +419,6 @@ export const setACLMode = (payload, _resolve, _reject) => ({
     _reject
 });
 
-export const blockNode = (payload, _resolve, _reject) => ({
-    type: BLOCK_NODE,
-    payload,
-    _resolve,
-    _reject
-});
-
 export const blockNodes = (payload, _resolve, _reject) => ({
     type: BLOCKED_NODES,
     payload,

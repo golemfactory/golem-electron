@@ -21,7 +21,7 @@ const NodeTable = ({
 					<th scope="col">Node ID</th>
 					<ConditionalRender showIf={isBlockTable}>
 						<th scope="col">Node IP</th>
-						<th scope="col">PORT</th>
+						<th scope="col">Port</th>
 					</ConditionalRender>
 					<th scope="col" width="25%">
 						Node Name
