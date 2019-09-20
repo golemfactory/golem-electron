@@ -8,29 +8,23 @@ import NodeTable from './NodeTable';
 import * as Actions from './../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
 import BlockNodeModal from './../../tasks/modal/BlockNodeModal';
+import { getFilteredKnownPeers } from './../../../reducers';
 
-import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
-import someFP from 'lodash/fp/some';
-import every from 'lodash/every';
-import filter from 'lodash/filter';
 import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
-import includes from 'lodash/fp/includes';
 
 const WAIT_INTERVAL = 500;
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
-    knownPeers: state.acl.knownPeers
+    knownPeers: getFilteredKnownPeers.bind(null, state)
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
-
-const includesValue = val => someFP(includes(val));
 
 export class SelectNodePanel extends React.Component {
     constructor(props) {
@@ -39,7 +33,7 @@ export class SelectNodePanel extends React.Component {
             blockNodeModal: false,
             checkedItems: {},
             errMsg: null,
-            filteredList: props.knownPeers,
+            filteredList: props.knownPeers(0),
             isAnyChecked: false,
             nodeBlocked: false,
             node2block: null
@@ -129,11 +123,11 @@ export class SelectNodePanel extends React.Component {
         this.interactionTimer && clearTimeout(this.interactionTimer);
         const { knownPeers } = this.props;
         if (!e.target.value) {
-            this.setState({ filteredList: knownPeers });
+            this.setState({ filteredList: knownPeers(0) });
             return;
         }
 
-        const filteredList = filter(knownPeers, includesValue(e.target.value));
+       const filteredList =  knownPeers(e.target.value)
 
         this.interactionTimer = setTimeout(() => {
             this.setState({ filteredList });
@@ -189,7 +183,7 @@ export class SelectNodePanel extends React.Component {
                         Back
                     </span>
                 </div>
-                <ConditionalRender showIf={size(knownPeers) > 0}>
+                <ConditionalRender showIf={size(filteredList) > 0}>
                     <NodeTable
                         list={filteredList}
                         checkedItems={checkedItems}
