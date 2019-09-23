@@ -171,42 +171,12 @@ export class ControlPanel extends React.Component {
         const { rules = [] } = nodeListACL;
         return (
             <Fragment>
-                <div className="switch-box">
-                    <span
-                        className={`switch-label switch-label--left ${
-                            !aclRestrictedMode ? 'active' : ''
-                        }`}>
-                        Open mode
-                    </span>
-                    <label className="switch">
-                        <input
-                            ref="concentRef"
-                            type="checkbox"
-                            aria-label="Task Based Concent Checkbox"
-                            tabIndex="0"
-                            checked={aclRestrictedMode}
-                            onChange={this._handleACLCheckbox}
-                        />
-                        <div className="switch-slider round" />
-                    </label>
-                    <span
-                        className={`switch-label switch-label--right ${
-                            aclRestrictedMode ? 'active' : ''
-                        }`}>
-                        Restricted mode
-                    </span>
-                </div>
                 <div className="description">
                     <span>
                         <b>With Open mode</b> (blacklist) you are connected to
                         all nodes in the network. This mode allowes you to block
                         specific nodes and exclude them from interacting with
                         you.
-                    </span>
-                    <br />
-                    <span>
-                        <b>Restricted mode</b> (whitelist) you create your own
-                        trusted network only with those nodes that you specify.
                     </span>
                 </div>
                 <div className="acl__action">
@@ -264,6 +234,39 @@ export class ControlPanel extends React.Component {
         );
     }
 }
+
+
+/*<div className="switch-box">
+    <span
+        className={`switch-label switch-label--left ${
+            !aclRestrictedMode ? 'active' : ''
+        }`}>
+        Open mode
+    </span>
+    <label className="switch">
+        <input
+            ref="concentRef"
+            type="checkbox"
+            aria-label="Task Based Concent Checkbox"
+            tabIndex="0"
+            checked={aclRestrictedMode}
+            onChange={this._handleACLCheckbox}
+        />
+        <div className="switch-slider round" />
+    </label>
+    <span
+        className={`switch-label switch-label--right ${
+            aclRestrictedMode ? 'active' : ''
+        }`}>
+        Restricted mode
+    </span>
+</div>
+
+<br />
+<span>
+    <b>Restricted mode</b> (whitelist) you create your own
+    trusted network only with those nodes that you specify.
+</span>*/
 
 export default connect(
     mapStateToProps,
