@@ -54,7 +54,8 @@ class TransactionTube extends Component {
     };
 
     _fetchLastTransaction = list => {
-        const { created, type, amount } = list.length > 0 && list[0].data;
+        const { created, type, amount, task_payment } =
+            list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
         return (
