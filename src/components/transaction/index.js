@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
-import { getFilteredPaymentHistory, getStatus } from "../../reducers";
-import { timeStampToHR } from "../../utils/time";
-import checkNested from '../../utils/checkNested'
+import { getFilteredPaymentHistory, getStatus } from '../../reducers';
+import { timeStampToHR } from '../../utils/time';
+import checkNested from '../../utils/checkNested';
 
 const filter = {
     PAYMENT: 'payment',
@@ -80,7 +80,15 @@ class TransactionTube extends Component {
                                     }`}>
                                     {type === filter.INCOME ? '+ ' : '- '}
                                 </span>
-                                <b>{(amount / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT</b>
+                                <b>
+                                    {(
+                                        (Number(amount)
+                                            ? amount
+                                            : task_payment?.missing_amount) /
+                                        ETH_DENOM
+                                    ).toFixed(4)}
+                                    {isMainNet ? ' ' : ' t'}GNT
+                                </b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>
                             <div
@@ -117,7 +125,8 @@ class TransactionTube extends Component {
                                         ? concentBalance.value
                                               .dividedBy(ETH_DENOM)
                                               .toFixed(4)
-                                        : '-'}{isMainNet ? ' ' : ' t'}
+                                        : '-'}
+                                    {isMainNet ? ' ' : ' t'}
                                     GNT
                                 </b>
                             </span>
