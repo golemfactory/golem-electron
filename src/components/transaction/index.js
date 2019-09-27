@@ -54,7 +54,7 @@ class TransactionTube extends Component {
     };
 
     _fetchLastTransaction = list => {
-        const { created, type, amount, task_payment } =
+        const { created, currency, type, amount, task_payment } =
             list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
@@ -88,7 +88,7 @@ class TransactionTube extends Component {
                                             : task_payment?.missing_amount) /
                                         ETH_DENOM
                                     ).toFixed(4)}
-                                    {isMainNet ? ' ' : ' t'}GNT
+                                    {isMainNet ? ' ' : ' t'}{currency}
                                 </b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>

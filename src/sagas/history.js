@@ -12,7 +12,7 @@ const { SET_HISTORY } = dict;
  * @return {Object}             [Action object]
  */
 export function subscribeHistory(session) {
-    const interval = 20000;
+    const interval = 10000;
 
     return eventChannel(emit => {
         const fetchHistory = () => {

@@ -27,6 +27,7 @@ const Item = posed.default.div({
 const mapStateToProps = state => ({
     isMainNet: state.info.isMainNet,
     isEngineOn: state.info.isEngineOn,
+    historyList: state.txHistory.historyList,
     paymentHistory: getFilteredPaymentHistory.bind(null, state)
 });
 
@@ -47,17 +48,41 @@ export class History extends React.Component {
 
     componentWillUnmount() {
         this.copyTimeout && clearTimeout(this.copyTimeout);
+        this.forceListUpdateTimeoutStart &&
+            clearTimeout(this.forceListUpdateTimeoutStart);
+        this.forceListUpdateTimeoutEnd &&
+            clearTimeout(this.forceListUpdateTimeoutEnd);
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.activeTab !== this.state.activeTab)
+        if (
+            nextState.activeTab !== this.state.activeTab ||
+            (!isEqual(nextProps.historyList, this.props.historyList) &&
+                this.list)
+        ) {
             this.setState({
                 filteredList: nextProps.paymentHistory(nextState.activeTab)
             });
+            this.list && this.list.forceUpdateGrid();
+            this.forceListUpdateTimeoutStart = setTimeout(() => {
+                // TODO dirty update hack, refactor it
+                const listDOM = document.getElementById('historyList')
+                    ?.firstChild.firstChild;
+                if (listDOM) {
+                    listDOM.scrollTo(0, listDOM.scrollTop + 1);
+                    this.forceListUpdateTimeoutEnd = setTimeout(() => {
+                        listDOM.scrollTo(0, listDOM.scrollTop - 1);
+                    }, 100);
+                }
+            }, 800);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !isEqual(nextState, this.state);
+        return (
+            !isEqual(nextState, this.state) ||
+            !isEqual(nextProps.historyList, this.props.historyList)
+        );
     }
 
     /**
@@ -203,11 +228,18 @@ export class History extends React.Component {
                 <div>
                     {paymentHistory && filteredList.length > 0 ? (
                         <div style={{ display: 'flex' }}>
-                            <div style={{ flex: '1 1 auto', height: '100%' }}>
+                            <div
+                                id="historyList"
+                                style={{ flex: '1 1 auto', height: '100%' }}>
                                 <AutoSizer>
                                     {({ width, height }) => {
                                         return (
                                             <List
+                                                ref={ref => (this.list = ref)}
+                                                filteredList={
+                                                    filteredList[0]
+                                                        ?.transaction_hash
+                                                }
                                                 width={width}
                                                 height={height - 48} //offset of height
                                                 cellRangeRenderer={
