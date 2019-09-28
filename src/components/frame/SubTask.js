@@ -211,7 +211,7 @@ export class SubTask extends React.Component {
     _blockNode = () => {
         let node_id = this.state.subtask2block.node_id;
         new Promise((resolve, reject) => {
-            this.props.actions.blockNode(node_id, resolve, reject);
+            this.props.actions.blockNodes(node_id, resolve, reject);
         }).then(([result, msg]) => {
             this.setState({
                 nodeBlocked: result,
@@ -312,7 +312,7 @@ export class SubTask extends React.Component {
                                             {isDevMode && (
                                                 <p className="node-name__tooltip">
                                                     {subtask.node_name ||
-                                                        'Anonymous'}
+                                                        'Unknown'}
                                                 </p>
                                             )}
                                             {isDevMode && (
@@ -410,8 +410,8 @@ export class SubTask extends React.Component {
                         trigger="mouseenter"
                         interactive={true}
                         hideOnClick={false}
-                        interactiveBorder="15"
-                        duration={[null, 200]}
+                        duration={[null, 100]}
+                        delay={[500, 0]}
                         distance="-15"
                         arrow={true}>
                         <polyline

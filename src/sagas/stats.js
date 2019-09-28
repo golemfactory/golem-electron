@@ -5,10 +5,56 @@ import { dict } from '../actions'
 import { config, _handleRPC } from './handler'
 
 
-const {SET_TASK_STATS} = dict
+const {SET_TASK_STATS, SET_UNSUPPORTED_TASK_STATS} = dict
+
+export function subscribeUnsupportedStats(session) {
+    const interval = 2000
+
+    return eventChannel(emit => {
+
+        const fetchUnsupportedStats = () => {
+            
+            function on_stats(args) {
+                let stats = args[0];
+                emit({
+                    type: SET_UNSUPPORTED_TASK_STATS,
+                    payload: stats
+                })
+            }
+
+            _handleRPC(on_stats, session, config.GET_UNSUPPORTED_TASK_STATS_RPC, [7])
+        }
+
+        const fetchOnStartup = () => {
+                fetchUnsupportedStats()
+
+            return fetchOnStartup
+        }
+
+        const channelInterval = setInterval(fetchOnStartup(), interval)
+
+        return () => {
+            console.log('negative')
+            clearInterval(channelInterval);
+        }
+    })
+}
+
+export function* unsupportedBase(session) {
+    const channel = yield call(subscribeUnsupportedStats, session)
+    try {
+        while (true) {
+            let action = yield take(channel)
+            yield put(action)
+        }
+    } finally {
+        console.info('yield cancelled!')
+        channel.close()
+    }
+}
 
 export function subscribeStats(session) {
-    const interval = 1000
+    const interval = 2000
 
     return eventChannel(emit => {
 
@@ -67,4 +113,5 @@ export function* fireBase(session) {
  */
 export function* statsFlow(session) {
     yield fork(fireBase, session)
+    yield fork(unsupportedBase, session)
 }

@@ -14,7 +14,6 @@ import { taskStatus } from './../constants/statusDicts';
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler';
 
 const {
-    BLOCK_NODE,
     SET_TASKLIST,
     DELETE_TASK,
     CREATE_TASK,
@@ -130,20 +129,6 @@ export function* nodeNumberBase(session, payload) {
     if (payload) {
         let action = yield call(fetchNodeNumber, session, payload);
         yield put(action);
-    }
-}
-
-/**
- * [blockNode func. blocks given node id]
- * @param  {Object} payload [Node Id]
- */
-export function blockNode(session, { payload, _resolve, _reject }) {
-    _handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject);
-}
-
-export function* blockNodeBase(session, payload) {
-    if (payload) {
-        yield call(blockNode, session, payload);
     }
 }
 
@@ -542,7 +527,7 @@ export function subscribeTaskList(session) {
                 });
             }
 
-            _handleRPC(on_tasks, session, config.GET_TASKS_RPC);
+            _handleRPC(on_tasks, session, config.GET_TASKS_RPC, [null, true]);
         };
 
         const fetchOnStartup = () => {
@@ -592,6 +577,5 @@ export function* tasksFlow(session) {
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session);
     yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session);
     yield takeEvery(GET_FRAGMENTS, fragmentBase, session);
-    yield takeLatest(BLOCK_NODE, blockNodeBase, session);
     yield takeEvery(GET_TASK_GAS_PRICE, gasPriceBase, session);
 }

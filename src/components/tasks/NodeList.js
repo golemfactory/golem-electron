@@ -30,7 +30,7 @@ class NodeList extends Component {
             blockNodeModal: false,
             nodeBlocked: false,
             errMsg: null,
-            subtask2block: null
+            node2block: null
         };
     }
 
@@ -138,7 +138,7 @@ class NodeList extends Component {
                                     this,
                                     node_name
                                 )}>
-                                <span>{node_name || "Anonymous node"}</span>
+                                <span>{node_name || "Unknown node"}</span>
                             </div>
                         </Tooltip>
                     </td>
@@ -183,7 +183,7 @@ class NodeList extends Component {
                 blockNodeModal: true,
                 nodeBlocked: false,
                 errMsg: null,
-                subtask2block: subtask
+                node2block: subtask
             },
             () => this._lockScroll(true)
         );
@@ -194,9 +194,9 @@ class NodeList extends Component {
     };
 
     _blockNode = () => {
-        let node_id = this.state.subtask2block.node_id;
+        let node_id = this.state.node2block.node_id;
         new Promise((resolve, reject) => {
-            this.props.actions.blockNode(node_id, resolve, reject);
+            this.props.actions.blockNodes(node_id, resolve, reject);
         }).then(([result, msg]) => {
             this.setState({
                 nodeBlocked: result,
@@ -211,7 +211,7 @@ class NodeList extends Component {
             blockNodeModal,
             nodeBlocked,
             errMsg,
-            subtask2block
+            node2block
         } = this.state;
         return (
             <div className="section-node-list__task-detail">
@@ -260,7 +260,7 @@ class NodeList extends Component {
                             blockAction={this._blockNode}
                             nodeBlocked={nodeBlocked}
                             errMsg={errMsg}
-                            subtask2block={subtask2block}
+                            node2block={node2block}
                         />,
                         document.getElementById('modalPortal')
                     )}

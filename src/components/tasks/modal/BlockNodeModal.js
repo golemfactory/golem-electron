@@ -1,11 +1,11 @@
-import React, {Fragment} from 'react';
+import React, { Fragment } from 'react';
 import Lottie from 'react-lottie';
 
 import animData from './../../../assets/anims/block-node';
 
 const defaultOptions = {
     loop: false,
-    autoplay: true, 
+    autoplay: true,
     animationData: animData,
     rendererSettings: {
         preserveAspectRatio: 'xMidYMid slice'
@@ -13,75 +13,120 @@ const defaultOptions = {
 };
 
 export default class BlockNodeModal extends React.Component {
-
-
     constructor(props) {
         super(props);
     }
 
-    _nodeName(subtask) {
-        return subtask.node_name ? subtask.node_name : "Anonymous"
+    _nodeName(node) {
+        return node?.node_name || node?.name || 'Unknown';
     }
 
-    _nodeId(subtask) {
-        return subtask.node_id.substr(0, 24) + "…"
+    _nodeId(node) {
+        return (
+            (node?.node_id || node?.key || node?.identity).substr(0, 24) + '…'
+        );
     }
 
-    _blockNodeModal(subtask, cancelAction, blockAction) {
-        return <Fragment>
-            <span>Are you sure you want to block the "
-                <b>{this._nodeName(subtask)}</b>"
-                node?
-                <span className="node_id_span"> (node id: {this._nodeId(subtask)})</span>
-            </span>
-            <div className="action__modal">
-                <span className="btn--cancel" onClick={cancelAction}>Cancel</span>
-                <button type="button" className="btn--primary" onClick={blockAction} autoFocus>Block</button>
-            </div>
-         </Fragment>
+    _blockNodeModal(node, cancelAction, blockAction, unlockMode, aclMode) {
+        return (
+            <Fragment>
+                <span>
+                    Are you sure you want to {unlockMode ? 'remove' : 'block'}{' '}
+                    the "<b>{this._nodeName(node)}</b>" node
+                    {unlockMode
+                        ? aclMode
+                            ? ' from whitelist'
+                            : ' from blacklist'
+                        : ''}
+                    ?
+                    <span className="node_id_span">
+                        {' '}
+                        (node id: {this._nodeId(node)})
+                    </span>
+                </span>
+                <div className="action__modal">
+                    <span className="btn--cancel" onClick={cancelAction}>
+                        Cancel
+                    </span>
+                    <button
+                        type="button"
+                        className="btn--primary"
+                        onClick={blockAction}
+                        autoFocus>
+                        {unlockMode ? 'Remove' : 'Block'}
+                    </button>
+                </div>
+            </Fragment>
+        );
     }
 
     _errorModal(errMsg, cancelAction) {
-        return <Fragment>
-            <span>
-                {errMsg}
-            </span>
-            <div className="action__modal">
-                <button className="btn--warning" onClick={cancelAction}>Cancel</button>
-            </div>
-        </Fragment>
+        return (
+            <Fragment>
+                <span>{errMsg}</span>
+                <div className="action__modal">
+                    <button className="btn--warning" onClick={cancelAction}>
+                        Cancel
+                    </button>
+                </div>
+            </Fragment>
+        );
     }
 
-    _confirmationModal(subtask, cancelAction) {
-        return <Fragment>
-            <span>The "
-                <b>{this._nodeName(subtask)}</b>"
-                node was added to the blacklist.
-            </span>
-            <div className="action__modal">
-                <button type="button" className="btn--primary" onClick={cancelAction} autoFocus>OK!</button>
-            </div>
-        </Fragment>
+    _confirmationModal(node, cancelAction, unlockMode) {
+        return (
+            <Fragment>
+                <span>
+                    The "<b>{this._nodeName(node)}</b>" node is{' '}
+                    {unlockMode ? 'removed from' : 'added to'} the list.
+                </span>
+                <div className="action__modal">
+                    <button
+                        type="button"
+                        className="btn--primary"
+                        onClick={cancelAction}
+                        autoFocus>
+                        OK!
+                    </button>
+                </div>
+            </Fragment>
+        );
     }
 
     render() {
-        const {cancelAction, blockAction, nodeBlocked, errMsg, subtask2block} = this.props
+        const {
+            cancelAction,
+            blockAction,
+            nodeBlocked,
+            errMsg,
+            node2block,
+            unlockMode = false,
+            aclMode = false
+        } = this.props;
         return (
             <div className="container__modal container__block-node-modal">
                 <div className="content__modal">
                     <div className="image-container">
-                        <Lottie options={defaultOptions}/>
+                        <Lottie options={defaultOptions} />
                     </div>
-                    { nodeBlocked
-                        ? this._confirmationModal(subtask2block, cancelAction)
+                    {nodeBlocked
+                        ? this._confirmationModal(
+                              node2block,
+                              cancelAction,
+                              unlockMode
+                          )
                         : errMsg
-                            ? this._errorModal(errMsg, cancelAction)
-                            : this._blockNodeModal(subtask2block, cancelAction, blockAction)
-                    }
+                        ? this._errorModal(errMsg, cancelAction)
+                        : this._blockNodeModal(
+                              node2block,
+                              cancelAction,
+                              blockAction,
+                              unlockMode,
+                              aclMode
+                          )}
                 </div>
             </div>
         );
     }
 }
 //<span className={`${nodeBlocked ? "icon-checkmark" : "icon-blocked"}`}/>
-

@@ -1,3 +1,12 @@
+import { eventChannel, buffers } from 'redux-saga';
+import {
+    fork,
+    takeEvery,
+    takeLatest,
+    take,
+    call,
+    put
+} from 'redux-saga/effects';
 const { remote } = window.electron;
 const log = remote.require('./electron/debug_handler.js');
 const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
@@ -25,7 +34,12 @@ export let config = Object.freeze({
     GET_NODE_KEY_RPC: 'net.ident.key',
     GET_KNOWN_PEERS_RPC: 'net.peers.known',
     GET_CONNECTED_PEERS_RPC: 'net.peers.connected',
+    SETUP_ACL_RPC: 'net.peer.acl.new',
     BLOCK_NODE_RPC: 'net.peer.block',
+    TRUST_NODE_RPC: 'net.peer.allow',
+    BLOCK_NODE_IP_RPC: 'net.peer.block_ip',
+    GET_ACL_STATUS_RPC: 'net.peer.acl',
+    GET_ACL_IP_STATUS_RPC: 'net.peer.acl_ip',
     CONNECTION_CH: 'evt.net.connection',
     GET_P2P_PORT_RPC: 'net.p2p.port',
     GET_TASK_SERVER_PORT_RPC: 'net.tasks.port',
@@ -39,6 +53,7 @@ export let config = Object.freeze({
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
+    GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
     REMOVE_TASK_HEADER_RPC: 'comp.tasks.known.delete',
     GET_TASK_RPC: 'comp.task',
@@ -54,7 +69,6 @@ export let config = Object.freeze({
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RESTART_SUBTASKS_RPC: 'comp.task.subtasks.restart',
-    RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
@@ -117,8 +131,60 @@ export let config = Object.freeze({
     CONCENT_UNLOCK: 'pay.deposit.unlock',
     CONCENT_RELOCK: 'pay.deposit.relock',
     CONCENT_SWITCH_RPC: 'golem.concent.switch.turn',
-    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch'
+    CONCENT_SWITCH_STATUS_RPC: 'golem.concent.switch',
+    CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
+    CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
+
+export function eventWrapper(
+    session,
+    rpc,
+    payload,
+    dispatch_type,
+    interval = 1000
+) {
+    return eventChannel(emit => {
+        const fetchStats = () => {
+            function on_info(args) {
+                let info = args[0];
+                emit({
+                    type: dispatch_type,
+                    payload: info
+                });
+            }
+
+            _handleRPC(on_info, session, rpc, [payload]);
+        };
+
+        const fetchOnStartup = () => {
+            fetchStats();
+
+            return fetchOnStartup;
+        };
+
+        const channelInterval = setInterval(fetchOnStartup(), interval);
+
+        return () => {
+            console.log('negative');
+            clearInterval(channelInterval);
+        };
+    });
+}
+
+export function* eventEmitter(wrapper, session, payload, cancelCB) {
+    if (payload) {
+        const channel = yield call(wrapper, session, payload);
+        try {
+            while (true) {
+                let action = yield take(channel);
+                yield put(action);
+                if (cancelCB) cancelCB(channel, action);
+            }
+        } finally {
+            console.info('yield cancelled!');
+        }
+    }
+}
 
 function errorCallback(topic, _eb, { error, details, argsList }) {
     console.warn(

@@ -75,7 +75,7 @@ export class Trust extends React.Component {
                     transform={true}
                     disabled={isEngineOn || !isNodeProvider}
                 />
-                <div className="tips__trust">
+                <div className="tips">
                     <span>
                         Remember! To activate the settings please stop Golem
                         first.

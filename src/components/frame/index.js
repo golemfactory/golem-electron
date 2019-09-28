@@ -31,7 +31,6 @@ export class Frame extends React.Component {
 
     componentDidMount() {
         const {actions, match} = this.props;
-        console.log("match", match);
         //console.dir(this.props)
         actions.loginFrame(match.params.id)
         const endLoading = () => {

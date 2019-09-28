@@ -38,6 +38,11 @@ function ipcHandler(
         shell.openItem(path.join(DATADIR, 'logs'));
     });
 
+    ipcMain.on('redirect-wallet', function(event) {
+        win.webContents.send('redirect-wallet');
+        win.focus();
+    });
+
     /**
      * [When preview expanding switched on from renderer side, this event resizing the window]
      * @param  {String}     'preview-section'       key of the ipc broadcast

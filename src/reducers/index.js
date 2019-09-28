@@ -17,6 +17,7 @@ import price from './settings/price';
 import profile from './settings/profile';
 import trust from './settings/trust';
 import stats from './settings/stats';
+import acl, * as fromACL from './settings/acl';
 /*Tasks*/
 import details from './tasks/details';
 import preview from './tasks/preview';
@@ -55,6 +56,7 @@ const reducer = history =>
         profile,
         trust,
         stats,
+        acl,
         //TASK
         details,
         preview,
@@ -92,3 +94,6 @@ export const getConcentDepositStatus = (state, key) =>
 
 export const getComponentWarnings = (state, key) =>
     fromRealTime.componentWarningSelector({ ...state.realTime, ...state.info }, key);
+
+export const getFilteredKnownPeers = (state, filter, key) =>
+    fromACL.getKnownPeersSelector(state.acl, filter, key);

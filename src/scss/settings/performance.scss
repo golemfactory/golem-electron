@@ -5,8 +5,7 @@
 }
 
 .content__performance {
-    height: 430px;
-
+    margin-bottom: 30px;
     .btn--calculate {
         float: right;
         width: 130px;
@@ -61,6 +60,7 @@
         width: 35px;
         height: 30px;
         color: $color-text2;
+        top: 5px;
     }
     .title__list-item__acount {
         font-size: 10pt;

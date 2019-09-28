@@ -11,7 +11,7 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 
 	useEffect(() => {
 		return () => {
-			copyTimeoutList.map( item => clearTimeout(item));
+			copyTimeoutList.map(item => clearTimeout(item));
 		};
 	}, []);
 
@@ -52,7 +52,12 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 					size="small">
 					<span
 						className="id-info"
-						onClick={_copyField.bind(null, item.subtask_id, isSubtaskCopied, setCopySubtaskStatus)}>
+						onClick={_copyField.bind(
+							null,
+							item.subtask_id,
+							isSubtaskCopied,
+							setCopySubtaskStatus
+						)}>
 						{item.subtask_id.replace(
 							new RegExp('^(.{0,12}).*(.{2})$', 'im'),
 							'$1...$2'
@@ -77,8 +82,13 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 					isEnabled={!!item?.node_name}>
 					<span
 						className="id-info"
-						onClick={_copyField.bind(null, item.node_id, isNodeCopied, setCopyNodeStatus)}>
-						{item.node_name || 'Anonymous'}
+						onClick={_copyField.bind(
+							null,
+							item.node_id,
+							isNodeCopied,
+							setCopyNodeStatus
+						)}>
+						{item.node_name || 'Unknown'}
 					</span>
 				</Tooltip>
 			</td>
@@ -90,8 +100,14 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 			</td>
 			<td align="center">
 				<span
-					className="icon-locked"
-					onClick={_showBlockNodeModal.bind(null, item)}
+					className={`icon-locked ${
+						item?.node_id ? '' : 'icon--disabled'
+					}`}
+					onClick={
+						item?.node_id
+							? _showBlockNodeModal.bind(null, item)
+							: undefined
+					}
 				/>
 			</td>
 		</tr>

@@ -133,7 +133,7 @@ export default class Dropdown extends React.Component {
                                 this.renderListItems(list)
                             ) : (
                                 <span className="info__dropdown">
-                                    There's no preset. You must create first.
+                                    There's no preset. You must create one first.
                                 </span>
                             )}
                         </div>

@@ -35,6 +35,7 @@ export default class TaskSummaryModal extends React.Component {
             format,
             frames,
             isMainNet,
+            loadingTaskIndicator,
             minPerf,
             resolution,
             samples,
@@ -143,6 +144,7 @@ export default class TaskSummaryModal extends React.Component {
                             type="button"
                             className="btn--primary"
                             onClick={this._handleApply}
+                            disabled={loadingTaskIndicator}
                             autoFocus
                         >
                             Start Task
