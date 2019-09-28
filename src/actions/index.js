@@ -11,6 +11,8 @@ export let dict = Object.freeze({
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
+    LOAD_HISTORY: 'LOAD_HISTORY',
+    EXPAND_HISTORY_PAGE: 'EXPAND_HISTORY_PAGE',
     SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
     SET_ADVANCED_PRESET: 'SET_ADVANCED_PRESET',
     CREATE_ADVANCED_PRESET: 'CREATE_ADVANCED_PRESET',
@@ -158,6 +160,8 @@ const {
     SET_BALANCE,
     SET_RESOURCES,
     SET_HISTORY,
+    LOAD_HISTORY,
+    EXPAND_HISTORY_PAGE,
     SET_SYSTEM_INFO,
     SET_ADVANCED_PRESET,
     CREATE_ADVANCED_PRESET,
@@ -330,7 +334,7 @@ export const setSubtasksBorder = payload => ({
 export const getSubtasksBorder = (payload, _resolve, _reject) => ({
     type: GET_SUBTASKS_BORDER,
     payload,
-    _resolve, 
+    _resolve,
     _reject
 });
 
@@ -435,6 +439,11 @@ export const trustNodes = (payload, _resolve, _reject) => ({
 
 export const setHistory = payload => ({
     type: SET_HISTORY,
+    payload
+});
+
+export const expandHistoryPage = payload => ({
+    type: EXPAND_HISTORY_PAGE,
     payload
 });
 

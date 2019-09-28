@@ -5,7 +5,12 @@ import { isEqual } from 'lodash';
 
 import Tooltip from '@tippy.js/react';
 import { Transition, animated, config } from 'react-spring';
-import { AutoSizer, List, defaultCellRangeRenderer } from 'react-virtualized';
+import {
+    AutoSizer,
+    InfiniteLoader,
+    List,
+    defaultCellRangeRenderer
+} from 'react-virtualized';
 const posed = require('react-pose');
 const { PoseGroup } = posed;
 
@@ -27,6 +32,8 @@ const Item = posed.default.div({
 const mapStateToProps = state => ({
     isMainNet: state.info.isMainNet,
     isEngineOn: state.info.isEngineOn,
+    historyList: state.txHistory.historyList,
+    listPage: state.txHistory.listPage,
     paymentHistory: getFilteredPaymentHistory.bind(null, state)
 });
 
@@ -39,7 +46,8 @@ export class History extends React.Component {
         super(props);
         this.state = {
             activeTab: 0,
-            filteredList: props.paymentHistory(0)
+            filteredList: props.paymentHistory(0),
+            rowLoading: false
         };
 
         this.copyTimeout = false;
@@ -47,17 +55,41 @@ export class History extends React.Component {
 
     componentWillUnmount() {
         this.copyTimeout && clearTimeout(this.copyTimeout);
+        this.forceListUpdateTimeoutStart &&
+            clearTimeout(this.forceListUpdateTimeoutStart);
+        this.forceListUpdateTimeoutEnd &&
+            clearTimeout(this.forceListUpdateTimeoutEnd);
     }
 
     componentWillUpdate(nextProps, nextState) {
-        if (nextState.activeTab !== this.state.activeTab)
+        if (
+            nextState.activeTab !== this.state.activeTab ||
+            !isEqual(nextProps.historyList, this.props.historyList) ||
+            !isEqual(nextProps.listPage, this.props.listPage)
+        ) {
             this.setState({
                 filteredList: nextProps.paymentHistory(nextState.activeTab)
             });
+            this.forceListUpdateTimeoutStart = setTimeout(() => {
+                // TODO dirty update hack, refactor it
+                const listDOM = document.getElementById('historyList')
+                    ?.firstChild.firstChild;
+                if (listDOM) {
+                    listDOM.scrollTo(0, listDOM.scrollTop + 1);
+                    this.forceListUpdateTimeoutEnd = setTimeout(() => {
+                        listDOM.scrollTo(0, listDOM.scrollTop - 1);
+                    }, 100);
+                }
+            }, 800);
+        }
     }
 
     shouldComponentUpdate(nextProps, nextState) {
-        return !isEqual(nextState, this.state);
+        return (
+            !isEqual(nextState, this.state) ||
+            !isEqual(nextProps.historyList, this.props.historyList) ||
+            !isEqual(nextProps.listPage, this.props.listPage)
+        );
     }
 
     /**
@@ -140,19 +172,40 @@ export class History extends React.Component {
         const tx = filteredList[index];
         return (
             <div key={key} style={style}>
-                <HistoryItem tx={tx} {...this.props} />
+                {tx ? <HistoryItem tx={tx} {...this.props} /> : 'Loading'}
             </div>
         );
+    };
+
+    isRowLoaded = ({ index }) => {
+        return !!this.state.filteredList[index];
+    };
+
+    loadMoreRows = ({ startIndex, stopIndex }) => {
+        const [size, list] = this.props.historyList;
+        const pageNumber = Math.floor(list?.length / 30 + 1);
+        if (list?.length < size) {
+            this.setState({
+                rowLoading: true
+            });
+            setTimeout(() => {
+                this.props.actions.expandHistoryPage(pageNumber);
+                this.setState({
+                    rowLoading: false
+                });
+            }, 500); //throttle
+        }
     };
 
     render() {
         const {
             isEngineOn,
             isMainNet,
+            historyList,
             paymentHistory,
             toggleTransactionHistory
         } = this.props;
-        const { activeTab, filteredList } = this.state;
+        const { activeTab, filteredList, rowLoading } = this.state;
         return (
             <div className="content__history">
                 <div
@@ -202,26 +255,52 @@ export class History extends React.Component {
                 </div>
                 <div>
                     {paymentHistory && filteredList.length > 0 ? (
-                        <div style={{ display: 'flex' }}>
-                            <div style={{ flex: '1 1 auto', height: '100%' }}>
-                                <AutoSizer>
-                                    {({ width, height }) => {
-                                        return (
-                                            <List
-                                                width={width}
-                                                height={height - 48} //offset of height
-                                                cellRangeRenderer={
-                                                    this.cellRangeRenderer
-                                                }
-                                                rowCount={filteredList.length}
-                                                rowHeight={76}
-                                                rowRenderer={this.rowRenderer}
-                                            />
-                                        );
-                                    }}
-                                </AutoSizer>
-                            </div>
-                        </div>
+                        <InfiniteLoader
+                            isRowLoaded={this.isRowLoaded}
+                            loadMoreRows={this.loadMoreRows}
+                            rowCount={historyList[0]}
+                            threshold={10}>
+                            {({ onRowsRendered, registerChild }) => (
+                                <div style={{ display: 'flex' }}>
+                                    <div
+                                        id="historyList"
+                                        style={{
+                                            flex: '1 1 auto',
+                                            height: '100%'
+                                        }}>
+                                        <AutoSizer>
+                                            {({ width, height }) => {
+                                                return (
+                                                    <List
+                                                        ref={registerChild}
+                                                        filteredList={
+                                                            filteredList[0]
+                                                                ?.transaction_hash
+                                                        }
+                                                        width={width}
+                                                        height={height - 48} //offset of height
+                                                        onRowsRendered={
+                                                            onRowsRendered
+                                                        }
+                                                        cellRangeRenderer={
+                                                            this
+                                                                .cellRangeRenderer
+                                                        }
+                                                        rowHeight={76}
+                                                        rowCount={
+                                                            filteredList.length
+                                                        }
+                                                        rowRenderer={
+                                                            this.rowRenderer
+                                                        }
+                                                    />
+                                                );
+                                            }}
+                                        </AutoSizer>
+                                    </div>
+                                </div>
+                            )}
+                        </InfiniteLoader>
                     ) : (
                         <div className="empty-list__history">
                             <span>
@@ -236,6 +315,35 @@ export class History extends React.Component {
                         </div>
                     )}
                 </div>
+                {rowLoading && (
+                    <svg className="loading__history" height="1">
+                        <line x1="0" y1="0" x2="560" y2="0" strokeWidth="2">
+                            <animate
+                                attributeType="XML"
+                                attributeName="stroke"
+                                values="#1c76e7;#0169CA;#1c76e7;#024686"
+                                dur="0.8s"
+                                repeatCount="indefinite"
+                            />
+                            <animate
+                                attributeType="XML"
+                                attributeName="x2"
+                                from="230"
+                                to="460"
+                                dur="0.5s"
+                                repeatCount="indefinite"
+                            />
+                            <animate
+                                attributeType="XML"
+                                attributeName="x1"
+                                from="230"
+                                to="0"
+                                dur="0.5s"
+                                repeatCount="indefinite"
+                            />
+                        </line>
+                    </svg>
+                )}
             </div>
         );
     }

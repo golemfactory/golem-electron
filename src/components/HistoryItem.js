@@ -85,6 +85,7 @@ export default class HistoryItem extends Component {
 			payee,
 			payer,
 			created,
+			currency,
 			status,
 			amount,
 			direction,
@@ -170,7 +171,7 @@ export default class HistoryItem extends Component {
 									{(direction == filter.PAYMENT
 										? recipient_address
 										: sender_address
-									).replace(
+									)?.replace(
 										new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 										'$1...$2'
 									)}
@@ -196,7 +197,8 @@ export default class HistoryItem extends Component {
 								? amount
 								: task_payment?.missing_amount) / ETH_DENOM
 						).toFixed(4)}
-						{isMainNet ? ' ' : ' t'}GNT
+						{isMainNet ? ' ' : ' t'}{currency
+						}
 					</span>
 					{transaction_hash && (
 						<Tooltip
