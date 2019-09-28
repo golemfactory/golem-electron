@@ -278,7 +278,7 @@ export class History extends React.Component {
                                                                 ?.transaction_hash
                                                         }
                                                         width={width}
-                                                        height={height - 49} //offset of height
+                                                        height={height - 48} //offset of height
                                                         onRowsRendered={
                                                             onRowsRendered
                                                         }
