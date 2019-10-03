@@ -536,9 +536,24 @@ export class TaskItem extends React.Component {
                                         </ConditionalRender>
                                         <ConditionalRender showIf={!isSupportedTaskType}>
                                             <div className="info-task-unsupported">
-                                                <span>
-                                                    Functionality for task type: {item.type} is available from CLI.
+                                                <Tooltip
+                                                    content={<p>Preview</p>}
+                                                    placement="bottom"
+                                                    trigger="mouseenter"
+                                                    size="small">
+                                                <span
+                                                    className="icon-preview"
+                                                    tabIndex="0"
+                                                    aria-label="Preview"
+                                                    onClick={this._togglePreview.bind(
+                                                        this,
+                                                        item
+                                                    )}>
+                                                    <span className="info-label">
+                                                        Preview
+                                                    </span>
                                                 </span>
+                                                </Tooltip>
                                             </div>
                                         </ConditionalRender>
                                     </div>
