@@ -46,6 +46,7 @@
             "category": "Utility",
             "artifactName": "golem-electron-beta-${os}-${version}.${ext}"
         },
+        "afterSign": "./notarization.js",
         "files": [
             "index.js",
             "electron/",
@@ -185,9 +186,10 @@
         "css-browser-selector": "^0.6.5",
         "css-loader": "2.1.0",
         "electron": "^3.1.8",
-        "electron-builder": "20.41.0",
+        "electron-builder": "21.2.0",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
+        "electron-notarize": "^0.1.1",
         "enzyme": "3.8.0",
         "enzyme-adapter-react-16": "1.12.1",
         "enzyme-to-json": "3.3.5",
