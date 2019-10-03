@@ -46,6 +46,8 @@ const mapDispatchToProps = dispatch => ({
 export class ImageZoom extends React.Component {
     constructor(props) {
         super(props);
+        this._prevX = null;
+        this._prevY = null;
     }
 
     componentDidMount() {
@@ -65,9 +67,7 @@ export class ImageZoom extends React.Component {
             nextProps.details.status !== this.props.details.status
         ) {
             loadImage(nextProps.image).then(data => {
-                this.viewer.world.removeItem(
-                    this.viewer.world.getItemAt(0)
-                );
+                this.viewer.world.removeItem(this.viewer.world.getItemAt(0));
                 this.viewer.addTiledImage({
                     tileSource: {
                         type: nextProps.type,
@@ -78,7 +78,7 @@ export class ImageZoom extends React.Component {
                                 width: data.naturalWidth
                             }
                         ]
-                    },
+                    }
                 });
             });
         }
@@ -134,6 +134,9 @@ export class ImageZoom extends React.Component {
             });
 
             viewer.addHandler('open', item => {
+                const { x, y } = viewer.viewport.getContainerSize();
+                this._prevX = x;
+                this._prevY = y;
                 setTimeout(
                     () => {
                         this.viewer.viewport.goHome(true);
@@ -149,19 +152,24 @@ export class ImageZoom extends React.Component {
 
             viewer.addHandler('resize', item => {
                 setTimeout(() => {
-                    this.viewer.viewport.goHome(true);
-                    this.props.fetchClientInfo(
-                        this.viewer.viewport._containerInnerSize,
-                        this.viewer.viewport.getCenter(true),
-                        this.viewer.viewport
-                    );
+                    const { x, y } = viewer.viewport.getContainerSize();
+                    if (x !== this._prevX || y !== this._prevY) {
+                        this.viewer.viewport.goHome(true);
+                        this.props.fetchClientInfo(
+                            this.viewer.viewport._containerInnerSize,
+                            this.viewer.viewport.getCenter(true),
+                            this.viewer.viewport
+                        );
+                        this._prevX = x;
+                        this._prevY = y;
+                    }
                 }, 500); //MacOS maximize animation delay
             });
 
-            viewer.addHandler('zoom', (item) => {
-                !!this.props.isSubtaskShown && this.props.getSubtasksBorder()
-                this.calculateZoomRatio.call(this, item.zoom)
-            })
+            viewer.addHandler('zoom', item => {
+                !!this.props.isSubtaskShown && this.props.getSubtasksBorder();
+                this.calculateZoomRatio.call(this, item.zoom);
+            });
         });
     }
 

@@ -46,7 +46,7 @@ describe('<MainFragment />', () => {
                 chosenPreset: 'custom'
             },
             txHistory: {
-                historyList: []
+                historyList: [null, []]
             },
             resources: {
                 resource: 50

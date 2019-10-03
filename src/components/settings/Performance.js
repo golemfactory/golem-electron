@@ -27,6 +27,10 @@ const mockList = [
     {
         icon: "icon-blender_nvgpu",
         title: "Blender GPU"
+    },
+    {
+        icon: "icon-gwasm-color",
+        title: "gWasm"
     }
 ];
 //loadingIndicator && <span className="icon-progress"/>

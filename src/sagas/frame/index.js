@@ -27,7 +27,7 @@ const {
     SET_ALL_FRAMES,
     RESTART_TASK,
     RESTART_SUBTASK,
-    BLOCK_NODE
+    BLOCKED_NODES
 } = dict;
 
 /**
@@ -208,5 +208,5 @@ export function* frameBase(session, id) {
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session);
     yield takeLatest(RESTART_TASK, restartTaskBase, session);
     yield takeLatest(RESTART_SUBTASK, restartSubtaskBase, session);
-    yield takeLatest(BLOCK_NODE, blockNodeBase, session);
+    yield takeLatest(BLOCKED_NODES, blockNodeBase, session);
 }

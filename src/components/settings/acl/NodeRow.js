@@ -52,7 +52,9 @@ const NodeRow = ({
 						name="taskType"
 						value={item?.key || item.identity}
 						checked={isChecked}
-						onChange={() => toggleItems.call(null, [item?.key || item.identity])}
+						onChange={() =>
+							toggleItems.call(null, [item?.key || item.identity])
+						}
 						readOnly
 						required
 					/>
@@ -97,7 +99,9 @@ const NodeRow = ({
 					<span className="info__id">{item.pub_addr}</span>
 				</td>
 				<td align="center">
-					<span className="info__id">{item.p2p_pub_port}</span>
+					<span className="info__id">
+						{item.p2p_pub_port || item.p2p_prv_port}
+					</span>
 				</td>
 			</ConditionalRender>
 			<td align="center">

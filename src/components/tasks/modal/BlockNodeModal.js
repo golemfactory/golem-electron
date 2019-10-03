@@ -27,12 +27,18 @@ export default class BlockNodeModal extends React.Component {
         );
     }
 
-    _blockNodeModal(node, cancelAction, blockAction, unlockMode) {
+    _blockNodeModal(node, cancelAction, blockAction, unlockMode, aclMode) {
         return (
             <Fragment>
                 <span>
-                    Are you sure you want to {unlockMode ? 'unlock' : 'block'}{' '}
-                    the "<b>{this._nodeName(node)}</b>" node?
+                    Are you sure you want to {unlockMode ? 'remove' : 'block'}{' '}
+                    the "<b>{this._nodeName(node)}</b>" node
+                    {unlockMode
+                        ? aclMode
+                            ? ' from whitelist'
+                            : ' from blacklist'
+                        : ''}
+                    ?
                     <span className="node_id_span">
                         {' '}
                         (node id: {this._nodeId(node)})
@@ -47,7 +53,7 @@ export default class BlockNodeModal extends React.Component {
                         className="btn--primary"
                         onClick={blockAction}
                         autoFocus>
-                        Block
+                        {unlockMode ? 'Remove' : 'Block'}
                     </button>
                 </div>
             </Fragment>
@@ -72,7 +78,7 @@ export default class BlockNodeModal extends React.Component {
             <Fragment>
                 <span>
                     The "<b>{this._nodeName(node)}</b>" node is{' '}
-                    {unlockMode ? 'removed from' : 'added to'} the blacklist.
+                    {unlockMode ? 'removed from' : 'added to'} the list.
                 </span>
                 <div className="action__modal">
                     <button
@@ -94,7 +100,8 @@ export default class BlockNodeModal extends React.Component {
             nodeBlocked,
             errMsg,
             node2block,
-            unlockMode = false
+            unlockMode = false,
+            aclMode = false
         } = this.props;
         return (
             <div className="container__modal container__block-node-modal">
@@ -114,7 +121,8 @@ export default class BlockNodeModal extends React.Component {
                               node2block,
                               cancelAction,
                               blockAction,
-                              unlockMode
+                              unlockMode,
+                              aclMode
                           )}
                 </div>
             </div>

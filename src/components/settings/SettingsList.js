@@ -106,30 +106,24 @@ export class SettingsList extends React.Component {
      * @return {DOM}                    [Elements of list]
      */
     loadTabItems(data) {
-        const { isDeveloperMode, isMainNet } = this.props;
-        return data
-            .filter((_, index) => isDeveloperMode || index < 6)
-            .filter(
-                (item, _) => !(item.title == 'Concent Settings' && isMainNet)
-            )
-            .map((item, index) => (
+        return data.map((item, index) => (
+            <div
+                className="settings-tab-item"
+                key={index.toString()}
+                value={index}>
                 <div
-                    className="settings-tab-item"
-                    key={index.toString()}
-                    value={index}>
-                    <div
-                        className="tab-item-title"
-                        onClick={this._handleTab}
-                        role="tab"
-                        tabIndex="0">
-                        <span>{item.title}</span>
-                        <span
-                            className="icon-arrow-right"
-                            aria-label="Expand Tab"
-                        />
-                    </div>
+                    className="tab-item-title"
+                    onClick={this._handleTab}
+                    role="tab"
+                    tabIndex="0">
+                    <span>{item.title}</span>
+                    <span
+                        className="icon-arrow-right"
+                        aria-label="Expand Tab"
+                    />
                 </div>
-            ));
+            </div>
+        ));
     }
 
     /**
@@ -163,6 +157,7 @@ export class SettingsList extends React.Component {
 
     render() {
         const { concentModal, activeContent } = this.state;
+        const { isMainNet } = this.props
         const tabItems = [
             {
                 title: 'Performance',
@@ -193,6 +188,9 @@ export class SettingsList extends React.Component {
                 content: <Peers />
             }
         ];
+        const filteredTabs = tabItems.filter(
+            (item, _) => !(item.title == 'Concent Settings' && isMainNet)
+        );
         return (
             <Fragment>
                 <Personal />
@@ -204,7 +202,7 @@ export class SettingsList extends React.Component {
                             !Number.isInteger(activeContent)
                                 ? [
                                       <div className="settings-tab" id="tabs">
-                                          {this.loadTabItems(tabItems)}
+                                          {this.loadTabItems(filteredTabs)}
                                       </div>
                                   ]
                                 : [
@@ -220,9 +218,9 @@ export class SettingsList extends React.Component {
                                                   className="icon-arrow-left"
                                                   aria-label="Back to Tabs"
                                               />
-                                              Back
+                                              {filteredTabs[activeContent]?.title}
                                           </div>
-                                          {tabItems[activeContent]?.content}
+                                          {filteredTabs[activeContent]?.content}
                                       </div>
                                   ]
                         }

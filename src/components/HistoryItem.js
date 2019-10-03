@@ -85,6 +85,7 @@ export default class HistoryItem extends Component {
 			payee,
 			payer,
 			created,
+			currency,
 			status,
 			amount,
 			direction,
@@ -119,14 +120,18 @@ export default class HistoryItem extends Component {
 									hideOnClick={false}
 									isEnabled={!!task_payment}>
 									<span
-										className={`icon-copy ${!!task_payment ? '' : 'icon--color-gray'}`}
+										className={`icon-copy ${
+											!!task_payment
+												? ''
+												: 'icon--color-gray'
+										}`}
 										onClick={
-											!!task_payment 
-											? this._copyField.bind(
-												null,
-												task_payment?.subtask_id
-											)
-											: undefined
+											!!task_payment
+												? this._copyField.bind(
+														null,
+														task_payment?.subtask_id
+												  )
+												: undefined
 										}
 									/>
 								</Tooltip>
@@ -166,7 +171,7 @@ export default class HistoryItem extends Component {
 									{(direction == filter.PAYMENT
 										? recipient_address
 										: sender_address
-									).replace(
+									)?.replace(
 										new RegExp('^(.{0,4}).*(.{4})$', 'im'),
 										'$1...$2'
 									)}
@@ -187,8 +192,13 @@ export default class HistoryItem extends Component {
 							}`}>
 							{direction === filter.PAYMENT ? '- ' : '+ '}
 						</span>
-						{(amount / ETH_DENOM).toFixed(4)}
-						{isMainNet ? ' ' : ' t'}GNT
+						{(
+							(!!Number(amount)
+								? amount
+								: task_payment?.missing_amount) / ETH_DENOM
+						).toFixed(4)}
+						{isMainNet ? ' ' : ' t'}{currency
+						}
 					</span>
 					{transaction_hash && (
 						<Tooltip
