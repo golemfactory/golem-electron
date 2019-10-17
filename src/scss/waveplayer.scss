@@ -1,0 +1,23 @@
+#audio-spectrum {
+  position: relative;
+  margin-top: 5px;
+  text-align: center;
+  height: 90px;
+  .loading-spectrum {
+    position: relative;
+    top: 50px;
+  }
+}
+
+#wave-timeline {
+  height: 15px;
+  margin-top: 10px;
+}
+
+.grid--media {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-column-gap: 24px;
+  box-sizing: border-box;
+  margin-top: 5px;
+}
