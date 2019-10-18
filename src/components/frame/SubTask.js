@@ -281,6 +281,9 @@ export class SubTask extends React.Component {
                 )[0];
                 const isDirectionTop =
                     index + 1 > taskDetails.subtaskAmount / 2;
+                const verticalPoints = arrayColumn(item.value, 1);
+                const verticalMidPoint =
+                    Math.abs(verticalPoints[2] - verticalPoints[0]) / 2;
                 return !!subtask ? (
                     <Tooltip
                         key={index.toString()}
@@ -412,7 +415,7 @@ export class SubTask extends React.Component {
                         hideOnClick={false}
                         duration={[null, 100]}
                         delay={[500, 0]}
-                        distance="-15"
+                        distance={-1 * verticalMidPoint}
                         arrow={true}>
                         <polyline
                             key={index.toString()}
