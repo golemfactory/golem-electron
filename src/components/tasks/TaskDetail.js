@@ -128,6 +128,8 @@ export class TaskDetail extends React.Component {
             subtask_timeout: '',
             bid: props.requestorMaxPrice / ETH_DENOM,
             //CUSTOM
+            editTaskName: false,
+            taskName: props.task?.name,
             testLock: false,
             presetList: [],
             savePresetLock: true,
@@ -841,6 +843,15 @@ export class TaskDetail extends React.Component {
 
     _handleBack = () => window.routerHistory.goBack();
 
+    _saveTaskName = () => {
+        this.setState({
+            taskName: document.getElementById('taskNameInput').value
+        })
+        this._editTaskName();
+    };
+    
+    _editTaskName = () => this.setState( prev => ({ editTaskName: !prev.editTaskName }));
+
     /**
      * [_closeModal func. closes all modals]
      */
@@ -941,6 +952,7 @@ export class TaskDetail extends React.Component {
             samples,
             subtasks_count,
             subtask_timeout,
+            taskName,
             timeout
         } = this.state;
         const { task, testStatus } = this.props;
@@ -949,6 +961,7 @@ export class TaskDetail extends React.Component {
             this.props.actions.createTask(
                 {
                     ...task,
+                    name: taskName,
                     bid,
                     compute_on,
                     concent_enabled: concent,
@@ -1337,6 +1350,7 @@ export class TaskDetail extends React.Component {
             compute_on,
             concent,
             defaultSettingsModal,
+            editTaskName,
             insufficientAmountModal,
             isDetailPage,
             isInPatient,
@@ -1350,6 +1364,7 @@ export class TaskDetail extends React.Component {
             resolutionChangeInfo,
             resolutionChangeModal,
             subtask_warning,
+            taskName,
             testLock
         } = this.state;
 
@@ -1408,15 +1423,35 @@ export class TaskDetail extends React.Component {
                                 {!isDetailPage && (
                                     <div className="source-path">
                                         <b>Name: </b>
+                                        {!editTaskName
+                                            ?
                                         <span>
-                                            {task.name}
+                                            {taskName}
                                             <span
                                                 className="action__edit-name"
-                                                onClick={this._handleBack}>
+                                                onClick={this._editTaskName}>
                                                 <span className="icon-pencil" />
                                                 Edit
                                             </span>
                                         </span>
+                                        :
+                                        <span>
+                                            <input
+                                                type="text"
+                                                id="taskNameInput"
+                                                aria-label="Task Name"
+                                                disabled={isDetailPage}
+                                                defaultValue={taskName}
+                                                autoFocus
+                                            />
+                                            <span
+                                                className="action__save-name"
+                                                onClick={this._saveTaskName}>
+                                                <span className="icon-confirmation" />
+                                                Save
+                                            </span>
+                                        </span>
+                                        }
                                     </div>
                                 )}
                                 {!isDetailPage && (
