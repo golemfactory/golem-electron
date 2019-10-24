@@ -968,7 +968,7 @@ export class TaskDetail extends React.Component {
     return new Promise(res => res(false));
   }
 
-  _handleFormByType(type, isDetail) {
+  _handleFormByType(type) {
     const {
       modalData,
       resolution,
@@ -1205,10 +1205,6 @@ export class TaskDetail extends React.Component {
 
     return formTemplate
       .sort(sortByOrder)
-      .filter(
-        item =>
-          item.detailContent === undefined || item.detailContent === isDetail
-      )
       .map(item => item.content);
   }
 
