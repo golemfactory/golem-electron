@@ -3,9 +3,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { hashHistory } from 'react-router';
 import { BigNumber } from 'bignumber.js';
+import isEqual from 'lodash/isEqual';
 
-import * as Actions from "./../../actions";
-import { timeStampToHR } from "./../../utils/time";
+import * as Actions from './../../actions';
+import { timeStampToHR } from './../../utils/time';
 
 import { getStatus } from '../../reducers';
 import CurrencyBox from './CurrencyBox';
@@ -15,6 +16,8 @@ const { clipboard } = window.electron;
 const zero = new BigNumber(0);
 
 const mapStateToProps = state => ({
+    balance: state.realTime.balance,
+    currency: state.currency,
     publicKey: state.account.publicKey,
     isDeveloperMode: state.input.developerMode,
     isMainNet: state.info.isMainNet,
@@ -41,6 +44,14 @@ export class Wallet extends Component {
                 () => this._handleExpandWallet(),
                 500
             );
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !isEqual(nextProps.balance[0], this.props.balance[0]) ||
+            !isEqual(nextProps.balance[1], this.props.balance[1]) ||
+            !isEqual(nextProps.status, this.props.status)
+        );
     }
 
     componentWillUnmount() {
