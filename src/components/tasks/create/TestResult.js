@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { isEqual } from "lodash";
 
-import checkNested from "./../../utils/checkNested";
-import isObjectEmpty from "./../../utils/isObjectEmpty";
-import { testStatusDict } from "./../../constants/statusDicts";
+import checkNested from "../../../utils/checkNested";
+import isObjectEmpty from "../../../utils/isObjectEmpty";
+import { testStatusDict } from "../../../constants/statusDicts";
 
 const { remote } = window.electron;
 const mainProcess = remote.require("./index");

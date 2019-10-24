@@ -10,9 +10,9 @@ import Header from "../components/Header";
 import MainFragment from "../components/network";
 import Tasks from "../components/tasks";
 import Frame from "../components/frame";
-import MasterFilePicker from "../components/tasks/MasterFilePicker";
-import NewTask from "../components/tasks/NewTask";
-import TaskDetail from "../components/tasks/TaskDetail";
+import MasterFilePicker from "../components/tasks/create/MasterFilePicker";
+import NewTask from "../components/tasks/create/NewTask";
+import TaskForm from "../components/tasks/create/TaskForm";
 import Settings from "../components/settings";
 import NotFound from "../components/NotFound";
 import { OnBoardingComponent } from "../components/hoc/Onboarding";
@@ -65,10 +65,10 @@ const routes = (
                     ConcentOnboardingComponent(Settings)
                 )}
             />
-            <Route path="/task/:id" component={TaskDetail} />
+            <Route path="/task/:id" component={TaskForm} />
             <Route path="/add-task/master-file/:type?" component={MasterFilePicker} />
             <Route path="/add-task/type/:type?" component={NewTask} />
-            <Route path="/add-task/settings" component={TaskDetail} />
+            <Route path="/add-task/settings" component={TaskForm} />
             <Route component={NotFound} status={404} />
         </Switch>
     </div>
