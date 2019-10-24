@@ -524,23 +524,13 @@ export class TaskDetail extends React.Component {
 
   /**
    * [_handleCheckbox func. updates checkbox value]
-   * @param  {Event}  e
+   * @param  {String}   state     name of checkbox state
+   * @param  {Event}    e
    */
-  _handleCheckbox(e) {
+  _handleCheckbox(state, e) {
     this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
     this.setState({
-      compositing: e.target.checked
-    });
-  }
-
-  /**
-   * [_handleCheckbox func. updates checkbox value]
-   * @param  {Event}  e
-   */
-  _handleConcentCheckbox(e) {
-    this.interactedInputObject[e.target.getAttribute('aria-label')] = true;
-    this.setState({
-      concent: e.target.checked
+      [state]: e.target.checked
     });
   }
 
@@ -612,6 +602,10 @@ export class TaskDetail extends React.Component {
    * @param  {String}     name    [Name of selected preset]
    */
   _handlePresetOptionChange(list, name) {
+    function _isArrayEqual(arr1, arr2) {
+      return arr1.toString() === arr2.toString(); //String representation hack
+    }
+
     const result = list.filter((item, index) => item.name == name)[0];
     const preset = { ...result, value: { ...result.value } }; // immutable
 
@@ -621,7 +615,7 @@ export class TaskDetail extends React.Component {
     const { resolutionW, resolutionH } = this.refs;
     if (
       this.state.isDefaultResolutionApplied &&
-      !this._isArrayEqual([resolutionW.value, resolutionH.value], resolution)
+      !_isArrayEqual([resolutionW.value, resolutionH.value], resolution)
     )
       this._askForNewResolutionChange(preset);
     else this._applyPresetOption(preset, true, false);
@@ -632,10 +626,6 @@ export class TaskDetail extends React.Component {
       resolutionChangeModal: true,
       resolutionChangeInfo: preset
     });
-  }
-
-  _isArrayEqual(arr1, arr2) {
-    return arr1.toString() === arr2.toString(); //String representation hack
   }
 
   _applyPresetOption = (
@@ -783,8 +773,6 @@ export class TaskDetail extends React.Component {
     this._closeModal('defaultSettingsModal');
   };
 
-  _handleBack = () => window.routerHistory.goBack();
-
   _saveTaskName = () => {
     this.setState({
       taskName: document.getElementById('taskNameInput').value
@@ -882,6 +870,7 @@ export class TaskDetail extends React.Component {
       subtasks_count: 1 // <--- HARDCODED
     });
   };
+  
   _createTaskAsync() {
     const {
       bid,
@@ -1001,7 +990,6 @@ export class TaskDetail extends React.Component {
     let formTemplate = [
       {
         order: 0,
-        detailContent: false,
         content: (
           <div className="item-settings" key="0">
             <InfoLabel
@@ -1131,7 +1119,6 @@ export class TaskDetail extends React.Component {
       },
       {
         order: 6,
-        detailContent: false,
         content: (
           <div className="item-settings item__preset-button" key="6">
             <button
@@ -1515,7 +1502,7 @@ export class TaskDetail extends React.Component {
                           aria-label="Task Based Concent Checkbox"
                           tabIndex="0"
                           checked={concent}
-                          onChange={this._handleConcentCheckbox.bind(this)}
+                          onChange={this._handleCheckbox.bind(this, 'concent')}
                         />
                         <div className="switch-slider round" />
                       </label>
