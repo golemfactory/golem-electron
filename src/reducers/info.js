@@ -8,6 +8,7 @@ const { setConfig, getConfig, dictConfig, configStore } = remote.getGlobal(
 
 const {
     APP_QUIT_GRACEFUL,
+    SET_GRACEFUL_QUIT,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -206,7 +207,7 @@ const setInfo = (state = initialState, action) => {
                 isVirtualizationExist: action.payload
             });
 
-        case APP_QUIT_GRACEFUL:
+        case SET_GRACEFUL_QUIT:
             return Object.assign({}, state, {
                 isGracefulShutdownEnabled: action.payload
             });

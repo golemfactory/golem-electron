@@ -104,6 +104,7 @@ export let dict = Object.freeze({
     //GENERAL
     APP_QUIT: 'APP_QUIT',
     APP_QUIT_GRACEFUL: 'APP_QUIT_GRACEFUL',
+    SET_GRACEFUL_QUIT: 'SET_GRACEFUL_QUIT',
     TOGGLE_FORCE_QUIT: 'TOGGLE_FORCE_QUIT',
     SET_CONNECTION: 'SET_CONNECTION',
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
@@ -244,6 +245,7 @@ const {
     //GENERAL
     APP_QUIT,
     APP_QUIT_GRACEFUL,
+    SET_GRACEFUL_QUIT,
     TOGGLE_FORCE_QUIT,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
@@ -600,9 +602,8 @@ export const setOnboard = payload => ({
     payload
 });
 
-export const gracefulShutdown= payload => ({
-    type: APP_QUIT_GRACEFUL,
-    payload
+export const gracefulShutdown= () => ({
+    type: APP_QUIT_GRACEFUL
 });
 
 export const toggleForceQuit= payload => ({

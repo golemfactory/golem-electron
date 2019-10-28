@@ -89,7 +89,8 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats.provider || state.stats.stats,
     isEngineLoading: state.info.isEngineLoading,
-    version: state.info.version
+    version: state.info.version,
+    isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -315,6 +316,7 @@ export class FooterMain extends Component {
             stats,
             engineLoading,
             isEngineLoading,
+            isGracefulShutdownEnabled,
             passwordModal,
             version
         } = this.props;
@@ -453,8 +455,8 @@ export class FooterMain extends Component {
                                                       )}
                                                   </span>
                                                   <br />
-                                                  {status?.client?.status ===
-                                                  componentStatus.SHUTDOWN ? (
+                                                  {((status?.client?.status === componentStatus.SHUTDOWN) || 
+                                                    isGracefulShutdownEnabled) ? (
                                                       <div className="action__graceful-shutdown">
                                                           <div
                                                               className="action__graceful-shutdown-item"
