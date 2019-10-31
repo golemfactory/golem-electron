@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as Actions from '../../actions';
-import FileCheckModal from './modal/FileCheckModal';
-import InfoLabel from './../InfoLabel';
+import * as Actions from '../../../actions';
+import FileCheckModal from './../modal/FileCheckModal';
+import InfoLabel from './../../InfoLabel';
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal,
