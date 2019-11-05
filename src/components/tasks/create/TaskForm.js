@@ -35,7 +35,6 @@ import calculateFrameAmount from '../../../utils/calculateFrameAmount';
 
 const TIME_VALIDITY_NOTE = 'Time should be minimum 1 minute.';
 const WAIT_INTERVAL = 500;
-const editMode = 'settings';
 const taskType = Object.freeze({
   BLENDER: 'Blender',
   BLENDER_NVGPU: 'Blender_NVGPU'
@@ -150,12 +149,8 @@ export class TaskDetail extends React.Component {
     } = this.props;
 
     actions.setEstimatedCost(0);
-    if (match.params.id !== editMode) {
-      actions.getTaskDetails(match.params.id);
-    } else {
-      actions.getTaskPresets(task.type);
-      this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM;
-    }
+    actions.getTaskPresets(task.type);
+    this.refs.bidRef.value = requestorMaxPrice / ETH_DENOM;
 
     if (!!this.refs.taskTimeout && !!this.refs.subtaskTimeout) {
       this._setTimeStamp();
@@ -175,14 +170,11 @@ export class TaskDetail extends React.Component {
       new Array(ariaKeys.length).fill(false)
     );
 
-    if (match.params.id === editMode)
-      document
-        .getElementById('taskFormSubmit')
-        .addEventListener('click', () => {
-          Object.keys(this.interactedInputObject).map(
-            keys => (this.interactedInputObject[keys] = true)
-          );
-        });
+    document.getElementById('taskFormSubmit').addEventListener('click', () => {
+      Object.keys(this.interactedInputObject).map(
+        keys => (this.interactedInputObject[keys] = true)
+      );
+    });
 
     actions.getTaskGasPrice();
   }
@@ -199,83 +191,6 @@ export class TaskDetail extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      Object.keys(nextProps.taskInfo).length > 0 &&
-      nextProps.match.params.id !== editMode
-    ) {
-      if (!!this.taskTimeoutInput && !!this.subtaskTaskTimeoutInput) {
-        this._setTimeStamp();
-      }
-      this.setState(
-        {
-          type: nextProps.taskInfo.type
-        },
-        () => {
-          const {
-            type,
-            timeout,
-            subtasks_count,
-            subtask_timeout,
-            compute_on,
-            concent_enabled,
-            options,
-            bid
-          } = nextProps.taskInfo;
-          const {
-            resolutionW,
-            resolutionH,
-            formatRef,
-            outputPath,
-            compositingRef,
-            concentRef,
-            haltspp,
-            taskTimeout,
-            subtaskCount,
-            subtaskTimeout,
-            bidRef
-          } = this.refs;
-          this.taskTimeoutInput.setValue(getTimeAsFloat(timeout) * 3600 || 0);
-          subtaskCount.value = subtasks_count || 0;
-          this.subtaskTaskTimeoutInput.setValue(
-            getTimeAsFloat(subtask_timeout) * 3600 || 0
-          );
-          bidRef.value = bid || 0;
-          if (options) {
-            resolutionW.value = options.resolution[0];
-            resolutionH.value = options.resolution[1];
-            outputPath.value = options.output_path;
-            let formatIndex = mockFormatList
-              .map(item => item.name)
-              .indexOf(options.format);
-
-            /*Apply concent option only on testnet*/
-            if (!this.props.isMainNet && nextProps.concentSwitch)
-              concentRef.checked = concent_enabled;
-
-            this.setState({
-              formatIndex,
-              compute_on,
-              concent: !!concent_enabled
-            });
-
-            if ((type || this.state.type).includes(taskType.BLENDER)) {
-              this.refs.framesRef.value = options.frames ? options.frames : 1;
-            }
-
-            if (nextProps.estimated_cost && nextProps.estimated_cost.GNT == 0)
-              this.props.actions.getEstimatedCost({
-                type: type,
-                options: {
-                  price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
-                  subtasks_count: Number(subtasks_count),
-                  subtask_timeout: subtask_timeout
-                }
-              });
-          }
-        }
-      );
-    }
-
     if (nextProps.presets !== this.props.presets) {
       this.parsePresets(nextProps.presets);
     }
@@ -870,7 +785,7 @@ export class TaskDetail extends React.Component {
       subtasks_count: 1 // <--- HARDCODED
     });
   };
-  
+
   _createTaskAsync() {
     const {
       bid,
@@ -955,17 +870,14 @@ export class TaskDetail extends React.Component {
   }
 
   isPresetFieldsFilled(nextState) {
-    if (this.props.match.params.id === editMode) {
-      const { resolution, frames, samples, compositing, format } = nextState;
-      return presetSchema[this.props.task.type].isValid({
-        resolution,
-        frames,
-        samples,
-        compositing,
-        format
-      });
-    }
-    return new Promise(res => res(false));
+    const { resolution, frames, samples, compositing, format } = nextState;
+    return presetSchema[this.props.task.type].isValid({
+      resolution,
+      frames,
+      samples,
+      compositing,
+      format
+    });
   }
 
   _handleFormByType(type) {
@@ -1203,9 +1115,7 @@ export class TaskDetail extends React.Component {
 
     let sortByOrder = (a, b) => a.order - b.order;
 
-    return formTemplate
-      .sort(sortByOrder)
-      .map(item => item.content);
+    return formTemplate.sort(sortByOrder).map(item => item.content);
   }
 
   _fetchRadioOptions = type => {
