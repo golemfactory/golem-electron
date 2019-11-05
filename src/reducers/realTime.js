@@ -3,7 +3,7 @@ import createCachedSelector from 're-reselect';
 import { find, some } from 'lodash';
 import { dict } from './../actions';
 import checkNested from './../utils/checkNested';
-import { componentStatus } from './../constants/statusDicts';
+import { componentStatus, taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
 const { app } = remote;
 const log = remote.require('./electron/debug_handler.js');
@@ -475,3 +475,22 @@ Number.prototype.toFixedDown = function(digits) {
         m = this.toString().match(re);
     return m ? parseFloat(m[1]) : this.valueOf();
 };
+
+function isTaskActive({ status }) {
+    return !(
+        status === taskStatus.FINISHED ||
+        status === taskStatus.RESTART ||
+        status === taskStatus.TIMEOUT
+    );
+}
+
+export const requestorStatusSelector = createCachedSelector(
+    state => state.taskList,
+    (state, key) => key,
+    (taskList, key) => {
+        if (!taskList.length) return false;
+        return taskList.some(task => isTaskActive(task));
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);

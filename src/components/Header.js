@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from '@tippy.js/react';
 
 import * as Actions from '../actions';
+import { getRequestorStatus } from '../reducers';
 
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
 import testNetLogo from './../assets/img/testnet-logo-small.svg';
@@ -53,6 +54,7 @@ const mapStateToProps = state => ({
     connectedPeers: state.realTime.connectedPeers,
     isMainNet: state.info.isMainNet,
     notificationList: state.notification.notificationList,
+    isRequestActive: getRequestorStatus(state, 'shutdown'),
     stats: state.stats.stats,
     forceQuit: state.info.forceQuit
 });
@@ -98,9 +100,13 @@ export class Header extends Component {
             });
 
         window.onbeforeunload = e => {
-            const { stats, forceQuit } = this.props;
+            const { isRequestActive, stats, forceQuit } = this.props;
 
-            if (stats?.provider?.provider_state?.status !== 'Idle' && !forceQuit)
+            if (
+                (stats?.provider_state?.status === 'Computing' ||
+                    isRequestActive) &&
+                !forceQuit
+            )
                 this._toggleQuitModal(cb);
 
             function cb(quitModal) {
