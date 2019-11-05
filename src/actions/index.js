@@ -602,13 +602,12 @@ export const setOnboard = payload => ({
     payload
 });
 
-export const gracefulShutdown= () => ({
+export const gracefulShutdown = () => ({
     type: APP_QUIT_GRACEFUL
 });
 
-export const toggleForceQuit= payload => ({
-    type: TOGGLE_FORCE_QUIT,
-    payload
+export const toggleForceQuit = () => ({
+    type: TOGGLE_FORCE_QUIT
 });
 
 export const setVersion = payload => ({

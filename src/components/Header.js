@@ -135,6 +135,11 @@ export class Header extends Component {
 
     _gracefulShutdown = () => this.props.actions.gracefulShutdown();
 
+    _forceQuit = () => {
+        this.props.actions.toggleForceQuit();
+        this._onClose();
+    }
+
     /**
      * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
      */
@@ -469,7 +474,7 @@ export class Header extends Component {
                     ReactDOM.createPortal(
                         <QuitModal
                             closeModal={this._toggleQuitModal}
-                            forceQuit={this._onClose}
+                            forceQuit={this._forceQuit}
                             gracefulShutdown={this._gracefulShutdown}
                         />,
                         document.getElementById('modalPortal')

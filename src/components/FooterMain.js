@@ -212,6 +212,7 @@ export class FooterMain extends Component {
     _cancelShutdown = () => this.props.actions.gracefulShutdown();
 
     _forceQuit = () => {
+        this.props.actions.toggleForceQuit();
         const win = BrowserWindow.getFocusedWindow();
         win.close();
     };
@@ -473,8 +474,7 @@ export class FooterMain extends Component {
                                                           <div
                                                               className="action__graceful-shutdown-item"
                                                               onClick={
-                                                                  this
-                                                                      ._forceQuit
+                                                                  this._forceQuit
                                                               }>
                                                               <span className="icon-force-quit" />
                                                               <span>
