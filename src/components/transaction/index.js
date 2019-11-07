@@ -9,8 +9,9 @@ import { timeStampToHR } from '../../utils/time';
 import checkNested from '../../utils/checkNested';
 
 const filter = {
-    PAYMENT: 'payment',
-    INCOME: 'income'
+    PAYMENT: 'outgoing',
+    INCOME: 'incoming',
+    DEPOSIT: 'deposit'
 };
 
 const mapStateToProps = state => ({
@@ -54,7 +55,7 @@ class TransactionTube extends Component {
     };
 
     _fetchLastTransaction = list => {
-        const { created, currency, type, amount, task_payment } =
+        const { created, currency, direction, amount, task_payment } =
             list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
@@ -75,11 +76,11 @@ class TransactionTube extends Component {
                             <span>
                                 <span
                                     className={`finance__indicator ${
-                                        type === filter.INCOME
+                                        direction === filter.INCOME
                                             ? 'indicator--up'
                                             : 'indicator--down'
                                     }`}>
-                                    {type === filter.INCOME ? '+ ' : '- '}
+                                    {direction === filter.INCOME ? '+ ' : '- '}
                                 </span>
                                 <b>
                                     {(
@@ -88,7 +89,8 @@ class TransactionTube extends Component {
                                             : task_payment?.missing_amount) /
                                         ETH_DENOM
                                     ).toFixed(4)}
-                                    {isMainNet ? ' ' : ' t'}{currency}
+                                    {isMainNet ? ' ' : ' t'}
+                                    {currency}
                                 </b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>
