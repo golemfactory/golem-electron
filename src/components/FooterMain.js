@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import Tooltip from '@tippy.js/react';
 import Lottie from 'react-lottie';
 import {
@@ -93,7 +93,7 @@ const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
-export class FooterMain extends Component {
+export class FooterMain extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -127,12 +127,6 @@ export class FooterMain extends Component {
                 engineLoading: false
             });
         }
-    }
-
-    shouldComponentUpdate(nextProps, nextState) {
-        return !(
-            isEqual(nextProps, this.props) && isEqual(nextState, this.state)
-        );
     }
 
     _golemize = () => {
@@ -634,4 +628,4 @@ export class FooterMain extends Component {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(FooterMain);
+)(React.memo(FooterMain));
