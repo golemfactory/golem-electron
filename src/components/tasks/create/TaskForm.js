@@ -718,6 +718,7 @@ export class TaskDetail extends React.Component {
         });
         this._editTaskName();
       } else {
+        nameInput.reportValidity();
         nameInput.classList.add('invalid');
       }
     });
@@ -1237,9 +1238,13 @@ export class TaskDetail extends React.Component {
                         type="text"
                         id="taskNameInput"
                         aria-label="Task Name"
+                        pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$"
+                        minLength={4}
+                        maxLength={24}
                         onKeyPress={this._saveTaskName}
                         defaultValue={taskName}
                         autoFocus
+                        required
                       />
                       <span
                         className="action__save-name"
