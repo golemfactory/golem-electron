@@ -67,6 +67,13 @@ const presetSchema = {
   })
 };
 
+const nameSchema = yup
+  .string()
+  .min(4)
+  .max(24)
+  .matches(/^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$/)
+  .required();
+
 const hints = {
   frame: [
     'Hint: To use consecutive frames, e.g. "1-6".',
@@ -688,13 +695,38 @@ export class TaskDetail extends React.Component {
     this._closeModal('defaultSettingsModal');
   };
 
-  _saveTaskName = () => {
-    this.setState({
-      taskName: document.getElementById('taskNameInput').value
+  /**
+   * _save Task Name func. will replace current task name with newest one
+   *
+   * @description The name trimmed, and checked with task name schema, which will
+   * let user put min 4, max 24 char task name
+   *
+   * @param  {Event} event [DOM Event]
+   * @return n/a
+   */
+  _saveTaskName = event => {
+    if (event.key && event.key !== 'Enter') return;
+    if (event.key === 'Enter') event.preventDefault();
+
+    const nameInput = document.getElementById('taskNameInput');
+    const newName = nameInput.value.trim();
+
+    nameSchema.isValid(newName).then(result => {
+      if (result) {
+        this.setState({
+          taskName: newName
+        });
+        this._editTaskName();
+      } else {
+        nameInput.classList.add('invalid');
+      }
     });
-    this._editTaskName();
   };
 
+  /**
+   * _editTaskName to trigger edit input visibility
+   * @return n/a
+   */
   _editTaskName = () =>
     this.setState(prev => ({ editTaskName: !prev.editTaskName }));
 
@@ -1205,6 +1237,7 @@ export class TaskDetail extends React.Component {
                         type="text"
                         id="taskNameInput"
                         aria-label="Task Name"
+                        onKeyPress={this._saveTaskName}
                         defaultValue={taskName}
                         autoFocus
                       />
