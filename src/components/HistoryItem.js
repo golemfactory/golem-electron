@@ -79,11 +79,9 @@ export default class HistoryItem extends Component {
 	};
 
 	render() {
-		const { paymentHistory, isMainNet, tx } = this.props;
+		const { isMainNet, tx } = this.props;
 		const { isDataCopied } = this.state;
 		const {
-			payee,
-			payer,
 			created,
 			currency,
 			status,

@@ -16,9 +16,9 @@ const { PoseGroup } = posed;
 
 import HistoryItem from './HistoryItem';
 import * as Actions from '../actions';
-import { getFilteredPaymentHistory } from '../reducers';
 
 const filter = {
+    ALL: 'all',
     PAYMENT: 'outgoing',
     INCOME: 'incoming',
     DEPOSIT: 'deposit'
@@ -29,12 +29,14 @@ const Item = posed.default.div({
     exit: { opacity: 0 }
 });
 
+const threshold = 10;
+
 const mapStateToProps = state => ({
     isMainNet: state.info.isMainNet,
     isEngineOn: state.info.isEngineOn,
     historyList: state.txHistory.historyList,
     listPage: state.txHistory.listPage,
-    paymentHistory: getFilteredPaymentHistory.bind(null, state)
+    activeTab: state.txHistory.activeTab
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -45,9 +47,8 @@ export class History extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeTab: 0,
-            filteredList: props.paymentHistory(0),
-            rowLoading: false
+            rowLoading: false,
+            activeTab: 'all'
         };
 
         this.copyTimeout = false;
@@ -61,15 +62,11 @@ export class History extends React.Component {
             clearTimeout(this.forceListUpdateTimeoutEnd);
     }
 
-    componentWillUpdate(nextProps, nextState) {
+    componentWillReceiveProps(nextProps) {
         if (
-            nextState.activeTab !== this.state.activeTab ||
             !isEqual(nextProps.historyList, this.props.historyList) ||
             !isEqual(nextProps.listPage, this.props.listPage)
         ) {
-            this.setState({
-                filteredList: nextProps.paymentHistory(nextState.activeTab)
-            });
             this.forceListUpdateTimeoutStart = setTimeout(() => {
                 // TODO dirty update hack, refactor it
                 const listDOM = document.getElementById('historyList')
@@ -80,7 +77,13 @@ export class History extends React.Component {
                         listDOM.scrollTo(0, listDOM.scrollTop - 1);
                     }, 100);
                 }
-            }, 800);
+            }, 1000);
+        }
+
+        if(nextProps.activeTab !== this.props.activeTab) {
+            this.setState({
+                activeTab: nextProps.activeTab
+            });
         }
     }
 
@@ -104,9 +107,8 @@ export class History extends React.Component {
             tabTitles[i].classList.remove('active');
         }
         elm.currentTarget.classList.add('active');
-        this.setState({
-            activeTab: elm.target.getAttribute('value')
-        });
+        const value = elm.target.getAttribute('value');
+        this.props.actions.queryHistory(value);
     };
 
     /**
@@ -168,7 +170,9 @@ export class History extends React.Component {
         isVisible, // This row is visible within the List (eg it is not an overscanned row)
         style // Style object to be applied to row (to position it)
     }) => {
-        const { filteredList } = this.state;
+        const [rowCount, filteredList] = this.props.historyList[
+            this.props.activeTab
+        ];
         const tx = filteredList[index];
         return (
             <div key={key} style={style}>
@@ -178,18 +182,24 @@ export class History extends React.Component {
     };
 
     isRowLoaded = ({ index }) => {
-        return !!this.state.filteredList[index];
+        const { activeTab, historyList } = this.props;
+        const [rowCount, filteredList] = historyList[activeTab];
+        return !!filteredList[index];
     };
 
     loadMoreRows = ({ startIndex, stopIndex }) => {
-        const [size, list] = this.props.historyList;
+        if (threshold > stopIndex + 1) return;
+        const { actions, activeTab, historyList } = this.props;
+        const [size, list] = historyList[activeTab];
         const pageNumber = Math.floor(list?.length / 30 + 1);
         if (list?.length < size) {
             this.setState({
                 rowLoading: true
             });
             setTimeout(() => {
-                this.props.actions.expandHistoryPage(pageNumber);
+                actions.expandHistoryPage({
+                    pageNumber
+                });
                 this.setState({
                     rowLoading: false
                 });
@@ -202,10 +212,10 @@ export class History extends React.Component {
             isEngineOn,
             isMainNet,
             historyList,
-            paymentHistory,
             toggleTransactionHistory
         } = this.props;
-        const { activeTab, filteredList, rowLoading } = this.state;
+        const { rowLoading, activeTab } = this.state;
+        const [rowCount, filteredList] = historyList[activeTab];
         return (
             <div className="content__history">
                 <div
@@ -214,7 +224,7 @@ export class History extends React.Component {
                     role="tablist">
                     <div
                         className="tab__title active"
-                        value={null}
+                        value={filter.ALL}
                         onClick={this._handleTab}
                         role="tab"
                         tabIndex="0">
@@ -254,12 +264,12 @@ export class History extends React.Component {
                     </div>
                 </div>
                 <div>
-                    {paymentHistory && filteredList.length > 0 ? (
+                    {filteredList && filteredList.length > 0 ? (
                         <InfiniteLoader
                             isRowLoaded={this.isRowLoaded}
                             loadMoreRows={this.loadMoreRows}
-                            rowCount={historyList[0]}
-                            threshold={10}>
+                            rowCount={rowCount}
+                            threshold={threshold}>
                             {({ onRowsRendered, registerChild }) => (
                                 <div style={{ display: 'flex' }}>
                                     <div
@@ -305,7 +315,9 @@ export class History extends React.Component {
                         <div className="empty-list__history">
                             <span>
                                 You don’t have any{' '}
-                                {activeTab ? activeTab : 'earnings or payment'}{' '}
+                                {activeTab !== filter.ALL
+                                    ? activeTab
+                                    : 'earnings or payment'}{' '}
                                 yet.
                                 <br />
                                 {isEngineOn

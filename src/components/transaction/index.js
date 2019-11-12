@@ -18,7 +18,6 @@ const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     isMainNet: state.info.isMainNet,
-    paymentHistory: getFilteredPaymentHistory.bind(null, state),
     networkInfo: state.info.networkInfo
 });
 
@@ -157,11 +156,11 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory, networkInfo } = this.props;
-        const filteredList = paymentHistory(0);
+        const { networkInfo } = this.props;
+        const filteredList = [];
         return (
             <div className="container__tube">
-                {paymentHistory && networkInfo && networkInfo.key ? (
+                {networkInfo && networkInfo.key ? (
                     this._fetchLastTransaction(filteredList)
                 ) : (
                     <span className="content__tube">Loading...</span>
