@@ -284,7 +284,6 @@ export class TaskItem extends React.Component {
       psId,
       isDeveloperMode
     } = this.props;
-
     const { toggledList, isDataCopied } = this.state;
     const { options } = item;
     const isSupportedTaskType = Object.values(taskType).indexOf(item.type) >= 0;
@@ -494,15 +493,7 @@ export class TaskItem extends React.Component {
               }>
               <Details
                 item={item}
-                updateIf={
-                  !(
-                    item.status === taskStatus.RESTART ||
-                    item.status === taskStatus.TIMEOUT ||
-                    item.status === taskStatus.FINISHED ||
-                    item.status === taskStatus.ABORTED ||
-                    item.status === taskStatus.ERRORCREATING
-                  )
-                }
+                updateIf={isTaskRunning(item)}
                 restartSubtasksModalHandler={_handleRestartSubtasksModal}
               />
             </ConditionalRender>
@@ -513,9 +504,20 @@ export class TaskItem extends React.Component {
   }
 }
 
+function isTaskRunning(item) {
+  return !(
+    item.status === taskStatus.RESTART ||
+    item.status === taskStatus.TIMEOUT ||
+    item.status === taskStatus.FINISHED ||
+    item.status === taskStatus.ABORTED ||
+    item.status === taskStatus.ERRORCREATING
+  );
+}
+
 function areEqual(prevProps, nextProps) {
   return (
-    isEqual(prevProps.item, nextProps.item) &&
+    !isTaskRunning(nextProps.item) &&
+    isEqual(prevProps.item, nextProps.item) && 
     isEqual(prevProps.psId, nextProps.psId)
   );
 }
