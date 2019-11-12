@@ -225,8 +225,15 @@
     }
 
     .source-path {
-        font-size: 9pt;
-        margin-bottom: 10px;
+        font-size: 10pt;
+        line-height: 34px;
+        b {
+            display: inline-block;
+            width: 12%;
+        }
+        input {
+            width: auto;
+         }
     }
 
     .switch-box {
@@ -239,12 +246,22 @@
 }
 
 .section-settings__task-detail {
-    .action__edit-name {
+    .action__edit-name,
+    .action__save-name {
+        display: inline-flex;
+        align-items: center;
         color: $color-text2;
         cursor: pointer;
+        line-height: 30px;
+        .icon-confirmation,
         .icon-pencil {
             margin-left: 10px;
             margin-right: 2px;
+        }
+
+        .icon-confirmation {
+            color: $color-accent1;
+            font-size: 11pt;
         }
 
         &:hover {

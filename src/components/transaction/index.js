@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import isEqual from 'lodash/isEqual';
 
 import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
@@ -18,7 +19,7 @@ const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     isMainNet: state.info.isMainNet,
-    paymentHistory: getFilteredPaymentHistory.bind(null, state),
+    paymentHistory: getFilteredPaymentHistory(state, 0),
     networkInfo: state.info.networkInfo
 });
 
@@ -32,6 +33,15 @@ class TransactionTube extends Component {
         this.state = {
             showConcentInfo: false
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !isEqual(nextProps.concentBalance.value, this.props.concentBalance.value) ||
+            !isEqual(nextProps.networkInfo, this.props.networkInfo) ||
+            !isEqual(nextProps.paymentHistory, this.props.paymentHistory) ||
+            nextState.showConcentInfo !== this.state.showConcentInfo
+        );
     }
 
     _toggleHistory = () => {
@@ -158,11 +168,10 @@ class TransactionTube extends Component {
 
     render() {
         const { paymentHistory, networkInfo } = this.props;
-        const filteredList = paymentHistory(0);
         return (
             <div className="container__tube">
                 {paymentHistory && networkInfo && networkInfo.key ? (
-                    this._fetchLastTransaction(filteredList)
+                    this._fetchLastTransaction(paymentHistory)
                 ) : (
                     <span className="content__tube">Loading...</span>
                 )}

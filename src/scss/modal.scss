@@ -35,16 +35,16 @@
     width: 100%;
     margin: 0 70px;
     border-radius: 4px;
-    animation: .2s ease-out 0s 1 zoomOut;
+    animation: .2s ease-in-out 0s 1 zoomIn;
     animation-fill-mode: forwards;
     .btn--cancel {
         cursor: pointer;
     }
 }
 
-@keyframes zoomOut {
+@keyframes zoomIn {
   0% {
-    transform: perspective(500px) translateZ(100px);
+    transform: perspective(500px) translateZ(-300px);
   }
   100% {
     transform: perspective(500px) translateZ(0px);

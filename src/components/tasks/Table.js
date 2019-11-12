@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import isEqual from 'lodash/isEqual';
 
 import * as Actions from "../../actions";
 import blender_logo from "./../../assets/img/blender_logo.png";
@@ -41,7 +42,7 @@ function shouldPSEnabled(_item) {
  *
  * @class      Table (name)
  */
-export class Table extends React.Component {
+export class Table extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -250,7 +251,9 @@ export class Table extends React.Component {
     }
 }
 
+
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Table);
+)(React.memo(Table));
