@@ -1,18 +1,18 @@
-const {app, Menu, globalShortcut} = require('electron')
-const {getConfig, setConfig, dictConfig} = require('./config_storage.js')
-const {DEBUG_MODE, DEVELOPER_MODE} = dictConfig
-const DOCLINK = "https://docs.golem.network/"
+const { app, Menu, globalShortcut } = require('electron');
+const { getConfig, setConfig, dictConfig } = require('../config/storage.js');
+const { DEBUG_MODE, DEVELOPER_MODE } = dictConfig;
+const DOCLINK = 'https://docs.golem.network/';
 
-let debugMode = getConfig(DEBUG_MODE)
+let debugMode = getConfig(DEBUG_MODE);
 
 if (debugMode === undefined || debugMode === null) {
-    debugMode = true
-    setConfig(DEBUG_MODE, true)
-    console.log(getConfig(DEBUG_MODE))
+    debugMode = true;
+    setConfig(DEBUG_MODE, true);
+    console.log(getConfig(DEBUG_MODE));
 }
-let isDebugMode = debugMode
+let isDebugMode = debugMode;
 
-let isDeveloperMode = getConfig(DEVELOPER_MODE)
+let isDeveloperMode = getConfig(DEVELOPER_MODE);
 const template = [
     {
         label: 'Edit',
@@ -95,12 +95,12 @@ const template = [
             {
                 label: 'Learn More',
                 click() {
-                    require('electron').shell.openExternal(DOCLINK)
+                    require('electron').shell.openExternal(DOCLINK);
                 }
             }
         ]
     }
-]
+];
 
 if (process.platform === 'darwin') {
     template.unshift({
@@ -129,7 +129,7 @@ if (process.platform === 'darwin') {
                 role: 'quit'
             }
         ]
-    })
+    });
 }
 
 //View menu
@@ -139,11 +139,14 @@ template[2].submenu.push({
     checked: isDebugMode,
     accelerator: 'CmdOrCtrl+Shift+L',
     click: () => {
-        isDebugMode = !isDebugMode
-        setConfig(DEBUG_MODE, isDebugMode)
-        console.info('!', `Debug mode ${isDebugMode ? 'started.' : 'stopped.'}`);
+        isDebugMode = !isDebugMode;
+        setConfig(DEBUG_MODE, isDebugMode);
+        console.info(
+            '!',
+            `Debug mode ${isDebugMode ? 'started.' : 'stopped.'}`
+        );
     }
-})
+});
 
 template[2].submenu.push({
     label: 'Developer mode',
@@ -151,24 +154,26 @@ template[2].submenu.push({
     checked: isDeveloperMode,
     accelerator: 'CmdOrCtrl+Shift+D',
     click: () => {
-        isDeveloperMode = !isDeveloperMode
-        setConfig(DEVELOPER_MODE, isDeveloperMode)
-        console.info('!', `Developer mode ${isDeveloperMode ? 'started.' : 'stopped.'}`);
+        isDeveloperMode = !isDeveloperMode;
+        setConfig(DEVELOPER_MODE, isDeveloperMode);
+        console.info(
+            '!',
+            `Developer mode ${isDeveloperMode ? 'started.' : 'stopped.'}`
+        );
     }
-})
+});
 
-
-    // template[2].submenu.push({
-    //     label: 'Use Local Geth',
-    //     type: 'checkbox',
-    //     checked: isLocalGeth,
-    //     accelerator: 'CmdOrCtrl+Shift+G',
-    //     click: () => {
-    //         isLocalGeth = !isLocalGeth
-    //         setConfig(LOCAL_GETH, isLocalGeth)
-    //         console.info('!', `Local Geth ${isLocalGeth ? 'activated.' : 'deactivated.'}`);
-    //     }
-    // })
+// template[2].submenu.push({
+//     label: 'Use Local Geth',
+//     type: 'checkbox',
+//     checked: isLocalGeth,
+//     accelerator: 'CmdOrCtrl+Shift+G',
+//     click: () => {
+//         isLocalGeth = !isLocalGeth
+//         setConfig(LOCAL_GETH, isLocalGeth)
+//         console.info('!', `Local Geth ${isLocalGeth ? 'activated.' : 'deactivated.'}`);
+//     }
+// })
 
 // Window menu
 template[3].submenu = [
@@ -184,7 +189,7 @@ template[3].submenu = [
     {
         role: 'front'
     }
-]
+];
 
-const menu = Menu.buildFromTemplate(template)
-module.exports = menu
+const menu = Menu.buildFromTemplate(template);
+module.exports = menu;
