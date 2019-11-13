@@ -8,13 +8,13 @@ const initialState = {
         all: [null, []],
         incoming: [null, []],
         outgoing: [null, []],
-        deposit: [null, []]
+        deposit_transfer: [null, []]
     },
     listPage: {
         all: 1,
         incoming: 1,
         outgoing: 1,
-        deposit: 1
+        deposit_transfer: 1
     },
     listLoading: false,
     activeTab: 'all'

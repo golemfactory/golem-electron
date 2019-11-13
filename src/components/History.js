@@ -21,7 +21,7 @@ const filter = {
   ALL: 'all',
   PAYMENT: 'outgoing',
   INCOME: 'incoming',
-  DEPOSIT: 'deposit'
+  DEPOSIT: 'deposit_transfer'
 };
 
 const Item = posed.default.div({
