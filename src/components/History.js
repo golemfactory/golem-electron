@@ -50,7 +50,6 @@ export class History extends React.Component {
       rowLoading: false,
       activeTab: 'all'
     };
-
     this.copyTimeout = false;
   }
 
@@ -60,6 +59,7 @@ export class History extends React.Component {
       clearTimeout(this.forceListUpdateTimeoutStart);
     this.forceListUpdateTimeoutEnd &&
       clearTimeout(this.forceListUpdateTimeoutEnd);
+    this.props.actions.queryHistory(filter.ALL);
   }
 
   componentWillReceiveProps(nextProps) {

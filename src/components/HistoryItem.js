@@ -17,7 +17,7 @@ const operation = {
 const filter = {
 	PAYMENT: 'outgoing',
 	INCOME: 'incoming',
-	DEPOSIT: 'deposit'
+	DEPOSIT: 'deposit_transfer'
 };
 
 /**
@@ -87,6 +87,7 @@ export default class HistoryItem extends Component {
 			status,
 			amount,
 			direction,
+			gas_cost,
 			operation_type,
 			sender_address,
 			recipient_address,
@@ -98,12 +99,16 @@ export default class HistoryItem extends Component {
 				<div className="info__history">
 					<div>
 						<span>
-							<h5>{this._fetchTitle(operation_type, direction)}</h5>
+							<h5>
+								{this._fetchTitle(operation_type, direction)}
+							</h5>
 							{operation_type === operation.TASK_PAYMENT && (
 								<Tooltip
 									content={
 										<p>
-											{isDataCopied[(task_payment?.subtask_id)]
+											{isDataCopied[
+												(task_payment?.subtask_id)
+											]
 												? 'Copied successfully!'
 												: 'Copy Subtask ID'}
 										</p>
@@ -115,11 +120,16 @@ export default class HistoryItem extends Component {
 									isEnabled={!!task_payment}>
 									<span
 										className={`icon-copy ${
-											!!task_payment ? '' : 'icon--color-gray'
+											!!task_payment
+												? ''
+												: 'icon--color-gray'
 										}`}
 										onClick={
 											!!task_payment
-												? this._copyField.bind(null, task_payment?.subtask_id)
+												? this._copyField.bind(
+														null,
+														task_payment?.subtask_id
+												  )
 												: undefined
 										}
 									/>
@@ -127,7 +137,12 @@ export default class HistoryItem extends Component {
 							)}
 						</span>
 						<span>
-							<b>{direction == filter.PAYMENT ? 'Payee' : 'Payer'}: </b>
+							<b>
+								{direction == filter.PAYMENT
+									? 'Payee'
+									: 'Payer'}
+								:{' '}
+							</b>
 							<Tooltip
 								content={
 									<p>
@@ -155,7 +170,10 @@ export default class HistoryItem extends Component {
 									{(direction == filter.PAYMENT
 										? recipient_address
 										: sender_address
-									)?.replace(new RegExp('^(.{0,4}).*(.{4})$', 'im'), '$1...$2')}
+									)?.replace(
+										new RegExp('^(.{0,4}).*(.{4})$', 'im'),
+										'$1...$2'
+									)}
 								</span>
 							</Tooltip>
 						</span>
@@ -164,36 +182,54 @@ export default class HistoryItem extends Component {
 					<span className="status__history">{status}</span>
 				</div>
 				<div className="action__history">
-					<span className="amount__history">
-						<span
-							className={`finance__indicator ${
-								direction === filter.PAYMENT
-									? 'indicator--down'
-									: 'indicator--up'
-							}`}>
-							{direction === filter.PAYMENT ? '- ' : '+ '}
+					<div className="item-action__history">
+						<span className="amount__history">
+							<span
+								className={`finance__indicator ${
+									direction === filter.PAYMENT
+										? 'indicator--down'
+										: 'indicator--up'
+								}`}>
+								{direction === filter.PAYMENT ? '- ' : '+ '}
+							</span>
+							<span className="ellipsis">
+								{(
+									(!!Number(amount)
+										? amount
+										: task_payment?.missing_amount) /
+									ETH_DENOM
+								).toFixed(6)}
+							</span>
+							{isMainNet ? ' ' : ' t'}
+							{currency}
 						</span>
-						<span className="ellipsis">
-							{(
-								(!!Number(amount) ? amount : task_payment?.missing_amount) /
-								ETH_DENOM
-							).toFixed(6)}
-						</span>
-						{isMainNet ? ' ' : ' t'}
-						{currency}
-					</span>
-					{transaction_hash && (
-						<Tooltip
-							content={<p>See on Etherscan</p>}
-							placement="bottom"
-							trigger="mouseenter">
-							<a
-								href={`${
-									isMainNet ? mainEtherscanTx : testEtherscanTx
-								}${transaction_hash}`}>
-								<span className="icon-new-window" />
-							</a>
-						</Tooltip>
+						{transaction_hash && (
+							<Tooltip
+								content={<p>See on Etherscan</p>}
+								placement="bottom"
+								trigger="mouseenter">
+								<a
+									href={`${
+										isMainNet
+											? mainEtherscanTx
+											: testEtherscanTx
+									}${transaction_hash}`}>
+									<span className="icon-new-window" />
+								</a>
+							</Tooltip>
+						)}
+					</div>
+					{direction !== filter.INCOME && (
+						<div className="item-action__history gas-cost">
+							<span className="gas-cost__history">
+								<span className="finance__indicator indicator--down">
+									{'- '}
+								</span>
+								<span>{(gas_cost / ETH_DENOM).toFixed(8)}</span>
+								{isMainNet ? ' ' : ' t'}
+								ETH
+							</span>
+						</div>
 					)}
 				</div>
 			</div>

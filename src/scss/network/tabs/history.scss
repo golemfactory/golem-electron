@@ -110,17 +110,25 @@
     }
     .action__history {
         display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    .item-action__history {
+        display: flex;
         justify-content: space-between;
         align-items: center;
         a {
             padding-bottom: 3.2pt;
         }
+        &.gas-cost {
+            text-align: right;
+            align-self: flex-end;
+            margin-right: 14px;
+        }
     }
-    .amount__history {
-        font-weight: 400;
-        font-size: 11pt !important;
-        transition: 0.1s margin-right;
-
+    .amount__history,
+    .gas-cost__history {
         .finance__indicator {
             &.indicator {
                 &--down,
@@ -138,6 +146,12 @@
                 }
             }
         }
+    }
+
+    .amount__history {
+        font-weight: 400;
+        font-size: 11pt !important;
+        transition: 0.1s margin-right;
 
         .ellipsis {
             display: inline-flex;
@@ -147,6 +161,10 @@
             width : 45px;
             transition: width .2s ease-in-out;
         }
+    }
+    .gas-cost__history {
+        font-size: 9pt;
+        color: $color-text;
     }
     .icon-new-window {
         position: relative;
