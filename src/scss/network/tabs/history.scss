@@ -138,6 +138,15 @@
                 }
             }
         }
+
+        .ellipsis {
+            display: inline-flex;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width : 45px;
+            transition: width .2s ease-in-out;
+        }
     }
     .icon-new-window {
         position: relative;
@@ -153,6 +162,9 @@
         }
         .icon-new-window {
             visibility: visible !important;
+        }
+        .ellipsis {
+            width : 64px;
         }
     }
 }
