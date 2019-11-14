@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import isEqual from 'lodash/isEqual';
 
 import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
@@ -31,6 +32,15 @@ class TransactionTube extends Component {
         this.state = {
             showConcentInfo: false
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !isEqual(nextProps.concentBalance.value, this.props.concentBalance.value) ||
+            !isEqual(nextProps.networkInfo, this.props.networkInfo) ||
+            !isEqual(nextProps.paymentHistory, this.props.paymentHistory) ||
+            nextState.showConcentInfo !== this.state.showConcentInfo
+        );
     }
 
     _toggleHistory = () => {

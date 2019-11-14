@@ -11,6 +11,7 @@ import testNetLogo from './../assets/img/testnet-logo-small.svg';
 
 import NotificationCenter from './NotificationCenter';
 import directorySelector from './../utils/directorySelector';
+import notify from './../utils/notify';
 
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
@@ -89,7 +90,7 @@ export class Header extends Component {
                     item.classList.remove('active');
                 });
                 setActiveClass(allNav, location.pathname);
-            }); 
+            });
     }
 
     /**
@@ -176,7 +177,12 @@ export class Header extends Component {
             return n + (item.seen === false);
         },
         0);
-
+        unreadNotificationAmount &&
+            notify(
+                'Meet with concent!',
+                'To get more information what is concent, clich here.',
+                'https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service'
+            );
         return (
             <Tooltip
                 arrow
