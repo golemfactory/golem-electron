@@ -4,7 +4,7 @@ import { find, some } from 'lodash';
 import { dict } from './../actions';
 import checkNested from './../utils/checkNested';
 const { ipcRenderer, remote } = window.electron;
-const log = remote.require('./electron/debug_handler.js');
+const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
 
 const { CONCENT_BALANCE_STATE } = dictConfig;

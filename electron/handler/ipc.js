@@ -1,8 +1,8 @@
 const electron = require('electron');
 var path = require('path');
 const { app, ipcMain, shell } = electron;
-const log = require('./debug_handler.js');
-const { DATADIR } = require('./golem_config.js');
+const log = require('./debug.js');
+const { DATADIR } = require('../config/golem.js');
 
 let openedWindowsMap = null;
 function ipcHandler(

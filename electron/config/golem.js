@@ -9,14 +9,14 @@ const args =
     .alias('r', 'rpc-address')
     .argv
 
-const {getConfig, dictConfig} = require('./config_storage.js')
+const {getConfig, dictConfig} = require('../config/storage.js')
 const {DEFAULT_GETH} = dictConfig
 
-const MAINNET = args['mainnet']
+const IS_MAINNET = args['mainnet']
 const CUSTOM_DATADIR = args['datadir']
 const CUSTOM_RPC = args['rpc-address']
 
-const CHAIN = MAINNET ? 'mainnet' : 'rinkeby';
+const CHAIN = IS_MAINNET ? 'mainnet' : 'rinkeby';
 const GETH_DEFAULT = getConfig(DEFAULT_GETH)
 
 
@@ -46,7 +46,7 @@ const DATADIR = CUSTOM_DATADIR
 
 module.exports = {
 	DATADIR,
-	IS_MAINNET: MAINNET,
+	IS_MAINNET,
     CUSTOM_DATADIR,
     CUSTOM_RPC,
     GETH_DEFAULT

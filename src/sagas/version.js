@@ -4,7 +4,7 @@ import { dict } from '../actions'
 import { config, _handleRPC, _handleSUBPUB, _handleUNSUBPUB } from './handler'
 import TimeoutPromise from './timeout';
 const {remote} = window.electron;
-const log = remote.require('./electron/debug_handler.js')
+const log = remote.require('./electron/handler/debug.js')
 
 
 const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN} = dict

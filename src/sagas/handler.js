@@ -8,8 +8,8 @@ import {
     put
 } from 'redux-saga/effects';
 const { remote } = window.electron;
-const log = remote.require('./electron/debug_handler.js');
-const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
+const log = remote.require('./electron/handler/debug.js');
+const { CUSTOM_RPC } = remote.require('./electron/config/golem.js');
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
