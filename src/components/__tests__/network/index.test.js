@@ -30,60 +30,64 @@ describe('<MainFragment />', () => {
     };
 
     const states = {
-            realTime: {
-                balance: [new BigNumber(0), new BigNumber(0)],
-                golemStatus: ['client', 'start', 'pre']
-            },
-            input: {
-                autoLaunch: false
-            },
-            info: {
-                connectionProblem: false,
-                isEngineOn: true,
-                componentWarnings: []
-            },
-            advanced: {
-                chosenPreset: 'custom'
-            },
-            txHistory: {
-                historyList: [null, []]
-            },
-            resources: {
-                resource: 50
-            },
-            performance: {
-                environments: {}
-            },
-            account: {
-                publicKey: ''
-            },
-            currency: {
-                GNT: 0,
-                ETH: 0
-            },
-            input: {
-                developerMode: false
-            },
-            stats: {
-                stats: {
-                    provider: {
-                        host_state: '',
-                        subtasks_computed: [],
-                        subtasks_accepted: [],
-                        subtasks_rejected: [],
-                        subtasks_with_timeout: [],
-                        subtasks_with_errors: []
-                    },
-                    requestor: {}
-                }
-            },
-            concent: {
-                concentSwitch: false
+        realTime: {
+            balance: [new BigNumber(0), new BigNumber(0)],
+            golemStatus: ['client', 'start', 'pre']
+        },
+        input: {
+            autoLaunch: false
+        },
+        info: {
+            connectionProblem: false,
+            isEngineOn: true,
+            componentWarnings: []
+        },
+        advanced: {
+            chosenPreset: 'custom'
+        },
+        txHistory: {
+            historyList: {
+                all: [null, []],
+                incoming: [null, []],
+                outgoing: [null, []],
+                deposit_transfer: [null, []]
             }
-        };
+        },
+        resources: {
+            resource: 50
+        },
+        performance: {
+            environments: {}
+        },
+        account: {
+            publicKey: ''
+        },
+        currency: {
+            GNT: 0,
+            ETH: 0
+        },
+        input: {
+            developerMode: false
+        },
+        stats: {
+            stats: {
+                provider: {
+                    host_state: '',
+                    subtasks_computed: [],
+                    subtasks_accepted: [],
+                    subtasks_rejected: [],
+                    subtasks_with_timeout: [],
+                    subtasks_with_errors: []
+                },
+                requestor: {}
+            }
+        },
+        concent: {
+            concentSwitch: false
+        }
+    };
 
     it('should call componentDidMount', () => {
-
         sinon.spy(MainFragment.prototype, 'componentDidMount');
         expect(MainFragment.prototype.componentDidMount.calledOnce).toBe(false);
         const wrapper = mount(

@@ -7,21 +7,24 @@ import { config, _handleRPC } from './handler';
 
 const { SET_HISTORY, LOAD_HISTORY, EXPAND_HISTORY_PAGE } = dict;
 
-let pageNumber = 1;
+const getQuery = state => state.txHistory.activeTab;
+const getPageNumber = state => state.txHistory.listPage;
 
-export function expandHistory(session, payload) {
+export function expandHistory(session, { pageNumber, query }) {
     return new Promise((response, reject) => {
         function on_history(args) {
             let history = args[0];
             response({
                 type: LOAD_HISTORY,
-                payload: history
+                payload: history,
+                query: query
             });
         }
+        query === 'all' ? null : query;
         _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [
             null,
-            null,
-            payload + 1,
+            query,
+            pageNumber + 1,
             30
         ]);
     });
@@ -32,11 +35,13 @@ export function expandHistory(session, payload) {
  * @param {[type]} session       [Session of the wamp connection]
  */
 export function* expandHistoryBase(session, { payload }) {
-    pageNumber = payload;
-    const action = yield call(expandHistory, session, pageNumber);
+    let query = yield select(getQuery);
+    payload.query = query;
+    const action = yield call(expandHistory, session, payload);
     yield put(action);
 }
 
+let query, pageNumber;
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
@@ -51,14 +56,26 @@ export function subscribeHistory(session) {
                 let historyList = args[0];
                 emit({
                     type: SET_HISTORY,
-                    payload: historyList
+                    payload: historyList,
+                    // query: query
                 });
             }
+
+            let _pageNumber = pageNumber['all'];
+            
+            // filter based regular updaate, 
+            // let _operation_type =
+            //     query === 'deposit' ? 'deposit_transfer' : null;
+            // let _query = null;
+
+            // if (!_operation_type && query !== 'all') {
+            //     _query = query;
+            // }
             _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [
                 null,
                 null,
                 1,
-                30 * pageNumber
+                30 * _pageNumber
             ]);
         };
 
@@ -84,10 +101,14 @@ export function subscribeHistory(session) {
  */
 export function* historyFlow(session) {
     yield takeLatest(EXPAND_HISTORY_PAGE, expandHistoryBase, session);
-    const channel = yield call(subscribeHistory, session);
 
+    query = yield select(getQuery);
+    pageNumber = yield select(getPageNumber);
+    const channel = yield call(subscribeHistory, session, query, pageNumber);
     try {
         while (true) {
+            query = yield select(getQuery);
+            pageNumber = yield select(getPageNumber);
             let action = yield take(channel);
             yield put(action);
         }

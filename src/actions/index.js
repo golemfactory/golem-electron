@@ -12,6 +12,7 @@ export let dict = Object.freeze({
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
     LOAD_HISTORY: 'LOAD_HISTORY',
+    QUERY_HISTORY: 'QUERY_HISTORY',
     EXPAND_HISTORY_PAGE: 'EXPAND_HISTORY_PAGE',
     SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
     SET_ADVANCED_PRESET: 'SET_ADVANCED_PRESET',
@@ -161,6 +162,7 @@ const {
     SET_RESOURCES,
     SET_HISTORY,
     LOAD_HISTORY,
+    QUERY_HISTORY,
     EXPAND_HISTORY_PAGE,
     SET_SYSTEM_INFO,
     SET_ADVANCED_PRESET,
@@ -441,6 +443,11 @@ export const setHistory = payload => ({
     type: SET_HISTORY,
     payload
 });
+
+export const queryHistory = payload => ({
+    type: QUERY_HISTORY,
+    payload
+})
 
 export const expandHistoryPage = payload => ({
     type: EXPAND_HISTORY_PAGE,

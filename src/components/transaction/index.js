@@ -5,7 +5,6 @@ import isEqual from 'lodash/isEqual';
 
 import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
-import { getFilteredPaymentHistory, getStatus } from '../../reducers';
 import { timeStampToHR } from '../../utils/time';
 import checkNested from '../../utils/checkNested';
 
@@ -19,7 +18,7 @@ const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     isMainNet: state.info.isMainNet,
-    paymentHistory: getFilteredPaymentHistory(state, 0),
+    historyList: state.txHistory.historyList,
     networkInfo: state.info.networkInfo
 });
 
@@ -167,11 +166,12 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory, networkInfo } = this.props;
+        const { networkInfo, historyList } = this.props;
+        const [_, filteredList] = historyList['all'];
         return (
             <div className="container__tube">
-                {paymentHistory && networkInfo && networkInfo.key ? (
-                    this._fetchLastTransaction(paymentHistory)
+                {networkInfo && networkInfo.key ? (
+                    this._fetchLastTransaction(filteredList)
                 ) : (
                     <span className="content__tube">Loading...</span>
                 )}
