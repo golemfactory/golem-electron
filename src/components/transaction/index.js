@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
-import { getFilteredPaymentHistory, getStatus } from '../../reducers';
 import { timeStampToHR } from '../../utils/time';
 import checkNested from '../../utils/checkNested';
 
@@ -18,6 +17,7 @@ const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     isMainNet: state.info.isMainNet,
+    historyList: state.txHistory.historyList,
     networkInfo: state.info.networkInfo
 });
 
@@ -156,8 +156,8 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { networkInfo } = this.props;
-        const filteredList = [];
+        const { networkInfo, historyList } = this.props;
+        const [_, filteredList] = historyList['all'];
         return (
             <div className="container__tube">
                 {networkInfo && networkInfo.key ? (
