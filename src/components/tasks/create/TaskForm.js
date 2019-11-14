@@ -261,14 +261,6 @@ export class TaskDetail extends React.Component {
       this._calcMaxSubtaskAmount.call(this, nextState);
     }
 
-    if (
-      nextState.maxSubtasks !== maxSubtasks ||
-      nextState.subtasks_count !== subtasks_count
-    ) {
-      const result = Math.min(nextState.maxSubtasks, nextState.subtasks_count);
-      this.refs.subtaskCount.value = result ? result : 1; // subtask cannot be 0
-    }
-
     if (nextState.frames !== frames || nextState.samples !== samples) {
       this.isPresetFieldsFilled(nextState).then(this.changePresetLock);
       this._calcMaxSubtaskAmount.call(this, nextState);
@@ -762,10 +754,57 @@ export class TaskDetail extends React.Component {
   };
 
   _handleConfirmationModal = () => {
-    this.setState({
-      taskSummaryModal: true
+    this._handleDryRun().then(result => {
+      console.log('result', result);
+      this.setState({
+        taskSummaryModal: true
+      });
     });
   };
+
+  _handleDryRun() {
+    const {
+      bid,
+      compositing,
+      compute_on,
+      concent,
+      frames,
+      format,
+      output_path,
+      resolution,
+      samples,
+      subtasks_count,
+      subtask_timeout,
+      taskName,
+      timeout
+    } = this.state;
+    const { task, testStatus } = this.props;
+    return new Promise((resolve, reject) => {
+      this.props.actions.dryRunTask(
+        {
+          ...task,
+          name: taskName,
+          bid,
+          compute_on,
+          concent_enabled: concent,
+          estimated_memory: testStatus && testStatus.estimated_memory,
+          subtasks_count: Number(subtasks_count),
+          subtask_timeout: floatToHR(subtask_timeout),
+          timeout: floatToHR(timeout),
+          options: {
+            frames,
+            format,
+            compositing,
+            output_path,
+            resolution,
+            ...(samples > 0 && { samples: Number(samples) })
+          }
+        },
+        resolve,
+        reject
+      );
+    });
+  }
 
   /**
    * [_handleStartTaskButton func. creates task with given task information, then it redirects users to the tasks screen]
@@ -1326,7 +1365,6 @@ export class TaskDetail extends React.Component {
                     ref="subtaskCount"
                     type="number"
                     min="1"
-                    max={maxSubtasks}
                     placeholder="Type a number"
                     aria-label="Subtask amount"
                     onChange={this._handleFormInputs.bind(
@@ -1334,7 +1372,6 @@ export class TaskDetail extends React.Component {
                       'subtasks_count'
                     )}
                     required
-                    disabled={!maxSubtasks}
                   />
                 </div>
                 <div className="item-settings">

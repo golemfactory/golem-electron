@@ -20,6 +20,7 @@ const {
     RESTART_TASK,
     RUN_TEST_TASK,
     ABORT_TEST_TASK,
+    DRY_RUN_TASK,
     SET_TASK_TEST_STATUS,
     GET_ESTIMATED_COST,
     SET_ESTIMATED_COST,
@@ -196,6 +197,25 @@ export function* estimatedCostBase(session, { payload }) {
     if (payload) {
         let action = yield call(getEstimatedCost, session, payload);
         yield put(action);
+    }
+}
+
+export function dryRunTask(session, payload) {
+    return new Promise((resolve, reject) => {
+        function on_dry_run(args) {
+            let info = args[0];
+            resolve(info);
+        }
+
+        _handleRPC(on_dry_run, session, config.TASK_DRY_RUN_RPC, [payload]);
+    });
+}
+
+export function* dryRunBase(session, { payload, _resolve, _reject }) {
+    if (payload) {
+        const action = yield call(dryRunTask, session, payload);
+        if (!action) reject(false);
+        _resolve(action);
     }
 }
 
@@ -427,36 +447,28 @@ export function callRestartTask(
     _resolve,
     _reject
 ) {
-
     function on_restart_task(args) {
         var restart_task = args[0];
         _resolve(restart_task);
     }
     if (isPartial)
-        _handleRPC(
-            on_restart_task,
-            session,
-            config.RESTART_SUBTASKS_RPC,
-            [id, subtaskList, true, !isConcentOn]
-        );
+        _handleRPC(on_restart_task, session, config.RESTART_SUBTASKS_RPC, [
+            id,
+            subtaskList,
+            true,
+            !isConcentOn
+        ]);
     else
         _handleRPC(on_restart_task, session, config.RESTART_TASK_RPC, [
-            id, true, !isConcentOn
+            id,
+            true,
+            !isConcentOn
         ]);
 }
 
-export function* restartTaskBase(
-    session,
-    { payload, _resolve, _reject }
-) {
+export function* restartTaskBase(session, { payload, _resolve, _reject }) {
     if (payload) {
-        yield call(
-            callRestartTask,
-            session,
-            payload,
-            _resolve,
-            _reject
-        );
+        yield call(callRestartTask, session, payload, _resolve, _reject);
     }
 }
 
@@ -573,6 +585,7 @@ export function* tasksFlow(session) {
     yield takeEvery(GET_TASK_DETAILS, taskDetailsBase, session);
     yield takeLatest(RUN_TEST_TASK, testTaskBase, session);
     yield takeLatest(ABORT_TEST_TASK, abortTestTaskBase, session);
+    yield takeLatest(DRY_RUN_TASK, dryRunBase, session);
     yield takeLatest(GET_ESTIMATED_COST, estimatedCostBase, session);
     yield takeEvery(FETCH_SUBTASKS_LIST, subtaskList, session);
     yield takeEvery(FETCH_HEALTHY_NODE_NUMBER, nodeNumberBase, session);
