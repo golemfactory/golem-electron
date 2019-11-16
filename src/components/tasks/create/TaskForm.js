@@ -26,6 +26,7 @@ import { connect } from 'react-redux';
 
 import * as Actions from '../../../actions';
 import { once } from '../../../utils/once';
+import deepDiff from '../../../utils/deepDiff';
 import zipObject from '../../../utils/zipObject';
 import isObjectEmpty from '../../../utils/isObjectEmpty';
 import { ETH_DENOM } from '../../../constants/variables';
@@ -131,7 +132,10 @@ export class TaskDetail extends React.Component {
       presetList: [],
       savePresetLock: true,
       presetModal: false,
-      taskSummaryModal: false,
+      taskSummaryModal: {
+        status: false,
+        data: {}
+      },
       depositTimeModal: false,
       managePresetModal: false,
       defaultSettingsModal: false,
@@ -754,10 +758,56 @@ export class TaskDetail extends React.Component {
   };
 
   _handleConfirmationModal = () => {
+    const { actions, task, estimated_cost } = this.props;
+    const {
+      bid,
+      compositing,
+      compute_on,
+      concent,
+      frames,
+      format,
+      output_path,
+      resolution,
+      samples,
+      subtasks_count,
+      subtask_timeout,
+      taskName,
+      timeout
+    } = this.state;
     this._handleDryRun().then(result => {
-      console.log('result', result);
+      const [suggested, _] = result;
+      let obsoletePrice = null;
+      const diff = deepDiff(
+        {
+          subtasks_count: Number(subtasks_count)
+        },
+        suggested,
+        false
+      );
+      //keep old price and update subtask count state
+      if (!isObjectEmpty(diff)) {
+        obsoletePrice = estimated_cost.GNT;
+        this.setState({
+          subtasks_count: suggested.subtasks_count
+        });
+        this.refs.subtaskCount.value = suggested.subtasks_count;
+      }
+      actions.getEstimatedCost({
+        type: task.type,
+        options: {
+          price: new BigNumber(bid).multipliedBy(ETH_DENOM).toString(), //wei
+          subtasks_count: Number(suggested.subtasks_count),
+          subtask_timeout: floatToHR(subtask_timeout)
+        }
+      });
       this.setState({
-        taskSummaryModal: true
+        taskSummaryModal: {
+          status: true,
+          data: {
+            diff,
+            obsoletePrice
+          }
+        }
       });
     });
   };
@@ -1757,12 +1807,13 @@ export class TaskDetail extends React.Component {
             applyPreset={this._applyDefaultPreset}
           />
         )}
-        {taskSummaryModal && (
+        {taskSummaryModal.status && (
           <TaskSummaryModal
             closeModal={this._closeModal}
             _handleStartTaskButton={this._handleStartTaskButton}
             loadingTaskIndicator={loadingTaskIndicator}
             estimated_cost={estimated_cost}
+            data={taskSummaryModal.data}
             minPerf={minPerf}
             isMainNet={isMainNet}
             {...this.state}
