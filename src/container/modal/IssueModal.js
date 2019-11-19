@@ -81,9 +81,9 @@ export class IssueModal extends React.Component {
                 );
             case knownIssues.UPDATE:
                 notify(
-                    'Check for update!',
+                    'New version is ready!',
                     'New version of Golem is ready to be downloaded. Download now!',
-                    'https://github.com/golemfactory/golem/releases'
+                    'https://golem.network/download/brass-beta/'
                 );
                 return (
                     <div className="content__modal">

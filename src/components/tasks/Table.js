@@ -37,6 +37,12 @@ function shouldPSEnabled(_item) {
     );
 }
 
+function newestToOldest(a, b) {
+    if (a.time_started < b.time_started) return 1;
+    if (a.time_started > b.time_started) return -1;
+    return 0;
+}
+
 /**
  * { Class for Table Component in Blender Component }
  *
@@ -211,7 +217,9 @@ export class Table extends React.PureComponent {
      */
     listTasks(data) {
         const { toggleWalletTray } = this.props;
-        const listItems = data.map((item, index) => (
+        const listItems = data
+        .sort(newestToOldest)
+        .map((item, index) => (
             <TaskItem
                 key={index.toString()}
                 item={item}

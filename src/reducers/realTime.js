@@ -2,7 +2,9 @@ import { BigNumber } from 'bignumber.js';
 import createCachedSelector from 're-reselect';
 import { find, some } from 'lodash';
 import { dict } from './../actions';
+import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';
+import { taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
 const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
@@ -76,19 +78,7 @@ const realTime = (state = initialState, action) => {
             });
 
         case SET_TASKLIST:
-            let badge = 0;
-            action.payload &&
-                action.payload.forEach(item => {
-                    item.status === 'In Progress' && (badge = badge + 1);
-                });
-            if (badge !== badgeTemp) {
-                ipcRenderer.send('set-badge', badge);
-                badgeTemp = badge;
-                badgeActive || (badgeActive = true);
-            } else if (badge === 0 && badgeActive) {
-                ipcRenderer.send('set-badge', 0);
-                badgeActive = false;
-            }
+            notifyTaskSelector(action.payload, 'tasks');
             return Object.assign({}, state, {
                 taskList: action.payload
             });
@@ -432,6 +422,30 @@ export const componentWarningSelector = createCachedSelector(
         addWarning(hypervisorData, 'low_diskspace', 'DISK');
 
         return componentWarnings.concat(warningCollector);
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);
+
+const isEqual = x => y => x === y;
+const prevStateCache = [];
+export const notifyTaskSelector = createCachedSelector(
+    taskList => taskList,
+    (taskList, key) => key,
+    (taskList, key) => {
+        taskList.forEach(task => {
+            if (prevStateCache[task.id]) {
+                const result = prevStateCache[task.id](task.status);
+                if (
+                    !result &&
+                    (task.status === taskStatus.FINISHED ||
+                        task.status === taskStatus.TIMEOUT)
+                )
+                    notify(`Task "${task.name}"`, `Status: ${task.status}`);
+                prevStateCache[task.id] = null;
+            }
+            prevStateCache[task.id] = isEqual(task.status);
+        });
     }
 )(
     (state, key) => key // Cache selectors by type name
