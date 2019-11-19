@@ -24,8 +24,10 @@ function notify(title, body, data = null) {
   }
 
   notification.onclick = function(e) {
+    const { data } = e.target;
     //TO DO diversify the data, check if it is url then apply the one below
-    window.location.href = e.target.data;
+    if (data.includes('https://')) window.location.href = data;
+    else if (data.includes('/')) window.routerHistory.push(data); //TODO find better way
   };
 }
 

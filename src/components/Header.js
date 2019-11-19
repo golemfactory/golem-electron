@@ -180,8 +180,8 @@ export class Header extends Component {
         unreadNotificationAmount &&
             notify(
                 'Meet with concent!',
-                'To get more information what is concent, clich here.',
-                'https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service'
+                'To get started, clich here.',
+                '/settings'
             );
         return (
             <Tooltip
