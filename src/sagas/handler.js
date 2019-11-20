@@ -52,6 +52,7 @@ export let config = Object.freeze({
     RUN_TEST_TASK_RPC: 'comp.tasks.check',
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
+    TASK_DRY_RUN_RPC: 'comp.task.create.dry_run',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
     GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
