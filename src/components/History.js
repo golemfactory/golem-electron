@@ -32,7 +32,6 @@ const Item = posed.default.div({
 const threshold = 10;
 
 const mapStateToProps = state => ({
-  isMainNet: state.info.isMainNet,
   isEngineOn: state.info.isEngineOn,
   historyList: state.txHistory.historyList,
   listPage: state.txHistory.listPage,
@@ -210,7 +209,6 @@ export class History extends React.Component {
   render() {
     const {
       isEngineOn,
-      isMainNet,
       historyList,
       toggleTransactionHistory
     } = this.props;
@@ -243,16 +241,14 @@ export class History extends React.Component {
             tabIndex="0">
             Outgoing
           </div>
-          {!isMainNet && (
-            <div
-              className="tab__title"
-              value={filter.DEPOSIT}
-              onClick={this._handleTab}
-              role="tab"
-              tabIndex="0">
-              Deposit
-            </div>
-          )}
+          <div
+            className="tab__title"
+            value={filter.DEPOSIT}
+            onClick={this._handleTab}
+            role="tab"
+            tabIndex="0">
+            Deposit
+          </div>
           <div className="tab__back">
             <span onClick={toggleTransactionHistory}>
               <span className="icon-back" />
