@@ -1,3 +1,4 @@
+require('dotenv').config()
 const fs = require('fs');
 const path = require('path');
 const notarizer = require('electron-notarize');
@@ -9,9 +10,9 @@ module.exports = async function(params) {
     }
 
     // Same appId in electron-builder.
-    let appId = 'network.golem.app';
+    const appId = 'network.golem.app';
 
-    let appPath = path.join(
+    const appPath = path.join(
         params.appOutDir,
         `${params.packager.appInfo.productFilename}.app`
     );
