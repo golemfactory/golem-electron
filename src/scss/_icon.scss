@@ -20,6 +20,11 @@ $color_14: rgb(0, 61, 135);
     margin: 0 5px;
   }
 }
+.icon-force-quit{
+  &:before {
+    content: "\e9b6";
+  }
+}
 .icon-high-five {
   &:before {
     content: "\e9b0";

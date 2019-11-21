@@ -20,9 +20,11 @@ import animData from './../assets/anims/wave.json';
 
 import LoaderBar from './LoaderBar';
 import checkNested from './../utils/checkNested';
+import { componentStatus } from './../constants/statusDicts';
 import golem_loading from './../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
+const { BrowserWindow } = remote;
 const currentPlatform = remote.getGlobal('process').platform;
 const versionGUI = remote.app.getVersion();
 
@@ -63,7 +65,7 @@ function isGolemConnected(gs) {
     return (
         !!gs?.status &&
         !!gs?.message &&
-        gs?.status === 'Ready' &&
+        gs?.status === componentStatus.READY &&
         gs?.message.includes('Node')
     );
 }
@@ -72,7 +74,8 @@ function isGolemConnecting(isEngineOn, status) {
     return (
         status?.client?.status &&
         (status.client.message === 'Logged In' ||
-            status.client.status !== 'Ready') &&
+            (status.client.status !== componentStatus.READY &&
+                status.client.status !== componentStatus.SHUTDOWN)) &&
         !status.client.message.includes('configuration')
     );
 }
@@ -86,7 +89,8 @@ const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     stats: state.stats.stats.provider || state.stats.stats,
     isEngineLoading: state.info.isEngineLoading,
-    version: state.info.version
+    version: state.info.version,
+    isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -152,7 +156,7 @@ export class FooterMain extends PureComponent {
                     ? 'blue'
                     : 'yellow'
                 : 'green';
-        } else if (status?.status !== 'Exception') {
+        } else if (status?.status !== componentStatus.EXCEPTION) {
             return 'yellow';
         }
         return 'red';
@@ -197,6 +201,14 @@ export class FooterMain extends PureComponent {
 
     _openLogs = () => {
         ipcRenderer.send('open-logs');
+    };
+
+    _cancelShutdown = () => this.props.actions.gracefulShutdown();
+
+    _forceQuit = () => {
+        this.props.actions.toggleForceQuit();
+        const win = BrowserWindow.getFocusedWindow();
+        win.close();
     };
 
     _fetchState(stat) {
@@ -300,6 +312,7 @@ export class FooterMain extends PureComponent {
             stats,
             engineLoading,
             isEngineLoading,
+            isGracefulShutdownEnabled,
             passwordModal,
             version
         } = this.props;
@@ -397,7 +410,9 @@ export class FooterMain extends PureComponent {
                                     (stats && !!Object.keys(stats).length) ||
                                     status?.client?.message.includes(
                                         'configuration'
-                                    )
+                                    ) ||
+                                    status?.client?.status ===
+                                        componentStatus.SHUTDOWN
                                 }
                                 from={{
                                     position: 'absolute',
@@ -436,28 +451,59 @@ export class FooterMain extends PureComponent {
                                                       )}
                                                   </span>
                                                   <br />
-                                                  <span>
-                                                      Attempted:{' '}
-                                                      {stats.subtasks_computed &&
-                                                          stats
-                                                              .subtasks_computed[1] +
-                                                              stats
-                                                                  .subtasks_with_timeout[1] +
-                                                              stats
-                                                                  .subtasks_with_errors[1]}
-                                                  </span>
-                                                  <br />
-                                                  <span>
-                                                      {stats.subtasks_with_errors &&
-                                                          `${
-                                                              stats
-                                                                  .subtasks_with_errors[1]
-                                                          } error | ${stats.subtasks_with_timeout &&
-                                                              stats
-                                                                  .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
-                                                              stats
-                                                                  .subtasks_accepted[1]} success`}
-                                                  </span>
+                                                  {((status?.client?.status === componentStatus.SHUTDOWN) || 
+                                                    isGracefulShutdownEnabled) ? (
+                                                      <div className="action__graceful-shutdown">
+                                                          <div
+                                                              className="action__graceful-shutdown-item"
+                                                              onClick={
+                                                                  this
+                                                                      ._cancelShutdown
+                                                              }>
+                                                              <span className="icon-failure" />
+                                                              <span>
+                                                                  Cancel
+                                                                  shutdown
+                                                              </span>
+                                                          </div>
+                                                          <div
+                                                              className="action__graceful-shutdown-item"
+                                                              onClick={
+                                                                  this._forceQuit
+                                                              }>
+                                                              <span className="icon-force-quit" />
+                                                              <span>
+                                                                  Force quit
+                                                              </span>
+                                                          </div>
+                                                      </div>
+                                                  ) : (
+                                                      [
+                                                          <span key="stats_01">
+                                                              Attempted:{' '}
+                                                              {stats.subtasks_computed &&
+                                                                  stats
+                                                                      .subtasks_computed[1] +
+                                                                      stats
+                                                                          .subtasks_with_timeout[1] +
+                                                                      stats
+                                                                          .subtasks_with_errors[1]}
+                                                          </span>,
+                                                          <br key="stats_02" />,
+                                                          <span key="stats_03">
+                                                              ,
+                                                              {stats.subtasks_with_errors &&
+                                                                  `${
+                                                                      stats
+                                                                          .subtasks_with_errors[1]
+                                                                  } error | ${stats.subtasks_with_timeout &&
+                                                                      stats
+                                                                          .subtasks_with_timeout[1]} timeout | ${stats.subtasks_accepted &&
+                                                                      stats
+                                                                          .subtasks_accepted[1]} success`}
+                                                          </span>
+                                                      ]
+                                                  )}
                                               </animated.div>
                                           )
                                         : props => (
@@ -475,7 +521,7 @@ export class FooterMain extends PureComponent {
                                                   className="status-node__loading">
                                                   {status?.client?.status &&
                                                   status.client.status !==
-                                                      'Exception' ? (
+                                                      componentStatus.EXCEPTION ? (
                                                       <div className="status__components">
                                                           <div className="item__status">
                                                               <div>

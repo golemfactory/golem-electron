@@ -35,6 +35,9 @@
         cursor: pointer;
         line-height: 3.2em;
         height: 30px;
+        &:hover {
+            color: $button-hover-color;
+        }
 
         .icon-back {
             display: inline-block;

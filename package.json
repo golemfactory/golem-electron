@@ -21,7 +21,7 @@
         "start:prod": "cross-env NODE_ENV=production electron .",
         "test": "jest -u",
         "test:clearcache": "jest --clearCache",
-        "test:watch": "jest --watch --no-cache",
+        "test:watch": "jest --watchAll --no-cache",
         "test:coverage": "jest --coverage --watch --no-cache",
         "pack": "build --dir",
         "dist": "build",

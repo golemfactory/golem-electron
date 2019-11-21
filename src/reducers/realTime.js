@@ -4,8 +4,9 @@ import { find, some } from 'lodash';
 import { dict } from './../actions';
 import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';
-import { taskStatus } from './../constants/statusDicts';
+import { componentStatus, taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
+const { app } = remote;
 const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
 
@@ -57,13 +58,6 @@ const initialState = {
 const password = {
     REGISTER: 'Requires new password',
     LOGIN: 'Requires password'
-};
-
-const statusDict = {
-    READY: 'Ready',
-    NOTREADY: 'Not Ready',
-    EXCEPTION: 'Exception',
-    WARNING: 'Warning'
 };
 
 let badgeActive = false;
@@ -258,7 +252,8 @@ const messages = {
             pre: 'Terminating Golem',
             post: 'Golem terminated',
             exception: 'Error terminating Golem'
-        }
+        },
+        shutdown: {}
     }
 };
 
@@ -293,16 +288,20 @@ function getGolemStatus(component, method, stage, data) {
         );
     }
 
-    if (stage == 'exception') {
-        result.status = statusDict.EXCEPTION;
+    if (method == 'shutdown') {
+        // result.status = componentStatus.SHUTDOWN;
+        // TO DO: add shutdown scheduled method
+        app.quit();
+    } else if (stage == 'exception') {
+        result.status = componentStatus.EXCEPTION;
     } else if (stage == 'post') {
-        result.status = statusDict.READY;
+        result.status = componentStatus.READY;
     } else if (stage == 'warning') {
-        result.status = statusDict.WARNING;
+        result.status = componentStatus.WARNING;
         result.data = data;
     } else
         try {
-            result.status = statusDict.NOTREADY;
+            result.status = componentStatus.NOTREADY;
         } catch (e) {
             log.warn('SAGA > GOLEM', e);
         }
@@ -323,17 +322,19 @@ export const getStatusSelector = createCachedSelector(
         if (
             statusObj &&
             !Object.keys(statusObj).some(
-                key => statusObj[key].status === statusDict.EXCEPTION
+                key => statusObj[key].status === componentStatus.EXCEPTION
             )
         ) {
             if (statusObj[0]) {
                 statusObj.client = {
-                    status: statusDict.EXCEPTION,
+                    status: componentStatus.EXCEPTION,
                     message: 'Outdated version'
                 };
+            } else if (statusObj?.client?.status === componentStatus.SHUTDOWN) {
+                statusObj.client.message = 'Shutting down...';
             } else if (isEngineOn && Number.isInteger(connectedPeers)) {
                 statusObj.client = {
-                    status: statusDict.READY,
+                    status: componentStatus.READY,
                     message: nodesString(connectedPeers)
                 };
             } else if (
@@ -344,7 +345,7 @@ export const getStatusSelector = createCachedSelector(
                 )
             ) {
                 statusObj.client = {
-                    status: statusDict.NOTREADY,
+                    status: componentStatus.NOTREADY,
                     message: isEngineOn
                         ? statusObj.client.message || 'Starting Golem'
                         : 'Waiting for configuration'
@@ -487,3 +488,22 @@ Number.prototype.toFixedDown = function(digits) {
         m = this.toString().match(re);
     return m ? parseFloat(m[1]) : this.valueOf();
 };
+
+function isTaskActive({ status }) {
+    return !(
+        status === taskStatus.FINISHED ||
+        status === taskStatus.RESTART ||
+        status === taskStatus.TIMEOUT
+    );
+}
+
+export const requestorStatusSelector = createCachedSelector(
+    state => state.taskList,
+    (state, key) => key,
+    (taskList, key) => {
+        if (!taskList.length) return false;
+        return taskList.some(task => isTaskActive(task));
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);

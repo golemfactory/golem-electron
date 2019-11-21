@@ -40,7 +40,7 @@
         display: none;
     }
 
-    .logo__header{
+    .logo__header {
         height: 50%;
         margin-top: 15px;
     }
@@ -57,19 +57,19 @@
         border-bottom: 1px solid $color-border;
 
         &.nav-mainnet,
-        &.nav-testnet{
+        &.nav-testnet {
             border-top: 1px solid $color-border;
         }
 
-        &.nav-mainnet{
+        &.nav-mainnet {
             background: $color-bg-mainnet;
-            .menu__item{
+            .menu__item {
                 &.active {
                     color: $color-text4;
                 }
             }
 
-            .header__frame{
+            .header__frame {
                 color: $color-text4 !important;
 
                 .menu {
@@ -89,14 +89,14 @@
             }
         }
 
-        &.nav-testnet{
-            .header__frame{
+        &.nav-testnet {
+            .header__frame {
                 color: $color-text !important;
             }
         }
     }
 
-    .indicator__notification{
+    .indicator__notification {
         position: absolute;
         background: $color-error;
         color: $button-font-color;
@@ -161,8 +161,8 @@
         color: $color-text3;
         margin-left: 15px;
 
-        [class^="icon-"],
-        [class*=" icon-"] {
+        [class^='icon-'],
+        [class*=' icon-'] {
             font-size: 15pt;
         }
 
@@ -175,18 +175,6 @@
         color: $color-text;
     }
 
-    // .nav__item:nth-child(2):hover ~ .selector
-    .active:nth-child(1) ~ .selector {
-        left: 0px;
-        width: 68px;
-    }
-
-    // .nav__item:nth-child(3):hover ~ .selector
-    .active:nth-child(2) ~ .selector {
-        left: 30px;
-        width: 47px;
-    }
-
     .selector {
         position: absolute;
         bottom: -1px;
@@ -194,14 +182,13 @@
         height: 2px;
         box-sizing: border-box;
         background: $button-static-color;
+        will-change: transform, width;
+        -webkit-transition: width 0.3s ease, transform 0.3s ease;
+        transition: width 0.3s ease, transform 0.3s ease;
     }
 
     ul li,
     span {
-        -webkit-transition: all 0.4s ease-in-out;
-        -moz-transition: all 0.4s ease-in-out;
-        -o-transition: all 0.4s ease-in-out;
-        transition: all 0.4s ease-in-out;
         position: relative;
     }
 }
@@ -213,13 +200,13 @@
 
     /*.nav__item:nth-child(2):hover ~ .selector*/
     .active:nth-child(1) ~ .selector {
-        left: $selector-left_1 + $padding;
+        transform: translateX($selector-left_1);
         width: 68px;
     }
 
     /*.nav__item:nth-child(3):hover ~ .selector*/
     .active:nth-child(2) ~ .selector {
-        left: $selector-left_2 + $padding;
+        transform: translateX($selector-left_2);
         width: 47px;
     }
 }
@@ -269,7 +256,6 @@
     .info {
         .time,
         .amount__frame {
-
             & + .amount__frame:before {
                 content: '|';
                 padding-right: 10px;
@@ -293,7 +279,7 @@
                 color: $color-text3;
             }
 
-            & + .menu__item:hover:before{
+            & + .menu__item:hover:before {
                 color: $color-text3;
             }
         }
@@ -305,7 +291,7 @@
 }
 
 .list__notification,
-.menu__upload{
+.menu__upload {
     display: flex;
     flex: 1 1 auto;
     height: 60px;
@@ -313,8 +299,8 @@
     flex-direction: column;
     align-items: start;
     .list-item__notification,
-    .menu-item__upload{
-        width:100%;
+    .menu-item__upload {
+        width: 100%;
         cursor: pointer;
         text-align: left;
         padding: 5px 7px;
@@ -324,29 +310,29 @@
             margin-left: 10px;
         }
 
-        [class^="icon-"], 
-        [class*=" icon-"] {
+        [class^='icon-'],
+        [class*=' icon-'] {
             position: relative;
             bottom: -2px;
             font-size: 14pt;
         }
 
-        &:hover{
-            background: rgba(0,0,0,0.2);
+        &:hover {
+            background: rgba(0, 0, 0, 0.2);
         }
 
-        &:active{
-            background: rgba(0,0,0,0.3);
+        &:active {
+            background: rgba(0, 0, 0, 0.3);
         }
     }
 
-    .list-item__notification{
+    .list-item__notification {
         display: flex;
         align-items: center;
         font-size: 2vw;
     }
 
-    .bullet__list{
+    .bullet__list {
         flex: 0 0 4px;
         border: 1px solid $color-accent2;
         border-radius: 50px/50px;
@@ -354,27 +340,27 @@
         height: 4px;
     }
 
-    .link--navigate{
+    .link--navigate {
         @extend a;
     }
 }
 
-.list__notification{
+.list__notification {
     max-width: 350px;
 }
 
-.frame__screen{
+.frame__screen {
     height: 84px !important;
 
-    .header__frame{
+    .header__frame {
         height: 50px !important;
         line-height: 48px !important;
     }
 
-    .nav{
+    .nav {
         height: 50px !important;
     }
-    .draggable{
+    .draggable {
         height: 84px !important;
     }
 }
@@ -383,8 +369,8 @@
  * Popper.js arrow position issue
  * @see https://github.com/tvkhoa/react-tippy/issues/74
  */
-#tippy-tooltip-2{
-    .arrow-regular{
+#tippy-tooltip-2 {
+    .arrow-regular {
         left: 161px !important;
     }
 }
@@ -397,7 +383,7 @@
         height: $header-height-windows;
         padding-top: 0;
 
-        .logo__header{
+        .logo__header {
             height: 25px;
         }
 
@@ -431,7 +417,7 @@
                 .icon-minimize,
                 .icon-close {
                     font-size: 6pt;
-                    transition: .5s all;
+                    transition: 0.5s all;
                     line-height: 22px;
 
                     &:hover {
@@ -450,21 +436,21 @@
                     padding-top: 3px;
 
                     &:hover {
-                        background: #3665B3;
-                        color: #FFF;
+                        background: #3665b3;
+                        color: #fff;
                     }
                 }
 
                 .icon-close {
                     display: inline-block;
-                    background: #C75050;
-                    color: #FFF;
+                    background: #c75050;
+                    color: #fff;
                     width: 45px;
                     height: 20px;
                     text-align: center;
 
                     &:hover {
-                        background: #E04343;
+                        background: #e04343;
                     }
                 }
             }
@@ -475,18 +461,18 @@
         }
     }
 
-    .frame__screen{
+    .frame__screen {
         height: 50px !important;
 
-        .header__frame{
+        .header__frame {
             height: 50px !important;
             line-height: 48px !important;
         }
 
-        .nav{
+        .nav {
             height: 50px !important;
         }
-        .draggable{
+        .draggable {
             height: 84px !important;
         }
     }
@@ -508,7 +494,7 @@
     }
 }
 
-.linux{ 
+.linux {
     .header {
         height: $header-height-linux;
         padding-top: 0;
@@ -525,18 +511,18 @@
         }
     }
 
-    .frame__screen{
+    .frame__screen {
         height: 50px !important;
 
-        .header__frame{
+        .header__frame {
             height: 50px !important;
             line-height: 48px !important;
         }
 
-        .nav{
+        .nav {
             height: 50px !important;
         }
-        .draggable{
+        .draggable {
             height: 50px !important;
         }
     }

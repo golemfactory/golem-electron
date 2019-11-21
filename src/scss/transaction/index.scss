@@ -79,6 +79,9 @@
 		z-index: 1;
 		position: relative;
 		color: $color-primary;
+		&:hover {
+            color: $button-hover-color;
+        }
 
 		.icon-settings{
 			margin-right: 4px;

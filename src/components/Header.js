@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import { findDOMNode } from 'react-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import Tooltip from '@tippy.js/react';
 
 import * as Actions from '../actions';
+import { getRequestorStatus } from '../reducers';
 
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
 import testNetLogo from './../assets/img/testnet-logo-small.svg';
@@ -12,6 +14,8 @@ import testNetLogo from './../assets/img/testnet-logo-small.svg';
 import NotificationCenter from './NotificationCenter';
 import directorySelector from './../utils/directorySelector';
 import notify from './../utils/notify';
+import ConditionalRender from './hoc/ConditionalRender';
+import QuitModal from '../container/modal/QuitModal';
 
 const { remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
@@ -50,7 +54,10 @@ const mapStateToProps = state => ({
   isEngineOn: state.info.isEngineOn,
   connectedPeers: state.realTime.connectedPeers,
   isMainNet: state.info.isMainNet,
-  notificationList: state.notification.notificationList
+  notificationList: state.notification.notificationList,
+  isRequestActive: getRequestorStatus(state, 'shutdown'),
+  stats: state.stats.stats,
+  forceQuit: state.info.forceQuit
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -68,7 +75,8 @@ export class Header extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isMac: mainProcess.isMac()
+      isMac: mainProcess.isMac(),
+      quitModal: false
     };
   }
 
@@ -86,6 +94,22 @@ export class Header extends Component {
         });
         setActiveClass(allNav, location.pathname);
       });
+
+    window.onbeforeunload = e => {
+      const { isRequestActive, stats, forceQuit } = this.props;
+
+      if (
+        (stats?.provider_state?.status === 'Computing' || isRequestActive) &&
+        !forceQuit
+      )
+        this._toggleQuitModal(cb);
+
+      function cb(quitModal) {
+        if (quitModal) {
+          e.returnValue = true;
+        }
+      }
+    };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -104,21 +128,35 @@ export class Header extends Component {
       window.routerHistory.push(to);
   }
 
+  _toggleQuitModal = cb =>
+    this.setState(
+      prevState => ({ quitModal: !prevState.quitModal }),
+      () => cb && cb(this.state.quitModal)
+    );
+
+  _gracefulShutdown = () => this.props.actions.gracefulShutdown();
+
+  _forceQuit = () => {
+    this.props.actions.toggleForceQuit();
+    this._onClose();
+  };
+
   /**
    * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
    */
-  _onClose() {
-    let win = BrowserWindow.getFocusedWindow();
+  _onClose = () => {
+    //this.props.actions.gracefulQuit(); //TO DO popup quit modal
+    const win = BrowserWindow.getFocusedWindow();
     win.close();
-  }
+  };
 
   _onMinimize() {
-    let win = BrowserWindow.getFocusedWindow();
+    const win = BrowserWindow.getFocusedWindow();
     win.minimize();
   }
 
   _onMaximize() {
-    let win = BrowserWindow.getFocusedWindow();
+    const win = BrowserWindow.getFocusedWindow();
     win.isMaximized() ? win.unmaximize() : win.maximize();
   }
 
@@ -179,9 +217,8 @@ export class Header extends Component {
       this.props.actions.setSeenNotification();
     }
   }
-
   render() {
-    const { isMac } = this.state;
+    const { isMac, quitModal } = this.state;
     const {
       activeHeader,
       connectedPeers,
@@ -202,15 +239,13 @@ export class Header extends Component {
           className={`nav ${isMainNet ? 'nav-mainnet' : 'nav-testnet'}`}
           role="menubar">
           <div style={styling} className="draggable draggable--other" />
-          {activeHeader === 'main' && (
+          <ConditionalRender showIf={activeHeader === 'main'}>
             <div className="nav__list">
               <img
                 src={isMainNet ? mainNetLogo : testNetLogo}
                 className="logo__header"
               />
             </div>
-          )}
-          {activeHeader === 'main' && (
             <ul className="menu" role="menu">
               <Tooltip
                 content={
@@ -303,17 +338,17 @@ export class Header extends Component {
                 </li>
               </Tooltip>
             </ul>
-          )}
-          {activeHeader === 'secondary' && (
+          </ConditionalRender>
+          <ConditionalRender showIf={activeHeader === 'secondary'}>
             <div className="header__frame">
               <div className="title">
-                <span>{taskDetails.name}</span>
+                <span>{taskDetails?.name}</span>
               </div>
               <div className="info">
-                <span className="time">{taskDetails.status}</span>
+                <span className="time">{taskDetails?.status}</span>
                 <span className="amount__frame">
-                  {taskDetails.options && taskDetails.options.frame_count}{' '}
-                  {taskDetails.options && taskDetails.options.frame_count > 1
+                  {taskDetails?.options && taskDetails?.options.frame_count}{' '}
+                  {taskDetails?.options && taskDetails?.options.frame_count > 1
                     ? ' Frames'
                     : ' Frame'}
                 </span>
@@ -329,7 +364,7 @@ export class Header extends Component {
                 </span>
                 <span
                   className={`menu__item ${
-                    taskDetails.options && taskDetails.options.frame_count > 1
+                    taskDetails?.options && taskDetails?.options.frame_count > 1
                       ? 'active'
                       : ''
                   }`}
@@ -341,37 +376,42 @@ export class Header extends Component {
                 </span>
               </div>
             </div>
-          )}
+          </ConditionalRender>
         </nav>
-        {activeHeader === 'main' && (
+        <ConditionalRender showIf={activeHeader === 'main'}>
           <nav className="nav">
             <ul className="nav__list" role="menu">
-              {activeHeader === 'main' && (
-                <li
-                  className="nav__item"
-                  onClick={this._navigateTo.bind(this, '/')}
-                  role="menuitem"
-                  data-path="/"
-                  tabIndex="0"
-                  aria-label="Network">
-                  Network
-                </li>
-              )}
-              {activeHeader === 'main' && (
-                <li
-                  className="nav__item"
-                  onClick={this._navigateTo.bind(this, '/tasks')}
-                  role="menuitem"
-                  data-path="/tasks"
-                  tabIndex="0"
-                  aria-label="Tasks">
-                  Tasks
-                </li>
-              )}
-              {activeHeader === 'main' && <span className="selector" />}
+              <li
+                className="nav__item"
+                onClick={this._navigateTo.bind(this, '/')}
+                role="menuitem"
+                data-path="/"
+                tabIndex="0"
+                aria-label="Network">
+                Network
+              </li>
+              <li
+                className="nav__item"
+                onClick={this._navigateTo.bind(this, '/tasks')}
+                role="menuitem"
+                data-path="/tasks"
+                tabIndex="0"
+                aria-label="Tasks">
+                Tasks
+              </li>
+              <span className="selector" />
             </ul>
           </nav>
-        )}
+        </ConditionalRender>
+        {quitModal &&
+          ReactDOM.createPortal(
+            <QuitModal
+              closeModal={this._toggleQuitModal}
+              forceQuit={this._forceQuit}
+              gracefulShutdown={this._gracefulShutdown}
+            />,
+            document.getElementById('modalPortal')
+          )}
       </header>
     );
   }

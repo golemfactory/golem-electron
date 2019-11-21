@@ -104,6 +104,7 @@ export let config = Object.freeze({
     CHAIN_INFO_RPC: 'golem.mainnet',
     VIRTUALIZATION_RPC: 'env.hw.virtualization',
     QUIT_RPC: 'ui.quit',
+    QUIT_GRACEFUL_RPC: 'golem.graceful_shutdown',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
     SET_PASSWORD_RPC: 'golem.password.set',
