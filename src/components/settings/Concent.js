@@ -163,7 +163,7 @@ export class Concent extends React.Component {
                         </span>
                     </div>
                 </ConditionalRender>
-                <ConditionalRender showIf={!isConcentOn && statusCode !== 1}>
+                <ConditionalRender showIf={!isConcentOn && (Math.abs(statusCode) !== 1)}>
                     <div className="deposit-info__concent">
                         {isConcentWaiting ? (
                             <div className="waiting-response">

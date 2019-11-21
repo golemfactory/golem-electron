@@ -36,7 +36,7 @@ class TransactionTube extends Component {
 
     shouldComponentUpdate(nextProps, nextState) {
         return (
-            !isEqual(nextProps.concentBalance.value, this.props.concentBalance.value) ||
+            !isEqual(nextProps.concentBalance?.value, this.props.concentBalance?.value) ||
             !isEqual(nextProps.networkInfo, this.props.networkInfo) ||
             !isEqual(nextProps.paymentHistory, this.props.paymentHistory) ||
             nextState.showConcentInfo !== this.state.showConcentInfo

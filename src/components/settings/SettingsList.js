@@ -20,7 +20,6 @@ import * as Actions from './../../actions';
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     isDeveloperMode: state.input.developerMode,
-    isMainNet: state.info.isMainNet,
     concentSwitch: state.concent.concentSwitch
 });
 
@@ -188,9 +187,6 @@ export class SettingsList extends React.Component {
                 content: <Peers />
             }
         ];
-        const filteredTabs = tabItems.filter(
-            (item, _) => !(item.title == 'Concent Settings' && isMainNet)
-        );
         return (
             <Fragment>
                 <Personal />
@@ -202,7 +198,7 @@ export class SettingsList extends React.Component {
                             !Number.isInteger(activeContent)
                                 ? [
                                       <div className="settings-tab" id="tabs">
-                                          {this.loadTabItems(filteredTabs)}
+                                          {this.loadTabItems(tabItems)}
                                       </div>
                                   ]
                                 : [
@@ -218,9 +214,9 @@ export class SettingsList extends React.Component {
                                                   className="icon-arrow-left"
                                                   aria-label="Back to Tabs"
                                               />
-                                              {filteredTabs[activeContent]?.title}
+                                              {tabItems[activeContent]?.title}
                                           </div>
-                                          {filteredTabs[activeContent]?.content}
+                                          {tabItems[activeContent]?.content}
                                       </div>
                                   ]
                         }

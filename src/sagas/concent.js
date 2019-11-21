@@ -126,6 +126,7 @@ export function toggleConcent(session, {isSwitchOn, informRPC, toggleLock = fals
             console.log("RPC informed")
         }
     })
+    
 }
 
 /**
@@ -139,12 +140,9 @@ export function* toggleConcentBase(session, payload) {
 
 export function* concentFlow(session, payload) {
     const getNetwork = state => state.info.isMainNet;
-    const isMainNet = yield select(getNetwork);
-    if(!isMainNet){
-        yield fork(fetchConcentStatusBase, session)
-        yield fork(fetchConcentRequiredStatusBase, session)
-        yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
-        yield takeLatest(TOGGLE_CONCENT_REQUIRED, toggleConcentRequiredBase, session)
-        yield takeLatest(UNLOCK_CONCENT_DEPOSIT, toggleConcentUnlockBase, session)
-    }
+    yield fork(fetchConcentStatusBase, session)
+    yield fork(fetchConcentRequiredStatusBase, session)
+    yield takeLatest(TOGGLE_CONCENT, toggleConcentBase, session)
+    yield takeLatest(TOGGLE_CONCENT_REQUIRED, toggleConcentRequiredBase, session)
+    yield takeLatest(UNLOCK_CONCENT_DEPOSIT, toggleConcentUnlockBase, session)
 }

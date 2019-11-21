@@ -403,7 +403,7 @@ export const concentDepositStatusSelector = createCachedSelector(
                     return { statusCode: 0, time: null }; //locked
             }
         }
-        return { statusCode: 0, time: null };
+        return { statusCode: -1, time: null };
     }
 )(
     (state, key) => key // Cache selectors by type name
