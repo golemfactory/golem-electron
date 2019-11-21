@@ -109,6 +109,33 @@
             }
         }
 
+        .action__graceful-shutdown {
+            display: flex;
+            align-items: center;
+            margin-top: 14px;
+            &-item {
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+                font-size: 7pt;
+                font-weight: 500;
+                cursor: pointer;
+                color: $color-primary;
+                &:hover {
+                    color: $button-hover-color;
+                }
+                [class^='icon-'],
+                [class*=' icon-'] {
+                    margin-right: 3px;
+                    font-size: 10pt;
+                }
+
+                .icon-force-quit {
+                    font-size: 9pt;
+                }
+            }
+        }
+
         .status-node {
             margin-top: 5px;
             font-size: 8pt;
@@ -184,8 +211,8 @@
             color: $color-text2;
         }
 
-        [class^="icon-"],
-        [class*=" icon-"] {
+        [class^='icon-'],
+        [class*=' icon-'] {
             font-size: 10pt;
             margin-right: 2px;
         }
@@ -246,7 +273,7 @@
     max-width: 432px !important;
     width: 432px;
     text-align: left;
-    .info__connection__item{
+    .info__connection__item {
         margin-left: 25px;
     }
     .icon-status-dot {

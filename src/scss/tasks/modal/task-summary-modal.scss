@@ -7,11 +7,15 @@
                 font-weight: 400;
                 margin: 10px 0;
             }
+            &__optimize {
+                font-size: 9pt;
+                color: $color-text2;
+                margin: 5px 0 15px 0;
+            }
             &__list {
                 width: 70%;
                 margin-top: 15px;
             }
-
             &__item {
                 display: flex;
                 justify-content: space-between;
@@ -21,6 +25,14 @@
 
                 .title {
                     color: $color-text2;
+                }
+                .params {
+                    &__obsolete {
+                        color: $color-text3;
+                    }
+                    &__suggested {
+                        font-weight: 600;
+                    }
                 }
             }
         }

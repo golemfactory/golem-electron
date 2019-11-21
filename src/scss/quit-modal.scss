@@ -1,0 +1,44 @@
+.container__quit-modal {
+    .content__modal {
+        position: relative;
+        text-align: center;
+        justify-content: space-around;
+        max-height: 500px;
+        padding: 20px;
+        
+        .icon-close {
+            position: absolute;
+            top: -5px;
+            right: 15px;
+            cursor: pointer;
+            font-size: 14pt;
+            color: $color-text2;
+        }
+
+        .image-container {
+            width: 150px;
+            height: 150px;
+        }
+        .description{
+            margin-top: 10px;
+            font-size: 10pt;
+            line-height: 1.5em;
+            font-weight: 400;
+        }
+        & > span {
+            padding: 20px 0;
+        }
+        .action__modal {
+            font-size: 10pt;
+            padding: 0 20px;
+            margin: 10px 0;
+            .btn--cancel {
+                width: 50%;
+            }
+            .btn--primary {
+                padding: 0 15px;
+                white-space: nowrap;
+            }
+        }
+    }
+}

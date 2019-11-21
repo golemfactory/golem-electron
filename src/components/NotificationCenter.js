@@ -24,12 +24,6 @@ export class NotificationCenter extends Component {
         super(props);
     }
 
-    componentDidMount() {
-        if(!this.props.isMainNet) {
-            this.props.actions.setSeenNotification();
-        }
-    }
-
     /**
      * [_navigateTo active class handling for navigation items]
      * @param  {String}     to      [Route fo the page]

@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
+import isEqual from 'lodash/isEqual';
 
 import * as Actions from "../../actions";
 import blender_logo from "./../../assets/img/blender_logo.png";
@@ -36,12 +37,18 @@ function shouldPSEnabled(_item) {
     );
 }
 
+function newestToOldest(a, b) {
+    if (a.time_started < b.time_started) return 1;
+    if (a.time_started > b.time_started) return -1;
+    return 0;
+}
+
 /**
  * { Class for Table Component in Blender Component }
  *
  * @class      Table (name)
  */
-export class Table extends React.Component {
+export class Table extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -210,7 +217,9 @@ export class Table extends React.Component {
      */
     listTasks(data) {
         const { toggleWalletTray } = this.props;
-        const listItems = data.map((item, index) => (
+        const listItems = data
+        .sort(newestToOldest)
+        .map((item, index) => (
             <TaskItem
                 key={index.toString()}
                 item={item}
@@ -250,7 +259,9 @@ export class Table extends React.Component {
     }
 }
 
+
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(Table);
+)(React.memo(Table));

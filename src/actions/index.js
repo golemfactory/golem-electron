@@ -12,6 +12,7 @@ export let dict = Object.freeze({
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
     LOAD_HISTORY: 'LOAD_HISTORY',
+    QUERY_HISTORY: 'QUERY_HISTORY',
     EXPAND_HISTORY_PAGE: 'EXPAND_HISTORY_PAGE',
     SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
     SET_ADVANCED_PRESET: 'SET_ADVANCED_PRESET',
@@ -43,6 +44,7 @@ export let dict = Object.freeze({
     RESTART_SUBTASK: 'RESTART_SUBTASK',
     RUN_TEST_TASK: 'RUN_TEST_TASK',
     ABORT_TEST_TASK: 'ABORT_TEST_TASK',
+    DRY_RUN_TASK: 'DRY_RUN_TASK',
     SET_TASK_TEST_STATUS: 'SET_TASK_TEST_STATUS',
     GET_ESTIMATED_COST: 'GET_ESTIMATED_COST',
     SET_ESTIMATED_COST: 'SET_ESTIMATED_COST',
@@ -106,6 +108,9 @@ export let dict = Object.freeze({
     PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
     APP_QUIT: 'APP_QUIT',
+    APP_QUIT_GRACEFUL: 'APP_QUIT_GRACEFUL',
+    SET_GRACEFUL_QUIT: 'SET_GRACEFUL_QUIT',
+    TOGGLE_FORCE_QUIT: 'TOGGLE_FORCE_QUIT',
     SET_CONNECTION: 'SET_CONNECTION',
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     SET_CHAIN_INFO: 'SET_CHAIN_INFO',
@@ -161,6 +166,7 @@ const {
     SET_RESOURCES,
     SET_HISTORY,
     LOAD_HISTORY,
+    QUERY_HISTORY,
     EXPAND_HISTORY_PAGE,
     SET_SYSTEM_INFO,
     SET_ADVANCED_PRESET,
@@ -190,6 +196,7 @@ const {
     RESTART_SUBTASK,
     RUN_TEST_TASK,
     ABORT_TEST_TASK,
+    DRY_RUN_TASK,
     SET_TASK_TEST_STATUS,
     GET_ESTIMATED_COST,
     SET_ESTIMATED_COST,
@@ -247,6 +254,9 @@ const {
     PREVIOUS_FRAME,
     //GENERAL
     APP_QUIT,
+    APP_QUIT_GRACEFUL,
+    SET_GRACEFUL_QUIT,
+    TOGGLE_FORCE_QUIT,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -442,6 +452,11 @@ export const setHistory = payload => ({
     payload
 });
 
+export const queryHistory = payload => ({
+    type: QUERY_HISTORY,
+    payload
+})
+
 export const expandHistoryPage = payload => ({
     type: EXPAND_HISTORY_PAGE,
     payload
@@ -616,6 +631,14 @@ export const setOnboard = payload => ({
     payload
 });
 
+export const gracefulShutdown = () => ({
+    type: APP_QUIT_GRACEFUL
+});
+
+export const toggleForceQuit = () => ({
+    type: TOGGLE_FORCE_QUIT
+});
+
 export const setVersion = payload => ({
     type: SET_GOLEM_VERSION,
     payload
@@ -729,6 +752,13 @@ export const runTestTask = payload => ({
 export const abortTestTask = payload => ({
     type: ABORT_TEST_TASK,
     payload
+});
+
+export const dryRunTask = (payload, _resolve, _reject) => ({
+    type: DRY_RUN_TASK,
+    payload,
+    _resolve, 
+    _reject
 });
 
 export const setTaskTestStatus = payload => ({

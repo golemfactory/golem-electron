@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 
 import * as Actions from "../../actions";
+import notify from '../../utils/notify';
 
 const knownIssues = Object.freeze({
     PORT: "PORT",
@@ -79,6 +80,11 @@ export class IssueModal extends React.Component {
                     </div>
                 );
             case knownIssues.UPDATE:
+                notify(
+                    'New version is ready!',
+                    'New version of Golem is ready to be downloaded. Download now!',
+                    'https://golem.network/download/brass-beta/'
+                );
                 return (
                     <div className="content__modal">
                         <div className="container-icon">

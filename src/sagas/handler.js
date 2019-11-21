@@ -8,8 +8,8 @@ import {
     put
 } from 'redux-saga/effects';
 const { remote } = window.electron;
-const log = remote.require('./electron/debug_handler.js');
-const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
+const log = remote.require('./electron/handler/debug.js');
+const { CUSTOM_RPC } = remote.require('./electron/config/golem.js');
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
@@ -52,6 +52,7 @@ export let config = Object.freeze({
     RUN_TEST_TASK_RPC: 'comp.tasks.check',
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
+    TASK_DRY_RUN_RPC: 'comp.task.create.dry_run',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
     GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
@@ -103,6 +104,7 @@ export let config = Object.freeze({
     CHAIN_INFO_RPC: 'golem.mainnet',
     VIRTUALIZATION_RPC: 'env.hw.virtualization',
     QUIT_RPC: 'ui.quit',
+    QUIT_GRACEFUL_RPC: 'golem.graceful_shutdown',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
     SET_PASSWORD_RPC: 'golem.password.set',
