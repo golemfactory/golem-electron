@@ -1,5 +1,5 @@
-@import "currency-box";
-@import "modal/withdraw-modal.scss";
+@import 'currency-box';
+@import 'modal/withdraw-modal.scss';
 
 .section__wallet {
 	position: relative;
@@ -12,6 +12,7 @@
 	border-bottom: 1px solid $color-border;
 	flex: 0 0 70px;
 	transition: 0.8s all;
+	transition-delay: 0.2s;
 
 	.icon-arrow-down {
 		position: absolute;
@@ -24,48 +25,17 @@
 }
 .expand__wallet {
 	flex: 0 0 320px;
+	transition-delay: 0s;
 
 	.panel_box {
 		width: 100% !important;
 	}
 
 	.address-box__wallet {
-		position: relative;
-		margin-right: 30px;
-		margin-bottom: 15px;
-		display: block;
-
-		.input__public-key {
-			padding-right: 40px;
-		}
-		.icon-confirmation,
-		.icon-copy {
-			position: absolute;
-			cursor: pointer;
-		}
-
-		.icon-copy {
-			font-size: 16pt;
-			bottom: 6px;
-			right: 6px;
-			color: $color-primary;
-		}
-
-		.icon-confirmation {
-			font-size: 12pt;
-			bottom: 8px;
-			right: 10px;
-			color: $color-accent1;
-		}
-
-		.status-copy_address {
-			position: absolute;
-			bottom: -15px;
-			right: 0px;
-			font-size: 9pt;
-			color: $color-accent1;
-			font-weight: 400;
-		}
+		animation: 0.2s ease 0.5s normal forwards 1 fadein;
+		-webkit-animation: 0.2s ease 0.5s normal forwards 1 fadein;
+		opacity: 0;
+		transition: 0.2s all;
 	}
 
 	.arrow-expand {
@@ -99,11 +69,12 @@
 }
 
 .address-box__wallet {
-	display: none;
+	position: relative;
+	margin-right: 30px;
+	margin-bottom: 15px;
 	box-sizing: border-box;
-	animation: 0.2s ease 0.5s normal forwards 1 fadein;
-	-webkit-animation: 0.2s ease 0.5s normal forwards 1 fadein;
-	opacity: 0;
+	animation: 0.2s ease 0s normal forwards 1 fadeout;
+	-webkit-animation: 0.2s ease 0s normal forwards 1 fadeout;
 	span {
 		font-size: 9pt;
 		&:first-child {
@@ -114,6 +85,38 @@
 		margin-top: 10px;
 		padding: 0 10px;
 		width: 100%;
+	}
+
+	.input__public-key {
+		padding-right: 40px;
+	}
+	.icon-confirmation,
+	.icon-copy {
+		position: absolute;
+		cursor: pointer;
+	}
+
+	.icon-copy {
+		font-size: 16pt;
+		bottom: 6px;
+		right: 6px;
+		color: $color-primary;
+	}
+
+	.icon-confirmation {
+		font-size: 12pt;
+		bottom: 8px;
+		right: 10px;
+		color: $color-accent1;
+	}
+
+	.status-copy_address {
+		position: absolute;
+		bottom: -15px;
+		right: 0px;
+		font-size: 9pt;
+		color: $color-accent1;
+		font-weight: 400;
 	}
 }
 
@@ -132,5 +135,23 @@
 	}
 	to {
 		opacity: 1;
+	}
+}
+
+@keyframes fadeout {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
+	}
+}
+
+@-webkit-keyframes fadeout {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0;
 	}
 }

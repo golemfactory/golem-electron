@@ -246,7 +246,8 @@
 	}
 
 	.container__currency-box {
-		height: auto;
+		max-height: fit-content;
+		height: 400px;
 		margin-top: 0;
 	}
 }
@@ -258,6 +259,7 @@
 	backface-visibility: hidden;
 	height: 70px;
 	margin-top: -25px;
+	transition: 0.8s height;
 }
 
 #cube {

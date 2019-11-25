@@ -68,12 +68,26 @@ export class Wallet extends Component {
   _handleExpandWallet = () => {
     const element = document.getElementById('sectionWallet');
     const expandButton = document.getElementById('expandWalletButton');
+    const addressBox = document.getElementById('addressBox');
+    if (addressBox) {
+      addressBox.addEventListener(
+        'webkitAnimationEnd',
+        event => {
+          this.setState({
+            isWalletExpanded: !this.state.isWalletExpanded,
+            expandedAmount: null
+          });
+        },
+        false
+      );
+    } else {
+      this.setState({
+        isWalletExpanded: !this.state.isWalletExpanded,
+        expandedAmount: null
+      });
+    }
     element.classList.toggle('expand__wallet');
     expandButton.classList.toggle('arrow-expand');
-    this.setState({
-      isWalletExpanded: !this.state.isWalletExpanded,
-      expandedAmount: null
-    });
   };
 
   _handleCopyToClipboard(_publicKey, evt) {
@@ -261,36 +275,42 @@ export class Wallet extends Component {
             onClick={this._handleExpandWallet}
           />
         </div>
-        <div className="address-box__wallet">
-          <div>
-            <span>Your address - </span>
-            <span>send GNT and ETH to this address to top up your account</span>
-          </div>
-          <div>
-            <input
-              className="input__public-key"
-              type="text"
-              value={
-                isMainNet ? publicKey : 'You cannot top up your TestNet account'
-              }
-              readOnly
-            />
-            <span
-              className={`icon-${addressCopied ? 'confirmation' : 'copy'}`}
-              onClick={this._handleCopyToClipboard.bind(
-                this,
-                isMainNet
-                  ? publicKey
-                  : isDeveloperMode
-                  ? publicKey
-                  : 'You cannot top up your TestNet account'
+        {isWalletExpanded && (
+          <div id="addressBox" className="address-box__wallet">
+            <div>
+              <span>Your address - </span>
+              <span>
+                send GNT and ETH to this address to top up your account
+              </span>
+            </div>
+            <div>
+              <input
+                className="input__public-key"
+                type="text"
+                value={
+                  isMainNet
+                    ? publicKey
+                    : 'You cannot top up your TestNet account'
+                }
+                readOnly
+              />
+              <span
+                className={`icon-${addressCopied ? 'confirmation' : 'copy'}`}
+                onClick={this._handleCopyToClipboard.bind(
+                  this,
+                  isMainNet
+                    ? publicKey
+                    : isDeveloperMode
+                    ? publicKey
+                    : 'You cannot top up your TestNet account'
+                )}
+              />
+              {addressCopied && (
+                <span className="status-copy_address">address copied</span>
               )}
-            />
-            {addressCopied && (
-              <span className="status-copy_address">address copied</span>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     );
   }
