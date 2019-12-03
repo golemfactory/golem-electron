@@ -72,7 +72,7 @@ module.exports = function createPreviewWindow(id, frameCount) {
 
             previewWindow.loadURL(previewURL);
         } else {
-            let previewURL = `file://${__dirname}/index.frame.html#/preview/${
+            let previewURL = `file://${path.resolve(__dirname, '..', '..')}/index.frame.html#/preview/${
                 frameCount > 1 ? 'all' : 'single'
             }/${id}`;
 
