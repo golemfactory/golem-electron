@@ -26,7 +26,7 @@ export let config = Object.freeze({
     GET_DATA_DIR_RPC: 'env.datadir',
     GET_KEY_ID_RPC: 'crypto.keys.id',
     GET_PUBLIC_KEY_RPC: 'crypto.keys.pub',
-    GET_STATUS_RPC: 'get_status',
+    GET_STATUS_RPC: 'net.status',
     WITHDRAW_RPC: 'pay.withdraw',
     GAS_COST_RPC: 'pay.withdraw.gas_cost',
     //Network
