@@ -491,9 +491,11 @@ Number.prototype.toFixedDown = function(digits) {
 
 function isTaskActive({ status }) {
     return !(
-        status === taskStatus.FINISHED ||
-        status === taskStatus.RESTART ||
-        status === taskStatus.TIMEOUT
+        status === taskStatus.FINISHED  ||
+        status === taskStatus.RESTART   ||
+        status === taskStatus.TIMEOUT   ||
+        status === taskStatus.ABORTED   ||
+        status === taskStatus.ERRORCREATING
     );
 }
 
