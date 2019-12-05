@@ -191,7 +191,8 @@ export function subscribe(session) {
                 }
             }
         }
-
+        //Get initial status information
+        _handleRPC(on_connection, session, config.GET_STATUS_RPC);
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH);
 
         session.options({
