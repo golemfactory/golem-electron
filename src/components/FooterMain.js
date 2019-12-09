@@ -446,7 +446,6 @@ export class FooterMain extends PureComponent {
                               </span>,
                               <br key="stats_02" />,
                               <span key="stats_03">
-                                ,
                                 {stats.subtasks_with_errors &&
                                   `${
                                     stats.subtasks_with_errors[1]
