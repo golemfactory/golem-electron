@@ -254,7 +254,6 @@ export function testRPC(session) {
 }
 
 export function* apiFlow(connection) {
-    yield call(testRPC, connection); //will block flow and wait for registered rpc procedures
     yield fork(accountFlow, connection);
     yield fork(settingsFlow, connection);
     yield fork(advancedFlow, connection);
@@ -295,6 +294,7 @@ export function* handleIO(connection) {
         yield fork(termsFlow, connection);
         yield fork(encryptionFlow, connection);
         yield fork(settingsInteractionFlow, connection);
+        yield call(testRPC, connection); //will block flow and wait for registered rpc procedures
 
         channel = yield call(subscribe, connection);
 
@@ -302,12 +302,12 @@ export function* handleIO(connection) {
             let status = yield take(channel);
             if (status && !taskApi) {
                 taskApi = yield fork(apiFlow, connection);
-            } else if (!status && taskApi) {
-                console.info("SHUT_DOWN");
-                if (taskApi) yield cancel(taskApi);
-                taskApi = null;
-            }
-
+            } 
+            // else if (!status && taskApi) {
+            //     console.info("SHUT_DOWN");
+            //     if (taskApi) yield cancel(taskApi);
+            //     taskApi = null;
+            // }
             if (!status) {
                 yield put({
                     type: SET_COMPONENT_WARNING,
