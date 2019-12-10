@@ -263,3 +263,22 @@ export let _handleRPC = (
         onError: errorCallback.bind(null, _rpc_address, _eb)
     });
 };
+
+export const multipleAttempts = (generator, handleError, maxTries) => {
+  return function * multipleAttempts (...args) {
+    let n = 0
+    while (n <= maxTries) {
+      try {
+        yield call(generator, ...args)
+        break
+      } catch (e) {
+        // until max tries are done we preserve error logs instead spamming
+        if (n < maxTries) {
+          yield log(e)
+        } else {
+          yield handleError(e)
+        }
+      }
+    }
+  }
+}

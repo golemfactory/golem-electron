@@ -194,7 +194,7 @@
         "express": "^4.14.0",
         "fibers": "^3.1.1",
         "file-loader": "1.1.11",
-        "handlebars": "^4.4.0",
+        "handlebars": "^4.5.3",
         "happypack": "^5.0.0",
         "history": "^4.7.2",
         "html-webpack-harddisk-plugin": "1.0.1",
