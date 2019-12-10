@@ -106,11 +106,11 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
 
         win.on('closed', () => {
             closeCallback();
+            ipcHandler.ipcRemover();
         });
 
         win.on('close', () => {
             closeCallback();
-            ipcHandler.ipcRemover();
         });
     });
 };

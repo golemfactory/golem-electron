@@ -1,37 +1,37 @@
-import { eventChannel, buffers } from "redux-saga";
-import { fork, takeLatest, take, call, put, cancel } from "redux-saga/effects";
-import { login, setMessage, logout, dict } from "../actions";
+import { eventChannel, buffers } from 'redux-saga';
+import { fork, takeLatest, take, call, put, cancel } from 'redux-saga/effects';
+import { login, setMessage, logout, dict } from '../actions';
 
-import { Wampy } from "wampy";
-import wampyCra from "wampy-cra";
-import { w3cwebsocket } from "websocket";
+import { Wampy } from 'wampy';
+import wampyCra from 'wampy-cra';
+import { w3cwebsocket } from 'websocket';
 
-import { MsgpackSerializer } from "wampy/dist/serializers/MsgpackSerializer";
-import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from "./handler";
+import { MsgpackSerializer } from 'wampy/dist/serializers/MsgpackSerializer';
+import { config, _handleSUBPUB, _handleRPC, _handleUNSUBPUB } from './handler';
 
-import { accountFlow } from "./account";
-import { advancedFlow } from "./advanced";
-import { balanceFlow } from "./balance";
-import { chainInfoFlow } from "./chainInfo";
-import { concentFlow } from "./concent";
-import { connectedPeersFlow } from "./connectedPeers";
-import { currencyFlow } from "./currency";
-import { encryptionFlow } from "./password";
-import { engineFlow } from "./engine";
-import { frameBase } from "./frame";
-import { golemStatusFlow } from "./golem";
-import { historyFlow } from "./history";
-import { networkInfoFlow } from "./networkInfo";
-import { performanceFlow } from "./performance";
-import { quitFlow } from "./quit";
-import { settingsFlow, settingsInteractionFlow } from "./userSettings";
-import { statsFlow } from "./stats";
-import { aclFlow } from "./acl";
-import { trustFlow } from "./trust";
-import { tasksFlow } from "./tasks";
-import { termsFlow } from "./terms";
-import { versionFlow } from "./version";
-import { virtualizationFlow } from "./virtualization";
+import { accountFlow } from './account';
+import { advancedFlow } from './advanced';
+import { balanceFlow } from './balance';
+import { chainInfoFlow } from './chainInfo';
+import { concentFlow } from './concent';
+import { connectedPeersFlow } from './connectedPeers';
+import { currencyFlow } from './currency';
+import { encryptionFlow } from './password';
+import { engineFlow } from './engine';
+import { frameBase } from './frame';
+import { golemStatusFlow } from './golem';
+import { historyFlow } from './history';
+import { networkInfoFlow } from './networkInfo';
+import { performanceFlow } from './performance';
+import { quitFlow } from './quit';
+import { settingsFlow, settingsInteractionFlow } from './userSettings';
+import { statsFlow } from './stats';
+import { aclFlow } from './acl';
+import { trustFlow } from './trust';
+import { tasksFlow } from './tasks';
+import { termsFlow } from './terms';
+import { versionFlow } from './version';
+import { virtualizationFlow } from './virtualization';
 
 const {
     SET_CONNECTION_PROBLEM,
@@ -76,11 +76,11 @@ export function connect() {
                 serializer: new MsgpackSerializer(),
                 maxRetries: 100000,
                 authid: config.AUTHID,
-                authmethods: ["wampcra"],
+                authmethods: ['wampcra'],
                 onChallenge: (method, info) =>
                     wampyCra.sign(secret, info.challenge),
                 onConnect: () => {
-                    console.log("WS: connected");
+                    console.log('WS: connected');
                     emit({
                         connection,
                         error: null
@@ -89,7 +89,7 @@ export function connect() {
                     reconnection = true;
                 },
                 onReconnectSuccess: () => {
-                    console.log("WS: Reconnected");
+                    console.log('WS: Reconnected');
 
                     emit({
                         connection,
@@ -100,11 +100,11 @@ export function connect() {
                 },
                 onClose: () => {
                     app.golem.connected = false;
-                    console.log("WS: connection closed");
+                    console.log('WS: connection closed');
                 },
                 onError: ({ error, details }) => {
                     connection.disconnect();
-                    console.info("WS: connection error:", error, details);
+                    console.info('WS: connection error:', error, details);
 
                     if (reconnection) {
                         emit({
@@ -144,7 +144,7 @@ export function connect() {
         reAskSecretKey();
 
         return () => {
-            console.log("negative");
+            console.log('negative');
         };
     });
 }
@@ -162,15 +162,20 @@ export function disablePortFlow() {
 export function subscribe(session) {
     return eventChannel(emit => {
         // SUBSCRIBE to a topic and receive events
+        let statusInterval = setInterval(() => {
+            //Get initial status information
+            _handleRPC(on_connection, session, config.GET_STATUS_RPC);
+        }, 5000);
 
         function on_connection(args) {
+            statusInterval && clearInterval(statusInterval);
             var connection = args[0];
             const { listening, port_statuses } = connection;
 
             if (port_statuses) {
                 const checkIfPortsAreHealty = Object.values(
                     port_statuses
-                ).every(i => i == "open");
+                ).every(i => i == 'open');
                 if (listening && checkIfPortsAreHealty) {
                     emit(true);
                 } else if (listening && !checkIfPortsAreHealty) {
@@ -186,23 +191,21 @@ export function subscribe(session) {
                 } else {
                     emit(false);
                     throw new Error(
-                        "Golem is not able to listen proper ports!"
+                        'Golem is not able to listen proper ports!'
                     );
                 }
             }
         }
-        //Get initial status information
-        _handleRPC(on_connection, session, config.GET_STATUS_RPC);
         _handleSUBPUB(on_connection, session, config.CONNECTION_CH);
 
         session.options({
             onClose: function() {
-                console.info("Connection lost!");
+                console.info('Connection lost!');
             }
         });
 
         return () => {
-            console.log("negative");
+            console.log('negative');
             _handleUNSUBPUB(on_connection, session, config.CONNECTION_CH);
         };
     });
@@ -216,26 +219,25 @@ export function subscribe(session) {
  * @return {[Object]}           [Promise]
  */
 export function testRPC(session) {
-    let paymentTimeout = null;
-    let timeoutCount = 0;
-
+    let paymentInterval = null;
+    let maxAttempt = 0;
     return new Promise((response, reject) => {
+
         function on_info(args) {
-            if (paymentTimeout) clearTimeout(paymentTimeout);
+            paymentInterval && clearInterval(paymentInterval);
             response(true);
         }
 
         function on_error(args) {
-            if (timeoutCount < 120) {
+            if (maxAttempt < 60) {
                 // 2 min
-                runTimeout();
-                timeoutCount++;
+                maxAttempt++;
             } else {
                 reject(args);
             }
         }
 
-        function runWithTimeout() {
+        function runWithInterval() {
             _handleRPC(
                 on_info,
                 session,
@@ -244,12 +246,9 @@ export function testRPC(session) {
                 on_error
             );
         }
-
-        function runTimeout() {
-            paymentTimeout = setTimeout(runWithTimeout, 1000);
-        }
-
-        runWithTimeout();
+        
+        runWithInterval();
+        paymentInterval = setInterval(() => runWithInterval(), 2000);
     });
 }
 
@@ -302,18 +301,18 @@ export function* handleIO(connection) {
             let status = yield take(channel);
             if (status && !taskApi) {
                 taskApi = yield fork(apiFlow, connection);
-            } else if (!status && taskApi) {
-                console.info("SHUT_DOWN");
-                if (taskApi) yield cancel(taskApi);
-                taskApi = null;
             }
-
+            // else if (!status && taskApi) {
+            //     console.info("SHUT_DOWN");
+            //     if (taskApi) yield cancel(taskApi);
+            //     taskApi = null;
+            // }
             if (!status) {
                 yield put({
                     type: SET_COMPONENT_WARNING,
                     payload: {
                         status: true,
-                        issue: "PORT"
+                        issue: 'PORT'
                     }
                 });
                 disablePortFlow();
@@ -356,7 +355,7 @@ export function* connectionFlow() {
                     type: SET_CONNECTION_PROBLEM,
                     payload: {
                         status: true,
-                        issue: "WEBSOCKET"
+                        issue: 'WEBSOCKET'
                     }
                 });
                 skipError = false;
@@ -373,12 +372,12 @@ export function* connectionFlow() {
             }
         }
     } finally {
-        console.info("yield cancelled!");
+        console.info('yield cancelled!');
         yield put({
             type: SET_CONNECTION_PROBLEM,
             payload: {
                 status: true,
-                issue: "WEBSOCKET"
+                issue: 'WEBSOCKET'
             }
         });
         yield cancel(task);
@@ -396,7 +395,7 @@ export function* flow() {
         yield take(LOGIN);
         yield put({
             type: SET_GOLEM_STATUS,
-            payload: [{ client: ["start", "pre", null] }]
+            payload: [{ client: ['start', 'pre', null] }]
         });
         const { task } = yield call(connectionFlow);
         let action = yield take(LOGOUT);
