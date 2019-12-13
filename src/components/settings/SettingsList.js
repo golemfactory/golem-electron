@@ -20,6 +20,7 @@ import * as Actions from './../../actions';
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     isDeveloperMode: state.input.developerMode,
+    concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch
 });
 
@@ -63,7 +64,8 @@ export class SettingsList extends React.Component {
 
         if (
             nextProps.concentSwitch !== this.props.concentSwitch &&
-            !nextProps.concentSwitch
+            !nextProps.concentSwitch &&
+            !nextProps.concentBalance.value.isZero()
         ) {
             this.setState({
                 concentModal: !nextProps.concentSwitch
@@ -156,7 +158,7 @@ export class SettingsList extends React.Component {
 
     render() {
         const { concentModal, activeContent } = this.state;
-        const { isMainNet } = this.props
+        const { isMainNet } = this.props;
         const tabItems = [
             {
                 title: 'Performance',

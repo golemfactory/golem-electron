@@ -570,7 +570,7 @@ export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     type: TOGGLE_CONCENT,
     isSwitchOn,
     informRPC,
-    toggleLock
+    toggleLock //toggleDepositLock
 });
 
 export const toggleConcentRequired = isSwitchOn => ({

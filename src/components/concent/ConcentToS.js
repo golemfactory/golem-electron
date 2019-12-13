@@ -19,14 +19,14 @@ export default class ConcentToS extends React.Component {
 
     _handleScroll = e => {
         if (e.target.scrollTop) {
-            const _ratio = e.target.scrollTop / (e.target.scrollHeight - 220); // 220 is the offset
+            const _ratio = e.target.scrollTop / (e.target.scrollHeight - 380); // 380 is the offset
             document.getElementById("blurTop").style.opacity = _ratio;
             document.getElementById("blurBottom").style.opacity = 1 - _ratio;
 
-            if (e.target.scrollTop > e.target.scrollHeight - 250) {
-                this.props.handleLock(false);
+            if (e.target.scrollTop > e.target.scrollHeight - (e.target.scrollTop / 10)) {
+                this._handleLock(false);
             } else {
-                this.props.handleLock(true);
+                this._handleLock(true);
             }
         }
     };
