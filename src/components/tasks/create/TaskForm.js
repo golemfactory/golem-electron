@@ -1497,7 +1497,7 @@ export class TaskDetail extends React.Component {
                   </div>
                 </div>
               </div>
-              {!isMainNet && concentSwitch && (
+              {concentSwitch && (
                 <div className="section-concent__task-detail">
                   <InfoLabel
                     type="h4"

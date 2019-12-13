@@ -7,7 +7,7 @@ const TERMS_VERSION = 3;
 /**
  * CONFIG STORE KEYS
  */
-store.delete('CONCENT_ONBOARDING:MAIN');
+
 //store.delete('DEFAULT_GETH') // <-- Rollback geth
 //store.delete('HIDE_ONBOARD_FLOW:TEST_V'+TERMS_VERSION) // <-- Rollback onboard
 const dictConfig = MAINNET ? {

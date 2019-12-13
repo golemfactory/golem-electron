@@ -10,6 +10,13 @@ export default class ConcentToS extends React.Component {
         };
     }
 
+    _handleLock = _lock => {
+        if (this.state.isAcceptLocked !== _lock)
+            this.setState({
+                isAcceptLocked: _lock
+            });
+    };
+
     _handleScroll = e => {
         if (e.target.scrollTop) {
             const _ratio = e.target.scrollTop / (e.target.scrollHeight - 220); // 220 is the offset
@@ -75,7 +82,8 @@ export default class ConcentToS extends React.Component {
                         </span>
                         <button
                             className="btn btn--primary"
-                            onClick={this._handleApply}>
+                            onClick={this._handleApply}
+                            disabled={isAcceptLocked}>
                             Accept
                         </button>
                     </div>

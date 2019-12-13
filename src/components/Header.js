@@ -95,21 +95,23 @@ export class Header extends Component {
         setActiveClass(allNav, location.pathname);
       });
 
-    window.onbeforeunload = e => {
+    window.addEventListener('beforeunload', event => {
       const { isRequestActive, stats, forceQuit } = this.props;
 
       if (
         (stats?.provider_state?.status === 'Computing' || isRequestActive) &&
         !forceQuit
-      )
+      ) {
+        event.preventDefault();
         this._toggleQuitModal(cb);
+      }
 
       function cb(quitModal) {
         if (quitModal) {
-          e.returnValue = true;
+          event.returnValue = true;
         }
       }
-    };
+    });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -207,16 +209,26 @@ export class Header extends Component {
     return <p>New Task</p>;
   }
 
+  _redirectToConcent = e => {
+    this.props.actions.toggleConcent(true, true);
+    window.routerHistory.push('/settings');
+  };
+
   _initNotificationCenter() {
     const { connectedPeers, notificationList } = this.props;
     const unreadNotificationAmount = notificationList.reduce(function(n, item) {
       return n + (item.seen === false);
     }, 0);
     if (unreadNotificationAmount) {
-      notify('Meet with concent!', 'To get started, clich here.', '/settings');
+      notify(
+        'Meet with concent!',
+        'To get started, click here.',
+        this._redirectToConcent
+      );
       this.props.actions.setSeenNotification();
     }
   }
+
   render() {
     const { isMac, quitModal } = this.state;
     const {

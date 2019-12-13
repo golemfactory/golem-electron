@@ -1,3 +1,4 @@
+const path = require('path');
 const { BrowserWindow } = require('electron');
 
 const ipcHandler = require('../handler/ipc.js');

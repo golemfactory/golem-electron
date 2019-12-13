@@ -43,6 +43,13 @@ function ipcHandler(
         win.focus();
     });
 
+    ipcMain.on('graceful-shutdown', function(event, flag = false) {
+        if (!!flag) {
+            win.webContents.send('graceful-shutdown');
+        }
+        global.isGracefulShutdown = !!flag;
+    });
+
     /**
      * [When preview expanding switched on from renderer side, this event resizing the window]
      * @param  {String}     'preview-section'       key of the ipc broadcast
