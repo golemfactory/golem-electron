@@ -17,6 +17,9 @@ global.window.require = function () {
     ipcRenderer: {
       send: function () {
         // Fake sending message to ipcMain
+      },
+      on: function () {
+        // Fake receiving message to ipcMain
       }
     },
     webFrame: {
@@ -111,7 +114,10 @@ global.window.electron = {
         ipcRenderer: {
            send: function () {
                // Fake sending message to ipcMain
-           }
+           },
+           on: function () {
+                // Fake receiving message to ipcMain
+          }
         },
         clipboard: {
             writeText: function () {}
