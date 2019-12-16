@@ -17,7 +17,7 @@ import notify from './../utils/notify';
 import ConditionalRender from './hoc/ConditionalRender';
 import QuitModal from '../container/modal/QuitModal';
 
-const { remote } = window.electron;
+const { ipcRenderer, remote } = window.electron;
 const { BrowserWindow, dialog } = remote;
 const mainProcess = remote.require('./index');
 
@@ -95,28 +95,38 @@ export class Header extends Component {
         setActiveClass(allNav, location.pathname);
       });
 
-    window.addEventListener('beforeunload', event => {
-      const { isRequestActive, stats, forceQuit } = this.props;
-
-      if (
-        (stats?.provider_state?.status === 'Computing' || isRequestActive) &&
-        !forceQuit
-      ) {
-        event.preventDefault();
-        this._toggleQuitModal(cb);
-      }
-
+    ipcRenderer.on('graceful-shutdown-modal', () => {
       function cb(quitModal) {
-        if (quitModal) {
-          event.returnValue = true;
-        }
+        //Callback for: in case of any check is needed
+        console.info('graceful-shutdown modal is on.');
       }
+      this._toggleQuitModal(cb);
     });
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.isEngineOn) {
       this._initNotificationCenter();
+    }
+
+    /**
+     * @description
+     * If node is requested task or providing for a task and if there is no force quit triggered,
+     * inform backend for graceful shutdown
+     */
+    if (
+      ((nextProps.isRequestActive !== this.props.isRequestActive &&
+        !!nextProps.isRequestActive) ||
+        nextProps.stats?.provider_state?.status === 'Computing') &&
+      !nextProps.forceQuit
+    ) {
+      ipcRenderer.send('graceful-shutdown', true);
+    } else if (nextProps.isRequestActive !== this.props.isRequestActive) {
+      ipcRenderer.send('graceful-shutdown', false);
+    }
+
+    if (nextProps.forceQuit !== this.props.forceQuit && !!nextProps.forceQuit) {
+      ipcRenderer.send('close-me');
     }
   }
 
@@ -138,16 +148,10 @@ export class Header extends Component {
 
   _gracefulShutdown = () => this.props.actions.gracefulShutdown();
 
-  _forceQuit = () => {
-    this.props.actions.toggleForceQuit();
-    this._onClose();
-  };
-
   /**
    * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
    */
   _onClose = () => {
-    //this.props.actions.gracefulQuit(); //TO DO popup quit modal
     const win = BrowserWindow.getFocusedWindow();
     win.close();
   };
@@ -161,6 +165,10 @@ export class Header extends Component {
     const win = BrowserWindow.getFocusedWindow();
     win.isMaximized() ? win.unmaximize() : win.maximize();
   }
+
+  _forceQuit = () => {
+    this.props.actions.toggleForceQuit();
+  };
 
   /**
    * [_handleTab to change active class of selected tab title]

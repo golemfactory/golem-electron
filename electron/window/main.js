@@ -112,11 +112,12 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
         });
 
         win.on('close', event => {
-            // if (global.isGracefulShutdown) {
-            //     event.preventDefault();
-            // } else {
+            if (global.isGracefulShutdown) {
+                event.preventDefault();
+                win.webContents.send('graceful-shutdown-modal');
+            } else {
                 closeCallback();
-            // }
+            }
         });
     });
 };

@@ -44,10 +44,12 @@ function ipcHandler(
     });
 
     ipcMain.on('graceful-shutdown', function(event, flag = false) {
-        if (!!flag) {
-            win.webContents.send('graceful-shutdown');
-        }
         global.isGracefulShutdown = !!flag;
+    });
+
+    ipcMain.on('close-me', function(event) {
+        global.isGracefulShutdown = false;
+        app.quit();
     });
 
     /**
@@ -90,11 +92,13 @@ function ipcHandler(
 }
 
 function ipcRemover() {
+    ipcMain.removeAllListeners('graceful-shutdown');
     ipcMain.removeAllListeners('preview-switch');
     ipcMain.removeAllListeners('preview-screen');
     ipcMain.removeAllListeners('set-badge');
     ipcMain.removeAllListeners('open-file');
     ipcMain.removeAllListeners('open-logs');
+    ipcMain.removeAllListeners('close-me');
     console.info('IPC Listeners destroyed.');
 }
 
