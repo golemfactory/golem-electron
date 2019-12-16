@@ -55,6 +55,7 @@ const mapStateToProps = state => ({
   connectedPeers: state.realTime.connectedPeers,
   isMainNet: state.info.isMainNet,
   notificationList: state.notification.notificationList,
+  isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled,
   isRequestActive: getRequestorStatus(state, 'shutdown'),
   stats: state.stats.stats,
   forceQuit: state.info.forceQuit
@@ -242,10 +243,11 @@ export class Header extends Component {
     const {
       activeHeader,
       connectedPeers,
-      taskDetails,
       detail,
       isEngineOn,
-      isMainNet
+      isGracefulShutdownEnabled,
+      isMainNet,
+      taskDetails
     } = this.props;
     let styling = {
       WebkitAppRegion: 'drag'
@@ -429,6 +431,7 @@ export class Header extends Component {
               closeModal={this._toggleQuitModal}
               forceQuit={this._forceQuit}
               gracefulShutdown={this._gracefulShutdown}
+              isGracefulShutdownEnabled={isGracefulShutdownEnabled}
             />,
             document.getElementById('modalPortal')
           )}
