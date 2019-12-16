@@ -232,7 +232,8 @@ export class Header extends Component {
       notify(
         'Meet with concent!',
         'To get started, click here.',
-        this._redirectToConcent
+        this._redirectToConcent,
+        true
       );
       this.props.actions.setSeenNotification();
     }

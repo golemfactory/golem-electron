@@ -1,8 +1,8 @@
 import { isFunction } from 'lodash';
-function notify(title, body, data = null) {
+function notify(title, body, data = null, requireInteraction = false) {
   const options = Object.freeze({
     body,
-    data
+    requireInteraction
   });
   let notification;
   // Check browser support
@@ -25,8 +25,7 @@ function notify(title, body, data = null) {
   }
 
   notification.onclick = function(e) {
-    const { data } = e.target;
-    if(isFunction(data)) {
+    if (isFunction(data)) {
       data(e);
       return;
     }
