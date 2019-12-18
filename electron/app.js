@@ -43,7 +43,7 @@ app.on('window-all-closed', () => {
     if (!isMac()) quit();
 });
 app.on('before-quit', () => {
-    if (!isMac()) quit();
+    if (isMac()) quit();
 });
 
 app.on('will-navigate', ev => {

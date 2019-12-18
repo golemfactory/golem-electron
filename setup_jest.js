@@ -11,123 +11,121 @@ global.render = render;
 global.mount = mount;
 global.toJson = toJson;
 
-
-global.window.require = function () {
-  return {
-    ipcRenderer: {
-      send: function () {
-        // Fake sending message to ipcMain
-      },
-      on: function () {
-        // Fake receiving message to ipcMain
-      }
-    },
-    webFrame: {
-        setZoomLevelLimits: function () {},
-        setVisualZoomLevelLimits: function () {}
-    },
-    remote: {
-        require: function () {
-            return {
-                        dirToJson: function () {
-                            return new Promise((res, rej) => {})
-                        },
-                        getDefaultLocation: function () {},
-                        selectDirectory: function () {
-                            return new Promise((res, rej) => {})
-                        },
-                        checkUpdate: function (_old, _new) {},
-                        warn: function () {},
-                        isMac: function () {},
-                        isWin: function () {}
-                    }
+global.window.require = function() {
+    return {
+        ipcRenderer: {
+            send: function() {
+                // Fake sending message to ipcMain
+            },
+            on: function() {
+                // Fake receiving message to ipcMain
+            }
         },
-        getGlobal: function () {
-            return {
-                setConfig: function () {},
-                getConfig: function () {},
-                dictConfig: function () {},
-                configStore: {
-                    onDidChange: function () {}
-                },
-                env:{
-                    NODE_ENV: function () {}
+        webFrame: {
+            setZoomLevelLimits: function() {},
+            setVisualZoomLevelLimits: function() {}
+        },
+        remote: {
+            require: function() {
+                return {
+                    dirToJson: function() {
+                        return new Promise((res, rej) => {});
+                    },
+                    getDefaultLocation: function() {},
+                    selectDirectory: function() {
+                        return new Promise((res, rej) => {});
+                    },
+                    checkUpdate: function(_old, _new) {},
+                    warn: function() {},
+                    isMac: function() {},
+                    isWin: function() {}
+                };
+            },
+            getGlobal: function() {
+                return {
+                    setConfig: function() {},
+                    getConfig: function() {},
+                    dictConfig: function() {},
+                    configStore: {
+                        onDidChange: function() {}
+                    },
+                    env: {
+                        NODE_ENV: function() {}
+                    }
+                };
+            },
+            dialog: {
+                showOpenDialog: function() {}
+            },
+            BrowserWindow: function() {},
+            app: {
+                getVersion: function() {}
+            },
+            process: {
+                argv: {
+                    includes: function() {}
                 }
             }
-        },
-        dialog: {
-            showOpenDialog: function () {}
-        },
-        BrowserWindow: function () {},
-        app: {
-            getVersion: function () {}
-        },
-        process:{
-            argv: {
-                includes: function(){}
-            }
         }
-    }
-  }
+    };
 };
 
 global.window.electron = {
-        remote: {
-            process:{
-                argv: {
-                    includes: function(){}
+    remote: {
+        process: {
+            argv: {
+                includes: function() {}
+            }
+        },
+        require: function() {
+            return {
+                dirToJson: function() {
+                    return new Promise((res, rej) => {});
+                },
+                getDefaultLocation: function() {},
+                selectDirectory: function() {
+                    return new Promise((res, rej) => {});
+                },
+                checkUpdate: function(_old, _new) {},
+                warn: function() {},
+                isMac: function() {},
+                isWin: function() {}
+            };
+        },
+        getGlobal: function() {
+            return {
+                setConfig: function() {},
+                getConfig: function() {},
+                dictConfig: function() {},
+                configStore: {
+                    onDidChange: function() {}
                 }
-            },
-            require: function () {
-                return {
-                        dirToJson: function () {
-                            return new Promise((res, rej) => {})
-                        },
-                        getDefaultLocation: function () {},
-                        selectDirectory: function () {
-                            return new Promise((res, rej) => {})
-                        },
-                        checkUpdate: function (_old, _new) {},
-                        warn: function () {},
-                        isMac: function () {},
-                        isWin: function () {}
-                    }
-            },
-            getGlobal: function () {
-                return {
-                    setConfig: function () {},
-                    getConfig: function () {},
-                    dictConfig: function () {},
-                    configStore: {
-                        onDidChange: function () {}
-                    }
-                }
-            },
-            dialog: {
-                showOpenDialog: function () {}
-            },
-            app: {
-                getVersion: function () {}
-            },
-            BrowserWindow: function () {}
+            };
         },
-        ipcRenderer: {
-           send: function () {
-               // Fake sending message to ipcMain
-           },
-           on: function () {
-                // Fake receiving message to ipcMain
-          }
+        dialog: {
+            showOpenDialog: function() {}
         },
-        clipboard: {
-            writeText: function () {}
+        app: {
+            getVersion: function() {}
         },
-        webFrame: {
-            setZoomLevelLimits: function () {},
-            setVisualZoomLevelLimits: function () {}
-
+        BrowserWindow: function() {}
+    },
+    ipcRenderer: {
+        send: function() {
+            // Fake sending message to ipcMain
+        },
+        on: function() {
+            // Fake receiving message to ipcMain
         }
-}
+    },
+    clipboard: {
+        writeText: function() {}
+    },
+    webFrame: {
+        setZoomLevelLimits: function() {},
+        setVisualZoomLevelLimits: function() {}
+    }
+};
 // Skip createElement warnings but fail tests on any other warning
 /*console.error = message => {
     if (!/(React.createElement: type should not be null)/.test(message)) {

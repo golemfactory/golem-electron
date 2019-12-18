@@ -1643,7 +1643,7 @@ export class TaskDetail extends React.Component {
                   <div className="item-price">
                     <InfoLabel
                       type="span"
-                      label="Tx Fee Lock"
+                      label="Tx fee lock"
                       info={
                         <p className="tooltip_task">
                           Estimated ETH amount to be locked for this task to
