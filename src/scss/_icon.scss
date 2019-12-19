@@ -294,23 +294,42 @@ $color_14: rgb(0, 61, 135);
   }
 }
 .icon-blender_nvgpu,
-.icon-blender_concent,
 .icon-blender_sgx {
   position: relative;
    &:after {
     position: absolute;
     font-size: 10pt;
     bottom: 3px;
-    right: 3px;
+    right: 2px;
+    background: white;
+    border: 1px solid #f5f5f5;
+    border-radius: 50%;
+    padding: 2px;
+    bottom: -6px;
    }
 }
+
+.icon-blender_concent {
+  position: relative;
+   &:before {
+    position: absolute;
+    background: white;
+    border: 1px solid #f5f5f5;
+    border-radius: 50%;
+    padding: 2px;
+    font-size: 10pt;
+    bottom: -6px;
+    left: 2px;
+   }
+}
+
 .icon-blender_nvgpu{
    &:after {
     content: '\e98f'
    }
 }
 .icon-blender_concent{
-   &:after {
+   &:before {
     content: '\e900'
    }
 }
