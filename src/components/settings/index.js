@@ -17,9 +17,6 @@ let activateContent;
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     version: state.info.version,
-    isDeveloperMode: state.input.developerMode,
-    isMainNet: state.info.isMainNet,
-    concentSwitch: state.concent.concentSwitch
 });
 
 const mapDispatchToProps = dispatch => ({

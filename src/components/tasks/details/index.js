@@ -65,7 +65,10 @@ export class Details extends React.PureComponent {
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
             const checkableFragments = filter(nextProps.fragments, item => {
-                return item[0]?.status && this._checkRestartCondition(item[0]);
+                return (
+                    item[item.length - 1]?.status &&
+                    this._checkRestartCondition(item[item.length - 1])
+                );
             }).filter(Boolean);
             const isAllChecked =
                 every(nextState.checkedItems, item => item === true) &&

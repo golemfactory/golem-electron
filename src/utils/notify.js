@@ -1,7 +1,8 @@
-function notify(title, body, data = null) {
+import { isFunction } from 'lodash';
+function notify(title, body, data = null, requireInteraction = false) {
   const options = Object.freeze({
     body,
-    data
+    requireInteraction
   });
   let notification;
   // Check browser support
@@ -24,7 +25,10 @@ function notify(title, body, data = null) {
   }
 
   notification.onclick = function(e) {
-    const { data } = e.target;
+    if (isFunction(data)) {
+      data(e);
+      return;
+    }
     //TO DO diversify the data, check if it is url then apply the one below
     if (data.includes('https://')) window.location.href = data;
     else if (data.includes('/')) window.routerHistory.push(data); //TODO find better way

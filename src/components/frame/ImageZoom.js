@@ -9,7 +9,6 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 
 //carrying viewer information to other components
-export let viewer;
 export let imageInfo = {
     width: null,
     height: null
@@ -48,6 +47,7 @@ export class ImageZoom extends React.Component {
         super(props);
         this._prevX = null;
         this._prevY = null;
+        this.viewer = null;
     }
 
     componentDidMount() {
@@ -57,7 +57,7 @@ export class ImageZoom extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (
             nextProps.isSubtaskShown !== this.props.isSubtaskShown &&
-            !!nextProps.isSubtaskShown
+            !!nextProps.isSubtaskShown && this.viewer
         ) {
             this.viewer.viewport.goHome(true);
         }
@@ -101,7 +101,7 @@ export class ImageZoom extends React.Component {
             if (imageInfo.width / imageInfo.height < 1.4601941747572815) {
                 isVertical = true;
             }
-            viewer = this.viewer = OSD({
+            this.viewer = OSD({
                 id: id,
                 //visibilityRatio: 1,
                 constrainDuringPan: false,
@@ -133,8 +133,8 @@ export class ImageZoom extends React.Component {
                 }
             });
 
-            viewer.addHandler('open', item => {
-                const { x, y } = viewer.viewport.getContainerSize();
+            this.viewer.addHandler('open', item => {
+                const { x, y } = this.viewer.viewport.getContainerSize();
                 this._prevX = x;
                 this._prevY = y;
                 setTimeout(
@@ -150,9 +150,9 @@ export class ImageZoom extends React.Component {
                 );
             });
 
-            viewer.addHandler('resize', item => {
+            this.viewer.addHandler('resize', item => {
                 setTimeout(() => {
-                    const { x, y } = viewer.viewport.getContainerSize();
+                    const { x, y } = this.viewer.viewport.getContainerSize();
                     if (x !== this._prevX || y !== this._prevY) {
                         this.viewer.viewport.goHome(true);
                         this.props.fetchClientInfo(
@@ -166,7 +166,7 @@ export class ImageZoom extends React.Component {
                 }, 500); //MacOS maximize animation delay
             });
 
-            viewer.addHandler('zoom', item => {
+            this.viewer.addHandler('zoom', item => {
                 !!this.props.isSubtaskShown && this.props.getSubtasksBorder();
                 this.calculateZoomRatio.call(this, item.zoom);
             });
@@ -178,7 +178,7 @@ export class ImageZoom extends React.Component {
      * @param  {Number} zoom [Zoom level of the Image Viewer]
      */
     calculateZoomRatio(zoom) {
-        const { x, y } = viewer.viewport.getContainerSize();
+        const { x, y } = this.viewer.viewport.getContainerSize();
         const { width, height } = imageInfo;
         let ratio = (x / width) * 100;
         // if ((width / height) < 1.4601941747572815) {

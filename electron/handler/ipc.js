@@ -43,6 +43,15 @@ function ipcHandler(
         win.focus();
     });
 
+    ipcMain.on('graceful-shutdown', function(event, flag = false) {
+        global.isGracefulShutdown = !!flag;
+    });
+
+    ipcMain.on('close-me', function(event) {
+        global.isGracefulShutdown = false;
+        app.quit();
+    });
+
     /**
      * [When preview expanding switched on from renderer side, this event resizing the window]
      * @param  {String}     'preview-section'       key of the ipc broadcast
@@ -83,11 +92,13 @@ function ipcHandler(
 }
 
 function ipcRemover() {
+    ipcMain.removeAllListeners('graceful-shutdown');
     ipcMain.removeAllListeners('preview-switch');
     ipcMain.removeAllListeners('preview-screen');
     ipcMain.removeAllListeners('set-badge');
     ipcMain.removeAllListeners('open-file');
     ipcMain.removeAllListeners('open-logs');
+    ipcMain.removeAllListeners('close-me');
     console.info('IPC Listeners destroyed.');
 }
 

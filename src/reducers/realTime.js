@@ -6,6 +6,7 @@ import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';
 import { componentStatus, taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
+const { isMac }  = remote.require('./index');
 const { app } = remote;
 const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
@@ -291,6 +292,8 @@ function getGolemStatus(component, method, stage, data) {
     if (method == 'shutdown') {
         // result.status = componentStatus.SHUTDOWN;
         // TO DO: add shutdown scheduled method
+        if(!isMac())
+            app.exit();
         app.quit();
     } else if (stage == 'exception') {
         result.status = componentStatus.EXCEPTION;
@@ -403,7 +406,7 @@ export const concentDepositStatusSelector = createCachedSelector(
                     return { statusCode: 0, time: null }; //locked
             }
         }
-        return { statusCode: 0, time: null };
+        return { statusCode: -1, time: null };
     }
 )(
     (state, key) => key // Cache selectors by type name
@@ -491,9 +494,11 @@ Number.prototype.toFixedDown = function(digits) {
 
 function isTaskActive({ status }) {
     return !(
-        status === taskStatus.FINISHED ||
-        status === taskStatus.RESTART ||
-        status === taskStatus.TIMEOUT
+        status === taskStatus.FINISHED  ||
+        status === taskStatus.RESTART   ||
+        status === taskStatus.TIMEOUT   ||
+        status === taskStatus.ABORTED   ||
+        status === taskStatus.ERRORCREATING
     );
 }
 
