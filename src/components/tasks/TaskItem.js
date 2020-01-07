@@ -323,6 +323,10 @@ export class TaskItem extends React.Component {
                       isSupportedTaskType
                         ? item.type.toLowerCase()
                         : 'default-task'
+                    } ${
+                      item.concent_enabled
+                        ? 'icon-blender_concent'
+                        : ''
                     }`}>
                     <span className="path1" />
                     <span className="path2" />

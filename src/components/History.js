@@ -33,6 +33,7 @@ const threshold = 10;
 
 const mapStateToProps = state => ({
   isEngineOn: state.info.isEngineOn,
+  isMainNet: state.info.isMainNet,
   historyList: state.txHistory.historyList,
   listPage: state.txHistory.listPage,
   activeTab: state.txHistory.activeTab

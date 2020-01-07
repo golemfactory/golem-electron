@@ -136,6 +136,8 @@ export function toggleConcent(session, {isSwitchOn, informRPC, toggleLock = fals
 export function* toggleConcentBase(session, payload) {
     const action = yield call(toggleConcent, session, payload);
     yield action && put(action)
+    const status = yield call(fetchConcentRequiredStatus, session);
+    yield status && put(status)
 }
 
 export function* concentFlow(session, payload) {
