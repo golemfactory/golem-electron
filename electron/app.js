@@ -7,7 +7,12 @@ const golemHandler = require('./handler/golem.js');
 
 const createMainWindow = require('./window/main.js');
 const installDevExtensions = require('./handler/extensions.js');
-const { isDevelopment, isLinux, isMac, isWin } = require('./config/electron.js');
+const {
+    isDevelopment,
+    isLinux,
+    isMac,
+    isWin
+} = require('./config/electron.js');
 
 /**
  * [onReady init function for electron]
@@ -17,7 +22,9 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions();
     }
-    createMainWindow(win, tray, closeCallback).then(_win => (exports.mainWindow = win = _win));
+    createMainWindow(win, tray, closeCallback).then(
+        _win => (exports.mainWindow = win = _win)
+    );
     // tray = createTray(win)
     golemHandler(app);
 }
@@ -27,8 +34,7 @@ function closeCallback() {
 }
 
 function quit() {
-    if (app.golem && !isWin())
-        app.golem.stopProcess().then(app.quit, app.quit);
+    if (app.golem && !isWin()) app.golem.stopProcess().then(app.quit, app.quit);
     else app.quit();
 }
 
@@ -52,6 +58,8 @@ app.on('will-navigate', ev => {
 
 app.on('activate', () => {
     if (win === null) {
-        createMainWindow(win, tray, closeCallback).then(_win => (exports.mainWindow = win = _win));
+        createMainWindow(win, tray, closeCallback).then(
+            _win => (exports.mainWindow = win = _win)
+        );
     }
 });

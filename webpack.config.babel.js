@@ -124,8 +124,9 @@ module.exports = (env, argv) => ({
         }),
         argv.mode === modes.PROD &&
             new CompressionPlugin({
-                // <-- don't forget to activate gzip on web server
-                asset: '[path].gz[query]',
+                filename(info) {
+                    return `${info.path}.gz${info.query}`;
+                },
                 algorithm: 'gzip',
                 test: /\.js$|\.html$/,
                 threshold: 10240,

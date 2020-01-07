@@ -116,9 +116,8 @@ export class Header extends Component {
      * inform backend for graceful shutdown
      */
     if (
-      ((nextProps.isRequestActive !== this.props.isRequestActive &&
-        !!nextProps.isRequestActive) ||
-        nextProps.stats?.provider_state?.status === 'Computing') &&
+      nextProps.isRequestActive !== this.props.isRequestActive &&
+      !!nextProps.isRequestActive &&
       !nextProps.forceQuit
     ) {
       ipcRenderer.send('graceful-shutdown', true);
