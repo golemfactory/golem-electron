@@ -197,8 +197,6 @@ export class FooterMain extends PureComponent {
 
   _forceQuit = () => {
     this.props.actions.toggleForceQuit();
-    const win = BrowserWindow.getFocusedWindow();
-    win.close();
   };
 
   _fetchState(stat) {
@@ -446,7 +444,6 @@ export class FooterMain extends PureComponent {
                               </span>,
                               <br key="stats_02" />,
                               <span key="stats_03">
-                                ,
                                 {stats.subtasks_with_errors &&
                                   `${
                                     stats.subtasks_with_errors[1]

@@ -134,7 +134,7 @@ export class ImageZoom extends React.Component {
             });
 
             this.viewer.addHandler('open', item => {
-                const { x, y } = viewer.viewport.getContainerSize();
+                const { x, y } = this.viewer.viewport.getContainerSize();
                 this._prevX = x;
                 this._prevY = y;
                 setTimeout(

@@ -1,3 +1,4 @@
+const path = require('path');
 const { app, BrowserWindow, Menu, shell } = require('electron');
 
 const createPreviewWindow = require('./preview.js');
@@ -97,7 +98,9 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
         if (isDevelopment()) {
             win.loadURL(`http://localhost:${process.env.PORT || 3002}/`);
         } else {
-            win.loadURL(`file://${__dirname}/index.html`);
+            win.loadURL(
+                `file://${path.resolve(__dirname, '..', '..')}/index.html`
+            );
         }
 
         // Do not update window title after loading pages
@@ -105,11 +108,16 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
 
         win.on('closed', () => {
             closeCallback();
+            ipcHandler.ipcRemover();
         });
 
-        win.on('close', () => {
-            closeCallback();
-            ipcHandler.ipcRemover();
+        win.on('close', event => {
+            if (global.isGracefulShutdown) {
+                event.preventDefault();
+                win.webContents.send('graceful-shutdown-modal');
+            } else {
+                closeCallback();
+            }
         });
     });
 };

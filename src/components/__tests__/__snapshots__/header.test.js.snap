@@ -32,36 +32,6 @@ exports[`should render a header component 1`] = `
         role="menu"
       >
         <ForwardRef(TippyWrapper)
-          arrow={true}
-          content={<Memo(ConnectFunction) />}
-          hideOnClick={true}
-          interactive={true}
-          placement="bottom"
-          theme="light"
-          trigger="click"
-        >
-          <ForwardRef(TippyWrapper)
-            content={
-              <p>
-                Notifications
-              </p>
-            }
-            placement="bottom"
-            trigger="mouseenter"
-          >
-            <li
-              className="menu__item"
-            >
-              <span
-                aria-label="Documentation"
-                className="icon-notification"
-                role="menuitem"
-                tabIndex="0"
-              />
-            </li>
-          </ForwardRef(TippyWrapper)>
-        </ForwardRef(TippyWrapper)>
-        <ForwardRef(TippyWrapper)
           content={
             <div
               className="menu__upload"

@@ -26,7 +26,7 @@ export let config = Object.freeze({
     GET_DATA_DIR_RPC: 'env.datadir',
     GET_KEY_ID_RPC: 'crypto.keys.id',
     GET_PUBLIC_KEY_RPC: 'crypto.keys.pub',
-    GET_STATUS_RPC: 'get_status',
+    GET_STATUS_RPC: 'net.status',
     WITHDRAW_RPC: 'pay.withdraw',
     GAS_COST_RPC: 'pay.withdraw.gas_cost',
     //Network
@@ -263,3 +263,22 @@ export let _handleRPC = (
         onError: errorCallback.bind(null, _rpc_address, _eb)
     });
 };
+
+export const multipleAttempts = (generator, handleError, maxTries) => {
+  return function * multipleAttempts (...args) {
+    let n = 0
+    while (n <= maxTries) {
+      try {
+        yield call(generator, ...args)
+        break
+      } catch (e) {
+        // until max tries are done we preserve error logs instead spamming
+        if (n < maxTries) {
+          yield log(e)
+        } else {
+          yield handleError(e)
+        }
+      }
+    }
+  }
+}
