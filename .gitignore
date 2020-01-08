@@ -6,6 +6,7 @@ node_modules
 # production
 app
 dist
+.env
 
 # misc
 .DS_Store
