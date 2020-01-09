@@ -35,7 +35,9 @@ export class Register extends React.Component {
     this.state = {
       password: '',
       passwordMaskToggle: false,
-      confirmationMaskToggle: false
+      confirmationMaskToggle: false,
+      isPasswordValid: false,
+      isPasswordMatched: false
     };
     this.asyncLoad = false;
   }
@@ -56,11 +58,22 @@ export class Register extends React.Component {
     }
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (
+      nextState.isPasswordValid !== this.state.isPasswordValid ||
+      nextState.isPasswordMatched !== this.state.isPasswordMatched
+    ) {
+      this.props.handlePasswordValidation(
+        nextState.isPasswordValid && nextState.isPasswordMatched
+      );
+    }
+  }
+
   _handleChange = e => {
     this.setState({
-      password: e.password
+      password: e.password,
+      isPasswordValid: e.isValid
     });
-    this.props.handlePasswordValidation(e.isValid);
   };
 
   _handlePassword = e => this.setState({ password: e.target.value });
@@ -68,6 +81,9 @@ export class Register extends React.Component {
   _confirmPassword = e => {
     const passwordTarget = e.target;
     if (passwordTarget) {
+      this.setState({
+        isPasswordMatched: passwordTarget.value === this.state.password
+      });
       if (passwordTarget.value === this.state.password) {
         passwordTarget.classList.add('password_confirmed');
         passwordTarget.classList.remove('password_not_confirmed');
@@ -114,7 +130,7 @@ export class Register extends React.Component {
   }
 
   _initProperContent = (_passwordModal, _loadingIndicator) => {
-    const { isPasswordValid } = this.props;
+    const { isPasswordValid } = this.state;
     if (_passwordModal.status) {
       return (
         <div className="container__register">
