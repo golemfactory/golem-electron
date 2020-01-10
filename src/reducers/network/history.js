@@ -25,16 +25,11 @@ const setHistory = (state = initialState, action) => {
             let history = { ...state.historyList };
             Object.keys(history).forEach( item => {
                 history[item] = getFilteredPaymentSelector(
-                { historyList: action.payload },
+                { historyList: action.payload[item] },
                 item
             )
             })
             
-            //filter based regular update
-            // history[action.query] = getFilteredPaymentSelector(
-            //     { historyList: action.payload },
-            //     action.query
-            // );
             return Object.assign({}, state, {
                 historyList: history
             });

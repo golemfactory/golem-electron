@@ -257,7 +257,7 @@ export class History extends React.Component {
             </span>
           </div>
         </div>
-        <div>
+        <div key={activeTab}>
           {filteredList && filteredList.length > 0 ? (
             <InfiniteLoader
               isRowLoaded={this.isRowLoaded}

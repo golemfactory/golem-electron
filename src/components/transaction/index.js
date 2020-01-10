@@ -39,6 +39,7 @@ class TransactionTube extends Component {
             !isEqual(nextProps.concentBalance?.value, this.props.concentBalance?.value) ||
             !isEqual(nextProps.networkInfo, this.props.networkInfo) ||
             !isEqual(nextProps.paymentHistory, this.props.paymentHistory) ||
+            !isEqual(nextProps.historyList, this.props.historyList) ||
             nextState.showConcentInfo !== this.state.showConcentInfo
         );
     }
