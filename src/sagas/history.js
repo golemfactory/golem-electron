@@ -22,10 +22,11 @@ export function expandHistory(session, { pageNumber, query }) {
             });
         }
 
-        // check if query about deposit, then put as first param (operation_type) if not put as second (direction)
-        query === 'all' ? null : query;
+        // check if query about 'deposit', then put as first param (operation_type) if not put as second (direction)
+        // // check if query about 'all',  then put query null instead of 'all' filter, otherwise pass the filter
         let params = [null, null, 1 + pageNumber, 30];
-        params[query === queries[3] ? 0 : 1] = query;
+        params[query === queries[3] ? 0 : 1] =
+            query === queries[0] ? null : query;
         _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, params);
     });
 }
@@ -62,10 +63,13 @@ export function subscribeHistory(session) {
             }
 
             for (let i = queries.length; i-- > 0; ) {
+                // check if query about 'deposit', then put as first param (operation_type) if not put as second (direction)
+                // check if query about 'all',  then put query null instead of 'all' filter, otherwise pass the filter
                 let _query = queries[i];
                 let _pageNumber = pageNumber[_query];
                 let params = [null, null, 1, 30 * _pageNumber];
-                params[_query === queries[3] ? 0 : 1] = _query;
+                params[_query === queries[3] ? 0 : 1] =
+                    _query === queries[0] ? null : _query;
                 let _promise = new Promise((resolve, reject) => {
                     _handleRPC(
                         on_history.bind(null, _query, resolve),
