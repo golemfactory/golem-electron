@@ -4,8 +4,8 @@ const path = require('path');
 const notarizer = require('electron-notarize');
 
 module.exports = async function(params) {
-    if (process.platform !== 'darwin') {
-        //Mac only
+    if (process.platform !== 'darwin' || !process.env.NOTARIZE_ENV) {
+        //Mac only, notarization flag needed
         return;
     }
 

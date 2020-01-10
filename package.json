@@ -26,6 +26,7 @@
         "pack": "electron-builder build --dir",
         "dist": "electron-builder build",
         "dist:all": "electron-builder build -mwl",
+        "dist:notarize": "cross-env NOTARIZE_ENV=true electron-builder build",
         "dist:debug": "cross-env DEBUG=electron-builder electron-builder build"
     },
     "build": {
