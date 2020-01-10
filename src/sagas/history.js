@@ -7,6 +7,7 @@ import { config, _handleRPC } from './handler';
 
 const { SET_HISTORY, LOAD_HISTORY, EXPAND_HISTORY_PAGE } = dict;
 
+const queries = ['all', 'outgoing', 'incoming', 'deposit_transfer'];
 const getQuery = state => state.txHistory.activeTab;
 const getPageNumber = state => state.txHistory.listPage;
 
@@ -20,13 +21,12 @@ export function expandHistory(session, { pageNumber, query }) {
                 query: query
             });
         }
+
+        // check if query about deposit, then put as first param (operation_type) if not put as second (direction)
         query === 'all' ? null : query;
-        _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [
-            null,
-            query,
-            pageNumber + 1,
-            30
-        ]);
+        let params = [null, null, 1 + pageNumber, 30];
+        params[query === queries[3] ? 0 : 1] = query;
+        _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, params);
     });
 }
 
@@ -49,34 +49,44 @@ let query, pageNumber;
  */
 export function subscribeHistory(session) {
     const interval = 10000;
+    let promises = [];
 
     return eventChannel(emit => {
         const fetchHistory = () => {
-            function on_history(args) {
+            function on_history(_query, resolve, args) {
                 let historyList = args[0];
-                emit({
-                    type: SET_HISTORY,
-                    payload: historyList,
-                    // query: query
+                resolve({
+                    query: _query,
+                    payload: historyList
                 });
             }
 
-            let _pageNumber = pageNumber['all'];
-            
-            // filter based regular updaate, 
-            // let _operation_type =
-            //     query === 'deposit' ? 'deposit_transfer' : null;
-            // let _query = null;
+            for (let i = queries.length; i-- > 0; ) {
+                let _query = queries[i];
+                let _pageNumber = pageNumber[_query];
+                let params = [null, null, 1, 30 * _pageNumber];
+                params[_query === queries[3] ? 0 : 1] = _query;
+                let _promise = new Promise((resolve, reject) => {
+                    _handleRPC(
+                        on_history.bind(null, _query, resolve),
+                        session,
+                        config.PAYMENT_HISTORY_RPC,
+                        params
+                    );
+                });
+                promises.push(_promise);
+            }
 
-            // if (!_operation_type && query !== 'all') {
-            //     _query = query;
-            // }
-            _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, [
-                null,
-                null,
-                1,
-                30 * _pageNumber
-            ]);
+            Promise.all(promises).then(result => {
+                let _payload = {};
+                result.forEach(item => {
+                    _payload[item.query] = item.payload;
+                });
+                emit({
+                    type: SET_HISTORY,
+                    payload: _payload
+                });
+            });
         };
 
         const fetchOnStartup = () => {
