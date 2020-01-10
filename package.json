@@ -26,6 +26,7 @@
         "pack": "electron-builder build --dir",
         "dist": "electron-builder build",
         "dist:all": "electron-builder build -mwl",
+        "dist:notarize": "cross-env NOTARIZE_ENV=true electron-builder build",
         "dist:debug": "cross-env DEBUG=electron-builder electron-builder build"
     },
     "build": {
@@ -33,7 +34,11 @@
         "mac": {
             "category": "public.app-category.productivity",
             "target": "dmg",
-            "artifactName": "golem-electron-beta-${os}os-${version}.${ext}"
+            "artifactName": "golem-electron-beta-${os}os-${version}.${ext}",
+            "hardenedRuntime": true,
+            "gatekeeperAssess": false,
+            "entitlements": "build/entitlements.mac.plist",
+            "entitlementsInherit": "build/entitlements.mac.plist"
         },
         "win": {
             "target": "zip",
@@ -46,6 +51,7 @@
             "category": "Utility",
             "artifactName": "golem-electron-beta-${os}-${version}.${ext}"
         },
+        "afterSign": "./notarization.js",
         "files": [
             "index.js",
             "electron/",
@@ -184,10 +190,12 @@
         "cross-env": "^5.0.1",
         "css-browser-selector": "^0.6.5",
         "css-loader": "2.1.0",
+        "dotenv": "^8.2.0",
         "electron": "^3.1.13",
-        "electron-builder": "22.1.0",
+        "electron-builder": "21.2.0",
         "electron-debug": "^1.2.0",
         "electron-devtools-installer": "2.2.4",
+        "electron-notarize": "^0.1.1",
         "enzyme": "3.8.0",
         "enzyme-adapter-react-16": "1.12.1",
         "enzyme-to-json": "3.3.5",
