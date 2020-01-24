@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,7 +18,6 @@ import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
-import without from 'lodash/without';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,

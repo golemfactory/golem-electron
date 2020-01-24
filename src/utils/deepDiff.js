@@ -1,4 +1,7 @@
-import { transform, isEqual, isObject } from "lodash/fp";
+import transform from "lodash/fp/transform";
+import isEqual from "lodash/fp/isEqual";
+import isObject from "lodash/fp/isObject";
+
 
 const _transform = transform.convert({
   cap: false

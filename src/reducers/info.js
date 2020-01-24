@@ -1,4 +1,4 @@
-import { some } from 'lodash';
+import some from 'lodash/some';
 import { dict } from './../actions';
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');

@@ -7,10 +7,6 @@ import * as Actions from '../../actions';
 import SettingsList from './SettingsList';
 import Stats from './stats';
 import ACL from './acl';
-import { APP_VERSION } from './../../main';
-
-const { remote } = window.electron;
-const { dialog } = remote;
 
 let activateContent;
 

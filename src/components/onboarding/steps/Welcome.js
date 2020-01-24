@@ -1,7 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import welcomeBeta from './../../../assets/img/welcome-beta.svg'
 import animDataTestNet from './../../../assets/anims/onboarding/welcome-testnet.json'
 import animDataMainNet from './../../../assets/anims/onboarding/welcome-mainnet.json'
 

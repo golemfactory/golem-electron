@@ -1,7 +1,6 @@
 import React from 'react';
 import { BigNumber } from 'bignumber.js';
 import Lottie from 'react-lottie';
-import Tooltip from '@tippy.js/react';
 
 import animData from './../../../assets/anims/warning';
 import { ETH_DENOM } from './../../../constants/variables';

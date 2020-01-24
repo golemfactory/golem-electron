@@ -4,7 +4,6 @@ import Tooltip from '@tippy.js/react';
 import { BigNumber } from 'bignumber.js';
 
 import { timeStampToHR } from './../../utils/time';
-import checkNested from './../../utils/checkNested';
 import { currencyIcons } from './../../constants';
 
 const mainEtherscan = 'https://etherscan.io/address/';
@@ -14,7 +13,7 @@ let motionBalanceStart = {};
 
 function isGolemReady(golemStatus) {
   return (
-    checkNested(golemStatus, 'client', 'status') &&
+    golemStatus?.client?.status &&
     golemStatus.client.status === 'Ready'
   );
 }

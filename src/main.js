@@ -3,7 +3,6 @@ import 'tippy.js/themes/light.css';
 import 'tippy.js/themes/translucent.css';
 require('css-browser-selector');
 import React from 'react';
-import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import {

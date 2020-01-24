@@ -1,7 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import printIcon from './../../../assets/img/print.svg'
 import animData from './../../../assets/anims/onboarding/printer.json'
 
 const defaultOptions = {

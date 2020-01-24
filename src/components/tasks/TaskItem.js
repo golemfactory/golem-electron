@@ -3,13 +3,14 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import Tooltip from '@tippy.js/react';
 import map from 'lodash/fp/map';
+import isEqual from 'lodash/isEqual';
+import Tooltip from '@tippy.js/react';
 import { Spring, config } from 'react-spring/renderprops.cjs';
+
 import { ETH_DENOM } from '../../constants/variables';
 import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
 import { taskStatus } from './../../constants/statusDicts';
-import isEqual from 'lodash/isEqual';
 
 import * as Actions from '../../actions';
 

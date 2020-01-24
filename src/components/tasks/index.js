@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 
 import Table from './Table';
-import Preview from './Preview';
 import DropZone from './../Dropzone';
 import TransactionTube from '../transaction';
 import History from '../History';

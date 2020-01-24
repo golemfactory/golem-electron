@@ -1,6 +1,5 @@
 import React from 'react';
-import uuid from 'uuid/v4';
-import _ from 'lodash-es';
+import cloneDeep from 'lodash/cloneDeep';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -62,7 +61,7 @@ export class MasterFilePicker extends React.Component {
                 } else if (node.name.includes(filterFor)) return true;
             });
         const filteredNodes = !!filterFor
-            ? _filterNodes(_.cloneDeep(nodes))
+            ? _filterNodes(cloneDeep(nodes))
             : nodes;
         return (
             <div className="directory-nodes__container" key="filteredContent">

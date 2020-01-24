@@ -4,7 +4,7 @@ import Tooltip from '@tippy.js/react';
 
 import ConditionalRender from '../../hoc/ConditionalRender';
 
-const { ipcRenderer, clipboard } = window.electron;
+const { clipboard } = window.electron;
 let copyTimeoutList = [];
 
 const NodeRow = ({

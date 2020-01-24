@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import TimeSelection from 'timepoint-selection';
-import { isEqual, isNumber } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { BigNumber } from 'bignumber.js';
 import yup from 'yup';
 
@@ -30,8 +30,7 @@ import deepDiff from '../../../utils/deepDiff';
 import zipObject from '../../../utils/zipObject';
 import isObjectEmpty from '../../../utils/isObjectEmpty';
 import { ETH_DENOM } from '../../../constants/variables';
-import { testStatusDict } from '../../../constants/statusDicts';
-import { getTimeAsFloat, floatToHR } from '../../../utils/time';
+import { floatToHR } from '../../../utils/time';
 import calculateFrameAmount from '../../../utils/calculateFrameAmount';
 
 const TIME_VALIDITY_NOTE = 'Time should be minimum 1 minute.';

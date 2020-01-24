@@ -5,6 +5,23 @@ const WARN = "#FEC62E"
 const DANGER = "#F65A23"
 const DISABLED = "#CBCBCB"
 
+/**
+ * @example
+ *
+<RadialProgress
+    pct={cpu_cores}
+    title="CPU"
+    unit="Cores"
+    max={max.cpu_cores}
+    warn={true}
+    disabled={isEngineOn}
+    onChange={this._handleInputChange.bind(
+        this,
+        'cpu_cores'
+    )}
+/>
+ */
+
 export default class RadialProgress extends React.Component {
 
     constructor(props) {

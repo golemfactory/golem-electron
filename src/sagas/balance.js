@@ -9,7 +9,7 @@ import {
     select
 } from "redux-saga/effects";
 import { BigNumber } from "bignumber.js";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 import { dict } from "../actions";
 

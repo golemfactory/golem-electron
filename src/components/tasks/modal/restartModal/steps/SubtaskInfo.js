@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { taskStatus } from "./../../../../../constants/statusDicts";
 
 const SubtaskInformation = ({ item }) => {
 	const num = item?.subtask_ids.length || 0; 
