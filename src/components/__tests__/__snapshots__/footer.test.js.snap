@@ -1,64 +1,1876 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`<Footer/> should render a footer component 1`] = `
-<footer
-  className="footer"
+<div
+  className="content__footer-main undefined"
 >
   <div
-    className="info-bar__footer"
+    className="section__actions"
   >
-    <span
-      className="progress-status indicator-status "
-    />
-    <span />
-  </div>
-  <div
-    className="preview-bar__footer"
-  >
-    <ForwardRef(TippyWrapper)
-      content={
-        <p>
-          Preview
-        </p>
-      }
-      placement="bottom"
-      trigger="mouseenter"
-    >
-      <div
-        className="switch-box switch-box--green"
-      >
-        <label
-          className="switch"
-        >
-          <input
-            aria-label="Show previews"
-            onChange={[Function]}
-            type="checkbox"
-          />
-          <div
-            className="switch-slider round"
-          />
-        </label>
-      </div>
-    </ForwardRef(TippyWrapper)>
-    <ForwardRef(TippyWrapper)
-      content={
-        <p>
-          Preview Window
-        </p>
-      }
-      placement="bottom"
-      trigger="mouseenter"
+    <div
+      className="section__actions-status"
     >
       <span
-        aria-label="Open Detailed Preview Window"
-        className="button__expand icon-new-window disabled"
-        onClick={[Function]}
-        onKeyDown={[Function]}
-        role="button"
-        tabIndex="0"
+        className="progress-status indicator-status indicator-status--yellow"
       />
-    </ForwardRef(TippyWrapper)>
+      <div>
+        <span>
+          <span
+            className="status-message"
+          >
+            <span>
+              <span>
+                Loading
+                <span
+                  className="jumping-dots"
+                >
+                  <span
+                    className="dot-1"
+                  >
+                    .
+                  </span>
+                  <span
+                    className="dot-2"
+                  >
+                    .
+                  </span>
+                  <span
+                    className="dot-3"
+                  >
+                    .
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+           
+        </span>
+        <Transition
+          enter={
+            Object {
+              "opacity": 1,
+              "position": "initial",
+              "transform": 0,
+            }
+          }
+          from={
+            Object {
+              "opacity": 0,
+              "position": "absolute",
+              "transform": 90,
+            }
+          }
+          initial={null}
+          items={false}
+          keys={[Function]}
+          leave={
+            Object {
+              "opacity": 0,
+              "position": "absolute",
+              "transform": -180,
+            }
+          }
+          native={true}
+          reset={false}
+          unique={false}
+        >
+          <Component />
+        </Transition>
+      </div>
+    </div>
+    <button
+      className="btn--primary "
+      onClick={[Function]}
+    >
+      Start
+       Golem
+    </button>
+    <div
+      className="wave-loading"
+      id="waveLoading"
+    >
+      <Lottie
+        ariaLabel="animation"
+        ariaRole="button"
+        eventListeners={Array []}
+        isClickToPauseDisabled={false}
+        isPaused={false}
+        isStopped={false}
+        options={
+          Object {
+            "animationData": Object {
+              "assets": Array [],
+              "ddd": 0,
+              "fr": 23.9759979248047,
+              "h": 250,
+              "ip": 0,
+              "layers": Array [
+                Object {
+                  "ao": 0,
+                  "bm": 0,
+                  "ddd": 0,
+                  "ind": 1,
+                  "ip": 0,
+                  "ks": Object {
+                    "a": Object {
+                      "a": 0,
+                      "ix": 1,
+                      "k": Array [
+                        229,
+                        121,
+                        0,
+                      ],
+                    },
+                    "o": Object {
+                      "a": 0,
+                      "ix": 11,
+                      "k": 100,
+                    },
+                    "p": Object {
+                      "a": 0,
+                      "ix": 2,
+                      "k": Array [
+                        232,
+                        164,
+                        0,
+                      ],
+                    },
+                    "r": Object {
+                      "a": 0,
+                      "ix": 10,
+                      "k": 0,
+                    },
+                    "s": Object {
+                      "a": 0,
+                      "ix": 6,
+                      "k": Array [
+                        117.799,
+                        117.799,
+                        100,
+                      ],
+                    },
+                  },
+                  "nm": "bottom wave Outlines",
+                  "op": 6408.99944528167,
+                  "shapes": Array [
+                    Object {
+                      "cix": 2,
+                      "hd": false,
+                      "it": Array [
+                        Object {
+                          "hd": false,
+                          "ind": 0,
+                          "ix": 1,
+                          "ks": Object {
+                            "a": 1,
+                            "ix": 2,
+                            "k": Array [
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        98.189,
+                                        -50.485,
+                                      ],
+                                      Array [
+                                        -91.002,
+                                        -27.35,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        90.714,
+                                        -58.791,
+                                      ],
+                                      Array [
+                                        -106.783,
+                                        -29.426,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 0,
+                              },
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        102.989,
+                                        -45.578,
+                                      ],
+                                      Array [
+                                        -71.608,
+                                        -13.802,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        98.189,
+                                        -50.485,
+                                      ],
+                                      Array [
+                                        -91.002,
+                                        -27.35,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 62,
+                              },
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        90.714,
+                                        -58.791,
+                                      ],
+                                      Array [
+                                        -106.783,
+                                        -29.426,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.553,
+                                        0,
+                                      ],
+                                      Array [
+                                        70.555,
+                                        -10.196,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -57.007,
+                                        0,
+                                      ],
+                                      Array [
+                                        -47.503,
+                                        6.864,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.711,
+                                        -23.319,
+                                      ],
+                                      Array [
+                                        -196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        58.791,
+                                      ],
+                                      Array [
+                                        196.711,
+                                        -41.662,
+                                      ],
+                                      Array [
+                                        102.989,
+                                        -45.578,
+                                      ],
+                                      Array [
+                                        -71.608,
+                                        -13.802,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 130,
+                              },
+                              Object {
+                                "t": 214.9999813911,
+                              },
+                            ],
+                          },
+                          "mn": "ADBE Vector Shape - Group",
+                          "nm": "Path 1",
+                          "ty": "sh",
+                        },
+                        Object {
+                          "c": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": Array [
+                              0.890196084976,
+                              0.917647063732,
+                              0.917647063732,
+                              1,
+                            ],
+                          },
+                          "hd": false,
+                          "mn": "ADBE Vector Graphic - Fill",
+                          "nm": "Fill 1",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 100,
+                          },
+                          "r": 1,
+                          "ty": "fl",
+                        },
+                        Object {
+                          "a": Object {
+                            "a": 0,
+                            "ix": 1,
+                            "k": Array [
+                              0,
+                              0,
+                            ],
+                          },
+                          "nm": "Transform",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 7,
+                            "k": 30,
+                          },
+                          "p": Object {
+                            "a": 0,
+                            "ix": 2,
+                            "k": Array [
+                              228.852,
+                              137.537,
+                            ],
+                          },
+                          "r": Object {
+                            "a": 0,
+                            "ix": 6,
+                            "k": 0,
+                          },
+                          "s": Object {
+                            "a": 0,
+                            "ix": 3,
+                            "k": Array [
+                              100,
+                              100,
+                            ],
+                          },
+                          "sa": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 0,
+                          },
+                          "sk": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": 0,
+                          },
+                          "ty": "tr",
+                        },
+                      ],
+                      "ix": 1,
+                      "mn": "ADBE Vector Group",
+                      "nm": "Group 1",
+                      "np": 4,
+                      "ty": "gr",
+                    },
+                    Object {
+                      "cix": 2,
+                      "hd": false,
+                      "it": Array [
+                        Object {
+                          "hd": false,
+                          "ind": 0,
+                          "ix": 1,
+                          "ks": Object {
+                            "a": 1,
+                            "ix": 2,
+                            "k": Array [
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        116.353,
+                                        44.113,
+                                      ],
+                                      Array [
+                                        -2.454,
+                                        -0.484,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -74.291,
+                                        -28.166,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.094,
+                                        -36.958,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        -13.533,
+                                      ],
+                                      Array [
+                                        -16.102,
+                                        -14.55,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        -58.176,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        116.353,
+                                        44.113,
+                                      ],
+                                      Array [
+                                        -2.454,
+                                        -0.484,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -74.291,
+                                        -28.166,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.094,
+                                        -36.958,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        -13.533,
+                                      ],
+                                      Array [
+                                        -14.026,
+                                        -26.593,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        -58.176,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 0,
+                              },
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        116.353,
+                                        44.113,
+                                      ],
+                                      Array [
+                                        -2.454,
+                                        -0.484,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -74.291,
+                                        -28.166,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.094,
+                                        -36.958,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        -13.533,
+                                      ],
+                                      Array [
+                                        -14.026,
+                                        -26.593,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        -58.176,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        116.353,
+                                        44.113,
+                                      ],
+                                      Array [
+                                        -2.454,
+                                        -0.484,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -74.291,
+                                        -28.166,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.094,
+                                        -36.958,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        58.183,
+                                      ],
+                                      Array [
+                                        196.133,
+                                        -13.533,
+                                      ],
+                                      Array [
+                                        -16.102,
+                                        -14.55,
+                                      ],
+                                      Array [
+                                        -196.094,
+                                        -58.176,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 130,
+                              },
+                              Object {
+                                "t": 214.9999813911,
+                              },
+                            ],
+                          },
+                          "mn": "ADBE Vector Shape - Group",
+                          "nm": "Path 1",
+                          "ty": "sh",
+                        },
+                        Object {
+                          "hd": false,
+                          "mm": 4,
+                          "mn": "ADBE Vector Filter - Merge",
+                          "nm": "Merge Paths 1",
+                          "ty": "mm",
+                        },
+                        Object {
+                          "c": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": Array [
+                              0.890196084976,
+                              0.917647063732,
+                              0.917647063732,
+                              1,
+                            ],
+                          },
+                          "hd": false,
+                          "mn": "ADBE Vector Graphic - Fill",
+                          "nm": "Fill 1",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 100,
+                          },
+                          "r": 1,
+                          "ty": "fl",
+                        },
+                        Object {
+                          "a": Object {
+                            "a": 0,
+                            "ix": 1,
+                            "k": Array [
+                              0,
+                              0,
+                            ],
+                          },
+                          "nm": "Transform",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 7,
+                            "k": 30,
+                          },
+                          "p": Object {
+                            "a": 0,
+                            "ix": 2,
+                            "k": Array [
+                              228.833,
+                              137.534,
+                            ],
+                          },
+                          "r": Object {
+                            "a": 0,
+                            "ix": 6,
+                            "k": 0,
+                          },
+                          "s": Object {
+                            "a": 0,
+                            "ix": 3,
+                            "k": Array [
+                              100,
+                              100,
+                            ],
+                          },
+                          "sa": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 0,
+                          },
+                          "sk": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": 0,
+                          },
+                          "ty": "tr",
+                        },
+                      ],
+                      "ix": 2,
+                      "mn": "ADBE Vector Group",
+                      "nm": "Group 2",
+                      "np": 3,
+                      "ty": "gr",
+                    },
+                    Object {
+                      "cix": 2,
+                      "hd": false,
+                      "it": Array [
+                        Object {
+                          "hd": false,
+                          "ind": 0,
+                          "ix": 1,
+                          "ks": Object {
+                            "a": 1,
+                            "ix": 2,
+                            "k": Array [
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        43.522,
+                                        -6.315,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        79.784,
+                                        0.376,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        -37.561,
+                                        5.45,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        -69.895,
+                                        -0.329,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -113.472,
+                                        -54.796,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -49.596,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -46.897,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        -19.079,
+                                      ],
+                                      Array [
+                                        192.973,
+                                        -0.458,
+                                      ],
+                                      Array [
+                                        16.886,
+                                        -73.769,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        14.496,
+                                        -14.09,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        79.76,
+                                        -1.998,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        -12.229,
+                                        11.887,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        -60.289,
+                                        1.51,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -196.113,
+                                        -52.097,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -51.819,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -51.508,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        -19.079,
+                                      ],
+                                      Array [
+                                        112.723,
+                                        2.349,
+                                      ],
+                                      Array [
+                                        -91.574,
+                                        -82.003,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 0,
+                              },
+                              Object {
+                                "e": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        46.742,
+                                        -5.348,
+                                      ],
+                                      Array [
+                                        93.253,
+                                        -1.411,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        79.774,
+                                        1.291,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        -77.501,
+                                        8.867,
+                                      ],
+                                      Array [
+                                        -89.468,
+                                        1.354,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        -56.208,
+                                        -0.91,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        132.792,
+                                        2.098,
+                                      ],
+                                      Array [
+                                        -92.292,
+                                        -81.989,
+                                      ],
+                                      Array [
+                                        -196.944,
+                                        -48.558,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        205.25,
+                                        -13.265,
+                                      ],
+                                      Array [
+                                        278.521,
+                                        -2.119,
+                                      ],
+                                      Array [
+                                        235.326,
+                                        -20.613,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "i": Object {
+                                  "x": 0.833,
+                                  "y": 0.833,
+                                },
+                                "n": "0p833_0p833_0p167_0p167",
+                                "o": Object {
+                                  "x": 0.167,
+                                  "y": 0.167,
+                                },
+                                "s": Array [
+                                  Object {
+                                    "c": true,
+                                    "i": Array [
+                                      Array [
+                                        43.522,
+                                        -6.315,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        79.784,
+                                        0.376,
+                                      ],
+                                    ],
+                                    "o": Array [
+                                      Array [
+                                        -37.561,
+                                        5.45,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        0,
+                                        0,
+                                      ],
+                                      Array [
+                                        -49.938,
+                                        0,
+                                      ],
+                                      Array [
+                                        -69.895,
+                                        -0.329,
+                                      ],
+                                    ],
+                                    "v": Array [
+                                      Array [
+                                        -113.472,
+                                        -54.796,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -49.596,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        -46.897,
+                                      ],
+                                      Array [
+                                        -196.113,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        82.003,
+                                      ],
+                                      Array [
+                                        196.114,
+                                        -19.079,
+                                      ],
+                                      Array [
+                                        192.973,
+                                        -0.458,
+                                      ],
+                                      Array [
+                                        16.886,
+                                        -73.769,
+                                      ],
+                                    ],
+                                  },
+                                ],
+                                "t": 62,
+                              },
+                              Object {
+                                "t": 215.999981304547,
+                              },
+                            ],
+                          },
+                          "mn": "ADBE Vector Shape - Group",
+                          "nm": "Path 1",
+                          "ty": "sh",
+                        },
+                        Object {
+                          "hd": false,
+                          "mm": 4,
+                          "mn": "ADBE Vector Filter - Merge",
+                          "nm": "Merge Paths 1",
+                          "ty": "mm",
+                        },
+                        Object {
+                          "c": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": Array [
+                              0.890196084976,
+                              0.917647063732,
+                              0.917647063732,
+                              1,
+                            ],
+                          },
+                          "hd": false,
+                          "mn": "ADBE Vector Graphic - Fill",
+                          "nm": "Fill 1",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 100,
+                          },
+                          "r": 1,
+                          "ty": "fl",
+                        },
+                        Object {
+                          "a": Object {
+                            "a": 0,
+                            "ix": 1,
+                            "k": Array [
+                              0,
+                              0,
+                            ],
+                          },
+                          "nm": "Transform",
+                          "o": Object {
+                            "a": 0,
+                            "ix": 7,
+                            "k": 30,
+                          },
+                          "p": Object {
+                            "a": 0,
+                            "ix": 2,
+                            "k": Array [
+                              228.039,
+                              114.283,
+                            ],
+                          },
+                          "r": Object {
+                            "a": 0,
+                            "ix": 6,
+                            "k": 0,
+                          },
+                          "s": Object {
+                            "a": 0,
+                            "ix": 3,
+                            "k": Array [
+                              100,
+                              100,
+                            ],
+                          },
+                          "sa": Object {
+                            "a": 0,
+                            "ix": 5,
+                            "k": 0,
+                          },
+                          "sk": Object {
+                            "a": 0,
+                            "ix": 4,
+                            "k": 0,
+                          },
+                          "ty": "tr",
+                        },
+                      ],
+                      "ix": 3,
+                      "mn": "ADBE Vector Group",
+                      "nm": "Group 3",
+                      "np": 3,
+                      "ty": "gr",
+                    },
+                  ],
+                  "sr": 1,
+                  "st": 0,
+                  "ty": 4,
+                },
+              ],
+              "markers": Array [],
+              "nm": "Final output composition ",
+              "op": 215.999981304547,
+              "v": "5.3.4",
+              "w": 460,
+            },
+            "autoplay": true,
+            "loop": true,
+            "rendererSettings": Object {
+              "preserveAspectRatio": "xMidYMid slice",
+            },
+          }
+        }
+        speed={1}
+        title=""
+        width="100%"
+      />
+    </div>
   </div>
-</footer>
+  <div
+    className="content__footer-social"
+  >
+    <span
+      className="element__footer"
+      onClick={[Function]}
+    >
+      <span
+        className="icon-logs"
+      />
+      <u>
+        open logs
+      </u>
+    </span>
+    <a
+      className="element__footer"
+      href="https://www.github.com/golemfactory"
+    >
+      <span
+        className="icon-golem"
+      />
+    </a>
+    <a
+      className="element__footer"
+      href="https://chat.golem.network"
+    >
+      <span
+        className="icon-chat"
+      />
+      <u>
+        golem chat
+      </u>
+    </a>
+  </div>
+  <div>
+    <div
+      className="loading-indicator "
+    />
+    <object
+      className="loading-icon "
+      data=""
+      type="image/svg+xml"
+    />
+  </div>
+</div>
 `;

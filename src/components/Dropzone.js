@@ -6,11 +6,6 @@ import { connect } from 'react-redux';
 import * as Actions from './../actions';
 import directorySelector from './../utils/directorySelector';
 
-const { remote } = window.electron;
-const mainProcess = remote.require('./index');
-
-const ADD_TASK_NEXT_STEP = '/add-task/type';
-
 const classDict = Object.freeze({
     SHOW: 'drop-zone--show',
     HIDE: 'drop-zone--hide'
@@ -19,9 +14,7 @@ const classDict = Object.freeze({
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
     taskList: state.realTime.taskList,
-    fileCheckModal: state.info.fileCheckModal,
-    connectedPeers: state.realTime.connectedPeers,
-    isMainNet: state.info.isMainNet
+    connectedPeers: state.realTime.connectedPeers
 });
 
 const mapDispatchToProps = dispatch => ({

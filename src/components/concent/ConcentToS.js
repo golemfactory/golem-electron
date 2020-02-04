@@ -1,7 +1,5 @@
 import React from "react";
 
-import termsIcon from "./../../assets/img/terms.svg";
-
 export default class ConcentToS extends React.Component {
     constructor(props) {
         super(props);

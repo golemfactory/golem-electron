@@ -1,4 +1,4 @@
-import { isFunction } from 'lodash';
+import isFunction from 'lodash/isFunction';
 function notify(title, body, data = null, requireInteraction = false) {
   const options = Object.freeze({
     body,

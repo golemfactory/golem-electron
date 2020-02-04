@@ -7,9 +7,6 @@ import Lottie from 'react-lottie';
 
 import * as Actions from '../../../actions';
 
-import lockedIcon from './../../../assets/img/locked.svg';
-import unlockedIcon from './../../../assets/img/unlocked.svg';
-
 import animDataLocked from './../../../assets/anims/onboarding/password.json';
 import animDataGenerating from './../../../assets/anims/onboarding/generating-keys.json';
 import animDataUnlocked from './../../../assets/anims/onboarding/unlocked-app.json';

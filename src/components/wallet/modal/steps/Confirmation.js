@@ -1,9 +1,7 @@
 import React from 'react';
-import { BigNumber } from 'bignumber.js';
 
-import { modals, currencyIcons, variables } from './../../../../constants';
+import { variables } from './../../../../constants';
 
-const { clipboard } = window.electron;
 const { ETH_DENOM, GWEI_DENOM, mainEtherscanAddr } = variables;
 
 export default class Confirmation extends React.Component {

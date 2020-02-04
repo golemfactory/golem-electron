@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 
 import BlockNodeModal from '../tasks/modal/BlockNodeModal';
-import { convertSecsToHMS, timeStampToHR } from './../../utils/time';
+import { timeStampToHR } from './../../utils/time';
 
 const { ipcRenderer, clipboard } = window.electron;
 

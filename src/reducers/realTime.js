@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js';
 import createCachedSelector from 're-reselect';
-import { find, some } from 'lodash';
+import find from 'lodash/find';
+import some from 'lodash/some';
 import { dict } from './../actions';
 import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';

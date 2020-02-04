@@ -1,7 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import ohReally from './../../../assets/img/oh-really.svg'
 import animData from './../../../assets/anims/onboarding/terms-are-you-sure.json'
 
 const defaultOptions = {

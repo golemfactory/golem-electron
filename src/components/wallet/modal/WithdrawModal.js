@@ -1,7 +1,6 @@
 import React from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import { hashHistory } from "react-router";
 import { BigNumber } from "bignumber.js";
 
 import * as Actions from "../../../actions";

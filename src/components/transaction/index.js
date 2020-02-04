@@ -6,7 +6,6 @@ import isEqual from 'lodash/isEqual';
 import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
 import { timeStampToHR } from '../../utils/time';
-import checkNested from '../../utils/checkNested';
 
 const filter = {
     PAYMENT: 'outgoing',

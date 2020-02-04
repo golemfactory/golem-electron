@@ -1,10 +1,8 @@
 import React from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
-import Tooltip from '@tippy.js/react';
-import { Transition, animated, config } from 'react-spring';
 import {
   AutoSizer,
   InfiniteLoader,

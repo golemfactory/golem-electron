@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { isEqual } from "lodash";
+import isEqual from "lodash/isEqual";
 
 import checkNested from "../../../utils/checkNested";
 import isObjectEmpty from "../../../utils/isObjectEmpty";

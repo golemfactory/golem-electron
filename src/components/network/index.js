@@ -16,7 +16,6 @@ import TransactionTube from "../transaction";
 import Wallet from "../wallet";
 import Resources from "./Resources";
 import History from "../History";
-import Advanced from "./tabs/Advanced";
 import FooterMain from "../FooterMain";
 import PresetModal from "./modal/PresetModal";
 import ManagePresetModal from "./modal/ManagePresetModal";

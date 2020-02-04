@@ -1,16 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { findDOMNode } from "react-dom";
-import { Link } from "react-router-dom";
 
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
-import isEqual from 'lodash/isEqual';
 
 import * as Actions from "../../actions";
-import blender_logo from "./../../assets/img/blender_logo.png";
 import { taskStatus as status } from './../../constants/statusDicts'
-import { convertSecsToHMS, timeStampToHR } from "./../../utils/time";
 
 import InsufficientAmountModal from "./modal/InsufficientAmountModal";
 import TaskItem from "./TaskItem";

@@ -3,9 +3,6 @@ import Lottie from "react-lottie";
 
 import animDataSuccess from "./../../../../assets/anims/success";
 import animDataError from "./../../../../assets/anims/error";
-import { modals, currencyIcons } from "./../../../../constants";
-
-const { clipboard } = window.electron;
 
 const defaultOptions = {
     loop: false,

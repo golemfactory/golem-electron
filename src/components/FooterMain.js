@@ -8,7 +8,7 @@ import {
 } from 'react-spring/renderprops.cjs';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 
 import * as Actions from './../actions';
 import {
@@ -18,15 +18,11 @@ import {
 } from './../reducers';
 import animData from './../assets/anims/wave.json';
 
-import LoaderBar from './LoaderBar';
-import checkNested from './../utils/checkNested';
 import { componentStatus } from './../constants/statusDicts';
 import golem_loading from './../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
-const { BrowserWindow } = remote;
 const currentPlatform = remote.getGlobal('process').platform;
-const versionGUI = remote.app.getVersion();
 
 const defaultOptions = {
   loop: true,

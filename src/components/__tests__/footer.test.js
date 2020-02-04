@@ -1,26 +1,23 @@
-jest.unmock('../Footer')
+jest.unmock('../FooterMain')
 
 import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
 import sinon from 'sinon'
-import ConnectedFooter, {Footer} from '../Footer'
+import ConnectedFooter, {FooterMain} from '../FooterMain'
 
 
 describe('<Footer/>', () => {
 
+    const props = {
+        status: {client: {message: ""}},
+        connectionProblem: {status: ""}
+    }
+
     it('should render a footer component', () => {
         const wrapper = shallow(
-            <Footer/>
+            <FooterMain {...props}/>
         )
         expect(wrapper).toMatchSnapshot()
     })
-
-    it('should render a footer component', () => {
-        const wrapper = mount(
-            <Footer preview={false}/>
-        )
-        expect(wrapper.ref('previewSwitch').defaultChecked).toBe(false)
-    })
-
 });

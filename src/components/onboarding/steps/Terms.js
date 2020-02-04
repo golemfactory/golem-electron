@@ -1,7 +1,6 @@
 import React from "react";
 import Lottie from "react-lottie";
 
-import termsIcon from "./../../../assets/img/terms.svg";
 import animData from "./../../../assets/anims/onboarding/terms.json";
 
 const defaultOptions = {

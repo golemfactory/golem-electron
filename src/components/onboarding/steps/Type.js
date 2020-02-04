@@ -1,7 +1,6 @@
 import React from 'react';
 import Lottie from 'react-lottie';
 
-import penIcon from './../../../assets/img/pen.svg'
 import animData from './../../../assets/anims/onboarding/no-recovery.json'
 
 const defaultOptions = {
