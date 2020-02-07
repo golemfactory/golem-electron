@@ -134,12 +134,12 @@
                 }
                 &-locked {
                     &:hover::before {
-                        content: '\e95f';
+                        content: '\e966';
                     }
                 }
                 &-unlocked {
                     &:hover::before {
-                        content: '\e928';
+                        content: '\e92c';
                     }
                 }
             }
