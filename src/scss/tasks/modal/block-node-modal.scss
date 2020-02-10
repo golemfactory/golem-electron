@@ -6,6 +6,13 @@
         text-align: center;
         padding: 20px;
 
+        .exist-message {
+            line-height: 1.4em;
+            .node_id_error {
+                font-weight: 600;
+            }
+        }
+
         .image-container{
             width: 120px;
             height: 120px;

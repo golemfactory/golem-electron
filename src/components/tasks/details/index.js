@@ -177,9 +177,10 @@ export class Details extends React.PureComponent {
         let node_id = this.state.node2block?.node_id;
         new Promise((resolve, reject) => {
             this.props.actions.blockNodes(node_id, resolve, reject);
-        }).then(([result, msg]) => {
+        }).then(([result, _]) => {
+            const [info, msg] = result;
             this.setState({
-                nodeBlocked: result,
+                nodeBlocked: info,
                 errMsg: msg
             });
         });

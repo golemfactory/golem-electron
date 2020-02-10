@@ -49,9 +49,19 @@
     }
 
     .input-field__add-node {
+        position: relative;
         margin-top: 30px;
         label {
             font-weight: 400;
+        }
+        .input--error {
+            border: 1px solid $color-error;
+        }
+        .exist-error {
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            color: $color-error;
         }
     }
 
