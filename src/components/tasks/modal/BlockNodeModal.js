@@ -60,17 +60,18 @@ export default class BlockNodeModal extends React.Component {
         );
     }
 
-    _errorModal(errMsg, cancelAction) {
+    _errorModal(node, errMsg, cancelAction) {
         return (
             <Fragment>
                 <div className="exist-message">
-                    <span>Hey! It seems that Node ID</span>
-                    <br/>
-                    <span className="node_id_error">
-                        {this._nodeId({node_id: errMsg})}
+                    <span>
+                        Hey! It seems that "<b>{this._nodeName(node)}</b>"
                     </span>
-                    <br/>
-                    <span>is already in your list.</span>
+                    <span> is already in your list.</span>
+                    <span className="node_id_span">
+                        {' '}
+                        (node id: {this._nodeId(node)})
+                    </span>
                 </div>
                 <div className="action__modal">
                     <button className="btn--primary" onClick={cancelAction}>
@@ -124,7 +125,7 @@ export default class BlockNodeModal extends React.Component {
                               unlockMode
                           )
                         : errMsg
-                        ? this._errorModal(errMsg, cancelAction)
+                        ? this._errorModal(node2block, errMsg, cancelAction)
                         : this._blockNodeModal(
                               node2block,
                               cancelAction,
