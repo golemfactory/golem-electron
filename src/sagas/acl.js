@@ -23,8 +23,7 @@ export function* trustNodeBase(session, { payload, _resolve, _reject }) {
 }
 
 export function blockNodes(session, payload, _resolve, _reject) {
-	//payload: node_id, -1: timeout, true: persist
-	_handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload, -1, true], _reject);
+	_handleRPC(_resolve, session, config.BLOCK_NODE_RPC, [payload], _reject);
 }
 
 export function* blockNodesBase(session, { payload, _resolve, _reject }) {
