@@ -47,8 +47,19 @@ export class Price extends React.Component {
         } = this.props;
         return (
             <div className="content__price">
+                <div className="description">
+                    <span className="description-title">Default price settings</span>
+                    <br />
+                    <span className="description-content">
+                        Here you are able to set your default price settings as
+                        a Provider, both for Brass Marketplace and Usage Market.
+                        You will be able to change your default task price as a
+                        Requestor during task creation.{' '}
+                        <a href="">Learn more.</a>
+                    </span>
+                </div>
                 <div className="section__price">
-                    <span>Provider Minimum</span>
+                    <span>Provider Offer</span>
                     <input
                         type="number"
                         min="0"
@@ -61,7 +72,7 @@ export class Price extends React.Component {
                     <span>{isMainNet ? '' : 't'}GNT per hour</span>
                 </div>
                 <div className="section__price">
-                    <span>Requestor Maximum</span>
+                    <span>Requestor Default</span>
                     <input
                         type="number"
                         min="0"
