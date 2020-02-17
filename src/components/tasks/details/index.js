@@ -21,12 +21,17 @@ import some from 'lodash/some';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
-    fragments: state.details.fragments[0] || {}
+    fragments: state.details.fragments[0] || {},
+    isRuleSwitchOn: isRuleSwitchOn(state.acl.nodeListACL)
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
+
+function isRuleSwitchOn(nodeListACL) {
+    return nodeListACL?.default_rule !== 'allow';
+}
 
 export class Details extends React.PureComponent {
     constructor(props) {
@@ -195,7 +200,7 @@ export class Details extends React.PureComponent {
     }
 
     render() {
-        const { item, fragments } = this.props;
+        const { item, fragments, isRuleSwitchOn } = this.props;
         const {
             checkedItems,
             isAllChecked,
@@ -230,6 +235,7 @@ export class Details extends React.PureComponent {
                         toggleItems={this._toggleItems}
                         showBlockNodeModal={this._showBlockNodeModal}
                         restartSubtask={this._restartSubtask}
+                        isRuleSwitchOn={isRuleSwitchOn}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={isEmpty(fragments)}>

@@ -69,11 +69,7 @@ const NodeRow = ({
 			<td align="center">
 				<Tooltip
 					content={
-						<p>
-							{isNodeCopied
-								? 'Copied Succesfully!'
-								: 'Click to copy ID'}
-						</p>
+						<p>{isNodeCopied ? 'Copied Succesfully!' : 'Click to copy ID'}</p>
 					}
 					placement="top"
 					trigger="mouseenter"
@@ -94,6 +90,11 @@ const NodeRow = ({
 					</span>
 				</Tooltip>
 			</td>
+			<ConditionalRender showIf={!isBlockTable}>
+				<td align="center">
+					<span className="info__id">{item.deadline || 'Forever'}</span>
+				</td>
+			</ConditionalRender>
 			<ConditionalRender showIf={isBlockTable}>
 				<td align="center">
 					<span className="info__id">{item.pub_addr}</span>
@@ -107,11 +108,7 @@ const NodeRow = ({
 			<td align="center">
 				<Tooltip
 					content={
-						<p>
-							{isNodeCopied
-								? 'Copied Succesfully!'
-								: 'Click to copy ID'}
-						</p>
+						<p>{isNodeCopied ? 'Copied Succesfully!' : 'Click to copy ID'}</p>
 					}
 					placement="top"
 					trigger="mouseenter"
