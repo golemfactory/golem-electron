@@ -12,7 +12,7 @@ let activateContent;
 
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
-    version: state.info.version,
+    version: state.info.version
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -21,15 +21,27 @@ const mapDispatchToProps = dispatch => ({
 
 export class Settings extends React.Component {
     state = {
-        mainTabIndex: 0
+        mainTabIndex:
+            window?.routerHistory?.location?.pathname == '/acl' ? 2 : 0
     };
+
+    componentDidMount() {
+        let menuItems = document.getElementsByClassName(
+            'settings-main-tab-item'
+        );
+        const activeIndex =
+            window?.routerHistory?.location?.pathname == '/acl' ? 2 : 0;
+        menuItems[activeIndex].classList.add('active');
+    }
 
     _handleTab = elm => {
         const index = Array.prototype.indexOf.call(
             elm.target.parentElement.children,
             elm.currentTarget
         );
-        let menuItems = document.getElementsByClassName('settings-main-tab-item');
+        let menuItems = document.getElementsByClassName(
+            'settings-main-tab-item'
+        );
         for (var i = 0; i < menuItems.length; i++) {
             menuItems[i].classList.remove('active');
         }
@@ -39,7 +51,11 @@ export class Settings extends React.Component {
         });
     };
 
-    mainContentList = [<SettingsList />, <Stats />, <ACL actions={this.props.actions}/>];
+    mainContentList = [
+        <SettingsList />,
+        <Stats />,
+        <ACL actions={this.props.actions} />
+    ];
 
     render() {
         const { version } = this.props;
@@ -50,7 +66,7 @@ export class Settings extends React.Component {
                 <nav className="nav">
                     <ul className="nav__list" role="menu">
                         <li
-                            className="nav__item settings-main-tab-item active"
+                            className="nav__item settings-main-tab-item"
                             role="menuitem"
                             tabIndex="0"
                             onClick={this._handleTab}
@@ -84,9 +100,7 @@ export class Settings extends React.Component {
                             : `${version.message}${version.number}`}
                     </span>
                     <br />
-                    <span>
-                        {`Golem Interface v${__VERSION__}`}
-                    </span>
+                    <span>{`Golem Interface v${__VERSION__}`}</span>
                 </div>
             </div>
         );

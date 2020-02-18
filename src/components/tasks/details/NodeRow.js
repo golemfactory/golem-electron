@@ -11,7 +11,9 @@ const NodeRow = ({ item, showBlockNodeModal, isRuleSwitchOn }) => {
 
 	useEffect(() => {
 		return () => {
-			copyTimeoutList.map(item => clearTimeout(item));
+			for (let key in copyTimeoutList) {
+				clearTimeout(copyTimeoutList[key])
+			}
 		};
 	}, []);
 

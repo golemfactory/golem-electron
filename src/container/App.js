@@ -64,6 +64,12 @@ const routes = (
                     ConcentOnboardingComponent(Settings)
                 )}
             />
+            <Route
+                path="/acl"
+                component={OnBoardingComponent(
+                    ConcentOnboardingComponent(Settings)
+                )}
+            />
             <Route path="/task/:id" component={TaskForm} />
             <Route path="/add-task/master-file/:type?" component={MasterFilePicker} />
             <Route path="/add-task/type/:type?" component={NewTask} />
