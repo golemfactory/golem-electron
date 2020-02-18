@@ -245,7 +245,13 @@ export class ControlPanel extends React.Component {
         <ConditionalRender showIf={!aclRestrictedMode}>
           <div className="acl__filter">
             <Tooltip
-              content={<p>TBD</p>}
+              content={
+                <p>
+                  Permenant bans are one made by user. Temporary bans are
+                  automated and time locked by Golem. They happen in case of
+                  subtask computation failure.
+                </p>
+              }
               placement="bottom"
               trigger="mouseenter"
               size="small">
