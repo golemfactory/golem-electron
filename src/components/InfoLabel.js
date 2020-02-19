@@ -32,7 +32,7 @@ export default class InfoLabel extends Component {
       interactive
     } = this.props;
     return (
-      <div className={`info-label__container ${cls}`}>
+      <div className={`info-label__container ${cls || ""}`}>
         {info ? (
           <Tooltip
             content={info}

@@ -224,16 +224,51 @@
         justify-content: flex-end;
     }
 
-    .source-path {
-        font-size: 10pt;
-        line-height: 34px;
-        b {
-            display: inline-block;
-            width: 12%;
+    .file-information {
+        background: $display-indicator-backround;
+        padding: 10px 24px;
+        margin: 0 -24px;
+        .source-path {
+            display: flex;
+            font-size: 9pt;
+            line-height: 34px;
+            scrollbar-width: thin;
+            b {
+                display: inline-block;
+                width: 12%;
+            }
+            input {
+                width: auto;
+            }
+            .file-item {
+                overflow-x: auto;
+                width: 88%;
+            }
         }
-        input {
-            width: auto;
-         }
+
+        .action__edit-name,
+        .action__save-name {
+            display: inline-flex;
+            align-items: center;
+            color: $color-text2;
+            cursor: pointer;
+            line-height: 30px;
+            .icon-confirmation,
+            .icon-pencil {
+                margin-left: 10px;
+                margin-right: 2px;
+            }
+
+            .icon-confirmation {
+                color: $color-accent1;
+                font-size: 11pt;
+            }
+
+            &:hover {
+                font-weight: 600;
+                color: $color-text;
+            }
+        }
     }
 
     .switch-box {
@@ -241,32 +276,6 @@
 
         span {
             margin-right: 10px;
-        }
-    }
-}
-
-.section-settings__task-detail {
-    .action__edit-name,
-    .action__save-name {
-        display: inline-flex;
-        align-items: center;
-        color: $color-text2;
-        cursor: pointer;
-        line-height: 30px;
-        .icon-confirmation,
-        .icon-pencil {
-            margin-left: 10px;
-            margin-right: 2px;
-        }
-
-        .icon-confirmation {
-            color: $color-accent1;
-            font-size: 11pt;
-        }
-
-        &:hover {
-            font-weight: 600;
-            color: $color-text;
         }
     }
 }
