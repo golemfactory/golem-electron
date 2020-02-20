@@ -3,7 +3,6 @@ import 'tippy.js/themes/light.css';
 import 'tippy.js/themes/translucent.css';
 require('css-browser-selector');
 import React from 'react';
-import { AppContainer } from 'react-hot-loader';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import {
@@ -100,13 +99,14 @@ if (remote.getGlobal('process').platform === 'win32') {
         /* Send the RPC call */
         evt.returnValue = false;
         store.dispatch({
-            type: "APP_QUIT",
+            type: 'APP_QUIT',
             _cb
         });
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
+    ipcRenderer.on('redirect-wallet', () => window.routerHistory.push('/wallet'));
     window.applicationSurface = document.getElementById('mount');
     render(
         <Provider store={store}>

@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { hashHistory } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -22,12 +21,6 @@ const mapDispatchToProps = dispatch => ({
 export class NotificationCenter extends Component {
     constructor(props) {
         super(props);
-    }
-
-    componentDidMount() {
-        if(!this.props.isMainNet) {
-            this.props.actions.setSeenNotification();
-        }
     }
 
     /**

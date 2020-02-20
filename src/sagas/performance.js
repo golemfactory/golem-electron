@@ -9,8 +9,9 @@ const {SET_PERFORMANCE_CHARTS, RECOUNT_BENCHMARK, SET_MULTIPLIER, UPDATE_MULTIPL
 
 const products = Object.freeze({
         BLENDER: 'estimated_blender_performance',
-        LUXRENDER: 'estimated_lux_performance',
-        DEFAULT: 'estimated_performance'
+        BLENDER_NVGPU: 'estimated_blender_nvgpu_performance',
+        DEFAULT: 'estimated_performance',
+        WASM: 'estimated_wasm_performance'
     })
 
 export function updateMultiplier(session, payload){

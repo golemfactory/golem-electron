@@ -1,10 +1,11 @@
 import React from 'react';
 import { BigNumber } from 'bignumber.js';
 import Lottie from 'react-lottie';
-import Tooltip from '@tippy.js/react';
 
 import animData from './../../../assets/anims/warning';
 import { ETH_DENOM } from './../../../constants/variables';
+
+const { ipcRenderer } = window.electron;
 
 const defaultOptions = {
     loop: false,
@@ -30,7 +31,12 @@ export default class InsufficientAmountModal extends React.Component {
      */
     _handleCancel = () => this.props.closeModal('insufficientAmountModal');
 
-    _handleTopUp = () => window.routerHistory.push('/wallet');
+    _handleTopUp = () => {
+        if(!!this.props.previewWindow)
+            ipcRenderer.send('redirect-wallet');
+        else window.routerHistory.push('/wallet');
+        this._handleCancel();
+    }
 
     _handleApply = () => {
         if (this.state.withConcent) {
@@ -45,7 +51,7 @@ export default class InsufficientAmountModal extends React.Component {
         this.setState({ withConcent: e.target.value == 'true' });
 
     _initContent(message) {
-        const { isMainNet } = this.props
+        const { isMainNet } = this.props;
         const { error_details, error_msg, error_type } = message;
 
         const createFundsInfo = missing_funds => {
@@ -57,7 +63,8 @@ export default class InsufficientAmountModal extends React.Component {
                                 <span className="amount__missing">
                                     {new BigNumber(item.required)
                                         .dividedBy(ETH_DENOM)
-                                        .toFixed(4)}{isMainNet ? ' ' : ' t'}
+                                        .toFixed(4)}
+                                    {isMainNet ? ' ' : ' t'}
                                     {item.currency}
                                 </span>
                             </div>
@@ -68,7 +75,8 @@ export default class InsufficientAmountModal extends React.Component {
                                         {new BigNumber(item.available)
                                             .dividedBy(ETH_DENOM)
                                             .toFixed(8)}
-                                    </b>{isMainNet ? ' ' : ' t'}
+                                    </b>
+                                    {isMainNet ? ' ' : ' t'}
                                     {item.currency}
                                 </span>
                             </div>
@@ -76,7 +84,7 @@ export default class InsufficientAmountModal extends React.Component {
                     ))}
                 </div>
             ];
-            if(error_type === 'NotEnoughDepositFunds')
+            if (error_type === 'NotEnoughDepositFunds')
                 result.push(
                     <div
                         className="radio-group"

@@ -31,12 +31,12 @@ export default class Step4 extends React.Component {
                       isPaused={this.state.isPaused}/>
                 </div>
                 <div className="concent-onboarding__desc">
-                    <h2>FAQ</h2>
+                    <h2>More tasks in the network</h2>
                     <span className="concent-info">
-                        If you have any more questions regarding Concent Service and it's usage, please head over to our <a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=concent-service">docs</a>, where we try to answer most of the questions you might have.
+                        When acting as a Provider, by default your node will accept all the tasks within the network (those with Concent and those without it).
                         <br/>
                         <br/>
-                        You can also talk with us via <a href="https://chat.golem.network">chat</a>.
+                        If you want to compute exclusively Concent tasks go to your Concent settings and set the switch that allows your node to take up all kinds of tasks to "OFF" position.
                     </span>
                 </div>  
             </div>

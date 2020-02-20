@@ -16,7 +16,6 @@ import TransactionTube from "../transaction";
 import Wallet from "../wallet";
 import Resources from "./Resources";
 import History from "../History";
-import Advanced from "./tabs/Advanced";
 import FooterMain from "../FooterMain";
 import PresetModal from "./modal/PresetModal";
 import ManagePresetModal from "./modal/ManagePresetModal";
@@ -28,10 +27,7 @@ import ManagePresetModal from "./modal/ManagePresetModal";
 
 //a11y(React)
 
-const mapStateToProps = state => ({
-    balance: state.realTime.balance,
-    currency: state.currency
-});
+const mapStateToProps = state => ({});
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
@@ -127,7 +123,7 @@ export class MainFragment extends React.Component {
 
     // <img src={golem_svg} className="loading-logo"/>
     render() {
-        const { message, actions, autoLaunch, balance, currency } = this.props;
+        const { message, actions, autoLaunch} = this.props;
         const {
             presetModal,
             managePresetModal,
@@ -138,7 +134,7 @@ export class MainFragment extends React.Component {
 
         return (
             <div className="content__main">
-                <Wallet balance={balance} currency={currency} />
+                <Wallet />
                 {!toggleHistory ? (
                     [
                         <TransactionTube
@@ -176,4 +172,4 @@ export class MainFragment extends React.Component {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(MainFragment);
+)(React.memo(MainFragment));

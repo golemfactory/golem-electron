@@ -1,10 +1,15 @@
 import { BigNumber } from 'bignumber.js';
 import createCachedSelector from 're-reselect';
-import { find, some } from 'lodash';
+import find from 'lodash/find';
+import some from 'lodash/some';
 import { dict } from './../actions';
+import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';
+import { componentStatus, taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
-const log = remote.require('./electron/debug_handler.js');
+const { isMac }  = remote.require('./index');
+const { app } = remote;
+const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
 
 const { CONCENT_BALANCE_STATE } = dictConfig;
@@ -57,13 +62,6 @@ const password = {
     LOGIN: 'Requires password'
 };
 
-const statusDict = {
-    READY: 'Ready',
-    NOTREADY: 'Not Ready',
-    EXCEPTION: 'Exception',
-    WARNING: 'Warning'
-};
-
 let badgeActive = false;
 let badgeTemp = 0;
 let _isPasswordModalPopped = false;
@@ -76,19 +74,7 @@ const realTime = (state = initialState, action) => {
             });
 
         case SET_TASKLIST:
-            let badge = 0;
-            action.payload &&
-                action.payload.forEach(item => {
-                    item.status === 'In Progress' && (badge = badge + 1);
-                });
-            if (badge !== badgeTemp) {
-                ipcRenderer.send('set-badge', badge);
-                badgeTemp = badge;
-                badgeActive || (badgeActive = true);
-            } else if (badge === 0 && badgeActive) {
-                ipcRenderer.send('set-badge', 0);
-                badgeActive = false;
-            }
+            notifyTaskSelector(action.payload, 'tasks');
             return Object.assign({}, state, {
                 taskList: action.payload
             });
@@ -268,7 +254,8 @@ const messages = {
             pre: 'Terminating Golem',
             post: 'Golem terminated',
             exception: 'Error terminating Golem'
-        }
+        },
+        shutdown: {}
     }
 };
 
@@ -303,16 +290,22 @@ function getGolemStatus(component, method, stage, data) {
         );
     }
 
-    if (stage == 'exception') {
-        result.status = statusDict.EXCEPTION;
+    if (method == 'shutdown') {
+        // result.status = componentStatus.SHUTDOWN;
+        // TO DO: add shutdown scheduled method
+        if(!isMac())
+            app.exit();
+        app.quit();
+    } else if (stage == 'exception') {
+        result.status = componentStatus.EXCEPTION;
     } else if (stage == 'post') {
-        result.status = statusDict.READY;
+        result.status = componentStatus.READY;
     } else if (stage == 'warning') {
-        result.status = statusDict.WARNING;
+        result.status = componentStatus.WARNING;
         result.data = data;
     } else
         try {
-            result.status = statusDict.NOTREADY;
+            result.status = componentStatus.NOTREADY;
         } catch (e) {
             log.warn('SAGA > GOLEM', e);
         }
@@ -333,17 +326,19 @@ export const getStatusSelector = createCachedSelector(
         if (
             statusObj &&
             !Object.keys(statusObj).some(
-                key => statusObj[key].status === statusDict.EXCEPTION
+                key => statusObj[key].status === componentStatus.EXCEPTION
             )
         ) {
             if (statusObj[0]) {
                 statusObj.client = {
-                    status: statusDict.EXCEPTION,
+                    status: componentStatus.EXCEPTION,
                     message: 'Outdated version'
                 };
+            } else if (statusObj?.client?.status === componentStatus.SHUTDOWN) {
+                statusObj.client.message = 'Shutting down...';
             } else if (isEngineOn && Number.isInteger(connectedPeers)) {
                 statusObj.client = {
-                    status: statusDict.READY,
+                    status: componentStatus.READY,
                     message: nodesString(connectedPeers)
                 };
             } else if (
@@ -354,7 +349,7 @@ export const getStatusSelector = createCachedSelector(
                 )
             ) {
                 statusObj.client = {
-                    status: statusDict.NOTREADY,
+                    status: componentStatus.NOTREADY,
                     message: isEngineOn
                         ? statusObj.client.message || 'Starting Golem'
                         : 'Waiting for configuration'
@@ -412,7 +407,7 @@ export const concentDepositStatusSelector = createCachedSelector(
                     return { statusCode: 0, time: null }; //locked
             }
         }
-        return { statusCode: 0, time: null };
+        return { statusCode: -1, time: null };
     }
 )(
     (state, key) => key // Cache selectors by type name
@@ -432,6 +427,30 @@ export const componentWarningSelector = createCachedSelector(
         addWarning(hypervisorData, 'low_diskspace', 'DISK');
 
         return componentWarnings.concat(warningCollector);
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);
+
+const isEqual = x => y => x === y;
+const prevStateCache = [];
+export const notifyTaskSelector = createCachedSelector(
+    taskList => taskList,
+    (taskList, key) => key,
+    (taskList, key) => {
+        taskList.forEach(task => {
+            if (prevStateCache[task.id]) {
+                const result = prevStateCache[task.id](task.status);
+                if (
+                    !result &&
+                    (task.status === taskStatus.FINISHED ||
+                        task.status === taskStatus.TIMEOUT)
+                )
+                    notify(`Task "${task.name}"`, `Status: ${task.status}`);
+                prevStateCache[task.id] = null;
+            }
+            prevStateCache[task.id] = isEqual(task.status);
+        });
     }
 )(
     (state, key) => key // Cache selectors by type name
@@ -473,3 +492,24 @@ Number.prototype.toFixedDown = function(digits) {
         m = this.toString().match(re);
     return m ? parseFloat(m[1]) : this.valueOf();
 };
+
+function isTaskActive({ status }) {
+    return !(
+        status === taskStatus.FINISHED  ||
+        status === taskStatus.RESTART   ||
+        status === taskStatus.TIMEOUT   ||
+        status === taskStatus.ABORTED   ||
+        status === taskStatus.ERRORCREATING
+    );
+}
+
+export const requestorStatusSelector = createCachedSelector(
+    state => state.taskList,
+    (state, key) => key,
+    (taskList, key) => {
+        if (!taskList.length) return false;
+        return taskList.some(task => isTaskActive(task));
+    }
+)(
+    (state, key) => key // Cache selectors by type name
+);

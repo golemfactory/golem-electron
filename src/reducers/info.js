@@ -1,4 +1,4 @@
-import { some } from 'lodash';
+import some from 'lodash/some';
 import { dict } from './../actions';
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');
@@ -7,6 +7,8 @@ const { setConfig, getConfig, dictConfig, configStore } = remote.getGlobal(
 );
 
 const {
+    APP_QUIT_GRACEFUL,
+    SET_GRACEFUL_QUIT,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -24,12 +26,14 @@ const {
     SET_CONCENT_TERMS,
     SET_CHAIN_INFO,
     SET_PASSWORD_MODAL,
-    SET_VIRTUALIZATION_STATUS
+    SET_VIRTUALIZATION_STATUS,
+    TOGGLE_FORCE_QUIT
 } = dict;
 
 const { GOLEM_STARTER, HIDE_ONBOARD } = dictConfig;
 
 const initialState = {
+    forceQuit: false,
     version: {
         number: '',
         message: 'Connection is not established yet.',
@@ -64,7 +68,8 @@ const initialState = {
     concentTerms: '',
     isConcentTermsAccepted: false,
     isNodeProvider: true,
-    isVirtualizationExist: false
+    isVirtualizationExist: false,
+    isGracefulShutdownEnabled: false
 };
 
 function isNewVersion(_old, _new) {
@@ -74,6 +79,12 @@ function isNewVersion(_old, _new) {
 //console.log(getConfig(GOLEM_STARTER))
 const setInfo = (state = initialState, action) => {
     switch (action.type) {
+        case TOGGLE_FORCE_QUIT: {
+            return Object.assign({}, state, {
+                forceQuit: !state.forceQuit
+            });
+        }
+
         case SET_GOLEM_VERSION:
             return Object.assign({}, state, {
                 version: {
@@ -194,6 +205,11 @@ const setInfo = (state = initialState, action) => {
         case SET_VIRTUALIZATION_STATUS:
             return Object.assign({}, state, {
                 isVirtualizationExist: action.payload
+            });
+
+        case SET_GRACEFUL_QUIT:
+            return Object.assign({}, state, {
+                isGracefulShutdownEnabled: action.payload
             });
 
         case SET_PASSWORD_MODAL:

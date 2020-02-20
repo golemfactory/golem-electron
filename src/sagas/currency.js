@@ -6,7 +6,7 @@ import { dict } from '../actions'
 
 const {SET_CURRENCY} = dict
 let config = Object.freeze({
-    CURRENCY_URL: 'http://api.coinmarketcap.com/v1/ticker/',
+    CURRENCY_URL: 'http://api.coinmarketcap.com/v1/ticker',
     TOKENS: {
         ETH: 'ethereum',
         GNT: 'golem-network-tokens'

@@ -55,8 +55,7 @@ export class FileLocation extends React.Component {
                     />
                     <button
                         className="btn--outline"
-                        onClick={this._handleFolderSelection}
-                        disabled={isEngineOn}>
+                        onClick={this._handleFolderSelection}>
                         Change
                     </button>
                 </div>

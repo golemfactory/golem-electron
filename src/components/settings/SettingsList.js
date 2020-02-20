@@ -20,7 +20,7 @@ import * as Actions from './../../actions';
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     isDeveloperMode: state.input.developerMode,
-    isMainNet: state.info.isMainNet,
+    concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch
 });
 
@@ -64,7 +64,8 @@ export class SettingsList extends React.Component {
 
         if (
             nextProps.concentSwitch !== this.props.concentSwitch &&
-            !nextProps.concentSwitch
+            !nextProps.concentSwitch &&
+            !nextProps.concentBalance.value.isZero()
         ) {
             this.setState({
                 concentModal: !nextProps.concentSwitch
@@ -106,30 +107,24 @@ export class SettingsList extends React.Component {
      * @return {DOM}                    [Elements of list]
      */
     loadTabItems(data) {
-        const { isDeveloperMode, isMainNet } = this.props;
-        return data
-            .filter((_, index) => isDeveloperMode || index < 6)
-            .filter(
-                (item, _) => !(item.title == 'Concent Settings' && isMainNet)
-            )
-            .map((item, index) => (
+        return data.map((item, index) => (
+            <div
+                className="settings-tab-item"
+                key={index.toString()}
+                value={index}>
                 <div
-                    className="settings-tab-item"
-                    key={index.toString()}
-                    value={index}>
-                    <div
-                        className="tab-item-title"
-                        onClick={this._handleTab}
-                        role="tab"
-                        tabIndex="0">
-                        <span>{item.title}</span>
-                        <span
-                            className="icon-arrow-right"
-                            aria-label="Expand Tab"
-                        />
-                    </div>
+                    className="tab-item-title"
+                    onClick={this._handleTab}
+                    role="tab"
+                    tabIndex="0">
+                    <span>{item.title}</span>
+                    <span
+                        className="icon-arrow-right"
+                        aria-label="Expand Tab"
+                    />
                 </div>
-            ));
+            </div>
+        ));
     }
 
     /**
@@ -163,6 +158,7 @@ export class SettingsList extends React.Component {
 
     render() {
         const { concentModal, activeContent } = this.state;
+        const { isMainNet } = this.props;
         const tabItems = [
             {
                 title: 'Performance',
@@ -220,7 +216,7 @@ export class SettingsList extends React.Component {
                                                   className="icon-arrow-left"
                                                   aria-label="Back to Tabs"
                                               />
-                                              Back
+                                              {tabItems[activeContent]?.title}
                                           </div>
                                           {tabItems[activeContent]?.content}
                                       </div>

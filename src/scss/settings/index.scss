@@ -143,6 +143,12 @@ $tab-item-height: 78.7px;
             left: 118px;
             width: 108px;
         }
+        &.disabled {
+            cursor: not-allowed;
+            &:hover {
+                color: $color-text2;
+            }
+        }
     }
 
     .horizontal-transition-container{
@@ -157,12 +163,21 @@ $tab-item-height: 78.7px;
         margin: 20px 20px;
         display: flex;
         align-items: center;
-        font-weight: 500;
+        font-weight: 600;
         cursor: pointer;
 
         .icon-arrow-left {
-            margin-right: 5px;
+            margin-right: 10px;
+            font-size: 12pt;
+            font-weight: 600;
         }
+    }
+
+    .tips {
+        margin-top: 20px;
+        color: $color-text2;
+        font-size: 9pt;
+        text-align: center;
     }
 }
 

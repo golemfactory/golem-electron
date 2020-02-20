@@ -16,6 +16,220 @@ exports[`should render a header component 1`] = `
         }
       }
     />
+    <ConditionalRender
+      showIf={false}
+    >
+      <div
+        className="nav__list"
+      >
+        <img
+          className="logo__header"
+          src=""
+        />
+      </div>
+      <ul
+        className="menu"
+        role="menu"
+      >
+        <ForwardRef(TippyWrapper)
+          content={
+            <div
+              className="menu__upload"
+            >
+              <div
+                className="menu-item__upload"
+                onClick={[Function]}
+              >
+                <span
+                  aria-label="Add file for task"
+                  className="icon-file"
+                  role="menuitem"
+                  tabIndex="0"
+                  title="Add File"
+                />
+                <span>
+                  Add file
+                </span>
+              </div>
+              <div
+                className="menu-item__upload"
+                onClick={[Function]}
+              >
+                <span
+                  aria-label="New folder for task"
+                  className="icon-folder"
+                  role="menuitem"
+                  tabIndex="0"
+                  title="Add Folder"
+                />
+                <span>
+                  Add folder
+                </span>
+              </div>
+            </div>
+          }
+          hideOnClick={true}
+          interactive={true}
+          isEnabled={false}
+          placement="bottom"
+          theme="light"
+          trigger="click"
+        >
+          <ForwardRef(TippyWrapper)
+            content={
+              <p>
+                Golem is not started yet.
+              </p>
+            }
+            placement="bottom"
+            trigger="mouseenter"
+          >
+            <li
+              className="menu__item upload-menu"
+            >
+              <span
+                aria-label="New Task"
+                className="icon-add"
+                role="menuitem"
+                tabIndex="0"
+                title="Upload file for the task"
+              />
+            </li>
+          </ForwardRef(TippyWrapper)>
+        </ForwardRef(TippyWrapper)>
+        <ForwardRef(TippyWrapper)
+          content={
+            <p>
+              Docs
+            </p>
+          }
+          placement="bottom"
+          trigger="mouseenter"
+        >
+          <li
+            className="menu__item"
+          >
+            <a
+              href="https://docs.golem.network/"
+            >
+              <span
+                aria-label="Documentation"
+                className="icon-doc"
+                role="menuitem"
+                tabIndex="0"
+              />
+            </a>
+          </li>
+        </ForwardRef(TippyWrapper)>
+        <ForwardRef(TippyWrapper)
+          content={
+            <p>
+              Settings
+            </p>
+          }
+          placement="bottom"
+          trigger="mouseenter"
+        >
+          <li
+            aria-label="Settings"
+            className="menu__item"
+            data-path="/settings"
+            onClick={[Function]}
+            role="menuitem"
+            tabIndex="0"
+          >
+            <span
+              className="icon-settings"
+            />
+          </li>
+        </ForwardRef(TippyWrapper)>
+      </ul>
+    </ConditionalRender>
+    <ConditionalRender
+      showIf={false}
+    >
+      <div
+        className="header__frame"
+      >
+        <div
+          className="title"
+        >
+          <span />
+        </div>
+        <div
+          className="info"
+        >
+          <span
+            className="time"
+          />
+          <span
+            className="amount__frame"
+          >
+             
+             Frame
+          </span>
+        </div>
+        <div
+          className="menu"
+          role="menu"
+        >
+          <span
+            aria-label="Completed Frames"
+            className="menu__item"
+            onClick={[Function]}
+            role="menuitem"
+            tabIndex="0"
+          >
+            Complete
+          </span>
+          <span
+            aria-label="All Frames"
+            className="menu__item "
+            onClick={[Function]}
+            role="menuitem"
+            tabIndex="0"
+          >
+            All
+          </span>
+        </div>
+      </div>
+    </ConditionalRender>
   </nav>
+  <ConditionalRender
+    showIf={false}
+  >
+    <nav
+      className="nav"
+    >
+      <ul
+        className="nav__list"
+        role="menu"
+      >
+        <li
+          aria-label="Network"
+          className="nav__item"
+          data-path="/"
+          onClick={[Function]}
+          role="menuitem"
+          tabIndex="0"
+        >
+          Network
+        </li>
+        <li
+          aria-label="Tasks"
+          className="nav__item"
+          data-path="/tasks"
+          onClick={[Function]}
+          role="menuitem"
+          tabIndex="0"
+        >
+          Tasks
+        </li>
+        <span
+          className="selector"
+        />
+      </ul>
+    </nav>
+  </ConditionalRender>
 </header>
 `;

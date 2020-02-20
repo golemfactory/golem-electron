@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Link } from 'react-router';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -19,7 +18,6 @@ import isEmpty from 'lodash/isEmpty';
 import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
-import without from 'lodash/without';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
@@ -65,7 +63,10 @@ export class Details extends React.PureComponent {
     componentWillUpdate(nextProps, nextState) {
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
             const checkableFragments = filter(nextProps.fragments, item => {
-                return item[0]?.status && this._checkRestartCondition(item[0]);
+                return (
+                    item[item.length - 1]?.status &&
+                    this._checkRestartCondition(item[item.length - 1])
+                );
             }).filter(Boolean);
             const isAllChecked =
                 every(nextState.checkedItems, item => item === true) &&
@@ -173,9 +174,9 @@ export class Details extends React.PureComponent {
     };
 
     _blockNode = () => {
-        let node_id = node2block.node_id;
+        let node_id = this.state.node2block?.node_id;
         new Promise((resolve, reject) => {
-            actions.blockNode(node_id, resolve, reject);
+            this.props.actions.blockNodes(node_id, resolve, reject);
         }).then(([result, msg]) => {
             this.setState({
                 nodeBlocked: result,

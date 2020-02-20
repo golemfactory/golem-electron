@@ -69,6 +69,7 @@
         }
 
         .user-name__form {
+            min-width: 200px;
             & .input__node-name + .toggle__edit-mode,
             &:hover > .toggle__edit-mode {
                 display: inline;

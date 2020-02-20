@@ -11,6 +11,9 @@ export let dict = Object.freeze({
     SET_BALANCE: 'SET_BALANCE',
     SET_RESOURCES: 'SET_RESOURCES',
     SET_HISTORY: 'SET_HISTORY',
+    LOAD_HISTORY: 'LOAD_HISTORY',
+    QUERY_HISTORY: 'QUERY_HISTORY',
+    EXPAND_HISTORY_PAGE: 'EXPAND_HISTORY_PAGE',
     SET_SYSTEM_INFO: 'SET_SYSTEM_INFO',
     SET_ADVANCED_PRESET: 'SET_ADVANCED_PRESET',
     CREATE_ADVANCED_PRESET: 'CREATE_ADVANCED_PRESET',
@@ -38,10 +41,10 @@ export let dict = Object.freeze({
     CREATE_TASK: 'CREATE_TASK',
     ADD_MISSING_TASK_FILES: 'ADD_MISSING_TASK_FILES',
     RESTART_TASK: 'RESTART_TASK',
-    RESTART_FRAME: 'RESTART_FRAME',
     RESTART_SUBTASK: 'RESTART_SUBTASK',
     RUN_TEST_TASK: 'RUN_TEST_TASK',
     ABORT_TEST_TASK: 'ABORT_TEST_TASK',
+    DRY_RUN_TASK: 'DRY_RUN_TASK',
     SET_TASK_TEST_STATUS: 'SET_TASK_TEST_STATUS',
     GET_ESTIMATED_COST: 'GET_ESTIMATED_COST',
     SET_ESTIMATED_COST: 'SET_ESTIMATED_COST',
@@ -95,16 +98,19 @@ export let dict = Object.freeze({
     SET_FRAMES_WITH_SUBTASKS: 'SET_FRAMES_WITH_SUBTASKS',
     SET_CONNECTED_PEERS: 'SET_CONNECTED_PEERS',
     SET_SUBTASKS_BORDER: 'SET_SUBTASKS_BORDER',
+    GET_SUBTASKS_BORDER: 'GET_SUBTASKS_BORDER',
     SET_PREVIEW_LIST: 'SET_PREVIEW_LIST',
     SET_SUBTASKS_LIST: 'SET_SUBTASKS_LIST',
     FETCH_SUBTASKS_LIST: 'FETCH_SUBTASKS_LIST',
-    SET_SUBTASKS_VISIBILITY: 'SET_SUBTASKS_VISIBILITY',
     SET_FRAME_ID: 'SET_FRAME_ID',
     SET_FRAME_INDEX: 'SET_FRAME_INDEX',
     NEXT_FRAME: 'NEXT_FRAME',
     PREVIOUS_FRAME: 'PREVIOUS_FRAME',
     //GENERAL
     APP_QUIT: 'APP_QUIT',
+    APP_QUIT_GRACEFUL: 'APP_QUIT_GRACEFUL',
+    SET_GRACEFUL_QUIT: 'SET_GRACEFUL_QUIT',
+    TOGGLE_FORCE_QUIT: 'TOGGLE_FORCE_QUIT',
     SET_CONNECTION: 'SET_CONNECTION',
     SET_GOLEM_VERSION: 'SET_GOLEM_VERSION',
     SET_CHAIN_INFO: 'SET_CHAIN_INFO',
@@ -159,6 +165,9 @@ const {
     SET_BALANCE,
     SET_RESOURCES,
     SET_HISTORY,
+    LOAD_HISTORY,
+    QUERY_HISTORY,
+    EXPAND_HISTORY_PAGE,
     SET_SYSTEM_INFO,
     SET_ADVANCED_PRESET,
     CREATE_ADVANCED_PRESET,
@@ -184,10 +193,10 @@ const {
     CREATE_TASK,
     ADD_MISSING_TASK_FILES,
     RESTART_TASK,
-    RESTART_FRAME,
     RESTART_SUBTASK,
     RUN_TEST_TASK,
     ABORT_TEST_TASK,
+    DRY_RUN_TASK,
     SET_TASK_TEST_STATUS,
     GET_ESTIMATED_COST,
     SET_ESTIMATED_COST,
@@ -235,16 +244,19 @@ const {
     SET_ALL_FRAMES,
     SET_FRAMES_WITH_SUBTASKS,
     SET_SUBTASKS_BORDER,
+    GET_SUBTASKS_BORDER,
     SET_PREVIEW_LIST,
     SET_SUBTASKS_LIST,
     FETCH_SUBTASKS_LIST,
-    SET_SUBTASKS_VISIBILITY,
     SET_FRAME_ID,
     SET_FRAME_INDEX,
     NEXT_FRAME,
     PREVIOUS_FRAME,
     //GENERAL
     APP_QUIT,
+    APP_QUIT_GRACEFUL,
+    SET_GRACEFUL_QUIT,
+    TOGGLE_FORCE_QUIT,
     SET_GOLEM_VERSION,
     SET_LATEST_VERSION,
     UPDATE_SEEN,
@@ -329,6 +341,13 @@ export const setSubtasksBorder = payload => ({
     payload
 });
 
+export const getSubtasksBorder = (payload, _resolve, _reject) => ({
+    type: GET_SUBTASKS_BORDER,
+    payload,
+    _resolve,
+    _reject
+});
+
 export const setPreviews = payload => ({
     type: SET_PREVIEW_LIST,
     payload
@@ -345,11 +364,6 @@ export const fetchSubtasksList = payload => {
         payload
     };
 };
-
-export const setSubtasksVisibility = payload => ({
-    type: SET_SUBTASKS_VISIBILITY,
-    payload
-});
 
 export const setFrameId = payload => ({
     type: SET_FRAME_ID,
@@ -419,25 +433,32 @@ export const setACLMode = (payload, _resolve, _reject) => ({
     _reject
 });
 
-export const blockNode = (payload, _resolve, _reject) => ({
-    type: BLOCK_NODE,
+export const blockNodes = (payload, _resolve, _reject) => ({
+    type: BLOCKED_NODES,
     payload,
     _resolve,
     _reject
 });
 
-export const blockNodes = payload => ({
-    type: BLOCKED_NODES,
-    payload
-});
-
-export const trustNodes = payload => ({
+export const trustNodes = (payload, _resolve, _reject) => ({
     type: TRUSTED_NODE,
-    payload
+    payload,
+    _resolve,
+    _reject
 });
 
 export const setHistory = payload => ({
     type: SET_HISTORY,
+    payload
+});
+
+export const queryHistory = payload => ({
+    type: QUERY_HISTORY,
+    payload
+})
+
+export const expandHistoryPage = payload => ({
+    type: EXPAND_HISTORY_PAGE,
     payload
 });
 
@@ -549,7 +570,7 @@ export const toggleConcent = (isSwitchOn, informRPC, toggleLock) => ({
     type: TOGGLE_CONCENT,
     isSwitchOn,
     informRPC,
-    toggleLock
+    toggleLock //toggleDepositLock
 });
 
 export const toggleConcentRequired = isSwitchOn => ({
@@ -608,6 +629,14 @@ export const updatePreviewLock = payload => ({
 export const setOnboard = payload => ({
     type: ONBOARDING,
     payload
+});
+
+export const gracefulShutdown = () => ({
+    type: APP_QUIT_GRACEFUL
+});
+
+export const toggleForceQuit = () => ({
+    type: TOGGLE_FORCE_QUIT
 });
 
 export const setVersion = payload => ({
@@ -710,11 +739,6 @@ export const restartTask = (payload, _resolve, _reject) => ({
     _reject
 });
 
-export const restartFrame = payload => ({
-    type: RESTART_FRAME,
-    payload
-});
-
 export const restartSubtask = payload => ({
     type: RESTART_SUBTASK,
     payload
@@ -728,6 +752,13 @@ export const runTestTask = payload => ({
 export const abortTestTask = payload => ({
     type: ABORT_TEST_TASK,
     payload
+});
+
+export const dryRunTask = (payload, _resolve, _reject) => ({
+    type: DRY_RUN_TASK,
+    payload,
+    _resolve, 
+    _reject
 });
 
 export const setTaskTestStatus = payload => ({

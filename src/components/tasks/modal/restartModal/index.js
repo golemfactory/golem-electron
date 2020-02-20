@@ -28,7 +28,7 @@ export default class RestartModal extends React.PureComponent {
     /**
      * [_handleCancel funcs. closes modal]
      */
-    _handleCancel = () => this.props.closeModal();
+    _handleCancel = () => this.props.closeModal('restartModal');
 
     _handleRestartOptionChange = e => {
         this.setState({

@@ -3,7 +3,7 @@ import { BigNumber } from 'bignumber.js';
 import yup from 'yup';
 
 import Slider from './../../../Slider.js';
-import { modals, currencyIcons, variables } from './../../../../constants';
+import { currencyIcons, variables } from './../../../../constants';
 
 const { ETH_DENOM, GWEI_DENOM } = variables;
 

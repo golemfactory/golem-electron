@@ -4,9 +4,9 @@ import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import * as Actions from '../../actions';
-import FileCheckModal from './modal/FileCheckModal';
-import InfoLabel from './../InfoLabel';
+import * as Actions from '../../../actions';
+import FileCheckModal from './../modal/FileCheckModal';
+import InfoLabel from './../../InfoLabel';
 
 const mapStateToProps = state => ({
     fileCheckModal: state.info.fileCheckModal,
@@ -41,10 +41,16 @@ export class NewTask extends React.Component {
     }
 
     _normalizeName = (name, type) => {
-        let taskName = (name && type) ? name.split('.' + type)[0] : name;
-            taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, '');
-            return (taskName && taskName.substring(0, 24)) || 'Golem Task'
-    }
+        let taskName = name && type ? name.split('.' + type)[0] : name;
+        taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, '');
+        taskName =
+            (taskName &&
+                taskName.length >= 4 &&
+                taskName.length <= 24 &&
+                taskName.substring(0, 24)) ||
+            'Golem Task';
+        return taskName;
+    };
 
     /**
      * [_closeModal funcs. closes modals]
@@ -57,6 +63,7 @@ export class NewTask extends React.Component {
     };
 
     checkInputValidity = e => {
+        e.persist();
         const { taskNameHint, nextButton } = this.refs;
         e.target.checkValidity();
         if (e.target.validity.valid) {
@@ -73,7 +80,6 @@ export class NewTask extends React.Component {
      * @param  {Event}  e
      */
     _handleNameInput = e => {
-        //console.log(e.target.value)
         this.checkInputValidity(e);
         this.setState({
             name: e.target.value
@@ -85,7 +91,6 @@ export class NewTask extends React.Component {
      * @param  {Event}  e
      */
     _handleTypeRadio = e => {
-        //console.log(e.target.value)
         this.setState({
             type: e.target.value
         });

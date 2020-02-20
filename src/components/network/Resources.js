@@ -1,10 +1,8 @@
 import React from 'react';
 import {
-    Spring,
     Transition,
     Keyframes,
-    animated,
-    config
+    animated
 } from 'react-spring/renderprops.cjs';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';

@@ -1,8 +1,8 @@
 const electron = require('electron');
 var path = require('path');
 const { app, ipcMain, shell } = electron;
-const log = require('./debug_handler.js');
-const { DATADIR } = require('./golem_config.js');
+const log = require('./debug.js');
+const { DATADIR } = require('../config/golem.js');
 
 let openedWindowsMap = null;
 function ipcHandler(
@@ -36,6 +36,20 @@ function ipcHandler(
 
     ipcMain.on('open-logs', event => {
         shell.openItem(path.join(DATADIR, 'logs'));
+    });
+
+    ipcMain.on('redirect-wallet', function(event) {
+        win.webContents.send('redirect-wallet');
+        win.focus();
+    });
+
+    ipcMain.on('graceful-shutdown', function(event, flag = false) {
+        global.isGracefulShutdown = !!flag;
+    });
+
+    ipcMain.on('close-me', function(event) {
+        global.isGracefulShutdown = false;
+        app.quit();
     });
 
     /**
@@ -78,11 +92,13 @@ function ipcHandler(
 }
 
 function ipcRemover() {
+    ipcMain.removeAllListeners('graceful-shutdown');
     ipcMain.removeAllListeners('preview-switch');
     ipcMain.removeAllListeners('preview-screen');
     ipcMain.removeAllListeners('set-badge');
     ipcMain.removeAllListeners('open-file');
     ipcMain.removeAllListeners('open-logs');
+    ipcMain.removeAllListeners('close-me');
     console.info('IPC Listeners destroyed.');
 }
 

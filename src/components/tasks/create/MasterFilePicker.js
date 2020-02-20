@@ -1,10 +1,9 @@
 import React from 'react';
-import uuid from 'uuid/v4';
-import _ from 'lodash-es';
+import cloneDeep from 'lodash/cloneDeep';
 import { Link } from 'react-router-dom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import * as Actions from '../../actions';
+import * as Actions from '../../../actions';
 
 const mapStateToProps = state => ({
     directoryTree: state.create.directoryTree
@@ -44,11 +43,11 @@ export class MasterFilePicker extends React.Component {
 
     _handleChange = nodes => this.setState({ nodes });
 
-    _selectMasterFile = node => 
-            this.setState({ 
-                selectedMasterNode: node.absolutePath, 
-                taskName: node.name 
-            });
+    _selectMasterFile = node =>
+        this.setState({
+            selectedMasterNode: node.absolutePath,
+            taskName: node.name
+        });
 
     _toggleExpandState = node => (node.state.expanded = !node.state.expanded);
 
@@ -62,13 +61,13 @@ export class MasterFilePicker extends React.Component {
                 } else if (node.name.includes(filterFor)) return true;
             });
         const filteredNodes = !!filterFor
-            ? _filterNodes(_.cloneDeep(nodes))
+            ? _filterNodes(cloneDeep(nodes))
             : nodes;
         return (
             <div className="directory-nodes__container" key="filteredContent">
                 <div>
                     <span className="directory-info">
-                        There is more than one .blend file in your folder. 
+                        There is more than one .blend file in your folder.
                         Please choose primary .blend file from your directory.
                     </span>
                     <input
@@ -116,12 +115,11 @@ export class MasterFilePicker extends React.Component {
                                 node.ext == this.state.type
                                     ? 'icon-blender'
                                     : 'icon-file'
-                            }
-                        >
-                            <span className="path1"/>
-                            <span className="path2"/>
-                            <span className="path3"/>
-                            <span className="path4"/>
+                            }>
+                            <span className="path1" />
+                            <span className="path2" />
+                            <span className="path3" />
+                            <span className="path4" />
                         </span>
                     )}
                     {node.isDir ? (

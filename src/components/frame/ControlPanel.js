@@ -1,5 +1,4 @@
 import React from 'react';
-import { viewer, imageInfo } from './ImageZoom';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 

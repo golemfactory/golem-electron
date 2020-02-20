@@ -1,23 +1,23 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import isEqual from 'lodash/isEqual';
 
-import * as Actions from "../../actions";
+import * as Actions from '../../actions';
 import { ETH_DENOM } from '../../constants/variables';
-import { getFilteredPaymentHistory, getStatus } from "../../reducers";
-import { timeStampToHR } from "../../utils/time";
-import checkNested from '../../utils/checkNested'
+import { timeStampToHR } from '../../utils/time';
 
 const filter = {
-    PAYMENT: 'payment',
-    INCOME: 'income'
+    PAYMENT: 'outgoing',
+    INCOME: 'incoming',
+    DEPOSIT: 'deposit'
 };
 
 const mapStateToProps = state => ({
     concentBalance: state.realTime.concentBalance,
     concentSwitch: state.concent.concentSwitch,
     isMainNet: state.info.isMainNet,
-    paymentHistory: getFilteredPaymentHistory.bind(null, state),
+    historyList: state.txHistory.historyList,
     networkInfo: state.info.networkInfo
 });
 
@@ -31,6 +31,16 @@ class TransactionTube extends Component {
         this.state = {
             showConcentInfo: false
         };
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return (
+            !isEqual(nextProps.concentBalance?.value, this.props.concentBalance?.value) ||
+            !isEqual(nextProps.networkInfo, this.props.networkInfo) ||
+            !isEqual(nextProps.paymentHistory, this.props.paymentHistory) ||
+            !isEqual(nextProps.historyList, this.props.historyList) ||
+            nextState.showConcentInfo !== this.state.showConcentInfo
+        );
     }
 
     _toggleHistory = () => {
@@ -54,7 +64,8 @@ class TransactionTube extends Component {
     };
 
     _fetchLastTransaction = list => {
-        const { created, type, value } = list.length > 0 && list[0].data;
+        const { created, currency, direction, amount, task_payment } =
+            list.length > 0 && list[0].data;
         const { concentBalance, concentSwitch, isMainNet } = this.props;
         const { showConcentInfo } = this.state;
         return (
@@ -74,13 +85,22 @@ class TransactionTube extends Component {
                             <span>
                                 <span
                                     className={`finance__indicator ${
-                                        type === filter.INCOME
+                                        direction === filter.INCOME
                                             ? 'indicator--up'
                                             : 'indicator--down'
                                     }`}>
-                                    {type === filter.INCOME ? '+ ' : '- '}
+                                    {direction === filter.INCOME ? '+ ' : '- '}
                                 </span>
-                                <b>{(value / ETH_DENOM).toFixed(4)}{isMainNet ? ' ' : ' t'}GNT</b>
+                                <b>
+                                    {(
+                                        (Number(amount)
+                                            ? amount
+                                            : task_payment?.missing_amount) /
+                                        ETH_DENOM
+                                    ).toFixed(4)}
+                                    {isMainNet ? ' ' : ' t'}
+                                    {currency}
+                                </b>
                             </span>
                             <span>{timeStampToHR(created, false, true)}</span>
                             <div
@@ -117,7 +137,8 @@ class TransactionTube extends Component {
                                         ? concentBalance.value
                                               .dividedBy(ETH_DENOM)
                                               .toFixed(4)
-                                        : '-'}{isMainNet ? ' ' : ' t'}
+                                        : '-'}
+                                    {isMainNet ? ' ' : ' t'}
                                     GNT
                                 </b>
                             </span>
@@ -145,11 +166,11 @@ class TransactionTube extends Component {
     };
 
     render() {
-        const { paymentHistory, networkInfo } = this.props;
-        const filteredList = paymentHistory(0);
+        const { networkInfo, historyList } = this.props;
+        const [_, filteredList] = historyList['all'];
         return (
             <div className="container__tube">
-                {paymentHistory && networkInfo && networkInfo.key ? (
+                {networkInfo && networkInfo.key ? (
                     this._fetchLastTransaction(filteredList)
                 ) : (
                     <span className="content__tube">Loading...</span>

@@ -17,7 +17,7 @@ import price from './settings/price';
 import profile from './settings/profile';
 import trust from './settings/trust';
 import stats from './settings/stats';
-import acl from './settings/acl';
+import acl, * as fromACL from './settings/acl';
 /*Tasks*/
 import details from './tasks/details';
 import preview from './tasks/preview';
@@ -91,6 +91,10 @@ export const getGPUEnvironment = (state, key) =>
     fromPerformance.getGPUEnvironmentSelector(state.performance, key);
 export const getConcentDepositStatus = (state, key) =>
     fromRealTime.concentDepositStatusSelector(state.realTime, key);
-
+export const getRequestorStatus = (state, key) =>
+    fromRealTime.requestorStatusSelector(state.realTime, key);
 export const getComponentWarnings = (state, key) =>
     fromRealTime.componentWarningSelector({ ...state.realTime, ...state.info }, key);
+
+export const getFilteredKnownPeers = (state, filter, key) =>
+    fromACL.getKnownPeersSelector(state.acl, filter, key);

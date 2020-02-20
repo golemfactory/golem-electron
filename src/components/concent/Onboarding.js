@@ -6,6 +6,7 @@ import Step1 from './steps/Step1';
 import Step2 from './steps/Step2';
 import Step3 from './steps/Step3';
 import Step4 from './steps/Step4';
+import Step5 from './steps/Step5';
 
 export default class ConcentOnboarding extends React.Component {
     constructor(props) {
@@ -27,6 +28,29 @@ export default class ConcentOnboarding extends React.Component {
             left: 0,
             transform: 'translate3d(-100%,0,0)'
         };
+    }
+
+    componentDidMount() {
+        this._keydownListener = event => {
+            //Right Arrow & Enter keycode
+            if (event.keyCode === 39 || event.keyCode === 13) {
+                this.state.currentStep === 5
+                    ? this._handleDone.call(this)
+                    : this._handleNext.call(this);
+            }
+
+            //Left Arrow & ESC keycode
+            if (event.keyCode === 37 || event.keyCode === 27) {
+                this.state.currentStep !== 0
+                    ? this._handlePrev.call(this)
+                    : this._handleCancel.call(this);
+            }
+        };
+        document.addEventListener('keydown', this._keydownListener);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this._keydownListener);
     }
 
     _handleCancel = () => {
@@ -56,7 +80,8 @@ export default class ConcentOnboarding extends React.Component {
         <Step1 key="step1" />,
         <Step2 key="step2" />,
         <Step3 key="step3" />,
-        <Step4 key="step4" />
+        <Step4 key="step4" />,
+        <Step5 key="step5" />
     ];
 
     render() {
@@ -85,25 +110,25 @@ export default class ConcentOnboarding extends React.Component {
                     </Transition>
                 </div>
                 <div className="concent-onboarding__action-container">
-                    {currentStep === 0 || currentStep === 4 ? (
+                    {currentStep === 0 || currentStep === 5 ? (
                         <div>
                             <span
                                 className="btn--cancel"
                                 onClick={
-                                    currentStep === 4
+                                    currentStep === 5
                                         ? this._handlePrev
                                         : this._handleCancel
                                 }>
-                                {currentStep === 4 ? 'Back' : 'Skip'}
+                                {currentStep === 5 ? 'Back' : 'Skip'}
                             </span>
                             <button
                                 className="btn btn--primary"
                                 onClick={
-                                    currentStep === 4
+                                    currentStep === 5
                                         ? this._handleDone
                                         : this._handleNext
                                 }>
-                                {currentStep === 4 ? 'Got it' : 'Learn more'}
+                                {currentStep === 5 ? 'Got it' : 'Learn more'}
                             </button>
                         </div>
                     ) : (
@@ -115,7 +140,7 @@ export default class ConcentOnboarding extends React.Component {
                                 tabIndex="0"
                             />
                             <span className="page-indicator">
-                                {currentStep + 1} of 4
+                                {currentStep + 1} of 6
                             </span>
                             <span
                                 className="icon-arrow-right"

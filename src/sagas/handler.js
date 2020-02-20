@@ -1,6 +1,15 @@
+import { eventChannel, buffers } from 'redux-saga';
+import {
+    fork,
+    takeEvery,
+    takeLatest,
+    take,
+    call,
+    put
+} from 'redux-saga/effects';
 const { remote } = window.electron;
-const log = remote.require('./electron/debug_handler.js');
-const { CUSTOM_RPC } = remote.require('./electron/golem_config.js');
+const log = remote.require('./electron/handler/debug.js');
+const { CUSTOM_RPC } = remote.require('./electron/config/golem.js');
 
 export let config = Object.freeze({
     //WS_URL: 'ws://127.0.0.1:8080/ws',
@@ -17,7 +26,7 @@ export let config = Object.freeze({
     GET_DATA_DIR_RPC: 'env.datadir',
     GET_KEY_ID_RPC: 'crypto.keys.id',
     GET_PUBLIC_KEY_RPC: 'crypto.keys.pub',
-    GET_STATUS_RPC: 'get_status',
+    GET_STATUS_RPC: 'net.status',
     WITHDRAW_RPC: 'pay.withdraw',
     GAS_COST_RPC: 'pay.withdraw.gas_cost',
     //Network
@@ -43,6 +52,7 @@ export let config = Object.freeze({
     RUN_TEST_TASK_RPC: 'comp.tasks.check',
     ABORT_TEST_TASK_RPC: 'comp.tasks.check.abort',
     CHECK_TEST_STATUS_RPC: 'comp.task.test.status',
+    TASK_DRY_RUN_RPC: 'comp.task.create.dry_run',
     GET_TASKS_STATS_RPC: 'comp.tasks.stats',
     GET_UNSUPPORTED_TASK_STATS_RPC: 'comp.tasks.unsupport',
     GET_KNOWN_TASKS_RPC: 'comp.tasks.known',
@@ -60,7 +70,6 @@ export let config = Object.freeze({
     GET_SUBTASKS_FRAMES_RPC: 'comp.task.subtasks.frames',
     RESTART_SUBTASK_RPC: 'comp.task.subtask.restart',
     RESTART_SUBTASKS_RPC: 'comp.task.subtasks.restart',
-    RESTART_FRAME_RPC: 'comp.task.subtasks.frame.restart',
     TASK_TEST_STATUS_CH: 'evt.comp.task.test.status',
     GET_ESTIMATED_COST_RPC: 'comp.tasks.estimated.cost',
     GET_ESTIMATED_COSTS_RPC: 'comp.tasks.estimated.costs',
@@ -86,6 +95,7 @@ export let config = Object.freeze({
     PAYMENTS_RPC: 'pay.payments',
     PAYMENT_ADDRESS_RPC: 'pay.ident',
     INCOME_RPC: 'pay.incomes',
+    PAYMENT_HISTORY_RPC: 'pay.operations',
     DEPOSIT_RPC: 'pay.deposit_payments',
     BALANCE_CH: 'evt.pay.balance',
     CONCENT_DEPOSIT_BALANCE_RPC: 'pay.deposit_balance',
@@ -94,6 +104,7 @@ export let config = Object.freeze({
     CHAIN_INFO_RPC: 'golem.mainnet',
     VIRTUALIZATION_RPC: 'env.hw.virtualization',
     QUIT_RPC: 'ui.quit',
+    QUIT_GRACEFUL_RPC: 'golem.graceful_shutdown',
     START_GOLEM_RPC: 'ui.start',
     STOP_GOLEM_RPC: 'ui.stop',
     SET_PASSWORD_RPC: 'golem.password.set',
@@ -126,6 +137,56 @@ export let config = Object.freeze({
     CONCENT_REQUIRED_SWITCH_RPC: 'golem.concent.required_as_provider.turn',
     CONCENT_REQUIRED_SWITCH_STATUS_RPC: 'golem.concent.required_as_provider'
 });
+
+export function eventWrapper(
+    session,
+    rpc,
+    payload,
+    dispatch_type,
+    interval = 1000
+) {
+    return eventChannel(emit => {
+        const fetchStats = () => {
+            function on_info(args) {
+                let info = args[0];
+                emit({
+                    type: dispatch_type,
+                    payload: info
+                });
+            }
+
+            _handleRPC(on_info, session, rpc, [payload]);
+        };
+
+        const fetchOnStartup = () => {
+            fetchStats();
+
+            return fetchOnStartup;
+        };
+
+        const channelInterval = setInterval(fetchOnStartup(), interval);
+
+        return () => {
+            console.log('negative');
+            clearInterval(channelInterval);
+        };
+    });
+}
+
+export function* eventEmitter(wrapper, session, payload, cancelCB) {
+    if (payload) {
+        const channel = yield call(wrapper, session, payload);
+        try {
+            while (true) {
+                let action = yield take(channel);
+                yield put(action);
+                if (cancelCB) cancelCB(channel, action);
+            }
+        } finally {
+            console.info('yield cancelled!');
+        }
+    }
+}
 
 function errorCallback(topic, _eb, { error, details, argsList }) {
     console.warn(
@@ -202,3 +263,22 @@ export let _handleRPC = (
         onError: errorCallback.bind(null, _rpc_address, _eb)
     });
 };
+
+export const multipleAttempts = (generator, handleError, maxTries) => {
+  return function * multipleAttempts (...args) {
+    let n = 0
+    while (n <= maxTries) {
+      try {
+        yield call(generator, ...args)
+        break
+      } catch (e) {
+        // until max tries are done we preserve error logs instead spamming
+        if (n < maxTries) {
+          yield log(e)
+        } else {
+          yield handleError(e)
+        }
+      }
+    }
+  }
+}

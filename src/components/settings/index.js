@@ -7,20 +7,12 @@ import * as Actions from '../../actions';
 import SettingsList from './SettingsList';
 import Stats from './stats';
 import ACL from './acl';
-import { APP_VERSION } from './../../main';
-
-const { remote } = window.electron;
-const { dialog } = remote;
-const versionGUI = remote.app.getVersion();
 
 let activateContent;
 
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
     version: state.info.version,
-    isDeveloperMode: state.input.developerMode,
-    isMainNet: state.info.isMainNet,
-    concentSwitch: state.concent.concentSwitch
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -93,7 +85,7 @@ export class Settings extends React.Component {
                     </span>
                     <br />
                     <span>
-                        {versionGUI && `Golem Interface v${versionGUI}`}
+                        {`Golem Interface v${__VERSION__}`}
                     </span>
                 </div>
             </div>

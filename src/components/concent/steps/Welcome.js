@@ -12,7 +12,7 @@ export default class Welcome extends React.Component {
                 <div className="concent-onboarding__desc">
                     <div>
                         <h3>Finally it's here!</h3>
-                        <h2>Protection with Concent Service</h2>
+                        <h2>Concent Service protection</h2>
                     </div>
                     <div className="whats-new__list">
                         <h4>Benefit of using Concent:</h4>

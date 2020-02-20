@@ -1,69 +1,111 @@
-import { eventChannel, buffers } from 'redux-saga'
-import { take, call, put } from 'redux-saga/effects'
-import { dict } from '../actions'
+import flatten from 'lodash/flatten';
+import { eventChannel, buffers } from 'redux-saga';
+import { take, call, put, takeLatest, select } from 'redux-saga/effects';
+import { dict } from '../actions';
 
-import { config, _handleRPC } from './handler'
+import { config, _handleRPC } from './handler';
 
+const { SET_HISTORY, LOAD_HISTORY, EXPAND_HISTORY_PAGE } = dict;
 
-const {SET_HISTORY} = dict
+const queries = ['all', 'outgoing', 'incoming', 'deposit_transfer'];
+const getQuery = state => state.txHistory.activeTab;
+const getPageNumber = state => state.txHistory.listPage;
 
+export function expandHistory(session, { pageNumber, query }) {
+    return new Promise((response, reject) => {
+        function on_history(args) {
+            let history = args[0];
+            response({
+                type: LOAD_HISTORY,
+                payload: history,
+                query: query
+            });
+        }
+
+        // check if query about 'deposit', then put as first param (operation_type) if not put as second (direction)
+        // // check if query about 'all',  then put query null instead of 'all' filter, otherwise pass the filter
+        let params = [null, null, 1 + pageNumber, 30];
+        params[query === queries[3] ? 0 : 1] =
+            query === queries[0] ? null : query;
+        _handleRPC(on_history, session, config.PAYMENT_HISTORY_RPC, params);
+    });
+}
+
+/**
+ * [*toggleConcentUnlockBase generator to unlock concent deposit]
+ * @param {[type]} session       [Session of the wamp connection]
+ */
+export function* expandHistoryBase(session, { payload }) {
+    let query = yield select(getQuery);
+    payload.query = query;
+    const action = yield call(expandHistory, session, payload);
+    yield put(action);
+}
+
+let query, pageNumber;
 /**
  * [subscribeHistory func. fetchs payment history of user, with interval]
  * @param  {Object} session     [Websocket connection session]
  * @return {Object}             [Action object]
  */
 export function subscribeHistory(session) {
-    const interval = 20000
+    const interval = 10000;
+    let promises = [];
 
     return eventChannel(emit => {
-        const iv = setInterval(function fetchHistory() {
-            let incomeList;
-            let paymentList;
-            let allPayments = []
+        const fetchHistory = () => {
+            function on_history(_query, resolve, args) {
+                let historyList = args[0];
+                resolve({
+                    query: _query,
+                    payload: historyList
+                });
+            }
 
-            function on_history_deposits(args) {
-                let deposits = args[0];
-                deposits = deposits.map(deposit => {
-                    deposit.type = "deposit";
-                    return deposit
-                })
-                let allPayments = [...paymentList, ...incomeList, ...deposits];
+            for (let i = queries.length; i-- > 0; ) {
+                // check if query about 'deposit', then put as first param (operation_type) if not put as second (direction)
+                // check if query about 'all',  then put query null instead of 'all' filter, otherwise pass the filter
+                let _query = queries[i];
+                let _pageNumber = pageNumber[_query];
+                let params = [null, null, 1, 30 * _pageNumber];
+                params[_query === queries[3] ? 0 : 1] =
+                    _query === queries[0] ? null : _query;
+                let _promise = new Promise((resolve, reject) => {
+                    _handleRPC(
+                        on_history.bind(null, _query, resolve),
+                        session,
+                        config.PAYMENT_HISTORY_RPC,
+                        params
+                    );
+                });
+                promises.push(_promise);
+            }
+
+            Promise.all(promises).then(result => {
+                let _payload = {};
+                result.forEach(item => {
+                    _payload[item.query] = item.payload;
+                });
                 emit({
                     type: SET_HISTORY,
-                    payload: allPayments
-                })
-            }
+                    payload: _payload
+                });
+            });
+        };
 
-            function on_history_payments(args) {
-                let payments = args[0];
-                payments = payments.map(payment => {
-                    payment.type = "payment";
-                    return payment
-                })
-                paymentList = payments
-                _handleRPC(on_history_deposits, session, config.DEPOSIT_RPC)
-            }
+        const fetchOnStartup = () => {
+            fetchHistory();
 
-            function on_history_income(args) {
-                let incomes = args[0];
-                incomes = incomes.map(income => {
-                    income.type = "income";
-                    return income
-                })
-                incomeList = incomes
-                _handleRPC(on_history_payments, session, config.PAYMENTS_RPC)
-            }
+            return fetchOnStartup;
+        };
 
-            _handleRPC(on_history_income, session, config.INCOME_RPC)
-            return fetchHistory
-        }(), interval)
-
+        const channelInterval = setInterval(fetchOnStartup(), interval);
 
         return () => {
-            console.log('negative')
-            clearInterval(iv)
-        }
-    })
+            console.log('negative');
+            clearInterval(channelInterval);
+        };
+    });
 }
 
 /**
@@ -72,15 +114,20 @@ export function subscribeHistory(session) {
  * @yield   {Object}            [Action object]
  */
 export function* historyFlow(session) {
-    const channel = yield call(subscribeHistory, session)
+    yield takeLatest(EXPAND_HISTORY_PAGE, expandHistoryBase, session);
 
+    query = yield select(getQuery);
+    pageNumber = yield select(getPageNumber);
+    const channel = yield call(subscribeHistory, session, query, pageNumber);
     try {
         while (true) {
-            let action = yield take(channel)
-            yield put(action)
+            query = yield select(getQuery);
+            pageNumber = yield select(getPageNumber);
+            let action = yield take(channel);
+            yield put(action);
         }
     } finally {
-        console.info('yield cancelled!')
-        channel.close()
+        console.info('yield cancelled!');
+        channel.close();
     }
 }

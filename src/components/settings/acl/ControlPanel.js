@@ -13,8 +13,11 @@ import map from 'lodash/map';
 import size from 'lodash/size';
 import some from 'lodash/some';
 import every from 'lodash/every';
+import keyBy from 'lodash/keyBy';
 import pickBy from 'lodash/pickBy';
 import isEqual from 'lodash/isEqual';
+import isEmpty from 'lodash/isEmpty';
+import mapValues from 'lodash/mapValues';
 
 const mapStateToProps = state => ({
     isEngineOn: state.info.isEngineOn,
@@ -39,7 +42,17 @@ export class ControlPanel extends React.Component {
         };
     }
 
+    componentDidMount() {
+        this._fillCheckedItemsIfEmpty(this.props);
+    }
+
     componentWillUpdate(nextProps, nextState) {
+        if (
+            isEmpty(this.props.nodeListACL?.rules) &&
+            !isEmpty(nextProps.nodeListACL?.rules)
+        ) {
+            this._fillCheckedItemsIfEmpty(nextProps);
+        }
         if (!isEqual(nextState.checkedItems, this.state.checkedItems)) {
             const isAllChecked = every(
                 nextState.checkedItems,
@@ -65,6 +78,12 @@ export class ControlPanel extends React.Component {
         }
     }
 
+    _fillCheckedItemsIfEmpty = props => {
+        const { rules } = props.nodeListACL;
+        const checkedItems = mapValues(keyBy(rules, 'identity'), () => false);
+        this.setState({ checkedItems });
+    };
+
     _showBlockNodeModal = node =>
         this.setState({
             blockNodeModal: true,
@@ -72,7 +91,8 @@ export class ControlPanel extends React.Component {
             nodeBlocked: false
         });
 
-    _closeBlockNodeModal = () => this.setState({ blockNodeModal: false });
+    _closeBlockNodeModal = () =>
+        this.setState({ blockNodeModal: false, node2block: null });
 
     _handleACLCheckbox = e => this.props.handleACLCheckbox(e.target.checked);
 
@@ -92,15 +112,25 @@ export class ControlPanel extends React.Component {
 
     _toggleLockNode = (e, nodes) => {
         const node = nodes || this.state?.node2block?.identity;
-        if(this.props.aclRestrictedMode) 
-            this.props.actions.blockNodes(node);
-        else
-            this.props.actions.trustNodes(node);
-        this.setState({
-            checkedItems: {},
-            nodeBlocked: true,
-            node2block: null
-        });
+        new Promise((resolve, reject) => {
+            if (this.props.aclRestrictedMode)
+                this.props.actions.blockNodes(node, resolve, reject);
+            else this.props.actions.trustNodes(node, resolve, reject);
+        })
+            .then(() => {
+                this.setState({
+                    checkedItems: pickBy(
+                        this.state.checkedItems,
+                        item => !item
+                    ),
+                    nodeBlocked: true
+                });
+            })
+            .catch(error => {
+                this.setState({
+                    nodeBlocked: false
+                });
+            });
     };
 
     _toggleItems = (keys, val = null) => {
@@ -223,7 +253,8 @@ export class ControlPanel extends React.Component {
                             cancelAction={this._closeBlockNodeModal}
                             blockAction={this._toggleLockNode}
                             nodeBlocked={nodeBlocked}
-                            unlockMode={!aclRestrictedMode}
+                            unlockMode={true}
+                            aclMode={aclRestrictedMode}
                             errMsg={errMsg}
                             node2block={node2block}
                         />,

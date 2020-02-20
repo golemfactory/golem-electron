@@ -1,16 +1,17 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import Tooltip from '@tippy.js/react';
 import { Transition, animated, config } from 'react-spring/renderprops.cjs';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as Actions from '../../actions';
+import RestartModal from '../tasks/modal/restartModal';
+import InsufficientAmountModal from '../tasks/modal/InsufficientAmountModal';
 
-import SingleFrame from './Single';
 import { timeStampToHR } from './../../utils/time';
 
 const statusDict = Object.freeze({
-    WAITINGFORPEER: 'waiting for peer',
     NOTREADY: 'not started',
     READY: 'ready',
     WAITING: 'waiting',
@@ -45,8 +46,10 @@ function sortById(a, b) {
 }
 
 const mapStateToProps = state => ({
+    borderList: state.single.borderList,
     details: state.details.detail,
-    frameList: state.all.frameList
+    frameList: state.all.frameList,
+    isMainNet: state.info.isMainNet
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -56,7 +59,17 @@ const mapDispatchToProps = dispatch => ({
 export class All extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { items: [] };
+        this.state = {
+            items: [],
+            restartModal: false,
+            restartCallback: null,
+            restartProps: null,
+            insufficientAmountModal: {
+                result: false,
+                message: null,
+                restartData: []
+            }
+        };
     }
 
     /**
@@ -77,9 +90,80 @@ export class All extends React.Component {
         }
     }
 
-    _handleResubmit(_, frameID) {
-        this.props.actions.restartFrame(frameID);
+    /**
+     * [_handleRestartModal func. makes  restart modal visible]
+     * @param  {[type]} restartId       [Id of selected task]
+     * @param  {[type]} restartCallback
+     */
+    _handleRestartModal = (item, restartCallback, isSubtask) => {
+        this.setState({
+            restartModal: true,
+            restartProps: {
+                item,
+                restartCallback,
+                isSubtask
+            }
+        });
+    };
+
+    _handleResubmitModal(_, frameID) {
+        new Promise((resolve, reject) => {
+            this.props.actions.getSubtasksBorder(frameID, resolve, reject);
+        }).then(borderList => {
+            let item = this.props.details;
+            item.subtask_ids = Object.keys(borderList);
+            this._handleRestartModal(item, this._handleRestart, true);
+        });
     }
+
+    /**
+     * [_handleDeleteModal sends information of the clicked task as callback]
+     * @param  {Any}        id              [Id of the selected task]
+     * @param  {Boolean}    isPartial       [Restart task partially for timed out subtasks]
+     */
+    _handleRestart = (id, isPartial, isConcentOn, subtaskList) => {
+        this._restartAsync(id, isPartial, isConcentOn, subtaskList).then(
+            _result => {
+                const isResultObject =
+                    !(_result instanceof Array) &&
+                    _result instanceof Object &&
+                    _result !== null;
+                if (_result && (!!_result[1] || isResultObject)) {
+                    const message = Array.isArray(_result)
+                        ? _result[1]
+                        : _result;
+                    this.setState({
+                        insufficientAmountModal: {
+                            result: true,
+                            message,
+                            restartData: [id, isPartial]
+                        }
+                    });
+                }
+
+                this._closeModal('restartModal');
+            }
+        );
+    };
+
+    _restartAsync(id, isPartial, isConcentOn, subtaskList) {
+        return new Promise((resolve, reject) => {
+            this.props.actions.restartTask(
+                { id, isPartial, isConcentOn, subtaskList },
+                resolve,
+                reject
+            );
+        });
+    }
+
+    /**
+     * [_closeModal funcs. closes modals.]
+     */
+    _closeModal = modal => {
+        this.setState({
+            [modal]: false
+        });
+    };
 
     /**
      * [getDefaultStyles func. actual animation-related logic]
@@ -145,7 +229,8 @@ export class All extends React.Component {
     }
     // show == 'complete' &&
     render() {
-        const { show, details } = this.props;
+        const { show, details, frameList, borderList, isMainNet } = this.props;
+        const { restartModal, restartProps, insufficientAmountModal } = this.state;
         const animatedList = this.getStyles();
         return (
             <div>
@@ -185,7 +270,7 @@ export class All extends React.Component {
                                                     </p>
                                                     <button
                                                         className="btn btn--primary"
-                                                        onClick={this._handleResubmit.bind(
+                                                        onClick={this._handleResubmitModal.bind(
                                                             this,
                                                             data,
                                                             data.id
@@ -236,6 +321,28 @@ export class All extends React.Component {
                         }}
                     </Transition>
                 </div>
+                {restartModal &&
+                    ReactDOM.createPortal(
+                        <RestartModal
+                            closeModal={this._closeModal}
+                            {...restartProps}
+                        />,
+                        document.getElementById('modalPortal')
+                    )}
+                {insufficientAmountModal?.result &&
+                    ReactDOM.createPortal(
+                        <InsufficientAmountModal
+                            previewWindow={true}
+                            closeModal={this._closeModal}
+                            createTaskConditionally={this._handleRestart.bind(
+                                this,
+                                ...insufficientAmountModal?.restartData
+                            )}
+                            isMainNet={isMainNet}
+                            message={insufficientAmountModal?.message}
+                        />,
+                        document.getElementById("modalPortal")
+                    )}
             </div>
         );
     }

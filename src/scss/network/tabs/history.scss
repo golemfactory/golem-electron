@@ -18,7 +18,7 @@
         text-align: left;
     }
 
-    .tab__title:nth-child(1){
+    .tab__title:nth-child(1) {
         margin-left: 5px;
     }
 
@@ -35,6 +35,9 @@
         cursor: pointer;
         line-height: 3.2em;
         height: 30px;
+        &:hover {
+            color: $button-hover-color;
+        }
 
         .icon-back {
             display: inline-block;
@@ -45,7 +48,7 @@
         }
     }
 
-    .ReactVirtualized__List{
+    .ReactVirtualized__List {
         overflow-y: overlay !important;
         overflow-x: hidden !important;
     }
@@ -64,13 +67,16 @@
     &:last-child {
         border-bottom: 1px solid $color-border;
     }
-    h5 {
-        padding: 0;
-        margin: 0 0 2px 0;
-        font-size: 11pt;
-        font-weight: 400;
-    }
+
     .info__history {
+        h5 {
+            display: inline-block;
+            padding: 0;
+            margin: 0 0 2px 0;
+            font-size: 11pt;
+            font-weight: 400;
+            color: $color-text;
+        }
         span {
             font-size: 9pt !important;
             color: $color-text2;
@@ -78,12 +84,28 @@
             line-height: 1.4em;
             & + span {
                 &::before {
-                    content: "|";
+                    content: '|';
                     padding: 0 10px;
                     font-size: 11pt;
                     color: #979797;
                 }
             }
+        }
+
+        .icon-copy {
+            color: $color-primary;
+            margin-left: 5px;
+            cursor: pointer;
+            &:hover {
+                color: $button-hover-color;
+            }
+            &:active {
+                color: $button-active-color;
+            }
+        }
+
+        .node-address {
+            cursor: pointer;
         }
     }
     .status__history {
@@ -91,17 +113,25 @@
     }
     .action__history {
         display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+    }
+    .item-action__history {
+        display: flex;
         justify-content: space-between;
         align-items: center;
         a {
             padding-bottom: 3.2pt;
         }
+        &.gas-cost {
+            text-align: right;
+            align-self: flex-end;
+            margin-right: 14px;
+        }
     }
-    .amount__history {
-        font-weight: 400;
-        font-size: 11pt !important;
-        transition: 0.1s margin-right;
-
+    .amount__history,
+    .gas-cost__history {
         .finance__indicator {
             &.indicator {
                 &--down,
@@ -120,6 +150,25 @@
             }
         }
     }
+
+    .amount__history {
+        font-weight: 400;
+        font-size: 11pt !important;
+        transition: 0.1s margin-right;
+
+        .ellipsis {
+            display: inline-flex;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            width : 45px;
+            transition: width .2s ease-in-out;
+        }
+    }
+    .gas-cost__history {
+        font-size: 9pt;
+        color: $color-text;
+    }
     .icon-new-window {
         position: relative;
         visibility: hidden;
@@ -135,7 +184,17 @@
         .icon-new-window {
             visibility: visible !important;
         }
+        .ellipsis {
+            width : 64px;
+        }
     }
+}
+
+.loading__history {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
 
 .empty-list__history {
