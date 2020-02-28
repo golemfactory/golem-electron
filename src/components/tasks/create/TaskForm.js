@@ -1308,44 +1308,46 @@ export class TaskDetail extends React.Component {
                     </p>
                   }
                 />
-                <div className="source-path">
-                  <b>Name: </b>
-                  {!editTaskName ? (
-                    <span>
-                      {taskName}
-                      <span
-                        className="action__edit-name"
-                        onClick={this._editTaskName}>
-                        <span className="icon-pencil" />
-                        Edit
+                <div className="file-information">
+                  <div className="source-path">
+                    <b>Name: </b>
+                    {!editTaskName ? (
+                      <span>
+                        <span className="file-item">{taskName}</span>
+                        <span
+                          className="action__edit-name"
+                          onClick={this._editTaskName}>
+                          <span className="icon-pencil" />
+                          Edit
+                        </span>
                       </span>
-                    </span>
-                  ) : (
-                    <span>
-                      <input
-                        type="text"
-                        id="taskNameInput"
-                        aria-label="Task Name"
-                        pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$"
-                        minLength={4}
-                        maxLength={24}
-                        onKeyPress={this._saveTaskName}
-                        defaultValue={taskName}
-                        autoFocus
-                        required
-                      />
-                      <span
-                        className="action__save-name"
-                        onClick={this._saveTaskName}>
-                        <span className="icon-confirmation" />
-                        Save
+                    ) : (
+                      <span>
+                        <input
+                          type="text"
+                          id="taskNameInput"
+                          aria-label="Task Name"
+                          pattern="^[a-zA-Z0-9_\-\.]+( [a-zA-Z0-9_\-\.]+)*$"
+                          minLength={4}
+                          maxLength={24}
+                          onKeyPress={this._saveTaskName}
+                          defaultValue={taskName}
+                          autoFocus
+                          required
+                        />
+                        <span
+                          className="action__save-name"
+                          onClick={this._saveTaskName}>
+                          <span className="icon-confirmation" />
+                          Save
+                        </span>
                       </span>
-                    </span>
-                  )}
-                </div>
-                <div className="source-path">
-                  <b>Path: </b>
-                  <span>{task.relativePath}</span>
+                    )}
+                  </div>
+                  <div className="source-path">
+                    <b>Path: </b>
+                    <span className="file-item">{task.relativePath}</span>
+                  </div>
                 </div>
                 {this._handleFormByType(
                   this.state.type || this.props.task.type

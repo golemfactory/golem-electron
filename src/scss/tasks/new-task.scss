@@ -24,8 +24,11 @@
     }
 
     .source-path{
-        margin: 10px 24px 40px 24px;
+        margin: 10px 24px 30px 24px;
         font-size: 9pt;
+        padding-bottom: 10px;
+        overflow-x: auto;
+        overflow-y: hidden;
     }
 
     .radio-item{
