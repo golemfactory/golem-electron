@@ -1,5 +1,7 @@
 import some from 'lodash/some';
 import { dict } from './../actions';
+import isEqual from 'lodash/isEqual';
+
 const { remote } = window.electron;
 const mainProcess = remote.require('./index');
 const { setConfig, getConfig, dictConfig, configStore } = remote.getGlobal(
@@ -97,17 +99,19 @@ const setInfo = (state = initialState, action) => {
                 action.payload,
                 state.version.number
             );
-            return Object.assign({}, state, {
-                latestVersion: {
-                    ...state.latestVersion,
-                    number: action.payload,
-                    importance,
-                    issue:
-                        !!importance && !state.latestVersion.seen
-                            ? 'UPDATE'
-                            : null
-                }
-            });
+
+            const tempVersionObject = {
+                ...state.latestVersion,
+                number: action.payload,
+                importance,
+                issue:
+                    !!importance && !state.latestVersion.seen ? 'UPDATE' : null
+            };
+            if (!isEqual(tempVersionObject, state.latestVersion)) {
+                return Object.assign({}, state, {
+                    latestVersion: tempVersionObject
+                });
+            }
 
         case SET_NETWORK_INFO:
             setConfig(GOLEM_STARTER, true);
