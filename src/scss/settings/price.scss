@@ -1,5 +1,15 @@
 .content__price {
     height: 130px;
+    .description {
+        color: $color-text2;
+        margin-bottom: 15px;
+        font-size: 8pt;
+        line-height: 1.6em;
+        &-title {
+            font-weight: 500;
+
+        }
+    }
 }
 
 .section__price {
