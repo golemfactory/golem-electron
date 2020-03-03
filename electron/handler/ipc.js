@@ -28,6 +28,16 @@ function ipcHandler(
             ...messageObject,
         });
 
+        if (messageObject && messageObject.open) {
+            notification.addListener('click', () => {
+                try {
+                    shell.openExternal(messageObject.open);
+                } catch (e) {
+                    new Error('Error ', e);
+                }
+            });
+        }
+
         notification.show();
     });
 

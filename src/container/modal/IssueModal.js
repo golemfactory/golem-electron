@@ -77,7 +77,7 @@ export class IssueModal extends React.Component {
       case knownIssues.UPDATE:
         ipcRenderer.send('notify', {
           title: 'New version is ready!',
-          message:
+          body:
             'New version of Golem is ready to be downloaded. Download now!',
           open: 'https://golem.network/download/brass-beta/'
         });
