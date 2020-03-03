@@ -1,6 +1,6 @@
 const electron = require('electron');
 var path = require('path');
-const { app, ipcMain, shell } = electron;
+const { app, ipcMain, shell, Notification } = electron;
 const log = require('./debug.js');
 const { DATADIR } = require('../config/golem.js');
 
@@ -22,6 +22,14 @@ function ipcHandler(
     //     tray.setToolTip(`at ${time}`)
 
     // })
+    ipcMain.on('notify', (event, messageObject) => {
+        const notification = new Notification({
+            icon: path.join(__dirname, '..', '..', 'build', 'icon.ico'),
+            ...messageObject,
+        });
+
+        notification.show();
+    });
 
     ipcMain.on('set-badge', (event, counter) => {
         app.setBadgeCount(counter);

@@ -8,11 +8,13 @@ import SettingsList from './SettingsList';
 import Stats from './stats';
 import ACL from './acl';
 
+const { remote, ipcRenderer } = window.electron;
+
 let activateContent;
 
 const mapStateToProps = state => ({
     nodeId: state.info.networkInfo.key,
-    version: state.info.version,
+    version: state.info.version
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -29,7 +31,9 @@ export class Settings extends React.Component {
             elm.target.parentElement.children,
             elm.currentTarget
         );
-        let menuItems = document.getElementsByClassName('settings-main-tab-item');
+        let menuItems = document.getElementsByClassName(
+            'settings-main-tab-item'
+        );
         for (var i = 0; i < menuItems.length; i++) {
             menuItems[i].classList.remove('active');
         }
@@ -39,7 +43,11 @@ export class Settings extends React.Component {
         });
     };
 
-    mainContentList = [<SettingsList />, <Stats />, <ACL actions={this.props.actions}/>];
+    mainContentList = [
+        <SettingsList />,
+        <Stats />,
+        <ACL actions={this.props.actions} />
+    ];
 
     render() {
         const { version } = this.props;
@@ -84,9 +92,7 @@ export class Settings extends React.Component {
                             : `${version.message}${version.number}`}
                     </span>
                     <br />
-                    <span>
-                        {`Golem Interface v${__VERSION__}`}
-                    </span>
+                    <span>{`Golem Interface v${__VERSION__}`}</span>
                 </div>
             </div>
         );
