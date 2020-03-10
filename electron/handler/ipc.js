@@ -25,7 +25,8 @@ function ipcHandler(
     ipcMain.on('notify', (event, messageObject) => {
         const notification = new Notification({
             icon: path.join(__dirname, '..', '..', 'build', 'icon.ico'),
-            ...messageObject,
+            timeoutType: 'never',
+            ...messageObject
         });
 
         if (messageObject && messageObject.open) {
