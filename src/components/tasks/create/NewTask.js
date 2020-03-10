@@ -28,9 +28,25 @@ export class NewTask extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: this._normalizeName(props.taskName, props.match.params.type),
+            name: "",
             type: radioTypes[props.match.params.type] || null
         };
+    }
+
+    componentDidMount() {
+        const taskName = this._normalizeName(
+                this.props.taskName,
+                this.props.match.params.type
+            )
+        const namingError = taskName && taskName.length < 4;
+        this.setState({
+            name: taskName
+        });
+        if(namingError) {
+            const { nextButton, taskNameHint } = this.refs;
+            taskNameHint.style.display = 'block';
+            nextButton.disabled = true;
+        } 
     }
 
     componentWillUpdate(nextProps, nextState) {
@@ -43,13 +59,8 @@ export class NewTask extends React.Component {
     _normalizeName = (name, type) => {
         let taskName = name && type ? name.split('.' + type)[0] : name;
         taskName = taskName && taskName.replace(/[^a-zA-Z0-9_\-\. ]/g, '');
-        taskName =
-            (taskName &&
-                taskName.length >= 4 &&
-                taskName.length <= 24 &&
-                taskName.substring(0, 24)) ||
-            'Golem Task';
-        return taskName;
+        if (taskName) return taskName.substring(0, 24);
+        return ""
     };
 
     /**
