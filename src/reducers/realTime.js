@@ -44,7 +44,7 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
-    concentBalance: lastConcentBalance || null,
+    concentBalance: lastConcentBalance || new BigNumber(0),
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
