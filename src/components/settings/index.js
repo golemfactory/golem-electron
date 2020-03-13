@@ -8,8 +8,6 @@ import SettingsList from './SettingsList';
 import Stats from './stats';
 import ACL from './acl';
 
-const { remote, ipcRenderer } = window.electron;
-
 let activateContent;
 
 const mapStateToProps = state => ({
