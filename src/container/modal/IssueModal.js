@@ -6,8 +6,6 @@ import { connect } from 'react-redux';
 import * as Actions from '../../actions';
 import notify from '../../utils/notify';
 
-const { ipcRenderer } = window.electron;
-
 const knownIssues = Object.freeze({
   PORT: 'PORT',
   WEBSOCKET: 'WEBSOCKET',
@@ -75,12 +73,11 @@ export class IssueModal extends React.Component {
           </div>
         );
       case knownIssues.UPDATE:
-        ipcRenderer.send('notify', {
-          title: 'New version is ready!',
-          body:
-            'New version of Golem is ready to be downloaded. Download now!',
-          open: 'https://golem.network/download/brass-beta/'
-        });
+        notify(
+          'New version is ready!',
+          'New version of Golem is ready to be downloaded. Download now!',
+          'https://golem.network/download/brass-beta/'
+        );
         return (
           <div className="content__modal">
             <div className="container-icon">

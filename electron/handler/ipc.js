@@ -28,13 +28,17 @@ function ipcHandler(
             timeoutType: 'never',
             ...messageObject
         });
-
-        if (messageObject && messageObject.open) {
+        const { open, click } = messageObject;
+        if (open || click) {
             notification.addListener('click', () => {
-                try {
-                    shell.openExternal(messageObject.open);
-                } catch (e) {
-                    new Error('Error ', e);
+                if (open) {
+                    try {
+                        shell.openExternal(open);
+                    } catch (e) {
+                        new Error('Error ', e);
+                    }
+                } else if (click) {
+                    event.sender.webContents.send('notify-click', true);
                 }
             });
         }
@@ -118,6 +122,7 @@ function ipcRemover() {
     ipcMain.removeAllListeners('open-file');
     ipcMain.removeAllListeners('open-logs');
     ipcMain.removeAllListeners('close-me');
+    ipcMain.removeAllListeners('notify');
     console.info('IPC Listeners destroyed.');
 }
 
