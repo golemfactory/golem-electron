@@ -1,6 +1,6 @@
 const electron = require('electron');
 var path = require('path');
-const { app, ipcMain, shell } = electron;
+const { app, ipcMain, shell, Notification } = electron;
 const log = require('./debug.js');
 const { DATADIR } = require('../config/golem.js');
 
@@ -22,6 +22,29 @@ function ipcHandler(
     //     tray.setToolTip(`at ${time}`)
 
     // })
+    ipcMain.on('notify', (event, messageObject) => {
+        const notification = new Notification({
+            icon: path.join(__dirname, '..', '..', 'build', 'icon.ico'),
+            timeoutType: 'never',
+            ...messageObject
+        });
+        const { open, click } = messageObject;
+        if (open || click) {
+            notification.addListener('click', () => {
+                if (open) {
+                    try {
+                        shell.openExternal(open);
+                    } catch (e) {
+                        new Error('Error ', e);
+                    }
+                } else if (click) {
+                    event.sender.webContents.send('notify-click', true);
+                }
+            });
+        }
+
+        notification.show();
+    });
 
     ipcMain.on('set-badge', (event, counter) => {
         app.setBadgeCount(counter);
@@ -99,6 +122,7 @@ function ipcRemover() {
     ipcMain.removeAllListeners('open-file');
     ipcMain.removeAllListeners('open-logs');
     ipcMain.removeAllListeners('close-me');
+    ipcMain.removeAllListeners('notify');
     console.info('IPC Listeners destroyed.');
 }
 

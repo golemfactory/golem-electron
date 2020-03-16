@@ -22,6 +22,9 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions();
     }
+    if(isWin()){
+        app.setAppUserModelId("network.golem.app");
+    }
     createMainWindow(win, tray, closeCallback).then(
         _win => (exports.mainWindow = win = _win)
     );
