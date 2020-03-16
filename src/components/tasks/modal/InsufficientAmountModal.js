@@ -32,11 +32,10 @@ export default class InsufficientAmountModal extends React.Component {
     _handleCancel = () => this.props.closeModal('insufficientAmountModal');
 
     _handleTopUp = () => {
-        if(!!this.props.previewWindow)
-            ipcRenderer.send('redirect-wallet');
+        if (!!this.props.previewWindow) ipcRenderer.send('redirect-wallet');
         else window.routerHistory.push('/wallet');
         this._handleCancel();
-    }
+    };
 
     _handleApply = () => {
         if (this.state.withConcent) {
@@ -150,6 +149,25 @@ export default class InsufficientAmountModal extends React.Component {
                             onClick={this._handleApply}
                             autoFocus>
                             Apply
+                        </button>
+                    )
+                };
+            case 'LongTransactionTime':
+                return {
+                    title:
+                        "Currently gas price is too high in the network.",
+                    content: (
+                        <pre>
+                            <div>{error_msg}</div>
+                        </pre>
+                    ),
+                    actionButton: (
+                        <button
+                            type="button"
+                            className="btn--primary"
+                            onClick={this._handleCancel}
+                            autoFocus>
+                            Retry
                         </button>
                     )
                 };
