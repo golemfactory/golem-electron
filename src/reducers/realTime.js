@@ -7,7 +7,7 @@ import notify from './../utils/notify';
 import checkNested from './../utils/checkNested';
 import { componentStatus, taskStatus } from './../constants/statusDicts';
 const { ipcRenderer, remote } = window.electron;
-const { isMac }  = remote.require('./index');
+const { isMac } = remote.require('./index');
 const { app } = remote;
 const log = remote.require('./electron/handler/debug.js');
 const { setConfig, getConfig, dictConfig } = remote.getGlobal('configStorage');
@@ -26,13 +26,18 @@ const {
 
 const tempCBSString = CONCENT_BALANCE_STATE && getConfig(CONCENT_BALANCE_STATE);
 const tempCBS = tempCBSString ? JSON.parse(tempCBSString) : null;
+const initialConcentBalance = {
+    value: new BigNumber(0),
+    status: null,
+    timelock: null
+}
 const lastConcentBalance = tempCBS
     ? {
           value: new BigNumber(tempCBS.value),
           status: tempCBS.status,
           timelock: tempCBS.timelock
       }
-    : null;
+    : initialConcentBalance;
 
 const initialState = {
     balance: [
@@ -44,7 +49,7 @@ const initialState = {
         new BigNumber(0).toString(),
         new BigNumber(0).toString()
     ],
-    concentBalance: lastConcentBalance || new BigNumber(0),
+    concentBalance: lastConcentBalance,
     taskList: [],
     connectedPeers: null,
     peerInfo: [],
@@ -293,8 +298,7 @@ function getGolemStatus(component, method, stage, data) {
     if (method == 'shutdown') {
         // result.status = componentStatus.SHUTDOWN;
         // TO DO: add shutdown scheduled method
-        if(!isMac())
-            app.exit();
+        if (!isMac()) app.exit();
         app.quit();
     } else if (stage == 'exception') {
         result.status = componentStatus.EXCEPTION;
@@ -495,10 +499,10 @@ Number.prototype.toFixedDown = function(digits) {
 
 function isTaskActive({ status }) {
     return !(
-        status === taskStatus.FINISHED  ||
-        status === taskStatus.RESTART   ||
-        status === taskStatus.TIMEOUT   ||
-        status === taskStatus.ABORTED   ||
+        status === taskStatus.FINISHED ||
+        status === taskStatus.RESTART ||
+        status === taskStatus.TIMEOUT ||
+        status === taskStatus.ABORTED ||
         status === taskStatus.ERRORCREATING
     );
 }

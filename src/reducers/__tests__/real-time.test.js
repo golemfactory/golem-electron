@@ -2,6 +2,13 @@ import {BigNumber} from 'bignumber.js';
 import realTime, {getStatusSelector} from '../realTime'
 
 describe('realTime reducer', () => {
+
+    const initialConcentBalance = {
+        value: new BigNumber(0),
+        status: null,
+        timelock: null
+    }
+
     it('should return initial state', () => {
         expect(realTime(undefined, {})).toEqual({
             taskList: [],
@@ -14,7 +21,7 @@ describe('realTime reducer', () => {
                 new BigNumber(0).toString(),
                 new BigNumber(0).toString()
             ],
-            concentBalance: new BigNumber(0),
+            concentBalance: initialConcentBalance,
             connectedPeers: null,
             peerInfo: [],
             golemStatus: [{client: ['start', 'pre', null]}],

@@ -133,7 +133,6 @@ class Estimation extends Component {
 					showIf={
 						item.concent_enabled &&
 						concentSwitch &&
-						!isMainNet &&
 						item.status !== taskStatus.COMPUTING &&
 						item.status !== taskStatus.WAITING
 					}>
@@ -166,7 +165,7 @@ class Estimation extends Component {
 							{isMainNet ? '' : 't'}ETH
 						</span>
 					</div>
-					<ConditionalRender showIf={concentSwitch && !isMainNet}>
+					<ConditionalRender showIf={concentSwitch}>
 						<div className="summary-item">
 							<sub>Deposit balance</sub>
 							<sub>
@@ -205,8 +204,7 @@ class Estimation extends Component {
 						showIf={
 							item.concent_enabled &&
 							isConcentOn &&
-							concentSwitch &&
-							!isMainNet
+							concentSwitch
 						}>
 						<Tooltip
 							content={
