@@ -31,7 +31,8 @@ export class AddNodePanel extends React.Component {
             'contextmenu',
             ev => {
                 ev.preventDefault();
-                ev.target.value = clipboard.readText();
+                let text = clipboard.readText();
+                ev.target.value = text.replace(/ /gi, '');
                 this._updateId.call(this, ev);
                 return false;
             },
@@ -45,6 +46,7 @@ export class AddNodePanel extends React.Component {
 
     _handleInput = e => {
         e.persist();
+        e.target.value = e.target.value.replace(/ /gi, '');
         this._updateId.call(this, e);
     };
 
@@ -61,9 +63,9 @@ export class AddNodePanel extends React.Component {
                 lockAddButton: true
             },
             () => {
-                this.trustNodes(this.state.node).then(([result, _]) => {
-                    const [info, msg] = result;
-                    if (info) this.props.addNodePanelToggle();
+                this.trustNodes(this.state.node).then(([result]) => {
+                    const [success, exist] = result;
+                    if (!exist.length) this.props.addNodePanelToggle();
                     else
                         this.setState({
                             existError: true,

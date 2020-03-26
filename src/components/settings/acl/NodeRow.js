@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@tippy.js/react';
 
 import ConditionalRender from '../../hoc/ConditionalRender';
+import { timeStampToHR } from '../../../utils/time';
 
 const { clipboard } = window.electron;
 let copyTimeoutList = [];
@@ -94,7 +95,7 @@ const NodeRow = ({
 			</td>
 			<ConditionalRender showIf={!isBlockTable}>
 				<td align="center">
-					<span className="info__id">{item.deadline || 'Forever'}</span>
+					<span className="info__id">{item.deadline ? timeStampToHR(item.deadline) : 'Forever'}</span>
 				</td>
 			</ConditionalRender>
 			<ConditionalRender showIf={isBlockTable}>
