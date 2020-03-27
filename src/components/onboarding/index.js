@@ -140,12 +140,14 @@ class OnboardIndex extends React.Component {
             position: 'absolute',
             top: 0,
             left: 0,
+            right: 0,
             transform: 'translate3d(100%,0,0)'
         };
         this.leaveStyle = {
             position: 'absolute',
             top: 0,
             left: 0,
+            right: 0,
             transform: 'translate3d(-100%,0,0)'
         };
     }
@@ -726,6 +728,7 @@ class OnboardIndex extends React.Component {
                         position: 'absolute',
                         top: 0,
                         left: 0,
+                        right: 0,
                         transform: 'translate3d(0,0,0)'
                     }}
                     leave={isNext ? this.leaveStyle : this.enterStyle}>
