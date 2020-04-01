@@ -38,20 +38,20 @@ const ISSUES = {
     title: 'Problem with ports',
     message: 'The ports are unreachable',
     docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
+      'https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
   },
   RAM: {
     title: 'RAM allocation lowered',
     message:
       'Golem could not allocate the configured amount of RAM on your machine. Allocation adjusted to ',
     docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
+      'https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=ram-warning'
   },
   DISK: {
     title: 'Not enough DISK',
     message: "You don't have enough DISK",
     docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=disk-space-warning'
+      'https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=disk-space-warning'
   }
 };
 
@@ -155,28 +155,28 @@ export class FooterMain extends PureComponent {
           <a
             href={
               currentPlatform === 'win32'
-                ? 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10'
-                : 'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos'
+                ? 'https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=docker-errors-on-windows-10'
+                : 'https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=docker-errors-on-macos'
             }>
             <span className="icon-new-window" />
           </a>
         );
       case 'Outdated hyperg version': //hyperg
         return (
-          <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=outdated-hyperg-version">
+          <a href="https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=outdated-hyperg-version">
             <span className="icon-new-window" />
           </a>
         );
       case 'Chain sync error': //sync
         return (
-          <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=sync">
+          <a href="https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=sync">
             <span className="icon-new-window" />
           </a>
         );
         break;
       case 'Error connecting geth': //geth
         return (
-          <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=geth">
+          <a href="https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=geth">
             <span className="icon-new-window" />
           </a>
         );
@@ -356,7 +356,7 @@ export class FooterMain extends PureComponent {
                   </span>
                   {status && status[0] && (
                     <span>
-                      <a href="https://docs.golem.network/#/Products/Brass-Beta/Installation">
+                      <a href="https://docs.golem.network/#/Products/Clay-Beta/Installation">
                         <span className="icon-new-window" />
                       </a>
                     </span>

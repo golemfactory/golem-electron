@@ -8,7 +8,7 @@ const log = remote.require('./electron/handler/debug.js')
 
 
 const {SET_GOLEM_VERSION, SET_LATEST_VERSION, UPDATE_SEEN} = dict
-const TEMPLATE = "Brass Golem v"
+const TEMPLATE = "Clay Golem v"
 
 /**
  * [callVersion func. fetchs current version of golem]
