@@ -212,7 +212,7 @@ class Estimation extends Component {
 									Minimum amount of GNT that is required (no
 									less than twice the amount of funds in your
 									Deposit for covering a task payment). <br />
-									<a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=how-does-it-work">
+									<a href="https://docs.golem.network/#/Products/Clay-Beta/Usage?id=how-does-it-work">
 										Learn more
 									</a>
 								</p>
@@ -239,7 +239,7 @@ class Estimation extends Component {
 									future tasks the Concent Service will try to
 									update your Deposit with higher amount.{' '}
 									<br />
-									<a href="https://docs.golem.network/#/Products/Brass-Beta/Usage?id=why-is-deposit-amount-higher-than-the-cost-of-task">
+									<a href="https://docs.golem.network/#/Products/Clay-Beta/Usage?id=why-is-deposit-amount-higher-than-the-cost-of-task">
 										Learn more
 									</a>
 								</p>
