@@ -148,7 +148,9 @@ module.exports = (env, argv) => ({
             loader: 'sass-loader',
             options: {
               implementation: sass,
-              fiber: Fiber
+              sassOptions: {
+                fiber: Fiber
+              } 
             }
           }
         ],

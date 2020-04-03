@@ -3,7 +3,6 @@ var path = require('path');
 const { app, ipcMain, shell, Notification } = electron;
 const log = require('./debug.js');
 const { DATADIR } = require('../config/golem.js');
-const PortCheck = require('../utils/check_port.js');
 
 let openedWindowsMap = null;
 function ipcHandler(

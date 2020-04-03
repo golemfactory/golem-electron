@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import TimeSelection from 'timepoint-selection';
 import isEqual from 'lodash/isEqual';
 import { BigNumber } from 'bignumber.js';
-import yup from 'yup';
+import * as yup from 'yup';
 
 const { remote } = window.electron;
 const { dialog } = remote;
