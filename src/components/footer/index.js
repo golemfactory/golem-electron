@@ -10,16 +10,16 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
 
-import * as Actions from './../actions';
+import * as Actions from './../../actions';
 import {
   getStatus,
   getPasswordModalStatus,
   getComponentWarnings
-} from './../reducers';
-import animData from './../assets/anims/wave.json';
+} from './../../reducers';
+import animData from './../../assets/anims/wave.json';
 
-import { componentStatus } from './../constants/statusDicts';
-import golem_loading from './../assets/img/golem-loading.svg';
+import { componentStatus } from './../../constants/statusDicts';
+import golem_loading from './../../assets/img/golem-loading.svg';
 
 const { remote, ipcRenderer } = window.electron;
 const currentPlatform = remote.getGlobal('process').platform;
@@ -93,7 +93,7 @@ const mapDispatchToProps = dispatch => ({
   actions: bindActionCreators(Actions, dispatch)
 });
 
-export class FooterMain extends PureComponent {
+export class Footer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -593,4 +593,4 @@ function areEqual(prevProps, nextProps) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(React.memo(FooterMain, areEqual));
+)(React.memo(Footer, areEqual));

@@ -33,7 +33,8 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
             show: false,
             backgroundColor: '#fff',
             webPreferences: {
-                webSecurity: false
+                webSecurity: false,
+                nodeIntegration: true
             }
         });
 

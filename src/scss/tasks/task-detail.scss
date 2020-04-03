@@ -166,11 +166,12 @@
 .section-details__task-detail {
     display: flex;
     position: relative;
+    height: 100%;
+    overflow-y: overlay !important;
 }
 
 .container__task-detail {
     position: relative;
-    overflow-y: overlay !important;
     overflow-x: hidden;
     transform: translateZ(0);
 }

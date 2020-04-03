@@ -1,61 +1,301 @@
-.footer {
+.content__footer-main {
+    @include flex;
+    position: absolute;
     width: 100%;
-    min-width: 450px;
-    flex: 0 0 59px;
-    line-height: 59px;
-    border-top: 1px solid $color-border;
-    padding: 0 20px;
-    background: $color-text4;
-    z-index: 999;
-    display: flex;
-    justify-content: space-between;
-    align-content: center;
-    font-size: 10pt;
-    font-weight: 400;
-    box-sizing: border-box;
-    .info-bar__footer {
-        display: flex;
+    bottom: 0;
+    flex-direction: column;
+    justify-content: center;
+    flex: 0 0 $footer-height;
+    transition: 0.5s flex;
+    transition-delay: 0.5s;
+
+    &__loading {
+        flex: 0 0 190px;
+
+        .section__actions {
+            flex: 0 0 160px !important;
+
+            .btn--primary {
+                display: none;
+            }
+        }
+
+        .status__components {
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            justify-content: space-between;
+            margin-top: 40px;
+
+            .item__status {
+                width: 250px;
+                display: grid;
+                grid-template-columns: 90px auto;
+                font-size: 8pt;
+                line-height: 1.8em;
+            }
+        }
+
+        .wave-loading {
+            height: 190px !important;
+        }
+    }
+
+    .section__actions {
+        position: relative;
+        text-align: left;
+        width: 100%;
+
+        @include flex;
+        justify-content: space-between;
+        box-sizing: border-box;
+        z-index: 2;
+        background: $color-text4;
+        flex: 0 0 100px;
+        transition: 0.5s flex;
+        transition-delay: 0.5s;
+
+        &-status {
+            @include flex;
+
+            justify-content: flex-start;
+            align-content: flex-start;
+            align-items: flex-start;
+            font-size: 11pt;
+            font-weight: 400;
+            width: 275px;
+            z-index: 2;
+
+            .icon-status-dot {
+                margin-right: 8px;
+                font-size: 10pt;
+
+                &--active {
+                    color: #37c481;
+                }
+
+                &--deactive {
+                    color: #f9fcfc;
+                }
+
+                &--warning {
+                    color: $color-accent2;
+                }
+                &--error {
+                    color: #f65a23;
+                }
+            }
+        }
+
+        .status-message {
+            line-height: 1.5em;
+            .icon-question-mark {
+                position: relative;
+                font-size: 7pt;
+                color: $color-text3;
+                margin-left: 5px;
+                bottom: 5px;
+            }
+        }
+
+        .info__warnings {
+            font-size: 8pt;
+            font-style: italic;
+            color: $color-text3;
+            .icon-warning-rounded {
+                position: relative;
+                font-size: 9pt;
+                margin-left: 3px;
+                color: $color-primary;
+                cursor: pointer;
+                bottom: -0.5px;
+            }
+        }
+
+        .action__graceful-shutdown {
+            display: flex;
+            align-items: center;
+            margin-top: 14px;
+            &-item {
+                display: flex;
+                align-items: center;
+                margin-right: 10px;
+                font-size: 7pt;
+                font-weight: 500;
+                cursor: pointer;
+                color: $color-primary;
+                &:hover {
+                    color: $button-hover-color;
+                }
+                [class^='icon-'],
+                [class*=' icon-'] {
+                    margin-right: 3px;
+                    font-size: 10pt;
+                }
+
+                .icon-force-quit {
+                    font-size: 9pt;
+                }
+            }
+        }
+
+        .status-node {
+            margin-top: 5px;
+            font-size: 8pt;
+            color: $color-text2;
+
+            &__loading {
+                @include flex;
+                font-size: 8pt;
+                color: $color-text2;
+                height: 45px;
+            }
+        }
+
+        .btn--primary {
+            z-index: 2;
+        }
+
+        .wave-loading {
+            position: absolute;
+            width: 100%;
+            margin-left: -24px;
+            bottom: 0;
+            height: 0;
+            pointer-events: none;
+            z-index: 1;
+            transition: 1.5s height linear;
+            transition-delay: 0.5s;
+        }
+
+        .component-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-bottom: -1px;
+            margin-left: -20px;
+            margin-right: 13px;
+
+            &--blue {
+                background-color: $button-static-color;
+            }
+            &--yellow {
+                background-color: $color-accent2;
+            }
+            &--green {
+                background-color: $color-accent1;
+            }
+            &--grey {
+                background-color: $color-text2;
+            }
+            &--red {
+                background-color: $color-error;
+            }
+        }
+    }
+
+    .content__footer-social {
+        @include flex;
         justify-content: space-between;
         align-items: center;
+        width: 100%;
+        padding: 0 25px;
+        height: 30px;
+        font-size: 7pt;
+        border-top: 1px solid $color-border;
+        box-sizing: border-box;
+        z-index: 99999;
+        background: white;
+
+        .element__footer {
+            @include flex;
+            cursor: pointer;
+            color: $color-text2;
+        }
+
+        [class^='icon-'],
+        [class*=' icon-'] {
+            font-size: 10pt;
+            margin-right: 2px;
+        }
+
+        .icon-golem {
+            color: $color-golem;
+        }
     }
-    img {
-        width: 20px;
-        height: 20px;
+
+    .loading-indicator {
+        position: absolute;
+        z-index: 9 !important;
+        position: absolute;
+        bottom: 40px;
+        right: 90px;
+        width: 0;
+        height: 0;
+        background: rgba($color-text4, 0.7);
+        border-radius: 50%;
+        transition: width 2s, height 2s, opacity 0.1s linear 2s;
+        transform: translate(50%, 50%);
+        opacity: 0;
+
+        &.active {
+            opacity: 1;
+            width: 300vh;
+            height: 300vh;
+            transition: width 2s, height 2s, opacity 0.1s linear 0s;
+        }
+    }
+
+    .loading-icon {
+        position: absolute;
+        display: none;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 120px;
+        z-index: 11;
+
+        &.active {
+            display: block;
+        }
+    }
+}
+
+.info__connection {
+    font-size: 9pt;
+    &__item {
+        display: block;
+        line-height: 2em;
+    }
+}
+
+.tooltip__warning-component {
+    max-width: 432px !important;
+    width: 432px;
+    text-align: left;
+    .info__connection__item {
+        margin-left: 25px;
+    }
+    .icon-status-dot {
+        position: relative;
+        bottom: -1px;
+        margin-left: -23px;
+        margin-right: 10px;
+        color: $color-accent2;
+
+        &--info {
+            color: $color-primary;
+        }
     }
     .icon-new-window {
-        font-size: 20pt;
+        position: relative;
+        bottom: -1px;
+        margin-left: 3px;
+        color: $color-primary;
+        font-size: 10pt;
         cursor: pointer;
-        color: $color-text;
-        will-change: transform;
-        &.jump {
-            animation: beat 0.35s linear;
-        }
-        &.disabled {
-            color: $button-disable-color;
-            cursor: not-allowed;
-        }
-    }
-    .preview-bar__footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin: 0 0 5px 0;
-        padding: 0;
-        .switch-box {
-            margin: 0 10px 0 0;
-            padding: 0;
-        }
-    }
-    @keyframes beat {
-        0% {
-            transform: scale(1);
-        }
-        50% {
-            transform: scale(1.4);
-            color: $button-static-color;
-        }
-        100% {
-            transform: scale(1);
-        }
     }
 }

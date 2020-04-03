@@ -193,10 +193,9 @@ export class Header extends Component {
    * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
    */
   _onFileDialog(dialogRules = []) {
-    const onFileHandler = data => {
-      //console.log(data)
-      if (data) {
-        directorySelector.call(this, data);
+    const onFileHandler = ({filePaths}) => {
+      if (filePaths && filePaths.length > 0) {
+        directorySelector.call(this, filePaths);
       }
     };
     /**
@@ -206,9 +205,8 @@ export class Header extends Component {
     dialog.showOpenDialog(
       {
         properties: [...dialogRules, 'multiSelections']
-      },
-      onFileHandler
-    );
+      }
+    ).then(onFileHandler);
   }
 
   _taskHints(engine, peers) {

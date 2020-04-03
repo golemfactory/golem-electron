@@ -24,7 +24,6 @@
 @import 'wallet/index';
 @import 'search-box';
 @import 'footer';
-@import 'footer-main';
 @import 'not-found';
 @import 'loader';
 @import 'dropzone';
@@ -55,6 +54,7 @@ body {
     font-family: $font-family-primary;
     font-weight: $font-weight-primary;
     overflow: hidden;
+    background-color: transparent;
 
     // -moz-font-weight: 400;
     /* Better Font Rendering =========== */

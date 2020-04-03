@@ -17,6 +17,7 @@
 @import "master-file-picker";
 .content__task-panel {
     height: 100%;
+    max-height: calc(100% - #{$footer-height});
     display: flex;
     flex-direction: column;
     justify-content: space-between;

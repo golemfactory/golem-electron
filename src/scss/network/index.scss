@@ -13,8 +13,8 @@
 
 .content__main {
     position: relative;
-    height: 100vh;
-    min-height: 100vh;
+    height: 100%;
+    max-height: calc(100% - #{$footer-height});
     display: flex;
     flex-direction: column;
     align-content: space-between;

@@ -247,15 +247,15 @@ function golemHandler(app) {
     app.golem = new GolemProcess();
     app.golem.loadCertificate();
 
+    // SSL/TSL: self signed certificate support
     app.on(
         'certificate-error',
         (event, webContents, url, error, certificate, callback) => {
+            event.preventDefault();
             const certificateError = err =>
                 log.error('Certificate error:', err);
-            const checkCertificate = () => {
-                event.preventDefault();
+            const checkCertificate = () =>
                 callback(certificate.data == app.golem.certificate);
-            };
 
             app.golem.prepared.promise.then(checkCertificate, certificateError);
         }

@@ -13,7 +13,6 @@ import History from '../History';
 import Wallet from '../wallet';
 import DeleteModal from './modal/DeleteModal';
 import RestartModal from './modal/restartModal';
-import FooterMain from './../FooterMain';
 
 const mapStateToProps = state => ({
     balance: state.realTime.balance,
@@ -208,7 +207,6 @@ export class TaskPanel extends React.Component {
                         />,
                         document.getElementById('modalPortal')
                     )}
-                <FooterMain />
             </div>
         );
     }

@@ -1,10 +1,10 @@
-jest.unmock('../FooterMain')
+jest.unmock('../footer')
 
 import React from 'react'
 import ReactDOM from 'react-dom'
 import TestUtils from 'react-dom/test-utils'
 import sinon from 'sinon'
-import ConnectedFooter, {FooterMain} from '../FooterMain'
+import ConnectedFooter, {Footer} from '../footer'
 
 
 describe('<Footer/>', () => {
@@ -16,7 +16,7 @@ describe('<Footer/>', () => {
 
     it('should render a footer component', () => {
         const wrapper = shallow(
-            <FooterMain {...props}/>
+            <Footer {...props}/>
         )
         expect(wrapper).toMatchSnapshot()
     })
