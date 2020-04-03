@@ -85,6 +85,7 @@ const mapStateToProps = state => ({
   isEngineOn: state.info.isEngineOn,
   stats: state.stats.stats.provider || state.stats.stats,
   isEngineLoading: state.info.isEngineLoading,
+  networkInfo: state.info.networkInfo,
   version: state.info.version,
   isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled
 });

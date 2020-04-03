@@ -3,6 +3,7 @@ var path = require('path');
 const { app, ipcMain, shell, Notification } = electron;
 const log = require('./debug.js');
 const { DATADIR } = require('../config/golem.js');
+const PortCheck = require('../utils/check_port.js');
 
 let openedWindowsMap = null;
 function ipcHandler(
@@ -45,6 +46,27 @@ function ipcHandler(
     }
 
     notification.show();
+  });
+
+  ipcMain.on('check-port', (event, ip, ports) => {
+    if (!ip) {
+      throw Error('No IP value provided');
+    }
+    if (!ports || ports.length !== 3) {
+      throw Error('There should be 3 port numbers in the list');
+    }
+    let checker = new PortCheck({
+      timeout: 500,
+      getBanner: 512
+    });
+
+    checker
+      .check(ip, 3333)
+      .check(ip, ports[1])
+      .check(ip, ports[2])
+      .on('done', (ip, port, result) => {
+        event.sender.webContents.send('check-port-answer', true);
+      });
   });
 
   ipcMain.on('set-badge', (event, counter) => {
@@ -119,6 +141,7 @@ function ipcRemover() {
   ipcMain.removeAllListeners('graceful-shutdown');
   ipcMain.removeAllListeners('preview-switch');
   ipcMain.removeAllListeners('preview-screen');
+  ipcMain.removeAllListeners('check-port');
   ipcMain.removeAllListeners('set-badge');
   ipcMain.removeAllListeners('open-file');
   ipcMain.removeAllListeners('open-logs');
