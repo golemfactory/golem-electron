@@ -166,7 +166,7 @@ class TestResult extends Component {
                                 here
                             </a>
                             , or talk with our tech support on{" "}
-                            <a href="https://chat.golem.network">Rocket Chat</a>
+                            <a href="https://discord.gg/y29dtcM">Discord</a>
                             .
                         </span>
                     </div>
