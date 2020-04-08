@@ -162,11 +162,11 @@ class TestResult extends Component {
                         <ul>{fillError(testStatus.error)}</ul>
                         <span className="error__hint">
                             You can try to find solution for this error in{" "}
-                            <a href="https://golem.network/documentation/06-preparing-your-blend-file/">
+                            <a href="https://docs.golem.network/#/Products/Clay-Beta/Being-a-Requestor?id=preparing-your-blend-file">
                                 here
                             </a>
                             , or talk with our tech support on{" "}
-                            <a href="https://chat.golem.network">Rocket Chat</a>
+                            <a href="https://discord.gg/y29dtcM">Discord</a>
                             .
                         </span>
                     </div>
