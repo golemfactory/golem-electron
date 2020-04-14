@@ -21,31 +21,6 @@ import Wave from './Wave';
 
 import { componentStatus } from './../../constants/statusDicts';
 
-const { remote, ipcRenderer } = window.electron;
-const currentPlatform = remote.getGlobal('process').platform;
-
-const ISSUES = {
-  PORT: {
-    title: 'Problem with ports',
-    message: 'The ports are unreachable',
-    docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=_1-smb-port-unreachable'
-  },
-  RAM: {
-    title: 'RAM allocation lowered',
-    message:
-      'Golem could not allocate the configured amount of RAM on your machine. Allocation adjusted to ',
-    docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=ram-warning'
-  },
-  DISK: {
-    title: 'Not enough DISK',
-    message: "You don't have enough DISK",
-    docs:
-      'https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=disk-space-warning'
-  }
-};
-
 /*############# HELPER FUNCTIONS ############# */
 
 function isGolemConnected(gs) {
