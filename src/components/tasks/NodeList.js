@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import Tooltip from '@tippy.js/react';
 
 import BlockNodeModal from './modal/BlockNodeModal';
+import DotAnim from '../DotAnim';
 
 const { clipboard } = window.electron;
 
@@ -243,8 +244,11 @@ class NodeList extends Component {
                     )
                 ) : (
                     <div className="no-node__task">
-                        <span>
+                        <DotAnim>
                             Loading nodes
+                        </DotAnim>
+                        <span>
+                            
                             <span className="jumping-dots">
                                 <span className="dot-1">.</span>
                                 <span className="dot-2">.</span>

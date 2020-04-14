@@ -5,6 +5,7 @@ import isEqual from "lodash/isEqual";
 import checkNested from "../../../utils/checkNested";
 import isObjectEmpty from "../../../utils/isObjectEmpty";
 import { testStatusDict } from "../../../constants/statusDicts";
+import DotAnim from "./../../DotAnim";
 
 const { remote } = window.electron;
 const mainProcess = remote.require("./index");
@@ -180,12 +181,9 @@ class TestResult extends Component {
             default:
                 return (
                     <span className="local-render__info">
-                        checking
-                        <span className="jumping-dots">
-                            <span className="dot-1">.</span>
-                            <span className="dot-2">.</span>
-                            <span className="dot-3">.</span>
-                        </span>
+                        <DotAnim>
+                            checking
+                        </DotAnim>
                     </span>
                 );
         }
