@@ -176,6 +176,7 @@
             margin-bottom: -1px;
             margin-left: -20px;
             margin-right: 13px;
+            transition: .7s background-color ease;
 
             &--blue {
                 background-color: $button-static-color;
@@ -192,6 +193,11 @@
             &--red {
                 background-color: $color-error;
             }
+        }
+
+        .port-status {
+            text-transform: capitalize;
+            font-weight: bold;
         }
     }
 

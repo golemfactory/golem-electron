@@ -103,15 +103,19 @@ function loadConnectionWarnings(
 										className="info__connection__item">
 										<span
 											className={`icon-status-dot ${
-												componentWarnings[index].issue === 'RAM'
+												componentWarnings[index]
+													.issue === 'RAM'
 													? 'icon-status-dot--info'
 													: ''
 											}`}
 										/>
 										{message}
-										{componentWarnings[index].issue === 'RAM' &&
+										{componentWarnings[index].issue ===
+											'RAM' &&
 											componentWarnings[index]?.value &&
-											`${componentWarnings[index]?.value} GiB`}
+											`${
+												componentWarnings[index]?.value
+											} GiB`}
 										<a href={docs}>
 											<span className="icon-new-window" />
 										</a>
@@ -137,6 +141,7 @@ const StatusMessage = ({
 	connectionProblem,
 	isEngineOn,
 	isGolemConnecting,
+	showPortInfo,
 	status
 }) => {
 	return (
@@ -152,7 +157,8 @@ const StatusMessage = ({
 										<p className="info__connection">
 											The process may take a few seconds.
 											<br />
-											When all connection statuses are green
+											When all connection statuses are
+											green
 											<br />
 											then app will properly connect.
 										</p>
@@ -162,6 +168,8 @@ const StatusMessage = ({
 									<span className="icon-question-mark" />
 								</Tooltip>
 							</span>
+						) : showPortInfo ? (
+							'Checking ports'
 						) : (
 							status.client.message
 						)
@@ -178,7 +186,11 @@ const StatusMessage = ({
 				)}
 			</span>
 			{status?.client?.message && loadErrorUrl(status.client.message)}
-			{loadConnectionWarnings(status, connectionProblem, componentWarnings)}
+			{loadConnectionWarnings(
+				status,
+				connectionProblem,
+				componentWarnings
+			)}
 		</span>
 	);
 };

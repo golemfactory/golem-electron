@@ -1,5 +1,5 @@
 import React from 'react';
-const { remote, ipcRenderer } = window.electron;
+const { ipcRenderer } = window.electron;
 
 const SocialBar = ({ version }) => {
 	const versionTemplate = version?.error

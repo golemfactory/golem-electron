@@ -1,14 +1,21 @@
 import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from './../../actions';
+import {
+  getStatus
+} from './../../reducers';
+
 import { animated } from 'react-spring/renderprops.cjs';
 import { componentStatus } from './../../constants/statusDicts';
 
 function _fetchEnvironment(env) {
 	switch (env) {
-		case 'BLENDER': 			return ' (CPU - Blender)';
-		case 'BLENDER_NVGPU': return ' (GPU - Blender)';
+		case 'BLENDER': 		return ' (CPU - Blender)';
+		case 'BLENDER_NVGPU': 	return ' (GPU - Blender)';
 		case 'BLENDER_SGX': 	return ' (SGX - Blender)';
-		case 'WASM': 					return ' (CPU - gWasm)';
-		default: 							return '';
+		case 'WASM': 			return ' (CPU - gWasm)';
+		default: 				return '';
 	}
 }
 
@@ -23,8 +30,7 @@ function _fetchState(stat) {
 }
 
 const ProviderStatus = ({
-	cancelShutdown,
-	forceQuit,
+	actions,
 	isGracefulShutdownEnabled,
 	opacity,
 	position,
@@ -32,6 +38,10 @@ const ProviderStatus = ({
 	status,
 	transform
 }) => {
+
+	const _cancelShutdown = () => actions.gracefulShutdown();
+  const _forceQuit = () => actions.toggleForceQuit();
+
 	return (
 		<animated.div
 			style={{
@@ -51,9 +61,7 @@ const ProviderStatus = ({
 						<span className="icon-failure" />
 						<span>Cancel shutdown</span>
 					</div>
-					<div
-						className="action__graceful-shutdown-item"
-						onClick={forceQuit}>
+					<div className="action__graceful-shutdown-item" onClick={forceQuit}>
 						<span className="icon-force-quit" />
 						<span>Force quit</span>
 					</div>
@@ -85,4 +93,17 @@ const ProviderStatus = ({
 
 ProviderStatus.displayName = 'ProviderStatus';
 
-export default ProviderStatus;
+const mapStateToProps = state => ({
+	status: getStatus(state, 'golemStatus'),
+	stats: state.stats.stats.provider || state.stats.stats,
+	isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled
+});
+
+const mapDispatchToProps = dispatch => ({
+	actions: bindActionCreators(Actions, dispatch)
+});
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(ProviderStatus);

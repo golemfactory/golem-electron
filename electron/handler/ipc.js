@@ -61,11 +61,11 @@ function ipcHandler(
     });
 
     checker
-      .check(ip, 3333)
+      .check(ip, ports[0])
       .check(ip, ports[1])
       .check(ip, ports[2])
       .on('done', (ip, port, result) => {
-        event.sender.webContents.send('check-port-answer', true);
+        event.sender.webContents.send('check-port-answer', port, result);
       });
   });
 

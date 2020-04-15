@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { Transition, animated } from 'react-spring/renderprops.cjs';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import isEqual from 'lodash/isEqual';
@@ -11,10 +10,9 @@ import {
   getComponentWarnings
 } from './../../reducers';
 
+import ContentTransition from './ContentTransition';
 import DotAnim from '../DotAnim';
 import LoadingIndicator from './LoadingIndicator';
-import ModuleStatus from './ModuleStatus';
-import ProviderStatus from './ProviderStatus';
 import SocialBar from './SocialBar';
 import StatusMessage from './StatusMessage';
 import Wave from './Wave';
@@ -23,27 +21,34 @@ import { componentStatus } from './../../constants/statusDicts';
 
 /*############# HELPER FUNCTIONS ############# */
 
-function isGolemConnected(gs) {
+function isGolemConnected(gs, portSkipped) {
   return (
     !!gs?.status &&
     !!gs?.message &&
+    portSkipped &&
     gs?.status === componentStatus.READY &&
     gs?.message.includes('Node')
   );
 }
 
-function isGolemConnecting(isEngineOn, status) {
+function isGolemConnecting(isEngineOn, portSkipped, status) {
   return (
     status?.client?.status &&
     (status.client.message === 'Logged In' ||
+      !portSkipped ||
       (status.client.status !== componentStatus.READY &&
         status.client.status !== componentStatus.SHUTDOWN)) &&
     !status.client.message.includes('configuration')
   );
 }
 
-function golemDotClass(status, connectionProblem, componentWarnings = []) {
-  if (status && isGolemConnected(status)) {
+function golemDotClass(
+  status,
+  connectionProblem,
+  componentWarnings = [],
+  portSkipped = true
+) {
+  if (status && isGolemConnected(status, portSkipped)) {
     return connectionProblem?.status || componentWarnings.length > 0
       ? componentWarnings.length === 1 && componentWarnings[0].issue === 'RAM'
         ? 'blue'
@@ -77,7 +82,9 @@ export class Footer extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
+      showPortInfo: false,
       engineLoading: false,
+      portSkipped: false,
       stopAnim: false
     };
   }
@@ -114,27 +121,32 @@ export class Footer extends PureComponent {
     }
   };
 
-  _cancelShutdown = () => this.props.actions.gracefulShutdown();
+  _setPortInfo = () => this.setState({ showPortInfo: true });
+  _skipPortChecker = () =>
+    this.setState({ showPortInfo: false, portSkipped: true });
 
-  _forceQuit = () => this.props.actions.toggleForceQuit();
-
+  case;
   render() {
     const {
-      status,
       componentWarnings,
       connectionProblem,
-      isEngineOn,
-      stats,
       engineLoading,
+      isEngineOn,
       isEngineLoading,
       isGracefulShutdownEnabled,
+      networkInfo,
       passwordModal,
+      stats,
+      status,
       version
     } = this.props;
+    const { portSkipped, showPortInfo, stopAnim } = this.state;
+    console.log("showPortInfo", showPortInfo);
     return (
       <div
         className={`content__footer-main ${isGolemConnecting(
           isEngineOn,
+          portSkipped,
           status
         ) && 'content__footer-main__loading'}`}>
         <div className="section__actions">
@@ -143,7 +155,8 @@ export class Footer extends PureComponent {
               className={`progress-status indicator-status indicator-status--${golemDotClass(
                 status.client,
                 connectionProblem,
-                componentWarnings
+                componentWarnings,
+                portSkipped
               )}`}
             />
             <div>
@@ -152,52 +165,17 @@ export class Footer extends PureComponent {
                 connectionProblem={connectionProblem}
                 isEngineOn={isEngineOn}
                 isGolemConnecting={isGolemConnecting}
+                showPortInfo={showPortInfo}
                 status={status}
               />
-              <Transition
-                native
-                initial={null}
-                items={
-                  (stats && !!Object.keys(stats).length) ||
-                  status?.client?.message.includes('configuration') ||
-                  status?.client?.status === componentStatus.SHUTDOWN
-                }
-                from={{
-                  position: 'absolute',
-                  opacity: 0,
-                  transform: 90
-                }}
-                enter={{
-                  position: 'initial',
-                  opacity: 1,
-                  transform: 0
-                }}
-                leave={{
-                  position: 'absolute',
-                  opacity: 0,
-                  transform: -180
-                }}>
-                {toggle =>
-                  toggle
-                    ? props => (
-                        <ProviderStatus
-                          {...props}
-                          cancelShutdown={this._cancelShutdown}
-                          forceQuit={this._forceQuit}
-                          stats={stats}
-                          status={status}
-                        />
-                      )
-                    : props => (
-                        <ModuleStatus
-                          {...props}
-                          connectionProblem={connectionProblem}
-                          golemDotClass={golemDotClass}
-                          status={status}
-                        />
-                      )
-                }
-              </Transition>
+              <ContentTransition
+                golemDotClass={golemDotClass}
+                portSkipped={portSkipped}
+                setPortInfo={this._setPortInfo}
+                skipPortChecker={this._skipPortChecker}
+                stats={stats}
+                status={status}
+              />
             </div>
           </div>
           <button
@@ -206,7 +184,7 @@ export class Footer extends PureComponent {
             disabled={isGolemConnecting(isEngineOn, status)}>
             {isEngineOn ? 'Stop' : 'Start'} Golem
           </button>
-          <Wave stopAnim={this.state.stopAnim} />
+          <Wave stopAnim={stopAnim} />
         </div>
         <SocialBar version={version} />
         <LoadingIndicator isEngineLoading={isEngineLoading} />
