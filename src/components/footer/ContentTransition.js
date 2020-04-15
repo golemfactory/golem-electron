@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Transition, animated } from 'react-spring/renderprops.cjs';
 
-import InitializationStatus from './InitializationStatus';
 import ModuleStatus from './ModuleStatus';
 import PortStatus from './PortStatus';
 import ProviderStatus from './ProviderStatus';
