@@ -36,7 +36,7 @@ export default class WithdrawForm extends React.Component {
             .getEstimatedGasPrice()
             .then(({ data }) => {
                 this._getGasCostAsync(
-                    this.state.amount.toString(),
+                    this.state.amount.toFixed(),
                     this.state.sendTo,
                     this.props.suffix
                 ).then(gasLimit => {
@@ -145,7 +145,7 @@ export default class WithdrawForm extends React.Component {
             .toChecksumAddress(sendTo) //Checksum ethereum address
             .then(sendToChecksum => {
                 this._getGasCostAsync(
-                    amount.toString(),
+                    amount.toFixed(),
                     sendToChecksum,
                     this.props.suffix
                 )
@@ -260,7 +260,7 @@ export default class WithdrawForm extends React.Component {
 
     _handleGasFeeSlider = val => {
         this._getGasCostAsync(
-            this.state.amount.toString(),
+            this.state.amount.toFixed(),
             this.state.sendTo,
             this.props.suffix
         ).then(gasLimit => {
