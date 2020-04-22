@@ -32,7 +32,7 @@ export default class VirtualisationInfo extends React.Component {
                     on your machine. Virtualisation is required in order <br/>
                     to run Golem. Please make sure that this option is <br/>
                     enabled in BIOS. If you'd like to know how to enable it, <br/>
-                    please follow these <a href="https://docs.golem.network/#/Products/Brass-Beta/Issues-&-Troubleshooting?id=enabling-virtualization-in-bios">instructions</a>.
+                    please follow these <a href="https://docs.golem.network/#/Products/Clay-Beta/Issues-&-Troubleshooting?id=enabling-virtualization-in-bios">instructions</a>.
                     </span>
                 </div>  
             </div>
