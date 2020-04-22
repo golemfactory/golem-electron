@@ -76,7 +76,7 @@ export class IssueModal extends React.Component {
         notify(
           'New version is ready!',
           'New version of Golem is ready to be downloaded. Download now!',
-          'https://golem.network/download/brass-beta/'
+          'https://golem.network/download/clay-beta/'
         );
         return (
           <div className="content__modal">

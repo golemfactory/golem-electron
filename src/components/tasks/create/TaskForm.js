@@ -1182,7 +1182,7 @@ export class TaskDetail extends React.Component {
                     <br />
                     with ; e.g. 1;4;7 will define frame 1, 4 and 7. You can also
                     define frames ranges with "-" character.{' '}
-                    <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=render-settings">
+                    <a href="https://docs.golem.network/#/Products/Clay-Beta/Being-a-Requestor?id=render-settings">
                       Learn more
                     </a>
                   </p>
@@ -1376,7 +1376,7 @@ export class TaskDetail extends React.Component {
                         maximum time
                         <br />
                         you will wait for a task to be accepted by the network.{' '}
-                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
+                        <a href="https://docs.golem.network/#/Products/Clay-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                           Learn more
                         </a>
                       </p>
@@ -1403,7 +1403,7 @@ export class TaskDetail extends React.Component {
                         <br />
                         If you are rendering a number of frames you should set
                         subtasks to the same number.{' '}
-                        <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
+                        <a href="https://docs.golem.network/#/Products/Clay-Beta/Being-a-Requestor?id=task-and-subtask-timeouts">
                           Learn more
                         </a>
                       </p>
@@ -1616,7 +1616,7 @@ export class TaskDetail extends React.Component {
                           Your bid, subtask amount and timeout settings. Fiat
                           value may change during computation as well as gas
                           price.
-                          <a href="https://docs.golem.network/#/Products/Brass-Beta/Being-a-Requestor?id=pricing-best-practices">
+                          <a href="https://docs.golem.network/#/Products/Clay-Beta/Being-a-Requestor?id=pricing-best-practices">
                             Learn more
                           </a>
                         </p>

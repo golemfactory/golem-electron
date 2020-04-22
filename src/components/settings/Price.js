@@ -52,7 +52,7 @@ export class Price extends React.Component {
                     <br />
                     <span className="description-content">
                         Here you are able to set your default price settings as
-                        a Provider, both for Brass Marketplace and Usage Market.
+                        a Provider, both for Clay Marketplace and Usage Market.
                         You will be able to change your default task price as a
                         Requestor during task creation.{' '}
                         <a href="">Learn more.</a>
