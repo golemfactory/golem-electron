@@ -176,6 +176,7 @@
             margin-bottom: -1px;
             margin-left: -20px;
             margin-right: 13px;
+            transition: .7s background-color ease;
 
             &--blue {
                 background-color: $button-static-color;
@@ -192,6 +193,11 @@
             &--red {
                 background-color: $color-error;
             }
+        }
+
+        .port-status {
+            text-transform: capitalize;
+            font-weight: bold;
         }
     }
 
@@ -228,7 +234,6 @@
     .loading-indicator {
         position: absolute;
         z-index: 9 !important;
-        position: absolute;
         bottom: 40px;
         right: 90px;
         width: 0;
@@ -249,18 +254,14 @@
 
     .loading-icon {
         position: absolute;
-        display: none;
+        display: block;
         left: 0;
         right: 0;
-        top: 0;
+        top: -70vh;
         bottom: 0;
         margin: auto;
         width: 120px;
         z-index: 11;
-
-        &.active {
-            display: block;
-        }
     }
 }
 

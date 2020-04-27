@@ -80,12 +80,12 @@ export function subscribeHistory(session) {
                 });
                 promises.push(_promise);
             }
-
             Promise.all(promises).then(result => {
                 let _payload = {};
                 result.forEach(item => {
                     _payload[item.query] = item.payload;
                 });
+                promises = []; //flush resolved promises
                 emit({
                     type: SET_HISTORY,
                     payload: _payload

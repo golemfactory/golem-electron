@@ -233,14 +233,9 @@ export class Details extends React.PureComponent {
                 </ConditionalRender>
                 <ConditionalRender showIf={isEmpty(fragments)}>
                     <div className="details__loading">
-                        <span>
-                            Fetching subtask information
-                            <span className="jumping-dots">
-                                <span className="dot-1">.</span>
-                                <span className="dot-2">.</span>
-                                <span className="dot-3">.</span>
-                            </span>
-                        </span>
+                            <DotAnim>
+                                Fetching subtask information
+                            </DotAnim>
                     </div>
                 </ConditionalRender>
                 {blockNodeModal &&
