@@ -20,7 +20,9 @@ const SocialBar = ({ version }) => {
 				className="element__footer"
 				href="https://www.github.com/golemfactory">
 				<span className="icon-golem" />
-				{versionTemplate}
+				<span>{versionTemplate}</span>
+				<span className="bumper" />
+				<span>{`GUI v${__VERSION__}`}</span>
 			</a>
 			<a className="element__footer" href="https://chat.golem.network">
 				<span className="icon-chat" />

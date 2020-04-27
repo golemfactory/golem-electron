@@ -90,15 +90,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Settings);
-
-/*
-<div className="footer__settings">
-    <span>
-        {version.error
-            ? version.message
-            : `${version.message}${version.number}`}
-    </span>
-    <br />
-    <span>{`Golem Interface v${__VERSION__}`}</span>
-</div>
- */
