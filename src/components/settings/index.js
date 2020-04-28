@@ -1,48 +1,55 @@
-import React, { Fragment } from 'react';
-import ReactDOM from 'react-dom';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as Actions from '../../actions';
+import React, { Fragment } from "react";
+import ReactDOM from "react-dom";
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as Actions from "../../actions";
 
-import SettingsList from './SettingsList';
-import Stats from './stats';
-import ACL from './acl';
+import SettingsList from "./SettingsList";
+import Stats from "./stats";
+import ACL from "./acl";
 
 let activateContent;
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   nodeId: state.info.networkInfo.key,
-  version: state.info.version
+  version: state.info.version,
 });
 
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(Actions, dispatch)
+const mapDispatchToProps = (dispatch) => ({
+  actions: bindActionCreators(Actions, dispatch),
 });
 
 export class Settings extends React.Component {
   state = {
-    mainTabIndex: 0
+    mainTabIndex: window?.routerHistory?.location?.pathname == "/acl" ? 2 : 0,
   };
 
-  _handleTab = elm => {
+  componentDidMount() {
+    let menuItems = document.getElementsByClassName("settings-main-tab-item");
+    const activeIndex =
+      window?.routerHistory?.location?.pathname == "/acl" ? 2 : 0;
+    menuItems[activeIndex].classList.add("active");
+  }
+
+  _handleTab = (elm) => {
     const index = Array.prototype.indexOf.call(
       elm.target.parentElement.children,
       elm.currentTarget
     );
-    let menuItems = document.getElementsByClassName('settings-main-tab-item');
+    let menuItems = document.getElementsByClassName("settings-main-tab-item");
     for (var i = 0; i < menuItems.length; i++) {
-      menuItems[i].classList.remove('active');
+      menuItems[i].classList.remove("active");
     }
-    elm.currentTarget.classList.add('active');
+    elm.currentTarget.classList.add("active");
     this.setState({
-      mainTabIndex: index
+      mainTabIndex: index,
     });
   };
 
   mainContentList = [
     <SettingsList />,
     <Stats />,
-    <ACL actions={this.props.actions} />
+    <ACL actions={this.props.actions} />,
   ];
 
   render() {
@@ -54,7 +61,7 @@ export class Settings extends React.Component {
         <nav className="nav">
           <ul className="nav__list" role="menu">
             <li
-              className="nav__item settings-main-tab-item active"
+              className="nav__item settings-main-tab-item"
               role="menuitem"
               tabIndex="0"
               onClick={this._handleTab}

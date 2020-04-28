@@ -53,3 +53,27 @@ export const getKnownPeersSelector = createCachedSelector(
 )(
     () => 'aclFilter' // Cache selectors by type name
 );
+
+/**
+ * [whiteListLock func]
+ * @param  {[Object]}   nodeListACL   [ACL rule information]
+ * @return {[Boolean]}                [Result of locking DnD screen based on given condition on description]
+ *
+ * @description
+ * if whitelisting enabled and there is no member. lock the dropzone,
+ * otherwise keep unlocked
+ */
+function getWhiteListLock(nodeListACL) {
+    return nodeListACL?.rules?.length < 1
+        ? nodeListACL?.default_rule !== 'allow'
+            ? true
+            : false
+        : false;
+}
+
+export const getWhiteListLockSelector = createCachedSelector(
+    state => state.nodeListACL,
+    nodeListACL => getWhiteListLock(nodeListACL)
+)(
+    (state, key) => key // Cache selectors by type name
+);

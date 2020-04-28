@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '@tippy.js/react';
 
 import ConditionalRender from '../../hoc/ConditionalRender';
+import { timeStampToHR } from '../../../utils/time';
 
 const { clipboard } = window.electron;
 let copyTimeoutList = [];
@@ -21,7 +22,9 @@ const NodeRow = ({
 
 	useEffect(() => {
 		return () => {
-			copyTimeoutList.map(item => clearTimeout(item));
+			for (let key in copyTimeoutList) {
+				clearTimeout(copyTimeoutList[key])
+			}
 		};
 	}, []);
 
@@ -69,11 +72,7 @@ const NodeRow = ({
 			<td align="center">
 				<Tooltip
 					content={
-						<p>
-							{isNodeCopied
-								? 'Copied Succesfully!'
-								: 'Click to copy ID'}
-						</p>
+						<p>{isNodeCopied ? 'Copied Succesfully!' : 'Click to copy ID'}</p>
 					}
 					placement="top"
 					trigger="mouseenter"
@@ -94,6 +93,11 @@ const NodeRow = ({
 					</span>
 				</Tooltip>
 			</td>
+			<ConditionalRender showIf={!isBlockTable}>
+				<td align="center">
+					<span className="info__id">{item.deadline ? timeStampToHR(item.deadline) : 'Forever'}</span>
+				</td>
+			</ConditionalRender>
 			<ConditionalRender showIf={isBlockTable}>
 				<td align="center">
 					<span className="info__id">{item.pub_addr}</span>
@@ -107,11 +111,7 @@ const NodeRow = ({
 			<td align="center">
 				<Tooltip
 					content={
-						<p>
-							{isNodeCopied
-								? 'Copied Succesfully!'
-								: 'Click to copy ID'}
-						</p>
+						<p>{isNodeCopied ? 'Copied Succesfully!' : 'Click to copy ID'}</p>
 					}
 					placement="top"
 					trigger="mouseenter"

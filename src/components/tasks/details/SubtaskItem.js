@@ -39,28 +39,22 @@ class SubtaskItem extends React.PureComponent {
 			checkedItems,
 			toggleItems,
 			restartSubtask,
-			showBlockNodeModal
+			showBlockNodeModal,
+			isRuleSwitchOn
 		} = this.props;
 		const { showNodeList } = this.state;
 		const recentInfo = item[item.length - 1];
 
 		return (
-			<li
-				key={keyItem}
-				className="container-checkbox__details checkbox-group">
+			<li key={keyItem} className="container-checkbox__details checkbox-group">
 				<div className="checkbox-item">
 					<input
 						id={`taskTypeRadio${keyItem}`}
 						type="checkbox"
 						name="taskType"
 						value={recentInfo?.subtask_id}
-						onChange={() =>
-							toggleItems.call(null, [recentInfo?.subtask_id])
-						}
-						checked={
-							checkedItems[recentInfo && recentInfo.subtask_id] ||
-							false
-						}
+						onChange={() => toggleItems.call(null, [recentInfo?.subtask_id])}
+						checked={checkedItems[recentInfo && recentInfo.subtask_id] || false}
 						disabled={
 							!recentInfo ||
 							lockCheckbox ||
@@ -80,9 +74,9 @@ class SubtaskItem extends React.PureComponent {
 						<b>State: </b>{' '}
 						{recentInfo ? (
 							<span
-								className={`icon-${
-									ICONS[(recentInfo?.status)]?.name
-								} ${ICONS[(recentInfo?.status)]?.color}`}
+								className={`icon-${ICONS[(recentInfo?.status)]?.name} ${
+									ICONS[(recentInfo?.status)]?.color
+								}`}
 							/>
 						) : (
 							<span className="icon-subtask-awaiting icon--color-gray" />
@@ -90,23 +84,15 @@ class SubtaskItem extends React.PureComponent {
 					</label>
 					<div className="checkbox-item__action">
 						<span
-							className={`icon-refresh ${
-								lockCheckbox ? 'disabled' : ''
-							}`}
+							className={`icon-refresh ${lockCheckbox ? 'disabled' : ''}`}
 							onClick={this._handleRestartModal.bind(
 								this,
 								recentInfo?.subtask_id
 							)}
 						/>
 						<span
-							className={`icon-arrow-down ${
-								!recentInfo ? 'disabled' : ''
-							}`}
-							onClick={
-								item.length > 0
-									? this.toggleNodeList
-									: undefined
-							}
+							className={`icon-arrow-down ${!recentInfo ? 'disabled' : ''}`}
+							onClick={item.length > 0 ? this.toggleNodeList : undefined}
 						/>
 					</div>
 				</div>
@@ -114,6 +100,7 @@ class SubtaskItem extends React.PureComponent {
 					<NodeTable
 						list={item}
 						showBlockNodeModal={showBlockNodeModal}
+						isRuleSwitchOn={isRuleSwitchOn}
 					/>
 				</ConditionalRender>
 			</li>

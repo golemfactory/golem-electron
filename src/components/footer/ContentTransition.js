@@ -35,7 +35,7 @@ const ContentTransition = ({
 	stats,
 	status
 }) => {
-	const [phase, setPhase] = useState(phases[0]);
+	const [phase, setPhase] = useState(phases[portSkipped ? 2 : 0]);
 
 	useEffect(() => {
 		const ifPortCheckable =

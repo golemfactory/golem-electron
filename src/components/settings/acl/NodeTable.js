@@ -19,6 +19,9 @@ const NodeTable = ({
 				<tr>
 					<th scope="col" width="10%" />
 					<th scope="col">Node ID</th>
+					<ConditionalRender showIf={!isBlockTable}>
+						<th scope="col">Deadline</th>
+					</ConditionalRender>
 					<ConditionalRender showIf={isBlockTable}>
 						<th scope="col">Node IP</th>
 						<th scope="col">Port</th>

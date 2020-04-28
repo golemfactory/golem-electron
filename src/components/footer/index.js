@@ -21,7 +21,7 @@ import { componentStatus } from "./../../constants/statusDicts";
 
 /*############# HELPER FUNCTIONS ############# */
 
-function isGolemConnected(gs, portSkipped) {
+function isGolemConnected(gs, portSkipped = true) {
   return (
     !!gs?.status &&
     !!gs?.message &&
@@ -81,11 +81,12 @@ const mapDispatchToProps = (dispatch) => ({
 export class Footer extends PureComponent {
   constructor(props) {
     super(props);
+    const skipInitialAnimation = isGolemConnected(props?.status?.client);
     this.state = {
       showPortInfo: false,
       engineLoading: false,
-      portSkipped: false,
-      stopAnim: false,
+      portSkipped: skipInitialAnimation,
+      stopAnim: skipInitialAnimation,
     };
   }
 

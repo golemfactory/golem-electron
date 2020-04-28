@@ -84,10 +84,11 @@ export class SelectNodePanel extends React.Component {
     _blockNode = () => {
         const { key } = this.state.node2block;
         this._blockFn(key)
-            .then(() => {
+            .then(([result, _]) => {
+                const [info, msg] = result;
                 this.setState({
                     checkedItems: {},
-                    nodeBlocked: true
+                    nodeBlocked: info
                 });
                 this.props.addNodePanelToggle();
             })

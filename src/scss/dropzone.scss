@@ -44,6 +44,14 @@
         pointer-events: none;
     }
 
+    .internal-link {
+        font-size: 8pt;
+        color: $color-primary;
+        text-decoration: underline;
+        pointer-events: auto;
+        cursor: pointer;
+    }
+
     .container-icon {
         padding: 25px 0;
         flex: 0 0 40px;

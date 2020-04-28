@@ -1,41 +1,42 @@
-import React, { Component } from 'react';
-import { Route, Switch } from 'react-router-dom'; // react-router v4
-import { ConnectedRouter } from 'connected-react-router';
-import { hot } from 'react-hot-loader';
+import React, { Component } from "react";
+import { Route, Switch } from "react-router-dom"; // react-router v4
+import { ConnectedRouter } from "connected-react-router";
+import { hot } from "react-hot-loader";
 
-import constants from '../constants';
+import constants from "../constants";
 
-import ErrorBoundary from '../components/ErrorBoundary';
-import Header from '../components/Header';
-import Footer from '../components/footer';
-import MainFragment from '../components/network';
-import Tasks from '../components/tasks';
-import MasterFilePicker from '../components/tasks/create/MasterFilePicker';
-import NewTask from '../components/tasks/create/NewTask';
-import TaskForm from '../components/tasks/create/TaskForm';
-import Settings from '../components/settings';
-import NotFound from '../components/NotFound';
-import { OnBoardingComponent } from '../components/hoc/Onboarding';
-import { ConcentOnboardingComponent } from '../components/hoc/ConcentOnboarding';
+import ErrorBoundary from "../components/ErrorBoundary";
+import Header from "../components/Header";
+import Footer from "../components/footer";
+import MainFragment from "../components/network";
+import Tasks from "../components/tasks";
+import MasterFilePicker from "../components/tasks/create/MasterFilePicker";
+import NewTask from "../components/tasks/create/NewTask";
+import TaskForm from "../components/tasks/create/TaskForm";
+import Settings from "../components/settings";
+import NotFound from "../components/NotFound";
+import { OnBoardingComponent } from "../components/hoc/Onboarding";
+import { ConcentOnboardingComponent } from "../components/hoc/ConcentOnboarding";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as Actions from '../actions';
-import { getStatus, getPasswordModalStatus } from '../reducers';
-import IssueModal from './modal/IssueModal';
-import WithdrawModal from './../components/wallet/modal/WithdrawModal';
-import PasswordModal from './modal/PasswordModal';
-import checkNested from './../utils/checkNested';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as Actions from "../actions";
+import { getStatus, getPasswordModalStatus } from "../reducers";
+import IssueModal from "./modal/IssueModal";
+import WithdrawModal from "./../components/wallet/modal/WithdrawModal";
+import PasswordModal from "./modal/PasswordModal";
+import checkNested from "./../utils/checkNested";
 
 const routePaths = {
-    MAIN: '/',
-    TASK_LIST: '/tasks',
-    WALLET: '/wallet',
-    SETTING: '/settings',
-    TASK_ID: '/task/:id',
-    MASTER_FILE: '/add-task/master-file/:type?',
-    NEW_TASK: '/add-task/type/:type?',
-    TASK_FORM: '/add-task/settings'
+    MAIN: "/",
+    TASK_LIST: "/tasks",
+    WALLET: "/wallet",
+    SETTING: "/settings",
+    TASK_ID: "/task/:id",
+    MASTER_FILE: "/add-task/master-file/:type?",
+    NEW_TASK: "/add-task/type/:type?",
+    TASK_FORM: "/add-task/settings",
+    ACL: "/acl",
 };
 
 Array.prototype.last = function() {
@@ -76,6 +77,12 @@ const routes = (
                     ConcentOnboardingComponent(Settings)
                 )}
             />
+            <Route
+                path={routePaths.ACL}
+                component={OnBoardingComponent(
+                    ConcentOnboardingComponent(Settings)
+                )}
+            />
             <Route path={routePaths.TASK_ID} component={TaskForm} />
             <Route path={routePaths.MASTER_FILE} component={MasterFilePicker} />
             <Route path={routePaths.NEW_TASK} component={NewTask} />
@@ -86,25 +93,25 @@ const routes = (
 );
 
 function isGolemReady(gs) {
-    return gs.status === 'Ready' && gs.message.toLowerCase().includes('node');
+    return gs.status === "Ready" && gs.message.toLowerCase().includes("node");
 }
 
-const mapStateToProps = state => ({
-    golemStatus: getStatus(state, 'golemStatus'),
+const mapStateToProps = (state) => ({
+    golemStatus: getStatus(state, "golemStatus"),
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
     withdrawModal: state.account.withdrawModal,
-    passwordModal: getPasswordModalStatus(state, 'passwordModal'),
+    passwordModal: getPasswordModalStatus(state, "passwordModal"),
     showOnboard: state.onboard.showOnboard,
     taskQueue: state.queue.next,
     //To fill initial resource
     resource: state.resources.resource,
     systemInfo: state.advanced.systemInfo,
-    chartValues: state.advanced.chartValues
+    chartValues: state.advanced.chartValues,
 });
 
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(Actions, dispatch)
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators(Actions, dispatch),
 });
 
 /**
@@ -114,28 +121,28 @@ const mapDispatchToProps = dispatch => ({
  */
 export class App extends Component {
     state = {
-        isFooterShown: true
+        isFooterShown: true,
     };
 
     componentDidMount() {
         const { actions } = this.props;
-        actions.login('Muhammed');
+        actions.login("Muhammed");
 
-        window.routerHistory?.listen(({pathname}, action) => {
+        window.routerHistory?.listen(({ pathname }, action) => {
             const isFooterShown =
                 pathname == routePaths.MAIN ||
                 pathname == routePaths.TASK_LIST ||
                 pathname == routePaths.SETTING ||
                 pathname == routePaths.WALLET;
             this.setState({
-                isFooterShown
+                isFooterShown,
             });
         });
     }
 
     componentWillReceiveProps(nextProps) {
         if (
-            checkNested(nextProps, 'golemStatus', 'client') &&
+            checkNested(nextProps, "golemStatus", "client") &&
             isGolemReady(nextProps.golemStatus.client) &&
             nextProps.taskQueue.length > 0
         ) {
@@ -148,7 +155,7 @@ export class App extends Component {
 
         if (
             Object.keys(nextProps.systemInfo).length > 0 &&
-            typeof nextProps.resource !== 'number' &&
+            typeof nextProps.resource !== "number" &&
             nextProps.chartValues.name !== null
         ) {
             const value = this.calculateResourceValue(
@@ -173,7 +180,7 @@ export class App extends Component {
         return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100);
     }
 
-    _closeModal = _modalType => {
+    _closeModal = (_modalType) => {
         const { actions } = this.props;
         const modals = constants.modals;
         if (modals.ISSUEMODAL === _modalType) {
@@ -184,8 +191,8 @@ export class App extends Component {
     };
 
     _showIssueModal(...args) {
-        const issues = args.map(item => (item ? item.issue : null));
-        const result = issues.some(item => !!item);
+        const issues = args.map((item) => (item ? item.issue : null));
+        const result = issues.some((item) => !!item);
         return result;
     }
 
@@ -197,12 +204,12 @@ export class App extends Component {
             latestVersion,
             withdrawModal,
             passwordModal,
-            showOnboard
+            showOnboard,
         } = this.props;
         const { isFooterShown } = this.state;
         return (
             <ErrorBoundary>
-                <Header actions={actions} activeHeader={'main'} />
+                <Header actions={actions} activeHeader={"main"} />
                 <ConnectedRouter history={history}>{routes}</ConnectedRouter>
                 {isFooterShown && <Footer />}
                 <div id="modalPortal" className="modal-portal" />
