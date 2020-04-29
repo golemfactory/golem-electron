@@ -5,13 +5,15 @@ import Tooltip from '@tippy.js/react';
 const { ipcRenderer, clipboard } = window.electron;
 let copyTimeoutList = [];
 
-const NodeRow = ({ item, showBlockNodeModal }) => {
+const NodeRow = ({ item, showBlockNodeModal, isRuleSwitchOn }) => {
 	const [isNodeCopied, setCopyNodeStatus] = useState(false);
 	const [isSubtaskCopied, setCopySubtaskStatus] = useState(false);
 
 	useEffect(() => {
 		return () => {
-			copyTimeoutList.map(item => clearTimeout(item));
+			for (let key in copyTimeoutList) {
+				clearTimeout(copyTimeoutList[key])
+			}
 		};
 	}, []);
 
@@ -99,16 +101,31 @@ const NodeRow = ({ item, showBlockNodeModal }) => {
 				/>
 			</td>
 			<td align="center">
-				<span
-					className={`icon-locked ${
-						item?.node_id ? '' : 'icon--disabled'
-					}`}
-					onClick={
-						item?.node_id
-							? _showBlockNodeModal.bind(null, item)
-							: undefined
-					}
-				/>
+				{isRuleSwitchOn ? (
+					<Tooltip
+						content={
+							<p>
+								Blocking disabled because your node is in a whitelist mode.
+							</p>
+						}
+						placement="bottom"
+						trigger="mouseenter"
+						size="small"
+						isEnabled={!!item?.node_name}>
+						<span className="icon-locked icon--disabled"/>
+					</Tooltip>
+				) : (
+					<span
+						className={`icon-locked ${
+							item?.node_id ? '' : 'icon--disabled'
+						}`}
+						onClick={
+							item?.node_id
+								? _showBlockNodeModal.bind(null, item)
+								: undefined
+						}
+					/>
+				)}
 			</td>
 		</tr>
 	);

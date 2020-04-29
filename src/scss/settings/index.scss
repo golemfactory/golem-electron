@@ -14,10 +14,12 @@ $tab-item-height: 78.7px;
 
 .content__settings {
     height: 100%;
+    max-height: calc(100% - #{$footer-height});
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-sizing: border-box;
+    border-bottom: 1px solid $color-border;
 
     .settings__main-content {
     }
@@ -196,6 +198,7 @@ $tab-item-height: 78.7px;
     width: 100%;
     position: absolute;
     overflow-x: hidden;
+    overflow-y: overlay;
 
     &-item {
         .tab-item-title {

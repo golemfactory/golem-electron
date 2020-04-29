@@ -1,6 +1,6 @@
 import React from 'react';
 import { BigNumber } from 'bignumber.js';
-import yup from 'yup';
+import * as yup from 'yup';
 
 import Slider from './../../../Slider.js';
 import { currencyIcons, variables } from './../../../../constants';

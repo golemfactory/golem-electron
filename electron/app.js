@@ -4,7 +4,6 @@ let win;
 let tray;
 
 const golemHandler = require('./handler/golem.js');
-
 const createMainWindow = require('./window/main.js');
 const installDevExtensions = require('./handler/extensions.js');
 const {
@@ -22,8 +21,8 @@ function onReady() {
     if (isDevelopment()) {
         installDevExtensions();
     }
-    if(isWin()){
-        app.setAppUserModelId("network.golem.app");
+    if (isWin()) {
+        app.setAppUserModelId('network.golem.app');
     }
     createMainWindow(win, tray, closeCallback).then(
         _win => (exports.mainWindow = win = _win)

@@ -1,24 +1,28 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
 import * as Actions from './../actions';
+import { getWhiteListLock } from '../reducers';
+
+import isEqual from 'lodash/isEqual';
 import directorySelector from './../utils/directorySelector';
 
 const classDict = Object.freeze({
-    SHOW: 'drop-zone--show',
-    HIDE: 'drop-zone--hide'
+  SHOW: 'drop-zone--show',
+  HIDE: 'drop-zone--hide'
 });
 
 const mapStateToProps = state => ({
-    isEngineOn: state.info.isEngineOn,
-    taskList: state.realTime.taskList,
-    connectedPeers: state.realTime.connectedPeers
+  isEngineOn: state.info.isEngineOn,
+  taskList: state.realTime.taskList,
+  connectedPeers: state.realTime.connectedPeers,
+  whiteListLock: getWhiteListLock(state, 'whiteListLock')
 });
 
 const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(Actions, dispatch)
+  actions: bindActionCreators(Actions, dispatch)
 });
 
 /**
@@ -26,313 +30,325 @@ const mapDispatchToProps = dispatch => ({
  * @doc: http://codepen.io/jzmmm/pen/bZjzxN?editors=0011
  */
 export class DropZone extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            className:
-                (props.taskList && props.taskList.length) > 0
-                    ? classDict.HIDE
-                    : classDict.SHOW,
-            unlockDnD: false
-        };
+  constructor(props) {
+    super(props);
+    this.state = {
+      className:
+        (props.taskList && props.taskList.length) > 0
+          ? classDict.HIDE
+          : classDict.SHOW,
+      unlockDnD: false,
+      whiteListLock: false
+    };
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (
+      nextProps.taskList &&
+      nextProps.taskList.length !== this.props.taskList.length
+    )
+      this.setState({
+        className:
+          nextProps.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+      });
+    if (
+      !isEqual(nextProps.connectedPeers, this.props.connectedPeers) ||
+      !isEqual(nextProps.isEngineOn, this.props.isEngineOn) ||
+      !isEqual(nextProps.whiteListLock, this.props.whiteListLock)
+    ) {
+      this._verifyDnD.call(
+        this,
+        nextProps.connectedPeers,
+        nextProps.isEngineOn,
+        nextProps.whiteListLock
+      );
     }
+  }
 
-    componentWillReceiveProps(nextProps) {
-        if (
-            nextProps.taskList &&
-            nextProps.taskList.length !== this.props.taskList.length
-        )
-            this.setState({
-                className:
-                    nextProps.taskList.length > 0
-                        ? classDict.HIDE
-                        : classDict.SHOW
-            });
+  componentDidMount() {
+    const { dropzone, dragbox } = this.refs;
+    const { connectedPeers, isEngineOn, whiteListLock } = this.props;
 
-        this._verifyDnD.call(
-            this,
-            nextProps.connectedPeers,
-            nextProps.isEngineOn
-        );
-    }
+    dropzone.addEventListener('mouseup', this._onDragLeave);
+    dropzone.addEventListener('dragenter', this._onDragEnter);
+    dropzone.addEventListener('dragover', this._onDragOver);
 
-    componentDidMount() {
-        const { dropzone, dragbox } = this.refs;
-        const { connectedPeers, isEngineOn } = this.props;
+    dragbox.addEventListener('dragleave', this._onDragLeave);
+    dropzone.addEventListener('drop', this._onDrop.bind(this._onDrop, true));
 
-        dropzone.addEventListener('mouseup', this._onDragLeave);
-        dropzone.addEventListener('dragenter', this._onDragEnter);
-        dropzone.addEventListener('dragover', this._onDragOver);
+    this._verifyDnD.call(this, connectedPeers, isEngineOn, whiteListLock);
+  }
 
-        dragbox.addEventListener('dragleave', this._onDragLeave);
-        dropzone.addEventListener(
+  componentWillUnmount() {
+    const { dropzone, dragbox } = this.refs;
+
+    dropzone.removeEventListener('mouseup', this._onDragLeave);
+    dropzone.removeEventListener('dragenter', this._onDragEnter);
+    dropzone.removeEventListener('dragover', this._onDragOver);
+    dropzone.removeEventListener('drop', this._onDrop);
+    dragbox.removeEventListener('dragleave', this._onDragLeave);
+  }
+
+  _verifyDnD(peers, engine, whiteListLock) {
+    this._toggleDnD(peers && engine, whiteListLock);
+  }
+
+  _toggleDnD = (_state, _whiteListLock) => {
+    const { dropzone, dragbox, infobox } = this.refs;
+    this.setState(
+      {
+        unlockDnD: _state,
+        whiteListLock: _whiteListLock
+      },
+      () => {
+        if (_state && !_whiteListLock) {
+          dropzone.addEventListener('mouseup', this._onDragLeave);
+          dropzone.addEventListener('dragover', this._onDragOver);
+          dropzone.addEventListener(
+            'drop',
+            this._onDrop.bind(this._onDrop, false)
+          );
+        } else {
+          dropzone.removeEventListener('mouseup', this._onDragLeave);
+          dropzone.removeEventListener('dragover', this._onDragOver);
+          dropzone.addEventListener(
             'drop',
             this._onDrop.bind(this._onDrop, true)
+          );
+        }
+      }
+    );
+  };
+
+  /**
+   * [_onDragEnter function]
+   * @param       {Object}    e   [event]
+   * @return      {boolean}
+   */
+  _onDragEnter = e => {
+    this.setState({
+      className: classDict.SHOW
+    });
+    if (this.props.overflowRef) {
+      this.props.overflowRef.scrollTop = 0;
+      this.props.overflowRef.style.setProperty('overflow-y', 'hidden');
+    }
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  };
+
+  /**
+   * [_onDragOver function]
+   * @param       {Object}    e  [event]
+   * @return      {boolean}
+   */
+  _onDragOver = e => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
+
+  /**
+   * [_onDragLeave fuction]
+   * @param       {Object}    e   [event]
+   * @return      {boolean}
+   */
+  _onDragLeave = e => {
+    this.setState({
+      className:
+        this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+    });
+    if (this.props.overflowRef) {
+      this.props.overflowRef.style.setProperty(
+        'overflow-y',
+        'overlay',
+        'important'
+      );
+    }
+    e.stopPropagation();
+    e.preventDefault();
+    return false;
+  };
+
+  /**
+   * [_onDrop function]
+   * @param       {Object}    e   [event]
+   * @return      {boolean}
+   */
+  _onDrop = (info, e) => {
+    e.preventDefault();
+
+    if (info) {
+      // in case of golem not connected
+
+      e.stopPropagation();
+
+      this.setState({
+        className:
+          this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
+      });
+      if (this.props.overflowRef) {
+        this.props.overflowRef.style.setProperty(
+          'overflow-y',
+          'overlay',
+          'important'
         );
+      }
 
-        this._verifyDnD.call(this, connectedPeers, isEngineOn);
+      return false;
     }
 
-    componentWillUnmount() {
-        const { dropzone, dragbox } = this.refs;
+    /**
+     * [checkDominantType function checks common item in given array, if there's one common returns it, if more than one with equal amounts returns negative boolean]
+     * @param  {[type]}      files      [Array of extension]
+     * @return {Any}                    [Common item or negative boolean]
+     */
+    const checkDominantType = function(files) {
+      const isBiggerThanOther = function(element, index, array) {
+        return element[1] !== array[0][1];
+      };
+      const tempFiles = [
+        ...files.reduce(
+          (total, current) => total.set(current, (total.get(current) || 0) + 1),
+          new Map()
+        )
+      ];
+      const anyDominant = tempFiles.some(isBiggerThanOther);
 
-        dropzone.removeEventListener('mouseup', this._onDragLeave);
-        dropzone.removeEventListener('dragenter', this._onDragEnter);
-        dropzone.removeEventListener('dragover', this._onDragOver);
-        dropzone.removeEventListener('drop', this._onDrop);
-        dragbox.removeEventListener('dragleave', this._onDragLeave);
+      if (!anyDominant && tempFiles.length > 1) {
+        return false;
+      } else {
+        return tempFiles.sort((a, b) => b[1] - a[1]).map(item => item[0])[0];
+      }
+    };
+
+    let files = e.dataTransfer.files;
+    //console.log('Files dropped: ', files.length);
+    // Upload files
+    // actions.uploadFile(files)
+    if (files) {
+      const data = [].map.call(files, item => item.path);
+      directorySelector.call(this, data);
     }
 
-    _verifyDnD(peers, engine) {
-        if (peers && engine) {
-            if (!this.state.unlockDnD) this._toggleDnD(true);
-        } else if (this.state.unlockDnD) {
-            this._toggleDnD(false);
-        }
-    }
+    // for (var i = 0; i < files.length; i++) {
+    //     // webkitGetAsEntry is where the magic happens
+    //     var item = files[i].webkitGetAsEntry();
+    //     if (item) {
+    //         this.traverseFileTree(item);
+    //     }
+    // }
 
-    _toggleDnD = _state => {
-        const { dropzone, dragbox, infobox } = this.refs;
-        this.setState(
-            {
-                unlockDnD: _state
-            },
-            () => {
-                if (_state) {
-                    dropzone.addEventListener('mouseup', this._onDragLeave);
-                    dropzone.addEventListener('dragover', this._onDragOver);
-                    dropzone.addEventListener(
-                        'drop',
-                        this._onDrop.bind(this._onDrop, false)
-                    );
-                } else {
-                    dropzone.removeEventListener('mouseup', this._onDragLeave);
-                    dropzone.removeEventListener('dragover', this._onDragOver);
-                    dropzone.addEventListener(
-                        'drop',
-                        this._onDrop.bind(this._onDrop, true)
-                    );
-                }
-            }
-        );
-    };
+    this.setState({
+      className: classDict.HIDE
+    });
 
-    /**
-     * [_onDragEnter function]
-     * @param       {Object}    e   [event]
-     * @return      {boolean}
-     */
-    _onDragEnter = e => {
-        this.setState({
-            className: classDict.SHOW
-        });
-        if (this.props.overflowRef) {
-            this.props.overflowRef.scrollTop = 0;
-            this.props.overflowRef.style.setProperty('overflow-y', 'hidden');
-        }
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    };
+    return false;
+  };
 
-    /**
-     * [_onDragOver function]
-     * @param       {Object}    e  [event]
-     * @return      {boolean}
-     */
-    _onDragOver = e => {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-    };
-
-    /**
-     * [_onDragLeave fuction]
-     * @param       {Object}    e   [event]
-     * @return      {boolean}
-     */
-    _onDragLeave = e => {
-        this.setState({
-            className:
-                this.props.taskList.length > 0 ? classDict.HIDE : classDict.SHOW
-        });
-        if (this.props.overflowRef) {
-            this.props.overflowRef.style.setProperty(
-                'overflow-y',
-                'overlay',
-                'important'
-            );
-        }
-        e.stopPropagation();
-        e.preventDefault();
-        return false;
-    };
-
-    /**
-     * [_onDrop function]
-     * @param       {Object}    e   [event]
-     * @return      {boolean}
-     */
-    _onDrop = (info, e) => {
-        e.preventDefault();
-
-        if (info) {
-            // in case of golem not connected
-
-            e.stopPropagation();
-
-            this.setState({
-                className:
-                    this.props.taskList.length > 0
-                        ? classDict.HIDE
-                        : classDict.SHOW
-            });
-            if (this.props.overflowRef) {
-                this.props.overflowRef.style.setProperty(
-                    'overflow-y',
-                    'overlay',
-                    'important'
-                );
-            }
-
-            return false;
-        }
-
-        /**
-         * [checkDominantType function checks common item in given array, if there's one common returns it, if more than one with equal amounts returns negative boolean]
-         * @param  {[type]}      files      [Array of extension]
-         * @return {Any}                    [Common item or negative boolean]
-         */
-        const checkDominantType = function(files) {
-            const isBiggerThanOther = function(element, index, array) {
-                return element[1] !== array[0][1];
-            };
-            const tempFiles = [
-                ...files.reduce(
-                    (total, current) =>
-                        total.set(current, (total.get(current) || 0) + 1),
-                    new Map()
-                )
-            ];
-            const anyDominant = tempFiles.some(isBiggerThanOther);
-
-            if (!anyDominant && tempFiles.length > 1) {
-                return false;
-            } else {
-                return tempFiles
-                    .sort((a, b) => b[1] - a[1])
-                    .map(item => item[0])[0];
-            }
-        };
-
-        let files = e.dataTransfer.files;
-        //console.log('Files dropped: ', files.length);
-        // Upload files
-        // actions.uploadFile(files)
-        if (files) {
-            const data = [].map.call(files, item => item.path);
-            directorySelector.call(this, data);
-        }
-
-        // for (var i = 0; i < files.length; i++) {
-        //     // webkitGetAsEntry is where the magic happens
-        //     var item = files[i].webkitGetAsEntry();
-        //     if (item) {
-        //         this.traverseFileTree(item);
-        //     }
-        // }
-
-        this.setState({
-            className: classDict.HIDE
-        });
-
-        return false;
-    };
-
-    /**
-     * { traverseFileTree function }
-     * @param  {[File]}         item        [File Object]
-     * @param  {[String]}       path        [Path of the file in filetree]
-     * @return nothing
-     */
-    traverseFileTree = (item, path) => {
-        const { actions } = this.props;
-        path = path || '';
-        if (item.isFile) {
-            // Get file
-            item.file(function(file) {
-                //file.name = path + file.name;
-                //console.log("File:", path, file.path);
-                /*actions.uploadFile({
+  /**
+   * { traverseFileTree function }
+   * @param  {[File]}         item        [File Object]
+   * @param  {[String]}       path        [Path of the file in filetree]
+   * @return nothing
+   */
+  traverseFileTree = (item, path) => {
+    const { actions } = this.props;
+    path = path || '';
+    if (item.isFile) {
+      // Get file
+      item.file(function(file) {
+        //file.name = path + file.name;
+        //console.log("File:", path, file.path);
+        /*actions.uploadFile({
                     path,
                     file
                 })*/
-            });
-        } else if (item.isDirectory) {
-            // Get folder contents
-            var dirReader = item.createReader();
-            let done = false;
-            /**
-             * [readFiles funct. reads files from dragged folder]
-             * @param  {[Object]}   dirReader   [File Reader form directory]
-             * @param  {[Array]}    (entries    [File Array]
-             * @return nothing
-             *
-             * @see https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
-             * @see http://stackoverflow.com/a/23823587/1763249
-             *
-             * @description readEntries file read limit is 100 item, so we're calling same function till array length is 0
-             */
-            let readFiles = dirReader.readEntries.bind(dirReader, entries => {
-                //console.log('Entries length: ', entries.length)
-                for (var i = 0; i < entries.length; i++) {
-                    this.traverseFileTree(entries[i], path + item.name + '/');
-                }
-                if (entries.length > 0) {
-                    readFiles(); // TODO we need to add a file length limit here cuz right now users can drag infinitve numbers of files.
-                }
-            });
-            readFiles();
+      });
+    } else if (item.isDirectory) {
+      // Get folder contents
+      var dirReader = item.createReader();
+      let done = false;
+      /**
+       * [readFiles funct. reads files from dragged folder]
+       * @param  {[Object]}   dirReader   [File Reader form directory]
+       * @param  {[Array]}    (entries    [File Array]
+       * @return nothing
+       *
+       * @see https://developer.mozilla.org/en-US/docs/Web/API/FileSystemDirectoryReader/readEntries
+       * @see http://stackoverflow.com/a/23823587/1763249
+       *
+       * @description readEntries file read limit is 100 item, so we're calling same function till array length is 0
+       */
+      let readFiles = dirReader.readEntries.bind(dirReader, entries => {
+        //console.log('Entries length: ', entries.length)
+        for (var i = 0; i < entries.length; i++) {
+          this.traverseFileTree(entries[i], path + item.name + '/');
         }
-    };
-
-    render() {
-        const { unlockDnD } = this.state;
-        return (
-            <div ref="dropzone" className="drop-zone">
-                {this.props.children}
-                <div ref="dragbox" className={this.state.className}>
-                    {unlockDnD
-                        ? [
-                              <p key="1">
-                                  <span className="icon-file-upload" />
-                              </p>,
-                              <span key="2">
-                                  Drop files here to create a new task
-                              </span>,
-                              <p key="3" className="tips__drop-zone">
-                                  You can also click <b>+</b> above to create a
-                                  task and browse for your files.
-                              </p>
-                          ]
-                        : [
-                              <p key="4">
-                                  <span className="icon-no-connection" />
-                              </p>,
-                              <span key="5">No connection!</span>,
-                              <p key="6" className="tips__drop-zone">
-                                  Before adding tasks please make sure Golem is
-                                  started <br />
-                                  and connected to the network
-                              </p>
-                          ]}
-                </div>
-            </div>
-        );
+        if (entries.length > 0) {
+          readFiles(); // TODO we need to add a file length limit here cuz right now users can drag infinitve numbers of files.
+        }
+      });
+      readFiles();
     }
+  };
+
+  _redirectToACL = () => window.routerHistory.push('/acl');
+
+  render() {
+    const { whiteListLock, unlockDnD } = this.state;
+    return (
+      <div ref="dropzone" className="drop-zone">
+        {this.props.children}
+        <div ref="dragbox" className={this.state.className}>
+          {whiteListLock ? (
+            <Fragment>
+              <p>
+                <span className="icon-no-connection" />
+              </p>
+              <span>Your node working in a restricted (whitelist) mode!</span>
+              <p className="tips__drop-zone">
+                You have not added any nodes to your list, currently acting
+                <br />
+                as a provider only. You can either turn your whitelist mode off
+                <br />
+                or add nodes to your private network.
+              </p>
+              <span className="internal-link" onClick={this._redirectToACL}>
+                Go to settings
+              </span>
+            </Fragment>
+          ) : unlockDnD ? (
+            <Fragment>
+              <p>
+                <span className="icon-file-upload" />
+              </p>
+              <span>Drop files here to create a new task</span>
+              <p className="tips__drop-zone">
+                You can also click <b>+</b> above to create a task and browse
+                for your files.
+              </p>
+            </Fragment>
+          ) : (
+            <Fragment>
+              <p>
+                <span className="icon-no-connection" />
+              </p>
+              <span>No connection!</span>
+              <p className="tips__drop-zone">
+                Before adding tasks please make sure Golem is started <br />
+                and connected to the network
+              </p>
+            </Fragment>
+          )}
+        </div>
+      </div>
+    );
+  }
 }
 
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+  mapStateToProps,
+  mapDispatchToProps
 )(DropZone);

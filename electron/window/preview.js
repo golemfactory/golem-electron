@@ -31,7 +31,8 @@ module.exports = function createPreviewWindow(id, frameCount) {
             show: true,
             backgroundColor: '#fff',
             webPreferences: {
-                webSecurity: false
+                webSecurity: false,
+                nodeIntegration: true
             }
         });
 

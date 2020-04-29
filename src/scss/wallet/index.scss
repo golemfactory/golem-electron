@@ -1,9 +1,10 @@
-@import "currency-box";
-@import "modal/withdraw-modal.scss";
+@import 'currency-box';
+@import 'modal/withdraw-modal.scss';
 
 .section__wallet {
 	position: relative;
 	display: flex;
+	height: 70px;
 	align-items: center;
 	flex-direction: column;
 	justify-content: space-around;

@@ -98,3 +98,6 @@ export const getComponentWarnings = (state, key) =>
 
 export const getFilteredKnownPeers = (state, filter, key) =>
     fromACL.getKnownPeersSelector(state.acl, filter, key);
+
+export const getWhiteListLock = (state, key) => 
+    fromACL.getWhiteListLockSelector(state.acl, key);

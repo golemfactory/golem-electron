@@ -7,7 +7,6 @@ import TestUtils from 'react-dom/test-utils'
 import configureStore from 'redux-mock-store';
 import ConnectedTaskPanel, { TaskPanel } from '../../tasks'
 import Table from '../../tasks/Table'
-import FooterMain from './../../FooterMain'
 import sinon from 'sinon'
 
 
@@ -42,10 +41,6 @@ describe('<Table />', () => {
 
     it('renders one <Table /> components', () => {
         expect(wrapper.find(Table).length).toBe(1)
-    });
-
-    it('renders for <FooterMain /> components', () => {
-        expect(wrapper.find(FooterMain).length).toBe(1)
     });
 
     /*it('should call componentDidMount', () => {

@@ -213,9 +213,10 @@ export class SubTask extends React.Component {
     new Promise((resolve, reject) => {
       this.props.actions.blockNodes(node_id, resolve, reject);
     }).then(([result, msg]) => {
+      const [success, existList] = result;
       this.setState({
-        nodeBlocked: result,
-        errMsg: msg
+        nodeBlocked: success && !existList.length,
+        errMsg: existList
       });
     });
   };
@@ -391,7 +392,8 @@ export class SubTask extends React.Component {
             duration={[null, 100]}
             delay={[500, 0]}
             distance={-1 * verticalMidPoint}
-            arrow={true}>
+            arrow={true}
+            zIndex={2}>
             <polyline
               key={index.toString()}
               fill="transparent"

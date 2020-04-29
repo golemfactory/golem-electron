@@ -21,6 +21,7 @@ const mapDispatchToProps = dispatch => ({
 
 export class AddNodePanel extends React.Component {
     state = {
+        existError: false,
         node: null,
         lockAddButton: false
     };
@@ -30,7 +31,8 @@ export class AddNodePanel extends React.Component {
             'contextmenu',
             ev => {
                 ev.preventDefault();
-                ev.target.value = clipboard.readText();
+                let text = clipboard.readText();
+                ev.target.value = text.replace(/ /gi, '');
                 this._updateId.call(this, ev);
                 return false;
             },
@@ -44,6 +46,7 @@ export class AddNodePanel extends React.Component {
 
     _handleInput = e => {
         e.persist();
+        e.target.value = e.target.value.replace(/ /gi, '');
         this._updateId.call(this, e);
     };
 
@@ -52,7 +55,7 @@ export class AddNodePanel extends React.Component {
         this.interactionTimer = setTimeout(() => {
             this.setState({ node: e.target.value });
         }, WAIT_INTERVAL);
-    }
+    };
 
     _handleAdd = () => {
         this.setState(
@@ -60,14 +63,26 @@ export class AddNodePanel extends React.Component {
                 lockAddButton: true
             },
             () => {
-                this.props.actions.trustNodes(this.state.node);
-                this.props.addNodePanelToggle();
+                this.trustNodes(this.state.node).then(([result]) => {
+                    const [success, exist] = result;
+                    if (!exist.length) this.props.addNodePanelToggle();
+                    else
+                        this.setState({
+                            existError: true,
+                            lockAddButton: false
+                        });
+                });
             }
         );
     };
 
+    trustNodes = node =>
+        new Promise((resolve, reject) =>
+            this.props.actions.trustNodes(node, resolve, reject)
+        );
+
     render() {
-        const { lockAddButton, node } = this.state;
+        const { existError, lockAddButton, node } = this.state;
         const { addNodePanelToggle } = this.props;
         return (
             <Fragment>
@@ -84,10 +99,17 @@ export class AddNodePanel extends React.Component {
                     <input
                         id="addNode"
                         type="text"
-                        className="input__add-node"
+                        className={`input__add-node ${
+                            existError ? 'input--error' : ''
+                        }`}
                         placeholder="Add node ID..."
                         onChange={this._handleInput}
                     />
+                    {existError && (
+                        <span className="exist-error">
+                            This node is already exist in whitelist{' '}
+                        </span>
+                    )}
                 </div>
                 <div className="acl__action acl__action--center">
                     <span onClick={addNodePanelToggle}>Cancel</span>

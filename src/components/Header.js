@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import Tooltip from '@tippy.js/react';
 
 import * as Actions from '../actions';
-import { getRequestorStatus } from '../reducers';
+import { getRequestorStatus, getWhiteListLock } from '../reducers';
 
 import mainNetLogo from './../assets/img/mainnet-logo-small.svg';
 import testNetLogo from './../assets/img/testnet-logo-small.svg';
@@ -58,7 +58,8 @@ const mapStateToProps = state => ({
   isGracefulShutdownEnabled: state.info.isGracefulShutdownEnabled,
   isRequestActive: getRequestorStatus(state, 'shutdown'),
   stats: state.stats.stats,
-  forceQuit: state.info.forceQuit
+  forceQuit: state.info.forceQuit,
+  whiteListLock: getWhiteListLock(state, 'whiteListLock')
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -193,10 +194,9 @@ export class Header extends Component {
    * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
    */
   _onFileDialog(dialogRules = []) {
-    const onFileHandler = data => {
-      //console.log(data)
-      if (data) {
-        directorySelector.call(this, data);
+    const onFileHandler = ({filePaths}) => {
+      if (filePaths && filePaths.length > 0) {
+        directorySelector.call(this, filePaths);
       }
     };
     /**
@@ -206,14 +206,14 @@ export class Header extends Component {
     dialog.showOpenDialog(
       {
         properties: [...dialogRules, 'multiSelections']
-      },
-      onFileHandler
-    );
+      }
+    ).then(onFileHandler);
   }
 
-  _taskHints(engine, peers) {
+  _taskWarnings(engine, peers, whiteListLock) {
     if (!engine) return <p>Golem is not started yet.</p>;
     if (!peers) return <p>There's no connected node yet.</p>;
+    if (whiteListLock) return <p>Add nodes in your whitelist</p>;
     return <p>New Task</p>;
   }
 
@@ -221,6 +221,8 @@ export class Header extends Component {
     this.props.actions.toggleConcent(true, true);
     window.routerHistory.push('/settings');
   };
+
+  _redirectToACL = () => window.routerHistory.push('/acl');
 
   _initNotificationCenter() {
     const { connectedPeers, notificationList } = this.props;
@@ -246,7 +248,8 @@ export class Header extends Component {
       isEngineOn,
       isGracefulShutdownEnabled,
       isMainNet,
-      taskDetails
+      taskDetails,
+      whiteListLock
     } = this.props;
     let styling = {
       WebkitAppRegion: 'drag'
@@ -303,13 +306,19 @@ export class Header extends Component {
                 placement="bottom"
                 theme="light"
                 trigger="click"
-                isEnabled={!(isMac || !isEngineOn || !connectedPeers)}
+                isEnabled={
+                  !(isMac || !isEngineOn || !connectedPeers || whiteListLock)
+                }
                 hideOnClick>
                 <Tooltip
-                  content={this._taskHints(isEngineOn, connectedPeers)}
+                  content={this._taskWarnings(
+                    isEngineOn,
+                    connectedPeers,
+                    whiteListLock
+                  )}
                   placement="bottom"
                   trigger="mouseenter"
-                  hideOnClick={connectedPeers}>
+                  hideOnClick={connectedPeers || whiteListLock}>
                   <li className="menu__item upload-menu">
                     <span
                       className="icon-add"
@@ -318,11 +327,15 @@ export class Header extends Component {
                       aria-label="New Task"
                       title="Upload file for the task"
                       onClick={
-                        isEngineOn && connectedPeers && isMac
-                          ? this._onFileDialog.bind(this, [
-                              'openFile',
-                              'openDirectory'
-                            ])
+                        isEngineOn && connectedPeers
+                          ? !whiteListLock
+                            ? isMac
+                              ? this._onFileDialog.bind(this, [
+                                  'openFile',
+                                  'openDirectory'
+                                ])
+                              : undefined
+                            : this._redirectToACL
                           : undefined
                       }
                     />

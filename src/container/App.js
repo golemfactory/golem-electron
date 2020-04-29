@@ -7,6 +7,7 @@ import constants from "../constants";
 
 import ErrorBoundary from "../components/ErrorBoundary";
 import Header from "../components/Header";
+import Footer from "../components/footer";
 import MainFragment from "../components/network";
 import Tasks from "../components/tasks";
 import MasterFilePicker from "../components/tasks/create/MasterFilePicker";
@@ -26,6 +27,18 @@ import WithdrawModal from "./../components/wallet/modal/WithdrawModal";
 import PasswordModal from "./modal/PasswordModal";
 import checkNested from "./../utils/checkNested";
 
+const routePaths = {
+    MAIN: "/",
+    TASK_LIST: "/tasks",
+    WALLET: "/wallet",
+    SETTING: "/settings",
+    TASK_ID: "/task/:id",
+    MASTER_FILE: "/add-task/master-file/:type?",
+    NEW_TASK: "/add-task/type/:type?",
+    TASK_FORM: "/add-task/settings",
+    ACL: "/acl",
+};
+
 Array.prototype.last = function() {
     return this[this.length - 1];
 };
@@ -40,34 +53,40 @@ const routes = (
         <Switch>
             <Route
                 exact
-                path="/"
+                path={routePaths.MAIN}
                 component={OnBoardingComponent(
                     MainFragment
                 )} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/
             />
             <Route
                 exact
-                path="/wallet"
+                path={routePaths.WALLET}
                 component={OnBoardingComponent(
                     MainFragment
                 )} /*component={ LoadingComponent(MainFragment, ['MAIN_LOADER'])[0]}*/
             />
             <Route
-                path="/tasks"
+                path={routePaths.TASK_LIST}
                 component={OnBoardingComponent(
                     Tasks
                 )} /*component={ LoadingComponent(Tasks, ['TASK_PANEL_LOADER'])[0]}*/
             />
             <Route
-                path="/settings"
+                path={routePaths.SETTING}
                 component={OnBoardingComponent(
                     ConcentOnboardingComponent(Settings)
                 )}
             />
-            <Route path="/task/:id" component={TaskForm} />
-            <Route path="/add-task/master-file/:type?" component={MasterFilePicker} />
-            <Route path="/add-task/type/:type?" component={NewTask} />
-            <Route path="/add-task/settings" component={TaskForm} />
+            <Route
+                path={routePaths.ACL}
+                component={OnBoardingComponent(
+                    ConcentOnboardingComponent(Settings)
+                )}
+            />
+            <Route path={routePaths.TASK_ID} component={TaskForm} />
+            <Route path={routePaths.MASTER_FILE} component={MasterFilePicker} />
+            <Route path={routePaths.NEW_TASK} component={NewTask} />
+            <Route path={routePaths.TASK_FORM} component={TaskForm} />
             <Route component={NotFound} status={404} />
         </Switch>
     </div>
@@ -77,7 +96,7 @@ function isGolemReady(gs) {
     return gs.status === "Ready" && gs.message.toLowerCase().includes("node");
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
     golemStatus: getStatus(state, "golemStatus"),
     connectionProblem: state.info.connectionProblem,
     latestVersion: state.info.latestVersion,
@@ -88,11 +107,11 @@ const mapStateToProps = state => ({
     //To fill initial resource
     resource: state.resources.resource,
     systemInfo: state.advanced.systemInfo,
-    chartValues: state.advanced.chartValues
+    chartValues: state.advanced.chartValues,
 });
 
-const mapDispatchToProps = dispatch => ({
-    actions: bindActionCreators(Actions, dispatch)
+const mapDispatchToProps = (dispatch) => ({
+    actions: bindActionCreators(Actions, dispatch),
 });
 
 /**
@@ -101,13 +120,24 @@ const mapDispatchToProps = dispatch => ({
  * @class      App (name)
  */
 export class App extends Component {
-    constructor(props) {
-        super(props);
-    }
+    state = {
+        isFooterShown: true,
+    };
 
     componentDidMount() {
         const { actions } = this.props;
         actions.login("Muhammed");
+
+        window.routerHistory?.listen(({ pathname }, action) => {
+            const isFooterShown =
+                pathname == routePaths.MAIN ||
+                pathname == routePaths.TASK_LIST ||
+                pathname == routePaths.SETTING ||
+                pathname == routePaths.WALLET;
+            this.setState({
+                isFooterShown,
+            });
+        });
     }
 
     componentWillReceiveProps(nextProps) {
@@ -150,7 +180,7 @@ export class App extends Component {
         return Math.min(100 * ((cpuRatio + ramRatio + diskRatio) / 3), 100);
     }
 
-    _closeModal = _modalType => {
+    _closeModal = (_modalType) => {
         const { actions } = this.props;
         const modals = constants.modals;
         if (modals.ISSUEMODAL === _modalType) {
@@ -161,8 +191,8 @@ export class App extends Component {
     };
 
     _showIssueModal(...args) {
-        const issues = args.map(item => (item ? item.issue : null));
-        const result = issues.some(item => !!item);
+        const issues = args.map((item) => (item ? item.issue : null));
+        const result = issues.some((item) => !!item);
         return result;
     }
 
@@ -174,12 +204,14 @@ export class App extends Component {
             latestVersion,
             withdrawModal,
             passwordModal,
-            showOnboard
+            showOnboard,
         } = this.props;
+        const { isFooterShown } = this.state;
         return (
             <ErrorBoundary>
                 <Header actions={actions} activeHeader={"main"} />
                 <ConnectedRouter history={history}>{routes}</ConnectedRouter>
+                {isFooterShown && <Footer />}
                 <div id="modalPortal" className="modal-portal" />
                 {this._showIssueModal(connectionProblem, latestVersion) && (
                     <IssueModal closeModal={this._closeModal} />

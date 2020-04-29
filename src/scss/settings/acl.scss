@@ -43,15 +43,27 @@
 
     .description {
         margin-top: 20px;
+        margin-bottom: 50px;
         font-size: 8pt;
         line-height: 2em;
         color: $color-text2;
     }
 
     .input-field__add-node {
+        position: relative;
         margin-top: 30px;
+        margin-bottom: 20px;
         label {
             font-weight: 400;
+        }
+        .input--error {
+            border: 1px solid $color-error;
+        }
+        .exist-error {
+            position: absolute;
+            left: 0;
+            bottom: -5px;
+            color: $color-error;
         }
     }
 
@@ -63,12 +75,43 @@
         background-color: $color-input;
     }
 
+    .acl__filter {
+        position: absolute;
+        right: 24px;
+        margin-top: -25px;
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+        .icon-question-mark {
+            position: relative;
+            font-size: 8pt;
+            bottom: 3px;
+        }
+        &-title {
+            font-size: 8pt;
+        }
+        &-item {
+            font-weight: 500;
+            font-size: 8pt;
+            margin-left: 15px;
+            cursor: pointer;
+            color: $color-text2;
+            &.active {
+                color: $color-primary;
+                text-decoration: underline;
+            }
+            &:hover {
+                color: $button-hover-color;
+            }
+        }
+    }
+
     .acl__action {
         display: flex;
         justify-content: flex-start;
         align-items: center;
         height: 25px;
-        margin-top: 30px;
+        margin-top: 10px;
         font-size: 8pt;
         color: $color-primary;
         &--center {
@@ -134,12 +177,12 @@
                 }
                 &-locked {
                     &:hover::before {
-                        content: '\e95f';
+                        content: '\e966';
                     }
                 }
                 &-unlocked {
                     &:hover::before {
-                        content: '\e928';
+                        content: '\e92c';
                     }
                 }
             }

@@ -1,9 +1,10 @@
-import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import * as Actions from "../../actions";
+import React from 'react';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
+import * as Actions from '../../actions';
 
-import Slider from "./../Slider";
+import Slider from './../Slider';
+import DotAnim from './../DotAnim';
 
 const mapStateToProps = state => ({
     chart: state.performance.charts,
@@ -17,20 +18,20 @@ const mapDispatchToProps = dispatch => ({
 
 const mockList = [
     {
-        icon: "icon-macbook",
-        title: "CPU"
+        icon: 'icon-macbook',
+        title: 'CPU'
     },
     {
-        icon: "icon-blender",
-        title: "Blender CPU"
+        icon: 'icon-blender',
+        title: 'Blender CPU'
     },
     {
-        icon: "icon-blender_nvgpu",
-        title: "Blender GPU"
+        icon: 'icon-blender_nvgpu',
+        title: 'Blender GPU'
     },
     {
-        icon: "icon-gwasm-color",
-        title: "gWasm"
+        icon: 'icon-gwasm-color',
+        title: 'gWasm'
     }
 ];
 //loadingIndicator && <span className="icon-progress"/>
@@ -45,9 +46,9 @@ export class Performance extends React.Component {
     }
 
     componentDidMount() {
-        const blenderPerf = this.props.chart["estimated_blender_performance"];
+        const blenderPerf = this.props.chart['estimated_blender_performance'];
         const indicatorOffset = (388 / 10) * (blenderPerf / (3000 / 10));
-        this.refs.scoreIndicator.style.left = indicatorOffset + "px";
+        this.refs.scoreIndicator.style.left = indicatorOffset + 'px';
     }
 
     componentWillUnmount() {
@@ -57,13 +58,13 @@ export class Performance extends React.Component {
     componentWillReceiveProps(nextProps) {
         if (
             !!nextProps.chart &&
-            nextProps.chart["estimated_blender_performance"] !==
-                this.props.chart["estimated_blender_performance"]
+            nextProps.chart['estimated_blender_performance'] !==
+                this.props.chart['estimated_blender_performance']
         ) {
             const blenderPerf =
-                nextProps.chart["estimated_blender_performance"];
+                nextProps.chart['estimated_blender_performance'];
             const indicatorOffset = (388 / 10) * (blenderPerf / (3000 / 10));
-            this.refs.scoreIndicator.style.left = indicatorOffset + "px";
+            this.refs.scoreIndicator.style.left = indicatorOffset + 'px';
         }
     }
 
@@ -113,7 +114,7 @@ export class Performance extends React.Component {
     loadList(data, chart) {
         return data.map(({ icon, title }, index) => (
             <div className="list-item__performance" key={index.toString()}>
-                <span className={"icon__list-item__acount " + icon}>
+                <span className={'icon__list-item__acount ' + icon}>
                     <span className="path1" />
                     <span className="path2" />
                     <span className="path3" />
@@ -140,17 +141,14 @@ export class Performance extends React.Component {
                 </div>
                 <button
                     className={`btn--outline btn--calculate ${loadingIndicator &&
-                        "btn--loading"}`}
+                        'btn--loading'}`}
                     onClick={this._handleRecount}
                     disabled={loadingIndicator}>
-                    {" "}
-                    {loadingIndicator ? "Calculating" : "Calculate"}
-                    {loadingIndicator && (
-                        <span className="jumping-dots">
-                            <span className="dot-1">.</span>
-                            <span className="dot-2">.</span>
-                            <span className="dot-3">.</span>
-                        </span>
+                    {' '}
+                    {loadingIndicator ? (
+                        <DotAnim>Calculating</DotAnim>
+                    ) : (
+                        'Calculate'
                     )}
                 </button>
                 <div className="content__min-score">
@@ -166,7 +164,7 @@ export class Performance extends React.Component {
                         inputId="performance_slider"
                         value={multiplier}
                         max={10}
-                        mainColor={"#1c76e7"}
+                        mainColor={'#1c76e7'}
                         aria-label="Performance slider"
                         callback={this._handleMinPerfSlider}
                         warn={false}
@@ -180,9 +178,9 @@ export class Performance extends React.Component {
                     <button
                         className="btn--outline"
                         onClick={this._applyMinPerformance}
-                        disabled={chart["estimated_blender_performance"] === 0}
+                        disabled={chart['estimated_blender_performance'] === 0}
                         disabled={isMinPerfApplied}>
-                        {!isMinPerfApplied ? "Apply" : "Applied"}
+                        {!isMinPerfApplied ? 'Apply' : 'Applied'}
                     </button>
                 </div>
             </div>

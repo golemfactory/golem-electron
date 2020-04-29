@@ -263,7 +263,7 @@ export class History extends React.Component {
               rowCount={rowCount}
               threshold={threshold}>
               {({ onRowsRendered, registerChild }) => (
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex', height: '100%' }}>
                   <div
                     id="historyList"
                     style={{

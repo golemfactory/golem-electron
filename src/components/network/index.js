@@ -16,7 +16,6 @@ import TransactionTube from "../transaction";
 import Wallet from "../wallet";
 import Resources from "./Resources";
 import History from "../History";
-import FooterMain from "../FooterMain";
 import PresetModal from "./modal/PresetModal";
 import ManagePresetModal from "./modal/ManagePresetModal";
 /*if (!("require" in window)) {
@@ -163,7 +162,6 @@ export class MainFragment extends React.Component {
                 {managePresetModal && (
                     <ManagePresetModal closeModal={this._closeModal} />
                 )}
-                <FooterMain />
             </div>
         );
     }

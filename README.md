@@ -1,5 +1,5 @@
 # Golem Electron Application
-![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D6.14.0-brightgreen.svg)
+![Minimum Node Requirement](https://img.shields.io/badge/node-%3E%3D10.14.0-brightgreen.svg)
 [![CircleCI](https://circleci.com/gh/golemfactory/golem-electron.svg?style=shield)](https://circleci.com/gh/golemfactory/golem-electron)
 <br/>
 <p align="center"> 

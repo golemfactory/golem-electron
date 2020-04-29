@@ -8,6 +8,7 @@ import * as Actions from '../../../actions';
 import ConditionalRender from '../../hoc/ConditionalRender';
 import GroupedStatus from './GroupedStatus';
 import SubtaskList from './SubtaskList';
+import DotAnim from '../../DotAnim';
 import BlockNodeModal from '../modal/BlockNodeModal';
 import { taskStatus } from '../../../constants/statusDicts';
 
@@ -21,23 +22,28 @@ import some from 'lodash/some';
 
 const mapStateToProps = state => ({
     frameCount: state.preview.ps.frameCount,
-    fragments: state.details.fragments[0] || {}
+    fragments: state.details.fragments[0] || {},
+    isRuleSwitchOn: isRuleSwitchOn(state.acl.nodeListACL)
 });
 
 const mapDispatchToProps = dispatch => ({
     actions: bindActionCreators(Actions, dispatch)
 });
 
+function isRuleSwitchOn(nodeListACL) {
+    return nodeListACL?.default_rule !== 'allow';
+}
+
 export class Details extends React.PureComponent {
     constructor(props) {
         super(props);
         this.state = {
+            blockNodeModal: false,
             checkedItems: {},
+            errMsg: null,
             isAllChecked: false,
             isAnyChecked: false,
-            blockNodeModal: false,
-            nodeBlocked: false,
-            errMsg: null,
+            isBlockSucceed: false,
             node2block: null
         };
 
@@ -163,7 +169,7 @@ export class Details extends React.PureComponent {
     _showBlockNodeModal(subtask) {
         this.setState({
             blockNodeModal: true,
-            nodeBlocked: false,
+            isBlockSucceed: false,
             errMsg: null,
             node2block: subtask
         });
@@ -177,10 +183,11 @@ export class Details extends React.PureComponent {
         let node_id = this.state.node2block?.node_id;
         new Promise((resolve, reject) => {
             this.props.actions.blockNodes(node_id, resolve, reject);
-        }).then(([result, msg]) => {
+        }).then(([result, _]) => {
+            const [success, existList, errorMessage] = result;
             this.setState({
-                nodeBlocked: result,
-                errMsg: msg
+                isBlockSucceed: success && !existList.length,
+                errMsg: existList
             });
         });
     };
@@ -194,14 +201,14 @@ export class Details extends React.PureComponent {
     }
 
     render() {
-        const { item, fragments } = this.props;
+        const { item, fragments, isRuleSwitchOn } = this.props;
         const {
+            blockNodeModal,
             checkedItems,
+            errMsg,
             isAllChecked,
             isAnyChecked,
-            blockNodeModal,
-            errMsg,
-            nodeBlocked,
+            isBlockSucceed,
             node2block
         } = this.state;
         return (
@@ -229,18 +236,14 @@ export class Details extends React.PureComponent {
                         toggleItems={this._toggleItems}
                         showBlockNodeModal={this._showBlockNodeModal}
                         restartSubtask={this._restartSubtask}
+                        isRuleSwitchOn={isRuleSwitchOn}
                     />
                 </ConditionalRender>
                 <ConditionalRender showIf={isEmpty(fragments)}>
                     <div className="details__loading">
-                        <span>
-                            Fetching subtask information
-                            <span className="jumping-dots">
-                                <span className="dot-1">.</span>
-                                <span className="dot-2">.</span>
-                                <span className="dot-3">.</span>
-                            </span>
-                        </span>
+                            <DotAnim>
+                                Fetching subtask information
+                            </DotAnim>
                     </div>
                 </ConditionalRender>
                 {blockNodeModal &&
@@ -248,7 +251,7 @@ export class Details extends React.PureComponent {
                         <BlockNodeModal
                             cancelAction={this._closeBlockNodeModal}
                             blockAction={this._blockNode}
-                            nodeBlocked={nodeBlocked}
+                            nodeBlocked={isBlockSucceed}
                             errMsg={errMsg}
                             node2block={node2block}
                         />,
