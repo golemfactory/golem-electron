@@ -46,7 +46,6 @@ const PortStatus = ({
 					ipcRenderer.send('check-port', pub_addr, Object.keys(port_statuses));
 					ipcRenderer.on('check-port-answer', (event, port, result) => {
 						const index = value.findIndex(item => item[0] == port);
-						console.log("index", index);
 						if (index > -1) {
 							value[index][1] = result;
 							setPortList(value);
