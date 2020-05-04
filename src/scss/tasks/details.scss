@@ -70,17 +70,17 @@
 				border-top: 1px solid $color-border;
 				padding-right: 20px;
 			}
-			&-row{
-				.icon{
+			&-row {
+				.icon {
 					&-logs,
-					&-locked{
+					&-locked {
 						color: $color-primary;
 						cursor: pointer;
 					}
-					&-logs::before{
+					&-logs::before {
 						font-size: 12pt;
 					}
-					&-locked::before{
+					&-locked::before {
 						font-size: 14pt;
 					}
 				}
@@ -89,16 +89,16 @@
 				}
 			}
 		}
-		
+
 		.icon-arrow-down,
-		.icon-refresh{
-			&.disabled{
+		.icon-refresh {
+			&.disabled {
 				color: $color-text3 !important;
 				cursor: not-allowed !important;
 			}
 		}
 
-		.icon-arrow-down{
+		.icon-arrow-down {
 			margin-right: 0 !important;
 			transition: 0.5s transform;
 			transition-delay: 0.1s;
@@ -108,7 +108,7 @@
 			transform: rotate(180deg);
 		}
 
-		.details__loading{
+		.details__loading {
 			text-align: center;
 			height: 30px;
 			line-height: 30px;
@@ -119,16 +119,15 @@
 
 	&__subtask-stats {
 		display: grid;
-		grid-template-columns: auto auto auto auto;
-  		grid-template-rows: 25px 25px;
-  		justify-items: center;
-  		align-items: center;
-  		text-align: left;
+		grid-template-columns: auto auto auto auto auto;
+		grid-template-rows: 25px 25px;
+		justify-items: center;
+		align-items: center;
+		text-align: left;
 		height: 50px;
-		font-size: 9pt;
 		margin: 10px 0;
 		padding: 0 24px;
-		font-size: 8pt;
+		font-size: 7pt;
 
 		& > span {
 			display: flex;
@@ -137,7 +136,7 @@
 			width: 100%;
 		}
 
-		[class^="icon-"], 
+		[class^="icon-"],
 		[class*=" icon-"] {
 			margin-right: 5px;
 			font-size: 10pt;

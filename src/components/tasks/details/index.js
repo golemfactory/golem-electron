@@ -275,5 +275,6 @@ export const ICONS = {
     Starting: { name: 'subtasks-negotiations', color: 'icon--color-yellow' },
     Verifying: { name: 'subtask-verifying', color: 'icon--color-blue' },
     Downloading: { name: 'download', color: 'icon--color-blue' },
-    Restart: { name: 'refresh', color: 'icon--color-gray' }
+    Restart: { name: 'refresh', color: 'icon--color-gray' },
+    Timeout: { name: 'timeout', color: 'icon--color-red' }
 };

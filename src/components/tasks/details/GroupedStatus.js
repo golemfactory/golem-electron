@@ -25,6 +25,7 @@ const fillRestGroups = function(gs) {
 	addUniq(gs, { status: 'Verifying', count: 0 }, 'status');
 	addUniq(gs, { status: 'Downloading', count: 0 }, 'status');
 	addUniq(gs, { status: 'Restart', count: 0 }, 'status');
+	addUniq(gs, { status: 'Timeout', count: 0 }, 'status');
 
 	return gs;
 };
