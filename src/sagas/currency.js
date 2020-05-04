@@ -5,13 +5,13 @@ import { dict } from '../actions'
 
 
 const {SET_CURRENCY} = dict
-let config = Object.freeze({
-    CURRENCY_URL: 'http://api.coinmarketcap.com/v1/ticker',
+let config = {
+    CURRENCY_URL: 'https://api.coingecko.com/api/v3/simple/price?ids=TOKEN&vs_currencies=usd',
     TOKENS: {
         ETH: 'ethereum',
-        GNT: 'golem-network-tokens'
+        GNT: 'golem'
     }
-})
+}
 
 
 /**
@@ -24,16 +24,15 @@ export function subscribeCurrency() {
     const dailyInterval = 24 * 60 * 60 * 1000
 
     return eventChannel(emit => {
-
-        let fetchCurrency = TOKEN => {
-            axios.get(`${CURRENCY_URL}/${TOKEN}`)
+        let fetchCurrency = (SYMBOL, TOKEN) => {
+            axios.get(`${CURRENCY_URL.replace('TOKEN', TOKEN)}`)
                 .then((data) => {
                     //console.log(`FROM SAGA_CURRENCY, ${TOKEN}`, data)
                     emit({
                         type: SET_CURRENCY,
                         payload: {
-                            currency: data.data[0].symbol,
-                            rate: data.data[0].price_usd
+                            currency: SYMBOL,
+                            rate: data.data[TOKEN].usd
                         }
                     })
                 })
@@ -41,8 +40,8 @@ export function subscribeCurrency() {
 
         let fetchWithInterval = () => {
 
-            Object.keys(TOKENS).map(TKN => {
-                fetchCurrency(TOKENS[TKN])
+            Object.entries(TOKENS).map(([SYMBOL, TOKEN]) => {
+                fetchCurrency(SYMBOL, TOKEN)
             })
 
             return fetchWithInterval
