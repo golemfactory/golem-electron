@@ -1,5 +1,6 @@
 import React from 'react';
 import Tooltip from '@tippy.js/react';
+import DotAnim from "../DotAnim";
 
 const { remote } = window.electron;
 const currentPlatform = remote.getGlobal('process').platform;
