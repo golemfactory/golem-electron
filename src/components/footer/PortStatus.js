@@ -1,18 +1,37 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { animated } from 'react-spring/renderprops.cjs';
-import useStateWithCallback from '../../utils/stateWithCallback';
+import React, { useEffect, useState, useCallback } from "react";
+import { animated } from "react-spring/renderprops.cjs";
+import useStateWithCallback from "../../utils/stateWithCallback";
 
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import * as Actions from './../../actions';
-import { getStatus } from './../../reducers';
+import { bindActionCreators } from "redux";
+import { connect } from "react-redux";
+import * as Actions from "./../../actions";
+import { getStatus } from "./../../reducers";
+
+import DotAnim from "../DotAnim";
 
 const { ipcRenderer } = window.electron;
 
 function golemDotClass({ status, opened }) {
-	if (status === 'checking') return 'yellow';
-	else if (opened) return 'green';
-	else return 'red';
+	if (status === "checking") return "yellow";
+	else if (opened) return "green";
+	else return "red";
+}
+
+function loadPortDOM(portList) {
+	if (!portList || portList.length === 0)
+		return <DotAnim>Waiting for port information</DotAnim>;
+
+	return portList.map((port, index) => (
+		<div className="item__status" key={index.toString()}>
+			<div>
+				<span
+					className={`component-dot component-dot--${golemDotClass(port[1])}`}
+				/>
+				<span>{port[0]}: </span>
+			</div>
+			<span className="port-status">{port[1]?.status}</span>
+		</div>
+	));
 }
 
 const PortStatus = ({
@@ -21,7 +40,7 @@ const PortStatus = ({
 	networkInfo,
 	setPortInfo,
 	skipChecker,
-	transform
+	transform,
 }) => {
 	const [portList, setPortList] = useStateWithCallback([]);
 	const [, updateState] = useState();
@@ -32,20 +51,26 @@ const PortStatus = ({
 	}, []);
 
 	useEffect(() => {
-		const { port_statuses, pub_addr } = networkInfo;
+		const {
+			hyperdrive_prv_port,
+			p2p_prv_port,
+			prv_port,
+			pub_addr,
+		} = networkInfo;
 		let skipTimer, delayTimer;
-		if (pub_addr) {
-			const _portList = Object.keys(port_statuses).map(port => [
+		let ports = [hyperdrive_prv_port, p2p_prv_port, prv_port];
+		if (ports.length > 0) {
+			const _portList = ports.map((port) => [
 				port,
-				{ status: 'checking', opened: false }
+				{ status: "checking", opened: false },
 			]);
 			setPortList(_portList, checkPorts);
 
 			function checkPorts(value) {
 				delayTimer = setTimeout(() => {
-					ipcRenderer.send('check-port', pub_addr, Object.keys(port_statuses));
-					ipcRenderer.on('check-port-answer', (event, port, result) => {
-						const index = value.findIndex(item => item[0] == port);
+					ipcRenderer.send("check-port", pub_addr, ports);
+					ipcRenderer.on("check-port-answer", (event, port, result) => {
+						const index = value.findIndex((item) => item[0] == port);
 						if (index > -1) {
 							value[index][1] = result;
 							setPortList(value);
@@ -65,38 +90,25 @@ const PortStatus = ({
 	return (
 		<animated.div
 			style={{
-				opacity: opacity.interpolate(opacity => opacity),
-				transform: transform.interpolate(y => `translateX(${y}px)`),
-				position: position
+				opacity: opacity.interpolate((opacity) => opacity),
+				transform: transform.interpolate((y) => `translateX(${y}px)`),
+				position: position,
 			}}
-			className="status-node__loading">
-			<div className="status__components">
-				{portList.map((port, index) => (
-					<div className="item__status" key={index.toString()}>
-						<div>
-							<span
-								className={`component-dot component-dot--${golemDotClass(
-									port[1]
-								)}`}
-							/>
-							<span>{port[0]}: </span>
-						</div>
-						<span className="port-status">{port[1]?.status}</span>
-					</div>
-				))}
-			</div>
+			className="status-node__loading"
+		>
+			<div className="status__components">{loadPortDOM(portList)}</div>
 		</animated.div>
 	);
 };
 
-PortStatus.displayName = 'PortStatus';
+PortStatus.displayName = "PortStatus";
 
-const mapStateToProps = state => ({
-	networkInfo: state.info.networkInfo
+const mapStateToProps = (state) => ({
+	networkInfo: state.info.networkInfo,
 });
 
-const mapDispatchToProps = dispatch => ({
-	actions: bindActionCreators(Actions, dispatch)
+const mapDispatchToProps = (dispatch) => ({
+	actions: bindActionCreators(Actions, dispatch),
 });
 
 export default connect(

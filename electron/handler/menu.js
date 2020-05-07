@@ -72,9 +72,6 @@ const template = [
             },
             {
                 type: 'separator'
-            },
-            {
-                role: 'togglefullscreen'
             }
         ]
     },

@@ -26,6 +26,7 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
             titleBarStyle: 'hiddenInset',
             frame: true,
             resizable: true,
+            fullscreen: false,
             minWidth: APP_WIDTH,
             minHeight: APP_MIN_HEIGHT,
             maxWidth: APP_WIDTH,
@@ -103,6 +104,10 @@ module.exports = function createMainWindow(win, tray, closeCallback) {
                 `file://${path.resolve(__dirname, '..', '..')}/index.html`
             );
         }
+
+        win.on('maximize', event => {
+            win.unmaximize();
+        })
 
         // Do not update window title after loading pages
         win.on('page-title-updated', event => event.preventDefault());
