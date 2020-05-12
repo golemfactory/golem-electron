@@ -85,7 +85,6 @@ export function getConcentTerms(session) {
                 payload: info
             })
         }
-        console.log("requested");
         _handleRPC(on_info, session, config.GET_CONCENT_TERMS_RPC)
     })
 }
@@ -99,7 +98,6 @@ export function getTerms(session) {
                 payload: info
             })
         }
-        console.log("requested");
         _handleRPC(on_info, session, config.GET_TERMS_RPC)
     })
 }
