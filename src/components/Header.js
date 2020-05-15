@@ -141,31 +141,13 @@ export class Header extends Component {
       window.routerHistory.push(to);
   }
 
-  _toggleQuitModal = cb =>
+  _toggleQuitModal = (callback) =>
     this.setState(
       prevState => ({ quitModal: !prevState.quitModal }),
-      () => cb && cb(this.state.quitModal)
+      () => callback && callback(this.state.quitModal)
     );
 
   _gracefulShutdown = () => this.props.actions.gracefulShutdown();
-
-  /**
-   * [_onClose,_onMinimize,_onMaximize Native Window Button handlers]
-   */
-  _onClose = () => {
-    const win = BrowserWindow.getFocusedWindow();
-    win.close();
-  };
-
-  _onMinimize() {
-    const win = BrowserWindow.getFocusedWindow();
-    win.minimize();
-  }
-
-  _onMaximize() {
-    const win = BrowserWindow.getFocusedWindow();
-    win.isMaximized() ? win.unmaximize() : win.maximize();
-  }
 
   _forceQuit = () => {
     this.props.actions.toggleForceQuit();
@@ -174,9 +156,9 @@ export class Header extends Component {
   /**
    * [_handleTab to change active class of selected tab title]
    *
-   * @param   {Object}     elm     [target element]
+   * @param   {Object}     event     [event]
    */
-  _handleMenu(to, elm) {
+  _handleMenu(to, event) {
     if (
       this.props.taskDetails.options &&
       Number(this.props.taskDetails.options.frame_count) > 1
@@ -185,7 +167,7 @@ export class Header extends Component {
       for (var i = 0; i < menuItems.length; i++) {
         menuItems[i].classList.remove('active');
       }
-      elm.currentTarget.classList.add('active');
+      event.currentTarget.classList.add('active');
       window.routerHistory.push(`/preview/${to}`);
     }
   }
@@ -193,7 +175,8 @@ export class Header extends Component {
   /**
    * [_onFileDialog func. opens file chooser dialog then checks if files has safe extensions after all redirects user to the new task screen]
    */
-  _onFileDialog(dialogRules = []) {
+  _onFileDialog(dialogRules = [], event) {
+    event.stopPropagation();
     const onFileHandler = ({filePaths}) => {
       if (filePaths && filePaths.length > 0) {
         directorySelector.call(this, filePaths);
@@ -217,12 +200,14 @@ export class Header extends Component {
     return <p>New Task</p>;
   }
 
-  _redirectToConcent = e => {
+  _redirectToConcent = () => {
     this.props.actions.toggleConcent(true, true);
     window.routerHistory.push('/settings');
   };
 
-  _redirectToACL = () => window.routerHistory.push('/acl');
+  _redirectToACL = () => {
+    window.routerHistory.push('/acl');
+  }
 
   _initNotificationCenter() {
     const { connectedPeers, notificationList } = this.props;

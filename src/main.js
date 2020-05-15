@@ -34,6 +34,7 @@ if (window.__REDUX_DEVTOOLS_EXTENSION__) {
 
 const { remote, ipcRenderer } = window.electron;
 const { configStore, dictConfig } = remote.getGlobal('configStorage');
+const isDevelopment = remote.getGlobal('isDevelopment');
 
 const history = (window.routerHistory = createHashHistory());
 const routingMiddleware = routerMiddleware(history);
@@ -46,7 +47,7 @@ const enhancer = compose(
 
 let store = createStore(
     createRootReducer(history),
-    window.__REDUX_DEVTOOLS_EXTENSION__
+    window.__REDUX_DEVTOOLS_EXTENSION__ && isDevelopment()
         ? enhancer
         : applyMiddleware(sagaMiddleware, routingMiddleware)
 );

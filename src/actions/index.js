@@ -27,6 +27,7 @@ export let dict = Object.freeze({
     BLOCK_NODE: 'BLOCK_NODE',
     BLOCKED_NODES: 'BLOCKED_NODES',
     TRUSTED_NODE: 'TRUSTED_NODE',
+    UPDATE_NODE_LIST: 'UPDATE_NODE_LIST',
     SET_CONCENT_DEPOSIT_BALANCE: 'SET_CONCENT_DEPOSIT_BALANCE',
     //TASKS
     SET_TASKLIST: 'SET_TASKLIST',
@@ -181,6 +182,7 @@ const {
     BLOCK_NODE,
     BLOCKED_NODES,
     TRUSTED_NODE,
+    UPDATE_NODE_LIST,
     //TASKS
     SET_TASKLIST,
     SET_TASK_DETAILS,
@@ -445,6 +447,10 @@ export const trustNodes = (payload, _resolve, _reject) => ({
     payload,
     _resolve,
     _reject
+});
+
+export const updateNodeList = () => ({
+    type: UPDATE_NODE_LIST
 });
 
 export const setHistory = payload => ({

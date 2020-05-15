@@ -38,18 +38,14 @@ const mapDispatchToProps = dispatch => ({
  * @class      MainFragment (name)
  */
 export class MainFragment extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            presetModal: false,
-            managePresetModal: false,
-            modalData: null,
-            engineLoading: false,
-            isPresetNameExist: false,
-            toggleHistory: false
-        };
-        //props.actions.setOnboard(true)
-    }
+    state = {
+        presetModal: false,
+        managePresetModal: false,
+        modalData: null,
+        engineLoading: false,
+        isPresetNameExist: false,
+        toggleHistory: false
+    };
 
     /**
      * [_handlePresetModal func. will trigger presetModal state to make preset modal visible]

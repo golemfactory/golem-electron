@@ -24,16 +24,13 @@ function statusDot(status) {
 }
 
 class NodeList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            isDataCopied: false,
-            blockNodeModal: false,
-            nodeBlocked: false,
-            errMsg: null,
-            node2block: null
-        };
-    }
+    state = {
+        isDataCopied: false,
+        blockNodeModal: false,
+        nodeBlocked: false,
+        errMsg: null,
+        node2block: null
+    };
 
     componentWillUnmount() {
         this.copyTimeout && clearTimeout(this.copyTimeout);
@@ -160,7 +157,8 @@ class NodeList extends Component {
         );
     };
 
-    _handleCopyToClipboard(data, evt) {
+    _handleCopyToClipboard(data, event) {
+        event.stopPropagation();
         if (data) {
             clipboard.writeText(data);
             this.setState(
@@ -178,7 +176,8 @@ class NodeList extends Component {
         }
     }
 
-    _showBlockNodeModal(subtask) {
+    _showBlockNodeModal(subtask, event) {
+        event.stopPropagation();
         this.setState(
             {
                 blockNodeModal: true,
@@ -190,11 +189,13 @@ class NodeList extends Component {
         );
     }
 
-    _closeBlockNodeModal = () => {
+    _closeBlockNodeModal = (event) => {
+        event.stopPropagation();
         this.setState({ blockNodeModal: false }, () => this._lockScroll(false));
     };
 
-    _blockNode = () => {
+    _blockNode = (event) => {
+        event.stopPropagation();
         let node_id = this.state.node2block.node_id;
         new Promise((resolve, reject) => {
             this.props.actions.blockNodes(node_id, resolve, reject);

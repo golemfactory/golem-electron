@@ -32,34 +32,19 @@ const mapDispatchToProps = dispatch => ({
  * @class      TaskPanel (name)
  */
 export class TaskPanel extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            deleteModal: false,
-            deleteCallback: null,
-            deleteProps: null,
-            restartModal: false,
-            restartCallback: null,
-            restartProps: null,
-            previewId: null,
-            previewSrc: null,
-            isWalletTray: false,
-            toggleHistory: false
-        };
-    }
-
-    componentDidMount() {
-        const { actions } = this.props;
-        const endLoading = () => {
-            actions.endLoading('TASK_PANEL_LOADER');
-            /*Object.keys(require.cache).forEach(function(key) {
-            delete require.cache[key]
-        })*/
-        };
-        actions.startLoading('TASK_PANEL_LOADER', 'I am loading!');
-        setTimeout(endLoading, 3000);
-    }
-
+    state = {
+        deleteModal: false,
+        deleteCallback: null,
+        deleteProps: null,
+        restartModal: false,
+        restartCallback: null,
+        restartProps: null,
+        previewId: null,
+        previewSrc: null,
+        isWalletTray: false,
+        toggleHistory: false
+    };
+    
     componentWillUnmount() {
         this.props.actions.updatePreviewLock({
             enabled: false,
