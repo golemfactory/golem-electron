@@ -10,6 +10,8 @@ function isMac() {
 function isLinux() {
 	return process.platform === 'linux';
 }
+
+global.isDevelopment = isDevelopment;
 module.exports = {
 	isDevelopment: isDevelopment,
 	isWin: isWin,

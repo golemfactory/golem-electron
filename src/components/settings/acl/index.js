@@ -34,6 +34,7 @@ export class ACL extends React.PureComponent {
         this.setState({
             aclRestrictedMode: isRuleSwitchOn(this.props)
         })
+        this.props.actions.updateNodeList();
     }
 
     componentWillReceiveProps(nextProps) {

@@ -9,7 +9,8 @@ const {
 	SET_ACL_NODE_LIST,
 	SET_KNOWN_PEERS,
 	BLOCKED_NODES,
-	TRUSTED_NODE
+	TRUSTED_NODE,
+	UPDATE_NODE_LIST
 } = dict;
 
 export function trustNode(session, payload, _resolve, _reject) {
@@ -134,6 +135,7 @@ export function* aclFlow(session) {
 	yield fork(knownPeersBase, session);
 	yield fork(nodeListBase, session);
 	yield fork(ipListBase, session);
+	yield takeLatest(UPDATE_NODE_LIST, nodeListBase, session);
 	yield takeLatest(SET_ACL_MODE, setupACLBase, session);
 	yield takeLatest(BLOCKED_NODES, blockNodesBase, session);
 	yield takeLatest(TRUSTED_NODE, trustNodeBase, session);
