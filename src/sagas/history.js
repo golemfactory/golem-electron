@@ -2,6 +2,7 @@ import flatten from 'lodash/flatten';
 import { eventChannel, buffers } from 'redux-saga';
 import { take, call, put, takeLatest, select } from 'redux-saga/effects';
 import { dict } from '../actions';
+import promiseTimeout from '../utils/promiseTimeout';
 
 import { config, _handleRPC } from './handler';
 
@@ -78,6 +79,7 @@ export function subscribeHistory(session) {
                         params
                     );
                 });
+                _promise = promiseTimeout(3000, _promise);
                 promises.push(_promise);
             }
             Promise.all(promises).then(result => {
@@ -90,6 +92,9 @@ export function subscribeHistory(session) {
                     type: SET_HISTORY,
                     payload: _payload
                 });
+            }).catch(error => {
+                console.warn(`${SET_HISTORY} error`, error);
+                promises = []; //flush resolved promises
             });
         };
 
