@@ -200,7 +200,7 @@ export class Personal extends React.Component {
                             content={
                                 <p>
                                     {nodeIdCopied
-                                        ? "Copied Succesfully!"
+                                        ? "Copied Successfully!"
                                         : "Click to copy"}
                                 </p>
                             }
