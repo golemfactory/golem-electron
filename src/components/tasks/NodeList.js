@@ -91,7 +91,7 @@ class NodeList extends Component {
                             content={
                                 <p>
                                     {isDataCopied
-                                        ? 'Copied Succesfully!'
+                                        ? 'Copied Successfully!'
                                         : 'Click to copy'}
                                 </p>
                             }
@@ -125,7 +125,7 @@ class NodeList extends Component {
                             content={
                                 <p>
                                     {isDataCopied
-                                        ? "Copied Succesfully!"
+                                        ? "Copied Successfully!"
                                         : "Click to copy"}
                                 </p>
                             }

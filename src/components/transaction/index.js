@@ -115,7 +115,7 @@ class TransactionTube extends Component {
                     ) : (
                         <div className="section__tube content__latest-tx">
                             <span className="no-payment">
-                                You don't have any payment yet.
+                                You don't have any payments yet.
                             </span>
                             <div
                                 className="btn__transaction-history"

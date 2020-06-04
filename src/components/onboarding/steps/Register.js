@@ -147,7 +147,7 @@ export class Register extends React.Component {
                   <br />
                   easily check if an address you want to interact with is
                   <br />
-                  being the right one.
+                  the right one.
                 </span>
               ) : (
                 <span>

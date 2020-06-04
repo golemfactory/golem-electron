@@ -51,8 +51,8 @@ export class Peers extends React.Component {
                         content={
                             <p>
                                 {isDataCopied
-                                    ? 'Copied Succesfully!'
-                                    : 'Click to copy <Adress:Port>'}
+                                    ? 'Copied Successfully!'
+                                    : 'Click to copy <Address:Port>'}
                             </p>
                         }
                         placement="bottom"
@@ -76,7 +76,7 @@ export class Peers extends React.Component {
                         content={
                             <p>
                                 {isDataCopied
-                                    ? 'Copied Succesfully!'
+                                    ? 'Copied Successfully!'
                                     : 'Click to copy'}
                             </p>
                         }
